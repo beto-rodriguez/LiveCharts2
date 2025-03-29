@@ -15,7 +15,7 @@ public readonly record struct XamlObject
     public readonly List<IMethodSymbol> Methods;
     public readonly List<IMethodSymbol> ExplicitMethods;
     public readonly string? FileHeader;
-    public readonly Dictionary<string, string> PropertyChangedHandlers = [];
+    public readonly Dictionary<string, string> PropertyChangedMap = [];
     public readonly Dictionary<string, string> OverridenTypes = [];
 
     public XamlObject(
@@ -30,7 +30,7 @@ public readonly record struct XamlObject
         List<IMethodSymbol> methods,
         List<IMethodSymbol> explicitMethods,
         string? fileHeader,
-        string? propertyChangedHandlers,
+        string? propertyChangedMap,
         string? overridenTypes)
     {
         GenerateBaseTypeDeclaration = generateBaseTypeDeclaration;
@@ -45,14 +45,14 @@ public readonly record struct XamlObject
         ExplicitMethods = explicitMethods;
         FileHeader = fileHeader;
 
-        if (propertyChangedHandlers is not null)
+        if (propertyChangedMap is not null)
         {
-            var handlers = propertyChangedHandlers.Split(["{,}"], StringSplitOptions.None);
+            var maps = propertyChangedMap.Split(["{,}"], StringSplitOptions.None);
 
-            foreach (var handler in handlers)
+            foreach (var map in maps)
             {
-                var parts = handler.Split(["{=}"], StringSplitOptions.None);
-                PropertyChangedHandlers[parts[0]] = parts[1];
+                var parts = map.Split(["{=}"], StringSplitOptions.None);
+                PropertyChangedMap[parts[0]] = parts[1];
             }
         }
 

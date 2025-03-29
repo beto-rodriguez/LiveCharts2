@@ -53,12 +53,12 @@ public class XamlClassAttribute(System.Type basedOn) : System.Attribute
     /// <summary>
     /// Also maps the specified type.
     /// </summary>
-    public System.Type Map { get; set; }
+    public System.Type? Map { get; set; }
 
     /// <summary>
     /// The path to the map.
     /// </summary>
-    public string MapPath { get; set; }
+    public string? MapPath { get; set; }
 
     /// <summary>
     /// The header to add to the generated file.
@@ -66,10 +66,10 @@ public class XamlClassAttribute(System.Type basedOn) : System.Attribute
     public string? FileHeader { get; set; }
 
     /// <summary>
-    /// A string with the property change handlers e.g.
-    /// MyProperty{=}OnMyPropertyChanged{,}MyOtherProperty{=}OnMyOtherPropertyChanged.
+    /// A string with the property change map e.g.
+    /// MyProperty{=}MyMapMethod{,}MyOtherProperty{=}MyOtherMapMethod.
     /// </summary>
-    public string? PropertyChangeHandlers { get; set; }
+    public string? PropertyChangeMap { get; set; }
 
     /// <summary>
     /// A string with the property type overrides e.g.
@@ -138,6 +138,25 @@ public partial class {target.Name}
 
 {ConcatenateExplicitMethods(target)}
 #endregion
+
+    protected override void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string? propertyName = null)
+    {{
+        base.OnPropertyChanged(propertyName);
+        MapChangeToBaseType(propertyName);
+        AlsoOnPropertyChanged(propertyName);
+    }}
+
+    partial void AlsoOnPropertyChanged(string? propertyName = null);
+
+    private void MapChangeToBaseType(string? propertyName = null)
+    {{
+        switch (propertyName)
+        {{
+{GetChangesMap(target)}
+            default:
+                break;
+        }}
+    }}
 
 }}";
     }
@@ -296,15 +315,38 @@ public partial class {target.Name}
         return @$"    {method.ReturnType} {method.Name}({sb}) => (({path})_baseType).{actualName}({sb1});";
     }
 
+    private static string GetChangesMap(XamlObject target)
+    {
+        var sb = new StringBuilder();
+
+        foreach (var pair in target.BindableProperties)
+        {
+            var path = pair.Key;
+            if (pair.Key.Length == 0)
+                path = "_baseType";
+
+            foreach (var property in pair.Value)
+            {
+                var hasPublicSetter = property.SetMethod is not null && property.SetMethod.DeclaredAccessibility == Accessibility.Public;
+                if (!hasPublicSetter) continue;
+
+                var propertyType = property.Type.ToDisplayString();
+
+                _ = target.PropertyChangedMap.TryGetValue(property.Name, out var map)
+                    ? sb.AppendLine(@$"            case ""{property.Name}"": {map}(GetValue({property.Name}Property)); break;")
+                    : sb.AppendLine(@$"            case ""{property.Name}"": {path}.{property.Name} = ({propertyType})GetValue({property.Name}Property); break;");
+            }
+        }
+
+        return sb.ToString();
+    }
+
     private static string GetBindablePropertySyntax(XamlObject target, IPropertySymbol property, string path)
     {
         var fallbackInfo = GetFallbackInfo(target.BasedOn);
         var fallBackName = path.Length > 0
             ? $"_default{path}"
             : fallbackInfo.Item2;
-
-        if (path.Length == 0)
-            path = "_baseType";
 
         var propertyName = property.Name;
         var propertyType = property.Type.ToDisplayString();
@@ -320,25 +362,12 @@ public partial class {target.Name}
 
         var sb = new StringBuilder();
 
-        var hasPublicSetter = property.SetMethod is not null && property.SetMethod.DeclaredAccessibility == Accessibility.Public;
-
         _ = sb
             .Append(@$"    public static readonly new BindableProperty {propertyName}Property = BindableProperty.Create(
         propertyName:       ""{propertyName}"",
         returnType:         typeof({sanitizedPropertyType}),
         declaringType:      typeof({bindableType}),
-        defaultValue:       {fallBackName}.{propertyName}");
-
-        if (hasPublicSetter)
-        {
-            _ = sb.Append(',').AppendLine();
-
-            _ = target.PropertyChangedHandlers.TryGetValue(propertyName, out var handler)
-                ? sb.Append(@$"        propertyChanged:    {handler}")
-                : sb.Append(@$"        propertyChanged:    (BindableObject bo, object o, object n) => (({bindableType})bo).{path}.{propertyName} = ({propertyType})n");
-        }
-
-        _ = sb.Append(");");
+        defaultValue:       {fallBackName}.{propertyName});");
 
         _ = sb.AppendLine();
 

@@ -59,7 +59,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
             return null;
 
         string? fileHeader = null;
-        string? propertyChangeHandlers = null;
+        string? propertyChangeMap = null;
         string? overridenTypes = null;
         ITypeSymbol? alsoMap = null;
         string? alsoMapPath = null;
@@ -72,8 +72,8 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
                 case "FileHeader":
                     fileHeader = arg.Value.Value as string;
                     break;
-                case "PropertyChangeHandlers":
-                    propertyChangeHandlers = arg.Value.Value as string;
+                case "PropertyChangeMap":
+                    propertyChangeMap = arg.Value.Value as string;
                     break;
                 case "PropertyTypeOverride":
                     overridenTypes = arg.Value.Value as string;
@@ -168,7 +168,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
 
         return new XamlObject(
             generateBaseTypeDeclaration, ns, name, symbol, baseType, bindablePropertiesDic, [.. notBindableProperties.Values], events,
-            [.. methods.Values], [.. explicitMethods.Values], fileHeader, propertyChangeHandlers, overridenTypes);
+            [.. methods.Values], [.. explicitMethods.Values], fileHeader, propertyChangeMap, overridenTypes);
     }
 
     private static List<ISymbol> GetLiveChartsMembers(ITypeSymbol typeSymbol)

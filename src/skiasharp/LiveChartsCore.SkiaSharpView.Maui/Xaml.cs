@@ -7,7 +7,6 @@
 
 using System;
 using System.Collections;
-using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Generators;
 using LiveChartsCore.Kernel;
@@ -86,10 +85,9 @@ public partial class XamlLogarithmicAxis : EmptyContentView, ICartesianAxis
         set => SetValue(LogBaseProperty, value);
     }
 
-    protected override void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    partial void AlsoOnPropertyChanged(string? propertyName)
     {
-        base.OnPropertyChanged(propertyName);
-        if (propertyName == nameof(Labeler)) _hasCustomLabeler = true;
+        if (propertyName == nameof(LogBase)) _hasCustomLabeler = true;
     }
 }
 
@@ -135,15 +133,12 @@ public class XamlColumnSeries<TVisual, TLabel> : XamlColumnSeries<object, TVisua
     where TLabel : BaseLabelGeometry, new()
 { }
 
-[XamlClass(typeof(ColumnSeries<,,>),
-    PropertyTypeOverride = "Values{=}object",
-    PropertyChangeHandlers = "Values{=}OnValuesChanged")]
+[XamlClass(typeof(ColumnSeries<,,>), PropertyTypeOverride = "Values{=}object", PropertyChangeMap = "Values{=}ValuesMap")]
 public partial class XamlColumnSeries<TModel, TVisual, TLabel> : EmptyContentView, IBarSeries, IInternalSeries
     where TVisual : BoundedDrawnGeometry, new()
     where TLabel : BaseLabelGeometry, new()
 {
-    private static void OnValuesChanged(BindableObject bindable, object oldValue, object newValue) =>
-        ((ISeries)((XamlColumnSeries<TModel, TVisual, TLabel>)bindable)._baseType).Values = (IEnumerable)newValue;
+    private void ValuesMap(object value) => ((ISeries)_baseType).Values = (IEnumerable)value;
 }
 
 #endregion
@@ -164,15 +159,12 @@ public class XamlLineSeries<TVisual, TLabel> : XamlLineSeries<object, TVisual, L
     where TLabel : BaseLabelGeometry, new()
 { }
 
-[XamlClass(typeof(LineSeries<,,>),
-    PropertyTypeOverride = "Values{=}object",
-    PropertyChangeHandlers = "Values{=}OnValuesChanged")]
+[XamlClass(typeof(LineSeries<,,>), PropertyTypeOverride = "Values{=}object", PropertyChangeMap = "Values{=}ValuesMap")]
 public partial class XamlLineSeries<TModel, TVisual, TLabel> : EmptyContentView, ILineSeries, IInternalSeries
     where TVisual : BoundedDrawnGeometry, new()
     where TLabel : BaseLabelGeometry, new()
 {
-    private static void OnValuesChanged(BindableObject bindable, object oldValue, object newValue) =>
-        ((ISeries)((XamlLineSeries<TModel, TVisual, TLabel>)bindable)._baseType).Values = (IEnumerable)newValue;
+    private void ValuesMap(object value) => ((ISeries)_baseType).Values = (IEnumerable)value;
 }
 
 #endregion
