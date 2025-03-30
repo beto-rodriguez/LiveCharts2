@@ -116,27 +116,29 @@ public partial class {target.Name}
 
 #region properties
 
-{ConcatenateRegularProperties(target)}
+{Concatenate(target.NotBindableProperties, GetRegularPropertySyntax)}
 #endregion
 
 #region bindable properties
 
-{ConcatenateBindableProperties(target)}
+{Concatenate(
+    target.BindableProperties,
+    pair => Concatenate(pair.Value, property => GetBindablePropertySyntax(target, property)))}
 #endregion
 
 #region events
 
-{ConcatenateEvents(target)}
+{Concatenate(target.Events, GetEventSyntax)}
 #endregion
 
 #region methods
 
-{ConcatenateMethods(target)}
+{Concatenate(target.Methods, GetMethodSyntax)}
 #endregion
 
 #region explicit methods
 
-{ConcatenateExplicitMethods(target)}
+{Concatenate(target.ExplicitMethods, GetExplicitMethodSyntax)}
 #endregion
 
     protected override void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string? propertyName = null)
@@ -158,6 +160,17 @@ public partial class {target.Name}
         }}
     }}
 
+    static {target.Type.Name}()
+    {{
+        OnTypeDefined();
+
+{Concatenate(
+    target.BindableProperties,
+    pair => Concatenate(pair.Value, property => GetBindablePropertyDefinition(target, property, pair.Key), false),
+    false)}
+    }}
+
+    static partial void OnTypeDefined();
 }}";
     }
 
@@ -168,65 +181,6 @@ public partial class {target.Name}
         var fallBackInfo = GetFallbackInfo(target.BasedOn);
 
         _ = sb.AppendLine($"    private static readonly {fallBackInfo.Item1} {fallBackInfo.Item2} = new();");
-
-        return sb.ToString();
-    }
-
-    private static string ConcatenateBindableProperties(XamlObject target)
-    {
-        var sb = new StringBuilder();
-
-        foreach (var pair in target.BindableProperties)
-            foreach (var property in pair.Value)
-                _ = sb.AppendLine(GetBindablePropertySyntax(target, property, pair.Key)).AppendLine();
-
-        return sb.ToString();
-    }
-
-    private static string ConcatenateRegularProperties(XamlObject target)
-    {
-        var sb = new StringBuilder();
-
-        foreach (var property in target.NotBindableProperties)
-            _ = sb
-                .AppendLine(GetRegularPropertySyntax(property))
-                .AppendLine();
-
-        return sb.ToString();
-    }
-
-    private static string ConcatenateEvents(XamlObject target)
-    {
-        var sb = new StringBuilder();
-
-        foreach (var @event in target.Events)
-            _ = sb
-                .AppendLine(GetEventSyntax(@event))
-                .AppendLine();
-
-        return sb.ToString();
-    }
-
-    private static string ConcatenateMethods(XamlObject target)
-    {
-        var sb = new StringBuilder();
-
-        foreach (var method in target.Methods)
-            _ = sb
-                .AppendLine(GetMethodSyntax(method))
-                .AppendLine();
-
-        return sb.ToString();
-    }
-
-    private static string ConcatenateExplicitMethods(XamlObject target)
-    {
-        var sb = new StringBuilder();
-
-        foreach (var method in target.ExplicitMethods)
-            _ = sb
-                .AppendLine(GetExplicitMethodSyntax(method))
-                .AppendLine();
 
         return sb.ToString();
     }
@@ -341,7 +295,35 @@ public partial class {target.Name}
         return sb.ToString();
     }
 
-    private static string GetBindablePropertySyntax(XamlObject target, IPropertySymbol property, string path)
+    private static string GetBindablePropertySyntax(XamlObject target, IPropertySymbol property)
+    {
+        var propertyName = property.Name;
+        var propertyType = property.Type.ToDisplayString();
+        var originalPropertyType = propertyType;
+
+        if (target.OverridenTypes.TryGetValue(propertyName, out var overridenType))
+            propertyType = overridenType;
+
+        var sb = new StringBuilder();
+
+        _ = sb
+            .Append(@$"    public static readonly new BindableProperty {propertyName}Property;");
+
+        _ = sb.AppendLine();
+
+        if (TypeConverters.TryGetValue(originalPropertyType, out var typeConverter))
+            _ = sb.AppendLine(@$"    [System.ComponentModel.TypeConverter(typeof({typeConverter}))]");
+
+        _ = sb.Append(@$"    public new {propertyType} {propertyName}
+    {{
+        get => ({propertyType})GetValue({propertyName}Property);
+        set => SetValue({propertyName}Property, value);
+    }}");
+
+        return sb.ToString();
+    }
+
+    private static string GetBindablePropertyDefinition(XamlObject target, IPropertySymbol property, string path)
     {
         var fallbackInfo = GetFallbackInfo(target.BasedOn);
         var fallBackName = path.Length > 0
@@ -350,7 +332,6 @@ public partial class {target.Name}
 
         var propertyName = property.Name;
         var propertyType = property.Type.ToDisplayString();
-        var originalPropertyType = propertyType;
 
         if (target.OverridenTypes.TryGetValue(propertyName, out var overridenType))
             propertyType = overridenType;
@@ -363,22 +344,7 @@ public partial class {target.Name}
         var sb = new StringBuilder();
 
         _ = sb
-            .Append(@$"    public static readonly new BindableProperty {propertyName}Property = BindableProperty.Create(
-        propertyName:       ""{propertyName}"",
-        returnType:         typeof({sanitizedPropertyType}),
-        declaringType:      typeof({bindableType}),
-        defaultValue:       {fallBackName}.{propertyName});");
-
-        _ = sb.AppendLine();
-
-        if (TypeConverters.TryGetValue(originalPropertyType, out var typeConverter))
-            _ = sb.AppendLine(@$"    [System.ComponentModel.TypeConverter(typeof({typeConverter}))]");
-
-        _ = sb.Append(@$"    public new {propertyType} {propertyName}
-    {{
-        get => ({propertyType})GetValue({propertyName}Property);
-        set => SetValue({propertyName}Property, value);
-    }}");
+            .AppendLine(@$"        {propertyName}Property = BindableProperty.Create(propertyName: ""{propertyName}"", returnType: typeof({sanitizedPropertyType}), declaringType: typeof({bindableType}), defaultValue: {fallBackName}.{propertyName});");
 
         return sb.ToString();
     }
@@ -403,5 +369,21 @@ public partial class {target.Name}
         ["LiveChartsCore.Painting.Paint?"] = "HexToPaintTypeConverter",
         ["System.Collections.Generic.IReadOnlyCollection<TModel>?"] = "ValuesTypeConverter"
     };
-#pragma warning restore format
+
+    private static string Concatenate<TItem>(
+        IEnumerable<TItem> propertyToWrite,
+        Func<TItem, string> syntaxBuilder,
+        bool appendLine = true)
+    {
+        var sb = new StringBuilder();
+
+        foreach (var item in propertyToWrite)
+        {
+            _ = appendLine
+                ? _ = sb.AppendLine(syntaxBuilder(item))
+                : _ = sb.Append(syntaxBuilder(item));
+        }
+
+        return sb.ToString();
+    }
 }

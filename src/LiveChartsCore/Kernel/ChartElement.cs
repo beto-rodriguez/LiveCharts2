@@ -106,7 +106,18 @@ public abstract class ChartElement : IChartElement, INotifyPropertyChanged
         PaintStyle style = PaintStyle.Fill,
         [CallerMemberName] string? propertyName = null)
     {
-        if (!_isInternalSet) TouchProperty(propertyName);
+        if (!_isInternalSet)
+        {
+            if (value == Paint.Default)
+            {
+                UntouchProperty(propertyName);
+                _theme = new(); // <- force the theme to be re-evaluated.
+            }
+            else
+            {
+                TouchProperty(propertyName);
+            }
+        }
         if (value == reference) return;
 
         if (propertyName is null) throw new ArgumentNullException(nameof(propertyName));
@@ -184,6 +195,9 @@ public abstract class ChartElement : IChartElement, INotifyPropertyChanged
 
     private void TouchProperty([CallerMemberName] string? propertyName = null) =>
         _ = _userSets.Add(propertyName ?? throw new ArgumentNullException(nameof(propertyName)));
+
+    private void UntouchProperty([CallerMemberName] string? propertyName = null) =>
+        _ = _userSets.Remove(propertyName ?? throw new ArgumentNullException(nameof(propertyName)));
 }
 
 /// <summary>

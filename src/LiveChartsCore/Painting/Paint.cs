@@ -38,6 +38,11 @@ public abstract class Paint : Animatable, IDisposable
     private readonly FloatMotionProperty _strokeWidthTransition;
 
     /// <summary>
+    /// Gets the default paint.
+    /// </summary>
+    public static Paint Default { get; } = new DefaultPaint();
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="Paint"/> class.
     /// </summary>
     protected Paint(float strokeThickness = 1f, float strokeMiter = 0f)
@@ -142,6 +147,8 @@ public abstract class Paint : Animatable, IDisposable
     /// <param name="geometries">The geometries.</param>
     public void SetGeometries(CoreMotionCanvas canvas, HashSet<IDrawnElement> geometries)
     {
+        if (this == Default) return;
+
         _geometriesByCanvas[canvas] = geometries;
         IsValid = false;
     }
@@ -153,6 +160,8 @@ public abstract class Paint : Animatable, IDisposable
     /// <param name="geometry">The geometry.</param>
     public void AddGeometryToPaintTask(CoreMotionCanvas canvas, IDrawnElement geometry)
     {
+        if (this == Default) return;
+
         var g = GetGeometriesByCanvas(canvas);
 
         if (g is null)
@@ -208,8 +217,11 @@ public abstract class Paint : Animatable, IDisposable
     /// </summary>
     /// <param name="canvas">The canvas.</param>
     /// <param name="value">The rectangle.</param>
-    public void SetClipRectangle(CoreMotionCanvas canvas, LvcRectangle value) =>
+    public void SetClipRectangle(CoreMotionCanvas canvas, LvcRectangle value)
+    {
+        if (this == Default) return;
         _clipRectangles[canvas] = value;
+    }
 
     /// <summary>
     /// Initializes the task.
@@ -247,5 +259,14 @@ public abstract class Paint : Animatable, IDisposable
         return _geometriesByCanvas.TryGetValue(canvas, out var geometries)
             ? geometries
             : null;
+    }
+
+    private class DefaultPaint : Paint
+    {
+        public override void ApplyOpacityMask(DrawingContext context, float opacity) { }
+        public override Paint CloneTask() => this;
+        public override void Dispose() { }
+        public override void InitializeTask(DrawingContext drawingContext) { }
+        public override void RestoreOpacityMask(DrawingContext context, float opacity) { }
     }
 }

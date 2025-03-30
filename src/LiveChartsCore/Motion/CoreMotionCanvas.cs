@@ -212,7 +212,11 @@ public class CoreMotionCanvas : IDisposable
     /// </summary>
     /// <param name="task">The task.</param>
     /// <returns></returns>
-    public void AddDrawableTask(Paint task) => _ = _paintTasks.Add(task);
+    public void AddDrawableTask(Paint task)
+    {
+        if (task == Paint.Default) return;
+        _ = _paintTasks.Add(task);
+    }
 
     /// <summary>
     /// Adds a geometry (or geometries) to the canvas.

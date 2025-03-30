@@ -118,10 +118,6 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
                     if (property.DeclaredAccessibility == Accessibility.Protected || property.IsStatic)
                         continue;
 
-                    // ignore the DefaultValues property, it is for internal use only
-                    if (property.Name == "DefaultValues")
-                        continue;
-
                     var notExplicit = property.ExplicitInterfaceImplementations.Length == 0;
                     var hasSetter = property.SetMethod is not null;
                     var isPublic = property.DeclaredAccessibility == Accessibility.Public;
