@@ -11,9 +11,11 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Generators;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.VisualElements;
 using LiveChartsCore.VisualElements;
+using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
@@ -94,9 +96,7 @@ public partial class XamlLogarithmicAxis : EmptyContentView, ICartesianAxis
 [XamlClass(typeof(DrawMarginFrame))]
 public partial class XamlDrawMarginFrame : EmptyContentView, IChartElement { }
 
-[XamlClass(typeof(DrawnLabelVisual),
-    Map = typeof(LabelGeometry),
-    MapPath = "DrawnLabel")]
+[XamlClass(typeof(DrawnLabelVisual), Map = typeof(LabelGeometry), MapPath = "DrawnLabel")]
 public partial class XamlDrawnLabelVisual : EmptyContentView, IChartElement, IInternalInteractable
 {
     private static readonly LabelGeometry _defaultDrawnLabel = new();
@@ -114,6 +114,12 @@ public partial class XamlDrawnLabelVisual : EmptyContentView, IChartElement, IIn
 // The main problem with using object, is that mappers are not strongly typed, the Mapping property is of type
 // Func<object, int, Coordinate>, instead of Func<TModel, int, Coordinate>, the cast should be done in the mapper,
 // ideally as stated in docs, when performance is critical, you must implement IChartEntity to prevent mapping.
+
+// Note 3.
+// Bindable properties default value is initialized according to the active LiveCharts theme,
+// The default value of bindable properties can not change at runtime, so when theme changes at runtime
+// the devault value can not change to the new theme.
+// if this a problem for the developer, then a theme in XAML must be implemented.
 
 // ============================
 
@@ -138,6 +144,7 @@ public partial class XamlColumnSeries<TModel, TVisual, TLabel> : EmptyContentVie
     where TVisual : BoundedDrawnGeometry, new()
     where TLabel : BaseLabelGeometry, new()
 {
+    static partial void OnTypeDefined() => ThemeDefaults.ConfigureSeriesDefaults(_defaultColumnSeries);
     private void ValuesMap(object value) => ((ISeries)_baseType).Values = (IEnumerable)value;
 }
 
@@ -164,7 +171,63 @@ public partial class XamlLineSeries<TModel, TVisual, TLabel> : EmptyContentView,
     where TVisual : BoundedDrawnGeometry, new()
     where TLabel : BaseLabelGeometry, new()
 {
+    static partial void OnTypeDefined() => ThemeDefaults.ConfigureSeriesDefaults(_defaultLineSeries);
     private void ValuesMap(object value) => ((ISeries)_baseType).Values = (IEnumerable)value;
 }
 
 #endregion
+
+internal class ThemeDefaults
+{
+    /// <summary>
+    /// Sets the default values of bindable properties to the values defined in the LiveCharts theme.
+    /// </summary>
+    /// <param name="series"></param>
+    public static void ConfigureSeriesDefaults(ISeries series)
+    {
+        LiveCharts.Configure(config => config.UseDefaults());
+        var theme = LiveCharts.DefaultSettings.GetTheme();
+        theme.Setup(Application.Current?.RequestedTheme == AppTheme.Dark);
+        series.SeriesId = 0;
+        theme.ApplyStyleToSeries(series);
+
+        series.DataLabelsPaint = Paint.Default;
+
+        if (series is IStrokedAndFilled strokedAndFilled)
+        {
+            strokedAndFilled.Fill = Paint.Default;
+            strokedAndFilled.Stroke = Paint.Default;
+        }
+
+        if (series is ILineSeries lineSeries)
+        {
+            lineSeries.GeometryFill = Paint.Default;
+            lineSeries.GeometryStroke = Paint.Default;
+        }
+
+        if (series is IPolarLineSeries polarLine)
+        {
+            polarLine.GeometryFill = Paint.Default;
+            polarLine.GeometryStroke = Paint.Default;
+        }
+
+        if (series is IStepLineSeries stepLine)
+        {
+            stepLine.GeometryFill = Paint.Default;
+            stepLine.GeometryStroke = Paint.Default;
+        }
+
+        if (series is IErrorSeries errorSeries)
+        {
+            errorSeries.ErrorPaint = Paint.Default;
+        }
+
+        if (series is IFinancialSeries financial)
+        {
+            financial.UpStroke = Paint.Default;
+            financial.DownStroke = Paint.Default;
+            financial.UpFill = Paint.Default;
+            financial.DownFill = Paint.Default;
+        }
+    }
+}
