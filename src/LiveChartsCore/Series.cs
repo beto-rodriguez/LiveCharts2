@@ -111,6 +111,10 @@ public abstract class Series<TModel, TVisual, TLabel>
     private double _dataLabelsRotation = 0;
     private Padding _dataLabelsPadding = new() { Left = 6, Top = 8, Right = 6, Bottom = 8 };
     private double _dataLabelsMaxWidth = LiveCharts.DefaultSettings.MaxTooltipsAndLegendsLabelsWidth;
+    private static readonly string[] s_stateableProperties = [
+        nameof(IDrawnElement.Opacity), nameof(IDrawnElement.TranslateTransform), nameof(IDrawnElement.ScaleTransform),
+        nameof(IDrawnElement.RotateTransform), nameof(IDrawnElement.SkewTransform), nameof(IDrawnElement.TransformOrigin)
+    ];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Series{TModel, TVisual, TLabel}"/> class.
@@ -501,7 +505,7 @@ public abstract class Series<TModel, TVisual, TLabel>
     protected virtual void OnPointerEnter(ChartPoint point)
     {
         if (VisualStates.TryGetValue("Hover", out var hoverState))
-            point.SetState(hoverState);
+            point.SetState(hoverState, s_stateableProperties);
 
         if (ChartPointPointerHover is null || point.IsPointerOver) return;
         point.IsPointerOver = true;
@@ -514,7 +518,7 @@ public abstract class Series<TModel, TVisual, TLabel>
     /// <param name="point">The chart point.</param>
     protected virtual void OnPointerLeft(ChartPoint point)
     {
-        point.ClearCurrentState();
+        point.ClearCurrentState(s_stateableProperties);
 
         if (ChartPointPointerHoverLost is null || !point.IsPointerOver) return;
         point.IsPointerOver = false;

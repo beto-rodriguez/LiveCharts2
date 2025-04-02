@@ -116,12 +116,16 @@ public class ChartPoint
     /// Sets the state of the point.
     /// </summary>
     /// <param name="state">The state.</param>
-    public void SetState(Action<IDrawnElement, ChartPoint> state)
+    /// <param name="propertyName">The property name.</param>
+    public void SetState(Action<IDrawnElement, ChartPoint> state, params string[]? propertyName)
     {
         if (Context.Visual is not Animatable animatable) return;
 
-        foreach (var property in animatable.MotionProperties.Values)
-            property.Save();
+        if (propertyName is null || propertyName.Length == 0)
+            propertyName = [.. animatable.MotionProperties.Keys];
+
+        foreach (var name in propertyName)
+            animatable.MotionProperties[name].Save();
 
         if (Context.Visual is not null)
             state.Invoke(Context.Visual, this);
@@ -130,11 +134,16 @@ public class ChartPoint
     /// <summary>
     /// Clears the current state.
     /// </summary>
-    public void ClearCurrentState()
+    /// <param name="propertyName">The property name.</param>
+    public void ClearCurrentState(params string[]? propertyName)
     {
         if (Context.Visual is not Animatable animatable) return;
-        foreach (var property in animatable.MotionProperties.Values)
-            property.Restore(animatable);
+
+        if (propertyName is null || propertyName.Length == 0)
+            propertyName = [.. animatable.MotionProperties.Keys];
+
+        foreach (var name in propertyName)
+            animatable.MotionProperties[name].Restore(animatable);
     }
 }
 
