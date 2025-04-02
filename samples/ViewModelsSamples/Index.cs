@@ -4,8 +4,8 @@ public static class Index
 {
     public static string[] Samples =
     [
-        "Design/LinearGradients",
-        "Design/RadialGradients",
+        //"Design/LinearGradients",
+        //"Design/RadialGradients",
 
         "Lines/Basic",
         "Lines/AutoUpdate",

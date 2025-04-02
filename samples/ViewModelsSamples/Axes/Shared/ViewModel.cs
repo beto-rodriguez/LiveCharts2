@@ -32,8 +32,8 @@ public class ViewModel
         X1 = [
             new Axis
             {
-                MinLimit = start,
-                MaxLimit = end,
+                //MinLimit = start,
+                //MaxLimit = end,
                 CrosshairLabelsBackground = SKColors.OrangeRed.AsLvcColor(),
                 CrosshairLabelsPaint = new SolidColorPaint(SKColors.White),
                 CrosshairPaint = new SolidColorPaint(SKColors.OrangeRed.WithAlpha(50), 4),
@@ -44,8 +44,8 @@ public class ViewModel
         X2 = [
             new Axis
             {
-                MinLimit = start,
-                MaxLimit = end,
+                //MinLimit = start,
+                //MaxLimit = end,
                 CrosshairPaint = new SolidColorPaint(SKColors.OrangeRed.WithAlpha(50), 4)
             }
         ];

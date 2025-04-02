@@ -1,4 +1,5 @@
-﻿using LiveChartsCore; // mark
+﻿using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView; // mark
 
 namespace MauiSample;
 
@@ -8,18 +9,13 @@ public partial class App : Application
     {
         InitializeComponent();
 
-        MainPage = new AppShell();
-    }
-
-    protected override void OnStart()
-    {
-        base.OnStart();
-
         // this is the recommended place to configure LiveCharts // mark
         LiveCharts.Configure(config => // mark
         { // mark
             // configure LiveCharts here... // mark
         }); // mark
+
+        MainPage = new AppShell();
     }
 
     public record City(string Name, double Population);
