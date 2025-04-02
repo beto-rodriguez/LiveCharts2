@@ -103,6 +103,32 @@ public partial class XamlDrawnLabelVisual : EmptyContentView, IChartElement, IIn
     private LabelGeometry? DrawnLabel => (LabelGeometry?)_baseType.DrawnElement;
 }
 
+public class SharedAxesPair
+{
+    private ICartesianAxis? _first;
+    private ICartesianAxis? _second;
+
+    public ICartesianAxis? First
+    {
+        get => _first;
+        set { _first = value; OnSet(); }
+    }
+
+    public ICartesianAxis? Second
+    {
+        get => _second;
+        set { _second = value; OnSet(); }
+    }
+
+    private void OnSet()
+    {
+        if (_first is null || _second is null) return;
+
+        // this object does not handle axes removal :(
+        SharedAxes.Set(_first, _second);
+    }
+}
+
 // == About generated series ==
 
 // Note 1.
@@ -179,10 +205,6 @@ public partial class XamlLineSeries<TModel, TVisual, TLabel> : EmptyContentView,
 
 internal class ThemeDefaults
 {
-    /// <summary>
-    /// Sets the default values of bindable properties to the values defined in the LiveCharts theme.
-    /// </summary>
-    /// <param name="series"></param>
     public static void ConfigureSeriesDefaults(ISeries series)
     {
         LiveCharts.Configure(config => config.UseDefaults());

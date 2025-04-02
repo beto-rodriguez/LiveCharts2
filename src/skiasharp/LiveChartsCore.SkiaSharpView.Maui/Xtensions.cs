@@ -21,6 +21,8 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Painting;
 using Microsoft.Maui.Controls.Xaml;
 using SkiaSharp;
@@ -93,4 +95,54 @@ public class SolidColorPaintExtension : IMarkupExtension<SolidColorPaint>
     }
 
     object IMarkupExtension.ProvideValue(IServiceProvider serviceProvider) => ProvideValue(serviceProvider);
+}
+
+/// <summary>
+/// The solid color paint extension.
+/// </summary>
+public class FromSharedAxesExtension : IMarkupExtension<ICollection<ICartesianAxis>>
+{
+    /// <summary>
+    /// Gets or sets the pair instance.
+    /// </summary>
+    public SharedAxesPair? AxesPair { get; set; }
+
+    /// <summary>
+    /// Gets or sets the element.
+    /// </summary>
+    public PairElement Element { get; set; }
+
+    /// <summary>
+    /// ...
+    /// </summary>
+    public ICollection<ICartesianAxis> ProvideValue(IServiceProvider serviceProvider)
+    {
+        if (AxesPair is null || AxesPair.First is null || AxesPair.Second is null)
+            return [];
+
+        return Element switch
+        {
+            PairElement.First => [AxesPair.First],
+            PairElement.Second => [AxesPair.Second],
+            _ => Array.Empty<ICartesianAxis>()
+        };
+    }
+
+    object IMarkupExtension.ProvideValue(IServiceProvider serviceProvider) => ProvideValue(serviceProvider);
+
+    /// <summary>
+    /// The shared axes pair elements.
+    /// </summary>
+    public enum PairElement
+    {
+        /// <summary>
+        /// The first element.
+        /// </summary>
+        First,
+
+        /// <summary>
+        /// The second element.
+        /// </summary>
+        Second
+    }
 }
