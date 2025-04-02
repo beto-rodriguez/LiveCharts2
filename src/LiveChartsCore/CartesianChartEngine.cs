@@ -58,6 +58,8 @@ public class CartesianChartEngine(
     private const double MaxAxisActiveBound = 0.15;
     private HashSet<CartesianChartEngine>? _sharedEvents;
     private HashSet<ICartesianAxis> _crosshair = [];
+    private ICartesianAxis[]? _virtualX;
+    private ICartesianAxis[]? _virtualY;
 
     /// <summary>
     /// Gets the x axes.
@@ -373,20 +375,8 @@ public class CartesianChartEngine(
         var viewDrawMargin = _chartView.DrawMargin;
         ControlSize = _chartView.ControlSize;
 
-        var x = _chartView.XAxes;
-        var y = _chartView.YAxes;
-
-        if (x is null || !x.Any())
-        {
-            var provider = LiveCharts.DefaultSettings.GetProvider();
-            x = [provider.GetDefaultCartesianAxis()];
-        }
-
-        if (y is null || !y.Any())
-        {
-            var provider = LiveCharts.DefaultSettings.GetProvider();
-            y = [provider.GetDefaultCartesianAxis()];
-        }
+        var x = GetAxesCollection(_chartView.XAxes, ref _virtualX);
+        var y = GetAxesCollection(_chartView.YAxes, ref _virtualY);
 
         XAxes = [.. x.Select(x => x.ChartElementSource).Cast<ICartesianAxis>()];
         YAxes = [.. y.Select(x => x.ChartElementSource).Cast<ICartesianAxis>()];
@@ -874,6 +864,8 @@ public class CartesianChartEngine(
     public override void Unload()
     {
         base.Unload();
+        _virtualX = null;
+        _virtualY = null;
         _crosshair = [];
         _sharedEvents = null;
         _zoomingSection = null;
@@ -1162,6 +1154,23 @@ public class CartesianChartEngine(
                     yi.SetLimits(limits.DataMax - ym, limits.DataMax);
             }
         }
+    }
+
+    private ICollection<ICartesianAxis> GetAxesCollection(
+        ICollection<ICartesianAxis>? viewAxes,
+        ref ICartesianAxis[]? virtualAxes)
+    {
+        if (viewAxes is not null && viewAxes.Count > 0) return viewAxes;
+
+        if (virtualAxes is null)
+        {
+            var provider = LiveCharts.DefaultSettings.GetProvider();
+            var virtualAxis = provider.GetDefaultCartesianAxis();
+            virtualAxis.PropertyChanged += (s, e) => Update();
+            virtualAxes = [virtualAxis];
+        }
+
+        return virtualAxes;
     }
 
     private void OnPointerLeft() => base.InvokePointerLeft();
