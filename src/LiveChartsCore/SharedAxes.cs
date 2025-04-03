@@ -46,9 +46,11 @@ public static class SharedAxes
 
         foreach (var axis in axes)
         {
-            axis.SharedWith = axes
-                .Where(x => x != axis)
-                .ToArray();
+            axis.SharedWith = [..
+                axes
+                    .Where(x => x != axis)
+                    .Select(x => (ICartesianAxis)x.ChartElementSource)
+                ];
 
             axis.MeasureStarted += (Chart chart, ICartesianAxis obj) =>
             {
