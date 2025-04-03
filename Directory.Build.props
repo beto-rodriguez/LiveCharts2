@@ -4,7 +4,7 @@
     <LiveChartsVersion>2.0.0-rc5.4</LiveChartsVersion>
     <LiveChartsAuthors>BetoRodriguez</LiveChartsAuthors>
 
-    <GlobalLangVersion>12.0</GlobalLangVersion>
+    <GlobalLangVersion>preview</GlobalLangVersion>
 
     <MauiVersion>8.0.82</MauiVersion>
     <SkiaSharpVersion>2.88.9</SkiaSharpVersion>
