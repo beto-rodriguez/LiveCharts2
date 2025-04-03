@@ -403,6 +403,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     }
 
     /// <inheritdoc cref="IChartView.DrawMargin" />
+    [TypeConverter(typeof(MarginTypeConverter))]
     public Margin? DrawMargin
     {
         get => (Margin)GetValue(DrawMarginProperty);

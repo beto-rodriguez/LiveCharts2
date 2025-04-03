@@ -360,6 +360,8 @@ public partial class {target.Name}
     {
         ["LiveChartsCore.Drawing.Padding"] = "PaddingTypeConverter",
         ["LiveChartsCore.Measure.Margin"] = "MarginTypeConverter",
+        ["LiveChartsCore.Drawing.LvcPoint"] = "PointTypeConverter",
+        ["LiveChartsCore.Drawing.LvcPointD"] = "PointDTypeConverter",
         ["LiveChartsCore.Drawing.LvcColor"] = "HexToLvcColorTypeConverter",
         ["LiveChartsCore.Drawing.LvcColor?"] = "HexToLvcColorTypeConverter",
         ["LiveChartsCore.Painting.Paint"] = "HexToPaintTypeConverter",
