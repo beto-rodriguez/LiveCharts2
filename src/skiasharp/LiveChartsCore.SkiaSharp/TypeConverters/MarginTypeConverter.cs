@@ -23,14 +23,14 @@
 using System;
 using System.ComponentModel;
 using System.Globalization;
-using LiveChartsCore.Drawing;
+using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.SkiaSharpView.TypeConverters;
 
 /// <summary>
-/// Converts a string to a <see cref="Padding"/> object.
+/// Converts a string to a <see cref="Margin"/> object.
 /// </summary>
-public class PaddingTypeConverter : TypeConverter
+public class MarginTypeConverter : TypeConverter
 {
     /// <summary>
     /// Returns whether this converter can convert an object of the given type to the type of this converter, using the specified context.
@@ -56,14 +56,17 @@ public class PaddingTypeConverter : TypeConverter
 
         return parts.Length switch
         {
-            1 => new Padding(Parse(parts[0])),
-            2 => new Padding(Parse(parts[0]), Parse(parts[1])),
-            4 => new Padding(Parse(parts[0]), Parse(parts[1]), Parse(parts[2]), Parse(parts[3])),
-            _ => new Padding(),
+            1 => new Margin(Parse(parts[0])),
+            2 => new Margin(Parse(parts[0]), Parse(parts[1])),
+            4 => new Margin(Parse(parts[0]), Parse(parts[1]), Parse(parts[2]), Parse(parts[3])),
+            _ => new Margin(),
         };
     }
 
-    private static float Parse(string value) => float.TryParse(value, out var result)
-        ? result
-        : 0;
+    private static float Parse(string value)
+    {
+        return string.Equals(value.ToLowerInvariant(), "auto")
+            ? Margin.Auto
+            : float.TryParse(value, out var result) ? result : 0;
+    }
 }

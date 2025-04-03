@@ -97,7 +97,6 @@ public class XamlClassAttribute(System.Type basedOn) : System.Attribute
 #pragma warning disable IDE0052 // Remove unread private members
 #pragma warning disable IDE1006 // Naming Styles
 {target.FileHeader}
-{GetNameSpaces()}
 using LiveChartsCore.SkiaSharpView.TypeConverters;
 
 namespace {target.NameSpace};
@@ -307,7 +306,7 @@ public partial class {target.Name}
         var sb = new StringBuilder();
 
         _ = sb
-            .Append(@$"    public static readonly new BindableProperty {propertyName}Property;");
+            .Append(@$"    public static readonly new Microsoft.Maui.Controls.BindableProperty {propertyName}Property;");
 
         _ = sb.AppendLine();
 
@@ -344,13 +343,10 @@ public partial class {target.Name}
         var sb = new StringBuilder();
 
         _ = sb
-            .AppendLine(@$"        {propertyName}Property = BindableProperty.Create(propertyName: ""{propertyName}"", returnType: typeof({sanitizedPropertyType}), declaringType: typeof({bindableType}), defaultValue: {fallBackName}.{propertyName});");
+            .AppendLine(@$"        {propertyName}Property = Microsoft.Maui.Controls.BindableProperty.Create(propertyName: ""{propertyName}"", returnType: typeof({sanitizedPropertyType}), declaringType: typeof({bindableType}), defaultValue: {fallBackName}.{propertyName});");
 
         return sb.ToString();
     }
-
-    private static string GetNameSpaces()
-        => "using Microsoft.Maui.Controls;";
 
     private static (string, string) GetFallbackInfo(ITypeSymbol target)
     {
@@ -363,6 +359,7 @@ public partial class {target.Name}
     private static Dictionary<string, string> TypeConverters { get; } = new()
     {
         ["LiveChartsCore.Drawing.Padding"] = "PaddingTypeConverter",
+        ["LiveChartsCore.Measure.Margin"] = "MarginTypeConverter",
         ["LiveChartsCore.Drawing.LvcColor"] = "HexToLvcColorTypeConverter",
         ["LiveChartsCore.Drawing.LvcColor?"] = "HexToLvcColorTypeConverter",
         ["LiveChartsCore.Painting.Paint"] = "HexToPaintTypeConverter",
