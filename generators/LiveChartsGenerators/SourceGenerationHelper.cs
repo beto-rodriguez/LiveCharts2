@@ -127,7 +127,7 @@ public partial class {target.Name}
 
 #region events
 
-{Concatenate(target.Events, GetEventSyntax)}
+{Concatenate(target.Events, e => GetEventSyntax(target, e))}
 #endregion
 
 #region methods
@@ -165,7 +165,7 @@ public partial class {target.Name}
 
 {Concatenate(
     target.BindableProperties,
-    pair => Concatenate(pair.Value, property => GetBindablePropertyDefinition(target, property, pair.Key), false),
+    pair => Concatenate(pair.Value, property => $"{property.Name}Property = {GetBindablePropertyDefinition(target, property, pair.Key)}", false),
     false)}
     }}
 
@@ -211,12 +211,13 @@ public partial class {target.Name}
             : @$"    public {propertyType} {propertyName} {{ get => throw new System.NotImplementedException(""The generator was not able to generate the property syntax.""); set => throw new System.NotImplementedException(""The generator was not able to generate the property syntax.""); }}";
     }
 
-    private static string GetEventSyntax(IEventSymbol @event) =>
+    private static string GetEventSyntax(XamlObject target, IEventSymbol @event) =>
         @$"    public new event {@event.Type.ToDisplayString()} {@event.Name}
     {{
         add => _baseType.{@event.Name} += value;
         remove => _baseType.{@event.Name} -= value;
-    }}";
+    }}
+{GetBindablePropertySyntax(target, $"{@event.Name}Command", "System.Windows.Input.ICommand", new(target.Name, "null"))}";
 
     private static string GetMethodSyntax(IMethodSymbol method)
     {
@@ -294,10 +295,11 @@ public partial class {target.Name}
         return sb.ToString();
     }
 
-    private static string GetBindablePropertySyntax(XamlObject target, IPropertySymbol property)
+    private static string GetBindablePropertySyntax(XamlObject target, IPropertySymbol property, BindablePropertyInitializer? initializer = null) =>
+        GetBindablePropertySyntax(target, property.Name, property.Type.ToDisplayString(), initializer);
+
+    private static string GetBindablePropertySyntax(XamlObject target, string propertyName, string propertyType, BindablePropertyInitializer? initializer)
     {
-        var propertyName = property.Name;
-        var propertyType = property.Type.ToDisplayString();
         var originalPropertyType = propertyType;
 
         if (target.OverridenTypes.TryGetValue(propertyName, out var overridenType))
@@ -306,9 +308,11 @@ public partial class {target.Name}
         var sb = new StringBuilder();
 
         _ = sb
-            .Append(@$"    public static readonly new Microsoft.Maui.Controls.BindableProperty {propertyName}Property;");
+            .Append(@$"    public static readonly new Microsoft.Maui.Controls.BindableProperty {propertyName}Property");
 
-        _ = sb.AppendLine();
+        _ = initializer is not null
+            ? sb.Append(" =").Append(GetBindablePropertyDefinition(propertyName, propertyType, initializer.BindableType, initializer.DefaultValue))
+            : sb.Append(';').AppendLine();
 
         if (TypeConverters.TryGetValue(originalPropertyType, out var typeConverter))
             _ = sb.AppendLine(@$"    [System.ComponentModel.TypeConverter(typeof({typeConverter}))]");
@@ -338,12 +342,19 @@ public partial class {target.Name}
         var sanitizedPropertyType = property.Type.IsReferenceType && propertyType.EndsWith("?")
             ? propertyType.Substring(0, propertyType.Length - 1)
             : propertyType;
-        var bindableType = target.Name;
 
+        return GetBindablePropertyDefinition(
+            propertyName, sanitizedPropertyType, target.Name, $"{fallBackName}.{propertyName}");
+    }
+
+
+    private static string GetBindablePropertyDefinition(
+        string propertyName, string propertyType, string bindableType, string defaultValue)
+    {
         var sb = new StringBuilder();
 
         _ = sb
-            .AppendLine(@$"        {propertyName}Property = Microsoft.Maui.Controls.BindableProperty.Create(propertyName: ""{propertyName}"", returnType: typeof({sanitizedPropertyType}), declaringType: typeof({bindableType}), defaultValue: {fallBackName}.{propertyName});");
+            .AppendLine(@$" Microsoft.Maui.Controls.BindableProperty.Create(propertyName: ""{propertyName}"", returnType: typeof({propertyType}), declaringType: typeof({bindableType}), defaultValue: {defaultValue});");
 
         return sb.ToString();
     }
@@ -384,5 +395,11 @@ public partial class {target.Name}
         }
 
         return sb.ToString();
+    }
+
+    private class BindablePropertyInitializer(string bindableType, string defaultValue)
+    {
+        public string BindableType { get; set; } = bindableType;
+        public string DefaultValue { get; set; } = defaultValue;
     }
 }
