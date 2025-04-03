@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Axes.Logarithmic.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Axes.Logarithmic;assembly=ViewModelsSamples"
-             >
+<ContentPage
+    x:Class="MauiSample.Axes.Logarithmic.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Axes.Logarithmic;assembly=ViewModelsSamples">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-    <lvc:CartesianChart
-        Series="{Binding Series}"
-        YAxes="{Binding YAxes}">
+
+    <lvc:CartesianChart>
+
+        <lvc:CartesianChart.Series>
+            <lvc:XamlLineSeries Values="{Binding Values}"/>
+        </lvc:CartesianChart.Series>
+
+        <lvc:CartesianChart.YAxes>
+            <lvc:XamlLogarithmicAxis
+                LogBase="{x:Static vms:ViewModel.LogBase}"
+                SeparatorsPaint="#64b4b4b4"
+                SubseparatorsPaint="{lvc:SolidColorPaint
+                    Color='#64b4b4b4',
+                    StrokeWidth=0.5}"
+                SubseparatorsCount="9"/>
+        </lvc:CartesianChart.YAxes>
+
     </lvc:CartesianChart>
 </ContentPage>

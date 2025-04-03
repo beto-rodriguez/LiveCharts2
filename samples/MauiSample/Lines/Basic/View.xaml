@@ -10,15 +10,22 @@
         <vms:ViewModel/>
     </ContentPage.BindingContext>
     <lvc:CartesianChart>
+        <lvc:CartesianChart.Resources>
+            <Style TargetType="lvc:XamlLineSeries">
+                <!--<Setter Property="Fill" Value="#f00"/>-->
+            </Style>
+        </lvc:CartesianChart.Resources>
+        
         <lvc:CartesianChart.Series>
             <lvc:XamlLineSeries
                 Values="{Binding Values1}"
-                Fill="{x:Null}"
-                GeometrySize="35"/>
-            <lvc:XamlLineSeries
+                GeometrySize="10"
+                />
+            <!--<lvc:XamlLineSeries
                 x:TypeArguments="lvcDraw:StarGeometry"
                 Values="{Binding Values2}"
-                GeometrySize="20"/>
+                Fill="{x:Null}"
+                GeometrySize="20"/>-->
         </lvc:CartesianChart.Series>
         <lvc:CartesianChart.Title>
             <lvc:XamlDrawnLabelVisual
