@@ -81,7 +81,41 @@ public class XamlClassAttribute(System.Type basedOn) : System.Attribute
     /// Indicates whether the generator should generate the base type declaration, default is true.
     /// </summary>
     public bool GenerateBaseTypeDeclaration { get; set; } = true;
-}";
+}
+
+public class CommandParameters<T1, T2>(T1 parameter1, T2 parameter2)
+{
+    public T1 Parameter1 { get; set; } = parameter1;
+    public T2 Parameter2 { get; set; } = parameter2;
+}
+
+public class CommandParameters<T1, T2, T3>(T1 parameter1, T2 parameter2, T3 parameter3)
+{
+    public T1 Parameter1 { get; set; } = parameter1;
+    public T2 Parameter2 { get; set; } = parameter2;
+    public T3 Parameter3 { get; set; } = parameter3;
+}
+
+public class CommandParameters<T1, T2, T3, T4>(T1 parameter1, T2 parameter2, T3 parameter3, T4 parameter4)
+{
+    public T1 Parameter1 { get; set; } = parameter1;
+    public T2 Parameter2 { get; set; } = parameter2;
+    public T3 Parameter3 { get; set; } = parameter3;
+    public T4 Parameter4 { get; set; } = parameter4;
+}
+
+public static class CommandParameters
+{
+    public static CommandParameters<T1, T2> Create<T1, T2>(T1 first, T2 second)
+        => new(first, second);
+
+    public static CommandParameters<T1, T2, T3> Create<T1, T2, T3>(T1 first, T2 second, T3 third)
+        => new(first, second, third);
+
+    public static CommandParameters<T1, T2, T3, T4> Create<T1, T2, T3, T4>(T1 first, T2 second, T3 third, T4 fourth)
+        => new(first, second, third, fourth);
+}
+";
 
     public static string GenerateXamlObject(XamlObject target)
     {
@@ -149,11 +183,13 @@ public partial class {target.Name}
 
     partial void AlsoOnPropertyChanged(string? propertyName = null);
 
+    private System.Collections.Generic.HashSet<string> _setCommands = [];
+
     private void MapChangeToBaseType(string? propertyName = null)
     {{
         switch (propertyName)
         {{
-{GetChangesMap(target)}
+{GetChangesMap(target)}{GetCommandsChangesMap(target)}
             default:
                 break;
         }}
@@ -290,6 +326,38 @@ public partial class {target.Name}
                     ? sb.AppendLine(@$"            case ""{property.Name}"": {map}(GetValue({property.Name}Property)); break;")
                     : sb.AppendLine(@$"            case ""{property.Name}"": {path}.{property.Name} = ({propertyType})GetValue({property.Name}Property); break;");
             }
+        }
+
+        return sb.ToString();
+    }
+
+    private static string GetCommandsChangesMap(XamlObject target)
+    {
+        var sb = new StringBuilder();
+
+        foreach (var @event in target.Events)
+        {
+            var commandPropertyName = $"{@event.Name}Command";
+            var delegateType = @event.Type as INamedTypeSymbol;
+            var parametersCount = delegateType?.DelegateInvokeMethod?.Parameters.Length ?? 0;
+
+            var parametersString = string.Join(", ", Enumerable.Range(0, parametersCount).Select(i => $"arg{i}"));
+            var parametersObject = parametersCount <= 1
+                ? parametersString
+                : $"LiveChartsCore.Generators.CommandParameters.Create({parametersString})";
+
+            _ = sb.AppendLine(@$"            case ""{commandPropertyName}"":
+                if (!_setCommands.Contains(""{commandPropertyName}""))
+                {{
+                    _setCommands.Add(""{commandPropertyName}"");
+                    _baseType.{@event.Name} += ({parametersString}) =>
+                    {{
+                        var commandParameter = {parametersObject};
+                        if ({commandPropertyName} is null || !{commandPropertyName}.CanExecute(commandParameter)) return;
+                        {commandPropertyName}.Execute(commandParameter);
+                    }};
+                }}
+                break;");
         }
 
         return sb.ToString();
