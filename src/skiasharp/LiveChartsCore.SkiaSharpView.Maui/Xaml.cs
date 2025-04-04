@@ -186,7 +186,10 @@ internal static class Info
 {
     public const string PropertyTypeOverride =
         "Values{=}object{,}" +
-        "DataLabelsFormatter{=}System.Func<LiveChartsCore.Kernel.ChartPoint, string>";
+        "DataLabelsFormatter{=}System.Func<LiveChartsCore.Kernel.ChartPoint, string>{,}" +
+        "ToolTipLabelFormatter{=}System.Func<LiveChartsCore.Kernel.ChartPoint, string>{,}" +
+        "XToolTipLabelFormatter{=}System.Func<LiveChartsCore.Kernel.ChartPoint, string>{,}" +
+        "YToolTipLabelFormatter{=}System.Func<LiveChartsCore.Kernel.ChartPoint, string>";
 
     public const string PropertyChangeMap =
         "Values{=}ValuesMap";
