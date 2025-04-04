@@ -276,6 +276,34 @@ public partial class XamlLineSeries<TModel, TVisual, TLabel> : EmptyContentView,
 
 #endregion
 
+#region scatter series
+
+/// <inheritdoc cref="XamlScatterSeries{TModel, TVisual, TLabel}" />
+public class XamlScatterSeries : XamlScatterSeries<object, CircleGeometry, LabelGeometry> { }
+
+/// <inheritdoc cref="XamlScatterSeries{TModel, TVisual, TLabel}" />
+public class XamlScatterSeries<TVisual> : XamlScatterSeries<object, TVisual, LabelGeometry>
+    where TVisual : BoundedDrawnGeometry, new()
+{ }
+
+/// <inheritdoc cref="XamlScatterSeries{TModel, TVisual, TLabel}" />
+public class XamlScatterSeries<TVisual, TLabel> : XamlScatterSeries<object, TVisual, LabelGeometry>
+    where TVisual : BoundedDrawnGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{ }
+
+[XamlClass(typeof(ScatterSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
+public partial class XamlScatterSeries<TModel, TVisual, TLabel> : EmptyContentView, IScatterSeries, IInternalSeries
+    where TVisual : BoundedDrawnGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{
+    static partial void OnTypeDefined() => ThemeDefaults.ConfigureSeriesDefaults(_defaultScatterSeries);
+
+    private void ValuesMap(object value) => ((ISeries)_baseType).Values = (IEnumerable)value;
+}
+
+#endregion
+
 #region box series
 
 /// <inheritdoc cref="XamlBoxSeries{TModel, TVisual, TLabel}" />

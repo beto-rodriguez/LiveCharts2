@@ -1,33 +1,42 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Error.Basic.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Error.Basic;assembly=ViewModelsSamples">
+<ContentPage
+    x:Class="MauiSample.Error.Basic.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Error.Basic;assembly=ViewModelsSamples">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-        </Grid.RowDefinitions>
 
-        <lvc:CartesianChart
-            Grid.Row="0"
-            Series="{Binding Series0}">
+    <Grid RowDefinitions="*,*,*">
+        <lvc:CartesianChart Grid.Row="0">
+            <lvc:CartesianChart.Series>
+                <lvc:XamlColumnSeries Values="{Binding Values1}" ShowError="True" Padding="0"/>
+                <lvc:XamlColumnSeries Values="{Binding Values2}" ShowError="True" Padding="0"/>
+            </lvc:CartesianChart.Series>
         </lvc:CartesianChart>
 
-        <lvc:CartesianChart
-            Grid.Row="1"
-            Series="{Binding Series1}">
+        <lvc:CartesianChart Grid.Row="1">
+            <lvc:CartesianChart.Series>
+                <lvc:XamlLineSeries Values="{Binding Values1}" ShowError="True" GeometrySize="4" Fill="{x:Null}"/>
+            </lvc:CartesianChart.Series>
         </lvc:CartesianChart>
 
-        <lvc:CartesianChart
-            Grid.Row="2"
-            Series="{Binding Series2}"
-            XAxes="{Binding DateTimeAxis}">
+        <lvc:CartesianChart Grid.Row="2">
+            <lvc:CartesianChart.Series>
+                <lvc:XamlScatterSeries Values="{Binding Values3}" ShowError="True" GeometrySize="10"/>
+            </lvc:CartesianChart.Series>
+            <lvc:CartesianChart.XAxes>
+                <!--
+                To get more help about DateTime axes see:
+                https://livecharts.dev/docs/{{ platform }}/{{ version }}/samples.axes.dateTimeScaled
+                -->
+                <lvc:XamlDateTimeAxis
+                    Interval="1.00:00:00"
+                    DateFormatter="{Binding Formatter}"/>
+            </lvc:CartesianChart.XAxes>
         </lvc:CartesianChart>
     </Grid>
 </ContentPage>
