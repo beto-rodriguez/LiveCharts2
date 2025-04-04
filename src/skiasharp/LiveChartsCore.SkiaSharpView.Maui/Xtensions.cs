@@ -22,11 +22,13 @@
 
 using System;
 using System.Collections.Generic;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
 using LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
+using LiveChartsCore.VisualStates;
 using Microsoft.Maui.Controls.Xaml;
 using SkiaSharp;
 
@@ -340,6 +342,51 @@ public class RadialGradientPaintExtension : BaseSkiaPaintExtention, IMarkupExten
         MapProperties(paint);
 
         return paint;
+    }
+
+    object IMarkupExtension.ProvideValue(IServiceProvider serviceProvider) => ProvideValue(serviceProvider);
+}
+
+/// <summary>
+/// The visual state extension.
+/// </summary>
+public class VisualStateExtension : BaseVisualStateExtension, IMarkupExtension<MotionPropertySetter[]>
+{
+    /// <summary>
+    /// ...
+    /// </summary>
+    public MotionPropertySetter[] ProvideValue(IServiceProvider serviceProvider)
+    {
+        var states = new List<MotionPropertySetter>();
+
+        if (Opacity != 0)
+            states.Add(new(nameof(IDrawnElement.Opacity), Opacity));
+
+        if (TranslateTransform is not null)
+            states.Add(new(nameof(IDrawnElement.TranslateTransform), ParsePoint(TranslateTransform, new(0, 0))));
+
+        if (ScaleTransform is not null)
+            states.Add(new(nameof(IDrawnElement.ScaleTransform), ParsePoint(ScaleTransform, new(1, 1))));
+
+        if (RotateTransform != 0)
+            states.Add(new(nameof(IDrawnElement.RotateTransform), RotateTransform));
+
+        if (SkewTransform is not null)
+            states.Add(new(nameof(IDrawnElement.SkewTransform), ParsePoint(SkewTransform, new(0, 0))));
+
+        if (TransformOrigin is not null)
+            states.Add(new(nameof(IDrawnElement.TransformOrigin), ParsePoint(TransformOrigin, new(0.5f, 0.5f))));
+
+        if (Fill != Paint.Default)
+            states.Add(new(nameof(IDrawnElement.Fill), Fill));
+
+        if (Stroke != Paint.Default)
+            states.Add(new(nameof(IDrawnElement.Stroke), Stroke));
+
+        if (Paint != Paint.Default)
+            states.Add(new(nameof(IDrawnElement.Paint), Paint));
+
+        return [.. states];
     }
 
     object IMarkupExtension.ProvideValue(IServiceProvider serviceProvider) => ProvideValue(serviceProvider);

@@ -54,6 +54,13 @@ public interface IMotionProperty
     Animation? Animation { get; set; }
 
     /// <summary>
+    /// Sets the target value.
+    /// </summary>
+    /// <param name="value">the value</param>
+    /// <param name="animatable">The animatable.</param>
+    void SetMovement(object value, Animatable animatable);
+
+    /// <summary>
     /// Copies into this instance the source property.
     /// </summary>
     /// <param name="source">The source.</param>

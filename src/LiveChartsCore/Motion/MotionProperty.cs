@@ -83,6 +83,9 @@ public abstract class MotionProperty<T>(string propertyName) : IMotionProperty
         IsCompleted = typedSource.IsCompleted;
     }
 
+    void IMotionProperty.SetMovement(object value, Animatable animatable) =>
+        SetMovement((T)value, animatable);
+
     /// <summary>
     /// Moves to the specified value.
     /// </summary>

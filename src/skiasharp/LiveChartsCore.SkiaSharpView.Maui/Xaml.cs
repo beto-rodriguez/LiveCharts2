@@ -7,6 +7,9 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Generators;
 using LiveChartsCore.Kernel;
@@ -15,6 +18,7 @@ using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.VisualElements;
 using LiveChartsCore.VisualElements;
+using LiveChartsCore.VisualStates;
 using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls;
 
@@ -193,179 +197,10 @@ internal static class Info
 
     public const string PropertyChangeMap =
         "Values{=}ValuesMap";
-}
 
-#region column series
+    public static void SetValues(ISeries series, object value) => series.Values = (IEnumerable)value;
 
-/// <inheritdoc cref="XamlColumnSeries{TModel, TVisual, TLabel}" />
-public class XamlColumnSeries : XamlColumnSeries<object, RoundedRectangleGeometry, LabelGeometry> { }
-
-/// <inheritdoc cref="XamlColumnSeries{TModel, TVisual, TLabel}" />
-public class XamlColumnSeries<TVisual> : XamlColumnSeries<object, TVisual, LabelGeometry>
-    where TVisual : BoundedDrawnGeometry, new()
-{ }
-
-/// <inheritdoc cref="XamlColumnSeries{TModel, TVisual, TLabel}" />
-public class XamlColumnSeries<TVisual, TLabel> : XamlColumnSeries<object, TVisual, LabelGeometry>
-    where TVisual : BoundedDrawnGeometry, new()
-    where TLabel : BaseLabelGeometry, new()
-{ }
-
-[XamlClass(typeof(ColumnSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
-public partial class XamlColumnSeries<TModel, TVisual, TLabel> : EmptyContentView, IBarSeries, IInternalSeries
-    where TVisual : BoundedDrawnGeometry, new()
-    where TLabel : BaseLabelGeometry, new()
-{
-    static partial void OnTypeDefined() => ThemeDefaults.ConfigureSeriesDefaults(_defaultColumnSeries);
-
-    private void ValuesMap(object value) => ((ISeries)_baseType).Values = (IEnumerable)value;
-}
-
-#endregion
-
-#region row series
-
-/// <inheritdoc cref="XamlRowSeries{TModel, TVisual, TLabel}" />
-public class XamlRowSeries : XamlRowSeries<object, RoundedRectangleGeometry, LabelGeometry> { }
-
-/// <inheritdoc cref="XamlRowSeries{TModel, TVisual, TLabel}" />
-public class XamlRowSeries<TVisual> : XamlRowSeries<object, TVisual, LabelGeometry>
-    where TVisual : BoundedDrawnGeometry, new()
-{ }
-
-/// <inheritdoc cref="XamlRowSeries{TModel, TVisual, TLabel}" />
-public class XamlRowSeries<TVisual, TLabel> : XamlRowSeries<object, TVisual, LabelGeometry>
-    where TVisual : BoundedDrawnGeometry, new()
-    where TLabel : BaseLabelGeometry, new()
-{ }
-
-[XamlClass(typeof(RowSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
-public partial class XamlRowSeries<TModel, TVisual, TLabel> : EmptyContentView, IBarSeries, IInternalSeries
-    where TVisual : BoundedDrawnGeometry, new()
-    where TLabel : BaseLabelGeometry, new()
-{
-    static partial void OnTypeDefined() => ThemeDefaults.ConfigureSeriesDefaults(_defaultRowSeries);
-
-    private void ValuesMap(object value) => ((ISeries)_baseType).Values = (IEnumerable)value;
-}
-
-#endregion
-
-#region line series
-
-/// <inheritdoc cref="XamlLineSeries{TModel, TVisual, TLabel}" />
-public class XamlLineSeries : XamlLineSeries<object, CircleGeometry, LabelGeometry> { }
-
-/// <inheritdoc cref="XamlLineSeries{TModel, TVisual, TLabel}" />
-public class XamlLineSeries<TVisual> : XamlLineSeries<object, TVisual, LabelGeometry>
-    where TVisual : BoundedDrawnGeometry, new()
-{ }
-
-/// <inheritdoc cref="XamlLineSeries{TModel, TVisual, TLabel}" />
-public class XamlLineSeries<TVisual, TLabel> : XamlLineSeries<object, TVisual, LabelGeometry>
-    where TVisual : BoundedDrawnGeometry, new()
-    where TLabel : BaseLabelGeometry, new()
-{ }
-
-[XamlClass(typeof(LineSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
-public partial class XamlLineSeries<TModel, TVisual, TLabel> : EmptyContentView, ILineSeries, IInternalSeries
-    where TVisual : BoundedDrawnGeometry, new()
-    where TLabel : BaseLabelGeometry, new()
-{
-    static partial void OnTypeDefined() => ThemeDefaults.ConfigureSeriesDefaults(_defaultLineSeries);
-
-    private void ValuesMap(object value) => ((ISeries)_baseType).Values = (IEnumerable)value;
-}
-
-#endregion
-
-#region scatter series
-
-/// <inheritdoc cref="XamlScatterSeries{TModel, TVisual, TLabel}" />
-public class XamlScatterSeries : XamlScatterSeries<object, CircleGeometry, LabelGeometry> { }
-
-/// <inheritdoc cref="XamlScatterSeries{TModel, TVisual, TLabel}" />
-public class XamlScatterSeries<TVisual> : XamlScatterSeries<object, TVisual, LabelGeometry>
-    where TVisual : BoundedDrawnGeometry, new()
-{ }
-
-/// <inheritdoc cref="XamlScatterSeries{TModel, TVisual, TLabel}" />
-public class XamlScatterSeries<TVisual, TLabel> : XamlScatterSeries<object, TVisual, LabelGeometry>
-    where TVisual : BoundedDrawnGeometry, new()
-    where TLabel : BaseLabelGeometry, new()
-{ }
-
-[XamlClass(typeof(ScatterSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
-public partial class XamlScatterSeries<TModel, TVisual, TLabel> : EmptyContentView, IScatterSeries, IInternalSeries
-    where TVisual : BoundedDrawnGeometry, new()
-    where TLabel : BaseLabelGeometry, new()
-{
-    static partial void OnTypeDefined() => ThemeDefaults.ConfigureSeriesDefaults(_defaultScatterSeries);
-
-    private void ValuesMap(object value) => ((ISeries)_baseType).Values = (IEnumerable)value;
-}
-
-#endregion
-
-#region box series
-
-/// <inheritdoc cref="XamlBoxSeries{TModel, TVisual, TLabel}" />
-public class XamlBoxSeries : XamlBoxSeries<object, BoxGeometry, LabelGeometry> { }
-
-/// <inheritdoc cref="XamlBoxSeries{TModel, TVisual, TLabel}" />
-public class XamlBoxSeries<TVisual> : XamlBoxSeries<object, TVisual, LabelGeometry>
-    where TVisual : BaseBoxGeometry, new()
-{ }
-
-/// <inheritdoc cref="XamlBoxSeries{TModel, TVisual, TLabel}" />
-public class XamlBoxSeries<TVisual, TLabel> : XamlBoxSeries<object, TVisual, LabelGeometry>
-    where TVisual : BaseBoxGeometry, new()
-    where TLabel : BaseLabelGeometry, new()
-{ }
-
-[XamlClass(typeof(BoxSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
-public partial class XamlBoxSeries<TModel, TVisual, TLabel> : EmptyContentView, IBoxSeries, IInternalSeries
-    where TVisual : BaseBoxGeometry, new()
-    where TLabel : BaseLabelGeometry, new()
-{
-    static partial void OnTypeDefined() => ThemeDefaults.ConfigureSeriesDefaults(_defaultBoxSeries);
-
-    private void ValuesMap(object value) => ((ISeries)_baseType).Values = (IEnumerable)value;
-}
-
-#endregion
-
-#region pie series
-
-/// <inheritdoc cref="XamlPieSeries{TModel, TVisual, TLabel}" />
-public class XamlPieSeries : XamlPieSeries<object, DoughnutGeometry, LabelGeometry> { }
-
-/// <inheritdoc cref="XamlPieSeries{TModel, TVisual, TLabel}" />
-public class XamlPieSeries<TVisual> : XamlPieSeries<object, TVisual, LabelGeometry>
-    where TVisual : BaseDoughnutGeometry, new()
-{ }
-
-/// <inheritdoc cref="XamlPieSeries{TModel, TVisual, TLabel}" />
-public class XamlPieSeries<TVisual, TLabel> : XamlPieSeries<object, TVisual, LabelGeometry>
-    where TVisual : BaseDoughnutGeometry, new()
-    where TLabel : BaseLabelGeometry, new()
-{ }
-
-[XamlClass(typeof(PieSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
-public partial class XamlPieSeries<TModel, TVisual, TLabel> : EmptyContentView, IPieSeries, IInternalSeries
-    where TVisual : BaseDoughnutGeometry, new()
-    where TLabel : BaseLabelGeometry, new()
-{
-    static partial void OnTypeDefined() => ThemeDefaults.ConfigureSeriesDefaults(_defaultPieSeries);
-
-    private void ValuesMap(object value) => ((ISeries)_baseType).Values = (IEnumerable)value;
-}
-
-#endregion
-
-internal class ThemeDefaults
-{
-    public static void ConfigureSeriesDefaults(ISeries series)
+    public static void ConfigureDefaults(ISeries series)
     {
         LiveCharts.Configure(config => config.UseDefaults());
         var theme = LiveCharts.DefaultSettings.GetTheme();
@@ -415,3 +250,249 @@ internal class ThemeDefaults
         }
     }
 }
+
+public class ChartPointVisualState
+{
+    public string Name { get; set; } = "Default";
+    public ICollection<MotionPropertySetter> Setters { get; set; } = [];
+}
+
+public abstract class XamlSeries : EmptyContentView
+{
+    public static readonly BindableProperty AdditionalVisualStatesProperty = BindableProperty.Create(
+        nameof(AdditionalVisualStates), typeof(ICollection<ChartPointVisualState>), typeof(XamlSeries),
+        defaultValueCreator: DefaultValueCreator);
+
+    public ICollection<ChartPointVisualState> AdditionalVisualStates =>
+        (ICollection<ChartPointVisualState>)GetValue(AdditionalVisualStatesProperty);
+
+    protected abstract ISeries WrappedSeries { get; }
+
+    protected void ValuesMap(object value) => Info.SetValues(WrappedSeries, value);
+
+    private static object DefaultValueCreator(BindableObject bindable)
+    {
+        var series = (XamlSeries)bindable;
+        var observableCollection = new ObservableCollection<ChartPointVisualState>();
+
+        observableCollection.CollectionChanged += series.OnAdditionalVisualStatesCollectionChanged;
+
+        return observableCollection;
+    }
+
+    private void OnAdditionalVisualStatesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        switch (e.Action)
+        {
+            case NotifyCollectionChangedAction.Add:
+                foreach (var item in e.NewItems ?? Array.Empty<object>())
+                {
+                    var state = (ChartPointVisualState)item;
+                    WrappedSeries.VisualStates[state.Name] = [.. state.Setters];
+                }
+                break;
+            case NotifyCollectionChangedAction.Remove:
+                foreach (var item in e.OldItems ?? Array.Empty<object>())
+                {
+                    var state = (ChartPointVisualState)item;
+                    _ = WrappedSeries.VisualStates.Remove(state.Name);
+                }
+                break;
+            case NotifyCollectionChangedAction.Replace:
+            case NotifyCollectionChangedAction.Move:
+            case NotifyCollectionChangedAction.Reset:
+            default:
+                break;
+        }
+    }
+}
+
+#region column series
+
+/// <inheritdoc cref="XamlColumnSeries{TModel, TVisual, TLabel}" />
+public class XamlColumnSeries : XamlColumnSeries<object, RoundedRectangleGeometry, LabelGeometry> { }
+
+/// <inheritdoc cref="XamlColumnSeries{TModel, TVisual, TLabel}" />
+public class XamlColumnSeries<TVisual> : XamlColumnSeries<object, TVisual, LabelGeometry>
+    where TVisual : BoundedDrawnGeometry, new()
+{ }
+
+/// <inheritdoc cref="XamlColumnSeries{TModel, TVisual, TLabel}" />
+public class XamlColumnSeries<TVisual, TLabel> : XamlColumnSeries<object, TVisual, LabelGeometry>
+    where TVisual : BoundedDrawnGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{ }
+
+[XamlClass(typeof(ColumnSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
+public partial class XamlColumnSeries<TModel, TVisual, TLabel> : XamlSeries, IBarSeries, IInternalSeries
+    where TVisual : BoundedDrawnGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{
+    protected override ISeries WrappedSeries => _baseType;
+    static partial void OnTypeDefined() => Info.ConfigureDefaults(_defaultColumnSeries);
+}
+
+#endregion
+
+#region row series
+
+/// <inheritdoc cref="XamlRowSeries{TModel, TVisual, TLabel}" />
+public class XamlRowSeries : XamlRowSeries<object, RoundedRectangleGeometry, LabelGeometry> { }
+
+/// <inheritdoc cref="XamlRowSeries{TModel, TVisual, TLabel}" />
+public class XamlRowSeries<TVisual> : XamlRowSeries<object, TVisual, LabelGeometry>
+    where TVisual : BoundedDrawnGeometry, new()
+{ }
+
+/// <inheritdoc cref="XamlRowSeries{TModel, TVisual, TLabel}" />
+public class XamlRowSeries<TVisual, TLabel> : XamlRowSeries<object, TVisual, LabelGeometry>
+    where TVisual : BoundedDrawnGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{ }
+
+[XamlClass(typeof(RowSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
+public partial class XamlRowSeries<TModel, TVisual, TLabel> : EmptyContentView, IBarSeries, IInternalSeries
+    where TVisual : BoundedDrawnGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{
+    static partial void OnTypeDefined() => Info.ConfigureDefaults(_defaultRowSeries);
+    private void ValuesMap(object value) => Info.SetValues(_baseType, value);
+}
+
+#endregion
+
+#region line series
+
+/// <inheritdoc cref="XamlLineSeries{TModel, TVisual, TLabel}" />
+public class XamlLineSeries : XamlLineSeries<object, CircleGeometry, LabelGeometry> { }
+
+/// <inheritdoc cref="XamlLineSeries{TModel, TVisual, TLabel}" />
+public class XamlLineSeries<TVisual> : XamlLineSeries<object, TVisual, LabelGeometry>
+    where TVisual : BoundedDrawnGeometry, new()
+{ }
+
+/// <inheritdoc cref="XamlLineSeries{TModel, TVisual, TLabel}" />
+public class XamlLineSeries<TVisual, TLabel> : XamlLineSeries<object, TVisual, LabelGeometry>
+    where TVisual : BoundedDrawnGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{ }
+
+[XamlClass(typeof(LineSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
+public partial class XamlLineSeries<TModel, TVisual, TLabel> : EmptyContentView, ILineSeries, IInternalSeries
+    where TVisual : BoundedDrawnGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{
+    static partial void OnTypeDefined() => Info.ConfigureDefaults(_defaultLineSeries);
+    private void ValuesMap(object value) => Info.SetValues(_baseType, value);
+}
+
+#endregion
+
+#region scatter series
+
+/// <inheritdoc cref="XamlScatterSeries{TModel, TVisual, TLabel}" />
+public class XamlScatterSeries : XamlScatterSeries<object, CircleGeometry, LabelGeometry> { }
+
+/// <inheritdoc cref="XamlScatterSeries{TModel, TVisual, TLabel}" />
+public class XamlScatterSeries<TVisual> : XamlScatterSeries<object, TVisual, LabelGeometry>
+    where TVisual : BoundedDrawnGeometry, new()
+{ }
+
+/// <inheritdoc cref="XamlScatterSeries{TModel, TVisual, TLabel}" />
+public class XamlScatterSeries<TVisual, TLabel> : XamlScatterSeries<object, TVisual, LabelGeometry>
+    where TVisual : BoundedDrawnGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{ }
+
+[XamlClass(typeof(ScatterSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
+public partial class XamlScatterSeries<TModel, TVisual, TLabel> : EmptyContentView, IScatterSeries, IInternalSeries
+    where TVisual : BoundedDrawnGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{
+    static partial void OnTypeDefined() => Info.ConfigureDefaults(_defaultScatterSeries);
+    private void ValuesMap(object value) => Info.SetValues(_baseType, value);
+    Dictionary<string, MotionPropertySetter[]> ISeries.VisualStates => _baseType.VisualStates;
+}
+
+#endregion
+
+#region candle series
+
+/// <inheritdoc cref="XamlCandlesticksSeries{TModel, TVisual, TLabel}" />
+public class XamlCandlesticksSeries : XamlCandlesticksSeries<object, CandlestickGeometry, LabelGeometry> { }
+
+/// <inheritdoc cref="XamlCandlesticksSeries{TModel, TVisual, TLabel}" />
+public class XamlCandlesticksSeries<TVisual> : XamlCandlesticksSeries<object, TVisual, LabelGeometry>
+    where TVisual : BaseCandlestickGeometry, new()
+{ }
+
+/// <inheritdoc cref="XamlCandlesticksSeries{TModel, TVisual, TLabel}" />
+public class XamlCandlesticksSeries<TVisual, TLabel> : XamlCandlesticksSeries<object, TVisual, LabelGeometry>
+    where TVisual : BaseCandlestickGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{ }
+
+[XamlClass(typeof(CandlesticksSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
+public partial class XamlCandlesticksSeries<TModel, TVisual, TLabel> : EmptyContentView, IFinancialSeries, IInternalSeries
+    where TVisual : BaseCandlestickGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{
+    static partial void OnTypeDefined() => Info.ConfigureDefaults(_defaultCandlesticksSeries);
+    private void ValuesMap(object value) => Info.SetValues(_baseType, value);
+}
+
+#endregion
+
+#region box series
+
+/// <inheritdoc cref="XamlBoxSeries{TModel, TVisual, TLabel}" />
+public class XamlBoxSeries : XamlBoxSeries<object, BoxGeometry, LabelGeometry> { }
+
+/// <inheritdoc cref="XamlBoxSeries{TModel, TVisual, TLabel}" />
+public class XamlBoxSeries<TVisual> : XamlBoxSeries<object, TVisual, LabelGeometry>
+    where TVisual : BaseBoxGeometry, new()
+{ }
+
+/// <inheritdoc cref="XamlBoxSeries{TModel, TVisual, TLabel}" />
+public class XamlBoxSeries<TVisual, TLabel> : XamlBoxSeries<object, TVisual, LabelGeometry>
+    where TVisual : BaseBoxGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{ }
+
+[XamlClass(typeof(BoxSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
+public partial class XamlBoxSeries<TModel, TVisual, TLabel> : EmptyContentView, IBoxSeries, IInternalSeries
+    where TVisual : BaseBoxGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{
+    static partial void OnTypeDefined() => Info.ConfigureDefaults(_defaultBoxSeries);
+    private void ValuesMap(object value) => Info.SetValues(_baseType, value);
+}
+
+#endregion
+
+#region pie series
+
+/// <inheritdoc cref="XamlPieSeries{TModel, TVisual, TLabel}" />
+public class XamlPieSeries : XamlPieSeries<object, DoughnutGeometry, LabelGeometry> { }
+
+/// <inheritdoc cref="XamlPieSeries{TModel, TVisual, TLabel}" />
+public class XamlPieSeries<TVisual> : XamlPieSeries<object, TVisual, LabelGeometry>
+    where TVisual : BaseDoughnutGeometry, new()
+{ }
+
+/// <inheritdoc cref="XamlPieSeries{TModel, TVisual, TLabel}" />
+public class XamlPieSeries<TVisual, TLabel> : XamlPieSeries<object, TVisual, LabelGeometry>
+    where TVisual : BaseDoughnutGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{ }
+
+[XamlClass(typeof(PieSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
+public partial class XamlPieSeries<TModel, TVisual, TLabel> : EmptyContentView, IPieSeries, IInternalSeries
+    where TVisual : BaseDoughnutGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{
+    static partial void OnTypeDefined() => Info.ConfigureDefaults(_defaultPieSeries);
+    private void ValuesMap(object value) => Info.SetValues(_baseType, value);
+}
+
+#endregion

@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.VisualStates;
 
 namespace LiveChartsCore.Kernel;
 
@@ -115,36 +115,43 @@ public class ChartPoint
     /// <summary>
     /// Sets the state of the point.
     /// </summary>
-    /// <param name="state">The state.</param>
-    /// <param name="propertyName">The property name.</param>
-    public void SetState(Action<IDrawnElement, ChartPoint> state, params string[]? propertyName)
+    /// <param name="setters">The states.</param>
+    public void SetState(MotionPropertySetter[] setters)
     {
         if (Context.Visual is not Animatable animatable) return;
 
-        if (propertyName is null || propertyName.Length == 0)
-            propertyName = [.. animatable.MotionProperties.Keys];
-
-        foreach (var name in propertyName)
-            animatable.MotionProperties[name].Save();
-
         if (Context.Visual is not null)
-            state.Invoke(Context.Visual, this);
+            foreach (var setter in setters)
+            {
+                var motionProperty = animatable.MotionProperties[setter.PropertyName];
+                motionProperty.Save();
+                motionProperty.SetMovement(setter.Value!, animatable);
+            }
     }
 
     /// <summary>
     /// Clears the current state.
     /// </summary>
-    /// <param name="propertyName">The property name.</param>
-    public void ClearCurrentState(params string[]? propertyName)
+    /// <param name="setters">The setters.</param>
+    public void ClearState(MotionPropertySetter[] setters)
     {
         if (Context.Visual is not Animatable animatable) return;
 
-        if (propertyName is null || propertyName.Length == 0)
-            propertyName = [.. animatable.MotionProperties.Keys];
-
-        foreach (var name in propertyName)
-            animatable.MotionProperties[name].Restore(animatable);
+        foreach (var setter in setters)
+            animatable.MotionProperties[setter.PropertyName].Restore(animatable);
     }
+
+    /// <summary>
+    /// Sets the state of the point.
+    /// </summary>
+    /// <param name="name">The name of the state.</param>
+    public void SetState(string name) => SetState(Context.Series.VisualStates[name]);
+
+    /// <summary>
+    /// Clears the current state.
+    /// </summary>
+    /// <param name="name"></param>
+    public void ClearState(string name) => ClearState(Context.Series.VisualStates[name]);
 }
 
 /// <summary>
