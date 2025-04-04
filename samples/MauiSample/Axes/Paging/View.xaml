@@ -10,11 +10,7 @@
         <vms:ViewModel/>
     </ContentPage.BindingContext>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+    <Grid RowDefinitions="50, *">
         <HorizontalStackLayout>
             <Button Command="{Binding GoToPage1Command}" Text="Page 1"></Button>
             <Button Command="{Binding GoToPage2Command}" Text="Page 2"></Button>

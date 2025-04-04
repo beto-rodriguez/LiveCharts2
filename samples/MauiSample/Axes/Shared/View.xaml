@@ -10,12 +10,7 @@
         <vms:ViewModel/>
     </ContentPage.BindingContext>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
+    <Grid RowDefinitions="*,*">
         <!--
         We define a SharedAxesPair, it cointains a pair of axes, one for each chart,
         The SharedAxesPair class will take care of keeping the axes in sync as the user

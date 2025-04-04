@@ -9,13 +9,8 @@
         <vms:ViewModel/>
     </ContentPage.BindingContext>
 	<ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            
+        <Grid RowDefinitions="40, 40, *">
+
             <StackLayout
                 Grid.Row="0"
                 Orientation="Horizontal"
