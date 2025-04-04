@@ -44,8 +44,8 @@ namespace LiveChartsCore.SkiaSharpView.Painting;
 /// The end point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
 /// </param>
 /// <param name="colorPos">
-/// An array of integers in the range of 0 to 1.
-/// These integers indicate the relative positions of the colors, You can set that argument to null to equally
+/// An array of floats in the range of 0 to 1.
+/// These floats indicate the relative positions of the colors, you can set that argument to null to equally
 /// space the colors, default is null.
 /// </param>
 /// <param name="tileMode">
@@ -64,12 +64,13 @@ public class LinearGradientPaint(
     /// <summary>
     /// Default start point.
     /// </summary>
-    protected static readonly SKPoint s_defaultStartPoint = new(0, 0.5f);
+    public static readonly SKPoint DefaultStartPoint = new(0, 0.5f);
 
     /// <summary>
     /// Default end point.
     /// </summary>
-    protected static readonly SKPoint s_defaultEndPoint = new(1, 0.5f);
+    public static readonly SKPoint DefaultEndPoint = new(1, 0.5f);
+
     private SkiaSharpDrawingContext? _drawingContext;
 
     /// <summary>
@@ -77,7 +78,7 @@ public class LinearGradientPaint(
     /// </summary>
     /// <param name="gradientStops">The gradient stops.</param>
     public LinearGradientPaint(SKColor[] gradientStops)
-        : this(gradientStops, s_defaultStartPoint, s_defaultEndPoint) { }
+        : this(gradientStops, DefaultStartPoint, DefaultEndPoint) { }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LinearGradientPaint"/> class.
@@ -99,7 +100,7 @@ public class LinearGradientPaint(
     /// <param name="start">The start.</param>
     /// <param name="end">The end.</param>
     public LinearGradientPaint(SKColor start, SKColor end)
-        : this(start, end, s_defaultStartPoint, s_defaultEndPoint) { }
+        : this(start, end, DefaultStartPoint, DefaultEndPoint) { }
 
     /// <inheritdoc cref="Paint.CloneTask" />
     public override Paint CloneTask()

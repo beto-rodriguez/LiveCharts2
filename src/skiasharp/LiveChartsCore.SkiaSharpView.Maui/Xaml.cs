@@ -323,6 +323,39 @@ public partial class XamlBoxSeries<TModel, TVisual, TLabel> : EmptyContentView, 
 
 #endregion
 
+#region pie series
+
+/// <inheritdoc cref="XamlPieSeries{TModel, TVisual, TLabel}" />
+public class XamlPieSeries : XamlPieSeries<object, DoughnutGeometry, LabelGeometry> { }
+
+/// <inheritdoc cref="XamlPieSeries{TModel, TVisual, TLabel}" />
+public class XamlPieSeries<TVisual> : XamlPieSeries<object, TVisual, LabelGeometry>
+    where TVisual : BaseDoughnutGeometry, new()
+{ }
+
+/// <inheritdoc cref="XamlPieSeries{TModel, TVisual, TLabel}" />
+public class XamlPieSeries<TVisual, TLabel> : XamlPieSeries<object, TVisual, LabelGeometry>
+    where TVisual : BaseDoughnutGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{ }
+
+[XamlClass(typeof(PieSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
+public partial class XamlPieSeries<TModel, TVisual, TLabel> : EmptyContentView, IPieSeries, IInternalSeries
+    where TVisual : BaseDoughnutGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{
+    static partial void OnTypeDefined()
+    {
+        static string formatter(ChartPoint point) => point.Coordinate.PrimaryValue.ToString();
+        _defaultPieSeries.DataLabelsFormatter = (Func<ChartPoint, string>)formatter;
+        ThemeDefaults.ConfigureSeriesDefaults(_defaultPieSeries);
+    }
+
+    private void ValuesMap(object value) => ((ISeries)_baseType).Values = (IEnumerable)value;
+}
+
+#endregion
+
 internal class ThemeDefaults
 {
     public static void ConfigureSeriesDefaults(ISeries series)

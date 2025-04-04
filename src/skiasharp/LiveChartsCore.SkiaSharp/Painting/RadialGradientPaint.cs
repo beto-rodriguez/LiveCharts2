@@ -70,7 +70,8 @@ public class RadialGradientPaint : SkiaPaint
         SKShaderTileMode tileMode = SKShaderTileMode.Repeat)
     {
         _gradientStops = gradientStops;
-        if (center is null) _center = new SKPoint(0.5f, 0.5f);
+        center ??= new SKPoint(0.5f, 0.5f);
+        _center = center.Value;
         _radius = radius;
         _colorPos = colorPos;
         _tileMode = tileMode;
