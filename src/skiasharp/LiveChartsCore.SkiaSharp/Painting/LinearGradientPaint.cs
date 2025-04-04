@@ -251,5 +251,5 @@ public class LinearGradientPaint(
     }
 
     private static SKRect GetDrawRectangleSize(SkiaSharpDrawingContext drawingContext) =>
-        new(0, 0, drawingContext.Info.Width, drawingContext.Info.Width);
+        new(0, 0, drawingContext.Info.Width, drawingContext.Info.Height);
 }
