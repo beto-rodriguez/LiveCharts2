@@ -94,9 +94,6 @@ public static class Index
 
         "Events/Tutorial",
         "Events/AddPointOnClick",
-        "Events/Cartesian",
-        "Events/Pie",
-        "Events/Polar",
         //"Events/OverrideFind",
 
         "General/MapPoints",
