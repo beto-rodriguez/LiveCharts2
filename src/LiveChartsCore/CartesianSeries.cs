@@ -54,8 +54,8 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel>(
     private int _scalesYAt;
     private DataLabelsPosition _labelsPosition;
     private LvcPoint? _labelsTranslate = null;
-    private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _xTooltipLabelFormatter;
-    private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _yTooltipLabelFormatter;
+    private Func<ChartPoint, string>? _xTooltipLabelFormatter;
+    private Func<ChartPoint, string>? _yTooltipLabelFormatter;
     private ClipMode _clippingMode = ClipMode.XY;
 
     /// <inheritdoc cref="ICartesianSeries.ScalesXAt"/>
@@ -80,6 +80,13 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel>(
     public Func<ChartPoint<TModel, TVisual, TLabel>, string>? XToolTipLabelFormatter
     {
         get => _xTooltipLabelFormatter;
+        // hack #040425
+        set => ((ICartesianSeries)this).XToolTipLabelFormatter = value is null ? null : p => value(ConvertToTypedChartPoint(p));
+    }
+
+    Func<ChartPoint, string>? ICartesianSeries.XToolTipLabelFormatter
+    {
+        get => _xTooltipLabelFormatter;
         set => SetProperty(ref _xTooltipLabelFormatter, value);
     }
 
@@ -91,6 +98,13 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel>(
     /// The tool tip label formatter.
     /// </value>
     public Func<ChartPoint<TModel, TVisual, TLabel>, string>? YToolTipLabelFormatter
+    {
+        get => _yTooltipLabelFormatter;
+        // hack #040425
+        set => ((ICartesianSeries)this).YToolTipLabelFormatter = value is null ? null : p => value(ConvertToTypedChartPoint(p));
+    }
+
+    Func<ChartPoint, string>? ICartesianSeries.YToolTipLabelFormatter
     {
         get => _yTooltipLabelFormatter;
         set => SetProperty(ref _yTooltipLabelFormatter, value);

@@ -213,12 +213,7 @@ public partial class XamlColumnSeries<TModel, TVisual, TLabel> : EmptyContentVie
     where TVisual : BoundedDrawnGeometry, new()
     where TLabel : BaseLabelGeometry, new()
 {
-    static partial void OnTypeDefined()
-    {
-        static string formatter(ChartPoint point) => point.Coordinate.PrimaryValue.ToString();
-        _defaultColumnSeries.DataLabelsFormatter = (Func<ChartPoint, string>)formatter;
-        ThemeDefaults.ConfigureSeriesDefaults(_defaultColumnSeries);
-    }
+    static partial void OnTypeDefined() => ThemeDefaults.ConfigureSeriesDefaults(_defaultColumnSeries);
 
     private void ValuesMap(object value) => ((ISeries)_baseType).Values = (IEnumerable)value;
 }
@@ -246,12 +241,8 @@ public partial class XamlRowSeries<TModel, TVisual, TLabel> : EmptyContentView, 
     where TVisual : BoundedDrawnGeometry, new()
     where TLabel : BaseLabelGeometry, new()
 {
-    static partial void OnTypeDefined()
-    {
-        static string formatter(ChartPoint point) => point.Coordinate.PrimaryValue.ToString();
-        _defaultRowSeries.DataLabelsFormatter = (Func<ChartPoint, string>)formatter;
-        ThemeDefaults.ConfigureSeriesDefaults(_defaultRowSeries);
-    }
+    static partial void OnTypeDefined() => ThemeDefaults.ConfigureSeriesDefaults(_defaultRowSeries);
+
     private void ValuesMap(object value) => ((ISeries)_baseType).Values = (IEnumerable)value;
 }
 
@@ -278,12 +269,7 @@ public partial class XamlLineSeries<TModel, TVisual, TLabel> : EmptyContentView,
     where TVisual : BoundedDrawnGeometry, new()
     where TLabel : BaseLabelGeometry, new()
 {
-    static partial void OnTypeDefined()
-    {
-        static string formatter(ChartPoint point) => point.Coordinate.PrimaryValue.ToString();
-        _defaultLineSeries.DataLabelsFormatter = (Func<ChartPoint, string>)formatter;
-        ThemeDefaults.ConfigureSeriesDefaults(_defaultLineSeries);
-    }
+    static partial void OnTypeDefined() => ThemeDefaults.ConfigureSeriesDefaults(_defaultLineSeries);
 
     private void ValuesMap(object value) => ((ISeries)_baseType).Values = (IEnumerable)value;
 }
@@ -311,12 +297,7 @@ public partial class XamlBoxSeries<TModel, TVisual, TLabel> : EmptyContentView, 
     where TVisual : BaseBoxGeometry, new()
     where TLabel : BaseLabelGeometry, new()
 {
-    static partial void OnTypeDefined()
-    {
-        static string formatter(ChartPoint point) => point.Coordinate.PrimaryValue.ToString();
-        _defaultBoxSeries.DataLabelsFormatter = (Func<ChartPoint, string>)formatter;
-        ThemeDefaults.ConfigureSeriesDefaults(_defaultBoxSeries);
-    }
+    static partial void OnTypeDefined() => ThemeDefaults.ConfigureSeriesDefaults(_defaultBoxSeries);
 
     private void ValuesMap(object value) => ((ISeries)_baseType).Values = (IEnumerable)value;
 }
@@ -344,12 +325,7 @@ public partial class XamlPieSeries<TModel, TVisual, TLabel> : EmptyContentView, 
     where TVisual : BaseDoughnutGeometry, new()
     where TLabel : BaseLabelGeometry, new()
 {
-    static partial void OnTypeDefined()
-    {
-        static string formatter(ChartPoint point) => point.Coordinate.PrimaryValue.ToString();
-        _defaultPieSeries.DataLabelsFormatter = (Func<ChartPoint, string>)formatter;
-        ThemeDefaults.ConfigureSeriesDefaults(_defaultPieSeries);
-    }
+    static partial void OnTypeDefined() => ThemeDefaults.ConfigureSeriesDefaults(_defaultPieSeries);
 
     private void ValuesMap(object value) => ((ISeries)_baseType).Values = (IEnumerable)value;
 }

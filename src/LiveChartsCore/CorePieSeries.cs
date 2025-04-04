@@ -67,7 +67,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
     private bool _isFillSeries;
     private bool _isRelativeToMin;
     private PolarLabelsPosition _labelsPosition = PolarLabelsPosition.Middle;
-    private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _tooltipLabelFormatter;
+    private Func<ChartPoint, string>? _tooltipLabelFormatter;
 
     /// <summary>
     /// Gets or sets the stroke.
@@ -140,6 +140,12 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
     /// The tool tip label formatter.
     /// </value>
     public Func<ChartPoint<TModel, TVisual, TLabel>, string>? ToolTipLabelFormatter
+    {
+        get => _tooltipLabelFormatter;
+        set => ((IPieSeries)this).TooltipLabelFormatter = value is null ? null : p => value(ConvertToTypedChartPoint(p));
+    }
+
+    Func<ChartPoint, string>? IPieSeries.TooltipLabelFormatter
     {
         get => _tooltipLabelFormatter;
         set => SetProperty(ref _tooltipLabelFormatter, value);

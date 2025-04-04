@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Measure;
 
@@ -72,6 +73,16 @@ public interface ICartesianSeries : ISeries
     /// default is <see cref="ClipMode.XY"/>, and means that anything outside the chart bounds will be ignored.
     /// </summary>
     ClipMode ClippingMode { get; set; }
+
+    /// <summary>
+    /// Gets or sets the tooltip label formatter in the X axis, the function receives a <see cref="ChartPoint"/> instance and must return a string.
+    /// </summary>
+    Func<ChartPoint, string>? XToolTipLabelFormatter { get; set; }
+
+    /// <summary>
+    /// Gets or sets the tooltip label formatter in the Y axis, the function receives a <see cref="ChartPoint"/> instance and must return a string.
+    /// </summary>
+    Func<ChartPoint, string>? YToolTipLabelFormatter { get; set; }
 
     /// <summary>
     /// Gets the series bounds.

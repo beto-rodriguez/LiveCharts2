@@ -193,6 +193,11 @@ public interface ISeries : IChartElement
     Dictionary<string, Action<IDrawnElement, ChartPoint>> VisualStates { get; }
 
     /// <summary>
+    /// Gets or sets the data labels formatter, the function receives a <see cref="ChartPoint"/> instance and must return a string.
+    /// </summary>
+    Func<ChartPoint, string> DataLabelsFormatter { get; set; }
+
+    /// <summary>
     /// Gets the tool tip text for a give chart point.
     /// </summary>
     /// <param name="point">The chart point.</param>
