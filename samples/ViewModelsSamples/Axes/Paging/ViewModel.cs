@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace ViewModelsSamples.Axes.Paging;
 
@@ -9,7 +10,38 @@ public partial class ViewModel : ObservableObject
     public int[] Values { get; set; } = Fetch();
 
     [ObservableProperty]
-    public partial string Name { get; set; }
+    public partial double? MinLimit { get; set; }
+
+    [ObservableProperty]
+    public partial double? MaxLimit { get; set; }
+
+    [RelayCommand]
+    public void GoToPage1()
+    {
+        MinLimit = -0.5;
+        MaxLimit = 10.5;
+    }
+
+    [RelayCommand]
+    public void GoToPage2()
+    {
+        MinLimit = 9.5;
+        MaxLimit = 20.5;
+    }
+
+    [RelayCommand]
+    public void GoToPage3()
+    {
+        MinLimit = 19.5;
+        MaxLimit = 30.5;
+    }
+
+    [RelayCommand]
+    public void SeeAll()
+    {
+        MinLimit = null;
+        MaxLimit = null;
+    }
 
     private static int[] Fetch()
     {
@@ -25,46 +57,4 @@ public partial class ViewModel : ObservableObject
 
         return [.. values];
     }
-
-    //public ISeries[] Series { get; }
-
-    //public ICartesianAxis[] XAxes { get; }
-
-    //public ViewModel()
-    //{
-    //    //Series = [new ColumnSeries<int>(values)];
-    //    XAxes = [new Axis()];
-    //}
-
-    //[RelayCommand]
-    //public void GoToPage1()
-    //{
-    //    var axis = XAxes[0];
-    //    axis.MinLimit = -0.5;
-    //    axis.MaxLimit = 10.5;
-    //}
-
-    //[RelayCommand]
-    //public void GoToPage2()
-    //{
-    //    var axis = XAxes[0];
-    //    axis.MinLimit = 9.5;
-    //    axis.MaxLimit = 20.5;
-    //}
-
-    //[RelayCommand]
-    //public void GoToPage3()
-    //{
-    //    var axis = XAxes[0];
-    //    axis.MinLimit = 19.5;
-    //    axis.MaxLimit = 30.5;
-    //}
-
-    //[RelayCommand]
-    //public void SeeAll()
-    //{
-    //    var axis = XAxes[0];
-    //    axis.MinLimit = null;
-    //    axis.MaxLimit = null;
-    //}
 }

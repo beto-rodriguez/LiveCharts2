@@ -1,14 +1,33 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Axes.TimeSpanScaled.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Axes.TimeSpanScaled;assembly=ViewModelsSamples">
+<ContentPage
+    x:Class="MauiSample.Axes.TimeSpanScaled.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Axes.TimeSpanScaled;assembly=ViewModelsSamples">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-    <lvc:CartesianChart
-        Series="{Binding Series}"
-        YAxes="{Binding YAxes}">
+
+    <lvc:CartesianChart>
+
+        <lvc:CartesianChart.Series>
+            <lvc:XamlColumnSeries Values="{Binding Values}"/>
+        </lvc:CartesianChart.Series>
+
+        <!--
+            The Interval property is used to set the interval between each label,
+            in this case, the interval is set to 1 millisecond.
+
+            In the DateFormatter property, we define the format of the labels.
+        -->
+
+        <lvc:CartesianChart.XAxes>
+            <lvc:XamlTimeSpanAxis
+                Interval="0:0:0.001"
+                TimeFormatter="{Binding Formatter}"/>
+        </lvc:CartesianChart.XAxes>
+        
     </lvc:CartesianChart>
 </ContentPage>

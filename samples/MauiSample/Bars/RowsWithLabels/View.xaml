@@ -1,21 +1,32 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Bars.RowsWithLabels.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Bars.RowsWithLabels;assembly=ViewModelsSamples"
-             >
+<ContentPage
+    x:Class="MauiSample.Bars.RowsWithLabels.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Bars.RowsWithLabels;assembly=ViewModelsSamples">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-	<ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            
-            <lvc:CartesianChart Series="{Binding Series}"></lvc:CartesianChart>
 
-        </Grid>
-    </ContentPage.Content>
+    <lvc:CartesianChart>
+        <lvc:CartesianChart.Series>
+            <lvc:XamlRowSeries
+                Values="{Binding Values1}"
+                ShowDataLabels="True"
+                DataLabelsSize="14"
+                DataLabelsPosition="End"/>
+            <lvc:XamlRowSeries
+                Values="{Binding Values2}"
+                ShowDataLabels="True"
+                DataLabelsSize="14"
+                DataLabelsPosition="Middle"/>
+            <lvc:XamlRowSeries
+                Values="{Binding Values3}"
+                ShowDataLabels="True"
+                DataLabelsSize="14"
+                DataLabelsPosition="Start"/>
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
 </ContentPage>

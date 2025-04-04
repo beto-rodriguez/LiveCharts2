@@ -1,19 +1,66 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Axes.Style.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Axes.Style;assembly=ViewModelsSamples">
+<ContentPage
+    x:Class="MauiSample.Axes.Style.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Axes.Style;assembly=ViewModelsSamples"
+    BackgroundColor="#303030">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+        <x:String x:Key="gray">#c3c3c3</x:String>
+        <x:String x:Key="gray1">#a0a0a0</x:String>
+        <x:String x:Key="gray2">#5a5a5a</x:String>
+        <x:String x:Key="gray3">#3c3c3c</x:String>
+    </ContentPage.Resources>
+
     <lvc:CartesianChart
         Margin="20"
-        Series="{Binding Series}"
-        XAxes="{Binding XAxes}"
-        YAxes="{Binding YAxes}"
-        DrawMarginFrame="{Binding Frame}"
+        DrawMarginFrame="{lvc:Frame Stroke={lvc:SolidColorPaint Color={StaticResource gray}, StrokeWidth=2}}"
         ZoomMode="Both"
         TooltipPosition="Hidden">
+
+        <lvc:CartesianChart.Series>
+            <lvc:XamlLineSeries
+                Values="{Binding Values}"
+                Stroke="{lvc:SolidColorPaint Color='#2196F3', StrokeWidth=4}"
+                Fill="{x:Null}"
+                GeometrySize="0"/>
+        </lvc:CartesianChart.Series>
+
+        <lvc:CartesianChart.XAxes>
+            <lvc:XamlAxis
+                Name="X Axis"
+                NamePaint="{lvc:SolidColorPaint Color={StaticResource gray1}}"
+                TextSize="18"
+                Padding="5,15,5,5"
+                LabelsPaint="{lvc:SolidColorPaint Color={StaticResource gray}}"
+                SeparatorsPaint="{lvc:SolidColorPaint Color={StaticResource gray}, StrokeWidth=1, DashArray='3,3'}"
+                SubseparatorsPaint="{lvc:SolidColorPaint Color={StaticResource gray2}, StrokeWidth=0.5}"
+                SubseparatorsCount="9"
+                ZeroPaint="{lvc:SolidColorPaint Color={StaticResource gray1}, StrokeWidth=2}"
+                TicksPaint="{lvc:SolidColorPaint Color={StaticResource gray}, StrokeWidth=1.5}"
+                SubticksPaint="{lvc:SolidColorPaint Color={StaticResource gray}, StrokeWidth=1}"/>
+        </lvc:CartesianChart.XAxes>
+
+        <lvc:CartesianChart.YAxes>
+            <lvc:XamlAxis
+                Name="Y Axis"
+                NamePaint="{lvc:SolidColorPaint Color={StaticResource gray1}}"
+                TextSize="18"
+                Padding="5,15,5,5"
+                LabelsPaint="{lvc:SolidColorPaint Color={StaticResource gray}}"
+                SeparatorsPaint="{lvc:SolidColorPaint Color={StaticResource gray}, StrokeWidth=1, DashArray='3,3'}"
+                SubseparatorsPaint="{lvc:SolidColorPaint Color={StaticResource gray2}, StrokeWidth=0.5}"
+                SubseparatorsCount="9"
+                ZeroPaint="{lvc:SolidColorPaint Color={StaticResource gray1}, StrokeWidth=2}"
+                TicksPaint="{lvc:SolidColorPaint Color={StaticResource gray}, StrokeWidth=1.5}"
+                SubticksPaint="{lvc:SolidColorPaint Color={StaticResource gray}, StrokeWidth=1}"/>
+        </lvc:CartesianChart.YAxes>
+
     </lvc:CartesianChart>
 </ContentPage>

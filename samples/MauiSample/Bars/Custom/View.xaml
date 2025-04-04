@@ -1,21 +1,46 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Bars.Custom.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Bars.Custom;assembly=ViewModelsSamples"
-             >
+<ContentPage
+    x:Class="MauiSample.Bars.Custom.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Bars.Custom;assembly=ViewModelsSamples"
+    xmlns:svg="clr-namespace:LiveChartsCore.Drawing;assembly=LiveChartsCore"
+    xmlns:draw="clr-namespace:LiveChartsCore.SkiaSharpView.Drawing.Geometries;assembly=LiveChartsCore.SkiaSharpView">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-	<ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            
-            <lvc:CartesianChart Series="{Binding Series}"></lvc:CartesianChart>
 
-        </Grid>
-    </ContentPage.Content>
+    <lvc:CartesianChart>
+        <lvc:CartesianChart.Series>
+            <lvc:XamlColumnSeries Values="2,1,4"/>
+
+            <!--
+            Use the generic parameter to set the type of the geometry to draw,
+            here are many predefined geometries in the LiveChartsCore.SkiaSharpView.Drawing.Geometries
+            namespace, for example, the StarGeometry, CrossGeometry, RectangleGeometry and DiamondGeometry
+            -->
+            <lvc:XamlColumnSeries
+                x:TypeArguments="draw:DiamondGeometry"
+                Values="4,3,6" />
+
+            <!--
+            You can also use SVG paths to draw the geometry
+            the VariableSVGPathGeometry can change the drawn path at runtime
+            -->
+            <lvc:XamlColumnSeries
+                x:TypeArguments="draw:VariableSVGPathGeometry"
+                GeometrySvg="{Static svg:SVGPoints.Star}"
+                Values="-2,2,1"/>
+
+            <!--
+            Finally you can also use SkiaSharp to draw your own geometry
+            -->
+            <lvc:XamlColumnSeries
+                x:TypeArguments="vms:MyGeometry"
+                Values="1,2,3"/>
+
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
 </ContentPage>

@@ -132,6 +132,13 @@ public interface IDrawnElement
     bool RemoveOnCompleted { get; set; }
 
     /// <summary>
+    /// Sets the transition for the specified properties.
+    /// </summary>
+    /// <param name="animation">The animation.</param>
+    /// <param name="propertyName">The property name, null to select all properties.</param>
+    void SetTransition(Animation? animation, params string[]? propertyName);
+
+    /// <summary>
     /// Completes the transition for the specified properties.
     /// </summary>
     /// <param name="propertyName">The properties, null to seledct all.</param>
