@@ -62,6 +62,45 @@ public partial class XamlDateTimeAxis : EmptyContentView, ICartesianAxis
     }
 }
 
+[XamlClass(typeof(TimeSpanAxis), GenerateBaseTypeDeclaration = false)]
+public partial class XamlTimeSpanAxis : EmptyContentView, ICartesianAxis
+{
+    private readonly TimeSpanAxis _baseType = new(TimeSpan.FromMilliseconds(1), date => $"{date:fff}ms");
+    private static readonly TimeSpanAxis _defaultTimeSpanAxis = new(TimeSpan.FromMilliseconds(1), date => $"{date:fff}ms");
+
+    public static readonly BindableProperty IntervalProperty = BindableProperty.Create(
+        nameof(Interval), typeof(TimeSpan), typeof(XamlTimeSpanAxis), TimeSpan.FromMicroseconds(1),
+        propertyChanged: (BindableObject bo, object o, object n) =>
+        {
+            var axis = (XamlTimeSpanAxis)bo;
+            var interval = (TimeSpan)n;
+
+            axis._baseType.UnitWidth = interval.Ticks;
+            axis._baseType.MinStep = interval.Ticks;
+        });
+
+    public static readonly BindableProperty TimeFormatterProperty = BindableProperty.Create(
+        nameof(Interval), typeof(Func<TimeSpan, string>), typeof(XamlTimeSpanAxis), null,
+        propertyChanged: (BindableObject bo, object o, object n) =>
+        {
+            var axis = (XamlTimeSpanAxis)bo;
+            var formatter = (Func<TimeSpan, string>)n;
+            axis._baseType.Labeler = value => formatter(value.AsTimeSpan());
+        });
+
+    public TimeSpan Interval
+    {
+        get => (TimeSpan)GetValue(IntervalProperty);
+        set => SetValue(IntervalProperty, value);
+    }
+
+    public Func<TimeSpan, string> TimeFormatter
+    {
+        get => (Func<TimeSpan, string>)GetValue(TimeFormatterProperty);
+        set => SetValue(TimeFormatterProperty, value);
+    }
+}
+
 [XamlClass(typeof(LogarithmicAxis), GenerateBaseTypeDeclaration = false)]
 public partial class XamlLogarithmicAxis : EmptyContentView, ICartesianAxis
 {
@@ -105,27 +144,24 @@ public partial class XamlDrawnLabelVisual : EmptyContentView, IChartElement, IIn
 
 public class SharedAxesPair
 {
-    private ICartesianAxis? _first;
-    private ICartesianAxis? _second;
-
     public ICartesianAxis? First
     {
-        get => _first;
-        set { _first = value; OnSet(); }
+        get;
+        set { field = value; OnSet(); }
     }
 
     public ICartesianAxis? Second
     {
-        get => _second;
-        set { _second = value; OnSet(); }
+        get;
+        set { field = value; OnSet(); }
     }
 
     private void OnSet()
     {
-        if (_first is null || _second is null) return;
+        if (First is null || Second is null) return;
 
         // this object does not handle axes removal :(
-        SharedAxes.Set(_first, _second);
+        SharedAxes.Set(First, Second);
     }
 }
 
@@ -149,6 +185,16 @@ public class SharedAxesPair
 
 // ============================
 
+internal static class Info
+{
+    public const string PropertyTypeOverride =
+        "Values{=}object{,}" +
+        "DataLabelsFormatter{=}System.Func<LiveChartsCore.Kernel.ChartPoint, string>";
+
+    public const string PropertyChangeMap =
+        "Values{=}ValuesMap";
+}
+
 #region column series
 
 /// <inheritdoc cref="XamlColumnSeries{TModel, TVisual, TLabel}" />
@@ -165,12 +211,50 @@ public class XamlColumnSeries<TVisual, TLabel> : XamlColumnSeries<object, TVisua
     where TLabel : BaseLabelGeometry, new()
 { }
 
-[XamlClass(typeof(ColumnSeries<,,>), PropertyTypeOverride = "Values{=}object", PropertyChangeMap = "Values{=}ValuesMap")]
+[XamlClass(typeof(ColumnSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
 public partial class XamlColumnSeries<TModel, TVisual, TLabel> : EmptyContentView, IBarSeries, IInternalSeries
     where TVisual : BoundedDrawnGeometry, new()
     where TLabel : BaseLabelGeometry, new()
 {
-    static partial void OnTypeDefined() => ThemeDefaults.ConfigureSeriesDefaults(_defaultColumnSeries);
+    static partial void OnTypeDefined()
+    {
+        static string formatter(ChartPoint point) => point.Coordinate.PrimaryValue.ToString();
+        _defaultColumnSeries.DataLabelsFormatter = (Func<ChartPoint, string>)formatter;
+        ThemeDefaults.ConfigureSeriesDefaults(_defaultColumnSeries);
+    }
+
+    private void ValuesMap(object value) => ((ISeries)_baseType).Values = (IEnumerable)value;
+}
+
+#endregion
+
+#region row series
+
+/// <inheritdoc cref="XamlRowSeries{TModel, TVisual, TLabel}" />
+public class XamlRowSeries : XamlRowSeries<object, RoundedRectangleGeometry, LabelGeometry> { }
+
+/// <inheritdoc cref="XamlRowSeries{TModel, TVisual, TLabel}" />
+public class XamlRowSeries<TVisual> : XamlRowSeries<object, TVisual, LabelGeometry>
+    where TVisual : BoundedDrawnGeometry, new()
+{ }
+
+/// <inheritdoc cref="XamlRowSeries{TModel, TVisual, TLabel}" />
+public class XamlRowSeries<TVisual, TLabel> : XamlRowSeries<object, TVisual, LabelGeometry>
+    where TVisual : BoundedDrawnGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{ }
+
+[XamlClass(typeof(RowSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
+public partial class XamlRowSeries<TModel, TVisual, TLabel> : EmptyContentView, IBarSeries, IInternalSeries
+    where TVisual : BoundedDrawnGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{
+    static partial void OnTypeDefined()
+    {
+        static string formatter(ChartPoint point) => point.Coordinate.PrimaryValue.ToString();
+        _defaultRowSeries.DataLabelsFormatter = (Func<ChartPoint, string>)formatter;
+        ThemeDefaults.ConfigureSeriesDefaults(_defaultRowSeries);
+    }
     private void ValuesMap(object value) => ((ISeries)_baseType).Values = (IEnumerable)value;
 }
 
@@ -192,12 +276,18 @@ public class XamlLineSeries<TVisual, TLabel> : XamlLineSeries<object, TVisual, L
     where TLabel : BaseLabelGeometry, new()
 { }
 
-[XamlClass(typeof(LineSeries<,,>), PropertyTypeOverride = "Values{=}object", PropertyChangeMap = "Values{=}ValuesMap")]
+[XamlClass(typeof(LineSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
 public partial class XamlLineSeries<TModel, TVisual, TLabel> : EmptyContentView, ILineSeries, IInternalSeries
     where TVisual : BoundedDrawnGeometry, new()
     where TLabel : BaseLabelGeometry, new()
 {
-    static partial void OnTypeDefined() => ThemeDefaults.ConfigureSeriesDefaults(_defaultLineSeries);
+    static partial void OnTypeDefined()
+    {
+        static string formatter(ChartPoint point) => point.Coordinate.PrimaryValue.ToString();
+        _defaultLineSeries.DataLabelsFormatter = (Func<ChartPoint, string>)formatter;
+        ThemeDefaults.ConfigureSeriesDefaults(_defaultLineSeries);
+    }
+
     private void ValuesMap(object value) => ((ISeries)_baseType).Values = (IEnumerable)value;
 }
 
@@ -214,6 +304,7 @@ internal class ThemeDefaults
         theme.ApplyStyleToSeries(series);
 
         series.DataLabelsPaint = Paint.Default;
+        series.ShowDataLabels = false;
 
         if (series is IStrokedAndFilled strokedAndFilled)
         {
@@ -242,6 +333,7 @@ internal class ThemeDefaults
         if (series is IErrorSeries errorSeries)
         {
             errorSeries.ErrorPaint = Paint.Default;
+            errorSeries.ShowError = false;
         }
 
         if (series is IFinancialSeries financial)

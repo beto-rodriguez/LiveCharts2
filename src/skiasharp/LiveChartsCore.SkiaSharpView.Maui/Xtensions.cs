@@ -23,7 +23,9 @@
 using System;
 using System.Collections.Generic;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.SkiaSharpView.Painting.Effects;
 using Microsoft.Maui.Controls.Xaml;
 using SkiaSharp;
 
@@ -43,6 +45,16 @@ public class SolidColorPaintExtension : IMarkupExtension<SolidColorPaint>
     /// Gets or sets the stroke width.
     /// </summary>
     public float StrokeWidth { get; set; } = 1f;
+
+    /// <summary>
+    /// Gets or sets the dash array separated by commas.
+    /// </summary>
+    public string? DashArray { get; set; } = null;
+
+    /// <summary>
+    /// Gets or sets the dash phase.
+    /// </summary>
+    public float DashPhase { get; set; } = 0f;
 
     /// <summary>
     /// Gets or sets the font family.
@@ -79,6 +91,18 @@ public class SolidColorPaintExtension : IMarkupExtension<SolidColorPaint>
 
         var paint = new SolidColorPaint(color, StrokeWidth);
 
+        if (DashArray is not null)
+        {
+            var dashArray = DashArray.Split(',');
+            var dashes = new List<float>(dashArray.Length);
+            foreach (var dash in dashArray)
+            {
+                if (float.TryParse(dash, out var value))
+                    dashes.Add(value);
+            }
+            paint.PathEffect = new DashEffect([.. dashes], DashPhase);
+        }
+
         if (FontWeight != SKFontStyleWeight.Normal || FontWidth != SKFontStyleWidth.Normal || FontSlant != SKFontStyleSlant.Upright)
             paint.SKFontStyle = new SKFontStyle(FontWeight, FontWidth, FontSlant);
 
@@ -98,7 +122,37 @@ public class SolidColorPaintExtension : IMarkupExtension<SolidColorPaint>
 }
 
 /// <summary>
-/// The solid color paint extension.
+/// The from shared axes extension.
+/// </summary>
+public class FrameExtension : IMarkupExtension<DrawMarginFrame>
+{
+    /// <summary>
+    /// Gets or sets the fill.
+    /// </summary>
+    public Paint? Fill { get; set; }
+
+    /// <summary>
+    /// Gets or sets the stroke.
+    /// </summary>
+    public Paint? Stroke { get; set; }
+
+    /// <summary>
+    /// ...
+    /// </summary>
+    public DrawMarginFrame ProvideValue(IServiceProvider serviceProvider)
+    {
+        return new DrawMarginFrame
+        {
+            Fill = Fill,
+            Stroke = Stroke
+        };
+    }
+
+    object IMarkupExtension.ProvideValue(IServiceProvider serviceProvider) => ProvideValue(serviceProvider);
+}
+
+/// <summary>
+/// The from shared axes extension.
 /// </summary>
 public class FromSharedAxesExtension : IMarkupExtension<ICollection<ICartesianAxis>>
 {
