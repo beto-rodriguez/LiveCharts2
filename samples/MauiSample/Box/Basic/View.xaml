@@ -1,15 +1,39 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Box.Basic.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Box.Basic;assembly=ViewModelsSamples">
+<ContentPage
+    x:Class="MauiSample.Box.Basic.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Box.Basic;assembly=ViewModelsSamples">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
+
     <lvc:CartesianChart
-        Series="{Binding Series}"
-        XAxes="{Binding XAxes}"
         LegendPosition="Right">
+
+        <lvc:CartesianChart.Series>
+            <lvc:XamlBoxSeries
+                Name="Year 2023"
+                Values="{Binding Values1}"/>
+            <lvc:XamlBoxSeries
+                Name="Year 2024"
+                Values="{Binding Values2}"/>
+            <lvc:XamlBoxSeries
+                Name="Year 2025"
+                Values="{Binding Values3}"/>
+        </lvc:CartesianChart.Series>
+
+        <lvc:CartesianChart.XAxes>
+            <lvc:XamlAxis
+                Labels="{Binding Labels}"
+                LabelsRotation="0"
+                SeparatorsPaint="#c8c8c8"
+                SeparatorsAtCenter="False"
+                TicksPaint="#232323"
+                TicksAtCenter="True"/>
+        </lvc:CartesianChart.XAxes>
+        
     </lvc:CartesianChart>
 </ContentPage>

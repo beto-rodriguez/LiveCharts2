@@ -12,6 +12,7 @@
 
     <lvc:CartesianChart
         MatchAxesScreenDataRatio="True"
+        DrawMarginFrame="{lvc:Frame Stroke={lvc:SolidColorPaint Color='#64b4b4b4', StrokeWidth=2}}"
         ZoomMode="Both"
         TooltipPosition="Hidden">
 
@@ -47,11 +48,6 @@
                 MinStep="0.1"
                 ForceStepToMin="True"/>
         </lvc:CartesianChart.YAxes>
-
-        <lvc:CartesianChart.DrawMarginFrame>
-            <lvc:XamlDrawMarginFrame
-                Stroke="{lvc:SolidColorPaint Color='#64b4b4b4', StrokeWidth=2}"/>
-        </lvc:CartesianChart.DrawMarginFrame>
 
     </lvc:CartesianChart>
 </ContentPage>

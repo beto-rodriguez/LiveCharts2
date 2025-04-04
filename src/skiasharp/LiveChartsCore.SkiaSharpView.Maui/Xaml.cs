@@ -132,9 +132,6 @@ public partial class XamlLogarithmicAxis : EmptyContentView, ICartesianAxis
     }
 }
 
-[XamlClass(typeof(DrawMarginFrame))]
-public partial class XamlDrawMarginFrame : EmptyContentView, IChartElement { }
-
 [XamlClass(typeof(DrawnLabelVisual), Map = typeof(LabelGeometry), MapPath = "DrawnLabel")]
 public partial class XamlDrawnLabelVisual : EmptyContentView, IChartElement, IInternalInteractable
 {
@@ -286,6 +283,39 @@ public partial class XamlLineSeries<TModel, TVisual, TLabel> : EmptyContentView,
         static string formatter(ChartPoint point) => point.Coordinate.PrimaryValue.ToString();
         _defaultLineSeries.DataLabelsFormatter = (Func<ChartPoint, string>)formatter;
         ThemeDefaults.ConfigureSeriesDefaults(_defaultLineSeries);
+    }
+
+    private void ValuesMap(object value) => ((ISeries)_baseType).Values = (IEnumerable)value;
+}
+
+#endregion
+
+#region box series
+
+/// <inheritdoc cref="XamlBoxSeries{TModel, TVisual, TLabel}" />
+public class XamlBoxSeries : XamlBoxSeries<object, BoxGeometry, LabelGeometry> { }
+
+/// <inheritdoc cref="XamlBoxSeries{TModel, TVisual, TLabel}" />
+public class XamlBoxSeries<TVisual> : XamlBoxSeries<object, TVisual, LabelGeometry>
+    where TVisual : BaseBoxGeometry, new()
+{ }
+
+/// <inheritdoc cref="XamlBoxSeries{TModel, TVisual, TLabel}" />
+public class XamlBoxSeries<TVisual, TLabel> : XamlBoxSeries<object, TVisual, LabelGeometry>
+    where TVisual : BaseBoxGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{ }
+
+[XamlClass(typeof(BoxSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
+public partial class XamlBoxSeries<TModel, TVisual, TLabel> : EmptyContentView, IBoxSeries, IInternalSeries
+    where TVisual : BaseBoxGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{
+    static partial void OnTypeDefined()
+    {
+        static string formatter(ChartPoint point) => point.Coordinate.PrimaryValue.ToString();
+        _defaultBoxSeries.DataLabelsFormatter = (Func<ChartPoint, string>)formatter;
+        ThemeDefaults.ConfigureSeriesDefaults(_defaultBoxSeries);
     }
 
     private void ValuesMap(object value) => ((ISeries)_baseType).Values = (IEnumerable)value;
