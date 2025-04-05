@@ -61,8 +61,7 @@ public partial class GeoMap : ContentView, IGeoMapView
 
         _seriesObserver = new CollectionDeepObserver<IGeoSeries>(
             (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
-            (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
-            true);
+            (object? sender, PropertyChangedEventArgs e) => _core?.Update());
 
         SetValue(SeriesProperty, Enumerable.Empty<IGeoSeries>());
         SetValue(ActiveMapProperty, Maps.GetWorldMap());

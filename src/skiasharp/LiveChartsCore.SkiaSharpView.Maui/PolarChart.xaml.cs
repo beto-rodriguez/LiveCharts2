@@ -74,11 +74,10 @@ public partial class PolarChart : ChartView, IPolarChartView
         InitializeCore();
         SizeChanged += OnSizeChanged;
 
-        _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _angleObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _radiusObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _visualsObserver = new CollectionDeepObserver<ChartElement>(
-            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+        _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged);
+        _angleObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged);
+        _radiusObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged);
+        _visualsObserver = new CollectionDeepObserver<ChartElement>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged);
 
         SetValue(AngleAxesProperty, new ObservableCollection<IPolarAxis>());
         SetValue(RadiusAxesProperty, new ObservableCollection<IPolarAxis>());

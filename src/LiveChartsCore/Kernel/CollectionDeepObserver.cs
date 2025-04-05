@@ -32,39 +32,19 @@ namespace LiveChartsCore.Kernel;
 /// <see cref="INotifyPropertyChanged.PropertyChanged"/> events.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class CollectionDeepObserver<T>
+/// <remarks>
+/// Initializes a new instance of the <see cref="CollectionDeepObserver{T}"/> class.
+/// </remarks>
+/// <param name="onCollectionChanged">The on collection changed handler.</param>
+/// <param name="onItemPropertyChanged">The on item property changed handler.</param>
+public sealed class CollectionDeepObserver<T>(
+    NotifyCollectionChangedEventHandler onCollectionChanged,
+    PropertyChangedEventHandler onItemPropertyChanged)
 {
-    private readonly NotifyCollectionChangedEventHandler _onCollectionChanged;
-    private readonly PropertyChangedEventHandler _onItemPropertyChanged;
+    private readonly NotifyCollectionChangedEventHandler _onCollectionChanged = onCollectionChanged;
+    private readonly PropertyChangedEventHandler _onItemPropertyChanged = onItemPropertyChanged;
     private readonly HashSet<INotifyPropertyChanged> _itemsListening = [];
-
-    /// <summary>
-    /// The check i notify property changed
-    /// </summary>
-    protected bool checkINotifyPropertyChanged;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CollectionDeepObserver{T}"/> class.
-    /// </summary>
-    /// <param name="onCollectionChanged">The on collection changed handler.</param>
-    /// <param name="onItemPropertyChanged">The on item property changed handler.</param>
-    /// <param name="checkINotifyPropertyChanged">if true, it will force the check to verify if the type {T} implements INotifyPropertyChanged.</param>
-    public CollectionDeepObserver(
-        NotifyCollectionChangedEventHandler onCollectionChanged,
-        PropertyChangedEventHandler onItemPropertyChanged,
-        bool? checkINotifyPropertyChanged = null)
-    {
-        _onCollectionChanged = onCollectionChanged;
-        _onItemPropertyChanged = onItemPropertyChanged;
-
-        if (checkINotifyPropertyChanged is not null)
-        {
-            this.checkINotifyPropertyChanged = checkINotifyPropertyChanged.Value;
-            return;
-        }
-
-        this.checkINotifyPropertyChanged = typeof(INotifyPropertyChanged).IsAssignableFrom(typeof(T));
-    }
+    private bool _isInppc;
 
     /// <summary>
     /// Initializes the listeners.
@@ -75,14 +55,13 @@ public class CollectionDeepObserver<T>
     {
         if (instance is null) return;
 
-        if (instance is INotifyCollectionChanged incc)
-        {
-            incc.CollectionChanged += OnCollectionChanged;
-        }
+        _isInppc = false;
 
-        if (checkINotifyPropertyChanged)
-            foreach (var item in GetINotifyPropertyChangedItems(instance))
-                item.PropertyChanged += _onItemPropertyChanged;
+        if (instance is INotifyCollectionChanged incc)
+            incc.CollectionChanged += OnCollectionChanged;
+
+        foreach (var item in GetINotifyPropertyChangedItems(instance))
+            item.PropertyChanged += _onItemPropertyChanged;
     }
 
     /// <summary>
@@ -95,18 +74,15 @@ public class CollectionDeepObserver<T>
         if (instance is null) return;
 
         if (instance is INotifyCollectionChanged incc)
-        {
             incc.CollectionChanged -= OnCollectionChanged;
-        }
 
-        if (checkINotifyPropertyChanged)
-            foreach (var item in GetINotifyPropertyChangedItems(instance))
-                item.PropertyChanged -= _onItemPropertyChanged;
+        foreach (var item in GetINotifyPropertyChangedItems(instance))
+            item.PropertyChanged -= _onItemPropertyChanged;
     }
 
     private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (checkINotifyPropertyChanged)
+        if (_isInppc)
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
@@ -158,13 +134,15 @@ public class CollectionDeepObserver<T>
         _onCollectionChanged(sender, e);
     }
 
-    private static IEnumerable<INotifyPropertyChanged> GetINotifyPropertyChangedItems(IEnumerable? source)
+    private IEnumerable<INotifyPropertyChanged> GetINotifyPropertyChangedItems(IEnumerable? source)
     {
         if (source is null) yield break;
 
         foreach (var item in source)
         {
             if (item is not INotifyPropertyChanged inpc) continue;
+
+            _isInppc = true;
             yield return inpc;
         }
     }
