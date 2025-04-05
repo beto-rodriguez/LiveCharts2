@@ -48,7 +48,7 @@ public abstract class BaseLabelGeometry : Animatable, IDrawnElement
     /// </summary>
     public BaseLabelGeometry()
     {
-        HasTransform = true;
+        //HasTransform = true; is this needed?
         _textSizeProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(TextSize), 11));
         _backgroundProperty = RegisterMotionProperty(new ColorMotionProperty(nameof(Background), LvcColor.Empty));
         _xProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0));
