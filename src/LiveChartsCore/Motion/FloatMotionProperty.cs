@@ -34,8 +34,8 @@ public class FloatMotionProperty : MotionProperty<float>
     public FloatMotionProperty(string propertyName)
         : base(propertyName)
     {
-        fromValue = 0;
-        toValue = 0;
+        FromValue = 0;
+        ToValue = 0;
     }
 
     /// <summary>
@@ -46,13 +46,13 @@ public class FloatMotionProperty : MotionProperty<float>
     public FloatMotionProperty(string propertyName, float value)
         : base(propertyName)
     {
-        fromValue = value;
-        toValue = value;
+        FromValue = value;
+        ToValue = value;
     }
 
     /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
     protected override float OnGetMovement(float progress)
     {
-        return fromValue + progress * (toValue - fromValue);
+        return FromValue + progress * (ToValue - FromValue);
     }
 }

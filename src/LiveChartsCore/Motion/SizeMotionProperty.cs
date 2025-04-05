@@ -45,15 +45,15 @@ public class SizeMotionProperty : MotionProperty<LvcSize>
     public SizeMotionProperty(string propertyName, LvcSize value)
         : base(propertyName)
     {
-        fromValue = value;
-        toValue = value;
+        FromValue = value;
+        ToValue = value;
     }
 
     /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
     protected override LvcSize OnGetMovement(float progress)
     {
         return new LvcSize(
-            fromValue.Width + progress * (toValue.Width - fromValue.Width),
-            fromValue.Height + progress * (toValue.Height - fromValue.Height));
+            FromValue.Width + progress * (ToValue.Width - FromValue.Width),
+            FromValue.Height + progress * (ToValue.Height - FromValue.Height));
     }
 }

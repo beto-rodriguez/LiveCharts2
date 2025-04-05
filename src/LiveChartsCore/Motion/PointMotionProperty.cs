@@ -45,15 +45,15 @@ public class PointMotionProperty : MotionProperty<LvcPoint>
     public PointMotionProperty(string propertyName, LvcPoint value)
         : base(propertyName)
     {
-        fromValue = value;
-        toValue = value;
+        FromValue = value;
+        ToValue = value;
     }
 
     /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
     protected override LvcPoint OnGetMovement(float progress)
     {
         return new LvcPoint(
-            fromValue.X + progress * (toValue.X - fromValue.X),
-            fromValue.Y + progress * (toValue.Y - fromValue.Y));
+            FromValue.X + progress * (ToValue.X - FromValue.X),
+            FromValue.Y + progress * (ToValue.Y - FromValue.Y));
     }
 }

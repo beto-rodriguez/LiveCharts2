@@ -34,8 +34,8 @@ public class NullableDoubleMotionProperty : MotionProperty<double?>
     public NullableDoubleMotionProperty(string propertyName)
         : base(propertyName)
     {
-        fromValue = 0;
-        toValue = 0;
+        FromValue = 0;
+        ToValue = 0;
     }
 
     /// <summary>
@@ -46,15 +46,15 @@ public class NullableDoubleMotionProperty : MotionProperty<double?>
     public NullableDoubleMotionProperty(string propertyName, double? value)
         : base(propertyName)
     {
-        fromValue = value;
-        toValue = value;
+        FromValue = value;
+        ToValue = value;
     }
 
     /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
     protected override double? OnGetMovement(float progress)
     {
-        return fromValue is null || toValue is null
-            ? toValue
-            : fromValue + progress * (toValue - fromValue);
+        return FromValue is null || ToValue is null
+            ? ToValue
+            : FromValue + progress * (ToValue - FromValue);
     }
 }

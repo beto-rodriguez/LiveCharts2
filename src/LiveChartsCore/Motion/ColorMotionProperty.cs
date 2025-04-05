@@ -36,8 +36,8 @@ public class ColorMotionProperty : MotionProperty<LvcColor>
     public ColorMotionProperty(string propertyName)
         : base(propertyName)
     {
-        fromValue = LvcColor.FromArgb(0, 0, 0, 0);
-        toValue = LvcColor.FromArgb(0, 0, 0, 0);
+        FromValue = LvcColor.FromArgb(0, 0, 0, 0);
+        ToValue = LvcColor.FromArgb(0, 0, 0, 0);
     }
 
     /// <summary>
@@ -48,19 +48,19 @@ public class ColorMotionProperty : MotionProperty<LvcColor>
     public ColorMotionProperty(string propertyName, LvcColor value)
         : base(propertyName)
     {
-        fromValue = value;
-        toValue = value;
+        FromValue = value;
+        ToValue = value;
     }
 
     /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
     protected override LvcColor OnGetMovement(float progress)
     {
-        return toValue == LvcColor.Empty
+        return ToValue == LvcColor.Empty
             ? LvcColor.Empty
             : LvcColor.FromArgb(
-                (byte)(fromValue.A + progress * (toValue.A - fromValue.A)),
-                (byte)(fromValue.R + progress * (toValue.R - fromValue.R)),
-                (byte)(fromValue.G + progress * (toValue.G - fromValue.G)),
-                (byte)(fromValue.B + progress * (toValue.B - fromValue.B)));
+                (byte)(FromValue.A + progress * (ToValue.A - FromValue.A)),
+                (byte)(FromValue.R + progress * (ToValue.R - FromValue.R)),
+                (byte)(FromValue.G + progress * (ToValue.G - FromValue.G)),
+                (byte)(FromValue.B + progress * (ToValue.B - FromValue.B)));
     }
 }

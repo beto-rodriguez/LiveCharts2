@@ -35,16 +35,6 @@ namespace LiveChartsCore.Motion;
 public abstract class MotionProperty<T>(string propertyName) : IMotionProperty
 {
     private static readonly bool s_canBeNull = Kernel.Extensions.CanBeNull(typeof(T));
-
-    /// <summary>
-    /// From value
-    /// </summary>
-    protected internal T? fromValue = default;
-
-    /// <summary>
-    /// To value
-    /// </summary>
-    protected internal T? toValue = default;
     private long _startTime;
     private long _endTime;
     private bool _requiresToInitialize = true;
@@ -53,12 +43,12 @@ public abstract class MotionProperty<T>(string propertyName) : IMotionProperty
     /// <summary>
     /// Gets the value where the transition began.
     /// </summary>
-    public T? FromValue => fromValue;
+    public T? FromValue { get; protected set; } = default;
 
     /// <summary>
     /// Gets the value where the transition finished or will finish.
     /// </summary>
-    public T? ToValue => toValue;
+    public T? ToValue { get; protected set; } = default;
 
     /// <inheritdoc cref="IMotionProperty.Animation"/>
     public Animation? Animation { get; set; }
@@ -74,8 +64,8 @@ public abstract class MotionProperty<T>(string propertyName) : IMotionProperty
     {
         var typedSource = (MotionProperty<T>)source;
 
-        fromValue = typedSource.FromValue;
-        toValue = typedSource.ToValue;
+        FromValue = typedSource.FromValue;
+        ToValue = typedSource.ToValue;
         _startTime = typedSource._startTime;
         _endTime = typedSource._endTime;
         _requiresToInitialize = typedSource._requiresToInitialize;
@@ -99,8 +89,8 @@ public abstract class MotionProperty<T>(string propertyName) : IMotionProperty
         // lets leave things as they were before.
         //if (value is not null && value.Equals(toValue)) return;
 
-        fromValue = GetMovement(animatable);
-        toValue = value;
+        FromValue = GetMovement(animatable);
+        ToValue = value;
         if (Animation is not null)
         {
             if (animatable.CurrentTime == long.MinValue) // the animatable is not in the canvas yet.
@@ -129,7 +119,7 @@ public abstract class MotionProperty<T>(string propertyName) : IMotionProperty
         // For some reason JITter can't remove value type boxing when started under PerfView Run command
         // Emitted IL has boxing originally, but JITter should be able to optimize it to 'false' or 'Nullable<T>.HasValue'
         // When s_canBeNull is false JITter should remove second check from generated code
-        var fromValueIsNull = s_canBeNull && fromValue is null;
+        var fromValueIsNull = s_canBeNull && FromValue is null;
         if (Animation is null || Animation.EasingFunction is null || fromValueIsNull || IsCompleted) return OnGetMovement(1);
 
         if (_requiresToInitialize || _startTime == long.MinValue)
@@ -187,7 +177,7 @@ public abstract class MotionProperty<T>(string propertyName) : IMotionProperty
     protected abstract T OnGetMovement(float progress);
 
     /// <inheritdoc cref="IMotionProperty.Save"/>
-    public void Save() => _savedValue = toValue;
+    public void Save() => _savedValue = ToValue;
 
     /// <inheritdoc cref="IMotionProperty.Restore"/>
     public void Restore(Animatable animatable) =>
