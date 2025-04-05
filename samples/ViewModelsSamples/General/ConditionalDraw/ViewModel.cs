@@ -8,11 +8,42 @@ using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
+using CommunityToolkit.Mvvm.Input;
+using LiveChartsCore.Kernel;
 
 namespace ViewModelsSamples.General.ConditionalDraw;
 
-public class ViewModel
+public partial class ViewModel
 {
+    public ObservableCollection<ObservableValue> Values { get; set; } =
+        [
+            new(2),
+            new(8),
+            new(4)
+        ];
+
+    [RelayCommand]
+    private void OnPointMeasured(ChartPoint point)
+    {
+        if (point.Context.Visual is null) return;
+
+        var observableValue = point.Context.DataSource as ObservableValue;
+        var isDanger = observableValue?.Value > 5;
+
+        if (isDanger)
+        {
+            point.SetState("Hola");
+        }
+        else
+        {
+            point.ClearState("Hola");
+        }
+
+        //point.Context.Visual.Fill = isDanger
+        //    ? _dangerPaint
+        //    : null; // when null, the series fill is used // mark
+    }
+
     private readonly ObservableCollection<ObservableValue> _values = [];
 
     public ViewModel()
@@ -76,7 +107,7 @@ public class ViewModel
         {
             await Task.Delay(3000);
 
-            foreach (var item in _values)
+            foreach (var item in Values)
             {
                 item.Value = r.Next(0, 10);
             }
