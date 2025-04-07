@@ -43,6 +43,7 @@ public abstract partial class Layout<TDrawingContext> : Animatable, IDrawnElemen
         _TransformOriginMotionProperty = new(new(0.5f, 0.5f));
         _ScaleTransformMotionProperty = new(new(1f, 1f));
         _SkewTransformMotionProperty = new(new(1f, 1f));
+        _PaddingMotionProperty = new(new(0f));
     }
 
     /// <inheritdoc cref="IDrawnElement.Parent"/>

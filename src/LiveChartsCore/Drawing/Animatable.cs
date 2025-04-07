@@ -57,7 +57,7 @@ public abstract class Animatable
     {
         var a = animation?.Duration == 0 ? null : animation;
 
-        if (properties is null)
+        if (properties is null || properties.Length == 0)
         {
             DefaultAnimation = animation;
             return;
@@ -77,7 +77,7 @@ public abstract class Animatable
     /// <param name="properties">The properties to remove, null to select all properties.</param>
     public void RemoveTransition(params PropertyDefinition[]? properties)
     {
-        if (properties is null)
+        if (properties is null || properties.Length == 0)
         {
             DefaultAnimation = null;
             return;
@@ -97,7 +97,7 @@ public abstract class Animatable
     /// <param name="properties">The properties to complete, null to select all properties.</param>
     public virtual void CompleteTransition(params PropertyDefinition[]? properties)
     {
-        if (properties is null)
+        if (properties is null || properties.Length == 0)
         {
             IsValid = true;
             return;

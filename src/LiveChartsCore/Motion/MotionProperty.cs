@@ -120,7 +120,7 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
     public T GetMovement(Animatable animatable)
     {
         var animation = GetActualAnimation(animatable);
-        if (animation is null || animation.EasingFunction is null || !CanTransitionate || IsCompleted) return OnGetMovement(1);
+        if (animation is null || animation.EasingFunction is null || !CanTransitionate || IsCompleted) return ToValue;
 
         if (_requiresToInitialize || _startTime == long.MinValue)
         {

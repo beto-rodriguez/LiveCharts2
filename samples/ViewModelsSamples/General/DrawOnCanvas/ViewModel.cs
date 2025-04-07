@@ -45,12 +45,7 @@ public partial class ViewModel
 public class MotionGeometry : BoundedDrawnGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
     // use Motion properties to animate the geometry
-    private readonly FloatMotionProperty _diameter;
-
-    public MotionGeometry()
-    {
-        _diameter = RegisterMotionProperty(new FloatMotionProperty(nameof(Diameter), 0));
-    }
+    private readonly FloatMotionProperty _diameter = new(0f);
 
     public float Diameter
     {
