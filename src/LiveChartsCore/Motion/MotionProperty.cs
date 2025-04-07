@@ -91,7 +91,10 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
 
         FromValue = GetMovement(animatable);
         ToValue = value;
-        if (Animation is not null)
+
+        var animation = GetActualAnimation(animatable);
+
+        if (animation is not null)
         {
             if (animatable.CurrentTime == long.MinValue) // the animatable is not in the canvas yet.
             {
@@ -100,9 +103,9 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
             else
             {
                 _startTime = animatable.CurrentTime;
-                _endTime = animatable.CurrentTime + Animation._duration;
+                _endTime = animatable.CurrentTime + animation._duration;
             }
-            Animation._animationCompletedCount = 0;
+            animation._animationCompletedCount = 0;
             IsCompleted = false;
             _requiresToInitialize = true;
         }
@@ -116,12 +119,13 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
     /// <returns></returns>
     public T GetMovement(Animatable animatable)
     {
-        if (Animation is null || Animation.EasingFunction is null || !CanTransitionate || IsCompleted) return OnGetMovement(1);
+        var animation = GetActualAnimation(animatable);
+        if (animation is null || animation.EasingFunction is null || !CanTransitionate || IsCompleted) return OnGetMovement(1);
 
         if (_requiresToInitialize || _startTime == long.MinValue)
         {
             _startTime = animatable.CurrentTime;
-            _endTime = animatable.CurrentTime + Animation._duration;
+            _endTime = animatable.CurrentTime + animation._duration;
             _requiresToInitialize = false;
         }
 
@@ -134,17 +138,17 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
         {
             // at this point the animation is completed
             p = 1;
-            Animation._animationCompletedCount++;
-            IsCompleted = Animation._repeatTimes != int.MaxValue && Animation._repeatTimes < Animation._animationCompletedCount;
+            animation._animationCompletedCount++;
+            IsCompleted = animation._repeatTimes != int.MaxValue && animation._repeatTimes < animation._animationCompletedCount;
             if (!IsCompleted)
             {
                 _startTime = animatable.CurrentTime;
-                _endTime = animatable.CurrentTime + Animation._duration;
+                _endTime = animatable.CurrentTime + animation._duration;
                 IsCompleted = false;
             }
         }
 
-        var fp = Animation.EasingFunction(p);
+        var fp = animation.EasingFunction(p);
         return OnGetMovement(fp);
     }
 
@@ -155,12 +159,14 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
     /// <returns>The current value.</returns>
     public T GetCurrentValue(Animatable animatable)
     {
+        var animation = GetActualAnimation(animatable);
+
         unchecked
         {
             var p = (animatable.CurrentTime - _startTime) / (float)(_endTime - _startTime);
             if (p >= 1) p = 1;
             if (animatable.CurrentTime == long.MinValue) p = 0;
-            var fp = Animation?.EasingFunction?.Invoke(p) ?? 1;
+            var fp = animation?.EasingFunction?.Invoke(p) ?? 1;
             return OnGetMovement(fp);
         }
     }
@@ -177,4 +183,6 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
 
     /// <inheritdoc cref="IMotionProperty.Restore"/>
     public void Restore(Animatable animatable) => SetMovement(_savedValue, animatable);
+
+    private Animation? GetActualAnimation(Animatable animatable) => Animation ??= animatable.DefaultAnimation;
 }
