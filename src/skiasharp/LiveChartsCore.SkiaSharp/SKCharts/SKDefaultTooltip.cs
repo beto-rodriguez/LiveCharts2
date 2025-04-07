@@ -246,10 +246,10 @@ public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
 
         this.Animate(
             new Animation(Easing, AnimationsSpeed),
-                DrawnGeometry.OpacityProperty,
-                DrawnGeometry.ScaleTransformProperty,
-                DrawnGeometry.XProperty,
-                DrawnGeometry.YProperty);
+                OpacityProperty,
+                ScaleTransformProperty,
+                XProperty,
+                YProperty);
     }
 
     private void AlignWedge(PopUpPlacement placement, Layout<SkiaSharpDrawingContext> layout)

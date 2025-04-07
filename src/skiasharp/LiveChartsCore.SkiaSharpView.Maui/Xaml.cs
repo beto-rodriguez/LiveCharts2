@@ -254,7 +254,7 @@ internal static class Info
 public class ChartPointVisualState
 {
     public string Name { get; set; } = "Default";
-    public ICollection<MotionPropertySetter> Setters { get; set; } = [];
+    public ICollection<AnimatablePropertySetter> Setters { get; set; } = [];
 }
 
 public abstract class XamlSeries : EmptyContentView
@@ -411,7 +411,7 @@ public partial class XamlScatterSeries<TModel, TVisual, TLabel> : EmptyContentVi
 {
     static partial void OnTypeDefined() => Info.ConfigureDefaults(_defaultScatterSeries);
     private void ValuesMap(object value) => Info.SetValues(_baseType, value);
-    Dictionary<string, MotionPropertySetter[]> ISeries.VisualStates => _baseType.VisualStates;
+    Dictionary<string, AnimatablePropertySetter[]> ISeries.VisualStates => _baseType.VisualStates;
 }
 
 #endregion

@@ -350,41 +350,41 @@ public class RadialGradientPaintExtension : BaseSkiaPaintExtention, IMarkupExten
 /// <summary>
 /// The visual state extension.
 /// </summary>
-public class VisualStateExtension : BaseVisualStateExtension, IMarkupExtension<MotionPropertySetter[]>
+public class VisualStateExtension : BaseVisualStateExtension, IMarkupExtension<AnimatablePropertySetter[]>
 {
     /// <summary>
     /// ...
     /// </summary>
-    public MotionPropertySetter[] ProvideValue(IServiceProvider serviceProvider)
+    public AnimatablePropertySetter[] ProvideValue(IServiceProvider serviceProvider)
     {
-        var states = new List<MotionPropertySetter>();
+        var states = new List<AnimatablePropertySetter>();
 
         if (Opacity != 0)
-            states.Add(new(nameof(IDrawnElement.Opacity), Opacity));
+            states.Add(new(DrawnGeometry.OpacityProperty, Opacity));
 
         if (TranslateTransform is not null)
-            states.Add(new(nameof(IDrawnElement.TranslateTransform), ParsePoint(TranslateTransform, new(0, 0))));
+            states.Add(new(DrawnGeometry.TranslateTransformProperty, ParsePoint(TranslateTransform, new(0, 0))));
 
         if (ScaleTransform is not null)
-            states.Add(new(nameof(IDrawnElement.ScaleTransform), ParsePoint(ScaleTransform, new(1, 1))));
+            states.Add(new(DrawnGeometry.ScaleTransformProperty, ParsePoint(ScaleTransform, new(1, 1))));
 
         if (RotateTransform != 0)
-            states.Add(new(nameof(IDrawnElement.RotateTransform), RotateTransform));
+            states.Add(new(DrawnGeometry.RotateTransformProperty, RotateTransform));
 
         if (SkewTransform is not null)
-            states.Add(new(nameof(IDrawnElement.SkewTransform), ParsePoint(SkewTransform, new(0, 0))));
+            states.Add(new(DrawnGeometry.SkewTransformProperty, ParsePoint(SkewTransform, new(0, 0))));
 
         if (TransformOrigin is not null)
-            states.Add(new(nameof(IDrawnElement.TransformOrigin), ParsePoint(TransformOrigin, new(0.5f, 0.5f))));
+            states.Add(new(DrawnGeometry.TransformOriginProperty, ParsePoint(TransformOrigin, new(0.5f, 0.5f))));
 
-        if (Fill != Paint.Default)
-            states.Add(new(nameof(IDrawnElement.Fill), Fill));
+        //if (Fill != Paint.Default)
+        //    states.Add(new(DrawnGeometry.fill, Fill));
 
-        if (Stroke != Paint.Default)
-            states.Add(new(nameof(IDrawnElement.Stroke), Stroke));
+        //if (Stroke != Paint.Default)
+        //    states.Add(new(nameof(IDrawnElement.Stroke), Stroke));
 
-        if (Paint != Paint.Default)
-            states.Add(new(nameof(IDrawnElement.Paint), Paint));
+        //if (Paint != Paint.Default)
+        //    states.Add(new(nameof(IDrawnElement.Paint), Paint));
 
         return [.. states];
     }

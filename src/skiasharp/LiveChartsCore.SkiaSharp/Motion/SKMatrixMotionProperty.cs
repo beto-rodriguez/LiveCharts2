@@ -35,6 +35,9 @@ namespace LiveChartsCore.SkiaSharpView.Motion;
 public class SKMatrixMotionProperty(SKMatrix defaultValue)
     : MotionProperty<SKMatrix>(defaultValue)
 {
+    /// <inheritdoc cref="MotionProperty{T}.CanTransitionate"/>
+    protected override bool CanTransitionate => true;
+
     /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)"/>
     protected override SKMatrix OnGetMovement(float progress)
     {
