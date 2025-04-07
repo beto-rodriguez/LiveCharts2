@@ -3,6 +3,7 @@
 
 using System.Text;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 
 namespace LiveChartsGenerators;
@@ -11,31 +12,50 @@ namespace LiveChartsGenerators;
 public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
 {
     private const string XamlAttribute = "LiveChartsCore.Generators.XamlClassAttribute";
+    private const string MotionPropertyAttribute = "LiveChartsCore.Generators.MotionPropertyAttribute";
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         context.RegisterPostInitializationOutput(static ctx => ctx.AddSource(
-            "XamlClassAttribute.g.cs", SourceText.From(SourceGenerationHelper.Attribute, Encoding.UTF8)));
+            "Assets.g.cs", SourceText.From(AssetsTemplates.GetTemplate(), Encoding.UTF8)));
 
-        var enumsToGenerate = context.SyntaxProvider
+        var xamlObjects = context.SyntaxProvider
             .ForAttributeWithMetadataName(
                 XamlAttribute,
-                predicate: static (s, _) => true,
+                predicate: static (syntaxNode, _) => syntaxNode is ClassDeclarationSyntax,
                 transform: static (ctx, _) => GetXamlObjectsToGenerate(ctx.SemanticModel, ctx.TargetNode))
             .Where(static m => m is not null);
 
-        context.RegisterSourceOutput(enumsToGenerate,
-            static (spc, source) => Execute(source, spc));
+        context.RegisterSourceOutput(xamlObjects, static (spc, source) => ExecuteXamlObjects(source, spc));
+
+        var motionProperties = context.SyntaxProvider
+            .ForAttributeWithMetadataName(
+                MotionPropertyAttribute,
+                predicate: static (syntaxNode, _) => syntaxNode is PropertyDeclarationSyntax,
+                transform: static (ctx, _) => GetMotionPropertiesToGenerate(ctx.SemanticModel, ctx.TargetNode))
+            .Where(static m => m is not null);
+
+        context.RegisterSourceOutput(motionProperties, static (spc, source) => ExecuteMotionProperties(source, spc));
     }
 
-    private static void Execute(XamlObject? enumToGenerate, SourceProductionContext context)
+    private static void ExecuteXamlObjects(XamlObject? target, SourceProductionContext context)
     {
-        if (enumToGenerate is { } value)
+        if (target is { } value)
         {
             // generate the source code and add it to the output
-            var result = SourceGenerationHelper.GenerateXamlObject(value);
+            var result = XamlObjectTempaltes.GetTemplate(value);
+            context.AddSource($"{value.Name}.g.cs".Replace('<', '_').Replace('>', '_'), SourceText.From(result, Encoding.UTF8));
+        }
+    }
+
+    private static void ExecuteMotionProperties(MotionProperty? target, SourceProductionContext context)
+    {
+        if (target is { } value)
+        {
+            // generate the source code and add it to the output
+            var result = MotionPropertyTemplates.GetTemplate(value);
             context.AddSource(
-                $"{value.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
+                $"{value.Property.ContainingType.Name}.{value.Property.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
                 SourceText.From(result, Encoding.UTF8));
         }
     }
@@ -165,6 +185,32 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
         return new XamlObject(
             generateBaseTypeDeclaration, ns, name, symbol, baseType, bindablePropertiesDic, [.. notBindableProperties.Values], events,
             [.. methods.Values], [.. explicitMethods.Values], fileHeader, propertyChangeMap, overridenTypes);
+    }
+
+    private static MotionProperty? GetMotionPropertiesToGenerate(SemanticModel semanticModel, SyntaxNode declarationSyntax)
+    {
+        if (semanticModel.GetDeclaredSymbol(declarationSyntax) is not IPropertySymbol symbol)
+            return null; // something went wrong
+
+        var targetAttribute = symbol.GetAttributes()
+           .FirstOrDefault(a => a.AttributeClass?.ToDisplayString() == MotionPropertyAttribute);
+        if (targetAttribute is null) return null;
+
+        var hasExplicitAcessors = false;
+
+        foreach (var arg in targetAttribute.NamedArguments)
+        {
+            switch (arg.Key)
+            {
+                case "HasExplicitAcessors":
+                    hasExplicitAcessors = ((bool?)arg.Value.Value) ?? true;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return new(symbol, hasExplicitAcessors);
     }
 
     private static List<ISymbol> GetLiveChartsMembers(ITypeSymbol typeSymbol)
