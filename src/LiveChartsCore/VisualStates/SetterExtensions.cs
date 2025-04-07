@@ -20,22 +20,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Motion;
+using System.Linq;
+using LiveChartsCore.Motion;
+
+namespace LiveChartsCore.VisualStates;
 
 /// <summary>
-/// Defines the <see cref="LvcPoint"/> motion property class.
+/// Defines the setter extensions.
 /// </summary>
-/// <remarks>
-/// Initializes a new instance of the <see cref="PointMotionProperty"/> class.
-/// </remarks>
-/// <param name="defaultValue">The default value.</param>
-public class PointMotionProperty(LvcPoint defaultValue = new())
-    : MotionProperty<LvcPoint>(defaultValue)
+public static class SetterExtensions
 {
-    /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
-    protected override LvcPoint OnGetMovement(float progress) =>
-        new(FromValue.X + progress * (ToValue.X - FromValue.X),
-            FromValue.Y + progress * (ToValue.Y - FromValue.Y));
+    /// <summary>
+    /// Adds a visual state to the series.
+    /// </summary>
+    /// <param name="series">The series.</param>
+    /// <param name="stateName">The state name.</param>
+    /// <param name="setters">The setters collection.</param>
+    /// <returns>The series.</returns>
+    public static ISeries HasState(this ISeries series, string stateName, (PropertyDefinition, object)[] setters)
+    {
+        series.VisualStates[stateName] = [.. setters.Select(x => new AnimatablePropertySetter(x.Item1, x.Item2))];
+
+        return series;
+    }
 }

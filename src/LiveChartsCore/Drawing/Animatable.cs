@@ -20,8 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Collections.Generic;
 using LiveChartsCore.Motion;
 
 namespace LiveChartsCore.Drawing;
@@ -46,67 +44,70 @@ public abstract class Animatable
     public bool RemoveOnCompleted { get; set; }
 
     /// <summary>
-    /// Gets the motion properties.
+    /// Gets or sets the default animation, this animation will be used when no animation is set for a property.
     /// </summary>
-    public Dictionary<string, IMotionProperty> MotionProperties { get; } = [];
+    public Animation? DefaultAnimation { get; set; } = null;
 
     /// <summary>
     /// Sets the transition for the specified properties.
     /// </summary>
     /// <param name="animation">The animation.</param>
-    /// <param name="propertyName">The property name, null to select all properties.</param>
-    public void SetTransition(Animation? animation, params string[]? propertyName)
+    /// <param name="properties">The properties, null to select all properties.</param>
+    public void SetTransition(Animation? animation, params PropertyDefinition[]? properties)
     {
         var a = animation?.Duration == 0 ? null : animation;
-        if (propertyName is null || propertyName.Length == 0) propertyName = [.. MotionProperties.Keys];
 
-        foreach (var name in propertyName)
-            MotionProperties[name].Animation = a;
+        if (properties is null)
+        {
+            DefaultAnimation = animation;
+            return;
+        }
+
+        foreach (var propertySource in properties)
+        {
+            var property = propertySource.GetMotion?.Invoke(this);
+            if (property is null) continue;
+            property.Animation = a;
+        }
     }
 
     /// <summary>
     /// Removes the transition for the specified properties.
     /// </summary>
-    /// <param name="propertyName">The properties to remove, null to select all properties.</param>
-    public void RemoveTransition(params string[]? propertyName)
+    /// <param name="properties">The properties to remove, null to select all properties.</param>
+    public void RemoveTransition(params PropertyDefinition[]? properties)
     {
-        if (propertyName is null || propertyName.Length == 0) propertyName = [.. MotionProperties.Keys];
-
-        foreach (var name in propertyName)
+        if (properties is null)
         {
-            MotionProperties[name].Animation = null;
+            DefaultAnimation = null;
+            return;
+        }
+
+        foreach (var propertySource in properties)
+        {
+            var property = propertySource.GetMotion?.Invoke(this);
+            if (property is null) continue;
+            property.Animation = null;
         }
     }
 
     /// <summary>
     /// Completes the transition for the specified properties.
     /// </summary>
-    /// <param name="propertyName">The property name, null to select all properties.</param>
-    public virtual void CompleteTransition(params string[]? propertyName)
+    /// <param name="properties">The properties to complete, null to select all properties.</param>
+    public virtual void CompleteTransition(params PropertyDefinition[]? properties)
     {
-        if (propertyName is null || propertyName.Length == 0) propertyName = [.. MotionProperties.Keys];
-
-        foreach (var property in propertyName)
+        if (properties is null)
         {
-            if (!MotionProperties.TryGetValue(property, out var transitionProperty))
-                throw new Exception(
-                    $"The property {property} is not a transition property of this instance.");
-
-            if (transitionProperty.Animation is null) continue;
-            transitionProperty.IsCompleted = true;
+            IsValid = true;
+            return;
         }
-    }
 
-    /// <summary>
-    /// Registers a motion property.
-    /// </summary>
-    /// <typeparam name="T">The type of the property.</typeparam>
-    /// <param name="motionProperty">The transition.</param>
-    /// <returns></returns>
-    protected T RegisterMotionProperty<T>(T motionProperty)
-        where T : IMotionProperty
-    {
-        MotionProperties[motionProperty.PropertyName] = motionProperty;
-        return motionProperty;
+        foreach (var propertySource in properties)
+        {
+            var property = propertySource.GetMotion?.Invoke(this);
+            if (property is null) continue;
+            property.IsCompleted = true;
+        }
     }
 }

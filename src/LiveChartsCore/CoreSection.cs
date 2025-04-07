@@ -291,7 +291,7 @@ public abstract class CoreSection<TSizedGeometry, TLabelGeometry> : CoreSection
 
                 _labelGeometry.Animate(
                     cartesianChart.ActualEasingFunction, cartesianChart.ActualAnimationsSpeed,
-                    nameof(_labelGeometry.X), nameof(_labelGeometry.Y));
+                    BaseLabelGeometry.XProperty, BaseLabelGeometry.YProperty);
 
                 _labelGeometry.VerticalAlign = Align.Start;
                 _labelGeometry.HorizontalAlign = Align.Start;

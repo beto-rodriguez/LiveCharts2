@@ -20,8 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// Ignore Spelling: animatable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +27,7 @@ using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.Kernel;
@@ -292,7 +291,7 @@ public static class Extensions
     /// <param name="properties">
     /// The properties, if this argument is not set then all the animatable properties in the object will use the given animation.
     /// </param>
-    public static void Animate(this Animatable animatable, Animation animation, params string[]? properties)
+    public static void Animate(this Animatable animatable, Animation animation, params PropertyDefinition[]? properties)
     {
         animatable.SetTransition(animation, properties);
         animatable.CompleteTransition(properties);
@@ -307,7 +306,7 @@ public static class Extensions
     /// <param name="properties">
     /// The properties, if this argument is not set then all the animatable properties in the object will use the given animation.
     /// </param>
-    public static void Animate(this Animatable animatable, Func<float, float>? easingFunction, TimeSpan speed, params string[]? properties) =>
+    public static void Animate(this Animatable animatable, Func<float, float>? easingFunction, TimeSpan speed, params PropertyDefinition[]? properties) =>
         Animate(animatable, new Animation(easingFunction, speed), properties);
 
     /// <summary>
@@ -322,7 +321,7 @@ public static class Extensions
     /// <param name="properties">
     /// The properties, if this argument is not set then all the animatable properties in the object will use the given animation.
     /// </param>
-    public static void Animate(this Animatable animatable, Chart chart, params string[]? properties) =>
+    public static void Animate(this Animatable animatable, Chart chart, params PropertyDefinition[]? properties) =>
         Animate(animatable, new Animation(chart.ActualEasingFunction, chart.ActualAnimationsSpeed), properties);
 
     /// <summary>
@@ -332,7 +331,7 @@ public static class Extensions
     /// <param name="visual">The visual.</param>
     /// <param name="animation">The animation.</param>
     /// <param name="properties">The properties.</param>
-    public static void Animate(this VisualElement visual, Animation animation, params string[]? properties)
+    public static void Animate(this VisualElement visual, Animation animation, params PropertyDefinition[]? properties)
     {
         foreach (var animatable in visual.GetDrawnGeometries())
         {

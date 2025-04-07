@@ -31,8 +31,8 @@ namespace LiveChartsCore.Motion;
 /// <remarks>
 /// Initializes a new instance of the <see cref="MotionProperty{T}"/> class.
 /// </remarks>
-/// <param name="propertyName">Name of the property.</param>
-public abstract class MotionProperty<T>(string propertyName) : IMotionProperty
+/// <param name="defaultValue">The default value.</param>
+public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
 {
     private static readonly bool s_canBeNull = Kernel.Extensions.CanBeNull(typeof(T));
     private long _startTime;
@@ -43,18 +43,15 @@ public abstract class MotionProperty<T>(string propertyName) : IMotionProperty
     /// <summary>
     /// Gets the value where the transition began.
     /// </summary>
-    public T? FromValue { get; protected set; } = default;
+    public T? FromValue { get; private set; } = defaultValue;
 
     /// <summary>
     /// Gets the value where the transition finished or will finish.
     /// </summary>
-    public T? ToValue { get; protected set; } = default;
+    public T? ToValue { get; private set; } = defaultValue;
 
     /// <inheritdoc cref="IMotionProperty.Animation"/>
     public Animation? Animation { get; set; }
-
-    /// <inheritdoc cref="IMotionProperty.PropertyName"/>
-    public string PropertyName { get; } = propertyName;
 
     /// <inheritdoc cref="IMotionProperty.IsCompleted"/>
     public bool IsCompleted { get; set; } = false;
@@ -72,9 +69,6 @@ public abstract class MotionProperty<T>(string propertyName) : IMotionProperty
         Animation = typedSource.Animation;
         IsCompleted = typedSource.IsCompleted;
     }
-
-    void IMotionProperty.SetMovement(object value, Animatable animatable) =>
-        SetMovement((T)value, animatable);
 
     /// <summary>
     /// Moves to the specified value.

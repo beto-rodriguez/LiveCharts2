@@ -21,27 +21,15 @@
 // SOFTWARE.
 
 using System;
-using LiveChartsCore.Motion;
+using LiveChartsCore.Generators;
 
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
 /// Defines a line geometry.
 /// </summary>
-public abstract class BaseLineGeometry : DrawnGeometry
+public abstract partial class BaseLineGeometry : DrawnGeometry
 {
-    private readonly FloatMotionProperty _x1;
-    private readonly FloatMotionProperty _y1;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="BaseLineGeometry"/> class.
-    /// </summary>
-    public BaseLineGeometry()
-    {
-        _x1 = RegisterMotionProperty(new FloatMotionProperty(nameof(X1), 0f));
-        _y1 = RegisterMotionProperty(new FloatMotionProperty(nameof(Y1), 0f));
-    }
-
     /// <summary>
     /// Gets or sets a value indicating whether the <see cref="X1"/> and <see cref="Y1"/> properties are relative to the location
     /// (<see cref="DrawnGeometry.X"/>, <see cref="DrawnGeometry.Y"/>).
@@ -51,23 +39,25 @@ public abstract class BaseLineGeometry : DrawnGeometry
     /// <summary>
     /// Gets or sets the x1.
     /// </summary>
-    public float X1
+    [MotionProperty(HasExplicitAcessors = true)]
+    public partial float X1
     {
         get => IsRelativeToLocation
-            ? _x1.GetMovement(this) + X
-            : _x1.GetMovement(this);
-        set => _x1.SetMovement(value, this);
+            ? _X1MotionProperty.GetMovement(this) + X
+            : _X1MotionProperty.GetMovement(this);
+        set => _X1MotionProperty.SetMovement(value, this);
     }
 
     /// <summary>
     /// Gets or sets the y1.
     /// </summary>
-    public float Y1
+    [MotionProperty(HasExplicitAcessors = true)]
+    public partial float Y1
     {
         get => IsRelativeToLocation
-            ? _y1.GetMovement(this) + Y
-            : _y1.GetMovement(this);
-        set => _y1.SetMovement(value, this);
+            ? _Y1MotionProperty.GetMovement(this) + Y
+            : _Y1MotionProperty.GetMovement(this);
+        set => _Y1MotionProperty.SetMovement(value, this);
     }
 
     /// <inheritdoc cref="DrawnGeometry.Measure()" />

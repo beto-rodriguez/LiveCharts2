@@ -21,130 +21,101 @@
 // SOFTWARE.
 
 using System;
-using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
+using LiveChartsCore.Generators;
 
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
 /// Defines a label geometry in the user interface.
 /// </summary>
-public abstract class BaseLabelGeometry : Animatable, IDrawnElement
+public abstract partial class BaseLabelGeometry : Animatable, IDrawnElement
 {
-    private readonly FloatMotionProperty _xProperty;
-    private readonly FloatMotionProperty _yProperty;
-    private readonly FloatMotionProperty _rotationProperty;
-    private readonly PointMotionProperty _transformOriginProperty;
-    private readonly PointMotionProperty _scaleProperty;
-    private readonly PointMotionProperty _skewProperty;
-    private readonly PointMotionProperty _translateProperty;
-    private readonly FloatMotionProperty _opacityProperty;
-    private readonly FloatMotionProperty _textSizeProperty;
-    private readonly ColorMotionProperty _backgroundProperty;
     private IDrawnElement? _parent;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseLabelGeometry"/> class.
     /// </summary>
-    public BaseLabelGeometry()
+    protected BaseLabelGeometry()
     {
-        //HasTransform = true; is this needed?
-        _textSizeProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(TextSize), 11));
-        _backgroundProperty = RegisterMotionProperty(new ColorMotionProperty(nameof(Background), LvcColor.Empty));
-        _xProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0));
-        _yProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0));
-        _transformOriginProperty = RegisterMotionProperty(
-            new PointMotionProperty(nameof(TransformOrigin), new LvcPoint(0.5f, 0.5f)));
-        _translateProperty = RegisterMotionProperty(
-            new PointMotionProperty(nameof(TranslateTransform), new LvcPoint(0, 0)));
-        _rotationProperty = RegisterMotionProperty(
-            new FloatMotionProperty(nameof(RotateTransform), 0));
-        _scaleProperty = RegisterMotionProperty(
-            new PointMotionProperty(nameof(ScaleTransform), new LvcPoint(1, 1)));
-        _skewProperty = RegisterMotionProperty(
-            new PointMotionProperty(nameof(SkewTransform), new LvcPoint(1, 1)));
-        _opacityProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Opacity), 1));
-        TransformOrigin = new LvcPoint(0f, 0f);
+        _ScaleTransformMotionProperty = new(new(1f, 1f));
+        _SkewTransformMotionProperty = new(new(1f, 1f));
+        _OpacityMotionProperty = new(1f);
+        _TextSizeMotionProperty = new(11f);
+        _BackgroundMotionProperty = new(LvcColor.Empty);
+        _PaddingMotionProperty = new(new(0f));
+        HasTransform = true;
     }
 
     /// <inheritdoc cref="IDrawnElement.Parent"/>
     IDrawnElement? IDrawnElement.Parent { get => _parent; set => _parent = value; }
 
     /// <inheritdoc cref="IDrawnElement.Opacity"/>
-    public float Opacity
-    {
-        get => _opacityProperty.GetMovement(this);
-        set => _opacityProperty.SetMovement(value, this);
-    }
+    [MotionProperty]
+    public partial float Opacity { get; set; }
 
     /// <inheritdoc cref="IDrawnElement.X"/>
-    public float X
+    [MotionProperty(HasExplicitAcessors = true)]
+    public partial float X
     {
         get => _parent is null
-            ? _xProperty.GetMovement(this)
-            : _xProperty.GetMovement(this) + _parent.X;
-        set => _xProperty.SetMovement(value, this);
+            ? _XMotionProperty.GetMovement(this)
+            : _XMotionProperty.GetMovement(this) + _parent.X;
+        set => _XMotionProperty.SetMovement(value, this);
     }
 
     /// <inheritdoc cref="IDrawnElement.Y"/>
-    public float Y
+    [MotionProperty(HasExplicitAcessors = true)]
+    public partial float Y
     {
         get => _parent is null
-            ? _yProperty.GetMovement(this)
-            : _yProperty.GetMovement(this) + _parent.Y;
-        set => _yProperty.SetMovement(value, this);
+            ? _YMotionProperty.GetMovement(this)
+            : _YMotionProperty.GetMovement(this) + _parent.Y;
+        set => _YMotionProperty.SetMovement(value, this);
     }
 
     /// <inheritdoc cref="IDrawnElement.TransformOrigin"/>
-    public LvcPoint TransformOrigin
-    {
-        get => _transformOriginProperty.GetMovement(this);
-        set => _transformOriginProperty.SetMovement(value, this);
-    }
+    [MotionProperty]
+    public partial LvcPoint TransformOrigin { get; set; }
 
     /// <inheritdoc cref="IDrawnElement.TranslateTransform"/>
-    public LvcPoint TranslateTransform
-    {
-        get => _translateProperty.GetMovement(this);
-        set
-        {
-            _translateProperty.SetMovement(value, this);
-            HasTransform = true;
-        }
-    }
+    [MotionProperty]
+    public partial LvcPoint TranslateTransform { get; set; }
 
     /// <inheritdoc cref="IDrawnElement.RotateTransform"/>
-    public float RotateTransform
-    {
-        get => _rotationProperty.GetMovement(this);
-        set
-        {
-            _rotationProperty.SetMovement(value, this);
-            HasTransform = true;
-        }
-    }
+    [MotionProperty]
+    public partial float RotateTransform { get; set; }
 
     /// <inheritdoc cref="IDrawnElement.ScaleTransform"/>
-    public LvcPoint ScaleTransform
-    {
-        get => _scaleProperty.GetMovement(this);
-        set
-        {
-            _scaleProperty.SetMovement(value, this);
-            HasTransform = true;
-        }
-    }
+    [MotionProperty]
+    public partial LvcPoint ScaleTransform { get; set; }
 
     /// <inheritdoc cref="IDrawnElement.SkewTransform"/>
-    public LvcPoint SkewTransform
-    {
-        get => _skewProperty.GetMovement(this);
-        set
-        {
-            _skewProperty.SetMovement(value, this);
-            HasTransform = true;
-        }
-    }
+    [MotionProperty]
+    public partial LvcPoint SkewTransform { get; set; }
+
+    /// <summary>
+    /// Gets or sets the size of the text.
+    /// </summary>
+    [MotionProperty]
+    public partial float TextSize { get; set; }
+
+    /// <summary>
+    /// Gets or sets the background color.
+    /// </summary>
+    [MotionProperty]
+    public partial LvcColor Background { get; set; }
+
+    /// <summary>
+    /// Gets or sets the padding.
+    /// </summary>
+    [MotionProperty]
+    public partial Padding Padding { get; set; }
+
+    /// <summary>
+    /// Gets or sets the maximum width, when the text exceeds this width, it will be wrapped.
+    /// </summary>
+    public float MaxWidth { get; set; } = float.MaxValue;
 
     /// <inheritdoc cref="IDrawnElement.HasTransform"/>
     public bool HasTransform { get; protected set; }
@@ -204,37 +175,9 @@ public abstract class BaseLabelGeometry : Animatable, IDrawnElement
     public string Text { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets or sets the size of the text.
-    /// </summary>
-    public float TextSize
-    {
-        get => _textSizeProperty.GetMovement(this);
-        set => _textSizeProperty.SetMovement(value, this);
-    }
-
-    /// <summary>
-    /// Gets or sets the background color.
-    /// </summary>
-    public LvcColor Background
-    {
-        get => _backgroundProperty.GetMovement(this);
-        set => _backgroundProperty.SetMovement(value, this);
-    }
-
-    /// <summary>
-    /// Gets or sets the padding.
-    /// </summary>
-    public Padding Padding { get; set; } = new();
-
-    /// <summary>
     /// Gets or sets the line height [in times the text height].
     /// </summary>
     public float LineHeight { get; set; } = 1.45f;
-
-    /// <summary>
-    /// Gets or sets the maximum width, when the text exceeds this width, it will be wrapped.
-    /// </summary>
-    public float MaxWidth { get; set; } = float.MaxValue;
 
 #if DEBUG
     /// <summary>

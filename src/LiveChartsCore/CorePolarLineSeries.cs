@@ -432,7 +432,10 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
 
                     if (isFirstDraw)
                         label.CompleteTransition(
-                            nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
+                            BaseLabelGeometry.TextSizeProperty,
+                            BaseLabelGeometry.XProperty,
+                            BaseLabelGeometry.YProperty,
+                            BaseLabelGeometry.RotateTransformProperty);
 
                     var labelPosition = GetLabelPolarPosition(
                         scaler.CenterX, scaler.CenterY, (float)rad, scaler.GetAngle(coordinate.SecondaryValue),

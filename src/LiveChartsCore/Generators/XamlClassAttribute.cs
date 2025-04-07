@@ -20,44 +20,55 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
+using System;
 
-namespace LiveChartsCore.Motion;
+namespace LiveChartsCore.Generators;
 
 /// <summary>
-/// Defines a motions property.
+/// Marks a class to be generated as a XAML friendly object, LiveCharts will wrap the object in a XAML friendly object,
+/// then when a property changes in the XAML object, it updates the LiveCharts object.
 /// </summary>
-public interface IMotionProperty
+/// <remarks>
+/// Initializes a new instance of the <see cref="XamlClassAttribute"/> class.
+/// </remarks>
+/// <param name="basedOn">The base type</param>
+[AttributeUsage(AttributeTargets.Class)]
+public class XamlClassAttribute(Type basedOn) : Attribute
 {
     /// <summary>
-    /// Gets or sets a value indicating whether this instance is completed.
+    /// The base type.
     /// </summary>
-    /// <value>
-    ///   <c>true</c> if this instance is completed; otherwise, <c>false</c>.
-    /// </value>
-    bool IsCompleted { get; set; }
+    public Type BaseType { get; } = basedOn;
 
     /// <summary>
-    /// Gets or sets the animation.
+    /// Also maps the specified type.
     /// </summary>
-    /// <value>
-    /// The animation.
-    /// </value>
-    Animation? Animation { get; set; }
+    public Type? Map { get; set; }
 
     /// <summary>
-    /// Copies into this instance the source property.
+    /// The path to the map.
     /// </summary>
-    /// <param name="source">The source.</param>
-    void CopyFrom(IMotionProperty source);
+    public string? MapPath { get; set; }
 
     /// <summary>
-    /// Saves the property target value.
+    /// The header to add to the generated file.
     /// </summary>
-    void Save();
+    public string? FileHeader { get; set; }
 
     /// <summary>
-    /// Restores the property target value.
+    /// A string with the property change map e.g.
+    /// MyProperty{=}MyMapMethod{,}MyOtherProperty{=}MyOtherMapMethod.
     /// </summary>
-    void Restore(Animatable animatable);
+    public string? PropertyChangeMap { get; set; }
+
+    /// <summary>
+    /// A string with the property type overrides e.g.
+    /// MyProperty{=}double{,}MyOtherProperty{=}object.
+    /// </summary>
+    public string? PropertyTypeOverride { get; set; }
+
+    /// <summary>
+    /// Indicates whether the generator should generate the base type declaration, default is true.
+    /// </summary>
+    public bool GenerateBaseTypeDeclaration { get; set; } = true;
 }

@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#pragma warning disable IDE1006 // Naming Styles
+
 using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Motion;
@@ -29,25 +31,12 @@ namespace LiveChartsCore.Motion;
 /// </summary>
 public class AnimatableAxisBounds : Animatable
 {
-    private readonly NullableDoubleMotionProperty _maxLimitProperty;
-    private readonly NullableDoubleMotionProperty _minLimitProperty;
-    private readonly DoubleMotionProperty _maxDataBoundProperty;
-    private readonly DoubleMotionProperty _minDataBoundProperty;
-    private readonly DoubleMotionProperty _maxVisibleBoundProperty;
-    private readonly DoubleMotionProperty _minVisibleBoundProperty;
-
-    /// <summary>
-    /// Intializes a new isntance of the <see cref="AnimatableAxisBounds"/> class.
-    /// </summary>
-    public AnimatableAxisBounds()
-    {
-        _maxLimitProperty = RegisterMotionProperty(new NullableDoubleMotionProperty(nameof(MaxLimit), null));
-        _minLimitProperty = RegisterMotionProperty(new NullableDoubleMotionProperty(nameof(MinLimit), null));
-        _maxDataBoundProperty = RegisterMotionProperty(new DoubleMotionProperty(nameof(MaxDataBound), 0d));
-        _minDataBoundProperty = RegisterMotionProperty(new DoubleMotionProperty(nameof(MinDataBound), 0d));
-        _maxVisibleBoundProperty = RegisterMotionProperty(new DoubleMotionProperty(nameof(MaxVisibleBound), 0d));
-        _minVisibleBoundProperty = RegisterMotionProperty(new DoubleMotionProperty(nameof(MinVisibleBound), 0d));
-    }
+    private readonly NullableDoubleMotionProperty _maxLimitProperty = new(null);
+    private readonly NullableDoubleMotionProperty _minLimitProperty = new(null);
+    private readonly DoubleMotionProperty _maxDataBoundProperty = new(0d);
+    private readonly DoubleMotionProperty _minDataBoundProperty = new(0d);
+    private readonly DoubleMotionProperty _maxVisibleBoundProperty = new(0d);
+    private readonly DoubleMotionProperty _minVisibleBoundProperty = new(0d);
 
     /// <summary>
     /// Gets or sets the max limit.

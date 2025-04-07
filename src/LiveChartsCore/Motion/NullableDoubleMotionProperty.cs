@@ -25,36 +25,16 @@ namespace LiveChartsCore.Motion;
 /// <summary>
 /// Defines the <see cref="NullableDoubleMotionProperty"/> class.
 /// </summary>
-public class NullableDoubleMotionProperty : MotionProperty<double?>
+/// <remarks>
+/// Initializes a new instance of the <see cref="NullableDoubleMotionProperty"/> class.
+/// </remarks>
+/// <param name="defaultValue">The default value.</param>
+public class NullableDoubleMotionProperty(double? defaultValue = null)
+    : MotionProperty<double?>(defaultValue)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="NullableDoubleMotionProperty"/> class.
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    public NullableDoubleMotionProperty(string propertyName)
-        : base(propertyName)
-    {
-        FromValue = 0;
-        ToValue = 0;
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="FloatMotionProperty"/> class.
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <param name="value">The value.</param>
-    public NullableDoubleMotionProperty(string propertyName, double? value)
-        : base(propertyName)
-    {
-        FromValue = value;
-        ToValue = value;
-    }
-
     /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
-    protected override double? OnGetMovement(float progress)
-    {
-        return FromValue is null || ToValue is null
+    protected override double? OnGetMovement(float progress) =>
+        FromValue is null || ToValue is null
             ? ToValue
             : FromValue + progress * (ToValue - FromValue);
-    }
 }

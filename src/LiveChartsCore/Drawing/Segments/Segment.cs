@@ -20,31 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Motion;
+using LiveChartsCore.Generators;
 
 namespace LiveChartsCore.Drawing.Segments;
 
 /// <summary>
 /// Defines a path segment that is part of a sequence.
 /// </summary>
-public class Segment : Animatable
+public partial class Segment : Animatable
 {
-    private readonly FloatMotionProperty _xiProperty;
-    private readonly FloatMotionProperty _yiProperty;
-    private readonly FloatMotionProperty _xjProperty;
-    private readonly FloatMotionProperty _yjProperty;
-
-    /// <summary>
-    /// Initializes a new insance of the <see cref="Segment"/> class.
-    /// </summary>
-    public Segment()
-    {
-        _xiProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Xi), 0f));
-        _yiProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Yi), 0f));
-        _xjProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Xj), 0f));
-        _yjProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Yj), 0f));
-    }
-
     /// <summary>
     /// Gets or sets the segment id, a unique and consecutive integer.
     /// </summary>
@@ -53,38 +37,26 @@ public class Segment : Animatable
     /// <summary>
     /// Gets the start point in the X axis.
     /// </summary>
-    public float Xi
-    {
-        get => _xiProperty.GetMovement(this);
-        set => _xiProperty.SetMovement(value, this);
-    }
+    [MotionProperty]
+    public partial float Xi { get; set; }
 
     /// <summary>
     /// Gets the start point in the X axis.
     /// </summary>
-    public float Yi
-    {
-        get => _yiProperty.GetMovement(this);
-        set => _yiProperty.SetMovement(value, this);
-    }
+    [MotionProperty]
+    public partial float Yi { get; set; }
 
     /// <summary>
     /// Gets the end point in the X axis.
     /// </summary>
-    public float Xj
-    {
-        get => _xjProperty.GetMovement(this);
-        set => _xjProperty.SetMovement(value, this);
-    }
+    [MotionProperty]
+    public partial float Xj { get; set; }
 
     /// <summary>
     /// Gets the end point in the Y axis.
     /// </summary>
-    public float Yj
-    {
-        get => _yjProperty.GetMovement(this);
-        set => _yjProperty.SetMovement(value, this);
-    }
+    [MotionProperty]
+    public partial float Yj { get; set; }
 
     /// <summary>
     /// Follows the specified segment.
@@ -96,12 +68,17 @@ public class Segment : Animatable
         CurrentTime = segment.CurrentTime;
         RemoveOnCompleted = segment.RemoveOnCompleted;
 
-        var xProp = segment.MotionProperties[nameof(Xj)];
-        var yProp = segment.MotionProperties[nameof(Yj)];
+        var xiPropertyGetter = XiProperty.GetMotion!;
+        var xjPropertyGetter = XjProperty.GetMotion!;
+        var yiPropertyGetter = YiProperty.GetMotion!;
+        var yjPropertyGetter = YjProperty.GetMotion!;
 
-        MotionProperties[nameof(Xi)].CopyFrom(xProp);
-        MotionProperties[nameof(Xj)].CopyFrom(xProp);
-        MotionProperties[nameof(Yi)].CopyFrom(yProp);
-        MotionProperties[nameof(Yj)].CopyFrom(yProp);
+        var xProp = xjPropertyGetter(segment)!;
+        var yProp = yjPropertyGetter(segment)!;
+
+        xiPropertyGetter(this)!.CopyFrom(xProp);
+        xjPropertyGetter(this)!.CopyFrom(xProp);
+        yiPropertyGetter(this)!.CopyFrom(yProp);
+        yjPropertyGetter(this)!.CopyFrom(yProp);
     }
 }

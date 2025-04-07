@@ -387,10 +387,11 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
                 var x = secondaryScale.ToPixels(coordinate.SecondaryValue);
                 var y = primaryScale.ToPixels(coordinate.PrimaryValue + s);
 
-                visual.Geometry.MotionProperties[nameof(visual.Geometry.X)]
-                    .CopyFrom(visual.Segment.MotionProperties[nameof(visual.Segment.Xj)]);
-                visual.Geometry.MotionProperties[nameof(visual.Geometry.Y)]
-                    .CopyFrom(visual.Segment.MotionProperties[nameof(visual.Segment.Yj)]);
+                DrawnGeometry.XProperty.GetMotion!.Invoke(visual.Geometry)!
+                    .CopyFrom(Segment.XjProperty.GetMotion!.Invoke(visual.Segment)!);
+                DrawnGeometry.YProperty.GetMotion!.Invoke(visual.Geometry)!
+                    .CopyFrom(Segment.YjProperty.GetMotion!.Invoke(visual.Segment)!);
+
                 visual.Geometry.TranslateTransform = new LvcPoint(-hgs, -hgs);
 
                 visual.Geometry.Width = gs;
@@ -452,7 +453,10 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
 
                     if (isFirstDraw)
                         label.CompleteTransition(
-                            nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
+                            BaseLabelGeometry.TextSizeProperty,
+                            BaseLabelGeometry.XProperty,
+                            BaseLabelGeometry.YProperty,
+                            BaseLabelGeometry.RotateTransformProperty);
 
                     var m = label.Measure();
                     var labelPosition = GetLabelPosition(

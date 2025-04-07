@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Drawing;
@@ -135,14 +136,20 @@ public interface IDrawnElement
     /// Sets the transition for the specified properties.
     /// </summary>
     /// <param name="animation">The animation.</param>
-    /// <param name="propertyName">The property name, null to select all properties.</param>
-    void SetTransition(Animation? animation, params string[]? propertyName);
+    /// <param name="properties">The properties, null to select all properties.</param>
+    void SetTransition(Animation? animation, params PropertyDefinition[]? properties);
+
+    /// <summary>
+    /// Removes the transition for the specified properties.
+    /// </summary>
+    /// <param name="properties">The properties to remove, null to select all properties.</param>
+    void RemoveTransition(params PropertyDefinition[]? properties);
 
     /// <summary>
     /// Completes the transition for the specified properties.
     /// </summary>
-    /// <param name="propertyName">The properties, null to seledct all.</param>
-    void CompleteTransition(params string[]? propertyName);
+    /// <param name="properties">The properties to complete, null to select all properties.</param>
+    void CompleteTransition(params PropertyDefinition[]? properties);
 
     /// <summary>
     /// Measures the instance.

@@ -20,22 +20,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
+using LiveChartsCore.Motion;
 
-namespace LiveChartsCore.Motion;
+namespace LiveChartsCore.VisualStates;
 
 /// <summary>
-/// Defines the <see cref="LvcPoint"/> motion property class.
+/// Defines a motion property setter.
 /// </summary>
-/// <remarks>
-/// Initializes a new instance of the <see cref="PointMotionProperty"/> class.
-/// </remarks>
-/// <param name="defaultValue">The default value.</param>
-public class PointMotionProperty(LvcPoint defaultValue = new())
-    : MotionProperty<LvcPoint>(defaultValue)
+public class AnimatablePropertySetter(PropertyDefinition propertyDefinition, object value)
 {
-    /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
-    protected override LvcPoint OnGetMovement(float progress) =>
-        new(FromValue.X + progress * (ToValue.X - FromValue.X),
-            FromValue.Y + progress * (ToValue.Y - FromValue.Y));
+    /// <summary>
+    /// Gets the property definition.
+    /// </summary>
+    public PropertyDefinition PropertyDefinition { get; } = propertyDefinition;
+
+    /// <summary>
+    /// Gets the value.
+    /// </summary>
+    public object Value { get; } = value;
 }

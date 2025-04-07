@@ -328,7 +328,7 @@ public abstract class Series<TModel, TVisual, TLabel>
     public double DataLabelsMaxWidth { get => _dataLabelsMaxWidth; set => SetProperty(ref _dataLabelsMaxWidth, value); }
 
     /// <inheritdoc cref="ISeries.VisualStates"/>
-    public Dictionary<string, MotionPropertySetter[]> VisualStates { get; } = [];
+    public Dictionary<string, AnimatablePropertySetter[]> VisualStates { get; } = [];
 
     /// <inheritdoc cref="ISeries.GetStackGroup"/>
     public virtual int GetStackGroup() => 0;

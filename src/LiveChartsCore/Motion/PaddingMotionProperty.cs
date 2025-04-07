@@ -20,22 +20,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Motion;
 
 /// <summary>
-/// Defines the <see cref="LvcPoint"/> motion property class.
+/// Defines the <see cref="Padding"/> motion property class.
 /// </summary>
 /// <remarks>
-/// Initializes a new instance of the <see cref="PointMotionProperty"/> class.
+/// Initializes a new instance of the <see cref="SizeMotionProperty"/> class.
 /// </remarks>
 /// <param name="defaultValue">The default value.</param>
-public class PointMotionProperty(LvcPoint defaultValue = new())
-    : MotionProperty<LvcPoint>(defaultValue)
+public class PaddingMotionProperty(Padding defaultValue = null!)
+    : MotionProperty<Padding>(defaultValue)
 {
     /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
-    protected override LvcPoint OnGetMovement(float progress) =>
-        new(FromValue.X + progress * (ToValue.X - FromValue.X),
-            FromValue.Y + progress * (ToValue.Y - FromValue.Y));
+    protected override Padding OnGetMovement(float progress) =>
+        ToValue is null || FromValue is null
+        ? throw new Exception("Cannot animate to or from null padding.")
+        : new(
+            FromValue.Left + progress * (ToValue.Left - FromValue.Left),
+            FromValue.Top + progress * (ToValue.Top - FromValue.Top),
+            FromValue.Right + progress * (ToValue.Right - FromValue.Right),
+            FromValue.Bottom + progress * (ToValue.Bottom - FromValue.Bottom));
 }

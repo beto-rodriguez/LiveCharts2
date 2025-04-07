@@ -20,20 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.VisualStates;
+using System;
+
+namespace LiveChartsCore.Generators;
 
 /// <summary>
-/// Defines a visual state.
+/// Marks a property as a motion property, LiveCharts will implement the property as a motion property.
 /// </summary>
-public class MotionPropertySetter(string propertyName, object? value)
+/// <remarks>
+/// Initializes a new instance of the <see cref="MotionPropertyAttribute"/> class.
+/// </remarks>
+[AttributeUsage(AttributeTargets.Property)]
+public class MotionPropertyAttribute() : Attribute
 {
     /// <summary>
-    /// The property name.
+    /// Gets or sets a value indicating whether the property has explicit accessors.
     /// </summary>
-    public string PropertyName { get; set; } = propertyName;
-
-    /// <summary>
-    /// The property value.
-    /// </summary>
-    public object? Value { get; set; } = value;
+    public bool HasExplicitAcessors { get; set; } = false;
 }
