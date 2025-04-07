@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Motion;
@@ -35,11 +34,13 @@ namespace LiveChartsCore.Motion;
 public class PaddingMotionProperty(Padding defaultValue = null!)
     : MotionProperty<Padding>(defaultValue)
 {
+    /// <inheritdoc cref="MotionProperty{T}.CanTransitionate"/>
+    protected override bool CanTransitionate =>
+        FromValue is not null && ToValue is not null;
+
     /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
     protected override Padding OnGetMovement(float progress) =>
-        ToValue is null || FromValue is null
-        ? throw new Exception("Cannot animate to or from null padding.")
-        : new(
+        new(
             FromValue.Left + progress * (ToValue.Left - FromValue.Left),
             FromValue.Top + progress * (ToValue.Top - FromValue.Top),
             FromValue.Right + progress * (ToValue.Right - FromValue.Right),

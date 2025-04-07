@@ -23,7 +23,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
@@ -37,8 +36,6 @@ namespace LiveChartsCore.Kernel;
 /// </summary>
 public static class Extensions
 {
-    private static readonly Type s_nullableType = typeof(Nullable<>);
-
     /// <summary>
     /// Calculates the tooltip location.
     /// </summary>
@@ -596,12 +593,6 @@ public static class Extensions
         data.GoNext(data.Next);
         yield return data;
     }
-
-    /// <summary>
-    /// Returns <see langword="true" /> when the given type is either a reference type or of type <see cref="Nullable{T}"/>.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static bool CanBeNull(Type type) => !type.IsValueType || (type.IsGenericType && type.GetGenericTypeDefinition() == s_nullableType);
 
     private static IEnumerable<ChartPoint> YieldReturnUntilNextNullChartPoint(
         GapsBuilder builder,

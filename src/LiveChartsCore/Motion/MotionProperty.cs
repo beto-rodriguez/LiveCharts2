@@ -34,27 +34,33 @@ namespace LiveChartsCore.Motion;
 /// <param name="defaultValue">The default value.</param>
 public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
 {
-    private static readonly bool s_canBeNull = Kernel.Extensions.CanBeNull(typeof(T));
     private long _startTime;
     private long _endTime;
     private bool _requiresToInitialize = true;
-    private T? _savedValue = default;
+    private T _savedValue = defaultValue;
 
     /// <summary>
     /// Gets the value where the transition began.
     /// </summary>
-    public T? FromValue { get; private set; } = defaultValue;
+    public T FromValue { get; private set; } = defaultValue;
 
     /// <summary>
     /// Gets the value where the transition finished or will finish.
     /// </summary>
-    public T? ToValue { get; private set; } = defaultValue;
+    public T ToValue { get; private set; } = defaultValue;
 
     /// <inheritdoc cref="IMotionProperty.Animation"/>
     public Animation? Animation { get; set; }
 
     /// <inheritdoc cref="IMotionProperty.IsCompleted"/>
     public bool IsCompleted { get; set; } = false;
+
+    /// <summary>
+    /// Indicates whether the property transition can complete, this depends
+    /// on <see cref="FromValue"/> and <see cref="ToValue"/> being null or any other
+    /// state where the transition is not possible.
+    /// </summary>
+    protected abstract bool CanTransitionate { get; }
 
     /// <inheritdoc cref="IMotionProperty.CopyFrom(IMotionProperty)"/>
     public void CopyFrom(IMotionProperty source)
@@ -110,11 +116,7 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
     /// <returns></returns>
     public T GetMovement(Animatable animatable)
     {
-        // For some reason JITter can't remove value type boxing when started under PerfView Run command
-        // Emitted IL has boxing originally, but JITter should be able to optimize it to 'false' or 'Nullable<T>.HasValue'
-        // When s_canBeNull is false JITter should remove second check from generated code
-        var fromValueIsNull = s_canBeNull && FromValue is null;
-        if (Animation is null || Animation.EasingFunction is null || fromValueIsNull || IsCompleted) return OnGetMovement(1);
+        if (Animation is null || Animation.EasingFunction is null || !CanTransitionate || IsCompleted) return OnGetMovement(1);
 
         if (_requiresToInitialize || _startTime == long.MinValue)
         {
@@ -174,7 +176,5 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
     public void Save() => _savedValue = ToValue;
 
     /// <inheritdoc cref="IMotionProperty.Restore"/>
-    public void Restore(Animatable animatable) =>
-        // should we check if _savedValue is null?
-        SetMovement(_savedValue!, animatable);
+    public void Restore(Animatable animatable) => SetMovement(_savedValue, animatable);
 }

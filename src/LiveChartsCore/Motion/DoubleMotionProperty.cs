@@ -31,6 +31,9 @@ namespace LiveChartsCore.Motion;
 /// <param name="defaultValue">The default value.</param>
 public class DoubleMotionProperty(double defaultValue = 0d) : MotionProperty<double>(defaultValue)
 {
+    /// <inheritdoc cref="MotionProperty{T}.CanTransitionate"/>
+    protected override bool CanTransitionate => true;
+
     /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
     protected override double OnGetMovement(float progress) =>
         FromValue + progress * (ToValue - FromValue);

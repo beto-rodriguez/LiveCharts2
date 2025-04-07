@@ -32,9 +32,11 @@ namespace LiveChartsCore.Motion;
 public class NullableDoubleMotionProperty(double? defaultValue = null)
     : MotionProperty<double?>(defaultValue)
 {
+    /// <inheritdoc cref="MotionProperty{T}.CanTransitionate"/>
+    protected override bool CanTransitionate =>
+        FromValue is not null && ToValue is not null;
+
     /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
     protected override double? OnGetMovement(float progress) =>
-        FromValue is null || ToValue is null
-            ? ToValue
-            : FromValue + progress * (ToValue - FromValue);
+        FromValue + progress * (ToValue - FromValue);
 }

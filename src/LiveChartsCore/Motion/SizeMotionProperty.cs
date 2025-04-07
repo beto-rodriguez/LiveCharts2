@@ -34,6 +34,9 @@ namespace LiveChartsCore.Motion;
 public class SizeMotionProperty(LvcSize defaultValue = new())
     : MotionProperty<LvcSize>(defaultValue)
 {
+    /// <inheritdoc cref="MotionProperty{T}.CanTransitionate"/>
+    protected override bool CanTransitionate => true;
+
     /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
     protected override LvcSize OnGetMovement(float progress) =>
         new(

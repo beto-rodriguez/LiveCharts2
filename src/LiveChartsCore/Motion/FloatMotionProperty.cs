@@ -32,6 +32,9 @@ namespace LiveChartsCore.Motion;
 public class FloatMotionProperty(float defaultValue = 0f)
     : MotionProperty<float>(defaultValue)
 {
+    /// <inheritdoc cref="MotionProperty{T}.CanTransitionate"/>
+    protected override bool CanTransitionate => true;
+
     /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
     protected override float OnGetMovement(float progress) =>
         FromValue + progress * (ToValue - FromValue);

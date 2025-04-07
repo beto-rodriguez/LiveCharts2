@@ -34,6 +34,9 @@ namespace LiveChartsCore.Motion;
 public class PointMotionProperty(LvcPoint defaultValue = new())
     : MotionProperty<LvcPoint>(defaultValue)
 {
+    /// <inheritdoc cref="MotionProperty{T}.CanTransitionate"/>
+    protected override bool CanTransitionate => true;
+
     /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
     protected override LvcPoint OnGetMovement(float progress) =>
         new(FromValue.X + progress * (ToValue.X - FromValue.X),
