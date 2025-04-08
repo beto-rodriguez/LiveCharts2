@@ -36,7 +36,6 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
 {
     private long _startTime;
     private long _endTime;
-    private bool _requiresToInitialize = true;
     private T _savedValue = defaultValue;
 
     /// <summary>
@@ -76,19 +75,12 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
 
         if (animation is not null)
         {
-            if (animatable.CurrentTime == long.MinValue) // the animatable is not in the canvas yet.
-            {
-                _requiresToInitialize = true;
-            }
-            else
-            {
-                _startTime = animatable.CurrentTime;
-                _endTime = animatable.CurrentTime + animation._duration;
-            }
+            _startTime = animatable.CurrentTime;
+            _endTime = animatable.CurrentTime + animation._duration;
             animation._animationCompletedCount = 0;
             IsCompleted = false;
-            _requiresToInitialize = true;
         }
+
         animatable.IsValid = false;
     }
 
@@ -102,11 +94,10 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
         var animation = GetActualAnimation(animatable);
         if (animation is null || animation.EasingFunction is null || !CanTransitionate || IsCompleted) return ToValue;
 
-        if (_requiresToInitialize || _startTime == long.MinValue)
+        if (_startTime == long.MinValue)
         {
             _startTime = animatable.CurrentTime;
             _endTime = animatable.CurrentTime + animation._duration;
-            _requiresToInitialize = false;
         }
 
         // at this points we are sure that the animatable has not finished at least with this property.
@@ -154,7 +145,6 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
         ToValue = typedSource.ToValue;
         _startTime = typedSource._startTime;
         _endTime = typedSource._endTime;
-        _requiresToInitialize = typedSource._requiresToInitialize;
         Animation = typedSource.Animation;
         IsCompleted = typedSource.IsCompleted;
     }
