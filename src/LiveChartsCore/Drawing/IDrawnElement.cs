@@ -125,7 +125,7 @@ public interface IDrawnElement
     /// <summary>
     /// Gets or sets the current time, this property is used to animate the instance.
     /// </summary>
-    long CurrentTime { get; set; }
+    float CurrentTime { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether the instance should be removed from the canvas when all the animations are completed.

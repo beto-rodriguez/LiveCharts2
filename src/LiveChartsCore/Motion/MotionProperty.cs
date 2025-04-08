@@ -34,8 +34,8 @@ namespace LiveChartsCore.Motion;
 /// <param name="defaultValue">The default value.</param>
 public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
 {
-    private long _startTime;
-    private long _endTime;
+    private float _startTime;
+    private float _endTime;
     private T _savedValue = defaultValue;
 
     /// <summary>
@@ -90,7 +90,7 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
         // at this points we are sure that the animatable has not finished at least with this property.
         animatable.IsValid = false;
 
-        var p = (animatable.CurrentTime - _startTime) / unchecked((float)(_endTime - _startTime));
+        var p = (animatable.CurrentTime - _startTime) / (_endTime - _startTime);
 
         if (p >= 1)
         {
@@ -138,7 +138,7 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
 
     private void SetTimeLine(Animatable animatable, Animation animation)
     {
-        if (animatable.CurrentTime == long.MinValue)
+        if (float.IsNaN(animatable.CurrentTime))
         {
             // this means that the animatable is not being animated yet,
             _startTime = 0;

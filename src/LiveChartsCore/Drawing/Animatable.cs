@@ -36,7 +36,7 @@ public abstract class Animatable
     /// <summary>
     /// Gets or sets the current time, this property is used by the motion engine to calculate the progress of the animations.
     /// </summary>
-    public long CurrentTime { get; set; } = long.MinValue;
+    public float CurrentTime { get; set; } = float.NaN;
 
     /// <summary>
     /// Gets or sets a value indicating whether this instance should be removed from the canvas when all the animations are completed.
