@@ -72,14 +72,7 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
         ToValue = value;
 
         var animation = GetActualAnimation(animatable);
-
-        if (animation is not null)
-        {
-            _startTime = animatable.CurrentTime;
-            _endTime = animatable.CurrentTime + animation._duration;
-            animation._animationCompletedCount = 0;
-            IsCompleted = false;
-        }
+        if (animation is not null) SetTimeLine(animatable, animation);
 
         animatable.IsValid = false;
     }
@@ -93,12 +86,6 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
     {
         var animation = GetActualAnimation(animatable);
         if (animation is null || animation.EasingFunction is null || !CanTransitionate || IsCompleted) return ToValue;
-
-        if (_startTime == long.MinValue)
-        {
-            _startTime = animatable.CurrentTime;
-            _endTime = animatable.CurrentTime + animation._duration;
-        }
 
         // at this points we are sure that the animatable has not finished at least with this property.
         animatable.IsValid = false;
@@ -147,6 +134,24 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
         _endTime = typedSource._endTime;
         Animation = typedSource.Animation;
         IsCompleted = typedSource.IsCompleted;
+    }
+
+    private void SetTimeLine(Animatable animatable, Animation animation)
+    {
+        if (animatable.CurrentTime == long.MinValue)
+        {
+            // this means that the animatable is not being animated yet,
+            _startTime = 0;
+            _endTime = animation.Duration;
+        }
+        else
+        {
+            _startTime = animatable.CurrentTime;
+            _endTime = animatable.CurrentTime + animation._duration;
+        }
+
+        animation._animationCompletedCount = 0;
+        IsCompleted = false;
     }
 
     private Animation? GetActualAnimation(Animatable animatable) => Animation ??= animatable.DefaultAnimation;
