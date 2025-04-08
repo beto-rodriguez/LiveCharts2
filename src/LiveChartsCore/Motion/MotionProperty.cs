@@ -62,20 +62,6 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
     /// </summary>
     protected abstract bool CanTransitionate { get; }
 
-    /// <inheritdoc cref="IMotionProperty.CopyFrom(IMotionProperty)"/>
-    public void CopyFrom(IMotionProperty source)
-    {
-        var typedSource = (MotionProperty<T>)source;
-
-        FromValue = typedSource.FromValue;
-        ToValue = typedSource.ToValue;
-        _startTime = typedSource._startTime;
-        _endTime = typedSource._endTime;
-        _requiresToInitialize = typedSource._requiresToInitialize;
-        Animation = typedSource.Animation;
-        IsCompleted = typedSource.IsCompleted;
-    }
-
     /// <summary>
     /// Moves to the specified value.
     /// </summary>
@@ -153,25 +139,6 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
     }
 
     /// <summary>
-    /// Gets the current value in the time line.
-    /// </summary>
-    /// <param name="animatable">The animatable object.</param>
-    /// <returns>The current value.</returns>
-    public T GetCurrentValue(Animatable animatable)
-    {
-        var animation = GetActualAnimation(animatable);
-
-        unchecked
-        {
-            var p = (animatable.CurrentTime - _startTime) / (float)(_endTime - _startTime);
-            if (p >= 1) p = 1;
-            if (animatable.CurrentTime == long.MinValue) p = 0;
-            var fp = animation?.EasingFunction?.Invoke(p) ?? 1;
-            return OnGetMovement(fp);
-        }
-    }
-
-    /// <summary>
     /// Called to get the movement at a specific progress.
     /// </summary>
     /// <param name="progress">The progress.</param>
@@ -183,6 +150,20 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
 
     /// <inheritdoc cref="IMotionProperty.Restore"/>
     public void Restore(Animatable animatable) => SetMovement(_savedValue, animatable);
+
+    /// <inheritdoc cref="IMotionProperty.CopyFrom(IMotionProperty)"/>
+    public void CopyFrom(IMotionProperty source)
+    {
+        var typedSource = (MotionProperty<T>)source;
+
+        FromValue = typedSource.FromValue;
+        ToValue = typedSource.ToValue;
+        _startTime = typedSource._startTime;
+        _endTime = typedSource._endTime;
+        _requiresToInitialize = typedSource._requiresToInitialize;
+        Animation = typedSource.Animation;
+        IsCompleted = typedSource.IsCompleted;
+    }
 
     private Animation? GetActualAnimation(Animatable animatable) => Animation ??= animatable.DefaultAnimation;
 }
