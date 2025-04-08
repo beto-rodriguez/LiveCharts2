@@ -69,12 +69,6 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
     /// <param name="animatable">The <see cref="Animatable"/> instance that is moving.</param>
     public void SetMovement(T value, Animatable animatable)
     {
-        // the next commented line was added from rc4 to rc5, this caused
-        // https://github.com/beto-rodriguez/LiveCharts2/issues/1768
-        // i dont exactly remember why i added it :(
-        // lets leave things as they were before.
-        //if (value is not null && value.Equals(toValue)) return;
-
         FromValue = GetMovement(animatable);
         ToValue = value;
 
