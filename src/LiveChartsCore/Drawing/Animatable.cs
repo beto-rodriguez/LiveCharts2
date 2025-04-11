@@ -34,11 +34,6 @@ public abstract class Animatable
     public bool IsValid { get; set; } = true;
 
     /// <summary>
-    /// Gets or sets the current time, this property is used by the motion engine to calculate the progress of the animations.
-    /// </summary>
-    public float CurrentTime { get; set; } = float.NaN;
-
-    /// <summary>
     /// Gets or sets a value indicating whether this instance should be removed from the canvas when all the animations are completed.
     /// </summary>
     public bool RemoveOnCompleted { get; set; }

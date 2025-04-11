@@ -65,7 +65,6 @@ public partial class Segment : Animatable
     public virtual void Follows(Segment segment)
     {
         IsValid = segment.IsValid;
-        CurrentTime = segment.CurrentTime;
         RemoveOnCompleted = segment.RemoveOnCompleted;
 
         var xiPropertyGetter = XiProperty.GetMotion!;
