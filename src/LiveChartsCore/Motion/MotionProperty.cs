@@ -117,6 +117,9 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
     /// <returns></returns>
     protected abstract T OnGetMovement(float progress);
 
+    /// <inheritdoc cref="IMotionProperty.Finish"/>
+    public void Finish() => _endTime = 0;
+
     /// <inheritdoc cref="IMotionProperty.Save"/>
     public void Save() => _savedValue = ToValue;
 

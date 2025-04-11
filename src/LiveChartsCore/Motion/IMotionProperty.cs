@@ -30,12 +30,9 @@ namespace LiveChartsCore.Motion;
 public interface IMotionProperty
 {
     /// <summary>
-    /// Gets or sets a value indicating whether this instance is completed.
+    /// Finishes the transition.
     /// </summary>
-    /// <value>
-    ///   <c>true</c> if this instance is completed; otherwise, <c>false</c>.
-    /// </value>
-    bool IsCompleted { get; set; }
+    void Finish();
 
     /// <summary>
     /// Gets or sets the animation.
