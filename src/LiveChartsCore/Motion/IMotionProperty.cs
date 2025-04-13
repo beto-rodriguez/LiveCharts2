@@ -29,6 +29,18 @@ namespace LiveChartsCore.Motion;
 /// </summary>
 public interface IMotionProperty
 {
+#if DEBUG
+    /// <summary>
+    /// Gets or sets the instance that will be used to log the getter of the <see cref="IMotionProperty"/>.
+    /// </summary>
+    Animatable? LogGet { get; set; }
+
+    /// <summary>
+    /// Gets or sets the instance that will be used to log the setter of the <see cref="IMotionProperty"/>.
+    /// </summary>
+    Animatable? LogSet { get; set; }
+#endif
+
     /// <summary>
     /// Finishes the transition.
     /// </summary>

@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using static LiveChartsCore.Motion.PropertyDefinition;
 
 namespace LiveChartsCore.Motion;
 
@@ -29,15 +28,15 @@ namespace LiveChartsCore.Motion;
 /// Defines the motion property metadata.
 /// </summary>
 /// <remarks>
-/// Initializes a new instance of the <see cref="PropertyDefinition"/> class.
+/// Creates a new instance of <see cref="PropertyDefinition"/>.
 /// </remarks>
-/// <param name="getter">The getter function.</param>
-/// <param name="setter">The setter function.</param>
-/// <param name="motionPropertyGetter">The motion property getter.</param>
+/// <param name="getter">The property getter.</param>
+/// <param name="setter">The property setter.</param>
+/// <param name="motionGetter">The motion property getter if exists.</param>
 public class PropertyDefinition(
-    Getter getter,
-    Setter setter,
-    MotionPropertyGetter? motionPropertyGetter)
+    PropertyDefinition.Getter getter,
+    PropertyDefinition.Setter setter,
+    PropertyDefinition.MotionPropertyGetter? motionGetter)
 {
     /// <summary>
     /// Gets the getter function.
@@ -52,7 +51,7 @@ public class PropertyDefinition(
     /// <summary>
     /// Gets the motion property.
     /// </summary>
-    public MotionPropertyGetter? GetMotion { get; } = motionPropertyGetter;
+    public MotionPropertyGetter? GetMotion { get; } = motionGetter;
 
     /// <summary>
     /// The property definition setter delegate.

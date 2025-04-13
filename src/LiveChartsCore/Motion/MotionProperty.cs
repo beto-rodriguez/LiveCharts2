@@ -44,15 +44,20 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
     public T FromValue { get; private set; } = defaultValue;
 
     /// <summary>
-    /// Gets the value where the transition finished or will finish.
+    /// Gets the value where the transition finishes.
     /// </summary>
     public T ToValue { get; private set; } = defaultValue;
 
     /// <inheritdoc cref="IMotionProperty.Animation"/>
     public Animation? Animation { get; set; }
 
-    /// <inheritdoc cref="IMotionProperty.IsCompleted"/>
-    public bool IsCompleted { get; set; } = false;
+#if DEBUG
+    /// <inheritdoc cref="IMotionProperty.LogGet"/>
+    public Animatable? LogGet { get; set; }
+
+    /// <inheritdoc cref="IMotionProperty.LogSet"/>
+    public Animatable? LogSet { get; set; }
+#endif
 
     /// <summary>
     /// Indicates whether the property transition can complete, this depends
@@ -68,13 +73,26 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
     /// <param name="animatable">The <see cref="Animatable"/> instance that is moving.</param>
     public void SetMovement(T value, Animatable animatable)
     {
+#if DEBUG
+        if (LogSet == animatable)
+        {
+            System.Diagnostics.Debug.WriteLine($"[MOTION SET]:");
+        }
+#endif
+
         FromValue = GetMovement(animatable);
         ToValue = value;
 
-        var animation = GetActualAnimation(animatable);
-        if (animation is not null) SetTimeLine(animatable, animation);
+        SetTimeLine(animatable);
 
         animatable.IsValid = false;
+
+#if DEBUG
+        if (LogSet == animatable)
+        {
+            System.Diagnostics.Debug.WriteLine($"    {FromValue:N2}   =>   {ToValue:N2}");
+        }
+#endif
     }
 
     /// <summary>
@@ -85,28 +103,76 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
     public T GetMovement(Animatable animatable)
     {
         var animation = GetActualAnimation(animatable);
-        if (animation is null || animation.EasingFunction is null || !CanTransitionate || IsCompleted) return ToValue;
+
+        if (animation is null || animation.EasingFunction is null || !CanTransitionate)
+        {
+#if DEBUG
+            if (LogGet == animatable)
+                System.Diagnostics.Debug.WriteLine($"[MOTION GET] invalid transition state.");
+#endif
+            return ToValue;
+        }
+
+        var globalTime = CoreMotionCanvas.ElapsedMilliseconds;
+
+        var deltaTime = _endTime - _startTime;
+        var p = (globalTime - _startTime) / deltaTime;
+
+        if (deltaTime <= 0 || p >= 1)
+        {
+            // when deltaTime is <= 0:
+            //  1. the animation duration is 0.
+            //  2. the Finish method was called, it sets the _endTime to 0.
+
+            // when p >= 1:
+            //  1. the animation is completed.
+
+            // when animation.ForceFinish is true:
+            //  1. the animation was forced to finish
+
+            // in both cases we return the ToValue, and return
+            // before invalidating the animatable.
+
+#if DEBUG
+            if (LogGet == animatable)
+                System.Diagnostics.Debug.WriteLine(
+                    $"[MOTION GET] complete state, progress: {p:P2}." +
+                    $"{(deltaTime <= 0 ? $" invalid delta {deltaTime:N2}" : string.Empty)}");
+#endif
+
+            return ToValue;
+        }
 
         // at this points we are sure that the animatable has not finished at least with this property.
+        // setting the IsValid to false will make the animatable draw again.
         animatable.IsValid = false;
-
-        var p = (animatable.CurrentTime - _startTime) / (_endTime - _startTime);
 
         if (p >= 1)
         {
             // at this point the animation is completed
             p = 1;
-            animation._animationCompletedCount++;
-            IsCompleted = animation._repeatTimes != int.MaxValue && animation._repeatTimes < animation._animationCompletedCount;
-            if (!IsCompleted)
+
+            var requiresRepeat =
+                animation.RepeatTimes == int.MaxValue ||
+                animation.RepeatTimes >= ++animation.RepeatCount;
+
+            if (requiresRepeat)
             {
-                _startTime = animatable.CurrentTime;
-                _endTime = animatable.CurrentTime + animation._duration;
-                IsCompleted = false;
+                _startTime = globalTime;
+                _endTime = globalTime + animation.Duration;
             }
         }
 
         var fp = animation.EasingFunction(p);
+
+#if DEBUG
+        if (LogGet == animatable)
+        {
+            System.Diagnostics.Debug.WriteLine(
+                $"[MOTION GET]    {FromValue:N2}   =>   {ToValue:N2}   @   {OnGetMovement(fp):N2} [{p:p2}]");
+        }
+#endif
+
         return OnGetMovement(fp);
     }
 
@@ -136,26 +202,20 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
         _startTime = typedSource._startTime;
         _endTime = typedSource._endTime;
         Animation = typedSource.Animation;
-        IsCompleted = typedSource.IsCompleted;
     }
 
-    private void SetTimeLine(Animatable animatable, Animation animation)
+    private void SetTimeLine(Animatable animatable)
     {
-        if (float.IsNaN(animatable.CurrentTime))
-        {
-            // this means that the animatable is not being animated yet,
-            _startTime = 0;
-            _endTime = animation.Duration;
-        }
-        else
-        {
-            _startTime = animatable.CurrentTime;
-            _endTime = animatable.CurrentTime + animation._duration;
-        }
+        var animation = GetActualAnimation(animatable);
+        if (animation is null) return;
 
-        animation._animationCompletedCount = 0;
-        IsCompleted = false;
+        var globalTime = CoreMotionCanvas.ElapsedMilliseconds;
+
+        _startTime = globalTime;
+        _endTime = globalTime + animation.Duration;
+
+        animation.RepeatCount = 0;
     }
 
-    private Animation? GetActualAnimation(Animatable animatable) => Animation ??= animatable.DefaultAnimation;
+    private Animation? GetActualAnimation(Animatable animatable) => Animation;
 }
