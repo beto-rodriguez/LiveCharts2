@@ -20,32 +20,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using LiveChartsCore.Generators;
 
-namespace LiveChartsCore.Drawing;
+using System.Linq;
+using LiveChartsCore.Motion;
+
+namespace LiveChartsCore.VisualStates;
 
 /// <summary>
-/// Defines a box geometry.
+/// Defines the setter extensions.
 /// </summary>
-public abstract partial class BaseBoxGeometry : DrawnGeometry
+public static class SetterExtensions
 {
-    [MotionProperty]
-    public partial float Width { get; set; }
+    /// <summary>
+    /// Adds a visual state to the series.
+    /// </summary>
+    /// <param name="series">The series.</param>
+    /// <param name="stateName">The state name.</param>
+    /// <param name="setters">The setters collection.</param>
+    /// <returns>The series.</returns>
+    public static ISeries HasState(this ISeries series, string stateName, (PropertyDefinition, object)[] setters)
+    {
+        series.VisualStates[stateName] = [.. setters.Select(x => new AnimatablePropertySetter(x.Item1, x.Item2))];
 
-    [MotionProperty]
-    public partial float Third { get; set; }
-
-    [MotionProperty]
-    public partial float First { get; set; }
-
-    [MotionProperty]
-    public partial float Min { get; set; }
-
-    [MotionProperty]
-    public partial float Median { get; set; }
-
-    /// <inheritdoc cref="DrawnGeometry.Measure()" />
-    public override LvcSize Measure() =>
-        new(Width, Math.Abs(Min - Y));
+        return series;
+    }
 }

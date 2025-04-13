@@ -441,7 +441,10 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
 
                 if (isFirstDraw)
                     label.CompleteTransition(
-                        nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
+                        BaseLabelGeometry.TextSizeProperty,
+                        BaseLabelGeometry.XProperty,
+                        BaseLabelGeometry.YProperty,
+                        BaseLabelGeometry.RotateTransformProperty);
 
                 var labelPosition = GetLabelPolarPosition(
                     cx,
@@ -558,8 +561,8 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
             visual.Animate(
                 EasingFunction ?? chart.CoreChart.ActualEasingFunction,
                 AnimationsSpeed ?? chart.CoreChart.ActualAnimationsSpeed,
-                nameof(visual.StartAngle),
-                nameof(visual.SweepAngle));
+                BaseDoughnutGeometry.StartAngleProperty,
+                BaseDoughnutGeometry.SweepAngleProperty);
     }
 
     /// <summary>

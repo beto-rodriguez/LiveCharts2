@@ -27,33 +27,19 @@ namespace LiveChartsCore.Motion;
 /// <summary>
 /// Defines the <see cref="LvcSize"/> motion property class.
 /// </summary>
-public class SizeMotionProperty : MotionProperty<LvcSize>
+/// <remarks>
+/// Initializes a new instance of the <see cref="SizeMotionProperty"/> class.
+/// </remarks>
+/// <param name="defaultValue">The default value.</param>
+public class SizeMotionProperty(LvcSize defaultValue = new())
+    : MotionProperty<LvcSize>(defaultValue)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SizeMotionProperty"/> class.
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    public SizeMotionProperty(string propertyName)
-        : base(propertyName)
-    { }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SizeMotionProperty"/> class.
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <param name="value">The value.</param>
-    public SizeMotionProperty(string propertyName, LvcSize value)
-        : base(propertyName)
-    {
-        fromValue = value;
-        toValue = value;
-    }
+    /// <inheritdoc cref="MotionProperty{T}.CanTransitionate"/>
+    protected override bool CanTransitionate => true;
 
     /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
-    protected override LvcSize OnGetMovement(float progress)
-    {
-        return new LvcSize(
-            fromValue.Width + progress * (toValue.Width - fromValue.Width),
-            fromValue.Height + progress * (toValue.Height - fromValue.Height));
-    }
+    protected override LvcSize OnGetMovement(float progress) =>
+        new(
+            FromValue.Width + progress * (ToValue.Width - FromValue.Width),
+            FromValue.Height + progress * (ToValue.Height - FromValue.Height));
 }

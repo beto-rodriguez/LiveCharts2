@@ -1,36 +1,33 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.General.ChartToImage.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.General.ChartToImage;assembly=ViewModelsSamples"
-             >
+<ContentPage
+    x:Class="MauiSample.General.ChartToImage.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.General.ChartToImage;assembly=ViewModelsSamples">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
 
+    <Grid RowDefinitions="*,*">
         <lvc:CartesianChart
-                Grid.Row="0"
-                x:Name="cartesianChart"
-                Series="{Binding CatesianSeries}">
+            Grid.Row="0"
+            x:Name="cartesianChart">
+            <lvc:CartesianChart.Series>
+                <lvc:XamlLineSeries Values="1, 5, 4, 6"/>
+                <lvc:XamlColumnSeries Values="4, 8, 2, 4"/>
+            </lvc:CartesianChart.Series>
         </lvc:CartesianChart>
 
         <lvc:PieChart
-                Grid.Row="1"
-                x:Name="pieChart"
-                Series="{Binding PieSeries}">
+            Grid.Row="1"
+            x:Name="pieChart">
+            <lvc:PieChart.Series>
+                <lvc:XamlPieSeries Values="10"/>
+                <lvc:XamlPieSeries Values="6"/>
+                <lvc:XamlPieSeries Values="4"/>
+            </lvc:PieChart.Series>
         </lvc:PieChart>
-
-        <lvc:GeoMap
-                Grid.Row="2"
-                x:Name="geoChart"
-                Series="{Binding GeoSeries}">
-        </lvc:GeoMap>
     </Grid>
 </ContentPage>

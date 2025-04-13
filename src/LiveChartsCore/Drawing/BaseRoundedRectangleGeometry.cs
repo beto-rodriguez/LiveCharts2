@@ -20,31 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Motion;
+using LiveChartsCore.Generators;
 
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
 /// Defines a rounded rectangle geometry.
 /// </summary>
-public abstract class BaseRoundedRectangleGeometry : BoundedDrawnGeometry
+public abstract partial class BaseRoundedRectangleGeometry : BoundedDrawnGeometry
 {
-    private readonly PointMotionProperty _borderRadius;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseRoundedRectangleGeometry"/> class.
     /// </summary>
-    public BaseRoundedRectangleGeometry()
+    protected BaseRoundedRectangleGeometry()
     {
-        _borderRadius = RegisterMotionProperty(new PointMotionProperty(nameof(BorderRadius), new LvcPoint(8f, 8f)));
+        _BorderRadiusMotionProperty = new(new(8f, 8f));
     }
 
     /// <summary>
     /// Gets or sets the border radius.
     /// </summary>
-    public LvcPoint BorderRadius
-    {
-        get => _borderRadius.GetMovement(this);
-        set => _borderRadius.SetMovement(value, this);
-    }
+    [MotionProperty]
+    public partial LvcPoint BorderRadius { get; set; }
 }

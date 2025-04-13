@@ -25,48 +25,52 @@ using LiveChartsCore.Drawing;
 namespace LiveChartsCore.Motion;
 
 /// <summary>
-/// Defines a motions property.
+/// Defines the motion property metadata.
 /// </summary>
-public interface IMotionProperty
+/// <remarks>
+/// Creates a new instance of <see cref="PropertyDefinition"/>.
+/// </remarks>
+/// <param name="getter">The property getter.</param>
+/// <param name="setter">The property setter.</param>
+/// <param name="motionGetter">The motion property getter if exists.</param>
+public class PropertyDefinition(
+    PropertyDefinition.Getter getter,
+    PropertyDefinition.Setter setter,
+    PropertyDefinition.MotionPropertyGetter? motionGetter)
 {
-#if DEBUG
     /// <summary>
-    /// Gets or sets the instance that will be used to log the getter of the <see cref="IMotionProperty"/>.
+    /// Gets the getter function.
     /// </summary>
-    Animatable? LogGet { get; set; }
+    public Getter GetValue { get; } = getter;
 
     /// <summary>
-    /// Gets or sets the instance that will be used to log the setter of the <see cref="IMotionProperty"/>.
+    /// Gets the setter function.
     /// </summary>
-    Animatable? LogSet { get; set; }
-#endif
+    public Setter SetValue { get; } = setter;
 
     /// <summary>
-    /// Finishes the transition.
+    /// Gets the motion property.
     /// </summary>
-    void Finish();
+    public MotionPropertyGetter? GetMotion { get; } = motionGetter;
 
     /// <summary>
-    /// Gets or sets the animation.
+    /// The property definition setter delegate.
     /// </summary>
-    /// <value>
-    /// The animation.
-    /// </value>
-    Animation? Animation { get; set; }
+    /// <param name="animatable">The animatable.</param>
+    /// <param name="value">The value.</param>
+    public delegate void Setter(Animatable animatable, object? value);
 
     /// <summary>
-    /// Copies into this instance the source property.
+    /// The property definition getter delegate.
     /// </summary>
-    /// <param name="source">The source.</param>
-    void CopyFrom(IMotionProperty source);
+    /// <param name="animatable">The animatable.</param>
+    /// <returns>The value.</returns>
+    public delegate object? Getter(Animatable animatable);
 
     /// <summary>
-    /// Saves the property target value.
+    /// The property definition motion property getter delegate.
     /// </summary>
-    void Save();
-
-    /// <summary>
-    /// Restores the property target value.
-    /// </summary>
-    void Restore(Animatable animatable);
+    /// <param name="animatable">The animatable.</param>
+    /// <returns>The motion property.</returns>
+    public delegate IMotionProperty? MotionPropertyGetter(Animatable animatable);
 }

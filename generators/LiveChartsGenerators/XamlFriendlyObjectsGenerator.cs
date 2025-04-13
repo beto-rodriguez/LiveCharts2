@@ -1,8 +1,28 @@
-﻿// based on:
-// https://github.com/andrewlock/blog-examples/tree/master/NetEscapades.EnumGenerators
+﻿// The MIT License(MIT)
+//
+// Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 using System.Text;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 
 namespace LiveChartsGenerators;
@@ -11,33 +31,60 @@ namespace LiveChartsGenerators;
 public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
 {
     private const string XamlAttribute = "LiveChartsCore.Generators.XamlClassAttribute";
+    private const string MotionPropertyAttribute = "LiveChartsCore.Generators.MotionPropertyAttribute";
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         context.RegisterPostInitializationOutput(static ctx => ctx.AddSource(
-            "XamlClassAttribute.g.cs", SourceText.From(SourceGenerationHelper.Attribute, Encoding.UTF8)));
+            "Assets.g.cs", SourceText.From(AssetsTemplates.GetTemplate(), Encoding.UTF8)));
 
-        var enumsToGenerate = context.SyntaxProvider
+        var xamlObjects = context.SyntaxProvider
             .ForAttributeWithMetadataName(
                 XamlAttribute,
-                predicate: static (s, _) => true,
+                predicate: static (syntaxNode, _) => syntaxNode is ClassDeclarationSyntax,
                 transform: static (ctx, _) => GetXamlObjectsToGenerate(ctx.SemanticModel, ctx.TargetNode))
             .Where(static m => m is not null);
 
-        context.RegisterSourceOutput(enumsToGenerate,
-            static (spc, source) => Execute(source, spc));
-    }
+        var motionProperties = context.SyntaxProvider
+            .ForAttributeWithMetadataName(
+                MotionPropertyAttribute,
+                predicate: static (syntaxNode, _) => syntaxNode is PropertyDeclarationSyntax,
+                transform: static (ctx, _) => GetMotionPropertiesToGenerate(ctx.SemanticModel, ctx.TargetNode))
+            .Where(static m => m is not null);
 
-    private static void Execute(XamlObject? enumToGenerate, SourceProductionContext context)
-    {
-        if (enumToGenerate is { } value)
+        var groupedByType = motionProperties
+            .Collect()
+            .Select((props, _) => props
+                .GroupBy(prop => prop?.Property.ContainingType, SymbolEqualityComparer.Default)
+                .ToList());
+
+        context.RegisterSourceOutput(xamlObjects, static (spc, source) =>
         {
-            // generate the source code and add it to the output
-            var result = SourceGenerationHelper.GenerateXamlObject(value);
-            context.AddSource(
+            if (source is not { } value) return;
+            spc.AddSource(
                 $"{value.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
-                SourceText.From(result, Encoding.UTF8));
-        }
+                SourceText.From(XamlObjectTempaltes.GetTemplate(value), Encoding.UTF8));
+        });
+
+        context.RegisterSourceOutput(motionProperties, static (spc, source) =>
+        {
+            if (source is not { } value) return;
+            spc.AddSource(
+                $"{value.Property.ContainingType.Name}.{value.Property.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
+                SourceText.From(MotionPropertyTemplates.GetTemplate(value), Encoding.UTF8));
+        });
+
+        context.RegisterSourceOutput(groupedByType, (spc, groups) =>
+        {
+            foreach (var group in groups)
+            {
+                if (group is null || group.Key is null) continue;
+
+                spc.AddSource(
+                    $"{group.Key.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
+                    MotionPropertyTemplates.GetClassTemplate(group));
+            }
+        });
     }
 
     private static XamlObject? GetXamlObjectsToGenerate(SemanticModel semanticModel, SyntaxNode declarationSyntax)
@@ -165,6 +212,32 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
         return new XamlObject(
             generateBaseTypeDeclaration, ns, name, symbol, baseType, bindablePropertiesDic, [.. notBindableProperties.Values], events,
             [.. methods.Values], [.. explicitMethods.Values], fileHeader, propertyChangeMap, overridenTypes);
+    }
+
+    private static MotionProperty? GetMotionPropertiesToGenerate(SemanticModel semanticModel, SyntaxNode declarationSyntax)
+    {
+        if (semanticModel.GetDeclaredSymbol(declarationSyntax) is not IPropertySymbol symbol)
+            return null; // something went wrong
+
+        var targetAttribute = symbol.GetAttributes()
+           .FirstOrDefault(a => a.AttributeClass?.ToDisplayString() == MotionPropertyAttribute);
+        if (targetAttribute is null) return null;
+
+        var hasExplicitAcessors = false;
+
+        foreach (var arg in targetAttribute.NamedArguments)
+        {
+            switch (arg.Key)
+            {
+                case "HasExplicitAcessors":
+                    hasExplicitAcessors = ((bool?)arg.Value.Value) ?? true;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return new(symbol, hasExplicitAcessors);
     }
 
     private static List<ISymbol> GetLiveChartsMembers(ITypeSymbol typeSymbol)

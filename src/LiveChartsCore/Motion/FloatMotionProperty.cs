@@ -25,34 +25,17 @@ namespace LiveChartsCore.Motion;
 /// <summary>
 /// Defines the float motion property class.
 /// </summary>
-public class FloatMotionProperty : MotionProperty<float>
+/// <remarks>
+/// Initializes a new instance of the <see cref="FloatMotionProperty"/> class.
+/// </remarks>
+/// <param name="defaultValue">The default value.</param>
+public class FloatMotionProperty(float defaultValue = 0f)
+    : MotionProperty<float>(defaultValue)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="FloatMotionProperty"/> class.
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    public FloatMotionProperty(string propertyName)
-        : base(propertyName)
-    {
-        fromValue = 0;
-        toValue = 0;
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="FloatMotionProperty"/> class.
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <param name="value">The value.</param>
-    public FloatMotionProperty(string propertyName, float value)
-        : base(propertyName)
-    {
-        fromValue = value;
-        toValue = value;
-    }
+    /// <inheritdoc cref="MotionProperty{T}.CanTransitionate"/>
+    protected override bool CanTransitionate => true;
 
     /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
-    protected override float OnGetMovement(float progress)
-    {
-        return fromValue + progress * (toValue - fromValue);
-    }
+    protected override float OnGetMovement(float progress) =>
+        FromValue + progress * (ToValue - FromValue);
 }

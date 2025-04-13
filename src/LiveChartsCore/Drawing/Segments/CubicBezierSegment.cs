@@ -20,54 +20,38 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Motion;
+using LiveChartsCore.Generators;
 
 namespace LiveChartsCore.Drawing.Segments;
 
 /// <summary>
 /// Defines a cubic bezier segment, that is part of a sequence.
 /// </summary>
-public class CubicBezierSegment : Segment
+public partial class CubicBezierSegment : Segment
 {
-    private readonly FloatMotionProperty _xmProperty;
-    private readonly FloatMotionProperty _ymProperty;
-
     /// <summary>
-    /// Initializes a new instance of the <see cref="CubicBezierSegment"/> class.
+    /// Gets or sets the middle point in the Y axis.
     /// </summary>
-    public CubicBezierSegment()
-    {
-        _xmProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Xm), 0f));
-        _ymProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Ym), 0f));
-    }
+    [MotionProperty]
+    public partial float Xm { get; set; }
 
     /// <summary>
     /// Gets or sets the middle point in the Y axis.
     /// </summary>
-    public float Xm
-    {
-        get => _xmProperty.GetMovement(this);
-        set => _xmProperty.SetMovement(value, this);
-    }
-
-    /// <summary>
-    /// Gets or sets the middle point in the Y axis.
-    /// </summary>
-    public float Ym
-    {
-        get => _ymProperty.GetMovement(this);
-        set => _ymProperty.SetMovement(value, this);
-    }
+    [MotionProperty]
+    public partial float Ym { get; set; }
 
     /// <inheritdoc cref="Segment.Follows(Segment)"/>
     public override void Follows(Segment segment)
     {
         base.Follows(segment);
 
-        var xProp = segment.MotionProperties[nameof(Xj)];
-        var yProp = segment.MotionProperties[nameof(Yj)];
+        var xjPropertyGetter = XjProperty.GetMotion!;
+        var xmPropertyGetter = XmProperty.GetMotion!;
+        var yjPropertyGetter = YjProperty.GetMotion!;
+        var ymPropertyGetter = YmProperty.GetMotion!;
 
-        MotionProperties[nameof(Xm)].CopyFrom(xProp);
-        MotionProperties[nameof(Ym)].CopyFrom(yProp);
+        xmPropertyGetter(this)!.CopyFrom(xjPropertyGetter(segment)!);
+        ymPropertyGetter(this)!.CopyFrom(yjPropertyGetter(segment)!);
     }
 }

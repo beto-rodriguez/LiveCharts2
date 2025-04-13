@@ -20,36 +20,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#pragma warning disable IDE0290 // Use primary ctor... why suggest this?? you cant do it in this case
+
 using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Generators;
 
 namespace LiveChartsCore.Painting;
 
 /// <summary>
 /// Defines a set of geometries that will be drawn according to this instance specifications.
 /// </summary>
-public abstract class Paint : Animatable, IDisposable
+/// <remarks>
+/// Initializes a new instance of the <see cref="Paint"/> class.
+/// </remarks>
+public abstract partial class Paint : Animatable, IDisposable
 {
     private readonly Dictionary<object, HashSet<IDrawnElement>> _geometriesByCanvas = [];
     private readonly Dictionary<object, LvcRectangle> _clipRectangles = [];
-    private readonly FloatMotionProperty _strokeMiterTransition;
-    private readonly FloatMotionProperty _strokeWidthTransition;
+
+    /// <param name="strokeThickness">The stroke thickness.</param>
+    /// <param name="strokeMiter">The stroke miter.</param>
+    public Paint(float strokeThickness = 1f, float strokeMiter = 0)
+    {
+        _StrokeMiterMotionProperty = new(strokeMiter);
+        _StrokeThicknessMotionProperty = new(strokeThickness);
+    }
 
     /// <summary>
     /// Gets the default paint.
     /// </summary>
     public static Paint Default { get; } = new DefaultPaint();
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Paint"/> class.
-    /// </summary>
-    protected Paint(float strokeThickness = 1f, float strokeMiter = 0f)
-    {
-        _strokeWidthTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeThickness), strokeThickness));
-        _strokeMiterTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeMiter), strokeMiter));
-    }
 
     /// <summary>
     /// Gets or sets the index of the z.
@@ -104,11 +107,8 @@ public abstract class Paint : Animatable, IDisposable
     /// <value>
     /// The stroke thickness.
     /// </value>
-    public float StrokeThickness
-    {
-        get => _strokeWidthTransition.GetMovement(this);
-        set => _strokeWidthTransition.SetMovement(value, this);
-    }
+    [MotionProperty]
+    public partial float StrokeThickness { get; set; }
 
     /// <summary>
     /// Gets or sets the stroke miter.
@@ -116,11 +116,8 @@ public abstract class Paint : Animatable, IDisposable
     /// <value>
     /// The stroke miter.
     /// </value>
-    public float StrokeMiter
-    {
-        get => _strokeMiterTransition.GetMovement(this);
-        set => _strokeMiterTransition.SetMovement(value, this);
-    }
+    [MotionProperty]
+    public partial float StrokeMiter { get; set; }
 
     /// <summary>
     /// Gets a value indicating whether this instance is empty.

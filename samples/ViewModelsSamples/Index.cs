@@ -58,7 +58,7 @@ public static class Index
         //"StackedBars/Basic",
         //"StackedBars/Groups",
 
-        "Financial/BasicCandlesticks",
+        //"Financial/BasicCandlesticks",
 
         //"Error/Basic",
 
@@ -93,15 +93,15 @@ public static class Index
         //"Axes/MatchScale",
         //"Axes/Paging",
 
-        "Events/Tutorial",
-        "Events/AddPointOnClick",
-        //"Events/OverrideFind",
+        //"Events/Tutorial",
+        //"Events/AddPointOnClick",
+        ////"Events/OverrideFind",
 
-        "General/MapPoints",
-        "General/RealTime",
-        "General/Scrollable",
-        "General/Sections",
-        "General/Sections2",
+        //"General/MapPoints",
+        //"General/RealTime",
+        //"General/Scrollable",
+        //"General/Sections",
+        //"General/Sections2",
         "General/ConditionalDraw",
         "General/VisualElements",
         "General/ChartToImage",

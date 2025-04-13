@@ -139,7 +139,7 @@ public class GeometryVisual<TGeometry, TLabelGeometry> : BaseGeometryVisual
 
                 _labelGeometry.Animate(
                     chart,
-                    nameof(_labelGeometry.X), nameof(_labelGeometry.Y), nameof(_labelGeometry.Opacity));
+                    BaseLabelGeometry.XProperty, BaseLabelGeometry.YProperty, BaseLabelGeometry.OpacityProperty);
                 _labelGeometry.VerticalAlign = Align.Start;
                 _labelGeometry.HorizontalAlign = Align.Start;
             }

@@ -20,32 +20,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using LiveChartsCore.Generators;
+using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Drawing;
+namespace LiveChartsCore.Motion;
 
 /// <summary>
-/// Defines a box geometry.
+/// Defines the <see cref="Padding"/> motion property class.
 /// </summary>
-public abstract partial class BaseBoxGeometry : DrawnGeometry
+/// <remarks>
+/// Initializes a new instance of the <see cref="SizeMotionProperty"/> class.
+/// </remarks>
+/// <param name="defaultValue">The default value.</param>
+public class PaddingMotionProperty(Padding defaultValue = null!)
+    : MotionProperty<Padding>(defaultValue)
 {
-    [MotionProperty]
-    public partial float Width { get; set; }
+    /// <inheritdoc cref="MotionProperty{T}.CanTransitionate"/>
+    protected override bool CanTransitionate =>
+        FromValue is not null && ToValue is not null;
 
-    [MotionProperty]
-    public partial float Third { get; set; }
-
-    [MotionProperty]
-    public partial float First { get; set; }
-
-    [MotionProperty]
-    public partial float Min { get; set; }
-
-    [MotionProperty]
-    public partial float Median { get; set; }
-
-    /// <inheritdoc cref="DrawnGeometry.Measure()" />
-    public override LvcSize Measure() =>
-        new(Width, Math.Abs(Min - Y));
+    /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
+    protected override Padding OnGetMovement(float progress) =>
+        new(
+            FromValue.Left + progress * (ToValue.Left - FromValue.Left),
+            FromValue.Top + progress * (ToValue.Top - FromValue.Top),
+            FromValue.Right + progress * (ToValue.Right - FromValue.Right),
+            FromValue.Bottom + progress * (ToValue.Bottom - FromValue.Bottom));
 }

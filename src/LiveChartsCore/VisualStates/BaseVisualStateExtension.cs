@@ -75,17 +75,28 @@ public abstract class BaseVisualStateExtension
     /// </summary>
     public Paint? Paint { get; set; } = Paint.Default;
 
+    /// <summary>
+    /// Parses the point.
+    /// </summary>
     protected static LvcPoint ParsePoint(string? point, LvcPoint @default)
     {
         if (string.IsNullOrWhiteSpace(point)) return @default;
 
         var split = point.Split(',');
 
-        if (split.Length != 2) return @default;
+        if (split.Length == 1)
+        {
+            return !float.TryParse(split[0], out var u)
+                ? @default
+                : new LvcPoint(u, u);
+        }
+
 #pragma warning disable IDE0046 // Convert to conditional expression
-        if (!float.TryParse(split[0], out var x) || !float.TryParse(split[1], out var y)) return @default;
+        if (split.Length != 2) return @default;
 #pragma warning restore IDE0046 // Convert to conditional expression
 
-        return new LvcPoint(x, y);
+        return !float.TryParse(split[0], out var x) || !float.TryParse(split[1], out var y)
+            ? @default
+            : new LvcPoint(x, y);
     }
 }

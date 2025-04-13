@@ -20,32 +20,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using LiveChartsCore.Generators;
+using LiveChartsCore.Motion;
 
-namespace LiveChartsCore.Drawing;
+namespace LiveChartsCore.VisualStates;
 
 /// <summary>
-/// Defines a box geometry.
+/// Defines a motion property setter.
 /// </summary>
-public abstract partial class BaseBoxGeometry : DrawnGeometry
+public class AnimatablePropertySetter(PropertyDefinition propertyDefinition, object value)
 {
-    [MotionProperty]
-    public partial float Width { get; set; }
+    /// <summary>
+    /// Gets the property definition.
+    /// </summary>
+    public PropertyDefinition PropertyDefinition { get; } = propertyDefinition;
 
-    [MotionProperty]
-    public partial float Third { get; set; }
-
-    [MotionProperty]
-    public partial float First { get; set; }
-
-    [MotionProperty]
-    public partial float Min { get; set; }
-
-    [MotionProperty]
-    public partial float Median { get; set; }
-
-    /// <inheritdoc cref="DrawnGeometry.Measure()" />
-    public override LvcSize Measure() =>
-        new(Width, Math.Abs(Min - Y));
+    /// <summary>
+    /// Gets the value.
+    /// </summary>
+    public object Value { get; } = value;
 }

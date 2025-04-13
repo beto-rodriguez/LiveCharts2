@@ -31,60 +31,40 @@ namespace LiveChartsCore.Motion;
 /// <remarks>
 /// Initializes a new instance of the <see cref="MotionProperty{T}"/> class.
 /// </remarks>
-/// <param name="propertyName">Name of the property.</param>
-public abstract class MotionProperty<T>(string propertyName) : IMotionProperty
+/// <param name="defaultValue">The default value.</param>
+public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
 {
-    private static readonly bool s_canBeNull = Kernel.Extensions.CanBeNull(typeof(T));
-
-    /// <summary>
-    /// From value
-    /// </summary>
-    protected internal T? fromValue = default;
-
-    /// <summary>
-    /// To value
-    /// </summary>
-    protected internal T? toValue = default;
-    private long _startTime;
-    private long _endTime;
-    private bool _requiresToInitialize = true;
-    private T? _savedValue = default;
+    private float _startTime;
+    private float _endTime;
+    private T _savedValue = defaultValue;
 
     /// <summary>
     /// Gets the value where the transition began.
     /// </summary>
-    public T? FromValue => fromValue;
+    public T FromValue { get; private set; } = defaultValue;
 
     /// <summary>
-    /// Gets the value where the transition finished or will finish.
+    /// Gets the value where the transition finishes.
     /// </summary>
-    public T? ToValue => toValue;
+    public T ToValue { get; private set; } = defaultValue;
 
     /// <inheritdoc cref="IMotionProperty.Animation"/>
     public Animation? Animation { get; set; }
 
-    /// <inheritdoc cref="IMotionProperty.PropertyName"/>
-    public string PropertyName { get; } = propertyName;
+#if DEBUG
+    /// <inheritdoc cref="IMotionProperty.LogGet"/>
+    public Animatable? LogGet { get; set; }
 
-    /// <inheritdoc cref="IMotionProperty.IsCompleted"/>
-    public bool IsCompleted { get; set; } = false;
+    /// <inheritdoc cref="IMotionProperty.LogSet"/>
+    public Animatable? LogSet { get; set; }
+#endif
 
-    /// <inheritdoc cref="IMotionProperty.CopyFrom(IMotionProperty)"/>
-    public void CopyFrom(IMotionProperty source)
-    {
-        var typedSource = (MotionProperty<T>)source;
-
-        fromValue = typedSource.FromValue;
-        toValue = typedSource.ToValue;
-        _startTime = typedSource._startTime;
-        _endTime = typedSource._endTime;
-        _requiresToInitialize = typedSource._requiresToInitialize;
-        Animation = typedSource.Animation;
-        IsCompleted = typedSource.IsCompleted;
-    }
-
-    void IMotionProperty.SetMovement(object value, Animatable animatable) =>
-        SetMovement((T)value, animatable);
+    /// <summary>
+    /// Indicates whether the property transition can complete, this depends
+    /// on <see cref="FromValue"/> and <see cref="ToValue"/> being null or any other
+    /// state where the transition is not possible.
+    /// </summary>
+    protected abstract bool CanTransitionate { get; }
 
     /// <summary>
     /// Moves to the specified value.
@@ -93,30 +73,26 @@ public abstract class MotionProperty<T>(string propertyName) : IMotionProperty
     /// <param name="animatable">The <see cref="Animatable"/> instance that is moving.</param>
     public void SetMovement(T value, Animatable animatable)
     {
-        // the next commented line was added from rc4 to rc5, this caused
-        // https://github.com/beto-rodriguez/LiveCharts2/issues/1768
-        // i dont exactly remember why i added it :(
-        // lets leave things as they were before.
-        //if (value is not null && value.Equals(toValue)) return;
-
-        fromValue = GetMovement(animatable);
-        toValue = value;
-        if (Animation is not null)
+#if DEBUG
+        if (LogSet == animatable)
         {
-            if (animatable.CurrentTime == long.MinValue) // the animatable is not in the canvas yet.
-            {
-                _requiresToInitialize = true;
-            }
-            else
-            {
-                _startTime = animatable.CurrentTime;
-                _endTime = animatable.CurrentTime + Animation._duration;
-            }
-            Animation._animationCompletedCount = 0;
-            IsCompleted = false;
-            _requiresToInitialize = true;
+            System.Diagnostics.Debug.WriteLine($"[MOTION SET]:");
         }
+#endif
+
+        FromValue = GetMovement(animatable);
+        ToValue = value;
+
+        SetTimeLine(animatable);
+
         animatable.IsValid = false;
+
+#if DEBUG
+        if (LogSet == animatable)
+        {
+            System.Diagnostics.Debug.WriteLine($"    {FromValue:N2}   =>   {ToValue:N2}");
+        }
+#endif
     }
 
     /// <summary>
@@ -126,57 +102,78 @@ public abstract class MotionProperty<T>(string propertyName) : IMotionProperty
     /// <returns></returns>
     public T GetMovement(Animatable animatable)
     {
-        // For some reason JITter can't remove value type boxing when started under PerfView Run command
-        // Emitted IL has boxing originally, but JITter should be able to optimize it to 'false' or 'Nullable<T>.HasValue'
-        // When s_canBeNull is false JITter should remove second check from generated code
-        var fromValueIsNull = s_canBeNull && fromValue is null;
-        if (Animation is null || Animation.EasingFunction is null || fromValueIsNull || IsCompleted) return OnGetMovement(1);
+        var animation = GetActualAnimation(animatable);
 
-        if (_requiresToInitialize || _startTime == long.MinValue)
+        if (animation is null || animation.EasingFunction is null || !CanTransitionate)
         {
-            _startTime = animatable.CurrentTime;
-            _endTime = animatable.CurrentTime + Animation._duration;
-            _requiresToInitialize = false;
+#if DEBUG
+            if (LogGet == animatable)
+                System.Diagnostics.Debug.WriteLine($"[MOTION GET] invalid transition state.");
+#endif
+            return ToValue;
+        }
+
+        var globalTime = CoreMotionCanvas.ElapsedMilliseconds;
+
+        var deltaTime = _endTime - _startTime;
+        var p = (globalTime - _startTime) / deltaTime;
+
+        if (deltaTime <= 0 || p >= 1)
+        {
+            // when deltaTime is <= 0:
+            //  1. the animation duration is 0.
+            //  2. the Finish method was called, it sets the _endTime to 0.
+
+            // when p >= 1:
+            //  1. the animation is completed.
+
+            // when animation.ForceFinish is true:
+            //  1. the animation was forced to finish
+
+            // in both cases we return the ToValue, and return
+            // before invalidating the animatable.
+
+#if DEBUG
+            if (LogGet == animatable)
+                System.Diagnostics.Debug.WriteLine(
+                    $"[MOTION GET] complete state, progress: {p:P2}." +
+                    $"{(deltaTime <= 0 ? $" invalid delta {deltaTime:N2}" : string.Empty)}");
+#endif
+
+            return ToValue;
         }
 
         // at this points we are sure that the animatable has not finished at least with this property.
+        // setting the IsValid to false will make the animatable draw again.
         animatable.IsValid = false;
-
-        var p = (animatable.CurrentTime - _startTime) / unchecked((float)(_endTime - _startTime));
 
         if (p >= 1)
         {
             // at this point the animation is completed
             p = 1;
-            Animation._animationCompletedCount++;
-            IsCompleted = Animation._repeatTimes != int.MaxValue && Animation._repeatTimes < Animation._animationCompletedCount;
-            if (!IsCompleted)
+
+            var requiresRepeat =
+                animation.RepeatTimes == int.MaxValue ||
+                animation.RepeatTimes >= ++animation.RepeatCount;
+
+            if (requiresRepeat)
             {
-                _startTime = animatable.CurrentTime;
-                _endTime = animatable.CurrentTime + Animation._duration;
-                IsCompleted = false;
+                _startTime = globalTime;
+                _endTime = globalTime + animation.Duration;
             }
         }
 
-        var fp = Animation.EasingFunction(p);
-        return OnGetMovement(fp);
-    }
+        var fp = animation.EasingFunction(p);
 
-    /// <summary>
-    /// Gets the current value in the time line.
-    /// </summary>
-    /// <param name="animatable">The animatable object.</param>
-    /// <returns>The current value.</returns>
-    public T GetCurrentValue(Animatable animatable)
-    {
-        unchecked
+#if DEBUG
+        if (LogGet == animatable)
         {
-            var p = (animatable.CurrentTime - _startTime) / (float)(_endTime - _startTime);
-            if (p >= 1) p = 1;
-            if (animatable.CurrentTime == long.MinValue) p = 0;
-            var fp = Animation?.EasingFunction?.Invoke(p) ?? 1;
-            return OnGetMovement(fp);
+            System.Diagnostics.Debug.WriteLine(
+                $"[MOTION GET]    {FromValue:N2}   =>   {ToValue:N2}   @   {OnGetMovement(fp):N2} [{p:p2}]");
         }
+#endif
+
+        return OnGetMovement(fp);
     }
 
     /// <summary>
@@ -186,11 +183,39 @@ public abstract class MotionProperty<T>(string propertyName) : IMotionProperty
     /// <returns></returns>
     protected abstract T OnGetMovement(float progress);
 
+    /// <inheritdoc cref="IMotionProperty.Finish"/>
+    public void Finish() => _endTime = 0;
+
     /// <inheritdoc cref="IMotionProperty.Save"/>
-    public void Save() => _savedValue = toValue;
+    public void Save() => _savedValue = ToValue;
 
     /// <inheritdoc cref="IMotionProperty.Restore"/>
-    public void Restore(Animatable animatable) =>
-        // should we check if _savedValue is null?
-        SetMovement(_savedValue!, animatable);
+    public void Restore(Animatable animatable) => SetMovement(_savedValue, animatable);
+
+    /// <inheritdoc cref="IMotionProperty.CopyFrom(IMotionProperty)"/>
+    public void CopyFrom(IMotionProperty source)
+    {
+        var typedSource = (MotionProperty<T>)source;
+
+        FromValue = typedSource.FromValue;
+        ToValue = typedSource.ToValue;
+        _startTime = typedSource._startTime;
+        _endTime = typedSource._endTime;
+        Animation = typedSource.Animation;
+    }
+
+    private void SetTimeLine(Animatable animatable)
+    {
+        var animation = GetActualAnimation(animatable);
+        if (animation is null) return;
+
+        var globalTime = CoreMotionCanvas.ElapsedMilliseconds;
+
+        _startTime = globalTime;
+        _endTime = globalTime + animation.Duration;
+
+        animation.RepeatCount = 0;
+    }
+
+    private Animation? GetActualAnimation(Animatable animatable) => Animation;
 }

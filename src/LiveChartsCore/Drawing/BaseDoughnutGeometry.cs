@@ -20,99 +20,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Motion;
+using LiveChartsCore.Generators;
 
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
 /// Defines a doughnut geometry.
 /// </summary>
-public abstract class BaseDoughnutGeometry : BoundedDrawnGeometry
+public abstract partial class BaseDoughnutGeometry : BoundedDrawnGeometry
 {
-    private readonly FloatMotionProperty _cxProperty;
-    private readonly FloatMotionProperty _cyProperty;
-    private readonly FloatMotionProperty _startProperty;
-    private readonly FloatMotionProperty _sweepProperty;
-    private readonly FloatMotionProperty _pushoutProperty;
-    private readonly FloatMotionProperty _innerRadiusProperty;
-    private readonly FloatMotionProperty _cornerRadiusProperty;
+    [MotionProperty]
+    public partial float CenterX { get; set; }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="BaseDoughnutGeometry"/> class.
-    /// </summary>
-    public BaseDoughnutGeometry()
-    {
-        _cxProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(CenterX)));
-        _cyProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(CenterY)));
-        _startProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(StartAngle)));
-        _sweepProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(SweepAngle)));
-        _pushoutProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(PushOut)));
-        _innerRadiusProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(InnerRadius)));
-        _cornerRadiusProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(CornerRadius)));
-    }
+    [MotionProperty]
+    public partial float CenterY { get; set; }
 
-    /// <summary>
-    /// Gets or sets the center x.
-    /// </summary>
-    public float CenterX
-    {
-        get => _cxProperty.GetMovement(this);
-        set => _cxProperty.SetMovement(value, this);
-    }
+    [MotionProperty]
+    public partial float StartAngle { get; set; }
 
-    /// <summary>
-    /// Gets or sets the center y.
-    /// </summary>
-    public float CenterY
-    {
-        get => _cyProperty.GetMovement(this);
-        set => _cyProperty.SetMovement(value, this);
-    }
+    [MotionProperty]
+    public partial float SweepAngle { get; set; }
 
-    /// <summary>
-    /// Gets or sets the start angle in degrees.
-    /// </summary>
-    public float StartAngle
-    {
-        get => _startProperty.GetMovement(this);
-        set => _startProperty.SetMovement(value, this);
-    }
+    [MotionProperty]
+    public partial float PushOut { get; set; }
+    [MotionProperty]
+    public partial float InnerRadius { get; set; }
 
-    /// <summary>
-    /// Gets or sets the sweep angle in degrees.
-    /// </summary>
-    public float SweepAngle
-    {
-        get => _sweepProperty.GetMovement(this);
-        set => _sweepProperty.SetMovement(value, this);
-    }
-
-    /// <summary>
-    /// Gets or sets the push out.
-    /// </summary>
-    public float PushOut
-    {
-        get => _pushoutProperty.GetMovement(this);
-        set => _pushoutProperty.SetMovement(value, this);
-    }
-
-    /// <summary>
-    /// Gets or sets the inner radius.
-    /// </summary>
-    public float InnerRadius
-    {
-        get => _innerRadiusProperty.GetMovement(this);
-        set => _innerRadiusProperty.SetMovement(value, this);
-    }
-
-    /// <summary>
-    /// Gets or sets the corner radius.
-    /// </summary>
-    public float CornerRadius
-    {
-        get => _cornerRadiusProperty.GetMovement(this);
-        set => _cornerRadiusProperty.SetMovement(value, this);
-    }
+    [MotionProperty]
+    public partial float CornerRadius { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether the direction of the corner radius is inverted.

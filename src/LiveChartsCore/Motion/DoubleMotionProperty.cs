@@ -25,34 +25,16 @@ namespace LiveChartsCore.Motion;
 /// <summary>
 /// Defines the double motion property class.
 /// </summary>
-public class DoubleMotionProperty : MotionProperty<double>
+/// <remarks>
+/// Initializes a new instance of the <see cref="DoubleMotionProperty"/> class.
+/// </remarks>
+/// <param name="defaultValue">The default value.</param>
+public class DoubleMotionProperty(double defaultValue = 0d) : MotionProperty<double>(defaultValue)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DoubleMotionProperty"/> class.
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    public DoubleMotionProperty(string propertyName)
-        : base(propertyName)
-    {
-        fromValue = 0;
-        toValue = 0;
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DoubleMotionProperty"/> class.
-    /// </summary>
-    /// <param name="propertyName">Name of the property.</param>
-    /// <param name="value">The value.</param>
-    public DoubleMotionProperty(string propertyName, double value)
-        : base(propertyName)
-    {
-        fromValue = value;
-        toValue = value;
-    }
+    /// <inheritdoc cref="MotionProperty{T}.CanTransitionate"/>
+    protected override bool CanTransitionate => true;
 
     /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
-    protected override double OnGetMovement(float progress)
-    {
-        return fromValue + progress * (toValue - fromValue);
-    }
+    protected override double OnGetMovement(float progress) =>
+        FromValue + progress * (ToValue - FromValue);
 }

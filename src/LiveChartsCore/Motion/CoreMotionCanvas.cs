@@ -34,8 +34,8 @@ namespace LiveChartsCore.Motion;
 /// </summary>
 public class CoreMotionCanvas : IDisposable
 {
+    private static readonly Stopwatch s_clock = new();
     internal HashSet<Paint> _paintTasks = [];
-    private readonly Stopwatch _stopwatch = new();
     private object _sync = new();
 
     private int _frames = 0;
@@ -44,13 +44,15 @@ public class CoreMotionCanvas : IDisposable
     private double _totalFrames = 0;
     private double _totalSeconds = 0;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CoreMotionCanvas"/> class.
-    /// </summary>
-    public CoreMotionCanvas()
+    static CoreMotionCanvas()
     {
-        _stopwatch.Start();
+        s_clock.Start();
     }
+
+    /// <summary>
+    /// Gets the clock elapsed time in milliseconds.
+    /// </summary>
+    public static long ElapsedMilliseconds => s_clock.ElapsedMilliseconds;
 
     internal bool DisableAnimations { get; set; }
 
@@ -107,7 +109,6 @@ public class CoreMotionCanvas : IDisposable
             context.OnBeginDraw();
 
             var isValid = true;
-            var frameTime = _stopwatch.ElapsedMilliseconds;
 
             var toRemoveGeometries = new List<Tuple<Paint, IDrawnElement>>();
 
@@ -115,7 +116,6 @@ public class CoreMotionCanvas : IDisposable
             {
                 if (DisableAnimations) task.CompleteTransition(null);
                 task.IsValid = true;
-                task.CurrentTime = frameTime;
 
                 context.InitializePaintTask(task);
 
@@ -125,7 +125,6 @@ public class CoreMotionCanvas : IDisposable
                     if (DisableAnimations) geometry.CompleteTransition(null);
 
                     geometry.IsValid = true;
-                    geometry.CurrentTime = frameTime;
 
                     if (!task.IsPaused)
                     {
@@ -150,7 +149,6 @@ public class CoreMotionCanvas : IDisposable
             foreach (var tracker in Trackers)
             {
                 tracker.IsValid = true;
-                tracker.CurrentTime = frameTime;
                 isValid = isValid && tracker.IsValid;
             }
 

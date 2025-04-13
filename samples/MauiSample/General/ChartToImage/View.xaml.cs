@@ -16,7 +16,6 @@ public partial class View : ContentPage
         // we render our chart controls as images // mark
         CreateImageFromCartesianControl();
         CreateImageFromPieControl();
-        CreateImageFromGeoControl();
     }
 
     private void CreateImageFromCartesianControl()
@@ -32,12 +31,5 @@ public partial class View : ContentPage
         var chartControl = (PieChart)FindByName("pieChart");
         var skChart = new SKPieChart(chartControl) { Width = 900, Height = 600, };
         skChart.SaveImage(Path.Combine(_folderPath, "PieImageFromControl.png"));
-    }
-
-    private void CreateImageFromGeoControl()
-    {
-        var chartControl = (GeoMap)FindByName("geoChart");
-        var skChart = new SKGeoMap(chartControl) { Width = 900, Height = 600, };
-        skChart.SaveImage(Path.Combine(_folderPath, "MapImageFromControl.png"));
     }
 }
