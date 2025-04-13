@@ -83,7 +83,7 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
         FromValue = GetMovement(animatable);
         ToValue = value;
 
-        SetTimeLine(animatable);
+        SetTimeLine();
 
         animatable.IsValid = false;
 
@@ -102,9 +102,7 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
     /// <returns></returns>
     public T GetMovement(Animatable animatable)
     {
-        var animation = GetActualAnimation(animatable);
-
-        if (animation is null || animation.EasingFunction is null || !CanTransitionate)
+        if (Animation is null || Animation.EasingFunction is null || !CanTransitionate)
         {
 #if DEBUG
             if (LogGet == animatable)
@@ -153,17 +151,17 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
             p = 1;
 
             var requiresRepeat =
-                animation.RepeatTimes == int.MaxValue ||
-                animation.RepeatTimes >= ++animation.RepeatCount;
+                Animation.RepeatTimes == int.MaxValue ||
+                Animation.RepeatTimes >= ++Animation.RepeatCount;
 
             if (requiresRepeat)
             {
                 _startTime = globalTime;
-                _endTime = globalTime + animation.Duration;
+                _endTime = globalTime + Animation.Duration;
             }
         }
 
-        var fp = animation.EasingFunction(p);
+        var fp = Animation.EasingFunction(p);
 
 #if DEBUG
         if (LogGet == animatable)
@@ -204,18 +202,15 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
         Animation = typedSource.Animation;
     }
 
-    private void SetTimeLine(Animatable animatable)
+    private void SetTimeLine()
     {
-        var animation = GetActualAnimation(animatable);
-        if (animation is null) return;
+        if (Animation is null) return;
 
         var globalTime = CoreMotionCanvas.ElapsedMilliseconds;
 
         _startTime = globalTime;
-        _endTime = globalTime + animation.Duration;
+        _endTime = globalTime + Animation.Duration;
 
-        animation.RepeatCount = 0;
+        Animation.RepeatCount = 0;
     }
-
-    private Animation? GetActualAnimation(Animatable animatable) => Animation;
 }
