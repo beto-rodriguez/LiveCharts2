@@ -1,5 +1,24 @@
-﻿// based on:
-// https://github.com/andrewlock/blog-examples/tree/master/NetEscapades.EnumGenerators
+﻿// The MIT License(MIT)
+//
+// Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -26,8 +45,6 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
                 transform: static (ctx, _) => GetXamlObjectsToGenerate(ctx.SemanticModel, ctx.TargetNode))
             .Where(static m => m is not null);
 
-        context.RegisterSourceOutput(xamlObjects, static (spc, source) => ExecuteXamlObjects(source, spc));
-
         var motionProperties = context.SyntaxProvider
             .ForAttributeWithMetadataName(
                 MotionPropertyAttribute,
@@ -35,29 +52,39 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
                 transform: static (ctx, _) => GetMotionPropertiesToGenerate(ctx.SemanticModel, ctx.TargetNode))
             .Where(static m => m is not null);
 
-        context.RegisterSourceOutput(motionProperties, static (spc, source) => ExecuteMotionProperties(source, spc));
-    }
+        var groupedByType = motionProperties
+            .Collect()
+            .Select((props, _) => props
+                .GroupBy(prop => prop?.Property.ContainingType, SymbolEqualityComparer.Default)
+                .ToList());
 
-    private static void ExecuteXamlObjects(XamlObject? target, SourceProductionContext context)
-    {
-        if (target is { } value)
+        context.RegisterSourceOutput(xamlObjects, static (spc, source) =>
         {
-            // generate the source code and add it to the output
-            var result = XamlObjectTempaltes.GetTemplate(value);
-            context.AddSource($"{value.Name}.g.cs".Replace('<', '_').Replace('>', '_'), SourceText.From(result, Encoding.UTF8));
-        }
-    }
+            if (source is not { } value) return;
+            spc.AddSource(
+                $"{value.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
+                SourceText.From(XamlObjectTempaltes.GetTemplate(value), Encoding.UTF8));
+        });
 
-    private static void ExecuteMotionProperties(MotionProperty? target, SourceProductionContext context)
-    {
-        if (target is { } value)
+        context.RegisterSourceOutput(motionProperties, static (spc, source) =>
         {
-            // generate the source code and add it to the output
-            var result = MotionPropertyTemplates.GetTemplate(value);
-            context.AddSource(
+            if (source is not { } value) return;
+            spc.AddSource(
                 $"{value.Property.ContainingType.Name}.{value.Property.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
-                SourceText.From(result, Encoding.UTF8));
-        }
+                SourceText.From(MotionPropertyTemplates.GetTemplate(value), Encoding.UTF8));
+        });
+
+        context.RegisterSourceOutput(groupedByType, (spc, groups) =>
+        {
+            foreach (var group in groups)
+            {
+                if (group is null || group.Key is null) continue;
+
+                spc.AddSource(
+                    $"{group.Key.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
+                    MotionPropertyTemplates.GetClassTemplate(group));
+            }
+        });
     }
 
     private static XamlObject? GetXamlObjectsToGenerate(SemanticModel semanticModel, SyntaxNode declarationSyntax)
