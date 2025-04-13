@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
 using LiveChartsCore.Motion;
 
 namespace LiveChartsCore.Drawing;
@@ -27,6 +28,11 @@ namespace LiveChartsCore.Drawing;
 /// <inheritdoc cref="Animatable" />
 public abstract class Animatable
 {
+    /// <summary>
+    /// Gets the <see cref="PropertyDefinition"/> collection in the <see cref="Animatable"/> type.
+    /// </summary>
+    public static PropertyDefinition[] PropertyDefinitions { get; } = [];
+
     /// <summary>
     /// Gets or sets a value indicating whether this instance is valid, the instance is valid when all the
     /// motion properties in the object finished their animations.
@@ -39,70 +45,70 @@ public abstract class Animatable
     public bool RemoveOnCompleted { get; set; }
 
     /// <summary>
-    /// Gets or sets the default animation, this animation will be used when no animation is set for a property.
-    /// </summary>
-    public Animation? DefaultAnimation { get; set; } = null;
-
-    /// <summary>
     /// Sets the transition for the specified properties.
     /// </summary>
     /// <param name="animation">The animation.</param>
-    /// <param name="properties">The properties, null to select all properties.</param>
+    /// <param name="properties">
+    /// The properties to animate, when no properties, all properties are selected.
+    /// </param>
     public void SetTransition(Animation? animation, params PropertyDefinition[]? properties)
     {
-        var a = animation?.Duration == 0 ? null : animation;
+        var propertiesEnumerable = properties is null || properties.Length == 0
+            ? GetPropertyDefinitions()
+            : (IEnumerable<PropertyDefinition>)properties;
 
-        if (properties is null || properties.Length == 0)
+        foreach (var property in propertiesEnumerable)
         {
-            DefaultAnimation = animation;
-            return;
-        }
+            var motionProperty = property.GetMotion?.Invoke(this);
+            if (motionProperty is null) continue;
 
-        foreach (var propertySource in properties)
-        {
-            var property = propertySource.GetMotion?.Invoke(this);
-            if (property is null) continue;
-            property.Animation = a;
+            motionProperty.Animation = animation;
         }
     }
 
     /// <summary>
     /// Removes the transition for the specified properties.
     /// </summary>
-    /// <param name="properties">The properties to remove, null to select all properties.</param>
+    /// <param name="properties">The properties to remove, when no properties, all properties are selected.
+    /// </param>
     public void RemoveTransition(params PropertyDefinition[]? properties)
     {
-        if (properties is null || properties.Length == 0)
-        {
-            DefaultAnimation = null;
-            return;
-        }
+        var propertiesEnumerable = properties is null || properties.Length == 0
+            ? GetPropertyDefinitions()
+            : (IEnumerable<PropertyDefinition>)properties;
 
-        foreach (var propertySource in properties)
+        foreach (var property in propertiesEnumerable)
         {
-            var property = propertySource.GetMotion?.Invoke(this);
-            if (property is null) continue;
-            property.Animation = null;
+            var motionProperty = property.GetMotion?.Invoke(this);
+            if (motionProperty is null) continue;
+
+            motionProperty.Animation = null;
         }
     }
 
     /// <summary>
     /// Completes the transition for the specified properties.
     /// </summary>
-    /// <param name="properties">The properties to complete, null to select all properties.</param>
+    /// <param name="properties">The properties to complete, when no properties, all properties are selected.
+    /// </param>
     public virtual void CompleteTransition(params PropertyDefinition[]? properties)
     {
-        if (properties is null || properties.Length == 0)
-        {
-            IsValid = true;
-            return;
-        }
+        var propertiesEnumerable = properties is null || properties.Length == 0
+            ? GetPropertyDefinitions()
+            : (IEnumerable<PropertyDefinition>)properties;
 
-        foreach (var propertySource in properties)
+        foreach (var property in propertiesEnumerable)
         {
-            var property = propertySource.GetMotion?.Invoke(this);
-            if (property is null) continue;
-            property.IsCompleted = true;
+            var motionProperty = property.GetMotion?.Invoke(this);
+            if (motionProperty is null) continue;
+
+            motionProperty.Finish();
         }
     }
+
+    /// <summary>
+    /// Gets the motion property definitions in the instance.
+    /// </summary>
+    /// <returns>The propertt definitions.</returns>
+    protected virtual PropertyDefinition[] GetPropertyDefinitions() => PropertyDefinitions;
 }
