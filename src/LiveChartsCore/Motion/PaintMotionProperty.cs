@@ -20,33 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using LiveChartsCore.Drawing;
+using LiveChartsCore.Painting;
 
-namespace LiveChartsCore.Painting;
+namespace LiveChartsCore.Motion;
 
 /// <summary>
-/// Just an empty paint task, this is used to measure layouts... just a hack.
+/// Defines the float motion property class.
 /// </summary>
-internal class MeasureTask : Paint
+/// <remarks>
+/// Initializes a new instance of the <see cref="PaintMotionProperty"/> class.
+/// </remarks>
+/// <param name="defaultValue">The default value.</param>
+public class PaintMotionProperty(Paint defaultValue = null!)
+    : MotionProperty<Paint>(defaultValue)
 {
-    public static MeasureTask Instance { get; } = new MeasureTask();
+    /// <inheritdoc cref="MotionProperty{T}.CanTransitionate"/>
+    protected override bool CanTransitionate =>
+        FromValue is not null && ToValue is not null;
 
-    /// <inheritdoc cref="Paint.CloneTask" />
-    public override void ApplyOpacityMask(DrawingContext context, float opacity) { }
-
-    /// <inheritdoc cref="Paint.CloneTask" />
-    public override Paint CloneTask() => throw new NotImplementedException();
-
-    /// <inheritdoc cref="Paint.Dispose" />
-    public override void Dispose() { }
-
-    /// <inheritdoc cref="Paint.InitializeTask(DrawingContext)" />
-    public override void InitializeTask(DrawingContext drawingContext) { }
-
-    /// <inheritdoc cref="Paint.RestoreOpacityMask(DrawingContext, float)" />
-    public override void RestoreOpacityMask(DrawingContext context, float opacity) { }
-
-    /// <inheritdoc cref="Paint.Transitionate(float, Paint)" />
-    public override Paint Transitionate(float progress, Paint target) => this;
+    /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
+    protected override Paint OnGetMovement(float progress) =>
+        FromValue.Transitionate(progress, ToValue);
 }

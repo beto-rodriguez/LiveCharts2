@@ -96,7 +96,6 @@ public class SolidColorPaint : SkiaPaint
     }
 
     /// <inheritdoc cref="Paint.InitializeTask(DrawingContext)" />
-
     public override void InitializeTask(DrawingContext drawingContext)
     {
         var skiaContext = (SkiaSharpDrawingContext)drawingContext;
@@ -133,6 +132,27 @@ public class SolidColorPaint : SkiaPaint
         }
 
         skiaContext.ActiveSkiaPaint = _skiaPaint;
+    }
+
+    /// <inheritdoc cref="Paint.Transitionate(float, Paint)"/>
+    public override Paint Transitionate(float progress, Paint target)
+    {
+        if (target is not SolidColorPaint paint) return target;
+
+        var clone = (SolidColorPaint)CloneTask();
+
+        clone.StrokeThickness = StrokeThickness + progress * (paint.StrokeThickness - StrokeThickness);
+        clone.StrokeMiter = StrokeMiter + progress * (paint.StrokeMiter - StrokeMiter);
+        clone.PathEffect = PathEffect?.Transitionate(progress, paint.PathEffect);
+        clone.ImageFilter = ImageFilter?.Transitionate(progress, paint.ImageFilter);
+
+        clone.Color = new SKColor(
+            (byte)(Color.Red + progress * (paint.Color.Red - Color.Red)),
+            (byte)(Color.Green + progress * (paint.Color.Green - Color.Green)),
+            (byte)(Color.Blue + progress * (paint.Color.Blue - Color.Blue)),
+            (byte)(Color.Alpha + progress * (paint.Color.Alpha - Color.Alpha)));
+
+        return clone;
     }
 
     /// <inheritdoc cref="Paint.ApplyOpacityMask(DrawingContext, float)" />

@@ -58,4 +58,7 @@ public class DrawnTask : Paint
 
     /// <inheritdoc cref="Paint.RestoreOpacityMask(DrawingContext, float)" />
     public override void RestoreOpacityMask(DrawingContext context, float opacity) { }
+
+    /// <inheritdoc cref="Paint.Transitionate(float, Paint)" />
+    public override Paint Transitionate(float progress, Paint target) => this;
 }

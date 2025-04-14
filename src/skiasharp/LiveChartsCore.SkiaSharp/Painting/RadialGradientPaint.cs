@@ -38,8 +38,8 @@ public class RadialGradientPaint : SkiaPaint
     private SkiaSharpDrawingContext? _drawingContext;
     private SKPaint? _skiaPaint;
     private readonly SKColor[] _gradientStops;
-    private readonly SKPoint _center;
-    private readonly float _radius;
+    private SKPoint _center;
+    private float _radius;
     private readonly float[]? _colorPos;
     private readonly SKShaderTileMode _tileMode;
 
@@ -118,11 +118,11 @@ public class RadialGradientPaint : SkiaPaint
         r *= _radius;
 
         _skiaPaint.Shader = SKShader.CreateRadialGradient(
-                center,
-                r,
-                _gradientStops,
-                _colorPos,
-                _tileMode);
+            center,
+            r,
+            _gradientStops,
+            _colorPos,
+            _tileMode);
 
         _skiaPaint.IsAntialias = IsAntialias;
         _skiaPaint.StrokeWidth = StrokeThickness;
@@ -156,6 +156,46 @@ public class RadialGradientPaint : SkiaPaint
         skiaContext.ActiveSkiaPaint = _skiaPaint;
     }
 
+    /// <inheritdoc cref="Paint.Transitionate(float, Paint)" />
+    public override Paint Transitionate(float progress, Paint target)
+    {
+        if (target is not RadialGradientPaint paint) return target;
+
+        var clone = (RadialGradientPaint)CloneTask();
+
+        clone.StrokeThickness = StrokeThickness + progress * (paint.StrokeThickness - StrokeThickness);
+        clone.StrokeMiter = StrokeMiter + progress * (paint.StrokeMiter - StrokeMiter);
+        clone.PathEffect = PathEffect?.Transitionate(progress, paint.PathEffect);
+        clone.ImageFilter = ImageFilter?.Transitionate(progress, paint.ImageFilter);
+
+        if (paint._gradientStops.Length != _gradientStops.Length)
+            throw new ArgumentException("The gradient stops must be the same length.");
+
+        for (var i = 0; i < _gradientStops.Length; i++)
+            clone._gradientStops[i] = new SKColor(
+                (byte)(_gradientStops[i].Red + progress * (paint._gradientStops[i].Red - _gradientStops[i].Red)),
+                (byte)(_gradientStops[i].Green + progress * (paint._gradientStops[i].Green - _gradientStops[i].Green)),
+                (byte)(_gradientStops[i].Blue + progress * (paint._gradientStops[i].Blue - _gradientStops[i].Blue)),
+                (byte)(_gradientStops[i].Alpha + progress * (paint._gradientStops[i].Alpha - _gradientStops[i].Alpha)));
+
+        clone._center = new SKPoint(
+            _center.X + progress * (paint._center.X - _center.X),
+            _center.Y + progress * (paint._center.Y - _center.Y));
+
+        clone._radius = _radius + progress * (paint._radius - _radius);
+
+        if (_colorPos is not null && paint._colorPos is not null)
+        {
+            if (clone._colorPos is null || _colorPos.Length != clone._colorPos.Length)
+                throw new ArgumentException("The color positions must be the same length.");
+
+            for (var i = 0; i < _colorPos.Length; i++)
+                clone._colorPos[i] = _colorPos[i] + progress * (clone._colorPos[i] - _colorPos[i]);
+        }
+
+        return clone;
+    }
+
     /// <inheritdoc cref="Paint.ApplyOpacityMask(DrawingContext, float)" />
     public override void ApplyOpacityMask(DrawingContext context, float opacity)
     {
@@ -170,11 +210,11 @@ public class RadialGradientPaint : SkiaPaint
         r *= _radius;
 
         _skiaPaint.Shader = SKShader.CreateRadialGradient(
-                center,
-                r,
-                _gradientStops.Select(x => new SKColor(x.Red, x.Green, x.Blue, (byte)(255 * opacity))).ToArray(),
-                _colorPos,
-                _tileMode);
+            center,
+            r,
+            [.. _gradientStops.Select(x => new SKColor(x.Red, x.Green, x.Blue, (byte)(255 * opacity)))],
+            _colorPos,
+            _tileMode);
     }
 
     /// <inheritdoc cref="Paint.RestoreOpacityMask(DrawingContext, float)" />

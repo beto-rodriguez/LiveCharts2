@@ -59,7 +59,12 @@ public class LinearGradientPaint(
     SKShaderTileMode tileMode = SKShaderTileMode.Repeat)
         : SkiaPaint
 {
+    private SkiaSharpDrawingContext? _drawingContext;
     private SKPaint? _skiaPaint;
+    private SKColor[] GradientStops { get; set; } = gradientStops;
+    private SKPoint StartPoint { get; set; } = startPoint;
+    private SKPoint EndPoint { get; set; } = endPoint;
+    private float[]? ColorPos { get; set; } = colorPos;
 
     /// <summary>
     /// Default start point.
@@ -70,8 +75,6 @@ public class LinearGradientPaint(
     /// Default end point.
     /// </summary>
     public static readonly SKPoint DefaultEndPoint = new(1, 0.5f);
-
-    private SkiaSharpDrawingContext? _drawingContext;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LinearGradientPaint"/> class.
@@ -105,7 +108,7 @@ public class LinearGradientPaint(
     /// <inheritdoc cref="Paint.CloneTask" />
     public override Paint CloneTask()
     {
-        return new LinearGradientPaint(gradientStops, startPoint, endPoint, colorPos, tileMode)
+        return new LinearGradientPaint(GradientStops, StartPoint, EndPoint, ColorPos, tileMode)
         {
             PaintStyle = PaintStyle,
             IsAntialias = IsAntialias,
@@ -135,14 +138,14 @@ public class LinearGradientPaint(
         var yf = size.Location.Y;
         var yt = yf + size.Height;
 
-        var start = new SKPoint(xf + (xt - xf) * startPoint.X, yf + (yt - yf) * startPoint.Y);
-        var end = new SKPoint(xf + (xt - xf) * endPoint.X, yf + (yt - yf) * endPoint.Y);
+        var start = new SKPoint(xf + (xt - xf) * StartPoint.X, yf + (yt - yf) * StartPoint.Y);
+        var end = new SKPoint(xf + (xt - xf) * EndPoint.X, yf + (yt - yf) * EndPoint.Y);
 
         _skiaPaint.Shader = SKShader.CreateLinearGradient(
             start,
             end,
-            gradientStops.Select(x => new SKColor(x.Red, x.Green, x.Blue, (byte)(255 * opacity))).ToArray(),
-            colorPos,
+            [.. GradientStops.Select(x => new SKColor(x.Red, x.Green, x.Blue, (byte)(255 * opacity)))],
+            ColorPos,
             tileMode);
     }
 
@@ -159,14 +162,14 @@ public class LinearGradientPaint(
         var yf = size.Location.Y;
         var yt = yf + size.Height;
 
-        var start = new SKPoint(xf + (xt - xf) * startPoint.X, yf + (yt - yf) * startPoint.Y);
-        var end = new SKPoint(xf + (xt - xf) * endPoint.X, yf + (yt - yf) * endPoint.Y);
+        var start = new SKPoint(xf + (xt - xf) * StartPoint.X, yf + (yt - yf) * StartPoint.Y);
+        var end = new SKPoint(xf + (xt - xf) * EndPoint.X, yf + (yt - yf) * EndPoint.Y);
 
         _skiaPaint.Shader = SKShader.CreateLinearGradient(
             start,
             end,
-            gradientStops,
-            colorPos,
+            GradientStops,
+            ColorPos,
             tileMode);
     }
 
@@ -184,15 +187,15 @@ public class LinearGradientPaint(
         var yf = size.Location.Y;
         var yt = yf + size.Height;
 
-        var start = new SKPoint(xf + (xt - xf) * startPoint.X, yf + (yt - yf) * startPoint.Y);
-        var end = new SKPoint(xf + (xt - xf) * endPoint.X, yf + (yt - yf) * endPoint.Y);
+        var start = new SKPoint(xf + (xt - xf) * StartPoint.X, yf + (yt - yf) * StartPoint.Y);
+        var end = new SKPoint(xf + (xt - xf) * EndPoint.X, yf + (yt - yf) * EndPoint.Y);
 
         _skiaPaint.Shader = SKShader.CreateLinearGradient(
-                start,
-                end,
-                gradientStops,
-                colorPos,
-                tileMode);
+            start,
+            end,
+            GradientStops,
+            ColorPos,
+            tileMode);
 
         _skiaPaint.IsAntialias = IsAntialias;
         _skiaPaint.StrokeWidth = StrokeThickness;
@@ -224,6 +227,50 @@ public class LinearGradientPaint(
         }
 
         skiaContext.ActiveSkiaPaint = _skiaPaint;
+    }
+
+    /// <inheritdoc cref="Paint.Transitionate(float, Paint)"/>
+    public override Paint Transitionate(float progress, Paint target)
+    {
+        if (target is not LinearGradientPaint paint) return target;
+
+        var clone = (LinearGradientPaint)CloneTask();
+
+        clone.StrokeThickness = StrokeThickness + progress * (paint.StrokeThickness - StrokeThickness);
+        clone.StrokeMiter = StrokeMiter + progress * (paint.StrokeMiter - StrokeMiter);
+        clone.PathEffect = PathEffect?.Transitionate(progress, paint.PathEffect);
+        clone.ImageFilter = ImageFilter?.Transitionate(progress, paint.ImageFilter);
+
+        if (paint.GradientStops.Length != GradientStops.Length)
+            throw new NotImplementedException(
+                $"Transitions between {nameof(GradientStops)} must be of the same length.");
+
+        for (var i = 0; i < GradientStops.Length; i++)
+            clone.GradientStops[i] = new SKColor(
+                (byte)(GradientStops[i].Red + progress * (paint.GradientStops[i].Red - GradientStops[i].Red)),
+                (byte)(GradientStops[i].Green + progress * (paint.GradientStops[i].Green - GradientStops[i].Green)),
+                (byte)(GradientStops[i].Blue + progress * (paint.GradientStops[i].Blue - GradientStops[i].Blue)),
+                (byte)(GradientStops[i].Alpha + progress * (paint.GradientStops[i].Alpha - GradientStops[i].Alpha)));
+
+        clone.StartPoint = new SKPoint(
+            StartPoint.X + progress * (paint.StartPoint.X - StartPoint.X),
+            StartPoint.Y + progress * (paint.StartPoint.Y - StartPoint.Y));
+
+        clone.EndPoint = new SKPoint(
+            EndPoint.X + progress * (paint.EndPoint.X - EndPoint.X),
+            EndPoint.Y + progress * (paint.EndPoint.Y - EndPoint.Y));
+
+        if (ColorPos is not null && paint.ColorPos is not null)
+        {
+            if (clone.ColorPos is null || ColorPos.Length != paint.ColorPos.Length)
+                throw new NotImplementedException(
+                    $"Transitions between {nameof(ColorPos)} must be of the same length.");
+
+            for (var i = 0; i < ColorPos.Length; i++)
+                clone.ColorPos[i] = ColorPos[i] + progress * (paint.ColorPos[i] - ColorPos[i]);
+        }
+
+        return clone;
     }
 
     /// <summary>

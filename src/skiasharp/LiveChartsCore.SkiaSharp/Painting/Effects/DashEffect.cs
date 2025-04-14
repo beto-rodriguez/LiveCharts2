@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
 
@@ -34,25 +35,31 @@ namespace LiveChartsCore.SkiaSharpView.Painting.Effects;
 /// </remarks>
 public class DashEffect(float[] dashArray, float phase = 0) : PathEffect
 {
+    private float[] DashArray { get; set; } = dashArray;
+    private float Phase { get; set; } = phase;
 
-    /// <summary>
-    /// Creates a new object that is a copy of the current instance.
-    /// </summary>
-    /// <returns>
-    /// A new object that is a copy of this instance.
-    /// </returns>
-    /// <exception cref="System.NotImplementedException"></exception>
-    public override PathEffect Clone()
-    {
-        return new DashEffect(dashArray, phase);
-    }
+    /// <inheritdoc cref="PathEffect.Clone"/>
+    public override PathEffect Clone() => new DashEffect(DashArray, Phase);
 
-    /// <summary>
-    /// Creates the path effect.
-    /// </summary>
-    /// <param name="drawingContext">The drawing context.</param>
-    public override void CreateEffect(SkiaSharpDrawingContext drawingContext)
+    /// <inheritdoc cref="PathEffect.CreateEffect(SkiaSharpDrawingContext)"/>
+    public override void CreateEffect(SkiaSharpDrawingContext drawingContext) =>
+        SKPathEffect = SKPathEffect.CreateDash(DashArray, Phase);
+
+    /// <inheritdoc cref="PathEffect.Transitionate(float, PathEffect)"/>
+    public override PathEffect? Transitionate(float progress, PathEffect? target)
     {
-        SKPathEffect = SKPathEffect.CreateDash(dashArray, phase);
+        if (target is not DashEffect dashEffect) return target;
+
+        var clone = (DashEffect)Clone();
+
+        if (DashArray.Length != dashEffect.DashArray.Length)
+            throw new Exception("The dash arrays must have the same length");
+
+        for (var i = 0; i < DashArray.Length; i++)
+            clone.DashArray[i] = DashArray[i] + (dashEffect.DashArray[i] - DashArray[i]) * progress;
+
+        clone.Phase = Phase + (dashEffect.Phase - Phase) * progress;
+
+        return clone;
     }
 }

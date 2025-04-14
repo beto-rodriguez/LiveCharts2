@@ -53,6 +53,14 @@ public abstract class ImageFilter : IDisposable
     public abstract ImageFilter Clone();
 
     /// <summary>
+    /// Transitions the image filter to a new one.
+    /// </summary>
+    /// <param name="progress">The progress.</param>
+    /// <param name="target">The end target.</param>
+    /// <returns></returns>
+    public abstract ImageFilter? Transitionate(float progress, ImageFilter? target);
+
+    /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
     /// </summary>
     public virtual void Dispose()

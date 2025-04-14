@@ -125,6 +125,13 @@ public abstract partial class Paint : Animatable, IDisposable
     public bool IsEmpty => _geometriesByCanvas.Count == 0;
 
     /// <summary>
+    /// Transitionates the paint task to the target paint task.
+    /// </summary>
+    /// <param name="progress">The progress.</param>
+    /// <param name="target">The end target.</param>
+    public abstract Paint Transitionate(float progress, Paint target);
+
+    /// <summary>
     /// Gets the geometries.
     /// </summary>
     /// <returns></returns>
@@ -265,5 +272,6 @@ public abstract partial class Paint : Animatable, IDisposable
         public override void Dispose() { }
         public override void InitializeTask(DrawingContext drawingContext) { }
         public override void RestoreOpacityMask(DrawingContext context, float opacity) { }
+        public override Paint Transitionate(float progress, Paint target) => this;
     }
 }
