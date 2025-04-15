@@ -213,7 +213,7 @@ public class SkiaSharpDrawingContext(
 
             if (ActiveLvcPaint.PaintStyle.HasFlag(PaintStyle.Fill))
             {
-                if (element.Fill is null)
+                if (element.Fill is null || element.Fill == ActiveLvcPaint)
                     DrawByActivePaint(element, opacity);
                 else
                     DrawByPaint(element.Fill, element, opacity);
@@ -221,7 +221,7 @@ public class SkiaSharpDrawingContext(
 
             if (ActiveLvcPaint.PaintStyle.HasFlag(PaintStyle.Stroke))
             {
-                if (element.Stroke is null)
+                if (element.Stroke is null || element.Stroke == ActiveLvcPaint)
                     DrawByActivePaint(element, opacity);
                 else
                     DrawByPaint(element.Stroke, element, opacity);
@@ -235,6 +235,7 @@ public class SkiaSharpDrawingContext(
     public override void InitializePaintTask(Paint paint)
     {
         ActiveLvcPaint = paint;
+        PaintMotionProperty.s_activePaint = paint;
         //ActiveSkiaPaint = paint.SKPaint; set by paint.InitializeTask
 
         paint.InitializeTask(this);
@@ -247,6 +248,7 @@ public class SkiaSharpDrawingContext(
 
         ActiveLvcPaint = null!;
         ActiveSkiaPaint = null!;
+        PaintMotionProperty.s_activePaint = null!;
     }
 
     private void DrawByActivePaint(IDrawnElement<SkiaSharpDrawingContext> element, float opacity)

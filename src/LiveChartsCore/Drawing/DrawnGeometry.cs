@@ -45,7 +45,6 @@ public abstract partial class DrawnGeometry : Animatable, IDrawnElement
         _OpacityMotionProperty = new(1f);
     }
 
-    /// <inheritdoc cref="IDrawnElement.Parent"/>
     IDrawnElement? IDrawnElement.Parent { get => _parent; set => _parent = value; }
 
     /// <inheritdoc cref="IDrawnElement.Opacity"/>
@@ -94,6 +93,30 @@ public abstract partial class DrawnGeometry : Animatable, IDrawnElement
     /// <inheritdoc cref="IDrawnElement.SkewTransform"/>
     [MotionProperty]
     public partial LvcPoint SkewTransform { get; set; }
+
+    /// <inheritdoc cref="IDrawnElement.Stroke"/>
+    [MotionProperty(HasExplicitAcessors = true)]
+    public partial Paint? Stroke
+    {
+        get => _StrokeMotionProperty.GetMovement(this);
+        set
+        {
+            if (value is not null) value.PaintStyle = PaintStyle.Stroke;
+            _StrokeMotionProperty.SetMovement(value, this);
+        }
+    }
+
+    /// <inheritdoc cref="IDrawnElement.Fill"/>
+    [MotionProperty(HasExplicitAcessors = true)]
+    public partial Paint? Fill
+    {
+        get => _FillMotionProperty.GetMovement(this);
+        set
+        {
+            if (value is not null) value.PaintStyle = PaintStyle.Fill;
+            _FillMotionProperty.SetMovement(value, this);
+        }
+    }
     partial void OnSkewTransformChanged(LvcPoint value) => HasTransform = true;
 
     /// <inheritdoc cref="IDrawnElement.HasTransform"/>
@@ -131,28 +154,6 @@ public abstract partial class DrawnGeometry : Animatable, IDrawnElement
 
     /// <inheritdoc cref="IDrawnElement.HasSkew"/>
     public bool HasRotation => Math.Abs(RotateTransform) > 0;
-
-    /// <inheritdoc cref="IDrawnElement.Stroke"/>
-    public Paint? Stroke
-    {
-        get;
-        set
-        {
-            field = value;
-            if (field is not null) field.PaintStyle = PaintStyle.Stroke;
-        }
-    }
-
-    /// <inheritdoc cref="IDrawnElement.Fill"/>
-    public Paint? Fill
-    {
-        get;
-        set
-        {
-            field = value;
-            if (field is not null) field.PaintStyle = PaintStyle.Fill;
-        }
-    }
 
     Paint? IDrawnElement.Paint { get; set; }
 

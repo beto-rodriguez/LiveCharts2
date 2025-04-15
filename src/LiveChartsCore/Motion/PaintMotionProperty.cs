@@ -34,11 +34,14 @@ namespace LiveChartsCore.Motion;
 public class PaintMotionProperty(Paint defaultValue = null!)
     : MotionProperty<Paint>(defaultValue)
 {
+    internal static Paint s_activePaint = null!;
+
     /// <inheritdoc cref="MotionProperty{T}.CanTransitionate"/>
     protected override bool CanTransitionate =>
-        FromValue is not null && ToValue is not null;
+        (FromValue ?? s_activePaint) is not null &&
+        (ToValue ?? s_activePaint) is not null;
 
     /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
     protected override Paint OnGetMovement(float progress) =>
-        FromValue.Transitionate(progress, ToValue);
+        (FromValue ?? s_activePaint).Transitionate(progress, ToValue ?? s_activePaint);
 }
