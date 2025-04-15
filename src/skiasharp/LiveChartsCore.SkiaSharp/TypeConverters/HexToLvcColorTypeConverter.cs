@@ -49,11 +49,14 @@ public class HexToLvcColorTypeConverter : TypeConverter
     /// <param name="culture">The culture.</param>
     /// <param name="value">The value.</param>
     /// <returns>The converted value.</returns>
-    public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
-    {
-        if (value is not string str) return base.ConvertFrom(context, culture, value);
+    public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value) =>
+        value is not string str
+            ? base.ConvertFrom(context, culture, value)
+            : Parse(str);
 
-        return LvcColor.TryParse(str, out var color)
+    internal static object Parse(string hexString)
+    {
+        return LvcColor.TryParse(hexString, out var color)
             ? color
             : new LvcColor(0, 0, 0, 0);
     }

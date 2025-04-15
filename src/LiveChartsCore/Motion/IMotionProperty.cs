@@ -55,18 +55,18 @@ public interface IMotionProperty
     Animation? Animation { get; set; }
 
     /// <summary>
+    /// Gets the start value of the transition.
+    /// </summary>
+    object? FromValue { get; }
+
+    /// <summary>
+    /// Gets the end value of the transition.
+    /// </summary>
+    object? ToValue { get; }
+
+    /// <summary>
     /// Copies into this instance the source property.
     /// </summary>
     /// <param name="source">The source.</param>
     void CopyFrom(IMotionProperty source);
-
-    /// <summary>
-    /// Saves the property target value.
-    /// </summary>
-    void Save();
-
-    /// <summary>
-    /// Restores the property target value.
-    /// </summary>
-    void Restore(Animatable animatable);
 }

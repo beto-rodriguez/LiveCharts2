@@ -186,6 +186,7 @@ public abstract partial class Paint : Animatable, IDisposable
     public void RemoveGeometryFromPaintTask(CoreMotionCanvas canvas, IDrawnElement geometry)
     {
         _ = GetGeometriesByCanvas(canvas)?.Remove(geometry);
+        ((Animatable)geometry)._statesTracker = null;
 
         IsValid = false;
     }

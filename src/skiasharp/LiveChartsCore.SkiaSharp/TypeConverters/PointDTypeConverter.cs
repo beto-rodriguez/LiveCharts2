@@ -48,11 +48,14 @@ public class PointDTypeConverter : TypeConverter
     /// <param name="culture">The culture.</param>
     /// <param name="value">The value.</param>
     /// <returns>The converted value.</returns>
-    public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
-    {
-        if (value is not string str) return base.ConvertFrom(context, culture, value);
+    public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value) =>
+        value is not string str
+            ? base.ConvertFrom(context, culture, value)
+            : ParsePoint(str);
 
-        var parts = str.Split(',');
+    internal static object ParsePoint(string value)
+    {
+        var parts = value.Split(',');
 
         return parts.Length switch
         {

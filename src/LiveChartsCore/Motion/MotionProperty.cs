@@ -36,7 +36,6 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
 {
     private float _startTime;
     private float _endTime;
-    private T _savedValue = defaultValue;
 
     /// <summary>
     /// Gets the value where the transition began.
@@ -47,6 +46,10 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
     /// Gets the value where the transition finishes.
     /// </summary>
     public T ToValue { get; private set; } = defaultValue;
+
+    object? IMotionProperty.FromValue => FromValue;
+
+    object? IMotionProperty.ToValue => ToValue;
 
     /// <inheritdoc cref="IMotionProperty.Animation"/>
     public Animation? Animation { get; set; }
@@ -161,17 +164,15 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
             }
         }
 
-        var fp = Animation.EasingFunction(p);
-
 #if DEBUG
         if (LogGet == animatable)
         {
             System.Diagnostics.Debug.WriteLine(
-                $"[MOTION GET]    {FromValue:N2}   =>   {ToValue:N2}   @   {OnGetMovement(fp):N2} [{p:p2}]");
+                $"[MOTION GET]    {FromValue:N2}   =>   {ToValue:N2}   @   {OnGetMovement(Animation.EasingFunction(p)):N2} [{p:p2}]");
         }
 #endif
 
-        return OnGetMovement(fp);
+        return OnGetMovement(Animation.EasingFunction(p));
     }
 
     /// <summary>
@@ -183,12 +184,6 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
 
     /// <inheritdoc cref="IMotionProperty.Finish"/>
     public void Finish() => _endTime = 0;
-
-    /// <inheritdoc cref="IMotionProperty.Save"/>
-    public void Save() => _savedValue = ToValue;
-
-    /// <inheritdoc cref="IMotionProperty.Restore"/>
-    public void Restore(Animatable animatable) => SetMovement(_savedValue, animatable);
 
     /// <inheritdoc cref="IMotionProperty.CopyFrom(IMotionProperty)"/>
     public void CopyFrom(IMotionProperty source)

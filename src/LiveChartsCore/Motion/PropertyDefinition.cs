@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Motion;
@@ -30,28 +32,69 @@ namespace LiveChartsCore.Motion;
 /// <remarks>
 /// Creates a new instance of <see cref="PropertyDefinition"/>.
 /// </remarks>
+/// <param name="propertyName">The property name.</param>
+/// <param name="propertyType">The property type.</param>
 /// <param name="getter">The property getter.</param>
 /// <param name="setter">The property setter.</param>
 /// <param name="motionGetter">The motion property getter if exists.</param>
 public class PropertyDefinition(
+    string propertyName,
+    Type propertyType,
     PropertyDefinition.Getter getter,
     PropertyDefinition.Setter setter,
-    PropertyDefinition.MotionPropertyGetter? motionGetter)
+    PropertyDefinition.MotionPropertyGetter motionGetter)
 {
-    /// <summary>
-    /// Gets the getter function.
-    /// </summary>
-    public Getter GetValue { get; } = getter;
+    internal static Dictionary<Type, Func<string, object>> Parsers { get; } = new()
+    {
+        { typeof(float), str => float.TryParse(str, out var parsed) ? parsed : 0 },
+        { typeof(double), str => double.TryParse(str, out var parsed) ? parsed : 0 },
+        { typeof(int), str => int.TryParse(str, out var parsed) ? parsed : 0 }
+    };
 
     /// <summary>
-    /// Gets the setter function.
+    /// Gets the property name.
     /// </summary>
-    public Setter SetValue { get; } = setter;
+    public string PropertyName { get; } = propertyName;
 
     /// <summary>
-    /// Gets the motion property.
+    /// Gets the property type.
     /// </summary>
-    public MotionPropertyGetter? GetMotion { get; } = motionGetter;
+    public Type Type { get; } = propertyType;
+
+    /// <summary>
+    /// Gets the property value.
+    /// </summary>
+    /// <param name="animatable">The animatable.</param>
+    /// <returns>The value.</returns>
+    public object? GetValue(Animatable animatable) => getter(animatable);
+
+    /// <summary>
+    /// Sets the property value.
+    /// </summary>
+    /// <param name="animatable">The animatable.</param>
+    /// <param name="value">The value.</param>
+    public void SetValue(Animatable animatable, object? value)
+    {
+        if (value is string str && Type != typeof(string))
+        {
+            if (!Parsers.TryGetValue(Type, out var parser))
+            {
+                throw new InvalidOperationException(
+                    $"The type {Type} does not have a parser registered. Please register a parser for this type.");
+            }
+
+            value = parser(str);
+        }
+
+        setter(animatable, value);
+    }
+
+    /// <summary>
+    /// Gets the motion property if exists.
+    /// </summary>
+    /// <param name="animatable"></param>
+    /// <returns></returns>
+    public IMotionProperty? GetMotion(Animatable animatable) => motionGetter(animatable);
 
     /// <summary>
     /// The property definition setter delegate.
@@ -73,4 +116,10 @@ public class PropertyDefinition(
     /// <param name="animatable">The animatable.</param>
     /// <returns>The motion property.</returns>
     public delegate IMotionProperty? MotionPropertyGetter(Animatable animatable);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString() => PropertyName;
 }

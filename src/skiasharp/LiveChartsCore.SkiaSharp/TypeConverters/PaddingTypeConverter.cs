@@ -48,12 +48,14 @@ public class PaddingTypeConverter : TypeConverter
     /// <param name="culture">The culture.</param>
     /// <param name="value">The value.</param>
     /// <returns>The converted value.</returns>
-    public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
+    public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value) =>
+        value is not string str
+            ? base.ConvertFrom(context, culture, value)
+            : ParsePadding(str);
+
+    internal static object ParsePadding(string value)
     {
-        if (value is not string str) return base.ConvertFrom(context, culture, value);
-
-        var parts = str.Split(',');
-
+        var parts = value.Split(',');
         return parts.Length switch
         {
             1 => new Padding(Parse(parts[0])),

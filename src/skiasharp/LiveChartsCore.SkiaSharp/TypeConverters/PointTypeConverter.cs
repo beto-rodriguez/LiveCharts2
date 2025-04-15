@@ -48,12 +48,14 @@ public class PointTypeConverter : TypeConverter
     /// <param name="culture">The culture.</param>
     /// <param name="value">The value.</param>
     /// <returns>The converted value.</returns>
-    public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
+    public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value) =>
+        value is not string str
+            ? base.ConvertFrom(context, culture, value)
+            : ParsePoint(str);
+
+    internal static object ParsePoint(string value)
     {
-        if (value is not string str) return base.ConvertFrom(context, culture, value);
-
-        var parts = str.Split(',');
-
+        var parts = value.Split(',');
         return parts.Length switch
         {
             1 => new LvcPoint(Parse(parts[0]), Parse(parts[0])),

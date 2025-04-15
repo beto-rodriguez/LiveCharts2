@@ -387,10 +387,10 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
                 var x = secondaryScale.ToPixels(coordinate.SecondaryValue);
                 var y = primaryScale.ToPixels(coordinate.PrimaryValue + s);
 
-                DrawnGeometry.XProperty.GetMotion!.Invoke(visual.Geometry)!
-                    .CopyFrom(Segment.XjProperty.GetMotion!.Invoke(visual.Segment)!);
-                DrawnGeometry.YProperty.GetMotion!.Invoke(visual.Geometry)!
-                    .CopyFrom(Segment.YjProperty.GetMotion!.Invoke(visual.Segment)!);
+                DrawnGeometry.XProperty.GetMotion(visual.Geometry)!
+                    .CopyFrom(Segment.XjProperty.GetMotion(visual.Segment)!);
+                DrawnGeometry.YProperty.GetMotion(visual.Geometry)!
+                    .CopyFrom(Segment.YjProperty.GetMotion(visual.Segment)!);
 
                 visual.Geometry.TranslateTransform = new LvcPoint(-hgs, -hgs);
 

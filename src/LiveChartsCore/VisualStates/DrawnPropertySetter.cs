@@ -20,22 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Motion;
-
 namespace LiveChartsCore.VisualStates;
 
 /// <summary>
 /// Defines a motion property setter.
 /// </summary>
-public class AnimatablePropertySetter(PropertyDefinition propertyDefinition, object value)
+/// <remarks>
+/// initializes a new instance of the <see cref="DrawnPropertySetter"/> class.
+/// </remarks>
+/// <param name="propertyName">The property name.</param>
+/// <param name="value">The value.</param>
+public class DrawnPropertySetter(string propertyName, object? value)
 {
     /// <summary>
     /// Gets the property definition.
     /// </summary>
-    public PropertyDefinition PropertyDefinition { get; } = propertyDefinition;
+    public string PropertyName { get; set; } = propertyName;
 
     /// <summary>
     /// Gets the value.
     /// </summary>
-    public object Value { get; } = value;
+    public object? Value { get; set; } = value;
 }

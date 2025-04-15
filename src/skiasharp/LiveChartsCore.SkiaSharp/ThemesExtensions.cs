@@ -25,6 +25,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
 using LiveChartsCore.SkiaSharpView.SKCharts;
@@ -122,9 +123,9 @@ public static class ThemesExtensions
                                 ? new SolidColorPaint(new(245, 245, 245))
                                 : new SolidColorPaint(new(45, 45, 45));
 
-                        series.VisualStates["Hover"] = [
-                            new(DrawnGeometry.OpacityProperty, 0.8f)
-                        ];
+                        _ = series.HasState("Hover", [
+                                (nameof(DrawnGeometry.Opacity), 0.8f)
+                            ]);
                     })
                     .HasRuleForLineSeries(lineSeries =>
                     {
@@ -144,7 +145,7 @@ public static class ThemesExtensions
 
 
                         _ = lineSeries.HasState("Hover", [
-                                (DrawnGeometry.ScaleTransformProperty, new LvcPoint(1.35f, 1.35f))
+                                (nameof(DrawnGeometry.ScaleTransform), new LvcPoint(1.35f, 1.35f))
                             ]);
                     })
                     .HasRuleForStepLineSeries(steplineSeries =>
@@ -159,7 +160,7 @@ public static class ThemesExtensions
                         steplineSeries.Fill = new SolidColorPaint(color.WithAlpha(50));
 
                         _ = steplineSeries.HasState("Hover", [
-                                (DrawnGeometry.ScaleTransformProperty, new LvcPoint(1.35f, 1.35f))
+                                (nameof(DrawnGeometry.ScaleTransform), new LvcPoint(1.35f, 1.35f))
                             ]);
                     })
                     .HasRuleForStackedLineSeries(stackedLine =>
@@ -272,8 +273,8 @@ public static class ThemesExtensions
                                         : new SolidColorPaint(new(245, 245, 245));
 
                         _ = pieSeries.HasState("Hover", [
-                            (BaseDoughnutGeometry.PushOutProperty, (float)pieSeries.HoverPushout),
-                            (DrawnGeometry.OpacityProperty, 0.8f)
+                            (nameof(DoughnutGeometry.PushOut), (float)pieSeries.HoverPushout),
+                            (nameof(DoughnutGeometry.Opacity), 0.8f)
                         ]);
                     })
                     .HasRuleForPolarLineSeries(polarLine =>
@@ -288,7 +289,7 @@ public static class ThemesExtensions
                         polarLine.Fill = new SolidColorPaint(color.WithAlpha(50));
 
                         _ = polarLine.HasState("Hover", [
-                                (DrawnGeometry.ScaleTransformProperty, new LvcPoint(1.35f, 1.35f))
+                                (nameof(DrawnGeometry.ScaleTransform), new LvcPoint(1.35f, 1.35f))
                             ]);
                     })
                     .HasRuleForGaugeSeries(gaugeSeries =>

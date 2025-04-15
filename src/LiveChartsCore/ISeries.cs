@@ -191,7 +191,7 @@ public interface ISeries : IChartElement
     /// Gets the visual states, states define the look of chart points when they are in a certain state, for example
     /// the hover, active, or selected states.
     /// </summary>
-    Dictionary<string, AnimatablePropertySetter[]> VisualStates { get; }
+    VisualStatesDictionary VisualStates { get; }
 
     /// <summary>
     /// Gets or sets the data labels formatter, the function receives a <see cref="ChartPoint"/> instance and must return a string.

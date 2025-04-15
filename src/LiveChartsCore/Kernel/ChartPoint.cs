@@ -23,7 +23,6 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
-using LiveChartsCore.VisualStates;
 
 namespace LiveChartsCore.Kernel;
 
@@ -115,48 +114,32 @@ public class ChartPoint
     /// <summary>
     /// Sets the state of the point.
     /// </summary>
-    /// <param name="setters">The states.</param>
-    public void SetState(AnimatablePropertySetter[] setters)
-    {
-        if (Context.Visual is not Animatable animatable) return;
-
-        if (Context.Visual is not null)
-            foreach (var setter in setters)
-            {
-                var property = setter.PropertyDefinition;
-                var motionProperty = property.GetMotion?.Invoke(animatable);
-                motionProperty?.Save();
-                property.SetValue(animatable, setter.Value);
-            }
-    }
-
-    /// <summary>
-    /// Clears the current state.
-    /// </summary>
-    /// <param name="setters">The setters.</param>
-    public void ClearState(AnimatablePropertySetter[] setters)
-    {
-        if (Context.Visual is not Animatable animatable) return;
-
-        foreach (var setter in setters)
-        {
-            var property = setter.PropertyDefinition;
-            var motionProperty = property.GetMotion?.Invoke(animatable);
-            motionProperty?.Restore(animatable);
-        }
-    }
-
-    /// <summary>
-    /// Sets the state of the point.
-    /// </summary>
     /// <param name="name">The name of the state.</param>
-    public void SetState(string name) => SetState(Context.Series.VisualStates[name]);
+    public void SetState(string name)
+    {
+        if (Context.Visual is not Animatable animatable) return;
+        Context.Series.VisualStates.SetState(name, animatable);
+    }
 
     /// <summary>
     /// Clears the current state.
     /// </summary>
     /// <param name="name"></param>
-    public void ClearState(string name) => ClearState(Context.Series.VisualStates[name]);
+    public void ClearState(string name)
+    {
+        if (Context.Visual is not Animatable animatable) return;
+        Context.Series.VisualStates.ClearState(name, animatable);
+    }
+
+
+    /// <summary>
+    /// Clears all the states.
+    /// </summary>
+    public void ClearStates()
+    {
+        if (Context.Visual is not Animatable animatable) return;
+        Context.Series.VisualStates.ClearStates(animatable);
+    }
 }
 
 /// <summary>

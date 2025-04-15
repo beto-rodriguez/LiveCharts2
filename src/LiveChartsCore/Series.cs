@@ -328,7 +328,7 @@ public abstract class Series<TModel, TVisual, TLabel>
     public double DataLabelsMaxWidth { get => _dataLabelsMaxWidth; set => SetProperty(ref _dataLabelsMaxWidth, value); }
 
     /// <inheritdoc cref="ISeries.VisualStates"/>
-    public Dictionary<string, AnimatablePropertySetter[]> VisualStates { get; } = [];
+    public VisualStatesDictionary VisualStates { get; } = [];
 
     /// <inheritdoc cref="ISeries.GetStackGroup"/>
     public virtual int GetStackGroup() => 0;
@@ -526,8 +526,7 @@ public abstract class Series<TModel, TVisual, TLabel>
     /// <param name="point">The chart point.</param>
     protected virtual void OnPointerEnter(ChartPoint point)
     {
-        if (VisualStates.TryGetValue("Hover", out var hoverState))
-            point.SetState(hoverState);
+        point.SetState("Hover");
 
         if (ChartPointPointerHover is null || point.IsPointerOver) return;
         point.IsPointerOver = true;
@@ -540,8 +539,7 @@ public abstract class Series<TModel, TVisual, TLabel>
     /// <param name="point">The chart point.</param>
     protected virtual void OnPointerLeft(ChartPoint point)
     {
-        if (VisualStates.TryGetValue("Hover", out var hoverState))
-            point.ClearState(hoverState);
+        point.ClearState("Hover");
 
         if (ChartPointPointerHoverLost is null || !point.IsPointerOver) return;
         point.IsPointerOver = false;

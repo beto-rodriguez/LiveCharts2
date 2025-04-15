@@ -22,16 +22,19 @@
 
 using System.Collections.Generic;
 using LiveChartsCore.Motion;
+using LiveChartsCore.VisualStates;
 
 namespace LiveChartsCore.Drawing;
 
 /// <inheritdoc cref="Animatable" />
 public abstract class Animatable
 {
+    internal VisualStatesDictionary.StatesTracker? _statesTracker;
+
     /// <summary>
     /// Gets the <see cref="PropertyDefinition"/> collection in the <see cref="Animatable"/> type.
     /// </summary>
-    public static PropertyDefinition[] PropertyDefinitions { get; } = [];
+    public static Dictionary<string, PropertyDefinition> PropertyDefinitions { get; } = [];
 
     /// <summary>
     /// Gets or sets a value indicating whether this instance is valid, the instance is valid when all the
@@ -54,12 +57,12 @@ public abstract class Animatable
     public void SetTransition(Animation? animation, params PropertyDefinition[]? properties)
     {
         var propertiesEnumerable = properties is null || properties.Length == 0
-            ? GetPropertyDefinitions()
+            ? GetPropertyDefinitions().Values
             : (IEnumerable<PropertyDefinition>)properties;
 
         foreach (var property in propertiesEnumerable)
         {
-            var motionProperty = property.GetMotion?.Invoke(this);
+            var motionProperty = property.GetMotion(this);
             if (motionProperty is null) continue;
 
             motionProperty.Animation = animation;
@@ -74,12 +77,12 @@ public abstract class Animatable
     public void RemoveTransition(params PropertyDefinition[]? properties)
     {
         var propertiesEnumerable = properties is null || properties.Length == 0
-            ? GetPropertyDefinitions()
+            ? GetPropertyDefinitions().Values
             : (IEnumerable<PropertyDefinition>)properties;
 
         foreach (var property in propertiesEnumerable)
         {
-            var motionProperty = property.GetMotion?.Invoke(this);
+            var motionProperty = property.GetMotion(this);
             if (motionProperty is null) continue;
 
             motionProperty.Animation = null;
@@ -94,12 +97,12 @@ public abstract class Animatable
     public virtual void CompleteTransition(params PropertyDefinition[]? properties)
     {
         var propertiesEnumerable = properties is null || properties.Length == 0
-            ? GetPropertyDefinitions()
+            ? GetPropertyDefinitions().Values
             : (IEnumerable<PropertyDefinition>)properties;
 
         foreach (var property in propertiesEnumerable)
         {
-            var motionProperty = property.GetMotion?.Invoke(this);
+            var motionProperty = property.GetMotion(this);
             if (motionProperty is null) continue;
 
             motionProperty.Finish();
@@ -107,8 +110,30 @@ public abstract class Animatable
     }
 
     /// <summary>
+    /// Gets the property definition by name.
+    /// </summary>
+    /// <param name="propertyName">The name of the property.</param>
+    /// <returns>The property definition, null if not found.</returns>
+    public PropertyDefinition? GetPropertyDefinition(string propertyName) =>
+        GetPropertyDefinitions().TryGetValue(propertyName, out var property)
+            ? property
+            : null;
+
+    internal static Dictionary<string, PropertyDefinition> Merge(
+        Dictionary<string, PropertyDefinition> one,
+        Dictionary<string, PropertyDefinition> two)
+    {
+        var merged = new Dictionary<string, PropertyDefinition>(one);
+
+        foreach (var item in two)
+            merged[item.Key] = item.Value;
+
+        return merged;
+    }
+
+    /// <summary>
     /// Gets the motion property definitions in the instance.
     /// </summary>
     /// <returns>The propertt definitions.</returns>
-    protected virtual PropertyDefinition[] GetPropertyDefinitions() => PropertyDefinitions;
+    protected virtual Dictionary<string, PropertyDefinition> GetPropertyDefinitions() => PropertyDefinitions;
 }
