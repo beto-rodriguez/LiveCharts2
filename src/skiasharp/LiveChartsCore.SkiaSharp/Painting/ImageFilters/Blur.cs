@@ -37,8 +37,10 @@ namespace LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
 public class Blur(
     float sigmaX,
     float sigmaY)
-        : ImageFilter
+        : ImageFilter(s_key)
 {
+    internal static object s_key = new();
+
     private float SigmaX { get; set; } = sigmaX;
     private float SigmaY { get; set; } = sigmaY;
 
@@ -50,9 +52,9 @@ public class Blur(
         SKImageFilter = SKImageFilter.CreateBlur(SigmaX, SigmaY);
 
     /// <inheritdoc cref="ImageFilter.Transitionate(float, ImageFilter)"/>
-    public override ImageFilter? Transitionate(float progress, ImageFilter? target)
+    protected override ImageFilter Transitionate(float progress, ImageFilter target)
     {
-        if (target is not Blur blur) return target;
+        var blur = (Blur)target;
 
         var clone = (Blur)Clone();
 

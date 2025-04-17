@@ -166,7 +166,7 @@ public class RadialGradientPaint : SkiaPaint
         clone.StrokeThickness = StrokeThickness + progress * (paint.StrokeThickness - StrokeThickness);
         clone.StrokeMiter = StrokeMiter + progress * (paint.StrokeMiter - StrokeMiter);
         clone.PathEffect = PathEffect?.Transitionate(progress, paint.PathEffect);
-        clone.ImageFilter = ImageFilter?.Transitionate(progress, paint.ImageFilter);
+        clone.ImageFilter = ImageFilters.ImageFilter.Transitionate(ImageFilter, paint.ImageFilter, progress);
 
         if (paint._gradientStops.Length != _gradientStops.Length)
             throw new ArgumentException("The gradient stops must be the same length.");

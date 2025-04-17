@@ -34,8 +34,10 @@ namespace LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
 /// Initializes a new instance of the <see cref="ImageFiltersMergeOperation"/> class.
 /// </remarks>
 /// <param name="imageFilters">The image filters.</param>
-public class ImageFiltersMergeOperation(ImageFilter[] imageFilters) : ImageFilter
+public class ImageFiltersMergeOperation(ImageFilter[] imageFilters) : ImageFilter(s_key)
 {
+    internal static object s_key = new();
+
     private ImageFilter[] Filters { get; set; } = imageFilters;
 
     /// <inheritdoc cref="ImageFilter.Clone"/>
@@ -58,7 +60,7 @@ public class ImageFiltersMergeOperation(ImageFilter[] imageFilters) : ImageFilte
     }
 
     /// <inheritdoc cref="ImageFilter.Transitionate(float, ImageFilter)"/>
-    public override ImageFilter? Transitionate(float progress, ImageFilter? target)
+    protected override ImageFilter Transitionate(float progress, ImageFilter target)
     {
         if (target is not ImageFiltersMergeOperation merge) return target;
 
@@ -71,7 +73,7 @@ public class ImageFiltersMergeOperation(ImageFilter[] imageFilters) : ImageFilte
         var hasNull = false;
         for (var i = 0; i < Filters.Length; i++)
         {
-            var transitionated = Filters[i]?.Transitionate(progress, merge.Filters[i]);
+            var transitionated = Transitionate(Filters[i], merge.Filters[i], progress);
             filters[i] = transitionated!; // ! ignored, will be filtered out later
             if (transitionated is null) hasNull = true;
         }

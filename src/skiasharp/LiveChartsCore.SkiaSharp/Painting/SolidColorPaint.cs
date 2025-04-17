@@ -144,7 +144,7 @@ public class SolidColorPaint : SkiaPaint
         clone.StrokeThickness = StrokeThickness + progress * (paint.StrokeThickness - StrokeThickness);
         clone.StrokeMiter = StrokeMiter + progress * (paint.StrokeMiter - StrokeMiter);
         clone.PathEffect = PathEffect?.Transitionate(progress, paint.PathEffect);
-        clone.ImageFilter = ImageFilter?.Transitionate(progress, paint.ImageFilter);
+        clone.ImageFilter = ImageFilters.ImageFilter.Transitionate(ImageFilter, paint.ImageFilter, progress);
 
         clone.Color = new SKColor(
             (byte)(Color.Red + progress * (paint.Color.Red - Color.Red)),
@@ -174,6 +174,12 @@ public class SolidColorPaint : SkiaPaint
         var skiaContext = (SkiaSharpDrawingContext)context;
         skiaContext.ActiveSkiaPaint.Color = Color;
     }
+
+    /// <summary>
+    /// Returns a string that represents the current object.
+    /// </summary>
+    /// <returns>a string.</returns>
+    public override string ToString() => $"({Color.Red}, {Color.Green}, {Color.Blue})";
 
     /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.

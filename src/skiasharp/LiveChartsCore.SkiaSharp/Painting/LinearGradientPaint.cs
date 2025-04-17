@@ -239,7 +239,7 @@ public class LinearGradientPaint(
         clone.StrokeThickness = StrokeThickness + progress * (paint.StrokeThickness - StrokeThickness);
         clone.StrokeMiter = StrokeMiter + progress * (paint.StrokeMiter - StrokeMiter);
         clone.PathEffect = PathEffect?.Transitionate(progress, paint.PathEffect);
-        clone.ImageFilter = ImageFilter?.Transitionate(progress, paint.ImageFilter);
+        clone.ImageFilter = ImageFilters.ImageFilter.Transitionate(ImageFilter, paint.ImageFilter, progress);
 
         if (paint.GradientStops.Length != GradientStops.Length)
             throw new NotImplementedException(

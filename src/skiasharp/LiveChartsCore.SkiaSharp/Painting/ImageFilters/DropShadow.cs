@@ -43,8 +43,10 @@ public class DropShadow(
     float sigmaX,
     float sigmaY,
     SKColor color)
-        : ImageFilter
+        : ImageFilter(s_key)
 {
+    internal static object s_key = new();
+
     private float Dx { get; set; } = dx;
     private float Dy { get; set; } = dy;
     private float SigmaX { get; set; } = sigmaX;
@@ -60,21 +62,21 @@ public class DropShadow(
         SKImageFilter = SKImageFilter.CreateDropShadow(Dx, Dy, SigmaX, SigmaY, Color);
 
     /// <inheritdoc cref="ImageFilter.Transitionate(float, ImageFilter)"/>
-    public override ImageFilter? Transitionate(float progress, ImageFilter? target)
+    protected override ImageFilter Transitionate(float progress, ImageFilter target)
     {
-        if (target is not DropShadow shadow) return this;
+        var dropShadow = (DropShadow)target;
 
         var clone = (DropShadow)Clone();
 
-        clone.Dx = Dx + (shadow.Dx - Dx) * progress;
-        clone.Dy = Dy + (shadow.Dy - Dy) * progress;
-        clone.SigmaX = SigmaX + (shadow.SigmaX - SigmaX) * progress;
-        clone.SigmaY = SigmaY + (shadow.SigmaY - SigmaY) * progress;
+        clone.Dx = Dx + (dropShadow.Dx - Dx) * progress;
+        clone.Dy = Dy + (dropShadow.Dy - Dy) * progress;
+        clone.SigmaX = SigmaX + (dropShadow.SigmaX - SigmaX) * progress;
+        clone.SigmaY = SigmaY + (dropShadow.SigmaY - SigmaY) * progress;
         clone.Color = new SKColor(
-            (byte)(Color.Red + (shadow.Color.Red - Color.Red) * progress),
-            (byte)(Color.Green + (shadow.Color.Green - Color.Green) * progress),
-            (byte)(Color.Blue + (shadow.Color.Blue - Color.Blue) * progress),
-            (byte)(Color.Alpha + (shadow.Color.Alpha - Color.Alpha) * progress));
+            (byte)(Color.Red + (dropShadow.Color.Red - Color.Red) * progress),
+            (byte)(Color.Green + (dropShadow.Color.Green - Color.Green) * progress),
+            (byte)(Color.Blue + (dropShadow.Color.Blue - Color.Blue) * progress),
+            (byte)(Color.Alpha + (dropShadow.Color.Alpha - Color.Alpha) * progress));
 
         return clone;
     }
