@@ -105,7 +105,10 @@ public class VisualStatesDictionary : Dictionary<string, Dictionary<string, Draw
 
             // if no value was found, then we need to restore the original value
             if (!foundValue && animatable._statesTracker.OriginalValues.TryGetValue(definition, out var originalValue))
+            {
                 value = originalValue;
+                _ = animatable._statesTracker.OriginalValues.Remove(definition);
+            }
 
             // set the original value
             definition.SetValue(animatable, value);
