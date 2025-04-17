@@ -100,6 +100,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
     private IEnumerable<double>? _customSeparators;
     private float _labelsDensity = 0.85f;
     internal double? _logBase;
+    private string? _name = null;
 
     #endregion
 
@@ -121,7 +122,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
     AnimatableAxisBounds IPlane.ActualBounds => _animatableBounds;
 
     /// <inheritdoc cref="IPlane.Name"/>
-    public string? Name { get; set; } = null;
+    public string? Name { get => _name; set => SetProperty(ref _name, value); }
 
     /// <inheritdoc cref="IPlane.NameTextSize"/>
     public double NameTextSize { get => _nameTextSize; set => SetProperty(ref _nameTextSize, value); }
