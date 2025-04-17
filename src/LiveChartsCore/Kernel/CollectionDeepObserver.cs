@@ -44,7 +44,6 @@ public sealed class CollectionDeepObserver<T>(
     private readonly NotifyCollectionChangedEventHandler _onCollectionChanged = onCollectionChanged;
     private readonly PropertyChangedEventHandler _onItemPropertyChanged = onItemPropertyChanged;
     private readonly HashSet<INotifyPropertyChanged> _itemsListening = [];
-    private bool _isInppc;
 
     /// <summary>
     /// Initializes the listeners.
@@ -54,8 +53,6 @@ public sealed class CollectionDeepObserver<T>(
     public void Initialize(IEnumerable? instance)
     {
         if (instance is null) return;
-
-        _isInppc = false;
 
         if (instance is INotifyCollectionChanged incc)
             incc.CollectionChanged += OnCollectionChanged;
@@ -82,54 +79,53 @@ public sealed class CollectionDeepObserver<T>(
 
     private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (_isInppc)
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                    foreach (var item in GetINotifyPropertyChangedItems(e.NewItems))
-                    {
-                        item.PropertyChanged += _onItemPropertyChanged;
-                        _ = _itemsListening.Add(item);
-                    }
-                    break;
-                case NotifyCollectionChangedAction.Remove:
-                    foreach (var item in GetINotifyPropertyChangedItems(e.OldItems))
-                    {
-                        item.PropertyChanged -= _onItemPropertyChanged;
-                        _ = _itemsListening.Remove(item);
-                    }
-                    break;
-                case NotifyCollectionChangedAction.Replace:
-                    foreach (var item in GetINotifyPropertyChangedItems(e.NewItems))
-                    {
-                        item.PropertyChanged += _onItemPropertyChanged;
-                        _ = _itemsListening.Add(item);
-                    }
-                    foreach (var item in GetINotifyPropertyChangedItems(e.OldItems))
-                    {
-                        item.PropertyChanged -= _onItemPropertyChanged;
-                        _ = _itemsListening.Remove(item);
-                    }
-                    break;
-                case NotifyCollectionChangedAction.Reset:
-                    foreach (var item in _itemsListening)
-                    {
-                        item.PropertyChanged -= _onItemPropertyChanged;
-                    }
-                    _itemsListening.Clear();
-                    if (sender is not IEnumerable<T> s) break;
-                    foreach (var item in GetINotifyPropertyChangedItems(s))
-                    {
-                        item.PropertyChanged += _onItemPropertyChanged;
-                        _ = _itemsListening.Remove(item);
-                    }
-                    break;
-                case NotifyCollectionChangedAction.Move:
-                    // ignored.
-                    break;
-                default:
-                    break;
-            }
+        switch (e.Action)
+        {
+            case NotifyCollectionChangedAction.Add:
+                foreach (var item in GetINotifyPropertyChangedItems(e.NewItems))
+                {
+                    item.PropertyChanged += _onItemPropertyChanged;
+                    _ = _itemsListening.Add(item);
+                }
+                break;
+            case NotifyCollectionChangedAction.Remove:
+                foreach (var item in GetINotifyPropertyChangedItems(e.OldItems))
+                {
+                    item.PropertyChanged -= _onItemPropertyChanged;
+                    _ = _itemsListening.Remove(item);
+                }
+                break;
+            case NotifyCollectionChangedAction.Replace:
+                foreach (var item in GetINotifyPropertyChangedItems(e.NewItems))
+                {
+                    item.PropertyChanged += _onItemPropertyChanged;
+                    _ = _itemsListening.Add(item);
+                }
+                foreach (var item in GetINotifyPropertyChangedItems(e.OldItems))
+                {
+                    item.PropertyChanged -= _onItemPropertyChanged;
+                    _ = _itemsListening.Remove(item);
+                }
+                break;
+            case NotifyCollectionChangedAction.Reset:
+                foreach (var item in _itemsListening)
+                {
+                    item.PropertyChanged -= _onItemPropertyChanged;
+                }
+                _itemsListening.Clear();
+                if (sender is not IEnumerable<T> s) break;
+                foreach (var item in GetINotifyPropertyChangedItems(s))
+                {
+                    item.PropertyChanged += _onItemPropertyChanged;
+                    _ = _itemsListening.Remove(item);
+                }
+                break;
+            case NotifyCollectionChangedAction.Move:
+                // ignored.
+                break;
+            default:
+                break;
+        }
 
         _onCollectionChanged(sender, e);
     }
@@ -142,7 +138,6 @@ public sealed class CollectionDeepObserver<T>(
         {
             if (item is not INotifyPropertyChanged inpc) continue;
 
-            _isInppc = true;
             yield return inpc;
         }
     }
