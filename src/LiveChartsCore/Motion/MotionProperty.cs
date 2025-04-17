@@ -34,18 +34,19 @@ namespace LiveChartsCore.Motion;
 /// <param name="defaultValue">The default value.</param>
 public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
 {
+    private bool _isCompleted = true;
     private float _startTime;
     private float _endTime;
 
     /// <summary>
     /// Gets the value where the transition began.
     /// </summary>
-    public T FromValue { get; private set; } = defaultValue;
+    public T FromValue { get; protected set; } = defaultValue;
 
     /// <summary>
     /// Gets the value where the transition finishes.
     /// </summary>
-    public T ToValue { get; private set; } = defaultValue;
+    public T ToValue { get; protected set; } = defaultValue;
 
     object? IMotionProperty.FromValue => FromValue;
 
@@ -119,7 +120,7 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
         var deltaTime = _endTime - _startTime;
         var p = (globalTime - _startTime) / deltaTime;
 
-        if (deltaTime <= 0 || p >= 1)
+        if (deltaTime <= 0 || p > 1)
         {
             // when deltaTime is <= 0:
             //  1. the animation duration is 0.
@@ -140,6 +141,12 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
                     $"[MOTION GET] complete state, progress: {p:P2}." +
                     $"{(deltaTime <= 0 ? $" invalid delta {deltaTime:N2}" : string.Empty)}");
 #endif
+
+            if (!_isCompleted)
+            {
+                _isCompleted = true;
+                OnCompleted();
+            }
 
             return ToValue;
         }
@@ -182,6 +189,11 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
     /// <returns></returns>
     protected abstract T OnGetMovement(float progress);
 
+    /// <summary>
+    /// Called when the animation is completed.
+    /// </summary>
+    protected virtual void OnCompleted() { }
+
     /// <inheritdoc cref="IMotionProperty.Finish"/>
     public void Finish() => _endTime = 0;
 
@@ -203,6 +215,7 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
 
         var globalTime = CoreMotionCanvas.ElapsedMilliseconds;
 
+        _isCompleted = false;
         _startTime = globalTime;
         _endTime = globalTime + Animation.Duration;
 
