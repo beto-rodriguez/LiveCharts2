@@ -20,7 +20,7 @@
                     Color='#6495ED',
                     StrokeCap=Round,
                     StrokeWidth=10,
-                    DashArray='30, 20'}"
+                    PathEffect={lvc:Dashed Array='30, 20'}}"
                 Fill="{x:Null}"/>
         </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
