@@ -41,10 +41,13 @@ public abstract partial class Paint : Animatable, IDisposable
     private readonly Dictionary<object, HashSet<IDrawnElement>> _geometriesByCanvas = [];
     private readonly Dictionary<object, LvcRectangle> _clipRectangles = [];
 
+    internal Paint _source;
+
     /// <param name="strokeThickness">The stroke thickness.</param>
     /// <param name="strokeMiter">The stroke miter.</param>
     public Paint(float strokeThickness = 1f, float strokeMiter = 0)
     {
+        _source = this;
         _StrokeMiterMotionProperty = new(strokeMiter);
         _StrokeThicknessMotionProperty = new(strokeThickness);
     }
@@ -249,6 +252,11 @@ public abstract partial class Paint : Animatable, IDisposable
     public abstract void RestoreOpacityMask(DrawingContext context, float opacity);
 
     /// <summary>
+    /// Resolves the active paint task.
+    /// </summary>
+    public abstract void ResolveActiveColor(Paint active);
+
+    /// <summary>
     /// Clones the task.
     /// </summary>
     /// <returns>A new instance with the same properties.</returns>
@@ -274,5 +282,6 @@ public abstract partial class Paint : Animatable, IDisposable
         public override void InitializeTask(DrawingContext drawingContext) { }
         public override void RestoreOpacityMask(DrawingContext context, float opacity) { }
         public override Paint Transitionate(float progress, Paint target) => this;
+        public override void ResolveActiveColor(Paint active) { }
     }
 }

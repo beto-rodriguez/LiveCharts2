@@ -37,11 +37,13 @@ public class RadialGradientPaint : SkiaPaint
 {
     private SkiaSharpDrawingContext? _drawingContext;
     private SKPaint? _skiaPaint;
-    private readonly SKColor[] _gradientStops;
+    private SKColor[] _gradientStops;
     private SKPoint _center;
     private float _radius;
     private readonly float[]? _colorPos;
     private readonly SKShaderTileMode _tileMode;
+    private bool _isActiveColor;
+    private SKColor[] _activeGradient = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RadialGradientPaint"/> class.
@@ -104,6 +106,32 @@ public class RadialGradientPaint : SkiaPaint
         };
     }
 
+    /// <inheritdoc cref="Paint.ResolveActiveColor" />
+    public override void ResolveActiveColor(Paint active)
+    {
+        if (active is not RadialGradientPaint paint) return;
+
+        var isEmpty = _gradientStops.Length == 1 && _gradientStops[0] == SKColor.Empty;
+
+        if (isEmpty || (_isActiveColor && ActiveColorChanged()))
+        {
+            _gradientStops = _activeGradient = paint._gradientStops;
+            _isActiveColor = true;
+        }
+    }
+
+    private bool ActiveColorChanged()
+    {
+        if (_activeGradient.Length != _gradientStops.Length)
+            return false;
+
+        for (var i = 0; i < _activeGradient.Length; i++)
+            if (_activeGradient[i] != _gradientStops[i])
+                return false;
+
+        return true;
+    }
+
     /// <inheritdoc cref="Paint.InitializeTask(DrawingContext)" />
     public override void InitializeTask(DrawingContext drawingContext)
     {
@@ -159,7 +187,7 @@ public class RadialGradientPaint : SkiaPaint
     /// <inheritdoc cref="Paint.Transitionate(float, Paint)" />
     public override Paint Transitionate(float progress, Paint target)
     {
-        if (target is not RadialGradientPaint paint) return target;
+        if (target._source is not RadialGradientPaint paint) return target;
 
         var clone = (RadialGradientPaint)CloneTask();
 

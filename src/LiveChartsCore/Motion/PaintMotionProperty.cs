@@ -82,7 +82,11 @@ public class PaintMotionProperty(Paint defaultValue = null!)
 
     private Paint GetFromOrDefault()
     {
-        if (FromValue is not null) return FromValue;
+        if (FromValue is not null)
+        {
+            FromValue.ResolveActiveColor(s_activePaint);
+            return FromValue;
+        }
 
         _isFromDefault = true;
         FromValue = s_activePaint.CloneTask();
@@ -92,7 +96,11 @@ public class PaintMotionProperty(Paint defaultValue = null!)
 
     private Paint GetToOrDefault()
     {
-        if (ToValue is not null) return ToValue;
+        if (ToValue is not null)
+        {
+            ToValue.ResolveActiveColor(s_activePaint);
+            return ToValue;
+        }
 
         _isToDefault = true;
         ToValue = s_activePaint.CloneTask();
