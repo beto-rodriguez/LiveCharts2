@@ -251,20 +251,58 @@ internal static class Info
     }
 }
 
-public class ChartPointVisualState
+[ContentProperty(nameof(Setters))]
+public class ChartPointState
 {
-    public string Name { get; set; } = "Default";
-    public ICollection<AnimatablePropertySetter> Setters { get; set; } = [];
+    /// <summary>
+    /// The sate name.
+    /// </summary>
+    public string Name
+    {
+        get;
+        set
+        {
+            field = value;
+            Setters.Name = value;
+        }
+    } = "Default";
+
+    /// <summary>
+    /// The setters.
+    /// </summary>
+    public SetterCollection Setters { get; set; } = new() { Name = "Default" };
+
+    public class SetterCollection : ObservableCollection<Set>
+    {
+        public string Name { get; set; } = string.Empty;
+
+        public Dictionary<string, DrawnPropertySetter> AsStatesCollection()
+        {
+            var setters = new Dictionary<string, DrawnPropertySetter>();
+            for (var i = 0; i < Count; i++)
+            {
+                var set = this[i];
+                setters[set.PropertyName] = new DrawnPropertySetter(set.PropertyName, set.Value);
+            }
+            return setters;
+        }
+    }
+}
+
+public class Set
+{
+    public string PropertyName { get; set; } = string.Empty;
+    public object Value { get; set; } = string.Empty;
 }
 
 public abstract class XamlSeries : EmptyContentView
 {
     public static readonly BindableProperty AdditionalVisualStatesProperty = BindableProperty.Create(
-        nameof(AdditionalVisualStates), typeof(ICollection<ChartPointVisualState>), typeof(XamlSeries),
+        nameof(AdditionalVisualStates), typeof(ICollection<ChartPointState>), typeof(XamlSeries),
         defaultValueCreator: DefaultValueCreator);
 
-    public ICollection<ChartPointVisualState> AdditionalVisualStates =>
-        (ICollection<ChartPointVisualState>)GetValue(AdditionalVisualStatesProperty);
+    public ICollection<ChartPointState> AdditionalVisualStates =>
+        (ICollection<ChartPointState>)GetValue(AdditionalVisualStatesProperty);
 
     protected abstract ISeries WrappedSeries { get; }
 
@@ -273,7 +311,7 @@ public abstract class XamlSeries : EmptyContentView
     private static object DefaultValueCreator(BindableObject bindable)
     {
         var series = (XamlSeries)bindable;
-        var observableCollection = new ObservableCollection<ChartPointVisualState>();
+        var observableCollection = new ObservableCollection<ChartPointState>();
 
         observableCollection.CollectionChanged += series.OnAdditionalVisualStatesCollectionChanged;
 
@@ -287,14 +325,16 @@ public abstract class XamlSeries : EmptyContentView
             case NotifyCollectionChangedAction.Add:
                 foreach (var item in e.NewItems ?? Array.Empty<object>())
                 {
-                    var state = (ChartPointVisualState)item;
-                    WrappedSeries.VisualStates[state.Name] = [.. state.Setters];
+                    var state = (ChartPointState)item;
+                    state.Setters.CollectionChanged += OnSetCollectionChanged;
+                    WrappedSeries.VisualStates[state.Name] = state.Setters.AsStatesCollection();
                 }
                 break;
             case NotifyCollectionChangedAction.Remove:
                 foreach (var item in e.OldItems ?? Array.Empty<object>())
                 {
-                    var state = (ChartPointVisualState)item;
+                    var state = (ChartPointState)item;
+                    state.Setters.CollectionChanged -= OnSetCollectionChanged;
                     _ = WrappedSeries.VisualStates.Remove(state.Name);
                 }
                 break;
@@ -304,6 +344,13 @@ public abstract class XamlSeries : EmptyContentView
             default:
                 break;
         }
+    }
+
+    private void OnSetCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (sender is not ChartPointState.SetterCollection setters) return;
+
+        WrappedSeries.VisualStates[setters.Name] = setters.AsStatesCollection();
     }
 }
 
@@ -411,7 +458,6 @@ public partial class XamlScatterSeries<TModel, TVisual, TLabel> : EmptyContentVi
 {
     static partial void OnTypeDefined() => Info.ConfigureDefaults(_defaultScatterSeries);
     private void ValuesMap(object value) => Info.SetValues(_baseType, value);
-    Dictionary<string, AnimatablePropertySetter[]> ISeries.VisualStates => _baseType.VisualStates;
 }
 
 #endregion
