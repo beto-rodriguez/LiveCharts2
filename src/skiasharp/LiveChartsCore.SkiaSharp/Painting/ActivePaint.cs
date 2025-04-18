@@ -28,32 +28,33 @@ namespace LiveChartsCore.SkiaSharpView.Painting;
 /// <summary>
 /// A paint that is resolved at runtime, based on the active color.
 /// </summary>
-public class ClonePaint : SkiaPaint
+public class ActivePaint : SkiaPaint
 {
-    private SkiaPaint _clone = null!;
+    private SkiaPaint? _clone;
 
     /// <inheritdoc cref="Paint.ApplyOpacityMask(DrawingContext, float)"/>
-    public override void ApplyOpacityMask(DrawingContext context, float opacity) => _clone.ApplyOpacityMask(context, opacity);
+    public override void ApplyOpacityMask(DrawingContext context, float opacity) => _clone?.ApplyOpacityMask(context, opacity);
 
     /// <inheritdoc cref="Paint.CloneTask"/>
     public override Paint CloneTask() => this;
 
     /// <inheritdoc cref="Paint.Dispose"/>
-    public override void Dispose() => _clone.Dispose();
+    public override void Dispose() => _clone?.Dispose();
 
     /// <inheritdoc cref="Paint.InitializeTask(DrawingContext)"/>
-    public override void InitializeTask(DrawingContext drawingContext) => _clone.InitializeTask(drawingContext);
+    public override void InitializeTask(DrawingContext drawingContext) => _clone?.InitializeTask(drawingContext);
 
     /// <inheritdoc cref="Paint.RestoreOpacityMask(DrawingContext, float)"/>
-    public override void RestoreOpacityMask(DrawingContext context, float opacity) => _clone.RestoreOpacityMask(context, opacity);
+    public override void RestoreOpacityMask(DrawingContext context, float opacity) => _clone?.RestoreOpacityMask(context, opacity);
 
     /// <inheritdoc cref="Paint.Transitionate(float, Paint)"/>
-    public override Paint Transitionate(float progress, Paint target) =>
-        _clone.Transitionate(progress, target);
+    public override Paint Transitionate(float progress, Paint target) => _clone?.Transitionate(progress, target) ?? target;
 
     /// <inheritdoc cref="Paint.ResolveActiveColor(Paint)"/>
-    public override void ResolveActiveColor(Paint active)
+    public override void ResolveActiveColor(Paint? active)
     {
+        if (active is null) return;
+
         _clone ??= (SkiaPaint)active.CloneTask();
         _source = _clone;
 

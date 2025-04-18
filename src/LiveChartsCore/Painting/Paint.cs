@@ -254,7 +254,7 @@ public abstract partial class Paint : Animatable, IDisposable
     /// <summary>
     /// Resolves the active paint task.
     /// </summary>
-    public abstract void ResolveActiveColor(Paint active);
+    public abstract void ResolveActiveColor(Paint? active);
 
     /// <summary>
     /// Clones the task.
@@ -282,6 +282,6 @@ public abstract partial class Paint : Animatable, IDisposable
         public override void InitializeTask(DrawingContext drawingContext) { }
         public override void RestoreOpacityMask(DrawingContext context, float opacity) { }
         public override Paint Transitionate(float progress, Paint target) => this;
-        public override void ResolveActiveColor(Paint active) { }
+        public override void ResolveActiveColor(Paint? active) { }
     }
 }

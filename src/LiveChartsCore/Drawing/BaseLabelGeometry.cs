@@ -112,6 +112,14 @@ public abstract partial class BaseLabelGeometry : Animatable, IDrawnElement
     [MotionProperty]
     public partial Padding Padding { get; set; }
 
+    /// <inheritdoc cref="IDrawnElement.Paint"/>
+    [MotionProperty(HasExplicitAcessors = true)]
+    public partial Paint? Paint
+    {
+        get => _PaintMotionProperty.GetMovement(this);
+        set => _PaintMotionProperty.SetMovement(value, this);
+    }
+
     /// <summary>
     /// Gets or sets the maximum width, when the text exceeds this width, it will be wrapped.
     /// </summary>
@@ -120,8 +128,7 @@ public abstract partial class BaseLabelGeometry : Animatable, IDrawnElement
     /// <inheritdoc cref="IDrawnElement.HasTransform"/>
     public bool HasTransform { get; protected set; }
 
-    /// <inheritdoc cref="IDrawnElement.HasTranslate"/>
-    public bool HasTranslate
+    bool IDrawnElement.HasTranslate
     {
         get
         {
@@ -130,8 +137,7 @@ public abstract partial class BaseLabelGeometry : Animatable, IDrawnElement
         }
     }
 
-    /// <inheritdoc cref="IDrawnElement.HasScale"/>
-    public bool HasScale
+    bool IDrawnElement.HasScale
     {
         get
         {
@@ -140,8 +146,7 @@ public abstract partial class BaseLabelGeometry : Animatable, IDrawnElement
         }
     }
 
-    /// <inheritdoc cref="IDrawnElement.HasSkew"/>
-    public bool HasSkew
+    bool IDrawnElement.HasSkew
     {
         get
         {
@@ -150,8 +155,7 @@ public abstract partial class BaseLabelGeometry : Animatable, IDrawnElement
         }
     }
 
-    /// <inheritdoc cref="IDrawnElement.HasSkew"/>
-    public bool HasRotation => Math.Abs(RotateTransform) > 0;
+    bool IDrawnElement.HasRotation => Math.Abs(RotateTransform) > 0;
 
     /// <summary>
     /// Gets or sets the vertical align.
@@ -185,11 +189,6 @@ public abstract partial class BaseLabelGeometry : Animatable, IDrawnElement
     /// </summary>
     public static bool ShowDebugLines { get; set; }
 #endif
-
-    /// <summary>
-    /// Gets or sets the paint.
-    /// </summary>
-    public Paint? Paint { get; set; }
 
     Paint? IDrawnElement.Stroke { get; set; }
     Paint? IDrawnElement.Fill { get; set; }

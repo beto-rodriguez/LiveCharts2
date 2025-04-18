@@ -128,7 +128,7 @@ public class LinearGradientPaint(
     }
 
     /// <inheritdoc cref="Paint.ResolveActiveColor" />
-    public override void ResolveActiveColor(Paint active)
+    public override void ResolveActiveColor(Paint? active)
     {
         if (active is not LinearGradientPaint paint) return;
 

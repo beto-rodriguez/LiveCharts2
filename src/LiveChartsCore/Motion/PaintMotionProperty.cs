@@ -34,7 +34,7 @@ namespace LiveChartsCore.Motion;
 public class PaintMotionProperty(Paint defaultValue = null!)
     : MotionProperty<Paint>(defaultValue)
 {
-    internal static Paint s_activePaint = null!;
+    internal static Paint? s_activePaint;
     private bool _isFromDefault;
     private bool _isToDefault;
 
@@ -89,7 +89,7 @@ public class PaintMotionProperty(Paint defaultValue = null!)
         }
 
         _isFromDefault = true;
-        FromValue = s_activePaint.CloneTask();
+        FromValue = s_activePaint!.CloneTask(); // ! canot be null here because of the check in CanTransitionate
 
         return FromValue;
     }
@@ -103,7 +103,7 @@ public class PaintMotionProperty(Paint defaultValue = null!)
         }
 
         _isToDefault = true;
-        ToValue = s_activePaint.CloneTask();
+        ToValue = s_activePaint!.CloneTask(); // ! canot be null here because of the check in CanTransitionate
 
         return ToValue;
     }

@@ -98,7 +98,7 @@ public class SolidColorPaint : SkiaPaint
     }
 
     /// <inheritdoc cref="Paint.ResolveActiveColor" />
-    public override void ResolveActiveColor(Paint active)
+    public override void ResolveActiveColor(Paint? active)
     {
         if (active is not SolidColorPaint paint) return;
         if (Color == SKColor.Empty || (_isActiveColor && _activeColor != paint.Color))

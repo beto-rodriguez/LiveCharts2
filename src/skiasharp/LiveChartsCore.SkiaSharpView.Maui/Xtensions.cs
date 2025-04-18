@@ -337,14 +337,14 @@ public class RadialGradientPaintExtension : BaseSkiaPaintExtention, IMarkupExten
 /// The active paint extension, this is resolved at runtime, and uses the active color of the element,
 /// for example the series color.
 /// </summary>
-public class ActivePaintExtension : BaseSkiaPaintExtention, IMarkupExtension<ClonePaint>
+public class ActivePaintExtension : BaseSkiaPaintExtention, IMarkupExtension<ActivePaint>
 {
     /// <summary>
     /// ...
     /// </summary>
-    public ClonePaint ProvideValue(IServiceProvider serviceProvider)
+    public ActivePaint ProvideValue(IServiceProvider serviceProvider)
     {
-        var paint = new ClonePaint();
+        var paint = new ActivePaint();
         MapProperties(paint);
         return paint;
     }

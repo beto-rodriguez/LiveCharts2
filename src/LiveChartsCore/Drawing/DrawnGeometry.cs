@@ -93,6 +93,7 @@ public abstract partial class DrawnGeometry : Animatable, IDrawnElement
     /// <inheritdoc cref="IDrawnElement.SkewTransform"/>
     [MotionProperty]
     public partial LvcPoint SkewTransform { get; set; }
+    partial void OnSkewTransformChanged(LvcPoint value) => HasTransform = true;
 
     /// <inheritdoc cref="IDrawnElement.Stroke"/>
     [MotionProperty(HasExplicitAcessors = true)]
@@ -117,13 +118,11 @@ public abstract partial class DrawnGeometry : Animatable, IDrawnElement
             _FillMotionProperty.SetMovement(value, this);
         }
     }
-    partial void OnSkewTransformChanged(LvcPoint value) => HasTransform = true;
 
     /// <inheritdoc cref="IDrawnElement.HasTransform"/>
     public bool HasTransform { get; protected set; }
 
-    /// <inheritdoc cref="IDrawnElement.HasTranslate"/>
-    public bool HasTranslate
+    bool IDrawnElement.HasTranslate
     {
         get
         {
@@ -132,8 +131,7 @@ public abstract partial class DrawnGeometry : Animatable, IDrawnElement
         }
     }
 
-    /// <inheritdoc cref="IDrawnElement.HasScale"/>
-    public bool HasScale
+    bool IDrawnElement.HasScale
     {
         get
         {
@@ -142,8 +140,7 @@ public abstract partial class DrawnGeometry : Animatable, IDrawnElement
         }
     }
 
-    /// <inheritdoc cref="IDrawnElement.HasSkew"/>
-    public bool HasSkew
+    bool IDrawnElement.HasSkew
     {
         get
         {
@@ -152,8 +149,7 @@ public abstract partial class DrawnGeometry : Animatable, IDrawnElement
         }
     }
 
-    /// <inheritdoc cref="IDrawnElement.HasSkew"/>
-    public bool HasRotation => Math.Abs(RotateTransform) > 0;
+    bool IDrawnElement.HasRotation => Math.Abs(RotateTransform) > 0;
 
     Paint? IDrawnElement.Paint { get; set; }
 

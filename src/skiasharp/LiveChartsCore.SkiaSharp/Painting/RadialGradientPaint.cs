@@ -107,7 +107,7 @@ public class RadialGradientPaint : SkiaPaint
     }
 
     /// <inheritdoc cref="Paint.ResolveActiveColor" />
-    public override void ResolveActiveColor(Paint active)
+    public override void ResolveActiveColor(Paint? active)
     {
         if (active is not RadialGradientPaint paint) return;
 

@@ -63,5 +63,5 @@ public class DrawnTask : Paint
     public override Paint Transitionate(float progress, Paint target) => this;
 
     /// <inheritdoc cref="Paint.ResolveActiveColor(Paint)" />
-    public override void ResolveActiveColor(Paint active) { }
+    public override void ResolveActiveColor(Paint? active) { }
 }

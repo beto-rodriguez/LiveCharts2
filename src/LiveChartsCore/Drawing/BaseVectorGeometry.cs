@@ -100,11 +100,34 @@ public abstract partial class BaseVectorGeometry<TSegment> : Animatable, IDrawnE
     public partial LvcPoint SkewTransform { get; set; }
     partial void OnSkewTransformChanged(LvcPoint value) => HasTransform = true;
 
+    /// <inheritdoc cref="IDrawnElement.Stroke"/>
+    [MotionProperty(HasExplicitAcessors = true)]
+    public partial Paint? Stroke
+    {
+        get => _StrokeMotionProperty.GetMovement(this);
+        set
+        {
+            if (value is not null) value.PaintStyle = PaintStyle.Stroke;
+            _StrokeMotionProperty.SetMovement(value, this);
+        }
+    }
+
+    /// <inheritdoc cref="IDrawnElement.Fill"/>
+    [MotionProperty(HasExplicitAcessors = true)]
+    public partial Paint? Fill
+    {
+        get => _FillMotionProperty.GetMovement(this);
+        set
+        {
+            if (value is not null) value.PaintStyle = PaintStyle.Fill;
+            _FillMotionProperty.SetMovement(value, this);
+        }
+    }
+
     /// <inheritdoc cref="IDrawnElement.HasTransform"/>
     public bool HasTransform { get; protected set; }
 
-    /// <inheritdoc cref="IDrawnElement.HasTranslate"/>
-    public bool HasTranslate
+    bool IDrawnElement.HasTranslate
     {
         get
         {
@@ -113,8 +136,7 @@ public abstract partial class BaseVectorGeometry<TSegment> : Animatable, IDrawnE
         }
     }
 
-    /// <inheritdoc cref="IDrawnElement.HasScale"/>
-    public bool HasScale
+    bool IDrawnElement.HasScale
     {
         get
         {
@@ -123,8 +145,7 @@ public abstract partial class BaseVectorGeometry<TSegment> : Animatable, IDrawnE
         }
     }
 
-    /// <inheritdoc cref="IDrawnElement.HasSkew"/>
-    public bool HasSkew
+    bool IDrawnElement.HasSkew
     {
         get
         {
@@ -133,30 +154,7 @@ public abstract partial class BaseVectorGeometry<TSegment> : Animatable, IDrawnE
         }
     }
 
-    /// <inheritdoc cref="IDrawnElement.HasSkew"/>
-    public bool HasRotation => Math.Abs(RotateTransform) > 0;
-
-    /// <inheritdoc cref="IDrawnElement.Stroke"/>
-    public Paint? Stroke
-    {
-        get;
-        set
-        {
-            field = value;
-            if (field is not null) field.PaintStyle = PaintStyle.Stroke;
-        }
-    }
-
-    /// <inheritdoc cref="IDrawnElement.Fill"/>
-    public Paint? Fill
-    {
-        get;
-        set
-        {
-            field = value;
-            if (field is not null) field.PaintStyle = PaintStyle.Fill;
-        }
-    }
+    bool IDrawnElement.HasRotation => Math.Abs(RotateTransform) > 0;
 
     Paint? IDrawnElement.Paint { get; set; }
 
