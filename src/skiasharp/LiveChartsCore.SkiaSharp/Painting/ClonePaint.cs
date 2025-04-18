@@ -36,7 +36,7 @@ public class ClonePaint : SkiaPaint
     public override void ApplyOpacityMask(DrawingContext context, float opacity) => _clone.ApplyOpacityMask(context, opacity);
 
     /// <inheritdoc cref="Paint.CloneTask"/>
-    public override Paint CloneTask() => _clone.CloneTask();
+    public override Paint CloneTask() => this;
 
     /// <inheritdoc cref="Paint.Dispose"/>
     public override void Dispose() => _clone.Dispose();
