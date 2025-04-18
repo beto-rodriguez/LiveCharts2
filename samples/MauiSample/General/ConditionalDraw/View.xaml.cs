@@ -1,4 +1,6 @@
-﻿namespace MauiSample.General.ConditionalDraw;
+﻿using LiveChartsCore.SkiaSharpView.Painting;
+
+namespace MauiSample.General.ConditionalDraw;
 
 [XamlCompilation(XamlCompilationOptions.Compile)]
 public partial class View : ContentPage

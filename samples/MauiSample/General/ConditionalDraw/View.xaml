@@ -1,23 +1,52 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.General.ConditionalDraw.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.General.ConditionalDraw;assembly=ViewModelsSamples">
+<ContentPage
+    x:Class="MauiSample.General.ConditionalDraw.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.General.ConditionalDraw;assembly=ViewModelsSamples">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
+
     <lvc:CartesianChart
         Sections="{Binding Sections}"
         YAxes="{Binding Y}">
+
         <lvc:CartesianChart.Series>
             <lvc:XamlColumnSeries
                 Values="{Binding Values}"
                 PointMeasuredCommand="{Binding PointMeasuredCommand}">
+
+                <!--
+                Use the AdditionalVisualStates property to define the look of the points
+                when they are in a different state, then 
+                -->
+
                 <lvc:XamlColumnSeries.AdditionalVisualStates>
-                    <lvc:ChartPointVisualState Name="Hola" Setters="{lvc:VisualState ScaleTransform='2'}"/>
+
+                    <!-- When the state is "Danger", the Fill is set to red -->
+                    <lvc:ChartPointState Name="Danger">
+                        <lvc:Set PropertyName="Fill" Value="#f00"/> 
+                    </lvc:ChartPointState>
+
+                    <!-- The "Hover" state is fired when the pointer is over a point-->
+                    <lvc:ChartPointState Name="Hover">
+
+                        <!--
+                        The ActivePaint extension, resolves the paint based on the series
+                        theme, then the ImageFilter is applied to the paint.
+                        -->
+                        <lvc:Set
+                            PropertyName="Fill"
+                            Value="{lvc:ActivePaint ImageFilter={lvc:Shadow '4, 16'}}"/>
+                    </lvc:ChartPointState>
+
                 </lvc:XamlColumnSeries.AdditionalVisualStates>
+
             </lvc:XamlColumnSeries>
         </lvc:CartesianChart.Series>
+
     </lvc:CartesianChart>
 </ContentPage>
