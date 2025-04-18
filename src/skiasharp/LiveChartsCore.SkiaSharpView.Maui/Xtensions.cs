@@ -22,13 +22,12 @@
 
 using System;
 using System.Collections.Generic;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
 using LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
-using LiveChartsCore.VisualStates;
+using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
 using SkiaSharp;
 
@@ -70,14 +69,9 @@ public abstract class BaseSkiaPaintExtention
     public ImageFilter? ImageFilter { get; set; } = null;
 
     /// <summary>
-    /// Gets or sets the dash array separated by commas.
+    /// Gets or sets the path effect.
     /// </summary>
-    public string? DashArray { get; set; } = null;
-
-    /// <summary>
-    /// Gets or sets the dash phase.
-    /// </summary>
-    public float DashPhase { get; set; } = 0f;
+    public PathEffect? PathEffect { get; set; } = null;
 
     /// <summary>
     /// Gets or sets the font family.
@@ -116,18 +110,7 @@ public abstract class BaseSkiaPaintExtention
         paint.StrokeMiter = StrokeMiter;
         paint.StrokeJoin = StrokeJoin;
         paint.ImageFilter = ImageFilter;
-
-        if (DashArray is not null)
-        {
-            var dashArray = DashArray.Split(',');
-            var dashes = new List<float>(dashArray.Length);
-            foreach (var dash in dashArray)
-            {
-                if (float.TryParse(dash, out var value))
-                    dashes.Add(value);
-            }
-            paint.PathEffect = new DashEffect([.. dashes], DashPhase);
-        }
+        paint.PathEffect = PathEffect;
 
         if (FontWeight != SKFontStyleWeight.Normal || FontWidth != SKFontStyleWidth.Normal || FontSlant != SKFontStyleSlant.Upright)
             paint.SKFontStyle = new SKFontStyle(FontWeight, FontWidth, FontSlant);
@@ -166,9 +149,10 @@ public abstract class BaseSkiaPaintExtention
 public class SolidColorPaintExtension : BaseSkiaPaintExtention, IMarkupExtension<SolidColorPaint>
 {
     /// <summary>
-    /// Gets or sets the color.
+    /// Gets or sets the color, default value is #00000000, and means to use the default color, normally
+    /// defines by the element being painted, for example the series color.
     /// </summary>
-    public string? Color { get; set; } = null;
+    public string? Color { get; set; } = "#00000000";
 
     /// <summary>
     /// ...
@@ -194,9 +178,10 @@ public class SolidColorPaintExtension : BaseSkiaPaintExtention, IMarkupExtension
 public class LinearGradientPaintExtension : BaseSkiaPaintExtention, IMarkupExtension<LinearGradientPaint>
 {
     /// <summary>
-    /// Gets or sets the colors separated by commas.
+    /// Gets or sets the colors separated by commas, default value is #00000000, and means to use the default color, normally
+    /// defines by the element being painted, for example the series color.
     /// </summary>
-    public string? Colors { get; set; } = null;
+    public string? Colors { get; set; } = "#00000000";
 
     /// <summary>
     /// Gets or sets the start point.
@@ -274,9 +259,10 @@ public class LinearGradientPaintExtension : BaseSkiaPaintExtention, IMarkupExten
 public class RadialGradientPaintExtension : BaseSkiaPaintExtention, IMarkupExtension<RadialGradientPaint>
 {
     /// <summary>
-    /// Gets or sets the colors separated by commas.
+    /// Gets or sets the colors separated by commas, default value is #00000000, and means to use the default color, normally
+    /// defines by the element being painted, for example the series color.
     /// </summary>
-    public string? Colors { get; set; } = null;
+    public string? Colors { get; set; } = "#00000000";
 
     /// <summary>
     /// Gets or sets the center point.
@@ -348,52 +334,26 @@ public class RadialGradientPaintExtension : BaseSkiaPaintExtention, IMarkupExten
 }
 
 /// <summary>
-/// The visual state extension.
+/// The active paint extension, this is resolved at runtime, and uses the active color of the element,
+/// for example the series color.
 /// </summary>
-public class VisualStateExtension : BaseVisualStateExtension, IMarkupExtension<AnimatablePropertySetter[]>
+public class ActivePaintExtension : BaseSkiaPaintExtention, IMarkupExtension<ClonePaint>
 {
     /// <summary>
     /// ...
     /// </summary>
-    public AnimatablePropertySetter[] ProvideValue(IServiceProvider serviceProvider)
+    public ClonePaint ProvideValue(IServiceProvider serviceProvider)
     {
-        var states = new List<AnimatablePropertySetter>();
-
-        if (Opacity != 0)
-            states.Add(new(DrawnGeometry.OpacityProperty, Opacity));
-
-        if (TranslateTransform is not null)
-            states.Add(new(DrawnGeometry.TranslateTransformProperty, ParsePoint(TranslateTransform, new(0, 0))));
-
-        if (ScaleTransform is not null)
-            states.Add(new(DrawnGeometry.ScaleTransformProperty, ParsePoint(ScaleTransform, new(1, 1))));
-
-        if (RotateTransform != 0)
-            states.Add(new(DrawnGeometry.RotateTransformProperty, RotateTransform));
-
-        if (SkewTransform is not null)
-            states.Add(new(DrawnGeometry.SkewTransformProperty, ParsePoint(SkewTransform, new(0, 0))));
-
-        if (TransformOrigin is not null)
-            states.Add(new(DrawnGeometry.TransformOriginProperty, ParsePoint(TransformOrigin, new(0.5f, 0.5f))));
-
-        //if (Fill != Paint.Default)
-        //    states.Add(new(DrawnGeometry.fill, Fill));
-
-        //if (Stroke != Paint.Default)
-        //    states.Add(new(nameof(IDrawnElement.Stroke), Stroke));
-
-        //if (Paint != Paint.Default)
-        //    states.Add(new(nameof(IDrawnElement.Paint), Paint));
-
-        return [.. states];
+        var paint = new ClonePaint();
+        MapProperties(paint);
+        return paint;
     }
 
     object IMarkupExtension.ProvideValue(IServiceProvider serviceProvider) => ProvideValue(serviceProvider);
 }
 
 /// <summary>
-/// The from shared axes extension.
+/// The frame extension.
 /// </summary>
 public class FrameExtension : IMarkupExtension<DrawMarginFrame>
 {
@@ -472,4 +432,133 @@ public class FromSharedAxesExtension : IMarkupExtension<ICollection<ICartesianAx
         /// </summary>
         Second
     }
+}
+
+/// <summary>
+/// The drop shadow extension.
+/// </summary>
+[ContentProperty(nameof(StringFormat))]
+public class ShadowExtension : IMarkupExtension<DropShadow>
+{
+    /// <summary>
+    /// Gets or sets the shadow in string format.
+    /// </summary>
+    public string? StringFormat { get; set; } = null;
+
+    /// <summary>
+    /// Gets or sets the dx.
+    /// </summary>
+    public float Dx { get; set; }
+
+    /// <summary>
+    /// Gets or sets the dy.
+    /// </summary>
+    public float Dy { get; set; }
+
+    /// <summary>
+    /// Gets or sets the sigma x.
+    /// </summary>
+    public float SigmaX { get; set; }
+
+    /// <summary>
+    /// Gets or sets the sigma y.
+    /// </summary>
+    public float SigmaY { get; set; }
+
+    /// <summary>
+    /// Gets or sets the color in hex string format.
+    /// </summary>
+    public string? Color { get; set; }
+
+    /// <summary>
+    /// ...
+    /// </summary>
+    public DropShadow ProvideValue(IServiceProvider serviceProvider)
+    {
+        if (StringFormat is not null)
+        {
+            var split = StringFormat.Split(',');
+
+            if (split.Length == 5)
+            {
+                Dx = float.TryParse(split[0], out var dx) ? dx : 0f;
+                Dy = float.TryParse(split[1], out var dy) ? dy : 0f;
+                SigmaX = float.TryParse(split[2], out var sx) ? sx : 0f;
+                SigmaY = float.TryParse(split[3], out var sy) ? sy : 0f;
+                Color = split[4];
+            }
+
+            if (split.Length == 4)
+            {
+                Dx = float.TryParse(split[0], out var dx) ? dx : 0f;
+                Dy = float.TryParse(split[1], out var dy) ? dy : 0f;
+                SigmaX = SigmaY = float.TryParse(split[2], out var sx) ? sx : 0f;
+                Color = split[3];
+            }
+
+            if (split.Length == 3)
+            {
+                Dx = Dy = float.TryParse(split[0], out var dx) ? dx : 0f;
+                SigmaX = SigmaY = float.TryParse(split[1], out var dy) ? dy : 0f;
+                Color = split[2];
+            }
+
+            if (split.Length == 2)
+            {
+                Dx = Dy = float.TryParse(split[0], out var dx) ? dx : 0f;
+                SigmaX = SigmaY = float.TryParse(split[1], out var dy) ? dy : 0f;
+                Color = "#555";
+            }
+        }
+
+        if (!SKColor.TryParse(Color, out var color))
+            color = SKColors.Black;
+
+        return new DropShadow(Dx, Dy, SigmaX, SigmaY, color);
+    }
+
+    object IMarkupExtension.ProvideValue(IServiceProvider serviceProvider) => ProvideValue(serviceProvider);
+}
+
+/// <summary>
+/// 
+/// </summary>
+public class DashedExtension : IMarkupExtension<DashEffect>
+{
+    private static readonly float[] s_defaultDashes = [2, 2];
+
+    /// <summary>
+    /// Gets or sets the dash array separated by commas.
+    /// </summary>
+    public string? Array { get; set; } = null;
+
+    /// <summary>
+    /// Gets or sets the dash phase.
+    /// </summary>
+    public float Phase { get; set; } = 0f;
+
+    /// <summary>
+    /// ...
+    /// </summary>
+    public DashEffect ProvideValue(IServiceProvider serviceProvider)
+    {
+        if (Array is null) return new DashEffect(s_defaultDashes);
+
+        var dashArray = Array.Split(',');
+        var dashes = new List<float>(dashArray.Length);
+
+        foreach (var dash in dashArray)
+        {
+            if (float.TryParse(dash, out var value))
+                dashes.Add(value);
+        }
+
+        return new DashEffect(
+            dashes.Count == 0
+                ? s_defaultDashes
+                : [.. dashes],
+            Phase);
+    }
+
+    object IMarkupExtension.ProvideValue(IServiceProvider serviceProvider) => ProvideValue(serviceProvider);
 }
