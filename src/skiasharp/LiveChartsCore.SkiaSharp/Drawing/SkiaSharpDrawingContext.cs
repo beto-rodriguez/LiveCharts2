@@ -214,7 +214,7 @@ public class SkiaSharpDrawingContext(
             if (ActiveLvcPaint.PaintStyle.HasFlag(PaintStyle.Fill))
             {
                 if (element.Fill is null || element.Fill == ActiveLvcPaint)
-                    DrawByActivePaint(element, opacity);
+                    DrawElement(element, opacity);
                 else
                     DrawByPaint(element.Fill, element, opacity);
             }
@@ -222,7 +222,7 @@ public class SkiaSharpDrawingContext(
             if (ActiveLvcPaint.PaintStyle.HasFlag(PaintStyle.Stroke))
             {
                 if (element.Stroke is null || element.Stroke == ActiveLvcPaint)
-                    DrawByActivePaint(element, opacity);
+                    DrawElement(element, opacity);
                 else
                     DrawByPaint(element.Stroke, element, opacity);
             }
@@ -251,31 +251,55 @@ public class SkiaSharpDrawingContext(
         PaintMotionProperty.s_activePaint = null!;
     }
 
-    private void DrawByActivePaint(IDrawnElement<SkiaSharpDrawingContext> element, float opacity)
-    {
-        var hasGeometryOpacity = opacity < 1;
-
-        if (hasGeometryOpacity) ActiveLvcPaint!.ApplyOpacityMask(this, opacity);
-        element.Draw(this);
-        if (hasGeometryOpacity) ActiveLvcPaint!.RestoreOpacityMask(this, opacity);
-    }
-
     private void DrawByPaint(Paint paint, IDrawnElement<SkiaSharpDrawingContext> element, float opacity)
     {
-        var hasGeometryOpacity = opacity < 1;
-
         var originalPaint = ActiveSkiaPaint;
         var originalTask = ActiveLvcPaint;
 
         paint.InitializeTask(this);
 
-        if (hasGeometryOpacity) paint.ApplyOpacityMask(this, opacity);
-        element.Draw(this);
-        if (hasGeometryOpacity) paint.RestoreOpacityMask(this, opacity);
+        DrawElement(element, opacity);
 
         paint.Dispose();
 
         ActiveSkiaPaint = originalPaint;
         ActiveLvcPaint = originalTask;
+    }
+
+
+    private void DrawElement(IDrawnElement<SkiaSharpDrawingContext> element, float opacity)
+    {
+        var hasGeometryOpacity = opacity < 1;
+        var hasShadow = element.DropShadow is not null && element.DropShadow != LvcDropShadow.Empty;
+        SKImageFilter? originalFilter = null;
+
+        if (hasGeometryOpacity)
+        {
+            ActiveLvcPaint!.ApplyOpacityMask(this, opacity);
+        }
+
+        if (hasShadow)
+        {
+            var shadow = element.DropShadow!;
+            originalFilter = ActiveSkiaPaint.ImageFilter;
+
+            ActiveSkiaPaint.ImageFilter = SKImageFilter.CreateDropShadow(
+                shadow.Dx, shadow.Dy,
+                shadow.SigmaX, shadow.SigmaY,
+                new(shadow.Color.R, shadow.Color.G, shadow.Color.B, shadow.Color.A));
+        }
+
+        element.Draw(this);
+
+        if (hasShadow)
+        {
+            ActiveSkiaPaint.ImageFilter!.Dispose();
+            ActiveSkiaPaint.ImageFilter = originalFilter;
+        }
+
+        if (hasGeometryOpacity)
+        {
+            ActiveLvcPaint!.RestoreOpacityMask(this, opacity);
+        }
     }
 }
