@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -438,7 +439,7 @@ public class FromSharedAxesExtension : IMarkupExtension<ICollection<ICartesianAx
 /// The drop shadow extension.
 /// </summary>
 [ContentProperty(nameof(StringFormat))]
-public class ShadowExtension : IMarkupExtension<DropShadow>
+public class ShadowExtension : IMarkupExtension<LvcDropShadow>
 {
     /// <summary>
     /// Gets or sets the shadow in string format.
@@ -473,7 +474,7 @@ public class ShadowExtension : IMarkupExtension<DropShadow>
     /// <summary>
     /// ...
     /// </summary>
-    public DropShadow ProvideValue(IServiceProvider serviceProvider)
+    public LvcDropShadow ProvideValue(IServiceProvider serviceProvider)
     {
         if (StringFormat is not null)
         {
@@ -511,10 +512,10 @@ public class ShadowExtension : IMarkupExtension<DropShadow>
             }
         }
 
-        if (!SKColor.TryParse(Color, out var color))
-            color = SKColors.Black;
+        if (!LvcColor.TryParse(Color, out var color))
+            color = new(0, 0, 0);
 
-        return new DropShadow(Dx, Dy, SigmaX, SigmaY, color);
+        return new LvcDropShadow(Dx, Dy, SigmaX, SigmaY, color);
     }
 
     object IMarkupExtension.ProvideValue(IServiceProvider serviceProvider) => ProvideValue(serviceProvider);
