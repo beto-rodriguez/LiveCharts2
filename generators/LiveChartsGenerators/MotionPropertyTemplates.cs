@@ -187,6 +187,9 @@ namespace {containingType.ContainingNamespace};
             "LiveChartsCore.Drawing.Padding" => "LiveChartsCore.Motion.PaddingMotionProperty",
             "LiveChartsCore.Painting.Paint" => "LiveChartsCore.Motion.PaintMotionProperty",
             "LiveChartsCore.Painting.Paint?" => "LiveChartsCore.Motion.PaintMotionProperty",
+            "LiveChartsCore.Drawing.LvcDropShadow" +
+            "" => "LiveChartsCore.Motion.DropShadowMotionProperty",
+            "LiveChartsCore.Drawing.LvcDropShadow?" => "LiveChartsCore.Motion.DropShadowMotionProperty",
             "SkiaSharp.SKMatrix" => "LiveChartsCore.SkiaSharpView.Motion.SKMatrixMotionProperty",
             _ => "UnsuportedType"
         };
