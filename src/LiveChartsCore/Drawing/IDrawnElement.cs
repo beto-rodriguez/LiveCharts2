@@ -77,6 +77,11 @@ public interface IDrawnElement
     LvcPoint SkewTransform { get; set; }
 
     /// <summary>
+    /// Gets or sets the drop shadow.
+    /// </summary>
+    LvcDropShadow? DropShadow { get; set; }
+
+    /// <summary>
     /// Gets a value indicating whether the instance has transform.
     /// </summary>
     bool HasTransform { get; }

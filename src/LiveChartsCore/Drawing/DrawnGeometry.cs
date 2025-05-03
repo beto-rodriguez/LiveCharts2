@@ -119,6 +119,10 @@ public abstract partial class DrawnGeometry : Animatable, IDrawnElement
         }
     }
 
+    /// <inheritdoc cref="IDrawnElement.DropShadow"/>
+    [MotionProperty]
+    public partial LvcDropShadow? DropShadow { get; set; }
+
     /// <inheritdoc cref="IDrawnElement.HasTransform"/>
     public bool HasTransform { get; protected set; }
 

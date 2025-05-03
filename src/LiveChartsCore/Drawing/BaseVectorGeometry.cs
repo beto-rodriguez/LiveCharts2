@@ -92,7 +92,6 @@ public abstract partial class BaseVectorGeometry<TSegment> : Animatable, IDrawnE
     /// <inheritdoc cref="IDrawnElement.ScaleTransform"/>
     [MotionProperty]
     public partial LvcPoint ScaleTransform { get; set; }
-
     partial void OnScaleTransformChanged(LvcPoint value) => HasTransform = true;
 
     /// <inheritdoc cref="IDrawnElement.SkewTransform"/>
@@ -123,6 +122,10 @@ public abstract partial class BaseVectorGeometry<TSegment> : Animatable, IDrawnE
             _FillMotionProperty.SetMovement(value, this);
         }
     }
+
+    /// <inheritdoc cref="IDrawnElement.DropShadow"/>
+    [MotionProperty]
+    public partial LvcDropShadow? DropShadow { get; set; }
 
     /// <inheritdoc cref="IDrawnElement.HasTransform"/>
     public bool HasTransform { get; protected set; }

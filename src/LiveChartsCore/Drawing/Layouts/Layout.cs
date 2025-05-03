@@ -150,6 +150,8 @@ public abstract partial class Layout<TDrawingContext> : Animatable, IDrawnElemen
             $"Layouts can not have a {nameof(IDrawnElement.Paint)}, instead place the layout as the child of another geometry.");
     }
 
+    LvcDropShadow? IDrawnElement.DropShadow { get; set; }
+
     /// <summary>
     /// Gets or sets the padding.
     /// </summary>

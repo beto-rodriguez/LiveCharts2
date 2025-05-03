@@ -94,6 +94,10 @@ public abstract partial class BaseLabelGeometry : Animatable, IDrawnElement
     [MotionProperty]
     public partial LvcPoint SkewTransform { get; set; }
 
+    /// <inheritdoc cref="IDrawnElement.DropShadow"/>
+    [MotionProperty]
+    public partial LvcDropShadow? DropShadow { get; set; }
+
     /// <summary>
     /// Gets or sets the size of the text.
     /// </summary>
