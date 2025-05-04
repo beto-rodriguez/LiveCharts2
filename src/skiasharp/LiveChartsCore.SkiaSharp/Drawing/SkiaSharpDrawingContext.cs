@@ -266,40 +266,45 @@ public class SkiaSharpDrawingContext(
         ActiveLvcPaint = originalTask;
     }
 
-
     private void DrawElement(IDrawnElement<SkiaSharpDrawingContext> element, float opacity)
     {
         var hasGeometryOpacity = opacity < 1;
         var hasShadow = element.DropShadow is not null && element.DropShadow != LvcDropShadow.Empty;
         SKImageFilter? originalFilter = null;
 
-        if (hasGeometryOpacity)
+        if (ActiveLvcPaint is not null)
         {
-            ActiveLvcPaint!.ApplyOpacityMask(this, opacity);
-        }
+            if (hasGeometryOpacity)
+            {
+                ActiveLvcPaint!.ApplyOpacityMask(this, opacity);
+            }
 
-        if (hasShadow)
-        {
-            var shadow = element.DropShadow!;
-            originalFilter = ActiveSkiaPaint.ImageFilter;
+            if (hasShadow)
+            {
+                var shadow = element.DropShadow!;
+                originalFilter = ActiveSkiaPaint.ImageFilter;
 
-            ActiveSkiaPaint.ImageFilter = SKImageFilter.CreateDropShadow(
-                shadow.Dx, shadow.Dy,
-                shadow.SigmaX, shadow.SigmaY,
-                new(shadow.Color.R, shadow.Color.G, shadow.Color.B, shadow.Color.A));
+                ActiveSkiaPaint.ImageFilter = SKImageFilter.CreateDropShadow(
+                    shadow.Dx, shadow.Dy,
+                    shadow.SigmaX, shadow.SigmaY,
+                    new(shadow.Color.R, shadow.Color.G, shadow.Color.B, shadow.Color.A));
+            }
         }
 
         element.Draw(this);
 
-        if (hasShadow)
+        if (ActiveLvcPaint is not null)
         {
-            ActiveSkiaPaint.ImageFilter!.Dispose();
-            ActiveSkiaPaint.ImageFilter = originalFilter;
-        }
+            if (hasShadow)
+            {
+                ActiveSkiaPaint.ImageFilter!.Dispose();
+                ActiveSkiaPaint.ImageFilter = originalFilter;
+            }
 
-        if (hasGeometryOpacity)
-        {
-            ActiveLvcPaint!.RestoreOpacityMask(this, opacity);
+            if (hasGeometryOpacity)
+            {
+                ActiveLvcPaint!.RestoreOpacityMask(this, opacity);
+            }
         }
     }
 }

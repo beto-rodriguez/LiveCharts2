@@ -28,33 +28,13 @@ namespace LiveChartsCore.Drawing;
 /// <remarks>
 /// Initializes a new instance of the <see cref="LvcDropShadow"/> class.
 /// </remarks>
-public class LvcDropShadow
+/// <param name="x">The horizonal offset.</param>
+/// <param name="y">The vertical offset.</param>
+/// <param name="sigmaX">The blur radius in the X direction.</param>
+/// <param name="sigmaY">The blur radius in the Y direction.</param>
+/// <param name="color">The color of the shadow.</param>
+public class LvcDropShadow(float x, float y, float sigmaX, float sigmaY, LvcColor color)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="LvcDropShadow"/> class.
-    /// </summary>
-    public LvcDropShadow()
-    {
-        Color = LvcColor.Empty;
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="LvcDropShadow"/> class.
-    /// </summary>
-    /// <param name="x">The horizonal offset.</param>
-    /// <param name="y">The vertical offset.</param>
-    /// <param name="sigmaX">The blur radius in the X direction.</param>
-    /// <param name="sigmaY">The blur radius in the Y direction.</param>
-    /// <param name="color">The color of the shadow.</param>
-    public LvcDropShadow(float x, float y, float sigmaX, float sigmaY, LvcColor color)
-    {
-        Dx = x;
-        Dy = y;
-        SigmaX = sigmaX;
-        SigmaY = sigmaY;
-        Color = color;
-    }
-
     /// <summary>
     /// Gets an empty drop shadow.
     /// </summary>
@@ -63,25 +43,25 @@ public class LvcDropShadow
     /// <summary>
     /// Gets or sets the horizontal offset.
     /// </summary>
-    public float Dx { get; set; }
+    public float Dx { get; set; } = x;
 
     /// <summary>
     /// Gets or sets the vertical offset.
     /// </summary>
-    public float Dy { get; set; }
+    public float Dy { get; set; } = y;
 
     /// <summary>
     /// Gets or sets the blur radius in the x direction.
     /// </summary>
-    public float SigmaX { get; set; }
+    public float SigmaX { get; set; } = sigmaX;
 
     /// <summary>
     /// Gets or sets the blur radius in the y direction.
     /// </summary>
-    public float SigmaY { get; set; }
+    public float SigmaY { get; set; } = sigmaY;
 
     /// <summary>
     /// Gets or sets the color of the shadow.
     /// </summary>
-    public LvcColor Color { get; set; }
+    public LvcColor Color { get; set; } = color;
 }
