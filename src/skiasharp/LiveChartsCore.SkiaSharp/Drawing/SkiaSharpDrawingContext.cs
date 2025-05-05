@@ -235,8 +235,8 @@ public class SkiaSharpDrawingContext(
     public override void InitializePaintTask(Paint paint)
     {
         ActiveLvcPaint = paint;
-        PaintMotionProperty.s_activePaint = paint;
         //ActiveSkiaPaint = paint.SKPaint; set by paint.InitializeTask
+        PaintMotionProperty.s_activePaint = paint;
 
         paint.InitializeTask(this);
     }
@@ -256,7 +256,15 @@ public class SkiaSharpDrawingContext(
         var originalPaint = ActiveSkiaPaint;
         var originalTask = ActiveLvcPaint;
 
-        paint.InitializeTask(this);
+        // hack for now...
+        // ActiveLvcPaint must be null for this kind of draw method...
+        // normally used to draw tooltips and legends
+        // Improve this? maybe a cleaner way?
+        if (paint != MeasureTask.Instance)
+        {
+            ActiveLvcPaint = paint;
+            paint.InitializeTask(this);
+        }
 
         DrawElement(element, opacity);
 
