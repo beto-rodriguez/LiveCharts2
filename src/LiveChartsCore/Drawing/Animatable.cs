@@ -119,7 +119,13 @@ public abstract class Animatable
             ? property
             : null;
 
-    internal static Dictionary<string, PropertyDefinition> Merge(
+    /// <summary>
+    /// Merges two dictionaries of property definitions into one.
+    /// </summary>
+    /// <param name="one">The first.</param>
+    /// <param name="two">The second.</param>
+    /// <returns>A new instance that contains both dictionaries.</returns>
+    protected static Dictionary<string, PropertyDefinition> Merge(
         Dictionary<string, PropertyDefinition> one,
         Dictionary<string, PropertyDefinition> two)
     {
