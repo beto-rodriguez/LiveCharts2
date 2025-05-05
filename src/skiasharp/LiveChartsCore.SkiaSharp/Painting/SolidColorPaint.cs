@@ -36,8 +36,6 @@ public class SolidColorPaint : SkiaPaint
 {
     private SkiaSharpDrawingContext? _drawingContext;
     private SKPaint? _skiaPaint;
-    private bool _isActiveColor;
-    private SKColor _activeColor;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SolidColorPaint"/> class.
@@ -95,17 +93,6 @@ public class SolidColorPaint : SkiaPaint
         };
 
         return clone;
-    }
-
-    /// <inheritdoc cref="Paint.ResolveActiveColor" />
-    public override void ResolveActiveColor(Paint? active)
-    {
-        if (active is not SolidColorPaint paint) return;
-        if (Color == SKColor.Empty || (_isActiveColor && _activeColor != paint.Color))
-        {
-            Color = _activeColor = paint.Color;
-            _isActiveColor = true;
-        }
     }
 
     /// <inheritdoc cref="Paint.InitializeTask(DrawingContext)" />

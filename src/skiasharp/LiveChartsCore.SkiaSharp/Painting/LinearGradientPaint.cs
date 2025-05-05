@@ -61,8 +61,6 @@ public class LinearGradientPaint(
 {
     private SkiaSharpDrawingContext? _drawingContext;
     private SKPaint? _skiaPaint;
-    private bool _isActiveColor;
-    private SKColor[] _activeGradient = [];
 
     private SKColor[] GradientStops { get; set; } = gradientStops;
     private SKPoint StartPoint { get; set; } = startPoint;
@@ -125,32 +123,6 @@ public class LinearGradientPaint(
             PathEffect = PathEffect?.Clone(),
             ImageFilter = ImageFilter?.Clone()
         };
-    }
-
-    /// <inheritdoc cref="Paint.ResolveActiveColor" />
-    public override void ResolveActiveColor(Paint? active)
-    {
-        if (active is not LinearGradientPaint paint) return;
-
-        var isEmpty = GradientStops.Length == 1 && GradientStops[0] == SKColor.Empty;
-
-        if (isEmpty || (_isActiveColor && ActiveColorChanged()))
-        {
-            GradientStops = _activeGradient = paint.GradientStops;
-            _isActiveColor = true;
-        }
-    }
-
-    private bool ActiveColorChanged()
-    {
-        if (_activeGradient.Length != GradientStops.Length)
-            return false;
-
-        for (var i = 0; i < _activeGradient.Length; i++)
-            if (_activeGradient[i] != GradientStops[i])
-                return false;
-
-        return true;
     }
 
     /// <inheritdoc cref="Paint.ApplyOpacityMask(DrawingContext, float)" />

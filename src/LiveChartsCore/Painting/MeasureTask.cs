@@ -49,6 +49,4 @@ internal class MeasureTask : Paint
 
     /// <inheritdoc cref="Paint.Transitionate(float, Paint)" />
     public override Paint Transitionate(float progress, Paint target) => this;
-
-    public override void ResolveActiveColor(Paint? active) { }
 }

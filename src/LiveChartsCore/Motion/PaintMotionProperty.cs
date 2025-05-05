@@ -35,76 +35,19 @@ public class PaintMotionProperty(Paint defaultValue = null!)
     : MotionProperty<Paint>(defaultValue)
 {
     internal static Paint? s_activePaint;
-    private bool _isFromDefault;
-    private bool _isToDefault;
 
     /// <inheritdoc cref="MotionProperty{T}.CanTransitionate"/>
     protected override bool CanTransitionate =>
         (FromValue ?? s_activePaint) is not null &&
         (ToValue ?? s_activePaint) is not null;
 
-    // how do paints transitionate?
-
-    //    - each property in the paint is interpolated according to the animation timeline.
-
-    //    - there is a special case, when the paint is null, the library will use the s_activePaint
-    //      as the default paint, this is to prevent initializing a new paint for every geometry
-    //      that is drawn, this is useful because normally series contain a lot of geometries that
-    //      are drawn with the same paint, so we can just use the same paint for all of them.
-    //      The s_activePaint is changing as the library is drawing, finally is set to null when the
-    //      frame is completed.
-
-    //    - GetFromOrDefault and GetToOrDefault are used to evaluate if the paint is null,
-    //      when it is, we clone the s_activePaint and set it to the FromValue or ToValue,
-    //      a clone only knows how to replicate the same skia paint, but it does not clone any reference
-    //      inside the paint instance, this should help to prevent memory leaks, but also when the
-    //      animation is completed, we set the FromValue and ToValue to null to release those clones from memory.
-
     /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)" />
-    protected override Paint OnGetMovement(float progress) =>
-        GetFromOrDefault().Transitionate(progress, GetToOrDefault());
-
-    /// <inheritdoc cref="MotionProperty{T}.OnCompleted" />
-    protected override void OnCompleted()
+    protected override Paint OnGetMovement(float progress)
     {
-        if (_isFromDefault)
-        {
-            FromValue = null!;
-            _isFromDefault = false;
-        }
+        // ! canot be null here because of the check in CanTransitionate
+        var from = FromValue ?? s_activePaint!.CloneTask();
+        var to = ToValue ?? s_activePaint!.CloneTask();
 
-        if (_isToDefault)
-        {
-            ToValue = null!;
-            _isToDefault = false;
-        }
-    }
-
-    private Paint GetFromOrDefault()
-    {
-        if (FromValue is not null)
-        {
-            FromValue.ResolveActiveColor(s_activePaint);
-            return FromValue;
-        }
-
-        _isFromDefault = true;
-        FromValue = s_activePaint!.CloneTask(); // ! canot be null here because of the check in CanTransitionate
-
-        return FromValue;
-    }
-
-    private Paint GetToOrDefault()
-    {
-        if (ToValue is not null)
-        {
-            ToValue.ResolveActiveColor(s_activePaint);
-            return ToValue;
-        }
-
-        _isToDefault = true;
-        ToValue = s_activePaint!.CloneTask(); // ! canot be null here because of the check in CanTransitionate
-
-        return ToValue;
+        return from.Transitionate(progress, to);
     }
 }
