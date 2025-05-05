@@ -206,7 +206,10 @@ internal static class Info
         var theme = LiveCharts.DefaultSettings.GetTheme();
         theme.Setup(Application.Current?.RequestedTheme == AppTheme.Dark);
         series.SeriesId = 0;
+        var ce = (ChartElement)series;
+        ce._isInternalSet = true;
         theme.ApplyStyleToSeries(series);
+        ce._isInternalSet = false;
 
         series.DataLabelsPaint = Paint.Default;
         series.ShowDataLabels = false;
@@ -276,7 +279,7 @@ public class ChartPointState
     {
         public string Name { get; set; } = string.Empty;
 
-        public Dictionary<string, DrawnPropertySetter> AsStatesCollection()
+        public VisualStatesDictionary.DrawnPropertiesDictionary AsStatesCollection()
         {
             var setters = new Dictionary<string, DrawnPropertySetter>();
             for (var i = 0; i < Count; i++)
@@ -284,7 +287,8 @@ public class ChartPointState
                 var set = this[i];
                 setters[set.PropertyName] = new DrawnPropertySetter(set.PropertyName, set.Value);
             }
-            return setters;
+
+            return new(setters, false);
         }
     }
 }

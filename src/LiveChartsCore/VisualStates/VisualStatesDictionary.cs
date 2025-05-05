@@ -23,13 +23,14 @@
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
+using static LiveChartsCore.VisualStates.VisualStatesDictionary;
 
 namespace LiveChartsCore.VisualStates;
 
 /// <summary>
 /// Defines a collection of visual states.
 /// </summary>
-public class VisualStatesDictionary : Dictionary<string, Dictionary<string, DrawnPropertySetter>>
+public class VisualStatesDictionary : Dictionary<string, DrawnPropertiesDictionary>
 {
     internal class StatesTracker
     {
@@ -148,5 +149,18 @@ public class VisualStatesDictionary : Dictionary<string, Dictionary<string, Draw
         animatable._statesTracker.ActiveStates.Clear();
         animatable._statesTracker.ActiveStatesList.Clear();
         animatable._statesTracker.OriginalValues.Clear();
+    }
+
+    /// <summary>
+    /// Defines a collection of drawn properties.
+    /// </summary>
+    /// <param name="baseDictionary">The base dictionary.</param>
+    /// <param name="isInternalSet">Indicates whether the object was created by a theme.</param>
+    public class DrawnPropertiesDictionary(
+        Dictionary<string, DrawnPropertySetter> baseDictionary,
+        bool isInternalSet)
+            : Dictionary<string, DrawnPropertySetter>(baseDictionary)
+    {
+        internal bool isInternalSet { get; } = isInternalSet;
     }
 }

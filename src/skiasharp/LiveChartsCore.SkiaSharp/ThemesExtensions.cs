@@ -143,7 +143,6 @@ public static class ThemesExtensions
                                 ? new SolidColorPaint(new(245, 245, 245))
                                 : new SolidColorPaint(new(45, 45, 45));
 
-
                         _ = lineSeries.HasState("Hover", [
                                 (nameof(DrawnGeometry.ScaleTransform), new LvcPoint(1.35f, 1.35f))
                             ]);

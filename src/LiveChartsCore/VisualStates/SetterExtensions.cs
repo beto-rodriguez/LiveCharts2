@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System.Linq;
+using LiveChartsCore.Kernel;
 
 namespace LiveChartsCore.VisualStates;
 
@@ -35,53 +36,48 @@ public static class SetterExtensions
     /// <param name="series">The series.</param>
     /// <param name="stateName">The state name.</param>
     /// <param name="setters">The setters collection.</param>
-    /// <param name="priority">The state priority.</param>
     /// <returns>The series.</returns>
     public static ISeries HasState(
         this ISeries series,
         string stateName,
-        (string, object)[] setters,
-        StatePriority priority = StatePriority.AddIfNotExists)
+        (string, object)[] setters)
     {
         var statesDictionary = setters.ToDictionary(
             x => x.Item1,
             x => new DrawnPropertySetter(x.Item1, x.Item2));
 
-        switch (priority)
+        var isInternalSet = ((ChartElement)series)._isInternalSet;
+
+        if (series.VisualStates.TryGetValue(stateName, out var propertiesDictionary))
         {
-            case StatePriority.AddOrOverride:
-                series.VisualStates[stateName] = statesDictionary;
-                break;
-            case StatePriority.AddIfNotExists:
-                if (!series.VisualStates.ContainsKey(stateName))
-                    series.VisualStates[stateName] = statesDictionary;
-                break;
-            default:
-                break;
+            // only override the state if:
+
+            if (isInternalSet == propertiesDictionary.isInternalSet)
+            {
+                // if both are defined by the user or both are defined by the theme
+
+                series.VisualStates[stateName] =
+                    new VisualStatesDictionary.DrawnPropertiesDictionary(statesDictionary, isInternalSet);
+            }
+            else
+            {
+                // only the user can override a theme state, a theme can never override a state defined by the user
+
+                if (propertiesDictionary.isInternalSet && !isInternalSet)
+                {
+                    series.VisualStates[stateName] =
+                        new VisualStatesDictionary.DrawnPropertiesDictionary(statesDictionary, isInternalSet);
+                }
+            }
+        }
+        else
+        {
+            // if the state is not defined, we can add it
+
+            series.VisualStates[stateName] =
+                new VisualStatesDictionary.DrawnPropertiesDictionary(statesDictionary, isInternalSet);
         }
 
-        if (priority == StatePriority.AddOrOverride)
-            series.VisualStates[stateName] = statesDictionary;
-
-        if (priority == StatePriority.AddIfNotExists && !series.VisualStates.ContainsKey(stateName))
-            series.VisualStates[stateName] = statesDictionary;
-
         return series;
-    }
-
-    /// <summary>
-    /// Defines the state priority.
-    /// </summary>
-    public enum StatePriority
-    {
-        /// <summary>
-        /// Adds the state if it does not exist, otherwise overrides the existing one.
-        /// </summary>
-        AddOrOverride,
-
-        /// <summary>
-        /// Adds the state if it does not exist, otherwise the state is not added.
-        /// </summary>
-        AddIfNotExists
     }
 }
