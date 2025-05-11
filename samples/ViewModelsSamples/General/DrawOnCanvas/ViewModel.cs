@@ -2,67 +2,92 @@
 using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Generators;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
 namespace ViewModelsSamples.General.DrawOnCanvas;
 
+// in this example, we use the UpdateStartedCommand to add our custom // mark
+// geometry to the chart, then we use the PointerPressedCommand to change the //mark
+// size of the geometry when the user clicks on it. // mark
+
 public partial class ViewModel
 {
-    private readonly MotionGeometry _geometry = new() { Stroke = new SolidColorPaint(SKColors.Blue) };
-    private bool _isInitialized;
-    private bool _isBigCircle = true;
+    private bool _isBig;
+    private readonly MotionGeometry _geometry = new()
+    {
+        Diameter = 20,
+        Fill = new SolidColorPaint(SKColors.Blue.WithAlpha(100)),
+        Stroke = new SolidColorPaint(SKColors.Blue, strokeWidth: 3)
+    };
 
     [RelayCommand]
     public void ChartUpdated(ChartCommandArgs args)
     {
         var chartView = (ICartesianChartView)args.Chart;
 
-        // lets convert the point (5, 5) in the chart values scale to pixels
+        // lets place the geometry at (5, 5) in the chart values scale
         var locationInChartValues = new LvcPointD(5, 5);
         var locationInPixels = chartView.ScaleDataToPixels(locationInChartValues);
 
         _geometry.X = (float)locationInPixels.X;
         _geometry.Y = (float)locationInPixels.Y;
-        // lets toggle the diameter of the circle between 20 and 70
-        _geometry.Diameter = (_isBigCircle = !_isBigCircle) ? 70 : 20;
 
-        if (!_isInitialized)
-        {
-            chartView.Core.Canvas.AddGeometry(_geometry);
-            _geometry.Animate(
-                new Animation(EasingFunctions.BounceOut, TimeSpan.FromMilliseconds(800)));
-            _isInitialized = true;
-        }
+        _geometry.Initialize(args);
+    }
+
+    [RelayCommand]
+    public void ChartPressed(PointerCommandArgs args)
+    {
+        _geometry.Diameter = _isBig ? 20 : 70;
+        _isBig = !_isBig;
+        args.Chart.Invalidate();
     }
 }
 
-public class MotionGeometry : BoundedDrawnGeometry, IDrawnElement<SkiaSharpDrawingContext>
+public partial class MotionGeometry : BoundedDrawnGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
-    // use Motion properties to animate the geometry
-    private readonly FloatMotionProperty _diameter = new(0f);
+    private bool _isInitialized;
 
-    public float Diameter
-    {
-        get => _diameter.GetMovement(this);
-        set => _diameter.SetMovement(value, this);
-    }
+    // The MotionProperty attribute makes the property animatable, // mark
+    // both the property and the class must be marked as partial // mark
+    // partial properties were introduced in C# 13 // mark
+    // A motion property will animate any change in the property // mark
+    // according to the Animation defined in the Animate method. // mark
+
+    [MotionProperty]
+    public partial float Diameter { get; set; }
 
     public void Draw(SkiaSharpDrawingContext context)
     {
         // we can use SkiaSharp here to draw anything we need // mark
         // https://learn.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/graphics/skiasharp/basics/ // mark
 
-        // because we inherited from Geometry, this class already contains the X, Y
+        // because we inherited from BoundedDrawnGeometry, this class already contains the X, Y
         // and some other motion properties that we can use.
 
         var paint = context.ActiveSkiaPaint;
         context.Canvas.DrawCircle(X, Y, Diameter, paint);
+    }
+
+    public void Initialize(ChartCommandArgs args)
+    {
+        if (_isInitialized) return;
+
+        args.Chart.CoreChart.Canvas.AddGeometry(this);
+
+        var animation = new Animation(
+            easingFunction: EasingFunctions.BounceOut,
+            duration: TimeSpan.FromMilliseconds(800));
+
+        this.Animate(animation);
+
+        _isInitialized = true;
     }
 }
 

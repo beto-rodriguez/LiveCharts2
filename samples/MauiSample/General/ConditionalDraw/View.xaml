@@ -10,9 +10,7 @@
         <vms:ViewModel/>
     </ContentPage.BindingContext>
 
-    <lvc:CartesianChart
-        Sections="{Binding Sections}"
-        YAxes="{Binding Y}">
+    <lvc:CartesianChart>
 
         <lvc:CartesianChart.Series>
             <lvc:XamlColumnSeries
@@ -21,26 +19,23 @@
 
                 <!--
                 Use the AdditionalVisualStates property to define the look of the points
-                when they are in a different state, then 
+                when they are in a different state
                 -->
 
                 <lvc:XamlColumnSeries.AdditionalVisualStates>
 
                     <!-- When the state is "Danger", the Fill is set to red -->
                     <lvc:ChartPointState Name="Danger">
-                        <lvc:Set PropertyName="Fill" Value="#f00"/> 
+                        <lvc:Set
+                            PropertyName="Fill"
+                            Value="{lvc:SolidColorPaint Color='#f00'}"/>
                     </lvc:ChartPointState>
 
                     <!-- The "Hover" state is fired when the pointer is over a point-->
                     <lvc:ChartPointState Name="Hover">
-
-                        <!--
-                        The ActivePaint extension, resolves the paint based on the series
-                        theme, then the ImageFilter is applied to the paint.
-                        -->
                         <lvc:Set
-                            PropertyName="Fill"
-                            Value="{lvc:ActivePaint ImageFilter={lvc:Shadow '4, 16'}}"/>
+                            PropertyName="DropShadow"
+                            Value="{lvc:Shadow '4, 16, #00f'}"/>
                     </lvc:ChartPointState>
 
                 </lvc:XamlColumnSeries.AdditionalVisualStates>

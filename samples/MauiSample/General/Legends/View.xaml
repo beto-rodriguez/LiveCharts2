@@ -24,7 +24,6 @@
                 Grid.Row="1"
                 Series="{Binding Series}"
                 LegendPosition="{Binding Position}" />
-
         </Grid>
     </ContentPage.Content>
 </ContentPage>

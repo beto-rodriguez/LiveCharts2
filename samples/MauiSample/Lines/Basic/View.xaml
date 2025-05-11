@@ -10,29 +10,37 @@
         <vms:ViewModel/>
     </ContentPage.BindingContext>
     <lvc:CartesianChart>
-        <lvc:CartesianChart.Resources>
+        <!--<lvc:CartesianChart.Resources>
             <Style TargetType="lvc:XamlLineSeries">
-                <!--<Setter Property="Fill" Value="#f00"/>-->
+                --><!--<Setter Property="Fill" Value="#f00"/>--><!--
             </Style>
-        </lvc:CartesianChart.Resources>
+        </lvc:CartesianChart.Resources>-->
         
-        <lvc:CartesianChart.Series>
+        <!--<lvc:CartesianChart.Series>
             <lvc:XamlLineSeries
                 Values="{Binding Values1}"
                 GeometrySize="10"
                 />
-            <!--<lvc:XamlLineSeries
+            --><!--<lvc:XamlLineSeries
                 x:TypeArguments="lvcDraw:StarGeometry"
                 Values="{Binding Values2}"
                 Fill="{x:Null}"
-                GeometrySize="20"/>-->
-        </lvc:CartesianChart.Series>
-        <lvc:CartesianChart.Title>
+                GeometrySize="20"/>--><!--
+        </lvc:CartesianChart.Series>-->
+        <!--<lvc:CartesianChart.Title>
             <lvc:XamlDrawnLabelVisual
                 Text="{Binding Title}"
                 Paint="#000000"
                 TextSize="25"
                 Padding="15"/>
-        </lvc:CartesianChart.Title>
+        </lvc:CartesianChart.Title>-->
+
+        <lvc:CartesianChart.XAxes>
+            <lvc:XamlAxis
+                Name="X this change"
+                IsVisible="true"
+                Padding="20"
+                />
+        </lvc:CartesianChart.XAxes>
     </lvc:CartesianChart>
 </ContentPage>
