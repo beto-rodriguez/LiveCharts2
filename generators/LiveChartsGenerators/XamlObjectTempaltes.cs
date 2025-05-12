@@ -66,7 +66,7 @@ public partial class {target.Name}
 
 {Concatenate(
     target.BindableProperties,
-    pair => Concatenate(pair.Value, property => GetBindablePropertySyntax(target, property)))}
+    pair => Concatenate(pair.Value, property => GetBindablePropertySyntax(target, pair.Key, property)))}
 #endregion
 
 #region events
@@ -163,7 +163,7 @@ public partial class {target.Name}
         add => _baseType.{@event.Name} += value;
         remove => _baseType.{@event.Name} -= value;
     }}
-{GetBindablePropertySyntax(target, $"{@event.Name}Command", "System.Windows.Input.ICommand", new(target.Name, "null"))}";
+{GetBindablePropertySyntax(target, "_baseType", $"{@event.Name}Command", "System.Windows.Input.ICommand", new(target.Name, "null"))}";
 
     private static string GetMethodSyntax(IMethodSymbol method)
     {
@@ -273,15 +273,19 @@ public partial class {target.Name}
         return sb.ToString();
     }
 
-    private static string GetBindablePropertySyntax(XamlObject target, IPropertySymbol property, BindablePropertyInitializer? initializer = null) =>
-        GetBindablePropertySyntax(target, property.Name, property.Type.ToDisplayString(), initializer);
+    private static string GetBindablePropertySyntax(XamlObject target, string key, IPropertySymbol property, BindablePropertyInitializer? initializer = null) =>
+        GetBindablePropertySyntax(target, key, property.Name, property.Type.ToDisplayString(), initializer);
 
-    private static string GetBindablePropertySyntax(XamlObject target, string propertyName, string propertyType, BindablePropertyInitializer? initializer)
+    private static string GetBindablePropertySyntax(XamlObject target, string key, string propertyName, string propertyType, BindablePropertyInitializer? initializer)
     {
         var originalPropertyType = propertyType;
 
+        var isTypeOverriden = false;
         if (target.OverridenTypes.TryGetValue(propertyName, out var overridenType))
+        {
             propertyType = overridenType;
+            isTypeOverriden = true;
+        }
 
         var sb = new StringBuilder();
 
@@ -295,9 +299,20 @@ public partial class {target.Name}
         if (TypeConverters.TryGetValue(originalPropertyType, out var typeConverter))
             _ = sb.AppendLine(@$"    [System.ComponentModel.TypeConverter(typeof({typeConverter}))]");
 
+        // for the getter we get the value from the base type
+        // in the PropertyChanged method we set the value to the base type
+
+        var path = key;
+        if (key.Length == 0)
+            path = "_baseType";
+
+        var getter = !propertyName.EndsWith("Command")
+            ? $"{(isTypeOverriden ? $"({propertyType})" : string.Empty)}{path}.{propertyName}"
+            : $"({propertyType})GetValue({propertyName}Property)";
+
         _ = sb.Append(@$"    public new {propertyType} {propertyName}
     {{
-        get => ({propertyType})GetValue({propertyName}Property);
+        get => {getter};
         set => SetValue({propertyName}Property, value);
     }}");
 
