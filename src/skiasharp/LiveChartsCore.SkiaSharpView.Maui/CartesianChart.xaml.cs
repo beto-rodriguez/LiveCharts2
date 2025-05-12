@@ -54,7 +54,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
     private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
     private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
-    private readonly CollectionDeepObserver<CoreSection> _sectionsObserver;
+    private readonly CollectionDeepObserver<IChartElement> _sectionsObserver;
     private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
     private IChartLegend? _legend;
     private IChartTooltip? _tooltip;
@@ -79,12 +79,13 @@ public partial class CartesianChart : ChartView, ICartesianChartView
         _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged);
         _xObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged);
         _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged);
-        _sectionsObserver = new CollectionDeepObserver<CoreSection>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged);
+        _sectionsObserver = new CollectionDeepObserver<IChartElement>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged);
         _visualsObserver = new CollectionDeepObserver<ChartElement>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged);
 
         SetValue(XAxesProperty, new ObservableCollection<ICartesianAxis>());
         SetValue(YAxesProperty, new ObservableCollection<ICartesianAxis>());
         SetValue(SeriesProperty, new ObservableCollection<ISeries>());
+        SetValue(SectionsProperty, new ObservableCollection<IChartElement>());
         SetValue(VisualElementsProperty, new ObservableCollection<ChartElement>());
         SetValue(SyncContextProperty, new object());
 
@@ -149,7 +150,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     /// </summary>
     public static readonly BindableProperty SectionsProperty =
         BindableProperty.Create(
-            nameof(Sections), typeof(ICollection<CoreSection>), typeof(CartesianChart), null, BindingMode.Default, null,
+            nameof(Sections), typeof(ICollection<IChartElement>), typeof(CartesianChart), null, BindingMode.Default, null,
             PropertyHandlers<CartesianChart>.OnUIElementsCollectionChanged(c => c._sectionsObserver));
 
     /// <summary>
@@ -437,9 +438,9 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     }
 
     /// <inheritdoc cref="ICartesianChartView.Sections" />
-    public ICollection<CoreSection> Sections
+    public ICollection<IChartElement> Sections
     {
-        get => (ICollection<CoreSection>)GetValue(SectionsProperty);
+        get => (ICollection<IChartElement>)GetValue(SectionsProperty);
         set => SetValue(SectionsProperty, value);
     }
 

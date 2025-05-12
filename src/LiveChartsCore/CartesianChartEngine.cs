@@ -85,13 +85,12 @@ public class CartesianChartEngine(
     /// <value>
     /// The sections.
     /// </value>
-    public IEnumerable<CoreSection> Sections { get; private set; } =
+    public IEnumerable<IChartElement> Sections { get; private set; } =
         [];
 
     ///<inheritdoc cref="Chart.Series"/>
     public override IEnumerable<ISeries> Series =>
         _chartView.Series?.Select(x => x.ChartElementSource).Cast<ISeries>() ?? [];
-
 
     ///<inheritdoc cref="Chart.VisibleSeries"/>
     public override IEnumerable<ISeries> VisibleSeries =>
@@ -393,7 +392,7 @@ public class CartesianChartEngine(
         FindingStrategy = _chartView.FindingStrategy;
         Tooltip = _chartView.Tooltip;
 
-        Sections = _chartView.Sections?.Where(static x => x.IsVisible) ?? [];
+        Sections = _chartView.Sections?.Select(x => x.ChartElementSource).Where(static x => x.IsVisible) ?? [];
         VisualElements = _chartView.VisualElements ?? [];
 
         ActualAnimationsSpeed = _chartView.AnimationsSpeed == TimeSpan.MaxValue

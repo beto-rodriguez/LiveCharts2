@@ -63,7 +63,7 @@ public interface ICartesianChartView : IChartView
     /// <value>
     /// The sections.
     /// </value>
-    ICollection<CoreSection> Sections { get; set; }
+    ICollection<IChartElement> Sections { get; set; }
 
     /// <summary>
     /// Gets or sets the series to plot in the user interface.

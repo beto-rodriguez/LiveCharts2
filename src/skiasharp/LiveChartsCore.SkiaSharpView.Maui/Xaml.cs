@@ -143,6 +143,10 @@ public partial class XamlDrawnLabelVisual : EmptyContentView, IChartElement, IIn
     private LabelGeometry? DrawnLabel => (LabelGeometry?)_baseType.DrawnElement;
 }
 
+[XamlClass(typeof(RectangularSection))]
+public partial class XamlRectangularSection : EmptyContentView, IChartElement
+{ }
+
 public class SharedAxesPair
 {
     public ICartesianAxis? First

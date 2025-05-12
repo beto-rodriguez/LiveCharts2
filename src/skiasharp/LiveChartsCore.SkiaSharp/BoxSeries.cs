@@ -67,7 +67,7 @@ public class BoxSeries<TModel>
 }
 
 /// <summary>
-/// Defines a box serries series in the user interface.
+/// Defines a box series series in the user interface.
 /// </summary>
 /// <typeparam name="TModel">
 /// The type of the points, you can use any type, the library already knows how to handle the most common numeric types,
