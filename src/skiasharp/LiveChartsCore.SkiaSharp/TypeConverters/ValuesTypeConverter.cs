@@ -24,7 +24,6 @@ using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using LiveChartsCore.Defaults;
 
 namespace LiveChartsCore.SkiaSharpView.TypeConverters;
 
@@ -55,7 +54,7 @@ public class ValuesTypeConverter : TypeConverter
             ? base.ConvertFrom(context, culture, value)
             : str
                 .Split(',')
-                .Select(x => new ObservableValue(double.Parse(x)))
+                .Select(x => double.TryParse(x, out var parsed) ? parsed : 0d)
                 .ToArray();
     }
 }
