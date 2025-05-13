@@ -12,6 +12,7 @@
 
     <lvc:CartesianChart
         SyncContext="{Binding Sync}">
+
         <lvc:CartesianChart.Series>
             <lvc:XamlLineSeries
                 Values="{Binding Values}"
@@ -19,6 +20,7 @@
                 GeometryFill="{x:Null}"
                 GeometryStroke="{x:Null}"/>
         </lvc:CartesianChart.Series>
+        
         <lvc:CartesianChart.XAxes>
             <lvc:XamlDateTimeAxis
                 Interval="0:0:1"

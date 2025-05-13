@@ -20,12 +20,13 @@
         We use the DrawMargin property to align both charts,
         both charts have a left margin of 100 and a right margin of 50
         -->
-        
+
         <lvc:CartesianChart
                 Grid.Row="0"
                 DrawMargin="100, Auto, 50, Auto"
                 ZoomMode="X"
                 UpdateStartedCommand="{Binding ChartUpdatedCommand}">
+            
             <lvc:CartesianChart.Series>
                 <lvc:XamlLineSeries
                     Values="{Binding Values}"
@@ -33,6 +34,7 @@
                     GeometryFill="{x:Null}"
                     DataPadding="0,1"/>
             </lvc:CartesianChart.Series>
+
             <lvc:CartesianChart.XAxes>
                 <lvc:XamlAxis
                     MinLimit="{Binding MinX}"
@@ -47,6 +49,7 @@
                 MovedCommand="{Binding PointerMoveCommand}"
                 ReleasedCommand="{Binding PointerUpCommand}"
                 TooltipPosition="Hidden">
+            
             <lvc:CartesianChart.Series>
                 <lvc:XamlLineSeries
                     Values="{Binding Values}"
@@ -54,12 +57,15 @@
                     GeometryFill="{x:Null}"
                     DataPadding="0,1"/>
             </lvc:CartesianChart.Series>
+            
             <lvc:CartesianChart.XAxes>
                 <lvc:XamlAxis IsVisible="False"/>
             </lvc:CartesianChart.XAxes>
+            
             <lvc:CartesianChart.YAxes>
                 <lvc:XamlAxis IsVisible="False"/>
             </lvc:CartesianChart.YAxes>
+            
             <lvc:CartesianChart.Sections>
                 <lvc:XamlRectangularSection
                     Xi="{Binding MinXThumb}"

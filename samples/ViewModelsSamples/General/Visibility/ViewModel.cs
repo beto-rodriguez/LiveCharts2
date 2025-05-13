@@ -1,38 +1,25 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace ViewModelsSamples.General.Visibility;
 
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
-    public ISeries[] Series { get; set; } = [
-        new ColumnSeries<double>
-        {
-            Values = [2, 5, 4, 3],
-            IsVisible = true
-        },
-        new ColumnSeries<double>
-        {
-            Values = [6, 3, 2, 8],
-            IsVisible = true
-        },
-        new ColumnSeries<double>
-        {
-            Values = [4, 2, 8, 7],
-            IsVisible = true
-        }
-    ];
+    [ObservableProperty]
+    public partial bool Visibility1 { get; set; } = true;
+
+    [ObservableProperty]
+    public partial bool Visibility2 { get; set; } = true;
+
+    [ObservableProperty]
+    public partial bool Visibility3 { get; set; } = true;
 
     [RelayCommand]
-    public void ToggleSeries0() =>
-        Series[0].IsVisible = !Series[0].IsVisible;
+    public void ToggleSeries1() => Visibility1 = !Visibility1;
 
     [RelayCommand]
-    public void ToggleSeries1() =>
-        Series[1].IsVisible = !Series[1].IsVisible;
+    public void ToggleSeries2() => Visibility2 = !Visibility2;
 
     [RelayCommand]
-    public void ToggleSeries2() =>
-        Series[2].IsVisible = !Series[2].IsVisible;
+    public void ToggleSeries3() => Visibility3 = !Visibility3;
 }

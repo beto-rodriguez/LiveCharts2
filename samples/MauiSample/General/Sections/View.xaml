@@ -11,9 +11,11 @@
     </ContentPage.BindingContext>
 
     <lvc:CartesianChart>
+        
         <lvc:CartesianChart.Series>
             <lvc:XamlScatterSeries Values="{Binding Values}"/>
         </lvc:CartesianChart.Series>
+        
         <lvc:CartesianChart.Sections>
             <!-- creates a section from 3 to 4 in the X axis -->
             <lvc:XamlRectangularSection
@@ -38,6 +40,6 @@
                 LabelPaint="{lvc:SolidColorPaint Color='#FF6F00'}"
                 Fill="{lvc:SolidColorPaint Color='#F9FBE7'}"/>
         </lvc:CartesianChart.Sections>
-    </lvc:CartesianChart>
 
+    </lvc:CartesianChart>
 </ContentPage>
