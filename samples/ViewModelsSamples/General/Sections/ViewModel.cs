@@ -10,6 +10,15 @@ namespace ViewModelsSamples.General.Sections;
 
 public partial class ViewModel
 {
+    public ObservablePoint[] Values { get; set; } = [
+        new ObservablePoint(2.2, 5.4),
+        new ObservablePoint(4.5, 2.5),
+        new ObservablePoint(4.2, 7.4),
+        new ObservablePoint(6.4, 9.9),
+        new ObservablePoint(8.9, 3.9),
+        new ObservablePoint(9.9, 5.2)
+    ];
+
     public RectangularSection[] Sections { get; set; } = [
         new RectangularSection
         {
@@ -38,21 +47,6 @@ public partial class ViewModel
             Label = "A section here!",
             LabelSize = 14,
             LabelPaint = new SolidColorPaint(new SKColor(255, 111, 0))
-        }
-    ];
-
-    public ISeries[] Series { get; set; } = [
-        new ScatterSeries<ObservablePoint>
-        {
-            Values = new ObservableCollection<ObservablePoint>
-            {
-                new(2.2, 5.4),
-                new(4.5, 2.5),
-                new(4.2, 7.4),
-                new(6.4, 9.9),
-                new(8.9, 3.9),
-                new(9.9, 5.2)
-            }
         }
     ];
 

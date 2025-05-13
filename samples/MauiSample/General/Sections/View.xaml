@@ -1,24 +1,43 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.General.Sections.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.General.Sections;assembly=ViewModelsSamples"
-             >
+<ContentPage
+    x:Class="MauiSample.General.Sections.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.General.Sections;assembly=ViewModelsSamples">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-	<ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
 
-            <lvc:CartesianChart
-                Series="{Binding Series}"
-                Sections="{Binding Sections}">
-            </lvc:CartesianChart>
+    <lvc:CartesianChart>
+        <lvc:CartesianChart.Series>
+            <lvc:XamlScatterSeries Values="{Binding Values}"/>
+        </lvc:CartesianChart.Series>
+        <lvc:CartesianChart.Sections>
+            <!-- creates a section from 3 to 4 in the X axis -->
+            <lvc:XamlRectangularSection
+                Xi="3"
+                Xj="4"
+                Fill="{lvc:SolidColorPaint Color='#FFCDD2'}"/>
 
-        </Grid>
-    </ContentPage.Content>
+            <!--
+            creates a section from 5 to 6 in the X axis
+            and from 2 to 8 in the Y axis
+            -->
+            <lvc:XamlRectangularSection
+                Xi="5" Xj="6"
+                Yi="2" Yj="8"
+                Fill="{lvc:SolidColorPaint Color='#BBDEFB'}"/>
+
+            <!-- creates a section from 8 to the end in the X axis -->
+            <lvc:XamlRectangularSection
+                Xi="8"
+                Label="A section here!"
+                LabelSize="14"
+                LabelPaint="{lvc:SolidColorPaint Color='#FF6F00'}"
+                Fill="{lvc:SolidColorPaint Color='#F9FBE7'}"/>
+        </lvc:CartesianChart.Sections>
+    </lvc:CartesianChart>
+
 </ContentPage>

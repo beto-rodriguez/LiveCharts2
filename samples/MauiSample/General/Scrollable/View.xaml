@@ -16,27 +16,56 @@
             <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
 
+        <!--
+        We use the DrawMargin property to align both charts,
+        both charts have a left margin of 100 and a right margin of 50
+        -->
+        
         <lvc:CartesianChart
                 Grid.Row="0"
-                Series="{Binding Series}"
-                XAxes="{Binding ScrollableAxes}"
+                DrawMargin="100, Auto, 50, Auto"
                 ZoomMode="X"
-                DrawMargin="{Binding Margin}"
                 UpdateStartedCommand="{Binding ChartUpdatedCommand}">
+            <lvc:CartesianChart.Series>
+                <lvc:XamlLineSeries
+                    Values="{Binding Values}"
+                    GeometryStroke="{x:Null}"
+                    GeometryFill="{x:Null}"
+                    DataPadding="0,1"/>
+            </lvc:CartesianChart.Series>
+            <lvc:CartesianChart.XAxes>
+                <lvc:XamlAxis
+                    MinLimit="{Binding MinX}"
+                    MaxLimit="{Binding MaxX}" />
+            </lvc:CartesianChart.XAxes>
         </lvc:CartesianChart>
 
         <lvc:CartesianChart
-                x:Name="ScrollBarChart"
                 Grid.Row="1"
-                Series="{Binding ScrollbarSeries}"
-                DrawMargin="{Binding Margin}"
-                Sections="{Binding Thumbs}"
-                XAxes="{Binding InvisibleX}"
-                YAxes="{Binding InvisibleY}"
+                DrawMargin="100, Auto, 50, Auto"
                 PressedCommand="{Binding PointerDownCommand}"
                 MovedCommand="{Binding PointerMoveCommand}"
                 ReleasedCommand="{Binding PointerUpCommand}"
                 TooltipPosition="Hidden">
+            <lvc:CartesianChart.Series>
+                <lvc:XamlLineSeries
+                    Values="{Binding Values}"
+                    GeometryStroke="{x:Null}"
+                    GeometryFill="{x:Null}"
+                    DataPadding="0,1"/>
+            </lvc:CartesianChart.Series>
+            <lvc:CartesianChart.XAxes>
+                <lvc:XamlAxis IsVisible="False"/>
+            </lvc:CartesianChart.XAxes>
+            <lvc:CartesianChart.YAxes>
+                <lvc:XamlAxis IsVisible="False"/>
+            </lvc:CartesianChart.YAxes>
+            <lvc:CartesianChart.Sections>
+                <lvc:XamlRectangularSection
+                    Xi="{Binding MinXThumb}"
+                    Xj="{Binding MaxXThumb}"
+                    Fill="{lvc:SolidColorPaint Color='#64FFCDD2'}"/>
+            </lvc:CartesianChart.Sections>
         </lvc:CartesianChart>
     </Grid>
 </ContentPage>
