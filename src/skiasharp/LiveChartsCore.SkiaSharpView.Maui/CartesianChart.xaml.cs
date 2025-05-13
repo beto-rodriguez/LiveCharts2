@@ -55,7 +55,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
     private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
     private readonly CollectionDeepObserver<IChartElement> _sectionsObserver;
-    private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
+    private readonly CollectionDeepObserver<IChartElement> _visualsObserver;
     private IChartLegend? _legend;
     private IChartTooltip? _tooltip;
     private bool _matchAxesScreenDataRatio;
@@ -80,7 +80,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
         _xObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged);
         _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged);
         _sectionsObserver = new CollectionDeepObserver<IChartElement>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged);
-        _visualsObserver = new CollectionDeepObserver<ChartElement>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged);
+        _visualsObserver = new CollectionDeepObserver<IChartElement>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged);
 
         SetValue(XAxesProperty, new ObservableCollection<ICartesianAxis>());
         SetValue(YAxesProperty, new ObservableCollection<ICartesianAxis>());
@@ -158,7 +158,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     /// </summary>
     public static readonly BindableProperty VisualElementsProperty =
         BindableProperty.Create(
-            nameof(VisualElements), typeof(ICollection<ChartElement>), typeof(CartesianChart), null, BindingMode.Default, null,
+            nameof(VisualElements), typeof(ICollection<IChartElement>), typeof(CartesianChart), null, BindingMode.Default, null,
             PropertyHandlers<CartesianChart>.OnUIElementsCollectionChanged(c => c._visualsObserver));
 
     /// <summary>
@@ -445,9 +445,9 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     }
 
     /// <inheritdoc cref="IChartView.VisualElements" />
-    public ICollection<ChartElement> VisualElements
+    public ICollection<IChartElement> VisualElements
     {
-        get => (ICollection<ChartElement>)GetValue(VisualElementsProperty);
+        get => (ICollection<IChartElement>)GetValue(VisualElementsProperty);
         set => SetValue(VisualElementsProperty, value);
     }
 

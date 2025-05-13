@@ -90,7 +90,7 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView
     public ICollection<ISeries> Series { get; set; } = [];
 
     /// <inheritdoc cref="IChartView.VisualElements"/>
-    public ICollection<ChartElement> VisualElements { get; set; } = [];
+    public ICollection<IChartElement> VisualElements { get; set; } = [];
 
     /// <inheritdoc cref="IPieChartView.InitialRotation"/>
     public double InitialRotation { get; set; }

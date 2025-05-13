@@ -54,7 +54,7 @@ public partial class PolarChart : ChartView, IPolarChartView
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
     private readonly CollectionDeepObserver<IPolarAxis> _angleObserver;
     private readonly CollectionDeepObserver<IPolarAxis> _radiusObserver;
-    private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
+    private readonly CollectionDeepObserver<IChartElement> _visualsObserver;
     private IChartLegend? _legend;
     private IChartTooltip? _tooltip;
     private Theme? _chartTheme;
@@ -77,7 +77,7 @@ public partial class PolarChart : ChartView, IPolarChartView
         _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged);
         _angleObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged);
         _radiusObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged);
-        _visualsObserver = new CollectionDeepObserver<ChartElement>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged);
+        _visualsObserver = new CollectionDeepObserver<IChartElement>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged);
 
         SetValue(AngleAxesProperty, new ObservableCollection<IPolarAxis>());
         SetValue(RadiusAxesProperty, new ObservableCollection<IPolarAxis>());
@@ -157,7 +157,7 @@ public partial class PolarChart : ChartView, IPolarChartView
     /// </summary>
     public static readonly BindableProperty VisualElementsProperty =
         BindableProperty.Create(
-            nameof(VisualElements), typeof(ICollection<ChartElement>), typeof(PolarChart), null, BindingMode.Default, null,
+            nameof(VisualElements), typeof(ICollection<IChartElement>), typeof(PolarChart), null, BindingMode.Default, null,
             PropertyHandlers<PolarChart>.OnUIElementsCollectionChanged(c => c._visualsObserver));
 
     /// <summary>
@@ -452,9 +452,9 @@ public partial class PolarChart : ChartView, IPolarChartView
     }
 
     /// <inheritdoc cref="IChartView.VisualElements" />
-    public ICollection<ChartElement> VisualElements
+    public ICollection<IChartElement> VisualElements
     {
-        get => (ICollection<ChartElement>)GetValue(VisualElementsProperty);
+        get => (ICollection<IChartElement>)GetValue(VisualElementsProperty);
         set => SetValue(VisualElementsProperty, value);
     }
 

@@ -256,7 +256,7 @@ public abstract class Chart
     /// <value>
     /// The visual elements.
     /// </value>
-    public IEnumerable<ChartElement> VisualElements { get; protected set; } =
+    public IEnumerable<IChartElement> VisualElements { get; protected set; } =
         [];
 
     internal event Action<Chart, LvcPoint>? PointerDown;

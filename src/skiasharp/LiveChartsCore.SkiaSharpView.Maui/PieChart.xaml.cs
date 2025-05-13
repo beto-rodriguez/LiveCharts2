@@ -52,7 +52,7 @@ public partial class PieChart : ChartView, IPieChartView
 
     private Chart? _core;
     private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-    private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
+    private readonly CollectionDeepObserver<IChartElement> _visualsObserver;
     private IChartLegend? _legend;
     private IChartTooltip? _tooltip;
     private Theme? _chartTheme;
@@ -75,7 +75,7 @@ public partial class PieChart : ChartView, IPieChartView
         _seriesObserver = new CollectionDeepObserver<ISeries>(
            (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
            (object? sender, PropertyChangedEventArgs e) => _core?.Update());
-        _visualsObserver = new CollectionDeepObserver<ChartElement>(
+        _visualsObserver = new CollectionDeepObserver<IChartElement>(
           (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
           (object? sender, PropertyChangedEventArgs e) => _core?.Update());
 
@@ -134,7 +134,7 @@ public partial class PieChart : ChartView, IPieChartView
     /// </summary>
     public static readonly BindableProperty VisualElementsProperty =
         BindableProperty.Create(
-            nameof(VisualElements), typeof(ICollection<ChartElement>), typeof(PieChart), null, BindingMode.Default, null,
+            nameof(VisualElements), typeof(ICollection<IChartElement>), typeof(PieChart), null, BindingMode.Default, null,
             PropertyHandlers<PieChart>.OnUIElementsCollectionChanged(c => c._visualsObserver));
 
     /// <summary>
@@ -400,9 +400,9 @@ public partial class PieChart : ChartView, IPieChartView
     }
 
     /// <inheritdoc cref="IChartView.VisualElements" />
-    public ICollection<ChartElement> VisualElements
+    public ICollection<IChartElement> VisualElements
     {
-        get => (ICollection<ChartElement>)GetValue(VisualElementsProperty);
+        get => (ICollection<IChartElement>)GetValue(VisualElementsProperty);
         set => SetValue(VisualElementsProperty, value);
     }
 

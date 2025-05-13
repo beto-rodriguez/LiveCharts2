@@ -97,7 +97,7 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView
     public ICollection<IChartElement> Sections { get; set; } = [];
 
     /// <inheritdoc cref="IChartView.VisualElements"/>
-    public ICollection<ChartElement> VisualElements { get; set; } = [];
+    public ICollection<IChartElement> VisualElements { get; set; } = [];
 
     /// <inheritdoc cref="ICartesianChartView.Series"/>
     public ICollection<ISeries> Series { get; set; } = [];
