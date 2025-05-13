@@ -368,14 +368,12 @@ public abstract class XamlSeries : EmptyContentView
 public class XamlColumnSeries : XamlColumnSeries<object, RoundedRectangleGeometry, LabelGeometry> { }
 
 /// <inheritdoc cref="XamlColumnSeries{TModel, TVisual, TLabel}" />
-public class XamlColumnSeries<TVisual> : XamlColumnSeries<object, TVisual, LabelGeometry>
-    where TVisual : BoundedDrawnGeometry, new()
+public class XamlColumnSeries<TModel> : XamlColumnSeries<TModel, RoundedRectangleGeometry, LabelGeometry>
 { }
 
 /// <inheritdoc cref="XamlColumnSeries{TModel, TVisual, TLabel}" />
-public class XamlColumnSeries<TVisual, TLabel> : XamlColumnSeries<object, TVisual, LabelGeometry>
+public class XamlColumnSeries<TModel, TVisual> : XamlColumnSeries<TModel, TVisual, LabelGeometry>
     where TVisual : BoundedDrawnGeometry, new()
-    where TLabel : BaseLabelGeometry, new()
 { }
 
 [XamlClass(typeof(ColumnSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
@@ -395,14 +393,12 @@ public partial class XamlColumnSeries<TModel, TVisual, TLabel> : XamlSeries, IBa
 public class XamlRowSeries : XamlRowSeries<object, RoundedRectangleGeometry, LabelGeometry> { }
 
 /// <inheritdoc cref="XamlRowSeries{TModel, TVisual, TLabel}" />
-public class XamlRowSeries<TVisual> : XamlRowSeries<object, TVisual, LabelGeometry>
-    where TVisual : BoundedDrawnGeometry, new()
+public class XamlRowSeries<TModel> : XamlRowSeries<TModel, RoundedRectangleGeometry, LabelGeometry>
 { }
 
 /// <inheritdoc cref="XamlRowSeries{TModel, TVisual, TLabel}" />
-public class XamlRowSeries<TVisual, TLabel> : XamlRowSeries<object, TVisual, LabelGeometry>
+public class XamlRowSeries<TModel, TVisual> : XamlRowSeries<TModel, TVisual, LabelGeometry>
     where TVisual : BoundedDrawnGeometry, new()
-    where TLabel : BaseLabelGeometry, new()
 { }
 
 [XamlClass(typeof(RowSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
@@ -422,14 +418,12 @@ public partial class XamlRowSeries<TModel, TVisual, TLabel> : EmptyContentView, 
 public class XamlLineSeries : XamlLineSeries<object, CircleGeometry, LabelGeometry> { }
 
 /// <inheritdoc cref="XamlLineSeries{TModel, TVisual, TLabel}" />
-public class XamlLineSeries<TVisual> : XamlLineSeries<object, TVisual, LabelGeometry>
-    where TVisual : BoundedDrawnGeometry, new()
+public class XamlLineSeries<TModel> : XamlLineSeries<TModel, CircleGeometry, LabelGeometry>
 { }
 
 /// <inheritdoc cref="XamlLineSeries{TModel, TVisual, TLabel}" />
-public class XamlLineSeries<TVisual, TLabel> : XamlLineSeries<object, TVisual, LabelGeometry>
+public class XamlLineSeries<TModel, TVisual> : XamlLineSeries<TModel, TVisual, LabelGeometry>
     where TVisual : BoundedDrawnGeometry, new()
-    where TLabel : BaseLabelGeometry, new()
 { }
 
 [XamlClass(typeof(LineSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
@@ -449,14 +443,12 @@ public partial class XamlLineSeries<TModel, TVisual, TLabel> : EmptyContentView,
 public class XamlScatterSeries : XamlScatterSeries<object, CircleGeometry, LabelGeometry> { }
 
 /// <inheritdoc cref="XamlScatterSeries{TModel, TVisual, TLabel}" />
-public class XamlScatterSeries<TVisual> : XamlScatterSeries<object, TVisual, LabelGeometry>
-    where TVisual : BoundedDrawnGeometry, new()
+public class XamlScatterSeries<TModel> : XamlScatterSeries<TModel, CircleGeometry, LabelGeometry>
 { }
 
 /// <inheritdoc cref="XamlScatterSeries{TModel, TVisual, TLabel}" />
-public class XamlScatterSeries<TVisual, TLabel> : XamlScatterSeries<object, TVisual, LabelGeometry>
+public class XamlScatterSeries<TModel, TVisual> : XamlScatterSeries<TModel, TVisual, LabelGeometry>
     where TVisual : BoundedDrawnGeometry, new()
-    where TLabel : BaseLabelGeometry, new()
 { }
 
 [XamlClass(typeof(ScatterSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
@@ -476,14 +468,12 @@ public partial class XamlScatterSeries<TModel, TVisual, TLabel> : EmptyContentVi
 public class XamlCandlesticksSeries : XamlCandlesticksSeries<object, CandlestickGeometry, LabelGeometry> { }
 
 /// <inheritdoc cref="XamlCandlesticksSeries{TModel, TVisual, TLabel}" />
-public class XamlCandlesticksSeries<TVisual> : XamlCandlesticksSeries<object, TVisual, LabelGeometry>
-    where TVisual : BaseCandlestickGeometry, new()
+public class XamlCandlesticksSeries<TModel> : XamlCandlesticksSeries<TModel, CandlestickGeometry, LabelGeometry>
 { }
 
 /// <inheritdoc cref="XamlCandlesticksSeries{TModel, TVisual, TLabel}" />
-public class XamlCandlesticksSeries<TVisual, TLabel> : XamlCandlesticksSeries<object, TVisual, LabelGeometry>
+public class XamlCandlesticksSeries<TModel, TVisual> : XamlCandlesticksSeries<TModel, TVisual, LabelGeometry>
     where TVisual : BaseCandlestickGeometry, new()
-    where TLabel : BaseLabelGeometry, new()
 { }
 
 [XamlClass(typeof(CandlesticksSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
@@ -503,14 +493,12 @@ public partial class XamlCandlesticksSeries<TModel, TVisual, TLabel> : EmptyCont
 public class XamlBoxSeries : XamlBoxSeries<object, BoxGeometry, LabelGeometry> { }
 
 /// <inheritdoc cref="XamlBoxSeries{TModel, TVisual, TLabel}" />
-public class XamlBoxSeries<TVisual> : XamlBoxSeries<object, TVisual, LabelGeometry>
-    where TVisual : BaseBoxGeometry, new()
+public class XamlBoxSeries<TModel> : XamlBoxSeries<TModel, BoxGeometry, LabelGeometry>
 { }
 
 /// <inheritdoc cref="XamlBoxSeries{TModel, TVisual, TLabel}" />
-public class XamlBoxSeries<TVisual, TLabel> : XamlBoxSeries<object, TVisual, LabelGeometry>
+public class XamlBoxSeries<TModel, TVisual> : XamlBoxSeries<TModel, TVisual, LabelGeometry>
     where TVisual : BaseBoxGeometry, new()
-    where TLabel : BaseLabelGeometry, new()
 { }
 
 [XamlClass(typeof(BoxSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
@@ -530,14 +518,12 @@ public partial class XamlBoxSeries<TModel, TVisual, TLabel> : EmptyContentView, 
 public class XamlPieSeries : XamlPieSeries<object, DoughnutGeometry, LabelGeometry> { }
 
 /// <inheritdoc cref="XamlPieSeries{TModel, TVisual, TLabel}" />
-public class XamlPieSeries<TVisual> : XamlPieSeries<object, TVisual, LabelGeometry>
-    where TVisual : BaseDoughnutGeometry, new()
+public class XamlPieSeries<TModel> : XamlPieSeries<TModel, DoughnutGeometry, LabelGeometry>
 { }
 
 /// <inheritdoc cref="XamlPieSeries{TModel, TVisual, TLabel}" />
-public class XamlPieSeries<TVisual, TLabel> : XamlPieSeries<object, TVisual, LabelGeometry>
+public class XamlPieSeries<TModel, TVisual> : XamlPieSeries<TModel, TVisual, LabelGeometry>
     where TVisual : BaseDoughnutGeometry, new()
-    where TLabel : BaseLabelGeometry, new()
 { }
 
 [XamlClass(typeof(PieSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]

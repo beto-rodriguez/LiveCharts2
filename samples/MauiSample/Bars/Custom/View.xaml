@@ -17,12 +17,16 @@
             <lvc:XamlColumnSeries Values="2,1,4"/>
 
             <!--
-            Use the generic parameter to set the type of the geometry to draw,
+            Use the generic type arguments to set the type of the geometry to draw,
             here are many predefined geometries in the LiveChartsCore.SkiaSharpView.Drawing.Geometries
             namespace, for example, the StarGeometry, CrossGeometry, RectangleGeometry and DiamondGeometry
+
+            The first type argument is the type of data, in this case double (parsed from the values string).
+            The second type argument is the type of geometry to draw.
+
             -->
             <lvc:XamlColumnSeries
-                x:TypeArguments="draw:DiamondGeometry"
+                x:TypeArguments="x:Double, draw:DiamondGeometry"
                 Values="4,3,6" />
 
             <!--
@@ -30,7 +34,7 @@
             the VariableSVGPathGeometry can change the drawn path at runtime
             -->
             <lvc:XamlColumnSeries
-                x:TypeArguments="draw:VariableSVGPathGeometry"
+                x:TypeArguments="x:Double, draw:VariableSVGPathGeometry"
                 GeometrySvg="{Static svg:SVGPoints.Star}"
                 Values="-2,2,1"/>
 
@@ -38,7 +42,7 @@
             Finally you can also use SkiaSharp to draw your own geometry
             -->
             <lvc:XamlColumnSeries
-                x:TypeArguments="vms:MyGeometry"
+                x:TypeArguments="x:Double, vms:MyGeometry"
                 Values="1,2,3"/>
 
         </lvc:CartesianChart.Series>
