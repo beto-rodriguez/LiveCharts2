@@ -186,12 +186,25 @@ public class LiveChartsSettings
     /// <exception cref="NotImplementedException"></exception>
     public Func<TModel, int, Coordinate> GetMap<TModel>()
     {
-        return !_mappers.TryGetValue(typeof(TModel), out var mapper)
-            ? throw new NotImplementedException(
-                $"A mapper for type {typeof(TModel)} is not implemented yet, consider using " +
-                $"{nameof(LiveCharts)}.{nameof(LiveCharts.Configure)}() " +
-                $"method to call {nameof(HasMap)}() with the type you are trying to plot.")
-            : (Func<TModel, int, Coordinate>)mapper;
+        if (_mappers.TryGetValue(typeof(TModel), out var mapper))
+            return (Func<TModel, int, Coordinate>)mapper;
+
+        var type = typeof(TModel);
+
+        // most likely a xaml series
+        if (type == typeof(object))
+            throw new Exception(
+                "A mapper for the type to plot was not found. " +
+                "When using custom types in XAML, you must define the series data type, " +
+                "for example to plot a collection of double add the x:TypeArguments=\"x:Double\" attribute " +
+                "to the series XAML, the mapper must also be configured, alternatively, you can also " +
+                "implement IChartEntity in the type your are plotting, for more info see: " +
+                "https://livecharts.dev/docs/wpf/2.0.0-rc5.4/Overview.Mappers");
+
+        throw new NotImplementedException(
+            $"A mapper for type {typeof(TModel)} is not implemented yet, consider using " +
+            $"{nameof(LiveCharts)}.{nameof(LiveCharts.Configure)}() " +
+            $"method to call {nameof(HasMap)}() with the type you are trying to plot.");
     }
 
     internal LiveChartsSettings HasProvider(ChartEngine factory)
