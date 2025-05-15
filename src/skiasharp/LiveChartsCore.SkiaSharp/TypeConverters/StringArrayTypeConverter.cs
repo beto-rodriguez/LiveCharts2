@@ -28,9 +28,9 @@ using LiveChartsCore.Drawing;
 namespace LiveChartsCore.SkiaSharpView.TypeConverters;
 
 /// <summary>
-/// Converts a string to a <see cref="LvcColor"/> object.
+/// Converts a string to a an array of <see cref="LvcColor"/>.
 /// </summary>
-public class HexToLvcColorTypeConverter : TypeConverter
+public class StringArrayTypeConverter : TypeConverter
 {
     /// <summary>
     /// Returns whether this converter can convert an object of the given type to the type of this converter, using the specified context.
@@ -53,10 +53,14 @@ public class HexToLvcColorTypeConverter : TypeConverter
             ? base.ConvertFrom(context, culture, value)
             : Parse(str);
 
-    internal static object Parse(string hexString)
+    private static object Parse(string @string)
     {
-        return LvcColor.TryParse(hexString, out var color)
-            ? color
-            : new LvcColor(0, 0, 0, 0);
+        var items = @string.Split([','], StringSplitOptions.RemoveEmptyEntries);
+        var strings = new string[items.Length];
+
+        for (var i = 0; i < items.Length; i++)
+            strings[i] = items[i].Trim();
+
+        return strings;
     }
 }

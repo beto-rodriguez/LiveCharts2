@@ -360,20 +360,45 @@ public partial class {target.Name}
         return (baseType, $"_default{baseTypeName}");
     }
 
-    private static Dictionary<string, string> TypeConverters { get; } = new()
+#pragma warning disable format
+    private static Dictionary<string, string> TypeConverters { get; } =
+        new Dictionary<string, string>()
+            .With("double[]",                                               "StringToDoubleArrayTypeConverter")
+            .With("string[]",                                               "StringArrayTypeConverter")
+            .With("LiveChartsCore.Drawing.Padding",                         "PaddingTypeConverter")
+            .With("LiveChartsCore.Measure.Margin",                          "MarginTypeConverter")
+            .With("LiveChartsCore.Drawing.LvcPoint",                        "PointTypeConverter")
+            .With("LiveChartsCore.Drawing.LvcPointD",                       "PointDTypeConverter")
+            .With("LiveChartsCore.Drawing.LvcColor",                        "HexToLvcColorTypeConverter")
+            .With("LiveChartsCore.Drawing.LvcColor[]",                      "HexToLvcColorArrayTypeConverter")
+            .With("LiveChartsCore.Painting.Paint",                          "HexToPaintTypeConverter")
+            .With("System.Collections.Generic.IReadOnlyCollection<TModel>", "ValuesTypeConverter");
+#pragma warning restore format
+
+    private static Dictionary<string, string> With(
+        this Dictionary<string, string> source,
+        string type,
+        string converter)
     {
-        ["LiveChartsCore.Drawing.Padding"] = "PaddingTypeConverter",
-        ["LiveChartsCore.Measure.Margin"] = "MarginTypeConverter",
-        ["LiveChartsCore.Drawing.LvcPoint"] = "PointTypeConverter",
-        ["LiveChartsCore.Drawing.LvcPoint?"] = "PointTypeConverter",
-        ["LiveChartsCore.Drawing.LvcPointD"] = "PointDTypeConverter",
-        ["LiveChartsCore.Drawing.LvcPointD?"] = "PointDTypeConverter",
-        ["LiveChartsCore.Drawing.LvcColor"] = "HexToLvcColorTypeConverter",
-        ["LiveChartsCore.Drawing.LvcColor?"] = "HexToLvcColorTypeConverter",
-        ["LiveChartsCore.Painting.Paint"] = "HexToPaintTypeConverter",
-        ["LiveChartsCore.Painting.Paint?"] = "HexToPaintTypeConverter",
-        ["System.Collections.Generic.IReadOnlyCollection<TModel>?"] = "ValuesTypeConverter"
-    };
+        if (type.EndsWith("[]"))
+        {
+            var typeName = type.Substring(0, type.Length - 2);
+
+            source.Add($"{typeName}[]", converter);
+            source.Add($"{typeName}[]?", converter);
+            source.Add($"System.Collections.Generic.IEnumerable<{typeName}>", converter);
+            source.Add($"System.Collections.Generic.IEnumerable<{typeName}>?", converter);
+            source.Add($"System.Collections.Generic.IList<{typeName}>", converter);
+            source.Add($"System.Collections.Generic.IList<{typeName}>?", converter);
+        }
+        else
+        {
+            source.Add(type, converter);
+            source.Add($"{type}?", converter);
+        }
+
+        return source;
+    }
 
     private static string Concatenate<TItem>(
         IEnumerable<TItem> propertyToWrite,

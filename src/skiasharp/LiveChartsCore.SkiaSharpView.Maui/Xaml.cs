@@ -512,6 +512,31 @@ public partial class XamlBoxSeries<TModel, TVisual, TLabel> : EmptyContentView, 
 
 #endregion
 
+#region heat series
+
+/// <inheritdoc cref="XamlHeatSeries{TModel, TVisual, TLabel}" />
+public class XamlHeatSeries : XamlHeatSeries<object, ColoredRectangleGeometry, LabelGeometry> { }
+
+/// <inheritdoc cref="XamlHeatSeries{TModel, TVisual, TLabel}" />
+public class XamlHeatSeries<TModel> : XamlHeatSeries<TModel, ColoredRectangleGeometry, LabelGeometry>
+{ }
+
+/// <inheritdoc cref="XamlHeatSeries{TModel, TVisual, TLabel}" />
+public class XamlHeatSeries<TModel, TVisual> : XamlHeatSeries<TModel, TVisual, LabelGeometry>
+    where TVisual : BoundedDrawnGeometry, IColoredGeometry, new()
+{ }
+
+[XamlClass(typeof(HeatSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
+public partial class XamlHeatSeries<TModel, TVisual, TLabel> : EmptyContentView, IHeatSeries, IInternalSeries
+    where TVisual : BoundedDrawnGeometry, IColoredGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{
+    static partial void OnTypeDefined() => Info.ConfigureDefaults(_defaultHeatSeries);
+    private void ValuesMap(object value) => Info.SetValues(_baseType, value);
+}
+
+#endregion
+
 #region pie series
 
 /// <inheritdoc cref="XamlPieSeries{TModel, TVisual, TLabel}" />
