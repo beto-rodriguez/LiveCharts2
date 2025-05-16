@@ -44,7 +44,6 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
         where TLabel : BaseLabelGeometry, new()
 {
     private Paint? _paintTaks;
-    private Bounds _weightBounds = new();
     private int _heatKnownLength = 0;
     private List<Tuple<double, LvcColor>> _heatStops = [];
     private LvcColor[] _heatMap =
@@ -81,6 +80,9 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
         };
         DataLabelsPosition = DataLabelsPosition.Middle;
     }
+
+    /// <inheritdoc cref="IHeatSeries.WeightBounds"/>
+    public Bounds WeightBounds { get; private set; } = new();
 
     /// <inheritdoc cref="IHeatSeries.HeatMap"/>
     public LvcColor[] HeatMap
@@ -165,7 +167,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
             var secondary = secondaryScale.ToPixels(coordinate.SecondaryValue);
             var tertiary = (float)coordinate.TertiaryValue;
 
-            var baseColor = HeatFunctions.InterpolateColor(tertiary, _weightBounds, HeatMap, _heatStops);
+            var baseColor = HeatFunctions.InterpolateColor(tertiary, WeightBounds, HeatMap, _heatStops);
 
             if (point.IsEmpty || !IsVisible)
             {
@@ -300,7 +302,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
     {
         var seriesBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
         var b = seriesBounds.Bounds.TertiaryBounds;
-        _weightBounds = new(_minValue ?? b.Min, _maxValue ?? b.Max);
+        WeightBounds = new(_minValue ?? b.Min, _maxValue ?? b.Max);
         return seriesBounds;
     }
 

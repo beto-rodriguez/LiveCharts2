@@ -4,13 +4,16 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-    xmlns:vms="clr-namespace:ViewModelsSamples.Heat.Basic;assembly=ViewModelsSamples">
+    xmlns:vms="clr-namespace:ViewModelsSamples.Heat.Basic;assembly=ViewModelsSamples"
+    xmlns:draw="clr-namespace:LiveChartsCore.SkiaSharpView.SKCharts;assembly=LiveChartsCore.SkiaSharpView">
 
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
 
-    <lvc:CartesianChart>
+    <lvc:CartesianChart
+        LegendTextPaint="{lvc:SolidColorPaint Color='#eee'}"
+        LegendPosition="Right">
 
         <lvc:CartesianChart.Series>
             <lvc:XamlHeatSeries
@@ -27,6 +30,10 @@
             <lvc:XamlAxis
                 Labels="Jan, Feb, Mar, Apr, May, Jun"/>
         </lvc:CartesianChart.YAxes>
+
+        <lvc:CartesianChart.Legend>
+            <draw:SKHeatLegend BadgePadding="30, 20, 8, 20"/>
+        </lvc:CartesianChart.Legend>
 
     </lvc:CartesianChart>
 </ContentPage>
