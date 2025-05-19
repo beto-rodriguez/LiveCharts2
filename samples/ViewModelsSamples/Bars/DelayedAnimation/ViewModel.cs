@@ -12,6 +12,10 @@ public partial class ViewModel
     public float[] Values1 { get; set; } = FetchVales(0);
     public float[] Values2 { get; set; } = FetchVales(-0.15f);
 
+    // The PointMesured command/event is triggered when a point size
+    // and position is calculated, for this example we use a command,
+    // but you could also subscribe to the series PointMeasured event.
+
     [RelayCommand]
     private void OnPointMeasured(ChartPoint point)
     {

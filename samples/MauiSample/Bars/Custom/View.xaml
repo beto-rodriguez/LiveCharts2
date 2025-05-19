@@ -23,7 +23,6 @@
 
             The first type argument is the type of data, in this case double (parsed from the values string).
             The second type argument is the type of geometry to draw.
-
             -->
             <lvc:XamlColumnSeries
                 x:TypeArguments="x:Double, draw:DiamondGeometry"

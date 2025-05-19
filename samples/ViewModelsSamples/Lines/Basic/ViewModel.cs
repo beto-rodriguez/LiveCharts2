@@ -7,6 +7,4 @@ public class ViewModel
 
     public int[] Values2 { get; set; } =
         [4, 2, 5, 2, 4, 5, 3];
-
-    public string Title { get; set; } = "ChartTitle";
 }

@@ -1,30 +1,32 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.General.Tooltips.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.General.Tooltips;assembly=ViewModelsSamples"
-             >
+<ContentPage
+    x:Class="MauiSample.General.Tooltips.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.General.Tooltips;assembly=ViewModelsSamples">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-	<ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            
-            <Picker
-                ItemsSource="{Binding Positions}"
-                ItemDisplayBinding="{Binding Name}"
-                SelectedItem="{Binding SelectedPosition}" />
-            
-            <lvc:CartesianChart
-                Grid.Row="1"
-                Series="{Binding Series}"
-                TooltipPosition="{Binding Position}" />
 
-        </Grid>
-    </ContentPage.Content>
+    <Grid RowDefinitions="Auto, *">
+        <Picker
+            Grid.Row="0"
+            ItemsSource="{Binding Positions}"
+            SelectedItem="{Binding SelectedPosition}" />
+
+        <lvc:CartesianChart
+            Grid.Row="1"
+            TooltipPosition="{Binding SelectedPosition}">
+            <lvc:CartesianChart.Series>
+                <lvc:XamlColumnSeries
+                    Values="3, 7, 3, 1, 4, 5, 6"
+                    Name="Sales" />
+                <lvc:XamlLineSeries
+                    Values="2, 1, 3, 5, 3, 4, 6"
+                    Name="Customers" />
+            </lvc:CartesianChart.Series>
+        </lvc:CartesianChart>
+    </Grid>
 </ContentPage>

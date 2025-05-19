@@ -1,15 +1,7 @@
-﻿using System;
-using LiveChartsCore.Defaults;
-using LiveChartsCore.Kernel;
+﻿namespace ViewModelsSamples.Axes.Logarithmic;
 
-namespace ViewModelsSamples.Axes.Logarithmic;
-
-public class LogarithmicPoint : ChartCoordinate
+public class LogarithmicPoint(double x, double y)
 {
-    public LogarithmicPoint(double x, double y)
-    {
-        // use the yLog as the y coordinate
-        var yLog = Math.Log(y, ViewModel.LogBase);
-        Coordinate = new Coordinate(x, yLog);
-    }
+    public double X { get; set; } = x;
+    public double Y { get; set; } = y;
 }

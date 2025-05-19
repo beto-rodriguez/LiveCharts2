@@ -4,43 +4,33 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-    xmlns:lvcDraw="clr-namespace:LiveChartsCore.SkiaSharpView.Drawing.Geometries;assembly=LiveChartsCore.SkiaSharpView"
-    xmlns:vms="clr-namespace:ViewModelsSamples.Lines.Basic;assembly=ViewModelsSamples">
+    xmlns:vms="clr-namespace:ViewModelsSamples.Lines.Basic;assembly=ViewModelsSamples"
+    xmlns:draw="clr-namespace:LiveChartsCore.SkiaSharpView.Drawing.Geometries;assembly=LiveChartsCore.SkiaSharpView">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
+
     <lvc:CartesianChart>
-        <!--<lvc:CartesianChart.Resources>
-            <Style TargetType="lvc:XamlLineSeries">
-                --><!--<Setter Property="Fill" Value="#f00"/>--><!--
-            </Style>
-        </lvc:CartesianChart.Resources>-->
-        
-        <!--<lvc:CartesianChart.Series>
-            <lvc:XamlLineSeries
-                Values="{Binding Values1}"
-                GeometrySize="10"
-                />
-            --><!--<lvc:XamlLineSeries
-                x:TypeArguments="lvcDraw:StarGeometry"
-                Values="{Binding Values2}"
-                Fill="{x:Null}"
-                GeometrySize="20"/>--><!--
-        </lvc:CartesianChart.Series>-->
-        <!--<lvc:CartesianChart.Title>
+        <lvc:CartesianChart.Title>
             <lvc:XamlDrawnLabelVisual
-                Text="{Binding Title}"
-                Paint="#000000"
+                Text="My chart title"
+                Paint="#303030"
                 TextSize="25"
                 Padding="15"/>
-        </lvc:CartesianChart.Title>-->
-
-        <lvc:CartesianChart.XAxes>
-            <lvc:XamlAxis
-                Name="X this change"
-                IsVisible="true"
-                Padding="20"
-                />
-        </lvc:CartesianChart.XAxes>
+        </lvc:CartesianChart.Title>
+        
+        <lvc:CartesianChart.Series>
+            <lvc:XamlLineSeries
+                Values="{Binding Values1}"
+                Fill="{x:Null}"
+                GeometrySize="20"/>
+            <lvc:XamlLineSeries
+                x:TypeArguments="x:Int32, draw:StarGeometry"
+                Values="{Binding Values2}"
+                Fill="{x:Null}"
+                GeometrySize="20"/>
+        </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
+
 </ContentPage>

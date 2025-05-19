@@ -11,6 +11,7 @@
     </ContentPage.BindingContext>
 
     <Grid RowDefinitions="*,*">
+
         <!--
         We define a SharedAxesPair, it cointains a pair of axes, one for each chart,
         The SharedAxesPair class will take care of keeping the axes in sync as the user

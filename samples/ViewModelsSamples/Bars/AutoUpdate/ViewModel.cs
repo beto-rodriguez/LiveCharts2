@@ -11,8 +11,8 @@ public partial class ViewModel
 {
     private readonly Random _random = new();
 
-    // We use the ObservableCollection class, to let the chart know // mark
-    // when a new item is added or removed from the chart. // mark
+    // when using the ObservableCollection class, // mark
+    // the chart will listen for changes in the collection // mark
     public ObservableCollection<ISeries> Series { get; set; }
     public ObservableCollection<ObservablePoint> ObservablePoints { get; set; }
 

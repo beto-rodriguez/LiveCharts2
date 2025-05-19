@@ -17,7 +17,7 @@
         TooltipPosition="Hidden">
 
         <lvc:CartesianChart.Title>
-            <lvc:XamlDrawnLabelVisual Text="hola 2" Paint="#303030"/>
+            <lvc:XamlDrawnLabelVisual Text="hola" Paint="#303030"/>
         </lvc:CartesianChart.Title>
 
         <lvc:CartesianChart.Series>

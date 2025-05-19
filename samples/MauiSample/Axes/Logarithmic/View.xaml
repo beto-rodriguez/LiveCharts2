@@ -13,7 +13,9 @@
     <lvc:CartesianChart>
 
         <lvc:CartesianChart.Series>
-            <lvc:XamlLineSeries Values="{Binding Values}"/>
+            <lvc:XamlLineSeries
+                x:TypeArguments="vms:LogarithmicPoint"
+                Values="{Binding Values}"/>
         </lvc:CartesianChart.Series>
 
         <lvc:CartesianChart.YAxes>

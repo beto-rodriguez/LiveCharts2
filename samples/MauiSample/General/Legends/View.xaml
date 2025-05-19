@@ -1,29 +1,38 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.General.Legends.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.General.Legends;assembly=ViewModelsSamples"
-             >
+<ContentPage
+    x:Class="MauiSample.General.Legends.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.General.Legends;assembly=ViewModelsSamples">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-	<ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            
-            <Picker
-                ItemsSource="{Binding Positions}"
-                ItemDisplayBinding="{Binding Name}"
-                SelectedItem="{Binding SelectedPosition}" />
-            
-            <lvc:CartesianChart
-                Grid.Row="1"
-                Series="{Binding Series}"
-                LegendPosition="{Binding Position}" />
-        </Grid>
-    </ContentPage.Content>
+
+    <Grid RowDefinitions="Auto, *">
+        <Picker
+            Grid.Row="0"
+            ItemsSource="{Binding Positions}"
+            SelectedItem="{Binding SelectedPosition}" />
+
+        <lvc:CartesianChart
+            Grid.Row="1"
+            LegendPosition="{Binding SelectedPosition}">
+            <lvc:CartesianChart.Series>
+                <lvc:XamlColumnSeries Name="Peru" Values="3, 7, 3"/>
+                <lvc:XamlColumnSeries Name="Egypt" Values="5, 3, 2"/>
+                <lvc:XamlColumnSeries Name="Portugal" Values="8, 2, 4"/>
+                <lvc:XamlColumnSeries Name="El Salvador" Values="3, 7, 3"/>
+                <lvc:XamlColumnSeries Name="Slovenia" Values="5, 3, 2"/>
+                <lvc:XamlColumnSeries Name="Morocco" Values="8, 2, 4"/>
+                <lvc:XamlColumnSeries Name="Canada" Values="3, 7, 3"/>
+                <lvc:XamlColumnSeries Name="United kingdom" Values="5, 3, 2"/>
+                <lvc:XamlColumnSeries Name="Zimbawe" Values="8, 2, 4"/>
+                <lvc:XamlColumnSeries Name="Cabo verde" Values="3, 7, 3"/>
+                <lvc:XamlColumnSeries Name="France" Values="5, 3, 2"/>
+                <lvc:XamlColumnSeries Name="China" Values="8, 2, 4"/>
+            </lvc:CartesianChart.Series>
+        </lvc:CartesianChart>
+    </Grid>
 </ContentPage>

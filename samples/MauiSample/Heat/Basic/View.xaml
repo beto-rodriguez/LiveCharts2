@@ -12,7 +12,6 @@
     </ContentPage.BindingContext>
 
     <lvc:CartesianChart
-        LegendTextPaint="{lvc:SolidColorPaint Color='#eee'}"
         LegendPosition="Right">
 
         <lvc:CartesianChart.Series>

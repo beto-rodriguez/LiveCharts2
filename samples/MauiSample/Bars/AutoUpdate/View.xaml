@@ -5,11 +5,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
     xmlns:vms="clr-namespace:ViewModelsSamples.Bars.AutoUpdate;assembly=ViewModelsSamples">
-    
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-    
+
     <Grid RowDefinitions="50, 50, *">
         <StackLayout Grid.Row="0" Orientation="Horizontal">
             <Button Margin="6" Command="{Binding AddItemCommand}" Text="Add item" />

@@ -1,14 +1,10 @@
 ﻿using System;
-using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Lines.Zoom;
 
 public class ViewModel
 {
-    public ISeries[] SeriesCollection { get; set; } = [
-        new LineSeries<int>(Fetch())
-    ];
+    public int[] Values { get; set; } = Fetch();
 
     private static int[] Fetch()
     {

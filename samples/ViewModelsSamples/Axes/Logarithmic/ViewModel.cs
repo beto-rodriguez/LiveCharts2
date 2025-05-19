@@ -1,7 +1,17 @@
-﻿namespace ViewModelsSamples.Axes.Logarithmic;
+﻿using System;
+using LiveChartsCore;
+
+namespace ViewModelsSamples.Axes.Logarithmic;
 
 public class ViewModel
 {
+    public ViewModel()
+    {
+        LiveCharts.Configure(config =>
+            config.HasMap<LogarithmicPoint>(
+                (logPoint, index) => new(logPoint.X, Math.Log(logPoint.Y, LogBase))));
+    }
+
     // base 10 log, change the base if you require it.
     // or use any custom scale the logic is the same.
     public static double LogBase { get; set; } = 10;

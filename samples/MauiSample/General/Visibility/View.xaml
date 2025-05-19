@@ -10,34 +10,28 @@
         <vms:ViewModel/>
     </ContentPage.BindingContext>
 
-    <ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            
-            <StackLayout Grid.Row="0" Orientation="Horizontal">
-                <Button Margin="6" Command="{Binding ToggleSeries1Command}" Text="toggle 1" />
-                <Button Margin="6" Command="{Binding ToggleSeries2Command}" Text="toggle 2"/>
-                <Button Margin="6" Command="{Binding ToggleSeries3Command}" Text="toggle 3"/>
-            </StackLayout>
+    <Grid RowDefinitions="Auto, *">
 
-            <lvc:CartesianChart Grid.Row="1">
-                <lvc:CartesianChart.Series>
-                    <lvc:XamlColumnSeries
-                        Values="2,5,4,3"
-                        IsVisible="{Binding Visibility1}"/>
+        <StackLayout Grid.Row="0" Orientation="Horizontal">
+            <Button Margin="6" Command="{Binding ToggleSeries1Command}" Text="toggle 1" />
+            <Button Margin="6" Command="{Binding ToggleSeries2Command}" Text="toggle 2"/>
+            <Button Margin="6" Command="{Binding ToggleSeries3Command}" Text="toggle 3"/>
+        </StackLayout>
 
-                    <lvc:XamlColumnSeries
-                        Values="1,2,3,4"
-                        IsVisible="{Binding Visibility2}"/>
+        <lvc:CartesianChart Grid.Row="1">
+            <lvc:CartesianChart.Series>
+                <lvc:XamlColumnSeries
+                    Values="2,5,4,3"
+                    IsVisible="{Binding Visibility1}"/>
 
-                    <lvc:XamlColumnSeries
-                        Values="4,3,2,1"
-                        IsVisible="{Binding Visibility3}"/>
-                </lvc:CartesianChart.Series>
-            </lvc:CartesianChart>
-        </Grid>
-    </ContentPage.Content>
+                <lvc:XamlColumnSeries
+                    Values="1,2,3,4"
+                    IsVisible="{Binding Visibility2}"/>
+
+                <lvc:XamlColumnSeries
+                    Values="4,3,2,1"
+                    IsVisible="{Binding Visibility3}"/>
+            </lvc:CartesianChart.Series>
+        </lvc:CartesianChart>
+    </Grid>
 </ContentPage>
