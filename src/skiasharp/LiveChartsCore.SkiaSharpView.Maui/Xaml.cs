@@ -10,6 +10,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
+using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Generators;
 using LiveChartsCore.Kernel;
@@ -558,6 +560,112 @@ public partial class XamlPieSeries<TModel, TVisual, TLabel> : EmptyContentView, 
 {
     static partial void OnTypeDefined() => Info.ConfigureDefaults(_defaultPieSeries);
     private void ValuesMap(object value) => Info.SetValues(_baseType, value);
+}
+
+#endregion
+
+#region gauge series
+
+/// <inheritdoc cref="XamlGaugeSeries{TVisual, TLabel}" />
+public class XamlGaugeSeries : XamlGaugeSeries<DoughnutGeometry, LabelGeometry>
+{ }
+
+/// <inheritdoc cref="XamlGaugeSeries{TVisual, TLabel}" />
+public class XamlGaugeSeries<TVisual> : XamlGaugeSeries<TVisual, LabelGeometry>
+    where TVisual : BaseDoughnutGeometry, new()
+{ }
+
+[XamlClass(typeof(PieSeries<,,>),
+    FileHeader = "using TModel = LiveChartsCore.Defaults.ObservableValue;",
+    PropertyTypeOverride = Info.PropertyTypeOverride,
+    PropertyChangeMap = Info.PropertyChangeMap,
+    GenerateBaseTypeDeclaration = false)]
+public partial class XamlGaugeSeries<TVisual, TLabel> : EmptyContentView, IPieSeries, IInternalSeries
+    where TVisual : BaseDoughnutGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{
+    private readonly ObservableValue _value = new(0d);
+    private readonly PieSeries<ObservableValue, TVisual, TLabel> _baseType = new();
+    private static readonly PieSeries<ObservableValue, TVisual, TLabel> _defaultPieSeries = new();
+
+    protected PieSeries<ObservableValue, TVisual, TLabel> Base => _baseType;
+
+    public XamlGaugeSeries()
+    {
+        _baseType.Values = new ObservableCollection<ObservableValue> { _value };
+        var baseSeries = (IInternalSeries)_baseType;
+        baseSeries.SeriesProperties |= SeriesProperties.Gauge;
+        _baseType.DataFactory.ValuesTransform = ValuesTransform;
+    }
+
+    public static BindableProperty GaugeValueProperty = BindableProperty.Create(
+        nameof(GaugeValue), typeof(double), typeof(XamlGaugeSeries<TVisual, TLabel>), 0d,
+        propertyChanged: (bo, o, n) =>
+        {
+            var series = (XamlGaugeSeries<TVisual, TLabel>)bo;
+            series._value.Value = (double)n;
+        });
+
+    public double GaugeValue
+    {
+        get => (double)GetValue(GaugeValueProperty);
+        set => SetValue(GaugeValueProperty, value);
+    }
+
+    static partial void OnTypeDefined() => Info.ConfigureDefaults(_defaultPieSeries);
+    private void ValuesMap(object value) => Info.SetValues(_baseType, value);
+
+    protected virtual IEnumerable ValuesTransform(Chart chart, IEnumerable values)
+    {
+        var seriesArray = ((PieChartEngine)chart).Series
+            .Where(x => x is IPieSeries pie && !pie.IsFillSeries)
+            .ToArray();
+
+        var index = 0;
+        foreach (var series in seriesArray)
+        {
+            if (series == _baseType) break;
+            index++;
+        }
+
+        var transformedValues = new ObservableValue?[seriesArray.Length];
+
+        for (var i = 0; i < seriesArray.Length; i++)
+        {
+            transformedValues[i] = i == index
+                ? _value
+                : null;
+        }
+
+        return transformedValues;
+    }
+}
+
+public class XamlGaugeBackgroundSeries : XamlGaugeSeries<DoughnutGeometry, LabelGeometry>
+{
+    public XamlGaugeBackgroundSeries()
+    {
+        ZIndex = -1;
+        IsFillSeries = true;
+        IsVisibleAtLegend = false;
+
+        var baseSeries = (IInternalSeries)Base;
+        baseSeries.SeriesProperties |= SeriesProperties.Gauge | SeriesProperties.GaugeFill;
+    }
+
+    protected override IEnumerable ValuesTransform(Chart chart, IEnumerable values)
+    {
+        var seriesArray = ((PieChartEngine)chart).Series
+            .Where(x => x is IPieSeries pie && !pie.IsFillSeries)
+            .ToArray();
+
+        var transformedValues = new ObservableValue?[seriesArray.Length];
+
+        for (var i = 0; i < seriesArray.Length; i++)
+            transformedValues[i] = new(0);
+
+        return transformedValues;
+    }
 }
 
 #endregion

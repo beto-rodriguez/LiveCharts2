@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using LiveChartsCore.Defaults;
@@ -42,6 +43,8 @@ public class DataFactory<TModel>
     /// Gets or sets the previous known bounds.
     /// </summary>
     protected DimensionalBounds PreviousKnownBounds { get; set; } = new DimensionalBounds(true);
+
+    internal Func<Chart, IEnumerable, IEnumerable>? ValuesTransform { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DataFactory{TModel}"/> class.
@@ -336,7 +339,7 @@ public class DataFactory<TModel>
     private IEnumerable<IChartEntity> EnumerateChartEntities(ISeries series, Chart chart)
     {
         if (series.Values is null) yield break;
-        var entities = (IEnumerable<IChartEntity>)series.Values;
+        var entities = (IEnumerable<IChartEntity>)GetValues(series.Values, chart);
         var index = 0;
 
         foreach (var entity in entities)
@@ -393,7 +396,9 @@ public class DataFactory<TModel>
 
     private IEnumerable<IChartEntity?> EnumerateIndexedEntities<TValues>(ISeries series, Chart chart)
     {
-        if (series.Values is not IEnumerable<TValues> typedValues)
+        if (series.Values is null) yield break;
+
+        if (GetValues(series.Values, chart) is not IEnumerable<TValues> typedValues)
             yield break;
 
         var canvas = chart.Canvas;
@@ -436,5 +441,12 @@ public class DataFactory<TModel>
 
             yield return entity;
         }
+    }
+
+    private IEnumerable GetValues(IEnumerable values, Chart chart)
+    {
+        return ValuesTransform is null
+            ? values
+            : ValuesTransform(chart, values);
     }
 }

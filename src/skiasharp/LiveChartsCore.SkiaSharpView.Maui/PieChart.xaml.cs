@@ -121,13 +121,7 @@ public partial class PieChart : ChartView, IPieChartView
     public static readonly BindableProperty SeriesProperty =
           BindableProperty.Create(
               nameof(Series), typeof(ICollection<ISeries>), typeof(PieChart), null, BindingMode.Default, null,
-              //PropertyHandlers<PieChart>.OnUIElementsCollectionChanged(c => c._seriesObserver));
-              (BindableObject bo, object o, object n) =>
-              {
-                  var a = n;
-                  var b = o;
-                  PropertyHandlers<PieChart>.OnUIElementsCollectionChanged(c => c._seriesObserver)(bo, o, n);
-              });
+              PropertyHandlers<PieChart>.OnUIElementsCollectionChanged(c => c._seriesObserver));
 
     /// <summary>
     /// The visual elements property.
