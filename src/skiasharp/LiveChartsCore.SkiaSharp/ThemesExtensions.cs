@@ -314,6 +314,7 @@ public static class ThemesExtensions
                     })
                     .HasRuleFor<BaseNeedleVisual>(needle =>
                     {
+                        needle.Width = 20;
                         needle.Fill =
                             new SolidColorPaint(theme.IsDark ? new(200, 200, 200) : new(30, 30, 30));
                     })

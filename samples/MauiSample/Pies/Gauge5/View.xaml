@@ -1,28 +1,44 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Pies.Gauge5.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Pies.Gauge5;assembly=ViewModelsSamples">
+<ContentPage
+    x:Class="MauiSample.Pies.Gauge5.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Pies.Gauge5;assembly=ViewModelsSamples">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
 
-        <Button Grid.Row="0" Command="{Binding DoRandomChangeCommand}" Text="Change Value"></Button>
+    <Grid RowDefinitions="Auto, *">
+
+        <Button
+            Grid.Row="0"
+            Command="{Binding DoRandomChangeCommand}"
+            Text="Change Value"/>
 
         <lvc:PieChart
             Grid.Row="1"
-            Series="{Binding Series}"
             InitialRotation="-90"
             MinValue="0"
             MaxValue="100"
             MaxAngle="270"
             LegendPosition="Bottom">
+
+            <lvc:PieChart.Series>
+
+                <lvc:XamlGaugeSeries
+                    Name="North"
+                    GaugeValue="{Binding Value1}"
+                    DataLabelsPosition="Start"/>
+
+                <lvc:XamlGaugeSeries
+                    Name="South"
+                    GaugeValue="{Binding Value2}"
+                    DataLabelsPosition="Start"/>
+
+            </lvc:PieChart.Series>
+
         </lvc:PieChart>
     </Grid>
 </ContentPage>

@@ -1,17 +1,53 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Pies.Gauge4.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Pies.Gauge4;assembly=ViewModelsSamples">
+<ContentPage
+    x:Class="MauiSample.Pies.Gauge4.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Pies.Gauge4;assembly=ViewModelsSamples">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
+
     <lvc:PieChart
-        Series="{Binding Series}"
         InitialRotation="-90"
         MaxAngle="350"
         MinValue="0"
         MaxValue="100">
+
+        <lvc:PieChart.Series>
+
+            <lvc:XamlGaugeSeries
+                GaugeValue="50"
+                Name="Vanessa"
+                DataLabelsSize="20"
+                DataLabelsPosition="End"
+                DataLabelsFormatter="{Binding Formatter}"
+                InnerRadius="20"
+                MaxRadialColumnWidth="5"/>
+
+            <lvc:XamlGaugeSeries
+                GaugeValue="80"
+                Name="Charles"
+                DataLabelsSize="20"
+                DataLabelsPosition="End"
+                DataLabelsFormatter="{Binding Formatter}"
+                InnerRadius="20"
+                MaxRadialColumnWidth="5"/>
+
+            <lvc:XamlGaugeSeries
+                GaugeValue="95"
+                Name="Ana"
+                DataLabelsSize="20"
+                DataLabelsPosition="End"
+                DataLabelsFormatter="{Binding Formatter}"
+                InnerRadius="20"
+                MaxRadialColumnWidth="5"/>
+
+            <lvc:XamlGaugeBackgroundSeries Fill="{x:Null}"/>
+
+        </lvc:PieChart.Series>
+
     </lvc:PieChart>
 </ContentPage>

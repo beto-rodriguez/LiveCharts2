@@ -4,6 +4,7 @@
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning disable IDE1006 // Naming Styles
+#pragma warning disable IDE0032 // Use auto property
 
 using System;
 using System.Collections;
@@ -666,6 +667,23 @@ public class XamlGaugeBackgroundSeries : XamlGaugeSeries<DoughnutGeometry, Label
 
         return transformedValues;
     }
+}
+
+public class XamlAngularGaugeSeries : XamlGaugeSeries<DoughnutGeometry, LabelGeometry>
+{
+    public XamlAngularGaugeSeries()
+    {
+        HoverPushout = 0;
+        IsHoverable = false;
+        DataLabelsPaint = null;
+        AnimationsSpeed = TimeSpan.FromSeconds(0);
+        IsRelativeToMinValue = true;
+
+        var baseSeries = (IInternalSeries)Base;
+        baseSeries.SeriesProperties |= SeriesProperties.Gauge;
+    }
+
+    protected override IEnumerable ValuesTransform(Chart chart, IEnumerable values) => values;
 }
 
 #endregion
