@@ -80,7 +80,7 @@ public partial class PieChart : ChartView, IPieChartView
           (object? sender, PropertyChangedEventArgs e) => _core?.Update());
 
         SetValue(SeriesProperty, new ObservableCollection<ISeries>());
-        SetValue(VisualElementsProperty, new ObservableCollection<ChartElement>());
+        SetValue(VisualElementsProperty, new ObservableCollection<IChartElement>());
         SetValue(SyncContextProperty, new object());
 
         if (_core is null) throw new Exception("Core not found!");

@@ -1,28 +1,65 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Pies.AngularGauge.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Pies.AngularGauge;assembly=ViewModelsSamples">
+<ContentPage
+    x:Class="MauiSample.Pies.AngularGauge.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Pies.AngularGauge;assembly=ViewModelsSamples">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
 
-        <Button Grid.Row="0" Command="{Binding DoRandomChangeCommand}">Change Value</Button>
+    <Grid RowDefinitions="Auto, *">
+
+        <Button
+            Grid.Row="0"
+            Command="{Binding DoRandomChangeCommand}"
+            Text="Change value"/>
 
         <lvc:PieChart
             Grid.Row="1"
-            Series="{Binding Series}"
-            VisualElements="{Binding VisualElements}"
             InitialRotation="-225"
             MaxAngle="270"
             MinValue="0"
             MaxValue="100">
+
+            <lvc:PieChart.Series>
+
+                <lvc:XamlAngularGaugeSeries
+                    GaugeValue="60"
+                    OuterRadiusOffset="130"
+                    MaxRadialColumnWidth="20"
+                    CornerRadius="0"/>
+
+                <lvc:XamlAngularGaugeSeries
+                    GaugeValue="30"
+                    OuterRadiusOffset="130"
+                    MaxRadialColumnWidth="20"
+                    CornerRadius="0"/>
+
+                <lvc:XamlAngularGaugeSeries
+                    GaugeValue="10"
+                    OuterRadiusOffset="130"
+                    MaxRadialColumnWidth="20"
+                    CornerRadius="0"/>
+
+            </lvc:PieChart.Series>
+
+            <lvc:PieChart.VisualElements>
+
+                <lvc:XamlNeedle
+                    Width="20"
+                    Value="{Binding Value}"/>
+
+                <lvc:XamlAngularTicks
+                    LabelsSize="16"
+                    LabelsOuterOffset="15"
+                    OuterOffset="65"
+                    TicksLength="20" />
+
+            </lvc:PieChart.VisualElements>
+
         </lvc:PieChart>
     </Grid>
 </ContentPage>

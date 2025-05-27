@@ -686,4 +686,12 @@ public class XamlAngularGaugeSeries : XamlGaugeSeries<DoughnutGeometry, LabelGeo
     protected override IEnumerable ValuesTransform(Chart chart, IEnumerable values) => values;
 }
 
+[XamlClass(typeof(NeedleVisual))]
+public partial class XamlNeedle : EmptyContentView, IChartElement, IInternalInteractable
+{ }
+
+[XamlClass(typeof(AngularTicksVisual))]
+public partial class XamlAngularTicks : EmptyContentView, IChartElement, IInternalInteractable
+{ }
+
 #endregion
