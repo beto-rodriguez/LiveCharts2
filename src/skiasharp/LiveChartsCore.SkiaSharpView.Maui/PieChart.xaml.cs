@@ -387,7 +387,7 @@ public partial class PieChart : ChartView, IPieChartView
     }
 
     /// <inheritdoc cref="IPieChartView.Series" />
-    public ICollection<ISeries> Series
+    public override ICollection<ISeries> Series
     {
         get => (ICollection<ISeries>)GetValue(SeriesProperty);
         set => SetValue(SeriesProperty, value);

@@ -417,7 +417,7 @@ public partial class CartesianChart : ChartView, ICartesianChartView
     }
 
     /// <inheritdoc cref="ICartesianChartView.Series" />
-    public ICollection<ISeries> Series
+    public override ICollection<ISeries> Series
     {
         get => (ICollection<ISeries>)GetValue(SeriesProperty);
         set => SetValue(SeriesProperty, value);

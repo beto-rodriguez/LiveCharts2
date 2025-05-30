@@ -431,7 +431,7 @@ public partial class PolarChart : ChartView, IPolarChartView
     }
 
     /// <inheritdoc cref="IPolarChartView.Series" />
-    public ICollection<ISeries> Series
+    public override ICollection<ISeries> Series
     {
         get => (ICollection<ISeries>)GetValue(SeriesProperty);
         set => SetValue(SeriesProperty, value);
