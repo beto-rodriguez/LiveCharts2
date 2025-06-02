@@ -2,5 +2,5 @@
 
 public class ViewModel
 {
-    // nothing to see here :(
+    public double Value { get; set; } = 30;
 }

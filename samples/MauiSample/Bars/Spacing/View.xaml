@@ -14,7 +14,7 @@
     Padding: Defines the distance between every bars in the series
     MaxBarWidth: Defines the maximum width a bar can take
     -->
-    
+
     <lvc:CartesianChart>
         <lvc:CartesianChart.Series>
             <lvc:XamlColumnSeries

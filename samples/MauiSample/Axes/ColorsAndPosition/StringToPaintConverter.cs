@@ -11,8 +11,8 @@ public class StringToPaintConverter : IValueConverter
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
         value is SolidColorPaint paint
-        ? paint.Color.Red.ToString("X2") +
-          paint.Color.Green.ToString("X2") +
-          paint.Color.Blue.ToString("X2")
-        : (object)null;
+            ? paint.Color.Red.ToString("X2") +
+              paint.Color.Green.ToString("X2") +
+              paint.Color.Blue.ToString("X2")
+            : (object)null;
 }

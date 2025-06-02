@@ -19,7 +19,7 @@
         <lvc:PieChart.Series>
 
             <lvc:XamlGaugeSeries
-                GaugeValue="50"
+                GaugeValue="{Binding Vanesa}"
                 Name="Vanessa"
                 DataLabelsSize="20"
                 DataLabelsPosition="End"
@@ -28,7 +28,7 @@
                 MaxRadialColumnWidth="5"/>
 
             <lvc:XamlGaugeSeries
-                GaugeValue="80"
+                GaugeValue="{Binding Charles}"
                 Name="Charles"
                 DataLabelsSize="20"
                 DataLabelsPosition="End"
@@ -37,7 +37,7 @@
                 MaxRadialColumnWidth="5"/>
 
             <lvc:XamlGaugeSeries
-                GaugeValue="95"
+                GaugeValue="{Binding Ana}"
                 Name="Ana"
                 DataLabelsSize="20"
                 DataLabelsPosition="End"

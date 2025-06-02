@@ -18,7 +18,7 @@
         <lvc:PieChart.Series>
 
             <lvc:XamlGaugeSeries
-                GaugeValue="30"
+                GaugeValue="{Binding Value}"
                 DataLabelsSize="50"
                 MaxRadialColumnWidth="50"/>
 

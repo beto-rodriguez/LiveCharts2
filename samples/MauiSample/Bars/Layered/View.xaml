@@ -13,7 +13,7 @@
     <!--
     When the bar positon is ignored, all bars are drawn in the same position.
     -->
-    
+
     <lvc:CartesianChart>
         <lvc:CartesianChart.Series>
             <lvc:XamlColumnSeries

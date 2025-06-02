@@ -1,8 +1,4 @@
-﻿using LiveChartsCore;
-using LiveChartsCore.Measure;
-using LiveChartsCore.SkiaSharpView;
-
-namespace ViewModelsSamples.Bars.RowsWithLabels;
+﻿namespace ViewModelsSamples.Bars.RowsWithLabels;
 
 public class ViewModel
 {

@@ -14,7 +14,7 @@
     When the bar positon is ignored, all bars are drawn in the same position.
     The first series is the background, we force the bar size to 10 in the values scale
     -->
-    
+
     <lvc:CartesianChart>
 
         <lvc:CartesianChart.Series>
@@ -27,13 +27,13 @@
                 Values="{Binding Values2}"
                 IgnoresBarPosition="True"/>
         </lvc:CartesianChart.Series>
-        
+
         <lvc:CartesianChart.YAxes>
             <lvc:XamlAxis
                 MinLimit="0"
                 MaxLimit="10"/>
         </lvc:CartesianChart.YAxes>
-        
+
     </lvc:CartesianChart>
 
 </ContentPage>

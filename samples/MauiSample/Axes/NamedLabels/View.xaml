@@ -33,6 +33,6 @@
         <lvc:CartesianChart.YAxes>
             <lvc:XamlAxis Labeler="{Binding Labeler}"/>
         </lvc:CartesianChart.YAxes>
-        
+
     </lvc:CartesianChart>
 </ContentPage>

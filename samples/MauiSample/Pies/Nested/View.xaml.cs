@@ -1,6 +1,4 @@
-﻿using ViewModelsSamples.Pies.AutoUpdate;
-
-namespace MauiSample.Pies.AutoUpdate;
+﻿namespace MauiSample.Pies.Nested;
 
 [XamlCompilation(XamlCompilationOptions.Compile)]
 public partial class View : ContentPage

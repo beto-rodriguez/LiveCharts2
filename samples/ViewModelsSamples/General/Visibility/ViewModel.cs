@@ -3,23 +3,22 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ViewModelsSamples.General.Visibility;
 
-public partial class ViewModel : ObservableObject
+public partial class PlotData(double[] values) : ObservableObject
 {
-    [ObservableProperty]
-    public partial bool Visibility1 { get; set; } = true;
+    public double[] Values { get; set; } = values;
 
     [ObservableProperty]
-    public partial bool Visibility2 { get; set; } = true;
-
-    [ObservableProperty]
-    public partial bool Visibility3 { get; set; } = true;
+    public partial bool IsVisible { get; set; } = true;
 
     [RelayCommand]
-    public void ToggleSeries1() => Visibility1 = !Visibility1;
+    public void ToggleVisibility() => IsVisible = !IsVisible;
+}
 
-    [RelayCommand]
-    public void ToggleSeries2() => Visibility2 = !Visibility2;
-
-    [RelayCommand]
-    public void ToggleSeries3() => Visibility3 = !Visibility3;
+public class ViewModel
+{
+    public PlotData[] Data { get; set; } = [
+        new([2, 5, 4, 3]),
+        new([1, 2, 3, 4]),
+        new([4, 3, 2, 1])
+    ];
 }

@@ -23,6 +23,14 @@
             <Button Margin="6" Clicked="Button_Clicked" Text="Constant changes" />
         </StackLayout>
 
-        <lvc:CartesianChart Grid.Row="2" Series="{Binding Series}"></lvc:CartesianChart>
+        <lvc:CartesianChart Grid.Row="2" SeriesSource="{Binding Data}">
+            <lvc:CartesianChart.SeriesTemplate>
+                <DataTemplate x:DataType="vms:ChartData">
+                    <lvc:XamlColumnSeries
+                        Name="{Binding Name}"
+                        Values="{Binding Values}"/>
+                </DataTemplate>
+            </lvc:CartesianChart.SeriesTemplate>
+        </lvc:CartesianChart>
     </Grid>
 </ContentPage>

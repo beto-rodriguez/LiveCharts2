@@ -1,94 +1,76 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.Input;
-using LiveChartsCore;
 using LiveChartsCore.Defaults;
-using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Bars.AutoUpdate;
+
+public class ChartData(string name, ObservableValue[] points)
+{
+    public string Name { get; set; } = name;
+    public ObservableCollection<ObservableValue> Values { get; set; } = new(points);
+}
 
 public partial class ViewModel
 {
     private readonly Random _random = new();
 
-    // when using the ObservableCollection class, // mark
-    // the chart will listen for changes in the collection // mark
-    public ObservableCollection<ISeries> Series { get; set; }
-    public ObservableCollection<ObservablePoint> ObservablePoints { get; set; }
-
-    public ViewModel()
-    {
-        ObservablePoints = [
-            new() { X = 0, Y = 2 },
-            new() { X = 1, Y = 5 },
-            new() { X = 2, Y = 4 }
-        ];
-
-        Series = [
-            new ColumnSeries<ObservablePoint>(ObservablePoints)
-        ];
-    }
+    public ObservableCollection<ChartData> Data { get; set; } = [
+        new("Juana",  [ new(2), new(5), new(4) ]),
+        new("Mary",   [ new(5), new(4), new(1) ])
+    ];
 
     [RelayCommand]
     public void AddSeries()
     {
-        // Because the Series property is an ObservableCollection, // mark
-        // the chart will listen for changes and update // mark
-        // in this case a new series is added to the chart // mark
+        Data.Add(
+            new ChartData(
+                name: $"User #{Data.Count}",
+                points: FetchVales()));
 
-        var newColumnSeries = new ColumnSeries<int>(FetchVales());
-        Series.Add(newColumnSeries);
     }
 
     [RelayCommand]
     public void RemoveSeries()
     {
-        if (Series.Count == 1) return;
+        if (Data.Count == 1) return;
 
-        // This will also remove the series from the UI. // mark
-        Series.RemoveAt(Series.Count - 1);
+        Data.RemoveAt(Data.Count - 1);
     }
 
     [RelayCommand]
     public void AddItem()
     {
-        var newPoint = new ObservablePoint
+        var newPoint = new ObservableValue
         {
-            X = ObservablePoints.Count,
-            Y = _random.Next(0, 10)
+            Value = _random.Next(0, 10)
         };
 
-        // The new point will be drawn at the end of the chart // mark
-        ObservablePoints.Add(newPoint);
+        Data[0].Values.Add(newPoint);
     }
 
     [RelayCommand]
     public void RemoveItem()
     {
-        if (ObservablePoints.Count < 2) return;
+        if (Data[0].Values.Count < 2) return;
 
-        // Because the ObservablePoints property is an ObservableCollection, // mark
-        // the chart will listen for changes and update // mark
-        // in this case a point is removed from the chart // mark
-
-        ObservablePoints.RemoveAt(0);
+        Data[0].Values.RemoveAt(0);
     }
 
     [RelayCommand]
     public void ReplaceItem()
     {
-        var randomIndex = _random.Next(0, ObservablePoints.Count - 1);
+        var randomIndex = _random.Next(0, Data[0].Values.Count - 1);
 
-        // The chart will update the point at the specified index // mark
-        ObservablePoints[randomIndex] = new(ObservablePoints[randomIndex].X, _random.Next(1, 10));
+        Data[0].Values[randomIndex] = new(_random.Next(1, 10));
     }
 
-    private int[] FetchVales()
+    private ObservableValue[] FetchVales()
     {
         return [
-            _random.Next(0, 10),
-            _random.Next(0, 10),
-            _random.Next(0, 10)
+            new(_random.Next(0, 10)),
+            new(_random.Next(0, 10)),
+            new(_random.Next(0, 10))
         ];
     }
 }

@@ -13,25 +13,19 @@
     <Grid RowDefinitions="Auto, *">
 
         <StackLayout Grid.Row="0" Orientation="Horizontal">
-            <Button Margin="6" Command="{Binding ToggleSeries1Command}" Text="toggle 1" />
-            <Button Margin="6" Command="{Binding ToggleSeries2Command}" Text="toggle 2"/>
-            <Button Margin="6" Command="{Binding ToggleSeries3Command}" Text="toggle 3"/>
+            <Button Margin="6" Command="{Binding Data[0].ToggleVisibilityCommand}" Text="toggle 1" />
+            <Button Margin="6" Command="{Binding Data[1].ToggleVisibilityCommand}" Text="toggle 2"/>
+            <Button Margin="6" Command="{Binding Data[2].ToggleVisibilityCommand}" Text="toggle 3"/>
         </StackLayout>
 
-        <lvc:CartesianChart Grid.Row="1">
-            <lvc:CartesianChart.Series>
-                <lvc:XamlColumnSeries
-                    Values="2,5,4,3"
-                    IsVisible="{Binding Visibility1}"/>
-
-                <lvc:XamlColumnSeries
-                    Values="1,2,3,4"
-                    IsVisible="{Binding Visibility2}"/>
-
-                <lvc:XamlColumnSeries
-                    Values="4,3,2,1"
-                    IsVisible="{Binding Visibility3}"/>
-            </lvc:CartesianChart.Series>
+        <lvc:CartesianChart Grid.Row="1" SeriesSource="{Binding Data}">
+            <lvc:CartesianChart.SeriesTemplate>
+                <DataTemplate x:DataType="vms:PlotData">
+                    <lvc:XamlColumnSeries
+                        Values="{Binding Values}"
+                        IsVisible="{Binding IsVisible}"/>
+                </DataTemplate>
+            </lvc:CartesianChart.SeriesTemplate>
         </lvc:CartesianChart>
     </Grid>
 </ContentPage>

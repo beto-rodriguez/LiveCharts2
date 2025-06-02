@@ -14,29 +14,29 @@
 
         <lvc:CartesianChart.Series>
             <lvc:XamlColumnSeries
-            Values="{Binding Values1}"/>
+                Values="{Binding Values1}"/>
             <lvc:XamlColumnSeries
-            Values="{Binding Values2}"
-            Fill="{x:Null}"/>
+                Values="{Binding Values2}"
+                Fill="{x:Null}"/>
         </lvc:CartesianChart.Series>
 
         <lvc:CartesianChart.XAxes>
             <lvc:XamlAxis
-            Name="Salesman/woman"
-            Labels="{Binding Labels}"/>
+                Name="Salesman/woman"
+                Labels="{Binding Labels}"/>
         </lvc:CartesianChart.XAxes>
 
         <lvc:CartesianChart.YAxes>
             <lvc:XamlAxis
-            Name="Sales"
-            NamePadding="0,15"
-            Labeler="{Binding Labeler}"
-            LabelsPaint="{lvc:SolidColorPaint
-                Color='#00f',
-                FontFamily='Times New Roman',
-                FontWeight=ExtraBold,
-                FontWidth=Normal,
-                FontSlant=Italic}"/>
+                Name="Sales"
+                NamePadding="0,15"
+                Labeler="{Binding Labeler}"
+                LabelsPaint="{lvc:SolidColorPaint
+                    Color='#00f',
+                    FontFamily='Times New Roman',
+                    FontWeight=ExtraBold,
+                    FontWidth=Normal,
+                    FontSlant=Italic}"/>
         </lvc:CartesianChart.YAxes>
 
     </lvc:CartesianChart>

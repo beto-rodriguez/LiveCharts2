@@ -2,12 +2,12 @@
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
-namespace MauiSample.Lines.Properties;
+namespace MauiSample.Pies.Nested;
 
 public class StringToPaintConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
-        new SolidColorPaint(SKColor.Parse((string)value), 3);
+        new SolidColorPaint(SKColor.Parse((string)value));
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
         value is SolidColorPaint paint

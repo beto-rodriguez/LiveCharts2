@@ -19,7 +19,7 @@
         <lvc:PieChart.Series>
 
             <lvc:XamlGaugeSeries
-                GaugeValue="30"
+                GaugeValue="{Binding Value}"
                 Fill="{lvc:SolidColorPaint Color='#9ACD32'}"
                 ShowDataLabels="True"
                 DataLabelsSize="50"

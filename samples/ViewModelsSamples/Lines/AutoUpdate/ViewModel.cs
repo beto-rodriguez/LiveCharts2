@@ -1,104 +1,88 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using CommunityToolkit.Mvvm.Input;
-using LiveChartsCore;
 using LiveChartsCore.Defaults;
-using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Lines.AutoUpdate;
+
+public class ChartData(string name, ObservableValue[] points)
+{
+    public string Name { get; set; } = name;
+    public ObservableCollection<ObservableValue> Values { get; set; } = new(points);
+}
 
 public partial class ViewModel
 {
     private readonly Random _random = new();
 
-    // when using the ObservableCollection class, // mark
-    // the chart will listen for changes in the collection // mark
-    public ObservableCollection<ISeries> Series { get; set; }
-    public ObservableCollection<ObservableValue> ObservableValues { get; set; }
-
-    public ViewModel()
-    {
-        ObservableValues = [
-            new() { Value = 2 },
-            new() { Value = 5 },
-            new() { Value = 4 }
-        ];
-
-        Series = [
-            new LineSeries<ObservableValue>(ObservableValues)
-        ];
-    }
-
-    [RelayCommand]
-    public void AddItem()
-    {
-        var randomValue = _random.Next(1, 10);
-
-        // the new value is added to the collection // mark
-        // the chart is listening, and will update and animate the change // mark
-
-        ObservableValues.Add(new() { Value = randomValue });
-    }
-
-    [RelayCommand]
-    public void RemoveItem()
-    {
-        if (ObservableValues.Count == 0) return;
-
-        // the last value is removed from the collection // mark
-        // the chart is listening, and will update and animate the change // mark
-
-        ObservableValues.RemoveAt(0);
-    }
-
-    [RelayCommand]
-    public void UpdateItem()
-    {
-        var randomValue = _random.Next(1, 10);
-        var lastItem = ObservableValues[ObservableValues.Count - 1];
-
-        // becase lastItem is an ObservableObject and implements INotifyPropertyChanged // mark
-        // the chart is listening for changes in the Value property // mark
-        // and will update and animate the change // mark
-
-        lastItem.Value = randomValue;
-    }
-
-    [RelayCommand]
-    public void ReplaceItem()
-    {
-        var randomValue = _random.Next(1, 10);
-        var randomIndex = _random.Next(0, ObservableValues.Count - 1);
-
-        // replacing and item also triggers the chart to update and animate the change // mark
-
-        ObservableValues[randomIndex] = new(randomValue);
-    }
+    public ObservableCollection<ChartData> Data { get; set; } = [
+        new ChartData(
+            name: "Ana",
+            points: [
+                new(2),
+                new(5),
+                new(4)
+            ]),
+        new ChartData(
+            name: "Mary",
+            points: [
+                new(5),
+                new(4),
+                new(1)
+            ])
+    ];
 
     [RelayCommand]
     public void AddSeries()
     {
-        var values = Enumerable.Range(0, 3)
-            .Select(_ => _random.Next(0, 10))
-            .ToArray();
+        Data.Add(
+            new ChartData(
+                name: $"User #{Data.Count}",
+                points: FetchVales()));
 
-        // a new line series is added to the chart // mark
-
-        Series.Add(new LineSeries<int>(values));
     }
 
     [RelayCommand]
     public void RemoveSeries()
     {
-        if (Series.Count == 1) return;
+        if (Data.Count == 1) return;
 
-        // the last series is removed from the chart // mark
+        Data.RemoveAt(Data.Count - 1);
+    }
 
-        Series.RemoveAt(Series.Count - 1);
+    [RelayCommand]
+    public void AddItem()
+    {
+        var newPoint = new ObservableValue
+        {
+            Value = _random.Next(0, 10)
+        };
+
+        Data[0].Values.Add(newPoint);
+    }
+
+    [RelayCommand]
+    public void RemoveItem()
+    {
+        if (Data[0].Values.Count < 2) return;
+
+        Data[0].Values.RemoveAt(0);
+    }
+
+    [RelayCommand]
+    public void ReplaceItem()
+    {
+        var randomIndex = _random.Next(0, Data[0].Values.Count - 1);
+
+        Data[0].Values[randomIndex] = new(_random.Next(1, 10));
+    }
+
+    private ObservableValue[] FetchVales()
+    {
+        return [
+            new(_random.Next(0, 10)),
+            new(_random.Next(0, 10)),
+            new(_random.Next(0, 10))
+        ];
     }
 }
-
-// All LiveCharts objects (Series, Axes, etc) implement INotifyPropertyChanged // mark
-// this means that the chart is listening for changes in the properties // mark
-// the chart will reflect the changes and animate them // mark
