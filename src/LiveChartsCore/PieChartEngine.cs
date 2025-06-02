@@ -157,9 +157,6 @@ public class PieChartEngine(
         IndexBounds = new Bounds();
         PushoutBounds = new Bounds();
 
-        var aa = view.Series;
-        var aaa = VisibleSeries.Cast<IPieSeries>().ToArray();
-
         foreach (var series in VisibleSeries.Cast<IPieSeries>())
         {
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
