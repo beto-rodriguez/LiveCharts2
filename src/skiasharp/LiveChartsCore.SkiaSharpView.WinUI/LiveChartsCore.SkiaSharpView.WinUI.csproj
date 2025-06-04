@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <LangVersion>$(GlobalLangVersion)</LangVersion>
     <Nullable>enable</Nullable>
@@ -13,6 +13,7 @@
     <EnableMsixTooling>true</EnableMsixTooling>
     <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
     <RootNamespace>LiveChartsCore.SkiaSharpView.WinUI</RootNamespace>
     <Version>$(LiveChartsVersion)</Version>
@@ -49,8 +50,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.230913002" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.1" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240923002" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.756" />
     <PackageReference Include="SkiaSharp.Views.WinUI" Version="$(SkiaSharpVersion)" />
     <PackageReference Include="SkiaSharp.HarfBuzz" Version="$(SkiaSharpVersion)" />
   </ItemGroup>
