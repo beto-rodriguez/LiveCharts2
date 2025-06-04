@@ -443,6 +443,31 @@ public partial class XamlLineSeries<TModel, TVisual, TLabel> : XamlSeries, ILine
 
 #endregion
 
+#region stepline series
+
+/// <inheritdoc cref="XamlStepLineSeries{TModel, TVisual, TLabel}" />
+public class XamlStepLineSeries : XamlStepLineSeries<object, CircleGeometry, LabelGeometry> { }
+
+/// <inheritdoc cref="XamlStepLineSeries{TModel, TVisual, TLabel}" />
+public class XamlStepLineSeries<TModel> : XamlStepLineSeries<TModel, CircleGeometry, LabelGeometry>
+{ }
+
+/// <inheritdoc cref="XamlStepLineSeries{TModel, TVisual, TLabel}" />
+public class XamlStepLineSeries<TModel, TVisual> : XamlStepLineSeries<TModel, TVisual, LabelGeometry>
+    where TVisual : BoundedDrawnGeometry, new()
+{ }
+
+[XamlClass(typeof(StepLineSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
+public partial class XamlStepLineSeries<TModel, TVisual, TLabel> : XamlSeries, IStepLineSeries, IInternalSeries
+    where TVisual : BoundedDrawnGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{
+    protected override ISeries WrappedSeries => _baseType;
+    static partial void OnTypeDefined() => Info.ConfigureDefaults(_defaultStepLineSeries);
+}
+
+#endregion
+
 #region scatter series
 
 /// <inheritdoc cref="XamlScatterSeries{TModel, TVisual, TLabel}" />
@@ -720,6 +745,81 @@ public partial class XamlPolarLineSeries<TModel, TVisual, TLabel> : XamlSeries, 
 {
     protected override ISeries WrappedSeries => _baseType;
     static partial void OnTypeDefined() => Info.ConfigureDefaults(_defaultPolarLineSeries);
+}
+
+#endregion
+
+#region stacked area series
+
+/// <inheritdoc cref="XamlStackedAreaSeries{TModel, TVisual, TLabel}" />
+public class XamlStackedAreaSeries : XamlStackedAreaSeries<object, CircleGeometry, LabelGeometry> { }
+
+/// <inheritdoc cref="XamlStackedAreaSeries{TModel, TVisual, TLabel}" />
+public class XamlStackedAreaSeries<TModel> : XamlStackedAreaSeries<TModel, CircleGeometry, LabelGeometry>
+{ }
+
+/// <inheritdoc cref="XamlStackedAreaSeries{TModel, TVisual, TLabel}" />
+public class XamlStackedAreaSeries<TModel, TVisual> : XamlStackedAreaSeries<TModel, TVisual, LabelGeometry>
+    where TVisual : BoundedDrawnGeometry, new()
+{ }
+
+[XamlClass(typeof(StackedAreaSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
+public partial class XamlStackedAreaSeries<TModel, TVisual, TLabel> : XamlSeries, ILineSeries, IInternalSeries
+    where TVisual : BoundedDrawnGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{
+    protected override ISeries WrappedSeries => _baseType;
+    static partial void OnTypeDefined() => Info.ConfigureDefaults(_defaultStackedAreaSeries);
+}
+
+#endregion
+
+#region stacked column series
+
+/// <inheritdoc cref="XamlStackedColumnSeries{TModel, TVisual, TLabel}" />
+public class XamlStackedColumnSeries : XamlStackedColumnSeries<object, RoundedRectangleGeometry, LabelGeometry> { }
+
+/// <inheritdoc cref="XamlStackedColumnSeries{TModel, TVisual, TLabel}" />
+public class XamlStackedColumnSeries<TModel> : XamlStackedColumnSeries<TModel, RoundedRectangleGeometry, LabelGeometry>
+{ }
+
+/// <inheritdoc cref="XamlStackedColumnSeries{TModel, TVisual, TLabel}" />
+public class XamlStackedColumnSeries<TModel, TVisual> : XamlStackedColumnSeries<TModel, TVisual, LabelGeometry>
+    where TVisual : BoundedDrawnGeometry, new()
+{ }
+
+[XamlClass(typeof(StackedColumnSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
+public partial class XamlStackedColumnSeries<TModel, TVisual, TLabel> : XamlSeries, IBarSeries, IInternalSeries
+    where TVisual : BoundedDrawnGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{
+    protected override ISeries WrappedSeries => _baseType;
+    static partial void OnTypeDefined() => Info.ConfigureDefaults(_defaultStackedColumnSeries);
+}
+
+#endregion
+
+#region stacked row series
+
+/// <inheritdoc cref="XamlStackedRowSeries{TModel, TVisual, TLabel}" />
+public class XamlStackedRowSeries : XamlStackedRowSeries<object, RoundedRectangleGeometry, LabelGeometry> { }
+
+/// <inheritdoc cref="XamlStackedRowSeries{TModel, TVisual, TLabel}" />
+public class XamlStackedRowSeries<TModel> : XamlStackedRowSeries<TModel, RoundedRectangleGeometry, LabelGeometry>
+{ }
+
+/// <inheritdoc cref="XamlStackedRowSeries{TModel, TVisual, TLabel}" />
+public class XamlStackedRowSeries<TModel, TVisual> : XamlStackedRowSeries<TModel, TVisual, LabelGeometry>
+    where TVisual : BoundedDrawnGeometry, new()
+{ }
+
+[XamlClass(typeof(StackedRowSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
+public partial class XamlStackedRowSeries<TModel, TVisual, TLabel> : XamlSeries, IBarSeries, IInternalSeries
+    where TVisual : BoundedDrawnGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{
+    protected override ISeries WrappedSeries => _baseType;
+    static partial void OnTypeDefined() => Info.ConfigureDefaults(_defaultStackedRowSeries);
 }
 
 #endregion
