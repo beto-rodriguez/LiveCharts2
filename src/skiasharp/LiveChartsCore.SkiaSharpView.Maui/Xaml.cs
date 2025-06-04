@@ -30,6 +30,9 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 [XamlClass(typeof(Axis))]
 public partial class XamlAxis : EmptyContentView, ICartesianAxis { }
 
+[XamlClass(typeof(PolarAxis))]
+public partial class XamlPolarAxis : EmptyContentView, IPolarAxis { }
+
 [XamlClass(typeof(DateTimeAxis), GenerateBaseTypeDeclaration = false)]
 public partial class XamlDateTimeAxis : EmptyContentView, ICartesianAxis
 {
@@ -693,5 +696,30 @@ public partial class XamlNeedle : EmptyContentView, IChartElement, IInternalInte
 [XamlClass(typeof(AngularTicksVisual))]
 public partial class XamlAngularTicks : EmptyContentView, IChartElement, IInternalInteractable
 { }
+
+#endregion
+
+#region polar line series
+
+/// <inheritdoc cref="XamlPolarLineSeries{TModel, TVisual, TLabel}" />
+public class XamlPolarLineSeries : XamlPolarLineSeries<object, CircleGeometry, LabelGeometry> { }
+
+/// <inheritdoc cref="XamlPolarLineSeries{TModel, TVisual, TLabel}" />
+public class XamlPolarLineSeries<TModel> : XamlPolarLineSeries<TModel, CircleGeometry, LabelGeometry>
+{ }
+
+/// <inheritdoc cref="XamlPolarLineSeries{TModel, TVisual, TLabel}" />
+public class XamlPolarLineSeries<TModel, TVisual> : XamlPolarLineSeries<TModel, TVisual, LabelGeometry>
+    where TVisual : BoundedDrawnGeometry, new()
+{ }
+
+[XamlClass(typeof(PolarLineSeries<,,>), PropertyTypeOverride = Info.PropertyTypeOverride, PropertyChangeMap = Info.PropertyChangeMap)]
+public partial class XamlPolarLineSeries<TModel, TVisual, TLabel> : XamlSeries, IPolarLineSeries, IInternalSeries
+    where TVisual : BoundedDrawnGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{
+    protected override ISeries WrappedSeries => _baseType;
+    static partial void OnTypeDefined() => Info.ConfigureDefaults(_defaultPolarLineSeries);
+}
 
 #endregion
