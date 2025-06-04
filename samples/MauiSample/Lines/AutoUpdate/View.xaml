@@ -20,7 +20,6 @@
         <StackLayout Grid.Row="1" Orientation="Horizontal">
             <Button Margin="6" Command="{Binding AddSeriesCommand}" Text="Add Series"/>
             <Button Margin="6" Command="{Binding RemoveSeriesCommand}" Text="Remove Series" />
-            <Button Margin="6" Clicked="Button_Clicked" Text="Constant changes" />
         </StackLayout>
 
         <lvc:CartesianChart Grid.Row="2" SeriesSource="{Binding Data}">

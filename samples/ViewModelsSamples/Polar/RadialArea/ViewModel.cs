@@ -1,9 +1,4 @@
-﻿using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
-
-namespace ViewModelsSamples.Polar.RadialArea;
+﻿namespace ViewModelsSamples.Polar.RadialArea;
 
 public class ViewModel
 {
