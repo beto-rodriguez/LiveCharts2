@@ -20,4 +20,4 @@ public class ViewModel
 
         return values;
     }
- }
+}

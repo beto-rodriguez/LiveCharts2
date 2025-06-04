@@ -1,14 +1,12 @@
 ﻿using System;
-using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.StepLines.Zoom;
 
 public class ViewModel
 {
-    public ISeries[] SeriesCollection { get; set; }
+    public int[] Values { get; set; } = Fetch();
 
-    public ViewModel()
+    private static int[] Fetch()
     {
         var values = new int[100];
         var r = new Random();
@@ -20,6 +18,6 @@ public class ViewModel
             values[i] = t;
         }
 
-        SeriesCollection = [new StepLineSeries<int> { Values = values }];
+        return values;
     }
 }
