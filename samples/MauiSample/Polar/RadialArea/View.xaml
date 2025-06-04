@@ -1,12 +1,39 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Polar.RadialArea.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Polar.RadialArea;assembly=ViewModelsSamples"
-             >
+<ContentPage
+    x:Class="MauiSample.Polar.RadialArea.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Polar.RadialArea;assembly=ViewModelsSamples"
+    xmlns:c="clr-namespace:LiveChartsCore;assembly=LiveChartsCore">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-    <lvc:PolarChart Series="{Binding Series}" AngleAxes="{Binding AngleAxes}" InitialRotation="-45" />
+
+    <lvc:PolarChart InitialRotation="-45">
+
+        <lvc:PolarChart.Series>
+
+            <lvc:XamlPolarLineSeries
+                Values="{Binding Values1}"
+                LineSmoothness="0"
+                GeometrySize="0"
+                Fill="{lvc:SolidColorPaint Color='#900000ff'}"/>
+
+            <lvc:XamlPolarLineSeries
+                Values="{Binding Values2}"
+                LineSmoothness="1"
+                GeometrySize="0"
+                Fill="{lvc:SolidColorPaint Color='#90ff0000'}"/>
+
+        </lvc:PolarChart.Series>
+
+        <lvc:PolarChart.AngleAxes>
+            <lvc:XamlPolarAxis
+                LabelsRotation="{Static c:LiveCharts.TangentAngle}"
+                Labels="{Binding Labels}"/>
+        </lvc:PolarChart.AngleAxes>
+
+    </lvc:PolarChart>
 </ContentPage>
