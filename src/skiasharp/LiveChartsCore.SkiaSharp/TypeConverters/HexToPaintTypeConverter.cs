@@ -38,7 +38,7 @@ public class HexToPaintTypeConverter : TypeConverter
     /// </summary>
     /// <param name="context">The context.</param>
     /// <param name="sourceType">The source type.</param>
-    /// <returns></returns>`
+    /// <returns></returns>
     public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
         => sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
 
