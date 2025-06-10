@@ -21,8 +21,11 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using Avalonia;
+using Avalonia.Collections;
 using Avalonia.Controls;
+using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
@@ -49,6 +52,11 @@ public class MotionCanvas : UserControl
         AttachedToVisualTree += OnAttached;
         DetachedFromVisualTree += OnDetached;
     }
+
+    /// <summary>
+    /// Gets the logical children.
+    /// </summary>
+    internal IAvaloniaList<ILogical> Children => LogicalChildren;
 
     /// <summary>
     /// Gets the canvas core.
@@ -88,6 +96,23 @@ public class MotionCanvas : UserControl
         CanvasCore.Invalidated -= OnCanvasCoreInvalidated;
         CanvasCore.Dispose();
     }
+
+    /// <inheritdoc cref="IBindableContainer.AddChild(object)"/>
+    public void AddChild(object child)
+    {
+        if (child is not ILogical logicalChild) return;
+        LogicalChildren.Add(logicalChild);
+    }
+
+    /// <inheritdoc cref="IBindableContainer.RemoveChild(object)"/>
+    public void RemoveChild(object child)
+    {
+        if (child is not ILogical logicalChild) return;
+        _ = LogicalChildren.Remove(logicalChild);
+    }
+
+    /// <inheritdoc cref="IBindableContainer.GetChildren()"/>
+    public IEnumerable<object> GetChildren() => LogicalChildren;
 
     // based on:
     // https://github.com/AvaloniaUI/Avalonia/blob/release/11.0.0/samples/RenderDemo/Pages/CustomSkiaPage.cs

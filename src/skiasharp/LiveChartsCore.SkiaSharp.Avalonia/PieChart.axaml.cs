@@ -23,13 +23,12 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -37,6 +36,7 @@ using Avalonia.Threading;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
+using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
@@ -62,8 +62,7 @@ public class PieChart : UserControl, IPieChartView
     protected IChartTooltip? tooltip;
 
     private Chart? _core;
-    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-    private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
+    private readonly ChartObserver _observe;
     private MotionCanvas? _avaloniaCanvas;
     private Theme? _chartTheme;
 
@@ -87,15 +86,13 @@ public class PieChart : UserControl, IPieChartView
 
         AttachedToVisualTree += OnAttachedToVisualTree;
 
-        _seriesObserver = new CollectionDeepObserver<ISeries>(
-           (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
-           (object? sender, PropertyChangedEventArgs e) => _core?.Update(), true);
-        _visualsObserver = new CollectionDeepObserver<ChartElement>(
-          (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
-          (object? sender, PropertyChangedEventArgs e) => _core?.Update(), true);
+        _observe = new ChartObserver(UpdateCore, AddUIElement, RemoveUIElement)
+            .Collection(nameof(Series))
+            .Collection(nameof(VisualElements))
+            .Property(nameof(Title));
 
         Series = new ObservableCollection<ISeries>();
-        VisualElements = new ObservableCollection<ChartElement>();
+        VisualElements = new ObservableCollection<IChartElement>();
         PointerExited += Chart_PointerLeave;
 
         PointerMoved += Chart_PointerMoved;
@@ -127,14 +124,14 @@ public class PieChart : UserControl, IPieChartView
     /// <summary>
     /// The series property
     /// </summary>
-    public static readonly AvaloniaProperty<IEnumerable<ISeries>> SeriesProperty =
-        AvaloniaProperty.Register<PieChart, IEnumerable<ISeries>>(nameof(Series), [], inherits: true);
+    public static readonly AvaloniaProperty<ICollection<ISeries>> SeriesProperty =
+        AvaloniaProperty.Register<PieChart, ICollection<ISeries>>(nameof(Series), [], inherits: true);
 
     /// <summary>
     /// The visual elements property
     /// </summary>
-    public static readonly AvaloniaProperty<IEnumerable<ChartElement>> VisualElementsProperty =
-        AvaloniaProperty.Register<PieChart, IEnumerable<ChartElement>>(
+    public static readonly AvaloniaProperty<ICollection<IChartElement>> VisualElementsProperty =
+        AvaloniaProperty.Register<PieChart, ICollection<IChartElement>>(
             nameof(VisualElements), [], inherits: true);
 
     /// <summary>
@@ -369,16 +366,16 @@ public class PieChart : UserControl, IPieChartView
     }
 
     /// <inheritdoc cref="IPieChartView.Series" />
-    public IEnumerable<ISeries> Series
+    public ICollection<ISeries> Series
     {
-        get => (IEnumerable<ISeries>)GetValue(SeriesProperty)!;
+        get => (ICollection<ISeries>)GetValue(SeriesProperty)!;
         set => SetValue(SeriesProperty, value);
     }
 
     /// <inheritdoc cref="IChartView.VisualElements" />
-    public IEnumerable<ChartElement> VisualElements
+    public ICollection<IChartElement> VisualElements
     {
-        get => (IEnumerable<ChartElement>)GetValue(VisualElementsProperty)!;
+        get => (ICollection<IChartElement>)GetValue(VisualElementsProperty)!;
         set => SetValue(VisualElementsProperty, value);
     }
 
@@ -618,25 +615,16 @@ public class PieChart : UserControl, IPieChartView
     {
         base.OnPropertyChanged(change);
 
-        if (_core is null) return;
+        if (_core is null || change.Property.Name == nameof(IsPointerOver)) return;
 
         if (change.Property.Name == nameof(SyncContext))
         {
             CoreCanvas.Sync = change.NewValue ?? new object();
         }
 
-        if (change.Property.Name == nameof(Series))
+        if (_observe.TryGetValue(change.Property.Name, out var observer))
         {
-            _seriesObserver?.Dispose((IEnumerable<ISeries>?)change.OldValue);
-            _seriesObserver?.Initialize((IEnumerable<ISeries>?)change.NewValue);
-            return;
-        }
-
-        if (change.Property.Name == nameof(VisualElements))
-        {
-            _visualsObserver?.Dispose((IEnumerable<ChartElement>?)change.OldValue);
-            _visualsObserver?.Initialize((IEnumerable<ChartElement>?)change.NewValue);
-            return;
+            observer.Initialize(change.NewValue);
         }
 
         if (change.Property.Name == nameof(ActualThemeVariant))
@@ -647,6 +635,20 @@ public class PieChart : UserControl, IPieChartView
 
     private void InitializeComponent() =>
         AvaloniaXamlLoader.Load(this);
+
+    private void UpdateCore() => _core?.Update();
+
+    private void AddUIElement(object item)
+    {
+        if (_avaloniaCanvas is null || item is not ILogical logical) return;
+        _avaloniaCanvas.Children.Add(logical);
+    }
+
+    private void RemoveUIElement(object item)
+    {
+        if (_avaloniaCanvas is null || item is not ILogical logical) return;
+        _ = _avaloniaCanvas.Children.Remove(logical);
+    }
 
     private void Chart_PointerMoved(object? sender, PointerEventArgs e)
     {
@@ -708,8 +710,11 @@ public class PieChart : UserControl, IPieChartView
     private void OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e) =>
         _core?.Load();
 
-    private void PieChart_DetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e) =>
+    private void PieChart_DetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
+    {
+        _observe.Dispose();
         _core?.Unload();
+    }
 
     void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer)
     {

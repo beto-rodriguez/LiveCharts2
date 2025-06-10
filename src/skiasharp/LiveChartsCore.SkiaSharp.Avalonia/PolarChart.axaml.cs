@@ -31,6 +31,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
+using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -38,6 +39,7 @@ using Avalonia.Threading;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
+using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
@@ -64,10 +66,7 @@ public class PolarChart : UserControl, IPolarChartView
 
     private MotionCanvas? _avaloniaCanvas;
     private Chart? _core;
-    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-    private readonly CollectionDeepObserver<IPolarAxis> _angleObserver;
-    private readonly CollectionDeepObserver<IPolarAxis> _radiusObserver;
-    private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
+    private readonly ChartObserver _observe;
     private Theme? _chartTheme;
 
     #endregion
@@ -90,11 +89,12 @@ public class PolarChart : UserControl, IPolarChartView
 
         AttachedToVisualTree += OnAttachedToVisualTree;
 
-        _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _angleObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _radiusObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _visualsObserver = new CollectionDeepObserver<ChartElement>(
-           OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+        _observe = new ChartObserver(UpdateCore, AddUIElement, RemoveUIElement)
+            .Collection(nameof(AngleAxes))
+            .Collection(nameof(RadiusAxes))
+            .Collection(nameof(Series))
+            .Collection(nameof(VisualElements))
+            .Property(nameof(Title));
 
         AngleAxes =
             [
@@ -105,7 +105,7 @@ public class PolarChart : UserControl, IPolarChartView
                 LiveCharts.DefaultSettings.GetProvider().GetDefaultPolarAxis()
             ];
         Series = new ObservableCollection<ISeries>();
-        VisualElements = new ObservableCollection<ChartElement>();
+        VisualElements = new ObservableCollection<IChartElement>();
 
         PointerWheelChanged += PolarChart_PointerWheelChanged;
         PointerPressed += PolarChart_PointerPressed;
@@ -132,14 +132,14 @@ public class PolarChart : UserControl, IPolarChartView
     /// <summary>
     /// The series property.
     /// </summary>
-    public static readonly AvaloniaProperty<IEnumerable<ISeries>> SeriesProperty =
-       AvaloniaProperty.Register<PolarChart, IEnumerable<ISeries>>(nameof(Series), [], inherits: true);
+    public static readonly AvaloniaProperty<ICollection<ISeries>> SeriesProperty =
+       AvaloniaProperty.Register<PolarChart, ICollection<ISeries>>(nameof(Series), [], inherits: true);
 
     /// <summary>
     /// The visual elements property
     /// </summary>
-    public static readonly AvaloniaProperty<IEnumerable<ChartElement>> VisualElementsProperty =
-        AvaloniaProperty.Register<PolarChart, IEnumerable<ChartElement>>(
+    public static readonly AvaloniaProperty<ICollection<IChartElement>> VisualElementsProperty =
+        AvaloniaProperty.Register<PolarChart, ICollection<IChartElement>>(
             nameof(VisualElements), [], inherits: true);
 
     /// <summary>
@@ -170,14 +170,14 @@ public class PolarChart : UserControl, IPolarChartView
     /// <summary>
     /// The x axes property.
     /// </summary>
-    public static readonly AvaloniaProperty<IEnumerable<IPolarAxis>> AngleAxesProperty =
-        AvaloniaProperty.Register<PolarChart, IEnumerable<IPolarAxis>>(nameof(AngleAxes), [], inherits: true);
+    public static readonly AvaloniaProperty<ICollection<IPolarAxis>> AngleAxesProperty =
+        AvaloniaProperty.Register<PolarChart, ICollection<IPolarAxis>>(nameof(AngleAxes), [], inherits: true);
 
     /// <summary>
     /// The y axes property.
     /// </summary>
-    public static readonly AvaloniaProperty<IEnumerable<IPolarAxis>> RadiusAxesProperty =
-        AvaloniaProperty.Register<PolarChart, IEnumerable<IPolarAxis>>(nameof(RadiusAxes), [], inherits: true);
+    public static readonly AvaloniaProperty<ICollection<IPolarAxis>> RadiusAxesProperty =
+        AvaloniaProperty.Register<PolarChart, ICollection<IPolarAxis>>(nameof(RadiusAxes), [], inherits: true);
 
     /// <summary>
     /// The animations speed property.
@@ -413,30 +413,30 @@ public class PolarChart : UserControl, IPolarChartView
     }
 
     /// <inheritdoc cref="IPolarChartView.Series" />
-    public IEnumerable<ISeries> Series
+    public ICollection<ISeries> Series
     {
-        get => (IEnumerable<ISeries>)GetValue(SeriesProperty)!;
+        get => (ICollection<ISeries>)GetValue(SeriesProperty)!;
         set => SetValue(SeriesProperty, value);
     }
 
     /// <inheritdoc cref="IPolarChartView.AngleAxes" />
-    public IEnumerable<IPolarAxis> AngleAxes
+    public ICollection<IPolarAxis> AngleAxes
     {
-        get => (IEnumerable<IPolarAxis>)GetValue(AngleAxesProperty)!;
+        get => (ICollection<IPolarAxis>)GetValue(AngleAxesProperty)!;
         set => SetValue(AngleAxesProperty, value);
     }
 
     /// <inheritdoc cref="IPolarChartView.RadiusAxes" />
-    public IEnumerable<IPolarAxis> RadiusAxes
+    public ICollection<IPolarAxis> RadiusAxes
     {
-        get => (IEnumerable<IPolarAxis>)GetValue(RadiusAxesProperty)!;
+        get => (ICollection<IPolarAxis>)GetValue(RadiusAxesProperty)!;
         set => SetValue(RadiusAxesProperty, value);
     }
 
     /// <inheritdoc cref="IChartView.VisualElements" />
-    public IEnumerable<ChartElement> VisualElements
+    public ICollection<IChartElement> VisualElements
     {
-        get => (IEnumerable<ChartElement>)GetValue(VisualElementsProperty)!;
+        get => (ICollection<IChartElement>)GetValue(VisualElementsProperty)!;
         set => SetValue(VisualElementsProperty, value);
     }
 
@@ -674,28 +674,9 @@ public class PolarChart : UserControl, IPolarChartView
             CoreCanvas.Sync = change.NewValue ?? new object();
         }
 
-        if (change.Property.Name == nameof(Series))
+        if (_observe.TryGetValue(change.Property.Name, out var observer))
         {
-            _seriesObserver?.Dispose((IEnumerable<ISeries>?)change.OldValue);
-            _seriesObserver?.Initialize((IEnumerable<ISeries>?)change.NewValue);
-        }
-
-        if (change.Property.Name == nameof(AngleAxes))
-        {
-            _angleObserver?.Dispose((IEnumerable<IPolarAxis>?)change.OldValue);
-            _angleObserver?.Initialize((IEnumerable<IPolarAxis>?)change.NewValue);
-        }
-
-        if (change.Property.Name == nameof(RadiusAxes))
-        {
-            _radiusObserver?.Dispose((IEnumerable<IPolarAxis>?)change.OldValue);
-            _radiusObserver?.Initialize((IEnumerable<IPolarAxis>?)change.NewValue);
-        }
-
-        if (change.Property.Name == nameof(VisualElements))
-        {
-            _visualsObserver?.Dispose((IEnumerable<ChartElement>?)change.OldValue);
-            _visualsObserver?.Initialize((IEnumerable<ChartElement>?)change.NewValue);
+            observer.Initialize(change.NewValue);
         }
 
         if (change.Property.Name == nameof(ActualThemeVariant))
@@ -706,12 +687,6 @@ public class PolarChart : UserControl, IPolarChartView
 
     private void InitializeComponent() =>
         AvaloniaXamlLoader.Load(this);
-
-    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
-        _core?.Update();
-
-    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e) =>
-        _core?.Update();
 
     private void PolarChart_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
@@ -783,9 +758,27 @@ public class PolarChart : UserControl, IPolarChartView
 
     private void PolarChart_PointerLeave(object? sender, PointerEventArgs e) => _core?.InvokePointerLeft();
 
+    private void UpdateCore() => _core?.Update();
+
+    private void AddUIElement(object item)
+    {
+        if (_avaloniaCanvas is null || item is not ILogical logical) return;
+        _avaloniaCanvas.Children.Add(logical);
+    }
+
+    private void RemoveUIElement(object item)
+    {
+        if (_avaloniaCanvas is null || item is not ILogical logical) return;
+        _ = _avaloniaCanvas.Children.Remove(logical);
+    }
+
     private void OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e) => _core?.Load();
 
-    private void PolarChart_DetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e) => _core?.Unload();
+    private void PolarChart_DetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
+    {
+        _observe.Dispose();
+        _core?.Unload();
+    }
 
     void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer)
     {

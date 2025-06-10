@@ -23,13 +23,12 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -37,6 +36,7 @@ using Avalonia.Threading;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
+using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
@@ -63,11 +63,7 @@ public class CartesianChart : UserControl, ICartesianChartView
 
     private Chart? _core;
     private MotionCanvas? _avaloniaCanvas;
-    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-    private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
-    private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
-    private readonly CollectionDeepObserver<CoreSection> _sectionsObserver;
-    private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
+    private readonly ChartObserver _observe;
 
     #endregion
 
@@ -89,24 +85,19 @@ public class CartesianChart : UserControl, ICartesianChartView
 
         AttachedToVisualTree += CartesianChart_AttachedToVisualTree;
 
-        _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _xObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _sectionsObserver = new CollectionDeepObserver<CoreSection>(
-            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _visualsObserver = new CollectionDeepObserver<ChartElement>(
-           OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+        _observe = new ChartObserver(UpdateCore, AddUIElement, RemoveUIElement)
+            .Collection(nameof(Series))
+            .Collection(nameof(XAxes))
+            .Collection(nameof(YAxes))
+            .Collection(nameof(Sections))
+            .Collection(nameof(VisualElements))
+            .Property(nameof(Title))
+            .Property(nameof(DrawMarginFrame));
 
-        XAxes =
-        [
-            LiveCharts.DefaultSettings.GetProvider().GetDefaultCartesianAxis()
-        ];
-        YAxes =
-        [
-            LiveCharts.DefaultSettings.GetProvider().GetDefaultCartesianAxis()
-        ];
+        XAxes = new ObservableCollection<ICartesianAxis>();
+        YAxes = new ObservableCollection<ICartesianAxis>();
         Series = new ObservableCollection<ISeries>();
-        VisualElements = new ObservableCollection<ChartElement>();
+        VisualElements = new ObservableCollection<IChartElement>();
 
         PointerPressed += CartesianChart_PointerPressed;
         PointerMoved += CartesianChart_PointerMoved;
@@ -144,40 +135,40 @@ public class CartesianChart : UserControl, ICartesianChartView
     /// <summary>
     /// The series property
     /// </summary>
-    public static readonly AvaloniaProperty<IEnumerable<ISeries>> SeriesProperty =
-       AvaloniaProperty.Register<CartesianChart, IEnumerable<ISeries>>(nameof(Series), [], inherits: true);
+    public static readonly AvaloniaProperty<ICollection<ISeries>> SeriesProperty =
+       AvaloniaProperty.Register<CartesianChart, ICollection<ISeries>>(nameof(Series), [], inherits: true);
 
     /// <summary>
     /// The x axes property
     /// </summary>
-    public static readonly AvaloniaProperty<IEnumerable<ICartesianAxis>> XAxesProperty =
-        AvaloniaProperty.Register<CartesianChart, IEnumerable<ICartesianAxis>>(nameof(XAxes), [], inherits: true);
+    public static readonly AvaloniaProperty<ICollection<ICartesianAxis>> XAxesProperty =
+        AvaloniaProperty.Register<CartesianChart, ICollection<ICartesianAxis>>(nameof(XAxes), [], inherits: true);
 
     /// <summary>
     /// The y axes property
     /// </summary>
-    public static readonly AvaloniaProperty<IEnumerable<ICartesianAxis>> YAxesProperty =
-        AvaloniaProperty.Register<CartesianChart, IEnumerable<ICartesianAxis>>(nameof(YAxes), [], inherits: true);
+    public static readonly AvaloniaProperty<ICollection<ICartesianAxis>> YAxesProperty =
+        AvaloniaProperty.Register<CartesianChart, ICollection<ICartesianAxis>>(nameof(YAxes), [], inherits: true);
 
     /// <summary>
     /// The sections property
     /// </summary>
-    public static readonly AvaloniaProperty<IEnumerable<CoreSection>> SectionsProperty =
-        AvaloniaProperty.Register<CartesianChart, IEnumerable<CoreSection>>(
+    public static readonly AvaloniaProperty<ICollection<IChartElement>> SectionsProperty =
+        AvaloniaProperty.Register<CartesianChart, ICollection<IChartElement>>(
             nameof(Sections), [], inherits: true);
 
     /// <summary>
     /// The visual elements property
     /// </summary>
-    public static readonly AvaloniaProperty<IEnumerable<ChartElement>> VisualElementsProperty =
-        AvaloniaProperty.Register<CartesianChart, IEnumerable<ChartElement>>(
+    public static readonly AvaloniaProperty<ICollection<IChartElement>> VisualElementsProperty =
+        AvaloniaProperty.Register<CartesianChart, ICollection<IChartElement>>(
             nameof(VisualElements), [], inherits: true);
 
     /// <summary>
     /// The draw margin frame property
     /// </summary>
-    public static readonly AvaloniaProperty<CoreDrawMarginFrame?> DrawMarginFrameProperty =
-        AvaloniaProperty.Register<CartesianChart, CoreDrawMarginFrame?>(
+    public static readonly AvaloniaProperty<IChartElement?> DrawMarginFrameProperty =
+        AvaloniaProperty.Register<CartesianChart, IChartElement?>(
             nameof(DrawMarginFrame), null, inherits: true);
 
     /// <summary>
@@ -408,44 +399,44 @@ public class CartesianChart : UserControl, ICartesianChartView
     }
 
     /// <inheritdoc cref="ICartesianChartView.Series" />
-    public IEnumerable<ISeries> Series
+    public ICollection<ISeries> Series
     {
-        get => (IEnumerable<ISeries>)GetValue(SeriesProperty)!;
+        get => (ICollection<ISeries>)GetValue(SeriesProperty)!;
         set => SetValue(SeriesProperty, value);
     }
 
     /// <inheritdoc cref="ICartesianChartView.XAxes" />
-    public IEnumerable<ICartesianAxis> XAxes
+    public ICollection<ICartesianAxis> XAxes
     {
-        get => (IEnumerable<ICartesianAxis>)GetValue(XAxesProperty)!;
+        get => (ICollection<ICartesianAxis>)GetValue(XAxesProperty)!;
         set => SetValue(XAxesProperty, value);
     }
 
     /// <inheritdoc cref="ICartesianChartView.YAxes" />
-    public IEnumerable<ICartesianAxis> YAxes
+    public ICollection<ICartesianAxis> YAxes
     {
-        get => (IEnumerable<ICartesianAxis>)GetValue(YAxesProperty)!;
+        get => (ICollection<ICartesianAxis>)GetValue(YAxesProperty)!;
         set => SetValue(YAxesProperty, value);
     }
 
     /// <inheritdoc cref="ICartesianChartView.Sections" />
-    public IEnumerable<CoreSection> Sections
+    public ICollection<IChartElement> Sections
     {
-        get => (IEnumerable<CoreSection>)GetValue(SectionsProperty)!;
+        get => (ICollection<IChartElement>)GetValue(SectionsProperty)!;
         set => SetValue(SectionsProperty, value);
     }
 
     /// <inheritdoc cref="IChartView.VisualElements" />
-    public IEnumerable<ChartElement> VisualElements
+    public ICollection<IChartElement> VisualElements
     {
-        get => (IEnumerable<ChartElement>)GetValue(VisualElementsProperty)!;
+        get => (ICollection<IChartElement>)GetValue(VisualElementsProperty)!;
         set => SetValue(VisualElementsProperty, value);
     }
 
     /// <inheritdoc cref="ICartesianChartView.DrawMarginFrame" />
-    public CoreDrawMarginFrame? DrawMarginFrame
+    public IChartElement? DrawMarginFrame
     {
-        get => (CoreDrawMarginFrame?)GetValue(DrawMarginFrameProperty);
+        get => (IChartElement?)GetValue(DrawMarginFrameProperty);
         set => SetValue(DrawMarginFrameProperty, value);
     }
 
@@ -717,34 +708,14 @@ public class CartesianChart : UserControl, ICartesianChartView
 
         if (_core is null || change.Property.Name == nameof(IsPointerOver)) return;
 
-        if (change.Property.Name == nameof(Series))
+        if (change.Property.Name == nameof(SyncContext))
         {
-            _seriesObserver?.Dispose((IEnumerable<ISeries>?)change.OldValue);
-            _seriesObserver?.Initialize((IEnumerable<ISeries>?)change.NewValue);
+            CoreCanvas.Sync = change.NewValue ?? new object();
         }
 
-        if (change.Property.Name == nameof(XAxes))
+        if (_observe.TryGetValue(change.Property.Name, out var observer))
         {
-            _xObserver?.Dispose((IEnumerable<ICartesianAxis>?)change.OldValue);
-            _xObserver?.Initialize((IEnumerable<ICartesianAxis>?)change.NewValue);
-        }
-
-        if (change.Property.Name == nameof(YAxes))
-        {
-            _yObserver?.Dispose((IEnumerable<ICartesianAxis>?)change.OldValue);
-            _yObserver?.Initialize((IEnumerable<ICartesianAxis>?)change.NewValue);
-        }
-
-        if (change.Property.Name == nameof(Sections))
-        {
-            _sectionsObserver?.Dispose((IEnumerable<CoreSection>?)change.OldValue);
-            _sectionsObserver?.Initialize((IEnumerable<CoreSection>?)change.NewValue);
-        }
-
-        if (change.Property.Name == nameof(VisualElementsProperty))
-        {
-            _visualsObserver?.Dispose((IEnumerable<ChartElement>?)change.OldValue);
-            _visualsObserver?.Initialize((IEnumerable<ChartElement>?)change.NewValue);
+            observer.Initialize(change.NewValue);
         }
 
         if (change.Property.Name == nameof(ActualThemeVariant))
@@ -755,9 +726,19 @@ public class CartesianChart : UserControl, ICartesianChartView
 
     private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
 
-    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update();
+    private void UpdateCore() => _core?.Update();
 
-    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e) => _core?.Update();
+    private void AddUIElement(object item)
+    {
+        if (_avaloniaCanvas is null || item is not ILogical logical) return;
+        _avaloniaCanvas.Children.Add(logical);
+    }
+
+    private void RemoveUIElement(object item)
+    {
+        if (_avaloniaCanvas is null || item is not ILogical logical) return;
+        _ = _avaloniaCanvas.Children.Remove(logical);
+    }
 
     private DateTime _lastPresed;
     private readonly int _tolearance = 50;
@@ -860,7 +841,11 @@ public class CartesianChart : UserControl, ICartesianChartView
 
     private void CartesianChart_AttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e) => _core?.Load();
 
-    private void CartesianChart_DetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e) => _core?.Unload();
+    private void CartesianChart_DetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
+    {
+        _observe.Dispose();
+        _core?.Unload();
+    }
 
     void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer)
     {
