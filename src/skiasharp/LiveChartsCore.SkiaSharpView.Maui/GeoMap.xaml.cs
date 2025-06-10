@@ -22,12 +22,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
-using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
@@ -45,7 +43,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 [XamlCompilation(XamlCompilationOptions.Compile)]
 public partial class GeoMap : ContentView, IGeoMapView
 {
-    private readonly CollectionDeepObserver<IGeoSeries> _seriesObserver;
+    private readonly CollectionDeepObserver _seriesObserver;
     private readonly GeoMapChart _core;
 
     /// <summary>
@@ -59,9 +57,7 @@ public partial class GeoMap : ContentView, IGeoMapView
 
         SizeChanged += GeoMap_SizeChanged;
 
-        _seriesObserver = new CollectionDeepObserver<IGeoSeries>(
-            (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
-            (object? sender, PropertyChangedEventArgs e) => _core?.Update());
+        _seriesObserver = new CollectionDeepObserver(() => _core.Update());
 
         SetValue(SeriesProperty, Enumerable.Empty<IGeoSeries>());
         SetValue(ActiveMapProperty, Maps.GetWorldMap());
@@ -133,7 +129,7 @@ public partial class GeoMap : ContentView, IGeoMapView
            {
                var chart = (GeoMap)o;
                var seriesObserver = chart._seriesObserver;
-               seriesObserver?.Dispose((IEnumerable<IGeoSeries>)oldValue);
+               seriesObserver?.Dispose();
                seriesObserver?.Initialize((IEnumerable<IGeoSeries>)newValue);
                chart._core.Update();
            });

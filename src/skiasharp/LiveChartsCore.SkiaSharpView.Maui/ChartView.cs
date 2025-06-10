@@ -22,9 +22,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Linq;
+using LiveChartsCore.Kernel.Observers;
 using Microsoft.Maui.Controls;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
@@ -51,6 +49,16 @@ public abstract class ChartView : ContentView
     protected ChartView()
     {
         Content = new MotionCanvas();
+        Observe = new ChartObserver(() => CoreChart?.Update(), AddUIElement, RemoveUIElement)
+        {
+            {
+                nameof(SeriesSource),
+                new SeriesSourceObserver(
+                    InflateSeriesTemplate,
+                    GetSeriesSource,
+                    () => SeriesSource is not null && SeriesTemplate is not null)
+            }
+        };
     }
 
     /// <summary>
@@ -62,6 +70,11 @@ public abstract class ChartView : ContentView
     /// Gets the core chart.
     /// </summary>
     public abstract Chart CoreChart { get; }
+
+    /// <summary>
+    /// Gets the chart observer.
+    /// </summary>
+    protected ChartObserver Observe { get; }
 
     /// <summary>
     /// The series items source property
@@ -109,65 +122,35 @@ public abstract class ChartView : ContentView
     internal virtual void OnPinched(object? sender, Behaviours.Events.PinchEventArgs args) { }
     internal virtual void OnExited(object? sender, Behaviours.Events.EventArgs args) { }
 
+    /// <summary>
+    /// Adds an element to the visual tree.
+    /// </summary>
+    /// <param name="item">the element to add.</param>
+    protected void AddUIElement(object item)
+    {
+        if (item is not View view) return;
+        CanvasView.Children.Add(view);
+    }
+
+    /// <summary>
+    /// Removes an element from the visual tree.
+    /// </summary>
+    /// <param name="item">the element to remove.</param>
+    protected void RemoveUIElement(object item)
+    {
+        if (item is not View view) return;
+        _ = CanvasView.Children.Remove(view);
+    }
+
     private static void OnSeriesSourceChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var chart = (ChartView)bindable;
 
-        if (oldValue is INotifyCollectionChanged oldIncc)
-            oldIncc.CollectionChanged -= chart.OnSeriesItemsSourceCollectionChanged;
+        var seriesObserver = (SeriesSourceObserver)chart.Observe[nameof(SeriesSource)];
+        seriesObserver.Initialize(newValue);
 
-        if (chart.SeriesSource is null || chart.SeriesTemplate is null) return;
-
-        chart.InitializeSeriesSource();
-    }
-
-    private void InitializeSeriesSource()
-    {
-        if (SeriesSource is null || SeriesTemplate is null) return;
-
-        var inflatedSeries = SeriesSource
-            .Select(InflateSeriesTemplate)
-            .ToArray();
-
-        if (SeriesSource is INotifyCollectionChanged incc)
-        {
-            incc.CollectionChanged += OnSeriesItemsSourceCollectionChanged;
-            var observableSeries = new ObservableCollection<ISeries>(inflatedSeries);
-            Series = observableSeries;
-        }
-        else
-        {
-            Series = inflatedSeries;
-        }
-    }
-
-    internal void OnSeriesItemsSourceCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        switch (e.Action)
-        {
-            case NotifyCollectionChangedAction.Add:
-                foreach (var newItem in e.NewItems ?? Array.Empty<object>())
-                {
-                    var inflatedSeries = InflateSeriesTemplate(newItem);
-                    Series.Add(inflatedSeries);
-                }
-                break;
-            case NotifyCollectionChangedAction.Remove:
-                var seriesHash = Series.ToDictionary(x => ((View)x).BindingContext, x => x);
-                foreach (var oldItem in e.OldItems ?? Array.Empty<object>())
-                {
-                    if (!seriesHash.TryGetValue(oldItem, out var seriesObject)) continue;
-                    _ = Series.Remove(seriesObject);
-                }
-                break;
-            case NotifyCollectionChangedAction.Reset:
-                InitializeSeriesSource();
-                break;
-            case NotifyCollectionChangedAction.Replace:
-            case NotifyCollectionChangedAction.Move:
-            default:
-                break;
-        }
+        if (seriesObserver.Series is not null)
+            chart.Series = seriesObserver.Series;
     }
 
     private ISeries InflateSeriesTemplate(object item)
@@ -181,4 +164,14 @@ public abstract class ChartView : ContentView
 
         return series;
     }
+
+
+    private static object GetSeriesSource(ISeries series) => ((View)series).BindingContext;
+
+    /// <summary>
+    /// Initializes the observer for a property change.
+    /// </summary>
+    /// <param name="propertyName">The property.</param>
+    protected static BindableProperty.BindingPropertyChangedDelegate InitializeObserver(string propertyName) =>
+        (bo, o, n) => ((ChartView)bo).Observe[propertyName].Initialize(n);
 }
