@@ -29,6 +29,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Events;
+using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Providers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
@@ -92,7 +93,7 @@ public abstract class Series<TModel, TVisual, TLabel>
     /// </summary>
     protected bool _geometrySvgChanged = false;
 
-    private readonly CollectionDeepObserver<TModel> _observer;
+    private readonly CollectionDeepObserver _observer;
     private IEnumerable? _values;
     private string? _name;
     private Func<TModel, int, Coordinate>? _mapping;
@@ -125,9 +126,7 @@ public abstract class Series<TModel, TVisual, TLabel>
         if (typeof(IVariableSvgPath).IsAssignableFrom(typeof(TVisual)))
             SeriesProperties |= SeriesProperties.IsSVGPath;
 
-        _observer = new CollectionDeepObserver<TModel>(
-            (sender, e) => NotifySubscribers(),
-            (sender, e) => NotifySubscribers());
+        _observer = new CollectionDeepObserver(NotifySubscribers);
 
         Values = values;
     }
@@ -158,7 +157,7 @@ public abstract class Series<TModel, TVisual, TLabel>
         get => _values;
         set
         {
-            _observer?.Dispose(_values);
+            _observer?.Dispose();
             _observer?.Initialize(value);
             _values = value;
             OnPropertyChanged();
