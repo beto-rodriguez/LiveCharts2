@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System.Text;
+using LiveChartsGenerators.Frameworks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
@@ -37,6 +38,9 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
     {
         context.RegisterPostInitializationOutput(static ctx => ctx.AddSource(
             "Assets.g.cs", SourceText.From(AssetsTemplates.GetTemplate(), Encoding.UTF8)));
+
+        var assemblyAttributes = context.CompilationProvider
+            .Select(GetConsumerAssemblyType);
 
         var xamlObjects = context.SyntaxProvider
             .ForAttributeWithMetadataName(
@@ -58,12 +62,14 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
                 .GroupBy(prop => prop?.Property.ContainingType, SymbolEqualityComparer.Default)
                 .ToList());
 
-        context.RegisterSourceOutput(xamlObjects, static (spc, source) =>
+        context.RegisterSourceOutput(xamlObjects.Combine(assemblyAttributes), static (spc, pair) =>
         {
-            if (source is not { } value) return;
+            var (xamlObject, consumerType) = pair;
+            if (xamlObject is not { } value) return;
+
             spc.AddSource(
                 $"{value.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
-                SourceText.From(XamlObjectTempaltes.GetTemplate(value), Encoding.UTF8));
+                SourceText.From(XamlObjectTempaltes.GetTemplate(value, GetFrameworkTemplate(consumerType)), Encoding.UTF8));
         });
 
         context.RegisterSourceOutput(motionProperties, static (spc, source) =>
@@ -238,6 +244,50 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
         }
 
         return new(symbol, hasExplicitAcessors);
+    }
+
+    private static string GetConsumerAssemblyType(Compilation compilation, CancellationToken cancellationToken)
+    {
+        var currentConsumerType = ResolveConsumerType(compilation.Assembly.Name);
+        if (currentConsumerType is not null) return currentConsumerType;
+
+        foreach (var reference in compilation.References)
+        {
+            if (reference is PortableExecutableReference peReference)
+            {
+                var symbol = compilation.GetAssemblyOrModuleSymbol(peReference);
+                if (symbol is IAssemblySymbol assemblySymbol)
+                {
+                    var type = ResolveConsumerType(assemblySymbol.Name);
+                    if (type is null) continue;
+                    return type;
+                }
+            }
+        }
+
+        return "Unknown";
+    }
+
+    private static string? ResolveConsumerType(string assemblyName)
+    {
+        return assemblyName switch
+        {
+            "LiveChartsCore.SkiaSharpView.Maui" => "Maui",
+            "LiveChartsCore.SkiaSharpView.WinUI" => "WinUI",
+            "LiveChartsCore.SkiaSharpView.Avalonia" => "Avalonia",
+            _ => null
+        };
+    }
+
+    private static FrameworkTemplate GetFrameworkTemplate(string consumerType)
+    {
+        return consumerType switch
+        {
+            "Maui" => new MauiTemplate(),
+            //"WinUI" => new WinUITemplate(),
+            "Avalonia" => new AvaloniaTemplate(),
+            _ => throw new NotSupportedException($"The consumer type '{consumerType}' is not supported.")
+        };
     }
 
     private static List<ISymbol> GetLiveChartsMembers(ITypeSymbol typeSymbol)

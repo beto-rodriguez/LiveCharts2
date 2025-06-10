@@ -21,13 +21,14 @@
 // SOFTWARE.
 
 using System.Text;
+using LiveChartsGenerators.Frameworks;
 using Microsoft.CodeAnalysis;
 
 namespace LiveChartsGenerators;
 
 public static class XamlObjectTempaltes
 {
-    public static string GetTemplate(XamlObject target)
+    public static string GetTemplate(XamlObject target, FrameworkTemplate template)
     {
         var baseType = target.BasedOn.OriginalDefinition.ToDisplayString();
 
@@ -66,12 +67,12 @@ public partial class {target.Name}
 
 {Concatenate(
     target.BindableProperties,
-    pair => Concatenate(pair.Value, property => GetBindablePropertySyntax(target, pair.Key, property)))}
+    pair => Concatenate(pair.Value, property => template.GetBindablePropertySyntax(target, pair.Key, property)))}
 #endregion
 
 #region events
 
-{Concatenate(target.Events, e => GetEventSyntax(target, e))}
+{Concatenate(target.Events, e => GetEventSyntax(template, target, e))}
 #endregion
 
 #region methods
@@ -84,12 +85,7 @@ public partial class {target.Name}
 {Concatenate(target.ExplicitMethods, GetExplicitMethodSyntax)}
 #endregion
 
-    protected override void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string? propertyName = null)
-    {{
-        base.OnPropertyChanged(propertyName);
-        MapChangeToBaseType(propertyName);
-        AlsoOnPropertyChanged(propertyName);
-    }}
+    {template.GetPropertyChangedMetod()}
 
     partial void AlsoOnPropertyChanged(string? propertyName = null);
 
@@ -109,9 +105,10 @@ public partial class {target.Name}
     {{
         OnTypeDefined();
 
-{Concatenate(
+        {Concatenate(
     target.BindableProperties,
-    pair => Concatenate(pair.Value, property => $"{property.Name}Property = {GetBindablePropertyDefinition(target, property, pair.Key)}", false),
+    pair => Concatenate(pair.Value, property => @$"{property.Name}Property = {template.GetBindablePropertyDefinition(target, property, pair.Key)}
+        ", false),
     false)}
     }}
 
@@ -123,7 +120,7 @@ public partial class {target.Name}
     {
         var sb = new StringBuilder();
 
-        var fallBackInfo = GetFallbackInfo(target.BasedOn);
+        var fallBackInfo = FrameworkTemplate.GetFallbackInfo(target.BasedOn);
 
         _ = sb.AppendLine($"    private static readonly {fallBackInfo.Item1} {fallBackInfo.Item2} = new();");
 
@@ -157,13 +154,13 @@ public partial class {target.Name}
             : @$"    public {propertyType} {propertyName} {{ get => throw new System.NotImplementedException(""The generator was not able to generate the property syntax.""); set => throw new System.NotImplementedException(""The generator was not able to generate the property syntax.""); }}";
     }
 
-    private static string GetEventSyntax(XamlObject target, IEventSymbol @event) =>
+    private static string GetEventSyntax(FrameworkTemplate template, XamlObject target, IEventSymbol @event) =>
         @$"    public new event {@event.Type.ToDisplayString()} {@event.Name}
     {{
         add => _baseType.{@event.Name} += value;
         remove => _baseType.{@event.Name} -= value;
     }}
-{GetBindablePropertySyntax(target, "_baseType", $"{@event.Name}Command", "System.Windows.Input.ICommand", new(target.Name, "null"))}";
+{template.GetBindablePropertySyntax(target, "_baseType", $"{@event.Name}Command", "System.Windows.Input.ICommand", new(target.Name, "null"))}";
 
     private static string GetMethodSyntax(IMethodSymbol method)
     {
@@ -273,95 +270,8 @@ public partial class {target.Name}
         return sb.ToString();
     }
 
-    private static string GetBindablePropertySyntax(XamlObject target, string key, IPropertySymbol property, BindablePropertyInitializer? initializer = null) =>
-        GetBindablePropertySyntax(target, key, property.Name, property.Type.ToDisplayString(), initializer);
-
-    private static string GetBindablePropertySyntax(XamlObject target, string key, string propertyName, string propertyType, BindablePropertyInitializer? initializer)
-    {
-        var originalPropertyType = propertyType;
-
-        var isTypeOverriden = false;
-        if (target.OverridenTypes.TryGetValue(propertyName, out var overridenType))
-        {
-            propertyType = overridenType;
-            isTypeOverriden = true;
-        }
-
-        var sb = new StringBuilder();
-
-        _ = sb
-            .Append(@$"    public static readonly new Microsoft.Maui.Controls.BindableProperty {propertyName}Property");
-
-        _ = initializer is not null
-            ? sb.Append(" =").Append(GetBindablePropertyDefinition(propertyName, propertyType, initializer.BindableType, initializer.DefaultValue))
-            : sb.Append(';').AppendLine();
-
-        if (TypeConverters.TryGetValue(originalPropertyType, out var typeConverter))
-            _ = sb.AppendLine(@$"    [System.ComponentModel.TypeConverter(typeof({typeConverter}))]");
-
-        // for the getter we get the value from the base type
-        // in the PropertyChanged method we set the value to the base type
-
-        var path = key;
-        if (key.Length == 0)
-            path = "_baseType";
-
-        var getter = !propertyName.EndsWith("Command")
-            ? $"{(isTypeOverriden ? $"({propertyType})" : string.Empty)}{path}.{propertyName}"
-            : $"({propertyType})GetValue({propertyName}Property)";
-
-        _ = sb.Append(@$"    public new {propertyType} {propertyName}
-    {{
-        get => {getter};
-        set => SetValue({propertyName}Property, value);
-    }}");
-
-        return sb.ToString();
-    }
-
-    private static string GetBindablePropertyDefinition(XamlObject target, IPropertySymbol property, string path)
-    {
-        var fallbackInfo = GetFallbackInfo(target.BasedOn);
-        var fallBackName = path.Length > 0
-            ? $"_default{path}"
-            : fallbackInfo.Item2;
-
-        var propertyName = property.Name;
-        var propertyType = property.Type.ToDisplayString();
-
-        if (target.OverridenTypes.TryGetValue(propertyName, out var overridenType))
-            propertyType = overridenType;
-
-        var sanitizedPropertyType = property.Type.IsReferenceType && propertyType.EndsWith("?")
-            ? propertyType.Substring(0, propertyType.Length - 1)
-            : propertyType;
-
-        return GetBindablePropertyDefinition(
-            propertyName, sanitizedPropertyType, target.Name, $"{fallBackName}.{propertyName}");
-    }
-
-
-    private static string GetBindablePropertyDefinition(
-        string propertyName, string propertyType, string bindableType, string defaultValue)
-    {
-        var sb = new StringBuilder();
-
-        _ = sb
-            .AppendLine(@$" Microsoft.Maui.Controls.BindableProperty.Create(propertyName: ""{propertyName}"", returnType: typeof({propertyType}), declaringType: typeof({bindableType}), defaultValue: {defaultValue});");
-
-        return sb.ToString();
-    }
-
-    private static (string, string) GetFallbackInfo(ITypeSymbol target)
-    {
-        var baseType = target.OriginalDefinition.ToDisplayString();
-        var baseTypeName = target.Name;
-
-        return (baseType, $"_default{baseTypeName}");
-    }
-
 #pragma warning disable format
-    private static Dictionary<string, string> TypeConverters { get; } =
+    public static Dictionary<string, string> TypeConverters { get; } =
         new Dictionary<string, string>()
             .With("double[]",                                               "StringToDoubleArrayTypeConverter")
             .With("string[]",                                               "StringArrayTypeConverter")
@@ -415,11 +325,5 @@ public partial class {target.Name}
         }
 
         return sb.ToString();
-    }
-
-    private class BindablePropertyInitializer(string bindableType, string defaultValue)
-    {
-        public string BindableType { get; set; } = bindableType;
-        public string DefaultValue { get; set; } = defaultValue;
     }
 }
