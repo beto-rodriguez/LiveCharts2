@@ -31,6 +31,7 @@ using Avalonia.Input;
 using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
+using Avalonia.Rendering;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using LiveChartsCore.Drawing;
@@ -47,7 +48,7 @@ using LiveChartsCore.VisualElements;
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
 /// <inheritdoc cref="IPieChartView" />
-public class PieChart : UserControl, IPieChartView
+public class PieChart : UserControl, IPieChartView, ICustomHitTest
 {
     #region fields
 
@@ -746,4 +747,6 @@ public class PieChart : UserControl, IPieChartView
     }
 
     void IChartView.Invalidate() => CoreCanvas.Invalidate();
+
+    bool ICustomHitTest.HitTest(Point point) => new Rect(Bounds.Size).Contains(point);
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using Avalonia;
+using Avalonia.Controls;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Generators;
 using LiveChartsCore.Kernel;
@@ -14,11 +15,13 @@ using LiveChartsCore.VisualStates;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
-[XamlClass(typeof(Axis))]
-public partial class XamlAxis : StyledElement, ICartesianAxis
-{
+// It seems that we should inherit from Styled element since that is all the level of abstraction we need.
+// but we cant.... because to use datatemplates we need to inherit from Control, so we do that instead.
+// maybe not a big issue?
 
-}
+[XamlClass(typeof(Axis))]
+public partial class XamlAxis : Control, ICartesianAxis
+{ }
 
 internal static class Info
 {
@@ -132,7 +135,7 @@ public class Set
     public object Value { get; set; } = string.Empty;
 }
 
-public abstract class XamlSeries : StyledElement
+public abstract class XamlSeries : Control
 {
     protected XamlSeries()
     {

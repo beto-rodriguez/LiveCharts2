@@ -30,10 +30,13 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml;
+using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Media;
+using Avalonia.Rendering;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Generators;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Observers;
@@ -47,7 +50,7 @@ using LiveChartsCore.VisualElements;
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
 /// <inheritdoc cref="ICartesianChartView" />
-public class CartesianChart : UserControl, ICartesianChartView
+public partial class CartesianChart : UserControl, ICartesianChartView, ICustomHitTest
 {
     #region fields
 
@@ -75,10 +78,6 @@ public class CartesianChart : UserControl, ICartesianChartView
     {
         InitializeComponent();
 
-        // workaround to detect mouse events.
-        // Avalonia do not seem to detect pointer events if background is not set.
-        ((IChartView)this).BackColor = LvcColor.FromArgb(0, 0, 0, 0);
-
         LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeCore();
@@ -93,6 +92,13 @@ public class CartesianChart : UserControl, ICartesianChartView
             .Collection(nameof(VisualElements))
             .Property(nameof(Title))
             .Property(nameof(DrawMarginFrame));
+
+        _observe.Add(
+            nameof(SeriesSource),
+            new SeriesSourceObserver(
+                InflateSeriesTemplate,
+                GetSeriesSource,
+                () => SeriesSource is not null && SeriesTemplate is not null));
 
         XAxes = new ObservableCollection<ICartesianAxis>();
         YAxes = new ObservableCollection<ICartesianAxis>();
@@ -111,6 +117,19 @@ public class CartesianChart : UserControl, ICartesianChartView
 
         DetachedFromVisualTree += CartesianChart_DetachedFromVisualTree;
     }
+
+    #region Generated Bindable Properties
+
+#pragma warning disable IDE1006 // Naming Styles
+#pragma warning disable IDE0052 // Remove unread private member
+
+    private static readonly XamlProperty<IEnumerable<object>> seriesSource = new(onChanged: OnSeriesSourceChanged);
+    private static readonly XamlProperty<DataTemplate> seriesTemplate = new(onChanged: OnSeriesSourceChanged);
+
+#pragma warning restore IDE1006 // Naming Styles
+#pragma warning restore IDE0052 // Remove unread private members
+
+    #endregion
 
     #region avalonia/dependency properties
 
@@ -701,11 +720,8 @@ public class CartesianChart : UserControl, ICartesianChartView
         _core.Update();
     }
 
-    /// <inheritdoc cref="OnPropertyChanged(AvaloniaPropertyChangedEventArgs)"/>
-    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    partial void OnXamlObjectPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
-        base.OnPropertyChanged(change);
-
         if (_core is null || change.Property.Name == nameof(IsPointerOver)) return;
 
         if (change.Property.Name == nameof(SyncContext))
@@ -722,6 +738,17 @@ public class CartesianChart : UserControl, ICartesianChartView
             _core.ApplyTheme();
 
         _core.Update();
+    }
+
+    private static void OnSeriesSourceChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        var chart = (CartesianChart)change.Sender;
+
+        var seriesObserver = (SeriesSourceObserver)chart._observe[nameof(SeriesSource)];
+        seriesObserver.Initialize(chart.SeriesSource);
+
+        if (seriesObserver.Series is not null)
+            chart.Series = seriesObserver.Series;
     }
 
     private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
@@ -877,4 +904,21 @@ public class CartesianChart : UserControl, ICartesianChartView
     }
 
     void IChartView.Invalidate() => CoreCanvas.Invalidate();
+
+    bool ICustomHitTest.HitTest(Point point) => new Rect(Bounds.Size).Contains(point);
+
+    private ISeries InflateSeriesTemplate(object item)
+    {
+        var control = SeriesTemplate.Build(item);
+
+        if (control is not ISeries series)
+            throw new InvalidOperationException("The template must be a valid series.");
+
+        control.DataContext = item;
+
+        return series;
+    }
+
+    private static object GetSeriesSource(ISeries series) =>
+        ((StyledElement)series).DataContext!;
 }

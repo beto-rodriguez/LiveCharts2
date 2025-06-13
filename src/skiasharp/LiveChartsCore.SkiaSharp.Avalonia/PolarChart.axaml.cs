@@ -34,6 +34,7 @@ using Avalonia.Input;
 using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
+using Avalonia.Rendering;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using LiveChartsCore.Drawing;
@@ -50,7 +51,7 @@ using LiveChartsCore.VisualElements;
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
 /// <inheritdoc cref="IPolarChartView" />
-public class PolarChart : UserControl, IPolarChartView
+public class PolarChart : UserControl, IPolarChartView, ICustomHitTest
 {
     #region fields
 
@@ -810,4 +811,6 @@ public class PolarChart : UserControl, IPolarChartView
     }
 
     void IChartView.Invalidate() => CoreCanvas.Invalidate();
+
+    bool ICustomHitTest.HitTest(Point point) => new Rect(Bounds.Size).Contains(point);
 }
