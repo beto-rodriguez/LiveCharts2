@@ -21,10 +21,11 @@
 // SOFTWARE.
 
 using System.Text;
+using LiveChartsGenerators.Definitions;
 using LiveChartsGenerators.Frameworks;
 using Microsoft.CodeAnalysis;
 
-namespace LiveChartsGenerators;
+namespace LiveChartsGenerators.Templates;
 
 public static class XamlObjectTempaltes
 {
@@ -318,11 +319,9 @@ public partial class {target.Name}
         var sb = new StringBuilder();
 
         foreach (var item in propertyToWrite)
-        {
             _ = appendLine
                 ? _ = sb.AppendLine(syntaxBuilder(item))
                 : _ = sb.Append(syntaxBuilder(item));
-        }
 
         return sb.ToString();
     }

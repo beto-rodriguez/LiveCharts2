@@ -21,6 +21,8 @@
 // SOFTWARE.
 
 using System.Text;
+using LiveChartsGenerators.Definitions;
+using LiveChartsGenerators.Templates;
 using Microsoft.CodeAnalysis;
 
 namespace LiveChartsGenerators.Frameworks;
@@ -48,7 +50,7 @@ public abstract class FrameworkTemplate
             .Append(@$"    {DeclareBindableProperty(propertyName, propertyType)}");
 
         _ = initializer is not null
-            ? sb.Append(" = ").Append(GetBindablePropertyDefinition(propertyName, propertyType, initializer.BindableType, initializer.DefaultValue))
+            ? sb.Append(" = ").Append(CreateBindableProperty(propertyName, propertyType, initializer.BindableType, initializer.DefaultValue))
             : sb.Append(';').AppendLine();
 
         if (XamlObjectTempaltes.TypeConverters.TryGetValue(originalPropertyType, out var typeConverter))
@@ -88,13 +90,9 @@ public abstract class FrameworkTemplate
             ? propertyType.Substring(0, propertyType.Length - 1)
             : propertyType;
 
-        return GetBindablePropertyDefinition(
+        return CreateBindableProperty(
             propertyName, sanitizedPropertyType, target.Name, $"{fallBackName}.{propertyName}");
     }
-
-    public string GetBindablePropertyDefinition(
-        string propertyName, string propertyType, string bindableType, string defaultValue) =>
-            CreateBindableProperty(propertyName, propertyType, bindableType, defaultValue);
 
     public static (string, string) GetFallbackInfo(ITypeSymbol target)
     {
@@ -104,7 +102,8 @@ public abstract class FrameworkTemplate
         return (baseType, $"_default{baseTypeName}");
     }
 
-    protected abstract string DeclareBindableProperty(string propertyName, string propertyType);
-    protected abstract string CreateBindableProperty(string propertyName, string propertyType, string bindableType, string defaultValue);
+    public abstract string DeclareBindableProperty(string propertyName, string propertyType);
+    public abstract string CreateBindableProperty(
+        string propertyName, string propertyType, string bindableType, string defaultValue, string? onChanged = null);
     public abstract string GetPropertyChangedMetod();
 }

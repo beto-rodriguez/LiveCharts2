@@ -21,8 +21,11 @@
 // SOFTWARE.
 
 using System.Text;
+using LiveChartsGenerators.Definitions;
 using LiveChartsGenerators.Frameworks;
+using LiveChartsGenerators.Templates;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 
@@ -54,12 +57,23 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
                 MotionPropertyAttribute,
                 predicate: static (syntaxNode, _) => syntaxNode is PropertyDeclarationSyntax,
                 transform: static (ctx, _) => GetMotionPropertiesToGenerate(ctx.SemanticModel, ctx.TargetNode))
-            .Where(static m => m is not null);
-
-        var groupedByType = motionProperties
+            .Where(static m => m is not null)
             .Collect()
             .Select((props, _) => props
                 .GroupBy(prop => prop?.Property.ContainingType, SymbolEqualityComparer.Default)
+                .ToList());
+
+        var xamlProperties = context.SyntaxProvider
+            .CreateSyntaxProvider(
+                static (node, _) =>
+                    node is FieldDeclarationSyntax fieldDecl &&
+                    fieldDecl.Modifiers.Any(SyntaxKind.StaticKeyword),
+                static (ctx, _) => GetXamlPropertiesToGenerate(ctx.SemanticModel, ctx.Node)
+            )
+            .Where(symbol => symbol is not null)
+            .Collect()
+            .Select((props, _) => props
+                .GroupBy(prop => prop?.DeclaringType, SymbolEqualityComparer.Default)
                 .ToList());
 
         context.RegisterSourceOutput(xamlObjects.Combine(assemblyAttributes), static (spc, pair) =>
@@ -72,23 +86,51 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
                 SourceText.From(XamlObjectTempaltes.GetTemplate(value, GetFrameworkTemplate(consumerType)), Encoding.UTF8));
         });
 
-        context.RegisterSourceOutput(motionProperties, static (spc, source) =>
-        {
-            if (source is not { } value) return;
-            spc.AddSource(
-                $"{value.Property.ContainingType.Name}.{value.Property.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
-                SourceText.From(MotionPropertyTemplates.GetTemplate(value), Encoding.UTF8));
-        });
-
-        context.RegisterSourceOutput(groupedByType, (spc, groups) =>
+        context.RegisterSourceOutput(motionProperties, (spc, groups) =>
         {
             foreach (var group in groups)
             {
                 if (group is null || group.Key is null) continue;
 
+                foreach (var item in group)
+                {
+                    if (item is not { } value) return;
+
+                    spc.AddSource(
+                        $"{value.Property.ContainingType.Name}.{value.Property.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
+                        SourceText.From(MotionPropertyTemplates.GetTemplate(value), Encoding.UTF8));
+                }
+
                 spc.AddSource(
                     $"{group.Key.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
                     MotionPropertyTemplates.GetClassTemplate(group));
+            }
+        });
+
+        context.RegisterSourceOutput(xamlProperties.Combine(assemblyAttributes), (spc, pair) =>
+        {
+            var (groups, consumerType) = pair;
+
+            foreach (var group in groups)
+            {
+                if (group is null || group.Key is null) continue;
+
+                if (consumerType == "Avalonia")
+                {
+                    // exception for avalonia, we need to generate additional code for the base type
+                    spc.AddSource(
+                        $"{group.Key.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
+                        SourceText.From(BindablePropertyTempaltes.GetAvaloniaBaseTypeTemplate(group, GetFrameworkTemplate(consumerType)), Encoding.UTF8));
+                }
+
+                foreach (var property in group)
+                {
+                    if (property is not { } value) return;
+
+                    spc.AddSource(
+                        $"{value.DeclaringType.Name}.{value.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
+                        SourceText.From(BindablePropertyTempaltes.GetTemplate(value, GetFrameworkTemplate(consumerType)), Encoding.UTF8));
+                }
             }
         });
     }
@@ -244,6 +286,77 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
         }
 
         return new(symbol, hasExplicitAcessors);
+    }
+
+    private static XamlProperty? GetXamlPropertiesToGenerate(SemanticModel semanticModel, SyntaxNode node)
+    {
+        var fieldDecl = (FieldDeclarationSyntax)node;
+        // Assume we only care about one variable per declaration
+        var variable = fieldDecl.Declaration.Variables.FirstOrDefault();
+        if (variable is null)
+            return null;
+
+        if (semanticModel.GetDeclaredSymbol(variable) is not IFieldSymbol fieldSymbol)
+            return null;
+
+        var displayFormat = new SymbolDisplayFormat(
+            typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
+            genericsOptions: SymbolDisplayGenericsOptions.None);
+
+        // Check if field's type is the type you're interested in
+        if (fieldSymbol.Type.ToDisplayString(displayFormat) == "LiveChartsCore.Generators.XamlProperty")
+        {
+            var camelCasedName = variable.Identifier.Text;
+            var propertyName = $"{camelCasedName.Substring(0, 1).ToUpperInvariant()}{camelCasedName.Substring(1, camelCasedName.Length - 1)}";
+            var propertyType = ((INamedTypeSymbol)fieldSymbol.Type).TypeArguments[0];
+            string? defaultValue = null;
+            string? onChanged = null;
+
+            var syntaxReference = fieldSymbol.DeclaringSyntaxReferences.First();
+            var syntaxTree = syntaxReference.SyntaxTree;
+            var root = syntaxTree.GetRoot() as CompilationUnitSyntax;
+            var usingDirectives = root?.Usings.Select(u => u.ToString());
+            var headers = string.Join(@"
+", usingDirectives);
+
+            foreach (var syntaxRef in fieldSymbol.DeclaringSyntaxReferences)
+            {
+                var syntaxNode = syntaxRef.GetSyntax();
+
+                if (syntaxNode is VariableDeclaratorSyntax variableDeclarator)
+                {
+                    if (variableDeclarator.Initializer != null)
+                    {
+                        var initializerExpression = variableDeclarator.Initializer.Value;
+
+                        if (initializerExpression is ImplicitObjectCreationExpressionSyntax ioce)
+                        {
+                            for (var i = 0; i < ioce.ArgumentList.Arguments.Count; i++)
+                            {
+                                var argument = ioce.ArgumentList.Arguments[i];
+                                var nameColon = argument.NameColon?.ToString() ?? XamlProperty.ByPosition[i];
+
+                                switch (nameColon)
+                                {
+                                    case "defaultValue:":
+                                        defaultValue = argument.Expression.ToString();
+                                        break;
+                                    case "onChanged:":
+                                        onChanged = argument.Expression.ToString();
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return new(propertyName, propertyType, fieldSymbol.ContainingType, headers, defaultValue, onChanged);
+        }
+
+        return null;
     }
 
     private static string GetConsumerAssemblyType(Compilation compilation, CancellationToken cancellationToken)

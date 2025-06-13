@@ -20,10 +20,38 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsGenerators;
+using Microsoft.CodeAnalysis;
 
-public class BindablePropertyInitializer(string bindableType, string defaultValue)
+namespace LiveChartsGenerators.Definitions;
+
+public readonly record struct XamlProperty
 {
-    public string BindableType { get; set; } = bindableType;
-    public string DefaultValue { get; set; } = defaultValue;
+    public readonly string Name;
+    public readonly ITypeSymbol Type;
+    public readonly ITypeSymbol DeclaringType;
+    public readonly string Headers;
+    public readonly string? DefaultValueExpression = null;
+    public readonly string? OnChangedExpression = null;
+
+    public XamlProperty(
+        string name,
+        ITypeSymbol type,
+        ITypeSymbol declaringType,
+        string headers,
+        string? defaultValueExpression,
+        string? onChangedExpression)
+    {
+        Name = name;
+        Type = type;
+        DeclaringType = declaringType;
+        Headers = headers;
+        DefaultValueExpression = defaultValueExpression;
+        OnChangedExpression = onChangedExpression;
+    }
+
+    public static Dictionary<int, string> ByPosition = new()
+    {
+        [0] = "defaultValue:",
+        [1] = "onChanged:",
+    };
 }

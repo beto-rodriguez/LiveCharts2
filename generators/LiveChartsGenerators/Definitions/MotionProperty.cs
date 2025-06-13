@@ -20,22 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsGenerators.Frameworks;
+using Microsoft.CodeAnalysis;
 
-public class MauiTemplate : FrameworkTemplate
+namespace LiveChartsGenerators.Definitions;
+
+public readonly record struct MotionProperty
 {
-    public override string DeclareBindableProperty(string propertyName, string propertyType)
-        => @$"public static readonly new global::Microsoft.Maui.Controls.BindableProperty {propertyName}Property";
+    public readonly IPropertySymbol Property;
+    public readonly bool HasExplicitAcessors;
 
-    public override string CreateBindableProperty(
-        string propertyName, string propertyType, string bindableType, string defaultValue, string? onChanged = null)
-            => @$"global::Microsoft.Maui.Controls.BindableProperty.Create(propertyName: ""{propertyName}"", returnType: typeof({propertyType}), declaringType: typeof({bindableType}), defaultValue: {defaultValue}{(onChanged is null ? string.Empty : $", propertyChanged: {onChanged}")});";
-
-    public override string GetPropertyChangedMetod() =>
-        @$"protected override void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string? propertyName = null)
-    {{
-        base.OnPropertyChanged(propertyName);
-        MapChangeToBaseType(propertyName);
-        AlsoOnPropertyChanged(propertyName);
-    }}";
+    public MotionProperty(IPropertySymbol symbol, bool hasExplicitAcessors)
+    {
+        Property = symbol;
+        HasExplicitAcessors = hasExplicitAcessors;
+    }
 }

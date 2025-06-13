@@ -23,9 +23,10 @@
 #pragma warning disable IDE0046 // Convert to conditional expression
 
 using System.Text;
+using LiveChartsGenerators.Definitions;
 using Microsoft.CodeAnalysis;
 
-namespace LiveChartsGenerators;
+namespace LiveChartsGenerators.Templates;
 
 public static class MotionPropertyTemplates
 {

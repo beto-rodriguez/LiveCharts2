@@ -24,11 +24,12 @@ namespace LiveChartsGenerators.Frameworks;
 
 public class AvaloniaTemplate : FrameworkTemplate
 {
-    protected override string DeclareBindableProperty(string propertyName, string propertyType)
+    public override string DeclareBindableProperty(string propertyName, string propertyType)
         => @$"public static readonly new global::Avalonia.AvaloniaProperty<{propertyType}> {propertyName}Property";
 
-    protected override string CreateBindableProperty(string propertyName, string propertyType, string bindableType, string defaultValue)
-        => @$"global::Avalonia.AvaloniaProperty.Register<{bindableType}, {propertyType}>(nameof({propertyName}), defaultValue: ({propertyType}){defaultValue}, inherits: true);";
+    public override string CreateBindableProperty(
+        string propertyName, string propertyType, string bindableType, string defaultValue, string? onChanged = null)
+            => @$"global::Avalonia.AvaloniaProperty.Register<{bindableType}, {propertyType}>(nameof({propertyName}), defaultValue: ({propertyType}){defaultValue}, inherits: true);";
 
     public override string GetPropertyChangedMetod() =>
         @$"protected override void OnPropertyChanged(global::Avalonia.AvaloniaPropertyChangedEventArgs change)
