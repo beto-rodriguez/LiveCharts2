@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using LiveChartsCore.Generators;
 using LiveChartsCore.Kernel.Observers;
 using Microsoft.Maui.Controls;
 
@@ -30,7 +31,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 /// <summary>
 /// Base class for views that display a chart.
 /// </summary>
-public abstract class ChartView : ContentView
+public abstract partial class ChartView : ContentView
 {
     static ChartView()
     {
@@ -76,39 +77,18 @@ public abstract class ChartView : ContentView
     /// </summary>
     protected ChartObserver Observe { get; }
 
-    /// <summary>
-    /// The series items source property
-    /// </summary>
-    public static readonly BindableProperty SeriesSourceProperty =
-          BindableProperty.Create(
-              nameof(SeriesSource), typeof(IEnumerable<object>), typeof(PieChart), null, BindingMode.Default, null,
-              OnSeriesSourceChanged);
+    #region Generated Bindable Properties
 
-    /// <summary>
-    /// The series template property
-    /// </summary>
-    public static readonly BindableProperty SeriesTemplateProperty =
-          BindableProperty.Create(
-              nameof(SeriesTemplate), typeof(DataTemplate), typeof(PieChart), null, BindingMode.Default, null,
-              OnSeriesSourceChanged);
+#pragma warning disable IDE1006 // Naming Styles
+#pragma warning disable IDE0052 // Remove unread private member
 
-    /// <summary>
-    /// Gets or sets the Series items source.
-    /// </summary>
-    public IEnumerable<object> SeriesSource
-    {
-        get => (IEnumerable<object>)GetValue(SeriesSourceProperty);
-        set => SetValue(SeriesSourceProperty, value);
-    }
+    private static readonly XamlProperty<IEnumerable<object>> seriesSource = new(onChanged: OnSeriesSourceChanged);
+    private static readonly XamlProperty<DataTemplate> seriesTemplate = new(onChanged: OnSeriesSourceChanged);
 
-    /// <summary>
-    /// Gets or sets the series template.
-    /// </summary>
-    public DataTemplate SeriesTemplate
-    {
-        get => (DataTemplate)GetValue(SeriesTemplateProperty);
-        set => SetValue(SeriesTemplateProperty, value);
-    }
+#pragma warning restore IDE1006 // Naming Styles
+#pragma warning restore IDE0052 // Remove unread private members
+
+    #endregion
 
     /// <summary>
     /// Gets or sets the series.
@@ -147,7 +127,7 @@ public abstract class ChartView : ContentView
         var chart = (ChartView)bindable;
 
         var seriesObserver = (SeriesSourceObserver)chart.Observe[nameof(SeriesSource)];
-        seriesObserver.Initialize(newValue);
+        seriesObserver.Initialize(chart.SeriesSource);
 
         if (seriesObserver.Series is not null)
             chart.Series = seriesObserver.Series;
@@ -164,7 +144,6 @@ public abstract class ChartView : ContentView
 
         return series;
     }
-
 
     private static object GetSeriesSource(ISeries series) => ((View)series).BindingContext;
 
