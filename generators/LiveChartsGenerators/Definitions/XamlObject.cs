@@ -37,6 +37,7 @@ public readonly record struct XamlObject
     public readonly List<IMethodSymbol> Methods;
     public readonly List<IMethodSymbol> ExplicitMethods;
     public readonly string? FileHeader;
+    public readonly bool ManualOnPropertyChanged = false;
     public readonly Dictionary<string, string> PropertyChangedMap = [];
     public readonly Dictionary<string, string> OverridenTypes = [];
 
@@ -52,6 +53,7 @@ public readonly record struct XamlObject
         List<IMethodSymbol> methods,
         List<IMethodSymbol> explicitMethods,
         string? fileHeader,
+        bool manualOnPropertyChanged,
         string? propertyChangedMap,
         string? overridenTypes)
     {
@@ -66,6 +68,7 @@ public readonly record struct XamlObject
         Methods = methods;
         ExplicitMethods = explicitMethods;
         FileHeader = fileHeader;
+        ManualOnPropertyChanged = manualOnPropertyChanged;
 
         if (propertyChangedMap is not null)
         {

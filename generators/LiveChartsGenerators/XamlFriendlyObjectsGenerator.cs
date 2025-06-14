@@ -78,59 +78,106 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
 
         context.RegisterSourceOutput(xamlObjects.Combine(assemblyAttributes), static (spc, pair) =>
         {
-            var (xamlObject, consumerType) = pair;
-            if (xamlObject is not { } value) return;
+            try
+            {
+                var (xamlObject, consumerType) = pair;
+                if (xamlObject is not { } value) return;
 
-            spc.AddSource(
-                $"{value.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
-                SourceText.From(XamlObjectTempaltes.GetTemplate(value, GetFrameworkTemplate(consumerType)), Encoding.UTF8));
+                spc.AddSource(
+                    $"{value.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
+                    SourceText.From(XamlObjectTempaltes.GetTemplate(value, GetFrameworkTemplate(consumerType)), Encoding.UTF8));
+            }
+            catch (Exception ex)
+            {
+                spc.ReportDiagnostic(Diagnostic.Create(
+                    new DiagnosticDescriptor(
+                    id: "GENEX001",
+                    title: "Exception in Generator",
+                    messageFormat: $"Exception: {ex.Message}\n{ex.StackTrace}",
+                    category: "SourceGenerator",
+                    DiagnosticSeverity.Error,
+                    isEnabledByDefault: true),
+                    Location.None));
+            }
         });
 
         context.RegisterSourceOutput(motionProperties, (spc, groups) =>
         {
-            foreach (var group in groups)
+            try
             {
-                if (group is null || group.Key is null) continue;
-
-                foreach (var item in group)
+                foreach (var group in groups)
                 {
-                    if (item is not { } value) return;
+                    if (group is null || group.Key is null) continue;
+
+                    foreach (var item in group)
+                    {
+                        if (item is not { } value) return;
+
+                        spc.AddSource(
+                            $"{value.Property.ContainingType.Name}.{value.Property.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
+                            SourceText.From(MotionPropertyTemplates.GetTemplate(value), Encoding.UTF8));
+                    }
 
                     spc.AddSource(
-                        $"{value.Property.ContainingType.Name}.{value.Property.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
-                        SourceText.From(MotionPropertyTemplates.GetTemplate(value), Encoding.UTF8));
+                        $"{group.Key.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
+                        MotionPropertyTemplates.GetClassTemplate(group));
                 }
-
-                spc.AddSource(
-                    $"{group.Key.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
-                    MotionPropertyTemplates.GetClassTemplate(group));
+            }
+            catch (Exception ex)
+            {
+                spc.ReportDiagnostic(Diagnostic.Create(
+                    new DiagnosticDescriptor(
+                    id: "GENEX001",
+                    title: "Exception in Generator",
+                    messageFormat: $"Exception: {ex.Message}\n{ex.StackTrace}",
+                    category: "SourceGenerator",
+                    DiagnosticSeverity.Error,
+                    isEnabledByDefault: true),
+                    Location.None));
             }
         });
 
         context.RegisterSourceOutput(xamlProperties.Combine(assemblyAttributes), (spc, pair) =>
         {
-            var (groups, consumerType) = pair;
-
-            foreach (var group in groups)
+            try
             {
-                if (group is null || group.Key is null) continue;
+                var (groups, consumerType) = pair;
 
-                if (consumerType == "Avalonia")
+                foreach (var group in groups)
                 {
-                    // exception for avalonia, we need to generate additional code for the base type
-                    spc.AddSource(
-                        $"{group.Key.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
-                        SourceText.From(BindablePropertyTempaltes.GetAvaloniaBaseTypeTemplate(group, GetFrameworkTemplate(consumerType)), Encoding.UTF8));
-                }
+                    if (group is null || group.Key is null) continue;
 
-                foreach (var property in group)
-                {
-                    if (property is not { } value) return;
+                    if (consumerType == "Avalonia")
+                    {
+                        // exception for avalonia, we need to generate additional code for the base type
+                        spc.AddSource(
+                            $"{group.Key.Name}.onChange.g.cs".Replace('<', '_').Replace('>', '_'),
+                            SourceText.From(
+                                BindablePropertyTempaltes.GetAvaloniaBaseTypeTemplate(group, GetFrameworkTemplate(consumerType)),
+                                Encoding.UTF8));
+                    }
 
-                    spc.AddSource(
-                        $"{value.DeclaringType.Name}.{value.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
-                        SourceText.From(BindablePropertyTempaltes.GetTemplate(value, GetFrameworkTemplate(consumerType)), Encoding.UTF8));
+                    foreach (var property in group)
+                    {
+                        if (property is not { } value) return;
+
+                        spc.AddSource(
+                            $"{value.DeclaringType.Name}.{value.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
+                            SourceText.From(BindablePropertyTempaltes.GetTemplate(value, GetFrameworkTemplate(consumerType)), Encoding.UTF8));
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                spc.ReportDiagnostic(Diagnostic.Create(
+                    new DiagnosticDescriptor(
+                    id: "GENEX001",
+                    title: "Exception in Generator",
+                    messageFormat: $"Exception: {ex.Message}\n{ex.StackTrace}",
+                    category: "SourceGenerator",
+                    DiagnosticSeverity.Error,
+                    isEnabledByDefault: true),
+                    Location.None));
             }
         });
     }
@@ -156,6 +203,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
         string? fileHeader = null;
         string? propertyChangeMap = null;
         string? overridenTypes = null;
+        bool manualOnPropertyChanged = false;
         ITypeSymbol? alsoMap = null;
         string? alsoMapPath = null;
         var generateBaseTypeDeclaration = true;
@@ -166,6 +214,9 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
             {
                 case "FileHeader":
                     fileHeader = arg.Value.Value as string;
+                    break;
+                case "GenerateOnChange":
+                    manualOnPropertyChanged = !(((bool?)arg.Value.Value) ?? true);
                     break;
                 case "PropertyChangeMap":
                     propertyChangeMap = arg.Value.Value as string;
@@ -259,7 +310,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
 
         return new XamlObject(
             generateBaseTypeDeclaration, ns, name, symbol, baseType, bindablePropertiesDic, [.. notBindableProperties.Values], events,
-            [.. methods.Values], [.. explicitMethods.Values], fileHeader, propertyChangeMap, overridenTypes);
+            [.. methods.Values], [.. explicitMethods.Values], fileHeader, manualOnPropertyChanged, propertyChangeMap, overridenTypes);
     }
 
     private static MotionProperty? GetMotionPropertiesToGenerate(SemanticModel semanticModel, SyntaxNode declarationSyntax)

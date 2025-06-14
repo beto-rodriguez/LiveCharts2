@@ -29,7 +29,7 @@ public class MauiTemplate : FrameworkTemplate
 
     public override string CreateBindableProperty(
         string propertyName, string propertyType, string bindableType, string defaultValue, string? onChanged = null)
-            => @$"global::Microsoft.Maui.Controls.BindableProperty.Create(propertyName: ""{propertyName}"", returnType: typeof({propertyType}), declaringType: typeof({bindableType}), defaultValue: {defaultValue}{(onChanged is null ? string.Empty : $", propertyChanged: {onChanged}")});";
+            => @$"global::Microsoft.Maui.Controls.BindableProperty.Create(propertyName: ""{propertyName}"", returnType: typeof({propertyType}), declaringType: typeof({bindableType}), defaultValue: {defaultValue}{(onChanged is null ? string.Empty : $", propertyChanged: {GetOnChangedExpression(onChanged, bindableType, propertyType)}")});";
 
     public override string GetPropertyChangedMetod() =>
         @$"protected override void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string? propertyName = null)
@@ -38,4 +38,7 @@ public class MauiTemplate : FrameworkTemplate
         MapChangeToBaseType(propertyName);
         AlsoOnPropertyChanged(propertyName);
     }}";
+
+    private string GetOnChangedExpression(string expression, string bindableType, string propertyType)
+        => $@"(bo, n, o) => {expression}(({bindableType})bo, ({propertyType})o, ({propertyType})n)";
 }
