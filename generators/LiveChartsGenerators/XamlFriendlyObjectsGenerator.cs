@@ -151,7 +151,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
                     {
                         // exception for avalonia, we need to generate additional code for the base type
                         spc.AddSource(
-                            $"{group.Key.Name}.onChange.g.cs".Replace('<', '_').Replace('>', '_'),
+                            $"{group.Key.Name}._avaloina_onChange.g.cs".Replace('<', '_').Replace('>', '_'),
                             SourceText.From(
                                 BindablePropertyTempaltes.GetAvaloniaBaseTypeTemplate(group, GetFrameworkTemplate(consumerType)),
                                 Encoding.UTF8));

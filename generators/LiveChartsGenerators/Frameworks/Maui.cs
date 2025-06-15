@@ -1,4 +1,5 @@
-﻿// The MIT License(MIT)
+﻿
+// The MIT License(MIT)
 //
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
 //
@@ -40,5 +41,5 @@ public class MauiTemplate : FrameworkTemplate
     }}";
 
     private string GetOnChangedExpression(string expression, string bindableType, string propertyType)
-        => $@"(bo, n, o) => {expression}(({bindableType})bo, ({propertyType})o, ({propertyType})n)";
+        => $@"(bo, o, n) => {expression}(({bindableType})bo, ({propertyType})o, ({propertyType})n)";
 }
