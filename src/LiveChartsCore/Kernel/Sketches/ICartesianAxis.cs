@@ -253,4 +253,10 @@ public interface ICartesianAxis : IPlane, INotifyPropertyChanged
     /// </summary>
     /// <param name="chart">The chart.</param>
     void ClearCrosshair(Chart chart);
+
+    /// <summary>
+    /// Sets the log base.
+    /// </summary>
+    /// <param name="newBase">The new base.</param>
+    void SetLogBase(double newBase);
 }

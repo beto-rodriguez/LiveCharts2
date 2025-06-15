@@ -981,6 +981,13 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
         MeasureStarted?.Invoke(chart, this);
     }
 
+    void ICartesianAxis.SetLogBase(double newBase)
+    {
+        MinStep = 1;
+        Labeler = value => Math.Pow(newBase, value).ToString("N2");
+        _logBase = newBase;
+    }
+
     /// <summary>
     /// Deletes the specified chart.
     /// </summary>

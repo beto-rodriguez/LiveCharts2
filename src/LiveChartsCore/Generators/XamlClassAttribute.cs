@@ -56,6 +56,11 @@ public class XamlClassAttribute(Type basedOn) : Attribute
     public string? FileHeader { get; set; }
 
     /// <summary>
+    /// Indicates whether the generator should generate the OnPropertyChanged method, default is true.
+    /// </summary>
+    public bool GenerateOnChange { get; set; } = true;
+
+    /// <summary>
     /// A string with the property change map e.g.
     /// MyProperty{=}MyMapMethod{,}MyOtherProperty{=}MyOtherMapMethod.
     /// </summary>
