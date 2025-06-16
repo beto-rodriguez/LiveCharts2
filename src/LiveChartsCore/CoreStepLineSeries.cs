@@ -53,8 +53,8 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
     private readonly Dictionary<object, List<TPathGeometry>> _fillPathHelperDictionary = [];
     private readonly Dictionary<object, List<TPathGeometry>> _strokePathHelperDictionary = [];
     private float _geometrySize = 14f;
-    private Paint? _geometryFill;
-    private Paint? _geometryStroke;
+    private Paint? _geometryFill = Paint.Default;
+    private Paint? _geometryStroke = Paint.Default;
     private bool _enableNullSplitting = true;
 
     /// <summary>

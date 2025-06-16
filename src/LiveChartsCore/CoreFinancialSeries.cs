@@ -48,10 +48,10 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
         where TLabel : BaseLabelGeometry, new()
         where TMiniatureGeometry : BoundedDrawnGeometry, new()
 {
-    private Paint? _upStroke = null;
-    private Paint? _upFill = null;
-    private Paint? _downStroke = null;
-    private Paint? _downFill = null;
+    private Paint? _upStroke = Paint.Default;
+    private Paint? _upFill = Paint.Default;
+    private Paint? _downStroke = Paint.Default;
+    private Paint? _downFill = Paint.Default;
     private double _maxBarWidth = 25;
 
     /// <summary>

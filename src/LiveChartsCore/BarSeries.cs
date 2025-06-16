@@ -58,7 +58,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel>(
     private bool _ignoresBarPosition = false;
     private double _rx;
     private double _ry;
-    private Paint? _errorPaint;
+    private Paint? _errorPaint = Paint.Default;
     private bool _showError;
 
     /// <inheritdoc cref="IBarSeries.Padding"/>
@@ -95,7 +95,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel>(
         set
         {
             SetPaintProperty(ref _errorPaint, value, PaintStyle.Stroke);
-            _showError = value is not null;
+            _showError = value is not null && value != Paint.Default;
         }
     }
 

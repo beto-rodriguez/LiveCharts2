@@ -54,10 +54,10 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
     private float _lineSmoothness = 0.65f;
     private float _geometrySize = 14f;
     private bool _enableNullSplitting = true;
-    private Paint? _geometryFill;
-    private Paint? _geometryStroke;
+    private Paint? _geometryFill = Paint.Default;
+    private Paint? _geometryStroke = Paint.Default;
+    private Paint? _errorPaint = Paint.Default;
     private bool _showError;
-    private Paint? _errorPaint;
 
     /// <summary>
     /// Initializes a new instance of the
@@ -124,7 +124,7 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
         set
         {
             SetPaintProperty(ref _errorPaint, value, PaintStyle.Stroke);
-            _showError = value is not null;
+            _showError = value is not null && value != Paint.Default;
         }
     }
 

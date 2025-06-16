@@ -54,10 +54,10 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
     private float _lineSmoothness = 0.65f;
     private float _geometrySize = 14f;
     private bool _enableNullSplitting = true;
-    private Paint? _geometryFill;
-    private Paint? _geometryStroke;
-    private Paint? _stroke = null;
-    private Paint? _fill = null;
+    private Paint? _geometryFill = Paint.Default;
+    private Paint? _geometryStroke = Paint.Default;
+    private Paint? _stroke = Paint.Default;
+    private Paint? _fill = Paint.Default;
     private int _scalesAngleAt;
     private int _scalesRadiusAt;
     private bool _isClosed = true;

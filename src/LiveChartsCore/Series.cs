@@ -108,7 +108,7 @@ public abstract class Series<TModel, TVisual, TLabel>
     private TimeSpan? _animationsSpeed;
     private string? _geometrySvg;
     private bool _showDataLabels;
-    private Paint? _dataLabelsPaint;
+    private Paint? _dataLabelsPaint = Paint.Default;
     private double _dataLabelsSize = 16;
     private double _dataLabelsRotation = 0;
     private Padding _dataLabelsPadding = new() { Left = 6, Top = 8, Right = 6, Bottom = 8 };
@@ -310,7 +310,7 @@ public abstract class Series<TModel, TVisual, TLabel>
         set
         {
             SetPaintProperty(ref _dataLabelsPaint, value);
-            _showDataLabels = value is not null;
+            _showDataLabels = value is not null && value != Paint.Default;
         }
     }
 

@@ -49,7 +49,7 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
         where TErrorGeometry : BaseLineGeometry, new()
 {
     private bool _showError;
-    private Paint? _errorPaint;
+    private Paint? _errorPaint = Paint.Default;
     private int? _stackGroup;
     private double _minGeometrySize = 6d;
     private double _geometrySize = 24d;
@@ -116,7 +116,7 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
         set
         {
             SetPaintProperty(ref _errorPaint, value, PaintStyle.Stroke);
-            _showError = value is not null;
+            _showError = value is not null && value != Paint.Default;
         }
     }
 
