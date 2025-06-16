@@ -24,14 +24,23 @@ using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.Generators;
 
+/// <summary>
+/// Represents a base class for shared axes pairs in a Cartesian chart.
+/// </summary>
 public class BaseSharedAxesPair
 {
+    /// <summary>
+    /// The first axis in the pair.
+    /// </summary>
     public ICartesianAxis? First
     {
         get;
         set { field = value; OnSet(); }
     }
 
+    /// <summary>
+    /// The second axis in the pair.
+    /// </summary>
     public ICartesianAxis? Second
     {
         get;
