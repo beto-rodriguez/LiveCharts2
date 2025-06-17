@@ -138,31 +138,31 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
         var clipping = GetClipRectangle(cartesianChart);
 
-        if (UpFill is not null)
+        if (UpFill is not null && UpFill != Paint.Default)
         {
             UpFill.ZIndex = actualZIndex + 0.1;
             UpFill.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(UpFill);
         }
-        if (DownFill is not null)
+        if (DownFill is not null && DownFill != Paint.Default)
         {
             DownFill.ZIndex = actualZIndex + 0.1;
             DownFill.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(DownFill);
         }
-        if (UpStroke is not null)
+        if (UpStroke is not null && UpStroke != Paint.Default)
         {
             UpStroke.ZIndex = actualZIndex + 0.2;
             UpStroke.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(UpStroke);
         }
-        if (DownStroke is not null)
+        if (DownStroke is not null && DownStroke != Paint.Default)
         {
             DownStroke.ZIndex = actualZIndex + 0.2;
             DownStroke.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(DownStroke);
         }
-        if (ShowDataLabels && DataLabelsPaint is not null)
+        if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
         {
             DataLabelsPaint.ZIndex = actualZIndex + 0.3;
             DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
@@ -254,17 +254,25 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
 
             if (open > close)
             {
-                UpFill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-                UpStroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-                DownFill?.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visual);
-                DownStroke?.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visual);
+                if (UpFill is not null && UpFill != Paint.Default)
+                    UpFill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                if (UpStroke is not null && UpStroke != Paint.Default)
+                    UpStroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                if (DownFill is not null && DownFill != Paint.Default)
+                    DownFill.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visual);
+                if (DownStroke is not null && DownStroke != Paint.Default)
+                    DownStroke.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visual);
             }
             else
             {
-                DownFill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-                DownStroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-                UpFill?.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visual);
-                UpStroke?.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visual);
+                if (DownFill is not null && DownFill != Paint.Default)
+                    DownFill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                if (DownStroke is not null && DownStroke != Paint.Default)
+                    DownStroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                if (UpFill is not null && UpFill != Paint.Default)
+                    UpFill.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visual);
+                if (UpStroke is not null && UpStroke != Paint.Default)
+                    UpStroke.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visual);
             }
 
             var x = secondary - uwm;
@@ -298,7 +306,7 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
 
             pointsCleanup.Clean(point);
 
-            if (ShowDataLabels && DataLabelsPaint is not null)
+            if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
             {
                 var label = (TLabel?)point.Context.Label;
 

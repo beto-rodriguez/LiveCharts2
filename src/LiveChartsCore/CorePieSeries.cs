@@ -180,19 +180,19 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
         double? chartTotal = double.IsNaN(view.MaxValue) ? null : view.MaxValue;
 
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
-        if (Fill is not null)
+        if (Fill is not null && Fill != Paint.Default)
         {
             Fill.ZIndex = actualZIndex + 0.1;
             Fill.SetClipRectangle(pieChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             pieChart.Canvas.AddDrawableTask(Fill);
         }
-        if (Stroke is not null)
+        if (Stroke is not null && Stroke != Paint.Default)
         {
             Stroke.ZIndex = actualZIndex + 0.2;
             Stroke.SetClipRectangle(pieChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             pieChart.Canvas.AddDrawableTask(Stroke);
         }
-        if (ShowDataLabels && DataLabelsPaint is not null)
+        if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
         {
             DataLabelsPaint.ZIndex = 1000 + actualZIndex + 0.3;
             // this does not require clipping...
@@ -372,8 +372,10 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
                 _ = everFetched.Add(point);
             }
 
-            Fill?.AddGeometryToPaintTask(pieChart.Canvas, visual);
-            Stroke?.AddGeometryToPaintTask(pieChart.Canvas, visual);
+            if (Fill is not null && Fill != Paint.Default)
+                Fill.AddGeometryToPaintTask(pieChart.Canvas, visual);
+            if (Stroke is not null && Stroke != Paint.Default)
+                Stroke.AddGeometryToPaintTask(pieChart.Canvas, visual);
 
             var dougnutGeometry = visual;
 
@@ -408,7 +410,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
 
             pointsCleanup.Clean(point);
 
-            if (ShowDataLabels && DataLabelsPaint is not null && !IsFillSeries)
+            if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default && !IsFillSeries)
             {
                 var label = (TLabel?)point.Context.Label;
 

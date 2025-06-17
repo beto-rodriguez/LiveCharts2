@@ -76,4 +76,19 @@ public class XamlClassAttribute(Type basedOn) : Attribute
     /// Indicates whether the generator should generate the base type declaration, default is true.
     /// </summary>
     public bool GenerateBaseTypeDeclaration { get; set; } = true;
+
+    /// <summary>
+    /// Indicates the type of the model.
+    /// </summary>
+    public Type? TModel { get; set; }
+
+    /// <summary>
+    /// Indicates the type of the visual.
+    /// </summary>
+    public Type? TVisual { get; set; }
+
+    /// <summary>
+    /// Indicates the type of the label.
+    /// </summary>
+    public Type? TLabel { get; set; }
 }

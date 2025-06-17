@@ -236,7 +236,7 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
                     strokeVector = new VectorManager<CubicBezierSegment>(strokePath);
                     fillVector = new VectorManager<CubicBezierSegment>(fillPath);
 
-                    if (Fill is not null)
+                    if (Fill is not null && Fill != Paint.Default)
                     {
                         Fill.AddGeometryToPaintTask(cartesianChart.Canvas, fillPath);
                         cartesianChart.Canvas.AddDrawableTask(Fill);
@@ -248,7 +248,7 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
                             fillPath.Animate(EasingFunction ?? cartesianChart.ActualEasingFunction, AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed);
                         }
                     }
-                    if (Stroke is not null)
+                    if (Stroke is not null && Stroke != Paint.Default)
                     {
                         Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, strokePath);
                         cartesianChart.Canvas.AddDrawableTask(Stroke);
@@ -318,7 +318,7 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
                 if (visual is null)
                 {
                     var v = new SegmentVisualPoint<TVisual, CubicBezierSegment, TErrorGeometry>();
-                    if (ShowError && ErrorPaint is not null)
+                    if (ShowError && ErrorPaint is not null && ErrorPaint != Paint.Default)
                     {
                         v.YError = new TErrorGeometry();
                         v.XError = new TErrorGeometry();
@@ -367,10 +367,15 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
 
                 _ = everFetched.Add(data.TargetPoint);
 
-                GeometryFill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
-                GeometryStroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
-                ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, visual.YError!);
-                ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, visual.XError!);
+                if (GeometryFill is not null && GeometryFill != Paint.Default)
+                    GeometryFill.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
+                if (GeometryStroke is not null && GeometryStroke != Paint.Default)
+                    GeometryStroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
+                if (ErrorPaint is not null && ErrorPaint != Paint.Default)
+                {
+                    ErrorPaint.AddGeometryToPaintTask(cartesianChart.Canvas, visual.YError!);
+                    ErrorPaint.AddGeometryToPaintTask(cartesianChart.Canvas, visual.XError!);
+                }
 
                 visual.Segment.Id = data.TargetPoint.Context.Entity.MetaData!.EntityIndex;
 
@@ -398,7 +403,7 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
                 visual.Geometry.Height = gs;
                 visual.Geometry.RemoveOnCompleted = false;
 
-                if (!coordinate.PointError.IsEmpty && ShowError && ErrorPaint is not null)
+                if (!coordinate.PointError.IsEmpty && ShowError && ErrorPaint is not null && ErrorPaint != Paint.Default)
                 {
                     var e = coordinate.PointError;
 
@@ -433,7 +438,7 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
 
                 pointsCleanup.Clean(data.TargetPoint);
 
-                if (ShowDataLabels && DataLabelsPaint is not null)
+                if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
                 {
                     var label = (TLabel?)data.TargetPoint.Context.Label;
 
@@ -475,13 +480,13 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
             strokeVector?.End();
             fillVector?.End();
 
-            if (GeometryFill is not null)
+            if (GeometryFill is not null && GeometryFill != Paint.Default)
             {
                 cartesianChart.Canvas.AddDrawableTask(GeometryFill);
                 GeometryFill.SetClipRectangle(cartesianChart.Canvas, clipping);
                 GeometryFill.ZIndex = actualZIndex + 0.4;
             }
-            if (GeometryStroke is not null)
+            if (GeometryStroke is not null && GeometryStroke != Paint.Default)
             {
                 cartesianChart.Canvas.AddDrawableTask(GeometryStroke);
                 GeometryStroke.SetClipRectangle(cartesianChart.Canvas, clipping);
@@ -514,13 +519,13 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
             }
         }
 
-        if (ShowDataLabels && DataLabelsPaint is not null)
+        if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
         {
             cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
             DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
             DataLabelsPaint.ZIndex = actualZIndex + 0.5;
         }
-        if (ShowError && ErrorPaint is not null)
+        if (ShowError && ErrorPaint is not null && ErrorPaint != Paint.Default)
         {
             cartesianChart.Canvas.AddDrawableTask(ErrorPaint);
             ErrorPaint.ZIndex = actualZIndex + 0.3;

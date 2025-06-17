@@ -27,6 +27,7 @@ using LiveChartsCore.Drawing.Segments;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore;
 
@@ -82,25 +83,25 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
         var clipping = GetClipRectangle(cartesianChart);
 
-        if (Fill is not null)
+        if (Fill is not null && Fill != Paint.Default)
         {
             Fill.ZIndex = actualZIndex + 0.1;
             Fill.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(Fill);
         }
-        if (Stroke is not null)
+        if (Stroke is not null && Stroke != Paint.Default)
         {
             Stroke.ZIndex = actualZIndex + 0.2;
             Stroke.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(Stroke);
         }
-        if (ShowError && ErrorPaint is not null)
+        if (ShowError && ErrorPaint is not null && ErrorPaint != Paint.Default)
         {
             ErrorPaint.ZIndex = actualZIndex + 0.3;
             ErrorPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(ErrorPaint);
         }
-        if (ShowDataLabels && DataLabelsPaint is not null)
+        if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
         {
             DataLabelsPaint.ZIndex = actualZIndex + 0.4;
             DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
@@ -188,7 +189,7 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>
                 if (r is BaseRoundedRectangleGeometry rg)
                     rg.BorderRadius = new LvcPoint(rx, ry);
 
-                if (ShowError && ErrorPaint is not null)
+                if (ShowError && ErrorPaint is not null && ErrorPaint != Paint.Default)
                 {
                     e = new ErrorVisual<TErrorGeometry>();
 
@@ -219,10 +220,15 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>
                     svgVisual.SVGPath = GeometrySvg ?? throw new Exception("svg path is not defined");
             }
 
-            Fill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-            Stroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-            ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, e!.YError);
-            ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, e!.XError);
+            if (Fill is not null && Fill != Paint.Default)
+                Fill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+            if (Stroke is not null && Stroke != Paint.Default)
+                Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+            if (ErrorPaint is not null && ErrorPaint != Paint.Default)
+            {
+                ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, e!.YError);
+                ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, e!.XError);
+            }
 
             var cy = primaryAxis.IsInverted
                 ? (coordinate.PrimaryValue > pivot ? primary - b : primary)
@@ -254,7 +260,7 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>
             visual.Width = helper.uw;
             visual.Height = b;
 
-            if (!coordinate.PointError.IsEmpty && ShowError && ErrorPaint is not null)
+            if (!coordinate.PointError.IsEmpty && ShowError && ErrorPaint is not null && ErrorPaint != Paint.Default)
             {
                 var pe = coordinate.PointError;
                 var xe = secondary - helper.uwm + helper.cp + helper.uw * 0.5f;
@@ -293,7 +299,7 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>
 
             pointsCleanup.Clean(point);
 
-            if (ShowDataLabels && DataLabelsPaint is not null)
+            if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
             {
                 var label = (TLabel?)point.Context.Label;
 

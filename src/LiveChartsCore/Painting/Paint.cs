@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Generators;
+using System.Diagnostics.CodeAnalysis;
 
 namespace LiveChartsCore.Painting;
 

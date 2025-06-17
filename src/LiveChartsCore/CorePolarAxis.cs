@@ -213,17 +213,17 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
             _ = polarChart.Canvas.Trackers.Add(_animatableBounds);
         }
 
-        if (NamePaint is not null)
+        if (NamePaint is not null && NamePaint != Paint.Default)
         {
             if (NamePaint.ZIndex == 0) NamePaint.ZIndex = -1;
             polarChart.Canvas.AddDrawableTask(NamePaint);
         }
-        if (LabelsPaint is not null)
+        if (LabelsPaint is not null && LabelsPaint != Paint.Default)
         {
             if (LabelsPaint.ZIndex == 0) LabelsPaint.ZIndex = -0.9;
             polarChart.Canvas.AddDrawableTask(LabelsPaint);
         }
-        if (SeparatorsPaint is not null)
+        if (SeparatorsPaint is not null && SeparatorsPaint != Paint.Default)
         {
             if (SeparatorsPaint.ZIndex == 0) SeparatorsPaint.ZIndex = -1;
             SeparatorsPaint.SetClipRectangle(polarChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
@@ -297,7 +297,7 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
                     ? scaler.ToPixels(visualSeparator.Value, scaler.MaxRadius)
                     : scaler.ToPixelsWithAngleInDegrees((float)LabelsAngle, visualSeparator.Value);
 
-                if (LabelsPaint is not null)
+                if (LabelsPaint is not null && LabelsPaint != Paint.Default)
                 {
                     var textGeometry = new TTextGeometry { TextSize = size };
                     visualSeparator.Label = textGeometry;
@@ -312,7 +312,7 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
                     textGeometry.CompleteTransition(null);
                 }
 
-                if (SeparatorsPaint is not null && ShowSeparatorLines)
+                if (SeparatorsPaint is not null && SeparatorsPaint != Paint.Default && ShowSeparatorLines)
                 {
                     if (visualSeparator is AxisVisualSeprator linearSeparator)
                     {
@@ -348,14 +348,14 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
                 separators.Add(i, visualSeparator);
             }
 
-            if (SeparatorsPaint is not null && ShowSeparatorLines && visualSeparator.Geometry is not null)
+            if (SeparatorsPaint is not null && SeparatorsPaint != Paint.Default && ShowSeparatorLines && visualSeparator.Geometry is not null)
                 SeparatorsPaint.AddGeometryToPaintTask(polarChart.Canvas, visualSeparator.Geometry);
-            if (LabelsPaint is not null && visualSeparator.Label is not null)
+            if (LabelsPaint is not null && LabelsPaint != Paint.Default && visualSeparator.Label is not null)
                 LabelsPaint.AddGeometryToPaintTask(polarChart.Canvas, visualSeparator.Label);
 
             var location = _orientation == PolarAxisOrientation.Angle
-                    ? scaler.ToPixels(visualSeparator.Value, scaler.MaxRadius)
-                    : scaler.ToPixelsWithAngleInDegrees((float)LabelsAngle, visualSeparator.Value);
+                ? scaler.ToPixels(visualSeparator.Value, scaler.MaxRadius)
+                : scaler.ToPixelsWithAngleInDegrees((float)LabelsAngle, visualSeparator.Value);
 
             if (visualSeparator.Label is not null)
             {
