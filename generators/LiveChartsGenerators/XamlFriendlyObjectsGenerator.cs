@@ -203,8 +203,11 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
         string? fileHeader = null;
         string? propertyChangeMap = null;
         string? overridenTypes = null;
-        bool manualOnPropertyChanged = false;
+        var manualOnPropertyChanged = false;
         ITypeSymbol? alsoMap = null;
+        ITypeSymbol? tModel = null;
+        ITypeSymbol? tVisual = null;
+        ITypeSymbol? tLabel = null;
         string? alsoMapPath = null;
         var generateBaseTypeDeclaration = true;
 
@@ -232,6 +235,15 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
                     break;
                 case "GenerateBaseTypeDeclaration":
                     generateBaseTypeDeclaration = ((bool?)arg.Value.Value) ?? true;
+                    break;
+                case "TModel":
+                    tModel = arg.Value.Value as ITypeSymbol;
+                    break;
+                case "TVisual":
+                    tVisual = arg.Value.Value as ITypeSymbol;
+                    break;
+                case "TLabel":
+                    tLabel = arg.Value.Value as ITypeSymbol;
                     break;
                 default:
                     break;
@@ -308,9 +320,10 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
             }
         }
 
-        return new XamlObject(
+        return new(
             generateBaseTypeDeclaration, ns, name, symbol, baseType, bindablePropertiesDic, [.. notBindableProperties.Values], events,
-            [.. methods.Values], [.. explicitMethods.Values], fileHeader, manualOnPropertyChanged, propertyChangeMap, overridenTypes);
+            [.. methods.Values], [.. explicitMethods.Values], fileHeader, manualOnPropertyChanged, propertyChangeMap, overridenTypes,
+            tModel, tVisual, tLabel);
     }
 
     private static MotionProperty? GetMotionPropertiesToGenerate(SemanticModel semanticModel, SyntaxNode declarationSyntax)

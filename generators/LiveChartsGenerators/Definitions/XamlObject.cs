@@ -40,6 +40,8 @@ public readonly record struct XamlObject
     public readonly bool ManualOnPropertyChanged = false;
     public readonly Dictionary<string, string> PropertyChangedMap = [];
     public readonly Dictionary<string, string> OverridenTypes = [];
+    public readonly bool IsSeries = false;
+    public readonly Dictionary<string, string> SeriesArgs = [];
 
     public XamlObject(
         bool generateBaseTypeDeclaration,
@@ -55,7 +57,10 @@ public readonly record struct XamlObject
         string? fileHeader,
         bool manualOnPropertyChanged,
         string? propertyChangedMap,
-        string? overridenTypes)
+        string? overridenTypes,
+        ITypeSymbol? tModel,
+        ITypeSymbol? tVisual,
+        ITypeSymbol? tLabel)
     {
         GenerateBaseTypeDeclaration = generateBaseTypeDeclaration;
         NameSpace = nameSpace;
@@ -69,6 +74,24 @@ public readonly record struct XamlObject
         ExplicitMethods = explicitMethods;
         FileHeader = fileHeader;
         ManualOnPropertyChanged = manualOnPropertyChanged;
+
+        IsSeries = GetIsSeries(basedOn);
+        if (IsSeries)
+        {
+            propertyChangedMap = "Values{=}ValuesMap";
+            overridenTypes =
+                "Values{=}object{,}" +
+                "DataLabelsFormatter{=}System.Func<LiveChartsCore.Kernel.ChartPoint, string>{,}" +
+                "ToolTipLabelFormatter{=}System.Func<LiveChartsCore.Kernel.ChartPoint, string>{,}" +
+                "XToolTipLabelFormatter{=}System.Func<LiveChartsCore.Kernel.ChartPoint, string>{,}" +
+                "YToolTipLabelFormatter{=}System.Func<LiveChartsCore.Kernel.ChartPoint, string>";
+            SeriesArgs["TModel"] = tModel?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
+                ?? "global::System.Object";
+            if (tVisual is not null)
+                SeriesArgs["TVisual"] = tVisual.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+            SeriesArgs["TLabel"] = tLabel?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
+                ?? "global::LiveChartsCore.SkiaSharpView.Drawing.Geometries.LabelGeometry";
+        }
 
         if (propertyChangedMap is not null)
         {
@@ -91,4 +114,24 @@ public readonly record struct XamlObject
             }
         }
     }
+
+    public static bool GetIsSeries(ITypeSymbol typeSymbol)
+    {
+        // Check direct interface implementation
+        if (typeSymbol.OriginalDefinition.AllInterfaces.Any(x => x.ToDisplayString() == "LiveChartsCore.ISeries"))
+            return true;
+
+        // Traverse the inheritance chain
+        var baseType = typeSymbol.OriginalDefinition.BaseType;
+        while (baseType != null)
+        {
+            if (baseType.AllInterfaces.Any(x => x.ToDisplayString() == "LiveChartsCore.ISeries"))
+                return true;
+
+            baseType = baseType.BaseType;
+        }
+
+        return false;
+    }
+
 }

@@ -48,11 +48,12 @@ using LiveChartsCore.SkiaSharpView.TypeConverters;
 namespace {target.NameSpace};
 
 /// <summary>
-/// A <see cref=""{baseType.Replace('<', '{').Replace('>', '}')}""/> for XAML.
+/// A <see cref=""{baseType.Replace('<', '{').Replace('>', '}')}""/> instance for XAML.
 /// </summary>
 public partial class {target.Name} : LiveChartsCore.Generators.IXamlWrapper<{baseType}>
 {{
     {(target.GenerateBaseTypeDeclaration ? $"private readonly {baseType} _baseType = new();" : string.Empty)}
+    {(target.IsSeries ? "protected override ISeries WrappedSeries => _baseType;" : string.Empty)}
 
 #region default values
 
@@ -105,17 +106,13 @@ public partial class {target.Name} : LiveChartsCore.Generators.IXamlWrapper<{bas
 
     static {target.Type.Name}()
     {{
-        OnTypeDefined();
-
         {Concatenate(
     target.BindableProperties,
     pair => Concatenate(pair.Value, property => @$"{property.Name}Property = {template.GetBindablePropertyDefinition(target, property, pair.Key)}
         ", false),
     false)}
     }}
-
-    static partial void OnTypeDefined();
-}}";
+}}{(target.IsSeries ? GetSeriesExtraGeneration(target) : string.Empty)}";
     }
 
     private static string GetDefaultValues(XamlObject target)
@@ -124,7 +121,8 @@ public partial class {target.Name} : LiveChartsCore.Generators.IXamlWrapper<{bas
 
         var fallBackInfo = FrameworkTemplate.GetFallbackInfo(target.BasedOn);
 
-        _ = sb.AppendLine($"    private static readonly {fallBackInfo.Item1} {fallBackInfo.Item2} = new();");
+        _ = sb.AppendLine(@$"    // this object is used to set the default value of bindable properties.
+    private static readonly {fallBackInfo.Item1} {fallBackInfo.Item2} = new();");
 
         return sb.ToString();
     }
@@ -267,6 +265,53 @@ public partial class {target.Name} : LiveChartsCore.Generators.IXamlWrapper<{bas
                     }};
                 }}
                 break;");
+        }
+
+        return sb.ToString();
+    }
+
+    private static string GetSeriesExtraGeneration(XamlObject target)
+    {
+        var isGauge = target.Type.Name.Contains("Gauge");
+
+        var constraints = target.Type.TypeParameters
+            .Select(p => (
+                Argument: p,
+                Constraints: string.Join(", ", p.ConstraintTypes.Select(c => c.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)))))
+            .ToArray();
+
+        var sb = new StringBuilder();
+
+        var previousConstraints = string.Join(", ", constraints.Select(x => x.Argument.Name));
+        var originalConstraints = previousConstraints;
+
+        var newLine = @"
+";
+
+        for (var i = constraints.Length - 1; i >= 0; i--)
+        {
+            var targetArgs = constraints.Skip(0).Take(i);
+
+            var genericArgs = string.Join(", ", targetArgs.Select(x => x.Argument.Name));
+            var newConstraints = string.Join(newLine, targetArgs
+                .Where(x => x.Constraints is not null && x.Constraints.Length > 0)
+                .Select(x => $"    where {x.Argument.Name} : {x.Constraints}{(x.Argument.HasConstructorConstraint ? ", new()" : string.Empty)}"));
+            if (newConstraints.Length > 0)
+                newConstraints = $"{newLine}{newConstraints}";
+
+            var implemented = constraints.Skip(i).ToArray();
+            foreach (var (arg, c) in implemented)
+                previousConstraints = previousConstraints.Replace(arg.Name, target.SeriesArgs[arg.Name]);
+
+            _ = sb.Append($@"
+/// <inheritdoc cref=""{target.BasedOn.Name}{{{originalConstraints}}}"" />
+public class {target.Type.OriginalDefinition.Name}{(genericArgs.Length > 0 ? $"<{genericArgs}>" : string.Empty)} : {target.Type.OriginalDefinition.Name}<{previousConstraints}>{newConstraints}
+{{
+    
+}}
+");
+
+            previousConstraints = genericArgs;
         }
 
         return sb.ToString();
