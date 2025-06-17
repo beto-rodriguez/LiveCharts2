@@ -20,9 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -31,8 +30,14 @@ using Avalonia.Controls;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
+/// <summary>
+/// A base series class for XAML-based series in LiveCharts.
+/// </summary>
 public abstract class XamlSeries : Control
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="XamlSeries"/> class.
+    /// </summary>
     protected XamlSeries()
     {
         var observableCollection = new ObservableCollection<ChartPointState>();
@@ -40,15 +45,28 @@ public abstract class XamlSeries : Control
         _ = SetValue(AdditionalVisualStatesProperty, observableCollection);
     }
 
+    /// <summary>
+    /// The AdditionalVisualStates property, which holds additional visual states for the series.
+    /// </summary>
     public static readonly AvaloniaProperty AdditionalVisualStatesProperty =
         AvaloniaProperty.Register<XamlSeries, ICollection<ChartPointState>>(
             nameof(AdditionalVisualStates), inherits: true);
+
+    /// <summary>
+    /// Gets the additional visual states for the series.
+    /// </summary>
     public ICollection<ChartPointState> AdditionalVisualStates =>
         (ICollection<ChartPointState>)GetValue(AdditionalVisualStatesProperty)!;
 
+    /// <summary>
+    /// Gets the wrapped series that this XAML series represents.
+    /// </summary>
     protected abstract ISeries WrappedSeries { get; }
 
-    protected void ValuesMap(object value) => Info.SetValues(WrappedSeries, value);
+    /// <summary>
+    /// Maps the specified value to the underlying series' values collection.
+    /// </summary>
+    protected void ValuesMap(object value) => WrappedSeries.Values = (IEnumerable)value;
 
     private void OnAdditionalVisualStatesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
@@ -80,7 +98,7 @@ public abstract class XamlSeries : Control
 
     private void OnSetCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (sender is not ChartPointState.SetterCollection setters) return;
+        if (sender is not Generators.BaseChartPointState.SetterCollection setters) return;
 
         WrappedSeries.VisualStates[setters.Name] = setters.AsStatesCollection();
     }

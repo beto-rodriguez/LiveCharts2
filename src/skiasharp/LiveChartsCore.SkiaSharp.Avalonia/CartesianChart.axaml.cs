@@ -720,9 +720,16 @@ public partial class CartesianChart : UserControl, ICartesianChartView, ICustomH
         _core.Update();
     }
 
-    partial void OnXamlObjectPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="change"></param>
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
+        base.OnPropertyChanged(change);
         if (_core is null || change.Property.Name == nameof(IsPointerOver)) return;
+
+        OnXamlPropertyChanged(change);
 
         if (change.Property.Name == nameof(SyncContext))
         {
@@ -740,10 +747,8 @@ public partial class CartesianChart : UserControl, ICartesianChartView, ICustomH
         _core.Update();
     }
 
-    private static void OnSeriesSourceChanged(AvaloniaPropertyChangedEventArgs change)
+    private static void OnSeriesSourceChanged(CartesianChart chart, object o, object n)
     {
-        var chart = (CartesianChart)change.Sender;
-
         var seriesObserver = (SeriesSourceObserver)chart._observe[nameof(SeriesSource)];
         seriesObserver.Initialize(chart.SeriesSource);
 
