@@ -149,9 +149,11 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
 
                     if (consumerType == "Avalonia")
                     {
+                        var name = ((INamedTypeSymbol)group.Key).ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+
                         // exception for avalonia, we need to generate additional code for the base type
                         spc.AddSource(
-                            $"{group.Key.Name}._avaloina_onChange.g.cs".Replace('<', '_').Replace('>', '_'),
+                            $"{name}._avaloina_onChange.g.cs".Replace('<', '_').Replace('>', '_'),
                             SourceText.From(
                                 BindablePropertyTempaltes.GetAvaloniaBaseTypeTemplate(group, GetFrameworkTemplate(consumerType)),
                                 Encoding.UTF8));
