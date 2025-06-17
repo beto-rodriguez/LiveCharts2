@@ -112,6 +112,12 @@ public partial class XamlDrawnLabelVisual : Control, IChartElement, IInternalInt
 [XamlClass(typeof(RectangularSection))]
 public partial class XamlRectangularSection : Control, IChartElement { }
 
+[XamlClass(typeof(ColumnSeries<,,>), TVisual = typeof(RoundedRectangleGeometry))]
+public partial class XamlColumnSeries<TModel, TVisual, TLabel> : XamlSeries, IBarSeries, IInternalSeries
+    where TVisual : BoundedDrawnGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{ }
+
 [XamlClass(typeof(RowSeries<,,>), TVisual = typeof(RoundedRectangleGeometry))]
 public partial class XamlRowSeries<TModel, TVisual, TLabel> : XamlSeries, IBarSeries, IInternalSeries
     where TVisual : BoundedDrawnGeometry, new()
