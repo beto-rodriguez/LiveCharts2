@@ -7,6 +7,8 @@ namespace ViewModelsSamples.Axes.ColorsAndPosition;
 
 public partial class ViewModel : ObservableObject
 {
+    public double[] Values { get; set; } = [2, 3, 8];
+
     [ObservableProperty]
     public partial AxisPosition Position { get; set; } = AxisPosition.End;
 

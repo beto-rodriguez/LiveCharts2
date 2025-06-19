@@ -1,14 +1,31 @@
-<UserControl x:Class="AvaloniaSample.Bars.Basic.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Bars.Basic">
-  <UserControl.DataContext>
-    <vms:ViewModel/>
-  </UserControl.DataContext>
-  <lvc:CartesianChart
-      Series="{Binding Series}"
-      XAxes="{Binding XAxes}"
-      LegendPosition="Right">
-  </lvc:CartesianChart>
+<UserControl
+    x:Class="AvaloniaSample.Bars.Basic.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Bars.Basic;assembly=ViewModelsSamples">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <lvc:CartesianChart>
+
+        <lvc:CartesianChart.Series>
+            <lvc:XamlColumnSeries Name="Mary" Values="{Binding MaryValues}"/>
+            <lvc:XamlColumnSeries Name="Ana" Values="{Binding AnaValues}"/>
+        </lvc:CartesianChart.Series>
+
+        <lvc:CartesianChart.XAxes>
+            <lvc:XamlAxis
+                Labels="{Binding Labels}"
+                SeparatorsPaint="{lvc:SolidColorPaint Color='#c8c8c8'}"
+                SeparatorsAtCenter="False"
+                TicksPaint="{lvc:SolidColorPaint Color='#232323'}"
+                TicksAtCenter="True"
+                MinStep="1"
+                ForceStepToMin="True"/>
+        </lvc:CartesianChart.XAxes>
+
+    </lvc:CartesianChart>
 </UserControl>
