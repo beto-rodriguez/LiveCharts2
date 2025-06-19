@@ -44,10 +44,16 @@ using Microsoft.Maui.Controls;
 namespace LiveChartsCore.SkiaSharpView.Maui;
 
 [XamlClass(typeof(Axis))]
-public partial class XamlAxis : EmptyContentView, ICartesianAxis { }
+public partial class XamlAxis : EmptyContentView, ICartesianAxis
+{
+    string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
+}
 
 [XamlClass(typeof(PolarAxis))]
-public partial class XamlPolarAxis : EmptyContentView, IPolarAxis { }
+public partial class XamlPolarAxis : EmptyContentView, IPolarAxis
+{
+    string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
+}
 
 [XamlClass(typeof(DateTimeAxis), GenerateBaseTypeDeclaration = false)]
 public partial class XamlDateTimeAxis : EmptyContentView, ICartesianAxis
@@ -57,6 +63,8 @@ public partial class XamlDateTimeAxis : EmptyContentView, ICartesianAxis
 
     private static readonly XamlProperty<TimeSpan> interval = new(TimeSpan.FromDays(1), XamlGeneration.OnAxisIntervalChanged);
     private static readonly XamlProperty<Func<DateTime, string>> dateFormatter = new(null, XamlGeneration.OnDateTimeAxisDateFormatterChanged);
+
+    string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
 }
 
 [XamlClass(typeof(TimeSpanAxis), GenerateBaseTypeDeclaration = false)]
@@ -67,6 +75,8 @@ public partial class XamlTimeSpanAxis : EmptyContentView, ICartesianAxis
 
     private static readonly XamlProperty<TimeSpan> interval = new(TimeSpan.FromSeconds(1), XamlGeneration.OnAxisIntervalChanged);
     private static readonly XamlProperty<Func<TimeSpan, string>> timeFormatter = new(null, XamlGeneration.OnTimeSpanAxisFormatterChanged);
+
+    string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
 }
 
 [XamlClass(typeof(LogarithmicAxis), GenerateBaseTypeDeclaration = false)]
@@ -76,6 +86,8 @@ public partial class XamlLogarithmicAxis : EmptyContentView, ICartesianAxis
     private static readonly LogarithmicAxis _defaultLogarithmicAxis = new(10);
 
     private static readonly XamlProperty<double> logBase = new(10d, XamlGeneration.OnAxisLogBaseChanged);
+
+    string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
 }
 
 [XamlClass(typeof(DrawnLabelVisual), Map = typeof(LabelGeometry), MapPath = "DrawnLabel")]

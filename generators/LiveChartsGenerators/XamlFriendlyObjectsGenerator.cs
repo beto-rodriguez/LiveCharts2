@@ -205,6 +205,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
         string? fileHeader = null;
         string? propertyChangeMap = null;
         string? overridenTypes = null;
+        string? overridenNames = null;
         var manualOnPropertyChanged = false;
         ITypeSymbol? alsoMap = null;
         ITypeSymbol? tModel = null;
@@ -228,6 +229,9 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
                     break;
                 case "PropertyTypeOverride":
                     overridenTypes = arg.Value.Value as string;
+                    break;
+                case "PropertyNameOverride":
+                    overridenNames = arg.Value.Value as string;
                     break;
                 case "Map":
                     alsoMap = arg.Value.Value as ITypeSymbol;
@@ -324,7 +328,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
 
         return new(
             generateBaseTypeDeclaration, ns, name, symbol, baseType, bindablePropertiesDic, [.. notBindableProperties.Values], events,
-            [.. methods.Values], [.. explicitMethods.Values], fileHeader, manualOnPropertyChanged, propertyChangeMap, overridenTypes,
+            [.. methods.Values], [.. explicitMethods.Values], fileHeader, manualOnPropertyChanged, propertyChangeMap, overridenTypes, overridenNames,
             tModel, tVisual, tLabel);
     }
 

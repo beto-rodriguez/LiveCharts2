@@ -40,6 +40,7 @@ public readonly record struct XamlObject
     public readonly bool ManualOnPropertyChanged = false;
     public readonly Dictionary<string, string> PropertyChangedMap = [];
     public readonly Dictionary<string, string> OverridenTypes = [];
+    public readonly Dictionary<string, string> OverridenNames = [];
     public readonly bool IsSeries = false;
     public readonly Dictionary<string, string> SeriesArgs = [];
 
@@ -58,6 +59,7 @@ public readonly record struct XamlObject
         bool manualOnPropertyChanged,
         string? propertyChangedMap,
         string? overridenTypes,
+        string? overridenNames,
         ITypeSymbol? tModel,
         ITypeSymbol? tVisual,
         ITypeSymbol? tLabel)
@@ -112,6 +114,19 @@ public readonly record struct XamlObject
                 var parts = t.Split(["{=}"], StringSplitOptions.None);
                 OverridenTypes[parts[0]] = parts[1];
             }
+        }
+
+        // by default, do not allow the Name property,
+        // it is reserved by some XAML frameworks
+
+        var baseName = basedOn.Name;
+        if (baseName.EndsWith("Series")) baseName = "Series";
+        overridenNames ??= $"Name{{=}}{baseName}Name";
+        var names = overridenNames.Split(["{,}"], StringSplitOptions.None);
+        foreach (var n in names)
+        {
+            var parts = n.Split(["{=}"], StringSplitOptions.None);
+            OverridenNames[parts[0]] = parts[1];
         }
     }
 

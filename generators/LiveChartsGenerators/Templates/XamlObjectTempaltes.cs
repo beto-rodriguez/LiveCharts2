@@ -108,7 +108,7 @@ public partial class {target.Name} : LiveChartsCore.Generators.IXamlWrapper<{bas
     {{
         {Concatenate(
     target.BindableProperties,
-    pair => Concatenate(pair.Value, property => @$"{property.Name}Property = {template.GetBindablePropertyDefinition(target, property, pair.Key)}
+    pair => Concatenate(pair.Value, property => @$"{GetPropertyName(target, property)}Property = {template.GetBindablePropertyDefinition(target, property, pair.Key)}
         ", false),
     false)}
     }}
@@ -230,8 +230,8 @@ public partial class {target.Name} : LiveChartsCore.Generators.IXamlWrapper<{bas
                 var propertyType = property.Type.ToDisplayString();
 
                 _ = target.PropertyChangedMap.TryGetValue(property.Name, out var map)
-                    ? sb.AppendLine(@$"            case ""{property.Name}"": {map}(GetValue({property.Name}Property)); break;")
-                    : sb.AppendLine(@$"            case ""{property.Name}"": {path}.{property.Name} = ({propertyType})GetValue({property.Name}Property); break;");
+                    ? sb.AppendLine(@$"            case ""{property.Name}"": {map}(GetValue({GetPropertyName(target, property)}Property)); break;")
+                    : sb.AppendLine(@$"            case ""{property.Name}"": {path}.{property.Name} = ({propertyType})GetValue({GetPropertyName(target, property)}Property); break;");
             }
         }
 
@@ -268,6 +268,14 @@ public partial class {target.Name} : LiveChartsCore.Generators.IXamlWrapper<{bas
         }
 
         return sb.ToString();
+    }
+
+    private static string GetPropertyName(XamlObject target, IPropertySymbol property)
+    {
+        var propertyName = property.Name;
+        if (target.OverridenNames.TryGetValue(propertyName, out var overridenName))
+            propertyName = overridenName;
+        return propertyName;
     }
 
     private static string GetSeriesExtraGeneration(XamlObject target)

@@ -44,10 +44,16 @@ using LiveChartsCore.VisualElements;
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
 [XamlClass(typeof(Axis))]
-public partial class XamlAxis : Control, ICartesianAxis { }
+public partial class XamlAxis : Control, ICartesianAxis
+{
+    string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
+}
 
 [XamlClass(typeof(PolarAxis))]
-public partial class XamlPolarAxis : Control, IPolarAxis { }
+public partial class XamlPolarAxis : Control, IPolarAxis
+{
+    string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
+}
 
 [XamlClass(typeof(DateTimeAxis), GenerateBaseTypeDeclaration = false, GenerateOnChange = false)]
 public partial class XamlDateTimeAxis : Control, ICartesianAxis
@@ -57,6 +63,8 @@ public partial class XamlDateTimeAxis : Control, ICartesianAxis
 
     private static readonly XamlProperty<TimeSpan> interval = new(TimeSpan.FromDays(1), XamlGeneration.OnAxisIntervalChanged);
     private static readonly XamlProperty<Func<DateTime, string>> dateFormatter = new(null, XamlGeneration.OnDateTimeAxisDateFormatterChanged);
+
+    string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
 
     /// <inheritdoc />
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -76,6 +84,8 @@ public partial class XamlTimeSpanAxis : Control, ICartesianAxis
     private static readonly XamlProperty<TimeSpan> interval = new(TimeSpan.FromSeconds(1), XamlGeneration.OnAxisIntervalChanged);
     private static readonly XamlProperty<Func<TimeSpan, string>> timeFormatter = new(null, XamlGeneration.OnTimeSpanAxisFormatterChanged);
 
+    string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
+
     /// <inheritdoc />
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
@@ -92,6 +102,8 @@ public partial class XamlLogarithmicAxis : Control, ICartesianAxis
     private static readonly LogarithmicAxis _defaultLogarithmicAxis = new(10);
 
     private static readonly XamlProperty<double> logBase = new(10d, XamlGeneration.OnAxisLogBaseChanged);
+
+    string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
 
     /// <inheritdoc />
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

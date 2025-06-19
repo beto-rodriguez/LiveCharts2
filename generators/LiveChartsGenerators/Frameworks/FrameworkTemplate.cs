@@ -44,6 +44,10 @@ public abstract class FrameworkTemplate
             isTypeOverriden = true;
         }
 
+        var originalPropertyName = propertyName;
+        if (target.OverridenNames.TryGetValue(propertyName, out var overridenName))
+            propertyName = overridenName;
+
         var sb = new StringBuilder();
 
         _ = sb
@@ -61,7 +65,7 @@ public abstract class FrameworkTemplate
             path = "_baseType";
 
         var getter = !propertyName.EndsWith("Command")
-            ? $"{(isTypeOverriden ? $"({propertyType})" : string.Empty)}{path}.{propertyName}"
+            ? $"{(isTypeOverriden ? $"({propertyType})" : string.Empty)}{path}.{originalPropertyName}"
             : $"({propertyType})GetValue({propertyName}Property)";
 
         _ = sb.Append(@$"    public new {propertyType} {propertyName}
@@ -86,12 +90,16 @@ public abstract class FrameworkTemplate
         if (target.OverridenTypes.TryGetValue(propertyName, out var overridenType))
             propertyType = overridenType;
 
+        var originalPropertyName = propertyName;
+        if (target.OverridenNames.TryGetValue(propertyName, out var overridenName))
+            propertyName = overridenName;
+
         var sanitizedPropertyType = property.Type.IsReferenceType && propertyType.EndsWith("?")
             ? propertyType.Substring(0, propertyType.Length - 1)
             : propertyType;
 
         return CreateBindableProperty(
-            propertyName, sanitizedPropertyType, target.Name, $"{fallBackName}.{propertyName}");
+            propertyName, sanitizedPropertyType, target.Name, $"{fallBackName}.{originalPropertyName}");
     }
 
     public static (string, string) GetFallbackInfo(ITypeSymbol target)

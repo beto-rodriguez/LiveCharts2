@@ -25,6 +25,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using Microsoft.Maui.Controls;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
@@ -46,6 +47,10 @@ public abstract class XamlSeries : EmptyContentView
     /// </summary>
     public ICollection<ChartPointState> AdditionalVisualStates =>
         (ICollection<ChartPointState>)GetValue(AdditionalVisualStatesProperty);
+
+    /// <inheritdoc cref="ISeries.Name"/>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public string? Name { get => WrappedSeries.Name; set => WrappedSeries.Name = value; }
 
     /// <summary>
     /// Gets the wrapped series that this XAML series represents.

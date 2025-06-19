@@ -73,6 +73,12 @@ public class XamlClassAttribute(Type basedOn) : Attribute
     public string? PropertyTypeOverride { get; set; }
 
     /// <summary>
+    /// A string with the property name overrides e.g.
+    /// MyProperty{=}double{,}MyOtherProperty{=}object.
+    /// </summary>
+    public string? PropertyNameOverride { get; set; }
+
+    /// <summary>
     /// Indicates whether the generator should generate the base type declaration, default is true.
     /// </summary>
     public bool GenerateBaseTypeDeclaration { get; set; } = true;
