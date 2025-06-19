@@ -14,7 +14,7 @@
         <lvc:CartesianChart.Series>
             <lvc:XamlLineSeries
                 x:TypeArguments="vms:City"
-                Name="Population"
+                SeriesName="Population"
                 Values="{Binding Values}"/>
         </lvc:CartesianChart.Series>
     </lvc:CartesianChart>

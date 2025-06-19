@@ -18,10 +18,10 @@
 
         <lvc:CartesianChart.Series>
             <lvc:XamlColumnSeries
-                Name="Sales"
+                SeriesName="Sales"
                 Values="{Binding Values1}"/>
             <lvc:XamlLineSeries
-                Name="Projected"
+                SeriesName="Projected"
                 Values="{Binding Values2}"
                 Fill="{x:Null}"/>
         </lvc:CartesianChart.Series>

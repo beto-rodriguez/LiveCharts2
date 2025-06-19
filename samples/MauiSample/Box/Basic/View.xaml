@@ -15,13 +15,13 @@
 
         <lvc:CartesianChart.Series>
             <lvc:XamlBoxSeries
-                Name="Year 2023"
+                SeriesName="Year 2023"
                 Values="{Binding Values1}"/>
             <lvc:XamlBoxSeries
-                Name="Year 2024"
+                SeriesName="Year 2024"
                 Values="{Binding Values2}"/>
             <lvc:XamlBoxSeries
-                Name="Year 2025"
+                SeriesName="Year 2025"
                 Values="{Binding Values3}"/>
         </lvc:CartesianChart.Series>
 

@@ -19,7 +19,7 @@
         <lvc:PieChart.Series>
             <lvc:XamlGaugeSeries
                 GaugeValue="{Binding Vanesa}"
-                Name="Vanesa"
+                SeriesName="Vanesa"
                 DataLabelsFormatter="{Binding LabelFormatter}"
                 DataLabelsPosition="Start"
                 InnerRadius="20"
@@ -28,7 +28,7 @@
 
             <lvc:XamlGaugeSeries
                 GaugeValue="{Binding Charles}"
-                Name="Charles"
+                SeriesName="Charles"
                 DataLabelsFormatter="{Binding LabelFormatter}"
                 DataLabelsPosition="Start"
                 InnerRadius="20"
@@ -37,7 +37,7 @@
 
             <lvc:XamlGaugeSeries
                 GaugeValue="{Binding Ana}"
-                Name="Ana"
+                SeriesName="Ana"
                 DataLabelsFormatter="{Binding LabelFormatter}"
                 DataLabelsPosition="Start"
                 InnerRadius="20"

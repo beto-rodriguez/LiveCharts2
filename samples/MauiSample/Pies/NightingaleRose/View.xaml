@@ -14,7 +14,7 @@
         <lvc:PieChart.SeriesTemplate>
             <DataTemplate x:DataType="vms:PieData">
                 <lvc:XamlPieSeries
-                     Name="{Binding Name}"
+                     SeriesName="{Binding Name}"
                      Values="{Binding Values}"
                      OuterRadiusOffset="{Binding Offset}"/>
             </DataTemplate>

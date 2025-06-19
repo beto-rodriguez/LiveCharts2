@@ -15,7 +15,7 @@
         <lvc:PieChart.SeriesTemplate>
             <DataTemplate x:DataType="vms:BrowserShare">
                 <local:CustomPieSeries
-                    Name="{Binding Name}"
+                    SeriesName="{Binding Name}"
                     Values="{Binding Values}"
                     IconName="{Binding Name}"
                     Icon="{Binding Icon}"

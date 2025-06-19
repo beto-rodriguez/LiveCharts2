@@ -27,7 +27,7 @@
             <lvc:CartesianChart.SeriesTemplate>
                 <DataTemplate x:DataType="vms:ChartData">
                     <lvc:XamlScatterSeries
-                        Name="{Binding Name}"
+                        SeriesName="{Binding Name}"
                         Values="{Binding Values}"/>
                 </DataTemplate>
             </lvc:CartesianChart.SeriesTemplate>

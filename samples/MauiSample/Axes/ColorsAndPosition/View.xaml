@@ -31,12 +31,12 @@
         <lvc:CartesianChart Grid.Row="1">
 
             <lvc:CartesianChart.Series>
-                <lvc:XamlColumnSeries Values="2, 3, 8"/>
+                <lvc:XamlColumnSeries Values="{Binding Values}"/>
             </lvc:CartesianChart.Series>
 
             <lvc:CartesianChart.XAxes>
                 <lvc:XamlAxis
-                    Name="X axis"
+                    AxisName="X axis"
                     TextSize="20"
                     Position="{Binding Position}"
                     LabelsPaint="{Binding Color, Converter={StaticResource StringToPaintConverter}}"
@@ -45,7 +45,7 @@
 
             <lvc:CartesianChart.YAxes>
                 <lvc:XamlAxis
-                    Name="Y axis"
+                    AxisName="Y axis"
                     TextSize="20"
                     Position="{Binding Position}"
                     LabelsPaint="{Binding Color, Converter={StaticResource StringToPaintConverter}}"

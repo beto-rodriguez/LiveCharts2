@@ -29,14 +29,14 @@
     <lvc:CartesianChart LegendPosition="Right">
         <lvc:CartesianChart.Series>
             <lvc:XamlColumnSeries
-                Name="John"
+                SeriesName="John"
                 Values="{Binding Values1}"
                 Fill="{lvc:LinearGradientPaint
                     Colors='#FF8C94, #DCEDC2',
                     StartPoint='0.5, 0',
                     EndPoint='0.5, 1'}"/>
             <lvc:XamlLineSeries
-                Name="Charles"
+                SeriesName="Charles"
                 Values="{Binding Values2}"
                 GeometrySize="22"
                 Fill="{x:Null}"

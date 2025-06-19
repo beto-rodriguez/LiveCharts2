@@ -23,7 +23,7 @@
             ZoomMode="X">
 
             <lvc:CartesianChart.Series>
-                <lvc:XamlLineSeries Values="{Binding Values}"/>
+                <lvc:XamlColumnSeries Values="{Binding Values}"/>
             </lvc:CartesianChart.Series>
 
             <lvc:CartesianChart.XAxes>

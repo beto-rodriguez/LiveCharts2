@@ -20,7 +20,7 @@
 
             <lvc:XamlGaugeSeries
                 GaugeValue="{Binding Vanesa}"
-                Name="Vanessa"
+                SeriesName="Vanessa"
                 DataLabelsSize="20"
                 DataLabelsPosition="End"
                 DataLabelsFormatter="{Binding Formatter}"
@@ -29,7 +29,7 @@
 
             <lvc:XamlGaugeSeries
                 GaugeValue="{Binding Charles}"
-                Name="Charles"
+                SeriesName="Charles"
                 DataLabelsSize="20"
                 DataLabelsPosition="End"
                 DataLabelsFormatter="{Binding Formatter}"
@@ -38,7 +38,7 @@
 
             <lvc:XamlGaugeSeries
                 GaugeValue="{Binding Ana}"
-                Name="Ana"
+                SeriesName="Ana"
                 DataLabelsSize="20"
                 DataLabelsPosition="End"
                 DataLabelsFormatter="{Binding Formatter}"

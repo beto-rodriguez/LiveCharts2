@@ -29,13 +29,13 @@
     <lvc:PieChart>
         <lvc:PieChart.Series>
             <lvc:XamlPieSeries
-                Name="Maria"
+                SeriesName="Maria"
                 Values="7"
                 Pushout="10"
                 OuterRadiusOffset="20"
                 Fill="{lvc:RadialGradientPaint Colors='#B3E5FC, #01579B'}"/>
             <lvc:XamlPieSeries
-                Name="Charles"
+                SeriesName="Charles"
                 Values="3"
                 Fill="{lvc:RadialGradientPaint Colors='#FFCDD2, #B71C1C'}"/>
         </lvc:PieChart.Series>

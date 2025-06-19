@@ -21,7 +21,7 @@
             <lvc:PieChart.SeriesTemplate>
                 <DataTemplate x:DataType="vms:ChartData">
                     <lvc:XamlPieSeries
-                        Name="{Binding Name}"
+                        SeriesName="{Binding Name}"
                         Values="{Binding Values}"/>
                 </DataTemplate>
             </lvc:PieChart.SeriesTemplate>

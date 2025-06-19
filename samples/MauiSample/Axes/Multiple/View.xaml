@@ -42,25 +42,25 @@
 
         <lvc:CartesianChart.Series>
             <lvc:XamlLineSeries
-                Name="Tens"
+                SeriesName="Tens"
                 Values="{Binding Values1}"
                 Stroke="{lvc:SolidColorPaint Color={StaticResource blue}, StrokeWidth=2}"
                 GeometryStroke="{lvc:SolidColorPaint Color={StaticResource blue}, StrokeWidth=2}"
                 ScalesYAt="0"/>
             <lvc:XamlLineSeries
-                Name="Tens 2"
+                SeriesName="Tens 2"
                 Values="{Binding Values2}"
                 Stroke="{lvc:SolidColorPaint Color={StaticResource blue}, StrokeWidth=2}"
                 GeometryStroke="{lvc:SolidColorPaint Color={StaticResource blue}, StrokeWidth=2}"
                 ScalesYAt="0"/>
             <lvc:XamlLineSeries
-                Name="Hundreds"
+                SeriesName="Hundreds"
                 Values="{Binding Values3}"
                 Stroke="{lvc:SolidColorPaint Color={StaticResource red}, StrokeWidth=2}"
                 GeometryStroke="{lvc:SolidColorPaint Color={StaticResource red}, StrokeWidth=2}"
                 ScalesYAt="1"/>
             <lvc:XamlLineSeries
-                Name="Thousands"
+                SeriesName="Thousands"
                 Values="{Binding Values4}"
                 Stroke="{lvc:SolidColorPaint Color={StaticResource yellow}, StrokeWidth=2}"
                 GeometryStroke="{lvc:SolidColorPaint Color={StaticResource yellow}, StrokeWidth=2}"
@@ -69,14 +69,14 @@
 
         <lvc:CartesianChart.YAxes>
             <lvc:XamlAxis
-                Name="Tens"
+                AxisName="Tens"
                 Padding="0, 0, 20, 0"
                 NamePaint="{lvc:SolidColorPaint Color={StaticResource blue}}"
                 LabelsPaint="{lvc:SolidColorPaint Color={StaticResource blue}}"
                 TicksPaint="{lvc:SolidColorPaint Color={StaticResource blue}}"
                 SubticksPaint="{lvc:SolidColorPaint Color={StaticResource blue}}"/>
             <lvc:XamlAxis
-                Name="Hundreds"
+                AxisName="Hundreds"
                 Padding="20, 0, 0, 0"
                 Position="End"
                 ShowSeparatorLines="False"
@@ -85,7 +85,7 @@
                 TicksPaint="{lvc:SolidColorPaint Color={StaticResource red}}"
                 SubticksPaint="{lvc:SolidColorPaint Color={StaticResource red}}"/>
             <lvc:XamlAxis
-                Name="Thousands"
+                AxisName="Thousands"
                 Padding="20, 0, 0, 0"
                 Position="End"
                 ShowSeparatorLines="False"

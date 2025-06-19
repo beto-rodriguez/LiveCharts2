@@ -22,13 +22,13 @@
 
         <lvc:CartesianChart.XAxes>
             <lvc:XamlAxis
-                Name="Salesman/woman"
+                AxisName="Salesman/woman"
                 Labels="{Binding Labels}"/>
         </lvc:CartesianChart.XAxes>
 
         <lvc:CartesianChart.YAxes>
             <lvc:XamlAxis
-                Name="Sales"
+                AxisName="Sales"
                 NamePadding="0,15"
                 Labeler="{Binding Labeler}"
                 LabelsPaint="{lvc:SolidColorPaint

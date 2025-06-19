@@ -28,12 +28,12 @@
             <lvc:PieChart.Series>
 
                 <lvc:XamlGaugeSeries
-                    Name="North"
+                    SeriesName="North"
                     GaugeValue="{Binding Value1}"
                     DataLabelsPosition="Start"/>
 
                 <lvc:XamlGaugeSeries
-                    Name="South"
+                    SeriesName="South"
                     GaugeValue="{Binding Value2}"
                     DataLabelsPosition="Start"/>
 

@@ -34,7 +34,7 @@
 
         <lvc:CartesianChart.XAxes>
             <lvc:XamlAxis
-                Name="X Axis"
+                AxisName="X Axis"
                 NamePaint="{lvc:SolidColorPaint
                     Color={StaticResource gray1}}"
                 TextSize="18"
@@ -62,7 +62,7 @@
 
         <lvc:CartesianChart.YAxes>
             <lvc:XamlAxis
-                Name="Y Axis"
+                AxisName="Y Axis"
                 NamePaint="{lvc:SolidColorPaint
                     Color={StaticResource gray1}}"
                 TextSize="18"

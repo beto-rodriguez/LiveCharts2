@@ -19,7 +19,7 @@
         <lvc:PieChart.SeriesTemplate>
             <DataTemplate x:DataType="vms:PieData">
                 <lvc:XamlPieSeries
-                    Name="{Binding Name}"
+                    SeriesName="{Binding Name}"
                     Values="{Binding Values}"
                     Stroke="{lvc:SolidColorPaint Color='#fff', StrokeWidth=2}"
                     Fill="{Binding Color, Converter={StaticResource StringToPaintConverter}}"

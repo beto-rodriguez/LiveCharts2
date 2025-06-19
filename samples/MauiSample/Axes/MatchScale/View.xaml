@@ -35,7 +35,7 @@
 
         <lvc:CartesianChart.XAxes>
             <lvc:XamlAxis
-                Name="XAxis"
+                AxisName="XAxis"
                 SeparatorsPaint="#64b4b4b4"
                 MinStep="0.1"
                 ForceStepToMin="True"/>
@@ -43,7 +43,7 @@
 
         <lvc:CartesianChart.YAxes>
             <lvc:XamlAxis
-                Name="YAxis"
+                AxisName="YAxis"
                 SeparatorsPaint="#64b4b4b4"
                 MinStep="0.1"
                 ForceStepToMin="True"/>

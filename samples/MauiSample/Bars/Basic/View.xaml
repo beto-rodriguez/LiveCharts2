@@ -15,8 +15,8 @@
     <lvc:CartesianChart LegendPosition="Right">
 
         <lvc:CartesianChart.Series>
-            <lvc:XamlColumnSeries Name="Mary" Values="{Binding MaryValues}"/>
-            <lvc:XamlColumnSeries Name="Ana" Values="{Binding AnaValues}"/>
+            <lvc:XamlColumnSeries SeriesName="Mary" Values="{Binding MaryValues}"/>
+            <lvc:XamlColumnSeries SeriesName="Ana" Values="{Binding AnaValues}"/>
         </lvc:CartesianChart.Series>
 
         <!-- We use force to min step to show all the labels always. -->

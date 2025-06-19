@@ -20,18 +20,18 @@
             Grid.Row="1"
             LegendPosition="{Binding SelectedPosition}">
             <lvc:CartesianChart.Series>
-                <lvc:XamlColumnSeries Name="Peru" Values="3, 7, 3"/>
-                <lvc:XamlColumnSeries Name="Egypt" Values="5, 3, 2"/>
-                <lvc:XamlColumnSeries Name="Portugal" Values="8, 2, 4"/>
-                <lvc:XamlColumnSeries Name="El Salvador" Values="3, 7, 3"/>
-                <lvc:XamlColumnSeries Name="Slovenia" Values="5, 3, 2"/>
-                <lvc:XamlColumnSeries Name="Morocco" Values="8, 2, 4"/>
-                <lvc:XamlColumnSeries Name="Canada" Values="3, 7, 3"/>
-                <lvc:XamlColumnSeries Name="United kingdom" Values="5, 3, 2"/>
-                <lvc:XamlColumnSeries Name="Zimbawe" Values="8, 2, 4"/>
-                <lvc:XamlColumnSeries Name="Cabo verde" Values="3, 7, 3"/>
-                <lvc:XamlColumnSeries Name="France" Values="5, 3, 2"/>
-                <lvc:XamlColumnSeries Name="China" Values="8, 2, 4"/>
+                <lvc:XamlColumnSeries SeriesName="Peru" Values="3, 7, 3"/>
+                <lvc:XamlColumnSeries SeriesName="Egypt" Values="5, 3, 2"/>
+                <lvc:XamlColumnSeries SeriesName="Portugal" Values="8, 2, 4"/>
+                <lvc:XamlColumnSeries SeriesName="El Salvador" Values="3, 7, 3"/>
+                <lvc:XamlColumnSeries SeriesName="Slovenia" Values="5, 3, 2"/>
+                <lvc:XamlColumnSeries SeriesName="Morocco" Values="8, 2, 4"/>
+                <lvc:XamlColumnSeries SeriesName="Canada" Values="3, 7, 3"/>
+                <lvc:XamlColumnSeries SeriesName="United kingdom" Values="5, 3, 2"/>
+                <lvc:XamlColumnSeries SeriesName="Zimbawe" Values="8, 2, 4"/>
+                <lvc:XamlColumnSeries SeriesName="Cabo verde" Values="3, 7, 3"/>
+                <lvc:XamlColumnSeries SeriesName="France" Values="5, 3, 2"/>
+                <lvc:XamlColumnSeries SeriesName="China" Values="8, 2, 4"/>
             </lvc:CartesianChart.Series>
         </lvc:CartesianChart>
     </Grid>
