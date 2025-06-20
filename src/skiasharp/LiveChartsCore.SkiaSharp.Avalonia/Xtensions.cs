@@ -545,3 +545,17 @@ public class PointExtension(string point) : MarkupExtension
     public override object ProvideValue(IServiceProvider serviceProvider) =>
         PointTypeConverter.ParsePoint(point);
 }
+
+/// <summary>
+/// 
+/// </summary>
+public class ColorArrayExtension(string colors) : MarkupExtension
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="serviceProvider"></param>
+    /// <returns></returns>
+    public override object ProvideValue(IServiceProvider serviceProvider) =>
+        HexToLvcColorArrayTypeConverter.Parse(colors);
+}

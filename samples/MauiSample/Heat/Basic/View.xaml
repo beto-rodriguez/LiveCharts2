@@ -21,13 +21,11 @@
         </lvc:CartesianChart.Series>
 
         <lvc:CartesianChart.XAxes>
-            <lvc:XamlAxis
-                Labels="Charles, Richard, Ana, Mari"/>
+            <lvc:XamlAxis Labels="{Binding XLabels}"/>
         </lvc:CartesianChart.XAxes>
 
         <lvc:CartesianChart.YAxes>
-            <lvc:XamlAxis
-                Labels="Jan, Feb, Mar, Apr, May, Jun"/>
+            <lvc:XamlAxis Labels="{Binding YLabels}"/>
         </lvc:CartesianChart.YAxes>
 
         <lvc:CartesianChart.Legend>

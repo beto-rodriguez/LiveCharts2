@@ -4,6 +4,13 @@ namespace ViewModelsSamples.Heat.Basic;
 
 public class ViewModel
 {
+
+    public string[] XLabels { get; set; } =
+        ["Charles", "Richard", "Ana", "Mari"];
+
+    public string[] YLabels { get; set; } =
+        ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
+
     public WeightedPoint[] Values { get; set; } = [
             // Charles
             new(0, 0, 150), // Jan

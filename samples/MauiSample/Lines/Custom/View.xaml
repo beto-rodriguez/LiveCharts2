@@ -15,7 +15,7 @@
     <lvc:CartesianChart>
         <lvc:CartesianChart.Series>
             <lvc:XamlLineSeries
-                Values="2,1,4,2,2,-5,-2"
+                Values="{Binding Values1}"
                 Fill="{x:Null}"
                 GeometrySize="20"/>
 
@@ -29,7 +29,7 @@
             -->
             <lvc:XamlLineSeries
                 x:TypeArguments="x:Double, draw:StarGeometry"
-                Values="3,3,-3,-2,-4,-3,-1"
+                Values="{Binding Values2}"
                 Fill="{x:Null}"
                 GeometrySize="20" />
 
@@ -40,7 +40,7 @@
             <lvc:XamlLineSeries
                 x:TypeArguments="x:Double, draw:VariableSVGPathGeometry"
                 GeometrySvg="{Static svg:SVGPoints.Pin}"
-                Values="-2,2,1,3,-1,4,3"
+                Values="{Binding Values3}"
                 Fill="{x:Null}"
                 GeometrySize="20"/>
 
@@ -49,7 +49,7 @@
             -->
             <lvc:XamlLineSeries
                 x:TypeArguments="x:Double, vms:MyGeometry"
-                Values="4,5,2,4,3,2,1"
+                Values="{Binding Values3}"
                 Fill="{x:Null}"
                 GeometrySize="20"/>
 

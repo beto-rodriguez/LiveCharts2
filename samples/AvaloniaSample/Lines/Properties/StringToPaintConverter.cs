@@ -4,7 +4,7 @@ using Avalonia.Data.Converters;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
-namespace AvaloniaSample.Axes.ColorsAndPosition;
+namespace AvaloniaSample.Lines.Properties;
 
 public class StringToPaintConverter : IValueConverter
 {

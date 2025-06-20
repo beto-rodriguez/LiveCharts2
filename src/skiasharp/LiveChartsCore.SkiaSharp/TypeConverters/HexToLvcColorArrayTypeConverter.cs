@@ -53,7 +53,12 @@ public class HexToLvcColorArrayTypeConverter : TypeConverter
             ? base.ConvertFrom(context, culture, value)
             : Parse(str);
 
-    private static object Parse(string hexString)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="hexString"></param>
+    /// <returns></returns>
+    public static object Parse(string hexString)
     {
         var items = hexString.Split([','], StringSplitOptions.RemoveEmptyEntries);
         var colors = new LvcColor[items.Length];
