@@ -6,6 +6,8 @@ namespace ViewModelsSamples.Axes.LabelsRotation;
 
 public partial class ViewModel : ObservableObject
 {
+    public double[] Values { get; set; } = [200, 558, 458, 249, 457, 339, 587];
+
     [ObservableProperty]
     public partial double Rotation { get; set; } = 15;
 
