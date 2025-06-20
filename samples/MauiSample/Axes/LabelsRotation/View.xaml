@@ -26,10 +26,10 @@
         </VerticalStackLayout>
 
         <lvc:CartesianChart
-            Grid.Row="2">
+            Grid.Row="1">
             <lvc:CartesianChart.Series>
                 <lvc:XamlLineSeries
-                    Values="200, 558, 458, 249, 457, 339, 587"
+                    Values="{Binding Values}"
                     XToolTipLabelFormatter="{Binding TooltipFormat}" />
             </lvc:CartesianChart.Series>
             <lvc:CartesianChart.XAxes>

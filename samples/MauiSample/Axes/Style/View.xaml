@@ -29,7 +29,8 @@
                 Values="{Binding Values}"
                 Stroke="{lvc:SolidColorPaint Color='#2196F3', StrokeWidth=4}"
                 Fill="{x:Null}"
-                GeometrySize="0"/>
+                GeometryFill="{x:Null}"
+                GeometryStroke="{x:Null}"/>
         </lvc:CartesianChart.Series>
 
         <lvc:CartesianChart.XAxes>
