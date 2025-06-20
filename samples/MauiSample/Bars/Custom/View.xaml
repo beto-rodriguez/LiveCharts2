@@ -14,7 +14,7 @@
 
     <lvc:CartesianChart>
         <lvc:CartesianChart.Series>
-            <lvc:XamlColumnSeries Values="2,1,4"/>
+            <lvc:XamlColumnSeries Values="{Binding Values1}"/>
 
             <!--
             Use the generic type arguments to set the type of the geometry to draw,
@@ -26,7 +26,7 @@
             -->
             <lvc:XamlColumnSeries
                 x:TypeArguments="x:Double, draw:DiamondGeometry"
-                Values="4,3,6" />
+                Values="{Binding Values2}" />
 
             <!--
             You can also use SVG paths to draw the geometry
@@ -35,14 +35,14 @@
             <lvc:XamlColumnSeries
                 x:TypeArguments="x:Double, draw:VariableSVGPathGeometry"
                 GeometrySvg="{Static svg:SVGPoints.Star}"
-                Values="-2,2,1"/>
+                Values="{Binding Values3}"/>
 
             <!--
             Finally you can also use SkiaSharp to draw your own geometry
             -->
             <lvc:XamlColumnSeries
                 x:TypeArguments="x:Double, vms:MyGeometry"
-                Values="1,2,3"/>
+                Values="{Binding Values4}"/>
 
         </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
