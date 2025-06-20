@@ -230,8 +230,8 @@ public partial class {target.Name} : LiveChartsCore.Generators.IXamlWrapper<{bas
                 var propertyType = property.Type.ToDisplayString();
 
                 _ = target.PropertyChangedMap.TryGetValue(property.Name, out var map)
-                    ? sb.AppendLine(@$"            case ""{property.Name}"": {map}(GetValue({GetPropertyName(target, property)}Property)); break;")
-                    : sb.AppendLine(@$"            case ""{property.Name}"": {path}.{property.Name} = ({propertyType})GetValue({GetPropertyName(target, property)}Property); break;");
+                    ? sb.AppendLine(@$"            case ""{GetPropertyName(target, property)}"": {map}(GetValue({GetPropertyName(target, property)}Property)); break;")
+                    : sb.AppendLine(@$"            case ""{GetPropertyName(target, property)}"": {path}.{property.Name} = ({propertyType})GetValue({GetPropertyName(target, property)}Property); break;");
             }
         }
 
