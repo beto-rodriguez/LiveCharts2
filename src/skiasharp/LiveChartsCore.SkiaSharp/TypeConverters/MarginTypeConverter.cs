@@ -53,7 +53,19 @@ public class MarginTypeConverter : TypeConverter
             ? base.ConvertFrom(context, culture, value)
             : ParseMargin(str);
 
-    internal static object ParseMargin(string value)
+    /// <summary>
+    /// Parses a string representation of margin values and returns a <see cref="Margin"/> object.
+    /// </summary>
+    /// <remarks>The input string should contain one, two, or four numeric values separated by commas. These
+    /// values represent the margin dimensions in the following order: <list type="bullet"> <item>One value: All sides
+    /// of the margin are set to the same value.</item> <item>Two values: The first value sets the top and bottom
+    /// margins, and the second value sets the left and right margins.</item> <item>Four values: The values set the top,
+    /// right, bottom, and left margins, respectively.</item> </list> If the input string contains an invalid number of
+    /// values, a default <see cref="Margin"/> object is returned.</remarks>
+    /// <param name="value">A comma-separated string containing one, two, or four numeric values representing margin dimensions.</param>
+    /// <returns>A <see cref="Margin"/> object initialized with the parsed values. If the input string is empty or does not
+    /// contain a valid number of values, a default <see cref="Margin"/> object is returned.</returns>
+    public static object ParseMargin(string value)
     {
         var parts = value.Split(',');
 

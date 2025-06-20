@@ -1,4 +1,5 @@
-﻿// The MIT License(MIT)
+﻿
+// The MIT License(MIT)
 //
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
 //
@@ -21,10 +22,15 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using Avalonia.Markup.Xaml;
+using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
 using LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
+using LiveChartsCore.SkiaSharpView.TypeConverters;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
@@ -128,7 +134,7 @@ public abstract class BaseSkiaPaintExtention : MarkupExtension
     {
         if (string.IsNullOrWhiteSpace(point)) return @default;
 
-        var split = point.Split(',');
+        var split = point!.Split(',');
 
         if (split.Length != 2) return @default;
 #pragma warning disable IDE0046 // Convert to conditional expression
@@ -321,4 +327,234 @@ public class RadialGradientPaintExtension : BaseSkiaPaintExtention
 
         return paint;
     }
+}
+
+/// <summary>
+/// The frame extension.
+/// </summary>
+public class FrameExtension : MarkupExtension
+{
+    /// <summary>
+    /// Gets or sets the fill.
+    /// </summary>
+    public Paint? Fill { get; set; }
+
+    /// <summary>
+    /// Gets or sets the stroke.
+    /// </summary>
+    public Paint? Stroke { get; set; }
+
+    /// <summary>
+    /// ...
+    /// </summary>
+    public override object ProvideValue(IServiceProvider serviceProvider)
+    {
+        return new DrawMarginFrame
+        {
+            Fill = Fill,
+            Stroke = Stroke
+        };
+    }
+}
+
+/// <summary>
+/// The from shared axes extension.
+/// </summary>
+public class FromSharedAxesExtension : MarkupExtension
+{
+    /// <summary>
+    /// Gets or sets the pair instance.
+    /// </summary>
+    public SharedAxesPair? AxesPair { get; set; }
+
+    /// <summary>
+    /// Gets or sets the element.
+    /// </summary>
+    public PairElement Element { get; set; }
+
+    /// <summary>
+    /// ...
+    /// </summary>
+    public override object ProvideValue(IServiceProvider serviceProvider)
+    {
+#pragma warning disable IDE0046 // Convert to conditional expression
+        if (AxesPair is null || AxesPair.First is null || AxesPair.Second is null)
+            return Array.Empty<ICartesianAxis>();
+#pragma warning restore IDE0046 // Convert to conditional expression
+
+        return Element switch
+        {
+            PairElement.First => [AxesPair.First],
+            PairElement.Second => [AxesPair.Second],
+            _ => Array.Empty<ICartesianAxis>()
+        };
+    }
+
+    /// <summary>
+    /// The shared axes pair elements.
+    /// </summary>
+    public enum PairElement
+    {
+        /// <summary>
+        /// The first element.
+        /// </summary>
+        First,
+
+        /// <summary>
+        /// The second element.
+        /// </summary>
+        Second
+    }
+}
+
+/// <summary>
+/// The drop shadow extension.
+/// </summary>
+public class ShadowExtension : MarkupExtension
+{
+    /// <summary>
+    /// Gets or sets the shadow in string format.
+    /// </summary>
+    public string? StringFormat { get; set; } = null;
+
+    /// <summary>
+    /// Gets or sets the dx.
+    /// </summary>
+    public float Dx { get; set; }
+
+    /// <summary>
+    /// Gets or sets the dy.
+    /// </summary>
+    public float Dy { get; set; }
+
+    /// <summary>
+    /// Gets or sets the sigma x.
+    /// </summary>
+    public float SigmaX { get; set; }
+
+    /// <summary>
+    /// Gets or sets the sigma y.
+    /// </summary>
+    public float SigmaY { get; set; }
+
+    /// <summary>
+    /// Gets or sets the color in hex string format.
+    /// </summary>
+    public string? Color { get; set; }
+
+    /// <summary>
+    /// ...
+    /// </summary>
+    public override object ProvideValue(IServiceProvider serviceProvider)
+    {
+        if (StringFormat is not null)
+        {
+            var split = StringFormat.Split(',');
+
+            if (split.Length == 5)
+            {
+                Dx = float.TryParse(split[0], out var dx) ? dx : 0f;
+                Dy = float.TryParse(split[1], out var dy) ? dy : 0f;
+                SigmaX = float.TryParse(split[2], out var sx) ? sx : 0f;
+                SigmaY = float.TryParse(split[3], out var sy) ? sy : 0f;
+                Color = split[4];
+            }
+
+            if (split.Length == 4)
+            {
+                Dx = float.TryParse(split[0], out var dx) ? dx : 0f;
+                Dy = float.TryParse(split[1], out var dy) ? dy : 0f;
+                SigmaX = SigmaY = float.TryParse(split[2], out var sx) ? sx : 0f;
+                Color = split[3];
+            }
+
+            if (split.Length == 3)
+            {
+                Dx = Dy = float.TryParse(split[0], out var dx) ? dx : 0f;
+                SigmaX = SigmaY = float.TryParse(split[1], out var dy) ? dy : 0f;
+                Color = split[2];
+            }
+
+            if (split.Length == 2)
+            {
+                Dx = Dy = float.TryParse(split[0], out var dx) ? dx : 0f;
+                SigmaX = SigmaY = float.TryParse(split[1], out var dy) ? dy : 0f;
+                Color = "#555";
+            }
+        }
+
+        if (!LvcColor.TryParse(Color!, out var color))
+            color = new(0, 0, 0);
+
+        return new LvcDropShadow(Dx, Dy, SigmaX, SigmaY, color);
+    }
+}
+
+/// <summary>
+/// 
+/// </summary>
+public class DashedExtension : MarkupExtension
+{
+    private static readonly float[] s_defaultDashes = [2, 2];
+
+    /// <summary>
+    /// Gets or sets the dash array separated by commas.
+    /// </summary>
+    public string? Array { get; set; } = null;
+
+    /// <summary>
+    /// Gets or sets the dash phase.
+    /// </summary>
+    public float Phase { get; set; } = 0f;
+
+    /// <summary>
+    /// ...
+    /// </summary>
+    public override object ProvideValue(IServiceProvider serviceProvider)
+    {
+        if (Array is null) return new DashEffect(s_defaultDashes);
+
+        var dashArray = Array.Split(',');
+        var dashes = new List<float>(dashArray.Length);
+
+        foreach (var dash in dashArray)
+        {
+            if (float.TryParse(dash, out var value))
+                dashes.Add(value);
+        }
+
+        return new DashEffect(
+            dashes.Count == 0
+                ? s_defaultDashes
+                : [.. dashes],
+            Phase);
+    }
+}
+
+/// <summary>
+/// 
+/// </summary>
+public class PaddingExtension(string padding) : MarkupExtension
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="serviceProvider"></param>
+    /// <returns></returns>
+    public override object ProvideValue(IServiceProvider serviceProvider) =>
+        PaddingTypeConverter.ParsePadding(padding);
+}
+
+/// <summary>
+/// 
+/// </summary>
+public class MarginExtension(string margin) : MarkupExtension
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="serviceProvider"></param>
+    /// <returns></returns>
+    public override object ProvideValue(IServiceProvider serviceProvider) =>
+        MarginTypeConverter.ParseMargin(margin);
 }

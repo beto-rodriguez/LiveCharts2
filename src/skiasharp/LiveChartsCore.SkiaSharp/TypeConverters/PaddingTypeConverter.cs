@@ -53,7 +53,17 @@ public class PaddingTypeConverter : TypeConverter
             ? base.ConvertFrom(context, culture, value)
             : ParsePadding(str);
 
-    internal static object ParsePadding(string value)
+    /// <summary>
+    /// Parses a string representation of padding values and returns a <see cref="Padding"/> object.
+    /// </summary>
+    /// <param name="value">A comma-separated string containing one, two, or four numeric values representing padding.</param>
+    /// <returns>A <see cref="Padding"/> object initialized with the parsed values. If the input string contains: <list
+    /// type="bullet"> <item>One value: All sides of the padding are set to the same value.</item> <item>Two values: The
+    /// first value is applied to the top and bottom, and the second value to the left and right.</item> <item>Four
+    /// values: The values are applied to the top, left, bottom, and right, respectively.</item> </list> If the input
+    /// string is invalid or does not contain one, two, or four values, a default <see cref="Padding"/> object is
+    /// returned.</returns>
+    public static object ParsePadding(string value)
     {
         var parts = value.Split(',');
         return parts.Length switch
