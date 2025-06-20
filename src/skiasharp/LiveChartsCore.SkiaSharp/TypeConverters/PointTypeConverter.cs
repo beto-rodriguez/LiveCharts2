@@ -53,7 +53,12 @@ public class PointTypeConverter : TypeConverter
             ? base.ConvertFrom(context, culture, value)
             : ParsePoint(str);
 
-    internal static object ParsePoint(string value)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public static object ParsePoint(string value)
     {
         var parts = value.Split(',');
         return parts.Length switch

@@ -558,3 +558,17 @@ public class MarginExtension(string margin) : MarkupExtension
     public override object ProvideValue(IServiceProvider serviceProvider) =>
         MarginTypeConverter.ParseMargin(margin);
 }
+
+/// <summary>
+/// 
+/// </summary>
+public class PointExtension(string point) : MarkupExtension
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="serviceProvider"></param>
+    /// <returns></returns>
+    public override object ProvideValue(IServiceProvider serviceProvider) =>
+        PointTypeConverter.ParsePoint(point);
+}
