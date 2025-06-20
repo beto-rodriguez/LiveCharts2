@@ -1,21 +1,41 @@
-<UserControl x:Class="AvaloniaSample.Axes.LabelsRotation.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Axes.LabelsRotation">
+<UserControl
+    x:Class="AvaloniaSample.Axes.LabelsRotation.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Axes.LabelsRotation">
+
   <UserControl.DataContext>
     <vms:ViewModel/>
   </UserControl.DataContext>
-  <Grid>
-      <Grid.RowDefinitions>
-          <RowDefinition Height="40"/>
-          <RowDefinition Height="*"/>
-      </Grid.RowDefinitions>
+    
+  <Grid RowDefinitions="Auto,*">
+
       <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
           <TextBlock>Rotation</TextBlock>
-          <TextBlock Width="100" Margin="10 0" Text="{Binding SliderValue}"></TextBlock>
-          <Slider Width="300" Minimum="-360" Maximum="720" Value="{Binding SliderValue, Mode=TwoWay}" />
+          <TextBlock Width="100" Margin="10 0" Text="{Binding Rotation}"></TextBlock>
+          <Slider Width="300" Minimum="-360" Maximum="720" Value="{Binding Rotation, Mode=TwoWay}" />
       </StackPanel>
-      <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}"></lvc:CartesianChart>
+
+      <lvc:CartesianChart
+            Grid.Row="1">
+          <lvc:CartesianChart.Series>
+              <lvc:XamlLineSeries
+                  Values="{Binding Values}"
+                  XToolTipLabelFormatter="{Binding TooltipFormat}" />
+          </lvc:CartesianChart.Series>
+          <lvc:CartesianChart.XAxes>
+              <lvc:XamlAxis
+                  Labeler="{Binding Labeler}"
+                  MinStep="1"
+                  LabelsRotation="45"
+                  SeparatorsPaint="{lvc:SolidColorPaint Color='#eee', StrokeWidth=2}"/>
+          </lvc:CartesianChart.XAxes>
+          <lvc:CartesianChart.YAxes>
+              <lvc:XamlAxis
+                  LabelsRotation="{Binding Rotation}"
+                  SeparatorsPaint="{lvc:SolidColorPaint Color='#eee', StrokeWidth=2}" />
+          </lvc:CartesianChart.YAxes>
+      </lvc:CartesianChart>
   </Grid> 
 </UserControl>

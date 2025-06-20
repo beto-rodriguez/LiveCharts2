@@ -1,13 +1,32 @@
-<UserControl x:Class="AvaloniaSample.Axes.TimeSpanScaled.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Axes.TimeSpanScaled">
-  <UserControl.DataContext>
-    <vms:ViewModel/>
-  </UserControl.DataContext>
-  <lvc:CartesianChart
-      Series="{Binding Series}"
-      XAxes="{Binding XAxes}">
-  </lvc:CartesianChart>
+<UserControl
+    x:Class="AvaloniaSample.Axes.TimeSpanScaled.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Axes.TimeSpanScaled">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <lvc:CartesianChart>
+
+        <lvc:CartesianChart.Series>
+            <lvc:XamlColumnSeries Values="{Binding Values}"/>
+        </lvc:CartesianChart.Series>
+
+        <!--
+            The Interval property is used to set the interval between each label,
+            in this case, the interval is set to 1 millisecond.
+
+            In the DateFormatter property, we define the format of the labels.
+        -->
+
+        <lvc:CartesianChart.XAxes>
+            <lvc:XamlTimeSpanAxis
+                Interval="0:0:0.001"
+                TimeFormatter="{Binding Formatter}"/>
+        </lvc:CartesianChart.XAxes>
+
+    </lvc:CartesianChart>
 </UserControl>
