@@ -410,46 +410,19 @@ public class FromSharedAxesExtension : MarkupExtension
 /// <summary>
 /// The drop shadow extension.
 /// </summary>
-public class ShadowExtension : MarkupExtension
+public class ShadowExtension(string stringFormat) : MarkupExtension
 {
-    /// <summary>
-    /// Gets or sets the shadow in string format.
-    /// </summary>
-    public string? StringFormat { get; set; } = null;
-
-    /// <summary>
-    /// Gets or sets the dx.
-    /// </summary>
-    public float Dx { get; set; }
-
-    /// <summary>
-    /// Gets or sets the dy.
-    /// </summary>
-    public float Dy { get; set; }
-
-    /// <summary>
-    /// Gets or sets the sigma x.
-    /// </summary>
-    public float SigmaX { get; set; }
-
-    /// <summary>
-    /// Gets or sets the sigma y.
-    /// </summary>
-    public float SigmaY { get; set; }
-
-    /// <summary>
-    /// Gets or sets the color in hex string format.
-    /// </summary>
-    public string? Color { get; set; }
-
     /// <summary>
     /// ...
     /// </summary>
     public override object ProvideValue(IServiceProvider serviceProvider)
     {
-        if (StringFormat is not null)
+        float Dx = 0, Dy = 0, SigmaX = 0, SigmaY = 0;
+        var Color = "#000";
+
+        if (stringFormat is not null)
         {
-            var split = StringFormat.Split(',');
+            var split = stringFormat.Split(',');
 
             if (split.Length == 5)
             {

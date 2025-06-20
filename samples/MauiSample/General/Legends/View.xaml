@@ -18,21 +18,13 @@
 
         <lvc:CartesianChart
             Grid.Row="1"
-            LegendPosition="{Binding SelectedPosition}">
-            <lvc:CartesianChart.Series>
-                <lvc:XamlColumnSeries SeriesName="Peru" Values="3, 7, 3"/>
-                <lvc:XamlColumnSeries SeriesName="Egypt" Values="5, 3, 2"/>
-                <lvc:XamlColumnSeries SeriesName="Portugal" Values="8, 2, 4"/>
-                <lvc:XamlColumnSeries SeriesName="El Salvador" Values="3, 7, 3"/>
-                <lvc:XamlColumnSeries SeriesName="Slovenia" Values="5, 3, 2"/>
-                <lvc:XamlColumnSeries SeriesName="Morocco" Values="8, 2, 4"/>
-                <lvc:XamlColumnSeries SeriesName="Canada" Values="3, 7, 3"/>
-                <lvc:XamlColumnSeries SeriesName="United kingdom" Values="5, 3, 2"/>
-                <lvc:XamlColumnSeries SeriesName="Zimbawe" Values="8, 2, 4"/>
-                <lvc:XamlColumnSeries SeriesName="Cabo verde" Values="3, 7, 3"/>
-                <lvc:XamlColumnSeries SeriesName="France" Values="5, 3, 2"/>
-                <lvc:XamlColumnSeries SeriesName="China" Values="8, 2, 4"/>
-            </lvc:CartesianChart.Series>
+            LegendPosition="{Binding SelectedPosition}"
+            SeriesSource="{Binding Data}">
+            <lvc:CartesianChart.SeriesTemplate>
+                <DataTemplate x:DataType="vms:ChartData">
+                    <lvc:XamlColumnSeries SeriesName="{Binding Name}" Values="{Binding Values}"/>
+                </DataTemplate>
+            </lvc:CartesianChart.SeriesTemplate>
         </lvc:CartesianChart>
     </Grid>
 </ContentPage>

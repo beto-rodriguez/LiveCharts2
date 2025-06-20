@@ -10,11 +10,7 @@
         <vms:ViewModel/>
     </ContentPage.BindingContext>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="100"/>
-        </Grid.RowDefinitions>
+    <Grid RowDefinitions="*, 100">
 
         <!--
         We use the DrawMargin property to align both charts,
@@ -26,7 +22,7 @@
                 DrawMargin="100, Auto, 50, Auto"
                 ZoomMode="X"
                 UpdateStartedCommand="{Binding ChartUpdatedCommand}">
-            
+
             <lvc:CartesianChart.Series>
                 <lvc:XamlLineSeries
                     Values="{Binding Values}"

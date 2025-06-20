@@ -1,14 +1,51 @@
-<UserControl x:Class="AvaloniaSample.General.ConditionalDraw.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.General.ConditionalDraw">
-  <UserControl.DataContext>
-    <vms:ViewModel/>
-  </UserControl.DataContext>
-  <lvc:CartesianChart
-      Series="{Binding Series}"
-      Sections="{Binding Sections}"
-      YAxes="{Binding Y}">
-  </lvc:CartesianChart>
+<UserControl
+    x:Class="AvaloniaSample.General.ConditionalDraw.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.General.ConditionalDraw">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <lvc:CartesianChart>
+
+        <lvc:CartesianChart.Series>
+            <lvc:XamlColumnSeries
+                Values="{Binding Values}"
+                PointMeasuredCommand="{Binding PointMeasuredCommand}">
+
+                <!--
+                Use the AdditionalVisualStates property to define the look of the points
+                when they are in a different state
+                -->
+
+                <lvc:XamlColumnSeries.AdditionalVisualStates>
+
+                    <!-- When the state is "Danger", the Fill is set to red -->
+                    <lvc:ChartPointState Name="Danger">
+                        <lvc:ChartPointState.Setters>
+                            <lvc:Set
+                                PropertyName="Fill"
+                                Value="{lvc:SolidColorPaint Color='#f00'}"/>
+                        </lvc:ChartPointState.Setters>
+                    </lvc:ChartPointState>
+
+                    <!-- The "Hover" state is fired when the pointer is over a point-->
+                    <lvc:ChartPointState Name="Hover">
+                        <lvc:ChartPointState.Setters>
+                            <lvc:Set
+                                PropertyName="DropShadow"
+                                Value="{lvc:Shadow '4, 16, #00f'}"/>
+                        </lvc:ChartPointState.Setters>
+                    </lvc:ChartPointState>
+
+                </lvc:XamlColumnSeries.AdditionalVisualStates>
+
+            </lvc:XamlColumnSeries>
+        </lvc:CartesianChart.Series>
+
+    </lvc:CartesianChart>
+
 </UserControl>

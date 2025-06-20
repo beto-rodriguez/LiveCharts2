@@ -1,37 +1,33 @@
-<UserControl x:Class="AvaloniaSample.General.ChartToImage.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.General.ChartToImage">
+<UserControl
+    x:Class="AvaloniaSample.General.ChartToImage.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.General.ChartToImage">
 
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
+    <Grid RowDefinitions="*,*">
         <lvc:CartesianChart
             Grid.Row="0"
-            x:Name="cartesianChart"
-            Series="{Binding CatesianSeries}">
+            x:Name="cartesianChart">
+            <lvc:CartesianChart.Series>
+                <lvc:XamlLineSeries Values="{Binding Values1}"/>
+                <lvc:XamlColumnSeries Values="{Binding Values2}"/>
+            </lvc:CartesianChart.Series>
         </lvc:CartesianChart>
 
         <lvc:PieChart
             Grid.Row="1"
-            x:Name="pieChart"
-            Series="{Binding PieSeries}">
+            x:Name="pieChart">
+            <lvc:PieChart.Series>
+                <lvc:XamlPieSeries Values="{Binding PieValues1}"/>
+                <lvc:XamlPieSeries Values="{Binding PieValues2}"/>
+                <lvc:XamlPieSeries Values="{Binding PieValues3}"/>
+            </lvc:PieChart.Series>
         </lvc:PieChart>
-
-        <lvc:GeoMap
-            Grid.Row="2"
-            x:Name="geoChart"
-            Series="{Binding GeoSeries}">
-        </lvc:GeoMap>
-
     </Grid>
+
 </UserControl>

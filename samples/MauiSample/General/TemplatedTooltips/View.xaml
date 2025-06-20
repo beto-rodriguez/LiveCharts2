@@ -10,12 +10,17 @@
         <vms:ViewModel/>
     </ContentPage.BindingContext>
 
-    <lvc:CartesianChart
-        Grid.Row="0"
-        Series="{Binding Series}">
+    <lvc:CartesianChart>
         <!-- mark -untilCloses CartesianChart.Tooltip -->
         <lvc:CartesianChart.Tooltip>
             <vms:CustomTooltip></vms:CustomTooltip>
         </lvc:CartesianChart.Tooltip>
+
+        <lvc:CartesianChart.Series>
+            <lvc:XamlColumnSeries
+                x:TypeArguments="vms:GeometryPoint"
+                Values="{Binding Values}"/>
+        </lvc:CartesianChart.Series>
+
     </lvc:CartesianChart>
 </ContentPage>

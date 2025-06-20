@@ -1,4 +1,6 @@
-﻿using LiveChartsCore;
+﻿using System;
+using LiveChartsCore;
+using LiveChartsCore.Kernel;
 
 namespace ViewModelsSamples.General.UserDefinedTypes;
 
@@ -25,4 +27,11 @@ public class ViewModel
         new City { Name = "Shanghai", Population = 3 },
         new City { Name = "Guadalajara", Population = 4 }
     ];
+
+    public Func<ChartPoint, string> TooltipFormatter { get; set; } = point =>
+    {
+        var city = (City)point.Context.DataSource!;
+
+        return $"{city.Population}M people in {city.Name}";
+    };
 }

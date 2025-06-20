@@ -14,6 +14,9 @@ public partial class ViewModel
 {
     private readonly HashSet<ChartPoint> _activePoints = [];
 
+    public double[] Values1 { get; set; } = [1, 5, 4, 3];
+    public double[] Values2 { get; set; } = [3, 2, 6, 2];
+
     public FindingStrategy Strategy { get; } = FindingStrategy.ExactMatch;
 
     [RelayCommand]

@@ -1,14 +1,39 @@
-<UserControl x:Class="AvaloniaSample.Box.Basic.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Box.Basic">
+<UserControl
+    x:Class="AvaloniaSample.Box.Basic.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Box.Basic">
+
   <UserControl.DataContext>
     <vms:ViewModel/>
   </UserControl.DataContext>
+
   <lvc:CartesianChart
-      Series="{Binding Series}"
-      XAxes="{Binding XAxes}"
       LegendPosition="Right">
+
+    <lvc:CartesianChart.Series>
+      <lvc:XamlBoxSeries
+          SeriesName="Year 2023"
+          Values="{Binding Values1}"/>
+      <lvc:XamlBoxSeries
+          SeriesName="Year 2024"
+          Values="{Binding Values2}"/>
+      <lvc:XamlBoxSeries
+          SeriesName="Year 2025"
+          Values="{Binding Values3}"/>
+    </lvc:CartesianChart.Series>
+
+    <lvc:CartesianChart.XAxes>
+      <lvc:XamlAxis
+          Labels="{Binding Labels}"
+          LabelsRotation="0"
+          SeparatorsPaint="{lvc:SolidColorPaint Color='#c8c8c8'}"
+          SeparatorsAtCenter="False"
+          TicksPaint="{lvc:SolidColorPaint Color='#232323'}"
+          TicksAtCenter="True"/>
+    </lvc:CartesianChart.XAxes>
+
   </lvc:CartesianChart>
+
 </UserControl>

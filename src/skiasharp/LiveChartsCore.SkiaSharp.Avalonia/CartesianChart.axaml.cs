@@ -103,6 +103,7 @@ public partial class CartesianChart : UserControl, ICartesianChartView, ICustomH
         XAxes = new ObservableCollection<ICartesianAxis>();
         YAxes = new ObservableCollection<ICartesianAxis>();
         Series = new ObservableCollection<ISeries>();
+        Sections = new ObservableCollection<IChartElement>();
         VisualElements = new ObservableCollection<IChartElement>();
 
         PointerPressed += CartesianChart_PointerPressed;

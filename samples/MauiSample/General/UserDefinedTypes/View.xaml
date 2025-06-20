@@ -15,7 +15,8 @@
             <lvc:XamlLineSeries
                 x:TypeArguments="vms:City"
                 SeriesName="Population"
-                Values="{Binding Values}"/>
+                Values="{Binding Values}"
+                YToolTipLabelFormatter="{Binding TooltipFormatter}"/>
         </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 

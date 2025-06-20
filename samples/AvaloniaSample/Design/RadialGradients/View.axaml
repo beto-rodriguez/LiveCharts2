@@ -1,18 +1,43 @@
-<UserControl x:Class="AvaloniaSample.Design.RadialGradients.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Design.RadialGradients">
-  <UserControl.DataContext>
-    <vms:ViewModel/>
-  </UserControl.DataContext>
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="*"/>
-    </Grid.RowDefinitions>
-    <lvc:PieChart
-        Series="{Binding Series}"
-        LegendPosition="Right">
+<UserControl
+    x:Class="AvaloniaSample.Design.RadialGradients.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Design.RadialGradients">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <!--
+    Use the RadialGradientPaint extension to create a circular gradients.
+
+    The Colors property accepts a string with the colors separated by a comma.
+ 
+    The Center property accepts a string with the coordinates separated by a comma,
+    both values are between 0 and 1, where 0,0 is the top left corner and 1,1 is the bottom right corner,
+    default is 0.5,0.5.
+
+    The ColorPositions property accepts a string with the color positions separated by a comma,
+    the positions are between 0 and 1, where 0 is the start of the gradient and 1 is the end of the gradient,
+    this defines the distribution of the colors in the gradient, use null to use the default distribution.
+
+    The TileMode property defines how the gradient is repeated.
+     -->
+
+    <lvc:PieChart>
+        <lvc:PieChart.Series>
+            <lvc:XamlPieSeries
+                SeriesName="Maria"
+                Values="7"
+                Pushout="10"
+                OuterRadiusOffset="20"
+                Fill="{lvc:RadialGradientPaint Colors='#B3E5FC, #01579B'}"/>
+            <lvc:XamlPieSeries
+                SeriesName="Charles"
+                Values="3"
+                Fill="{lvc:RadialGradientPaint Colors='#FFCDD2, #B71C1C'}"/>
+        </lvc:PieChart.Series>
     </lvc:PieChart>
-  </Grid>  
+
 </UserControl>
