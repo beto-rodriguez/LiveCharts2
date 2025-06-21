@@ -2,5 +2,6 @@
 
 public class ViewModel
 {
-    // nothing to see here :(
+    public double[] MariaValues { get; set; } = [7];
+    public double[] CharlesValues { get; set; } = [3];
 }

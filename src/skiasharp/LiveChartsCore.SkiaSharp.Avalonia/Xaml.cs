@@ -205,7 +205,8 @@ public partial class XamlStackedRowSeries<TModel, TVisual, TLabel> : XamlSeries,
 
 [XamlClass(typeof(PieSeries<,,>),
     FileHeader = "using TModel = LiveChartsCore.Defaults.ObservableValue;",
-    TVisual = typeof(DoughnutGeometry))]
+    TVisual = typeof(DoughnutGeometry),
+    GenerateOnChange = false)]
 public partial class XamlGaugeSeries<TVisual, TLabel> : XamlSeries, IPieSeries, IInternalSeries
     where TVisual : BaseDoughnutGeometry, new()
     where TLabel : BaseLabelGeometry, new()
@@ -226,6 +227,14 @@ public partial class XamlGaugeSeries<TVisual, TLabel> : XamlSeries, IPieSeries, 
     private static void OnGaugeValueChanged(
         XamlGaugeSeries<TVisual, TLabel> series, double oldValue, double newValue) =>
             series._value.Value = newValue;
+
+    /// <inheritdoc />
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        MapChangeToBaseType(change.Property.Name);
+        OnXamlPropertyChanged(change);
+    }
 }
 
 /// <inheritdoc cref="PieSeries{TModel, TVisual, TLabel}"/>

@@ -1,12 +1,26 @@
+<UserControl
+    x:Class="AvaloniaSample.Pies.Icons.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Pies.Icons"
+    xmlns:local="using:AvaloniaSample.Pies.Icons">
 
-<UserControl x:Class="AvaloniaSample.Pies.Icons.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lv="clr-namespace:LiveChartsCore;assembly=LiveChartsCore"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Pies.Icons">
-  <UserControl.DataContext>
-    <vms:ViewModel/>
-  </UserControl.DataContext>
-  <lvc:PieChart Series="{Binding Series}" Title="{Binding Title}"/>
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <lvc:PieChart SeriesSource="{Binding Data}">
+        <lvc:PieChart.SeriesTemplate>
+            <DataTemplate x:DataType="vms:BrowserShare">
+                <local:CustomPieSeries
+                    SeriesName="{Binding Name}"
+                    Values="{Binding Values}"
+                    IconName="{Binding Name}"
+                    Icon="{Binding Icon}"
+                    ShowDataLabels="True"/>
+            </DataTemplate>
+        </lvc:PieChart.SeriesTemplate>
+    </lvc:PieChart>
+
 </UserControl>

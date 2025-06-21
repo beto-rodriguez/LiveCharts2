@@ -1,22 +1,29 @@
-<UserControl x:Class="AvaloniaSample.Pies.AutoUpdate.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Pies.AutoUpdate">
-  <UserControl.DataContext>
-    <vms:ViewModel/>
-  </UserControl.DataContext>
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="50"/>
-      <RowDefinition Height="*"/>
-    </Grid.RowDefinitions>
-    <StackPanel Grid.Row="0" Orientation="Horizontal">
-      <Button Margin="6" Command="{Binding AddSeriesCommand}">Add Series</Button>
-      <Button Margin="6" Command="{Binding RemoveSeriesCommand}">Remove Series</Button>
-      <Button Margin="6" Command="{Binding UpdateAllCommand}">Update all</Button>
-      <Button Margin="6" Click="ButtonClick">Constant changes</Button>
-    </StackPanel>
-    <lvc:PieChart Grid.Row="1" Series="{Binding Series}"></lvc:PieChart>
-  </Grid>  
+<UserControl
+    x:Class="AvaloniaSample.Pies.AutoUpdate.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Pies.AutoUpdate">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+    
+    <Grid RowDefinitions="Auto,*">
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button Margin="6" Command="{Binding AddSeriesCommand}" Content="Add series"/>
+            <Button Margin="6" Command="{Binding RemoveSeriesCommand}" Content="Remove series"/>
+            <Button Margin="6" Command="{Binding UpdateAllCommand}" Content="Update Series"/>
+        </StackPanel>
+
+        <lvc:PieChart Grid.Row="1" SeriesSource="{Binding Data}">
+            <lvc:PieChart.SeriesTemplate>
+                <DataTemplate x:DataType="vms:ChartData">
+                    <lvc:XamlPieSeries
+                      SeriesName="{Binding Name}"
+                      Values="{Binding Values}"/>
+                </DataTemplate>
+            </lvc:PieChart.SeriesTemplate>
+        </lvc:PieChart>
+    </Grid>
 </UserControl>

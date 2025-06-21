@@ -1,17 +1,52 @@
-<UserControl x:Class="AvaloniaSample.Pies.Gauge4.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lv="clr-namespace:LiveChartsCore;assembly=LiveChartsCore"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Pies.Gauge4">
+<UserControl
+    x:Class="AvaloniaSample.Pies.Gauge4.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Pies.Gauge4">
+
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
+
     <lvc:PieChart
-        Series="{Binding Series}"
         InitialRotation="-90"
         MaxAngle="350"
         MinValue="0"
         MaxValue="100">
+
+        <lvc:PieChart.Series>
+
+            <lvc:XamlGaugeSeries
+                GaugeValue="{Binding Vanesa}"
+                SeriesName="Vanessa"
+                DataLabelsSize="20"
+                DataLabelsPosition="End"
+                DataLabelsFormatter="{Binding Formatter}"
+                InnerRadius="20"
+                MaxRadialColumnWidth="5"/>
+
+            <lvc:XamlGaugeSeries
+                GaugeValue="{Binding Charles}"
+                SeriesName="Charles"
+                DataLabelsSize="20"
+                DataLabelsPosition="End"
+                DataLabelsFormatter="{Binding Formatter}"
+                InnerRadius="20"
+                MaxRadialColumnWidth="5"/>
+
+            <lvc:XamlGaugeSeries
+                GaugeValue="{Binding Ana}"
+                SeriesName="Ana"
+                DataLabelsSize="20"
+                DataLabelsPosition="End"
+                DataLabelsFormatter="{Binding Formatter}"
+                InnerRadius="20"
+                MaxRadialColumnWidth="5"/>
+
+            <lvc:XamlGaugeBackgroundSeries Fill="{x:Null}"/>
+
+        </lvc:PieChart.Series>
+
     </lvc:PieChart>
 </UserControl>

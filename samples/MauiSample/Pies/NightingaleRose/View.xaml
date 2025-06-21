@@ -16,7 +16,8 @@
                 <lvc:XamlPieSeries
                      SeriesName="{Binding Name}"
                      Values="{Binding Values}"
-                     OuterRadiusOffset="{Binding Offset}"/>
+                     OuterRadiusOffset="{Binding Offset}"
+                     InnerRadius="50"/>
             </DataTemplate>
         </lvc:PieChart.SeriesTemplate>
     </lvc:PieChart>
