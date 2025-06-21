@@ -23,8 +23,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
 using Avalonia;
@@ -33,11 +31,13 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml;
+using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Media;
 using Avalonia.Rendering;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Generators;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Observers;
@@ -51,7 +51,7 @@ using LiveChartsCore.VisualElements;
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
 /// <inheritdoc cref="IPolarChartView" />
-public class PolarChart : UserControl, IPolarChartView, ICustomHitTest
+public partial class PolarChart : UserControl, IPolarChartView, ICustomHitTest
 {
     #region fields
 
@@ -97,14 +97,15 @@ public class PolarChart : UserControl, IPolarChartView, ICustomHitTest
             .Collection(nameof(VisualElements))
             .Property(nameof(Title));
 
-        AngleAxes =
-            [
-                LiveCharts.DefaultSettings.GetProvider().GetDefaultPolarAxis()
-            ];
-        RadiusAxes =
-            [
-                LiveCharts.DefaultSettings.GetProvider().GetDefaultPolarAxis()
-            ];
+        _observe.Add(
+            nameof(SeriesSource),
+            new SeriesSourceObserver(
+                InflateSeriesTemplate,
+                GetSeriesSource,
+                () => SeriesSource is not null && SeriesTemplate is not null));
+
+        AngleAxes = new ObservableCollection<IPolarAxis>();
+        RadiusAxes = new ObservableCollection<IPolarAxis>();
         Series = new ObservableCollection<ISeries>();
         VisualElements = new ObservableCollection<IChartElement>();
 
@@ -115,6 +116,19 @@ public class PolarChart : UserControl, IPolarChartView, ICustomHitTest
         PointerExited += PolarChart_PointerLeave;
         DetachedFromVisualTree += PolarChart_DetachedFromVisualTree;
     }
+
+    #region Generated Bindable Properties
+
+#pragma warning disable IDE1006 // Naming Styles
+#pragma warning disable IDE0052 // Remove unread private member
+
+    private static readonly XamlProperty<IEnumerable<object>> seriesSource = new(onChanged: OnSeriesSourceChanged);
+    private static readonly XamlProperty<DataTemplate> seriesTemplate = new(onChanged: OnSeriesSourceChanged);
+
+#pragma warning restore IDE1006 // Naming Styles
+#pragma warning restore IDE0052 // Remove unread private members
+
+    #endregion
 
     #region avalonia/dependency properties
 
@@ -667,8 +681,9 @@ public class PolarChart : UserControl, IPolarChartView, ICustomHitTest
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-
         if (_core is null || change.Property.Name == nameof(IsPointerOver)) return;
+
+        OnXamlPropertyChanged(change);
 
         if (change.Property.Name == nameof(SyncContext))
         {
@@ -686,8 +701,16 @@ public class PolarChart : UserControl, IPolarChartView, ICustomHitTest
         _core.Update();
     }
 
-    private void InitializeComponent() =>
-        AvaloniaXamlLoader.Load(this);
+    private static void OnSeriesSourceChanged(PolarChart chart, object o, object n)
+    {
+        var seriesObserver = (SeriesSourceObserver)chart._observe[nameof(SeriesSource)];
+        seriesObserver.Initialize(chart.SeriesSource);
+
+        if (seriesObserver.Series is not null)
+            chart.Series = seriesObserver.Series;
+    }
+
+    private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
 
     private void PolarChart_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
@@ -813,4 +836,19 @@ public class PolarChart : UserControl, IPolarChartView, ICustomHitTest
     void IChartView.Invalidate() => CoreCanvas.Invalidate();
 
     bool ICustomHitTest.HitTest(Point point) => new Rect(Bounds.Size).Contains(point);
+
+    private ISeries InflateSeriesTemplate(object item)
+    {
+        var control = SeriesTemplate.Build(item);
+
+        if (control is not ISeries series)
+            throw new InvalidOperationException("The template must be a valid series.");
+
+        control.DataContext = item;
+
+        return series;
+    }
+
+    private static object GetSeriesSource(ISeries series) =>
+        ((StyledElement)series).DataContext!;
 }

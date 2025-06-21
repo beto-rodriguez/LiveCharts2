@@ -6,5 +6,22 @@
   <UserControl.DataContext>
     <vms:ViewModel/>
   </UserControl.DataContext>
-  <lvc:PolarChart Series="{Binding Series}" AngleAxes="{Binding AngleAxes}" />
+
+  <lvc:PolarChart>
+    <lvc:PolarChart.Series>
+      <lvc:XamlPolarLineSeries
+          Values="{Binding Values}"
+          IsClosed="True"
+          Fill="{x:Null}"/>
+    </lvc:PolarChart.Series>
+
+    <lvc:PolarChart.AngleAxes>
+      <lvc:XamlPolarAxis
+          MinLimit="0"
+          MaxLimit="360"
+          Labeler="{Binding Labeler}"
+          ForceStepToMin="True"
+          MinStep="30"/>
+    </lvc:PolarChart.AngleAxes>
+  </lvc:PolarChart>
 </UserControl>
