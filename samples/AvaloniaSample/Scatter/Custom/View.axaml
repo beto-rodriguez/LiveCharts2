@@ -1,15 +1,52 @@
-<UserControl x:Class="AvaloniaSample.Scatter.Custom.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Scatter.Custom">
-  <UserControl.DataContext>
-    <vms:ViewModel/>
-  </UserControl.DataContext>
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="*"/>
-    </Grid.RowDefinitions>
-    <lvc:CartesianChart Series="{Binding Series}"></lvc:CartesianChart>
-  </Grid>  
+<UserControl
+    x:Class="AvaloniaSample.Scatter.Custom.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Scatter.Custom"
+    xmlns:svg="using:LiveChartsCore.Drawing"
+    xmlns:draw="using:LiveChartsCore.SkiaSharpView.Drawing.Geometries"
+    xmlns:d="using:LiveChartsCore.Defaults">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <lvc:CartesianChart>
+        <lvc:CartesianChart.Series>
+            <!--
+            Use the generic type arguments to set the type of the geometry to draw,
+            here are many predefined geometries in the LiveChartsCore.SkiaSharpView.Drawing.Geometries
+            namespace, for example, the StarGeometry, CrossGeometry, RectangleGeometry and DiamondGeometry
+
+            The first type argument is the type of data.
+            The second type argument is the type of geometry to draw.
+            -->
+
+            <lvc:XamlScatterSeries
+                x:TypeArguments="d:ObservablePoint, draw:HeartGeometry"
+                Values="{Binding Values1}"
+                Stroke="{x:Null}"
+                GeometrySize="40" />
+
+            <!--
+            You can also use SVG paths to draw the geometry
+            the VariableSVGPathGeometry can change the drawn path at runtime
+            -->
+            <lvc:XamlScatterSeries
+                x:TypeArguments="d:ObservablePoint, draw:VariableSVGPathGeometry"
+                Values="{Binding Values2}"
+                GeometrySvg="{x:Static svg:SVGPoints.Pin}"
+                GeometrySize="40"/>
+
+            <!--
+            Finally you can also use SkiaSharp to draw your own geometry
+            -->
+            <lvc:XamlScatterSeries
+                x:TypeArguments="d:ObservablePoint, vms:MyGeometry"
+                Values="{Binding Values3}"
+                GeometrySize="40"/>
+
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
 </UserControl>
