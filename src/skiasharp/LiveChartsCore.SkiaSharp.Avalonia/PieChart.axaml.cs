@@ -30,11 +30,13 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml;
+using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Media;
 using Avalonia.Rendering;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Generators;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Observers;
@@ -48,7 +50,7 @@ using LiveChartsCore.VisualElements;
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
 /// <inheritdoc cref="IPieChartView" />
-public class PieChart : UserControl, IPieChartView, ICustomHitTest
+public partial class PieChart : UserControl, IPieChartView, ICustomHitTest
 {
     #region fields
 
@@ -92,6 +94,13 @@ public class PieChart : UserControl, IPieChartView, ICustomHitTest
             .Collection(nameof(VisualElements))
             .Property(nameof(Title));
 
+        _observe.Add(
+            nameof(SeriesSource),
+            new SeriesSourceObserver(
+                InflateSeriesTemplate,
+                GetSeriesSource,
+                () => SeriesSource is not null && SeriesTemplate is not null));
+
         Series = new ObservableCollection<ISeries>();
         VisualElements = new ObservableCollection<IChartElement>();
         PointerExited += Chart_PointerLeave;
@@ -101,6 +110,19 @@ public class PieChart : UserControl, IPieChartView, ICustomHitTest
         PointerReleased += PieChart_PointerReleased;
         DetachedFromVisualTree += PieChart_DetachedFromVisualTree;
     }
+
+    #region Generated Bindable Properties
+
+#pragma warning disable IDE1006 // Naming Styles
+#pragma warning disable IDE0052 // Remove unread private member
+
+    private static readonly XamlProperty<IEnumerable<object>> seriesSource = new(onChanged: OnSeriesSourceChanged);
+    private static readonly XamlProperty<DataTemplate> seriesTemplate = new(onChanged: OnSeriesSourceChanged);
+
+#pragma warning restore IDE1006 // Naming Styles
+#pragma warning restore IDE0052 // Remove unread private members
+
+    #endregion
 
     #region avalonia/dependency properties
 
@@ -615,8 +637,9 @@ public class PieChart : UserControl, IPieChartView, ICustomHitTest
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-
         if (_core is null || change.Property.Name == nameof(IsPointerOver)) return;
+
+        OnXamlPropertyChanged(change);
 
         if (change.Property.Name == nameof(SyncContext))
         {
@@ -634,8 +657,16 @@ public class PieChart : UserControl, IPieChartView, ICustomHitTest
         _core.Update();
     }
 
-    private void InitializeComponent() =>
-        AvaloniaXamlLoader.Load(this);
+    private static void OnSeriesSourceChanged(PieChart chart, object o, object n)
+    {
+        var seriesObserver = (SeriesSourceObserver)chart._observe[nameof(SeriesSource)];
+        seriesObserver.Initialize(chart.SeriesSource);
+
+        if (seriesObserver.Series is not null)
+            chart.Series = seriesObserver.Series;
+    }
+
+    private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
 
     private void UpdateCore() => _core?.Update();
 
@@ -749,4 +780,19 @@ public class PieChart : UserControl, IPieChartView, ICustomHitTest
     void IChartView.Invalidate() => CoreCanvas.Invalidate();
 
     bool ICustomHitTest.HitTest(Point point) => new Rect(Bounds.Size).Contains(point);
+
+    private ISeries InflateSeriesTemplate(object item)
+    {
+        var control = SeriesTemplate.Build(item);
+
+        if (control is not ISeries series)
+            throw new InvalidOperationException("The template must be a valid series.");
+
+        control.DataContext = item;
+
+        return series;
+    }
+
+    private static object GetSeriesSource(ISeries series) =>
+        ((StyledElement)series).DataContext!;
 }
