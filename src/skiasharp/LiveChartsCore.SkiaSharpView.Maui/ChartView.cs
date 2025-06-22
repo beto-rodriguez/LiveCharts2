@@ -77,6 +77,11 @@ public abstract partial class ChartView : ContentView
     /// </summary>
     protected ChartObserver Observe { get; }
 
+    /// <summary>
+    /// Gets or sets the series.
+    /// </summary>
+    public abstract ICollection<ISeries> Series { get; set; }
+
     #region Generated Bindable Properties
 
 #pragma warning disable IDE1006 // Naming Styles
@@ -90,11 +95,6 @@ public abstract partial class ChartView : ContentView
 
     #endregion
 
-    /// <summary>
-    /// Gets or sets the series.
-    /// </summary>
-    public abstract ICollection<ISeries> Series { get; set; }
-
     internal virtual void OnPressed(object? sender, Behaviours.Events.PressedEventArgs args) { }
     internal virtual void OnMoved(object? sender, Behaviours.Events.ScreenEventArgs args) { }
     internal virtual void OnReleased(object? sender, Behaviours.Events.PressedEventArgs args) { }
@@ -102,21 +102,13 @@ public abstract partial class ChartView : ContentView
     internal virtual void OnPinched(object? sender, Behaviours.Events.PinchEventArgs args) { }
     internal virtual void OnExited(object? sender, Behaviours.Events.EventArgs args) { }
 
-    /// <summary>
-    /// Adds an element to the visual tree.
-    /// </summary>
-    /// <param name="item">the element to add.</param>
-    protected void AddUIElement(object item)
+    private void AddUIElement(object item)
     {
         if (item is not View view) return;
         CanvasView.Children.Add(view);
     }
 
-    /// <summary>
-    /// Removes an element from the visual tree.
-    /// </summary>
-    /// <param name="item">the element to remove.</param>
-    protected void RemoveUIElement(object item)
+    private void RemoveUIElement(object item)
     {
         if (item is not View view) return;
         _ = CanvasView.Children.Remove(view);
