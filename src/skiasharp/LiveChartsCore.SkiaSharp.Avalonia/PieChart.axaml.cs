@@ -79,10 +79,6 @@ public partial class PieChart : UserControl, IPieChartView, ICustomHitTest
     {
         InitializeComponent();
 
-        // workaround to detect mouse events.
-        // Avalonia do not seem to detect events if background is not set.
-        Background = new SolidColorBrush(Colors.Transparent);
-
         LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeCore();

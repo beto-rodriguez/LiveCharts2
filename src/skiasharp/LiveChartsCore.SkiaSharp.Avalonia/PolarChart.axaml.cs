@@ -80,10 +80,6 @@ public partial class PolarChart : UserControl, IPolarChartView, ICustomHitTest
     {
         InitializeComponent();
 
-        // workaround to detect mouse events.
-        // Avalonia do not seem to detect pointer events if background is not set.
-        ((IChartView)this).BackColor = LvcColor.FromArgb(0, 0, 0, 0);
-
         LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeCore();

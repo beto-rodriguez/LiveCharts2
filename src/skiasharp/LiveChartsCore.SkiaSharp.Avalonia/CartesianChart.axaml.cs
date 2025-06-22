@@ -926,5 +926,5 @@ public partial class CartesianChart : UserControl, ICartesianChartView, ICustomH
     }
 
     private static object GetSeriesSource(ISeries series) =>
-        ((StyledElement)series).DataContext!;
+        ((Control)series).DataContext!;
 }

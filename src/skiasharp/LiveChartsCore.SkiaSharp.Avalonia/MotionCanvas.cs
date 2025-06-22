@@ -53,9 +53,6 @@ public class MotionCanvas : UserControl
         DetachedFromVisualTree += OnDetached;
     }
 
-    /// <summary>
-    /// Gets the logical children.
-    /// </summary>
     internal IAvaloniaList<ILogical> Children => LogicalChildren;
 
     /// <summary>
