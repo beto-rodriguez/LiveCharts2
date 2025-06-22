@@ -458,6 +458,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
             "LiveChartsCore.SkiaSharpView.Maui" => "Maui",
             "LiveChartsCore.SkiaSharpView.WinUI" => "WinUI",
             "LiveChartsCore.SkiaSharpView.Avalonia" => "Avalonia",
+            "LiveChartsCore.SkiaSharpView.WPF" => "WPF",
             _ => null
         };
     }
@@ -469,6 +470,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
             "Maui" => new MauiTemplate(),
             //"WinUI" => new WinUITemplate(),
             "Avalonia" => new AvaloniaTemplate(),
+            "WPF" => new WPFTemplate(),
             _ => throw new NotSupportedException($"The consumer type '{consumerType}' is not supported.")
         };
     }
