@@ -22,14 +22,14 @@
 
 // ===================================================
 // THIS FILE INCLUDES THE XAML GENERATED OBJECTS.
-// For MAUI, the EmptyContentView class is used as a base class
-// it is an empty IView that does nothing, but allows the XAML bindings, styles and templates to work.
+// For WPF, we inherit from FramewokrElement to support styles, bindings and data templates.
 // ===================================================
 
 #pragma warning disable IDE1006 // Naming Styles
 #pragma warning disable IDE0052 // Remove unread private members
 
 using System;
+using System.Windows;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Generators;
@@ -39,24 +39,23 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.VisualElements;
 using LiveChartsCore.VisualElements;
-using Microsoft.Maui.Controls;
 
-namespace LiveChartsCore.SkiaSharpView.Maui;
+namespace LiveChartsCore.SkiaSharpView.WPF;
 
 [XamlClass(typeof(Axis))]
-public partial class XamlAxis : EmptyContentView, ICartesianAxis
+public partial class XamlAxis : FrameworkElement, ICartesianAxis
 {
     string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
 }
 
 [XamlClass(typeof(PolarAxis))]
-public partial class XamlPolarAxis : EmptyContentView, IPolarAxis
+public partial class XamlPolarAxis : FrameworkElement, IPolarAxis
 {
     string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
 }
 
 [XamlClass(typeof(DateTimeAxis), GenerateBaseTypeDeclaration = false)]
-public partial class XamlDateTimeAxis : EmptyContentView, ICartesianAxis
+public partial class XamlDateTimeAxis : FrameworkElement, ICartesianAxis
 {
     private readonly DateTimeAxis _baseType = new(TimeSpan.FromDays(1), date => date.ToString("d"));
     private static readonly DateTimeAxis _defaultDateTimeAxis = new(TimeSpan.FromDays(1), date => date.ToString("d"));
@@ -68,7 +67,7 @@ public partial class XamlDateTimeAxis : EmptyContentView, ICartesianAxis
 }
 
 [XamlClass(typeof(TimeSpanAxis), GenerateBaseTypeDeclaration = false)]
-public partial class XamlTimeSpanAxis : EmptyContentView, ICartesianAxis
+public partial class XamlTimeSpanAxis : FrameworkElement, ICartesianAxis
 {
     private readonly TimeSpanAxis _baseType = new(TimeSpan.FromMilliseconds(1), date => $"{date:fff}ms");
     private static readonly TimeSpanAxis _defaultTimeSpanAxis = new(TimeSpan.FromMilliseconds(1), date => $"{date:fff}ms");
@@ -80,7 +79,7 @@ public partial class XamlTimeSpanAxis : EmptyContentView, ICartesianAxis
 }
 
 [XamlClass(typeof(LogarithmicAxis), GenerateBaseTypeDeclaration = false)]
-public partial class XamlLogarithmicAxis : EmptyContentView, ICartesianAxis
+public partial class XamlLogarithmicAxis : FrameworkElement, ICartesianAxis
 {
     private readonly LogarithmicAxis _baseType = new(10);
     private static readonly LogarithmicAxis _defaultLogarithmicAxis = new(10);
@@ -91,14 +90,14 @@ public partial class XamlLogarithmicAxis : EmptyContentView, ICartesianAxis
 }
 
 [XamlClass(typeof(DrawnLabelVisual), Map = typeof(LabelGeometry), MapPath = "DrawnLabel")]
-public partial class XamlDrawnLabelVisual : EmptyContentView, IChartElement, IInternalInteractable
+public partial class XamlDrawnLabelVisual : FrameworkElement, IChartElement, IInternalInteractable
 {
     private static readonly LabelGeometry _defaultDrawnLabel = new();
     private LabelGeometry? DrawnLabel => (LabelGeometry?)_baseType.DrawnElement;
 }
 
 [XamlClass(typeof(RectangularSection))]
-public partial class XamlRectangularSection : EmptyContentView, IChartElement { }
+public partial class XamlRectangularSection : FrameworkElement, IChartElement { }
 
 [XamlClass(typeof(ColumnSeries<,,>), TVisual = typeof(RoundedRectangleGeometry))]
 public partial class XamlColumnSeries<TModel, TVisual, TLabel> : XamlSeries, IBarSeries, IInternalSeries
@@ -220,17 +219,17 @@ public class XamlAngularGaugeSeries : XamlGaugeSeries<DoughnutGeometry, LabelGeo
 }
 
 [XamlClass(typeof(NeedleVisual))]
-public partial class XamlNeedle : EmptyContentView, IChartElement, IInternalInteractable { }
+public partial class XamlNeedle : FrameworkElement, IChartElement, IInternalInteractable { }
 
 [XamlClass(typeof(AngularTicksVisual))]
-public partial class XamlAngularTicks : EmptyContentView, IChartElement, IInternalInteractable { }
+public partial class XamlAngularTicks : FrameworkElement, IChartElement, IInternalInteractable { }
 
 /// <inheritdoc cref="BaseSharedAxesPair"/>
 public class SharedAxesPair : BaseSharedAxesPair { }
 
 /// <inheritdoc cref="BaseChartPointState"/>
-[ContentProperty(nameof(Setters))]
 public class ChartPointState : BaseChartPointState { }
 
 /// <inheritdoc cref="BaseSet"/>
 public class Set : BaseSet { }
+

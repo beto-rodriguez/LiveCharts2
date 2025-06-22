@@ -78,7 +78,7 @@ public abstract partial class Chart : UserControl, IChartView
     {
         LiveCharts.Configure(config => config.UseDefaults());
 
-        Observe = new ChartObserver(() => CoreChart?.Update(), AddUIElement, RemoveUIElement)
+        Observe = new ChartObserver(() => core?.Update(), AddUIElement, RemoveUIElement)
             .Collection(nameof(VisualElements))
             .Property(nameof(Title));
 
