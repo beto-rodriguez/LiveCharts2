@@ -22,15 +22,16 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Generators;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
+using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
@@ -41,7 +42,7 @@ using LiveChartsCore.VisualElements;
 namespace LiveChartsCore.SkiaSharpView.WPF;
 
 /// <inheritdoc cref="IChartView" />
-public abstract class Chart : UserControl, IChartView
+public abstract partial class Chart : UserControl, IChartView
 {
     #region fields
 
@@ -65,7 +66,6 @@ public abstract class Chart : UserControl, IChartView
     /// </summary>
     protected IChartTooltip? tooltip;
 
-    private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
     private Theme? _chartTheme;
 
     #endregion
@@ -78,8 +78,16 @@ public abstract class Chart : UserControl, IChartView
     {
         LiveCharts.Configure(config => config.UseDefaults());
 
-        _visualsObserver = new CollectionDeepObserver<ChartElement>(
-            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+        Observe = new ChartObserver(() => CoreChart?.Update(), AddUIElement, RemoveUIElement)
+            .Collection(nameof(VisualElements))
+            .Property(nameof(Title));
+
+        Observe.Add(
+            nameof(SeriesSource),
+            new SeriesSourceObserver(
+                InflateSeriesTemplate,
+                GetSeriesSource,
+                () => SeriesSource is not null && SeriesTemplate is not null));
 
         MouseDown += Chart_MouseDown;
         MouseMove += OnMouseMove;
@@ -93,6 +101,29 @@ public abstract class Chart : UserControl, IChartView
         Loaded += Chart_Loaded;
     }
 
+    /// <summary>
+    /// Gets the chart observer.
+    /// </summary>
+    protected ChartObserver Observe { get; }
+
+    /// <summary>
+    /// Gets or sets the series.
+    /// </summary>
+    public abstract ICollection<ISeries> Series { get; set; }
+
+    #region Generated Bindable Properties
+
+#pragma warning disable IDE1006 // Naming Styles
+#pragma warning disable IDE0052 // Remove unread private member
+
+    private static readonly XamlProperty<IEnumerable<object>> seriesSource = new(onChanged: OnSeriesSourceChanged);
+    private static readonly XamlProperty<DataTemplate> seriesTemplate = new(onChanged: OnSeriesSourceChanged);
+
+#pragma warning restore IDE1006 // Naming Styles
+#pragma warning restore IDE0052 // Remove unread private members
+
+    #endregion
+
     #region dependency properties
 
     /// <summary>
@@ -100,7 +131,7 @@ public abstract class Chart : UserControl, IChartView
     /// </summary>
     public static readonly DependencyProperty TitleProperty =
        DependencyProperty.Register(
-           nameof(Title), typeof(IChartElement), typeof(Chart), new PropertyMetadata(null));
+           nameof(Title), typeof(IChartElement), typeof(Chart), new PropertyMetadata(null, InitializeObserver(nameof(Title))));
 
     /// <summary>
     /// The sync context property.
@@ -108,7 +139,7 @@ public abstract class Chart : UserControl, IChartView
     public static readonly DependencyProperty SyncContextProperty =
        DependencyProperty.Register(
            nameof(SyncContext), typeof(object), typeof(Chart), new PropertyMetadata(null,
-               (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+               (o, args) =>
                {
                    var chart = (Chart)o;
                    if (chart.canvas != null) chart.CoreCanvas.Sync = args.NewValue;
@@ -280,22 +311,8 @@ public abstract class Chart : UserControl, IChartView
     /// </summary>
     public static readonly DependencyProperty VisualElementsProperty =
         DependencyProperty.Register(
-            nameof(VisualElements), typeof(IEnumerable<ChartElement>), typeof(Chart), new PropertyMetadata(null,
-                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
-                {
-                    var chart = (Chart)o;
-                    var observer = chart._visualsObserver;
-                    observer?.Dispose((IEnumerable<ChartElement>)args.OldValue);
-                    observer?.Initialize((IEnumerable<ChartElement>)args.NewValue);
-                    if (chart.core is null) return;
-                    chart.core.Update();
-                },
-                (DependencyObject o, object value) =>
-                {
-                    return value is IEnumerable<ChartElement>
-                    ? value
-                    : new List<ChartElement>();
-                }));
+            nameof(VisualElements), typeof(ICollection<IChartElement>), typeof(Chart),
+            new PropertyMetadata(null, InitializeObserver(nameof(VisualElements))));
 
     #endregion
 
@@ -558,9 +575,9 @@ public abstract class Chart : UserControl, IChartView
     }
 
     /// <inheritdoc cref="IChartView.VisualElements" />
-    public IEnumerable<ChartElement> VisualElements
+    public ICollection<IChartElement> VisualElements
     {
-        get => (IEnumerable<ChartElement>)GetValue(VisualElementsProperty);
+        get => (ICollection<IChartElement>)GetValue(VisualElementsProperty);
         set => SetValue(VisualElementsProperty, value);
     }
 
@@ -714,12 +731,6 @@ public abstract class Chart : UserControl, IChartView
         OnUnloaded();
     }
 
-    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
-        core?.Update();
-
-    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e) =>
-        core?.Update();
-
     /// <summary>
     /// Called before the chart is unloaded.
     /// </summary>
@@ -753,4 +764,49 @@ public abstract class Chart : UserControl, IChartView
     }
 
     void IChartView.Invalidate() => CoreCanvas.Invalidate();
+
+    /// <summary>
+    /// Initializes the observer for a property change.
+    /// </summary>
+    /// <param name="propertyName">The property.</param>
+    protected static PropertyChangedCallback InitializeObserver(string propertyName) =>
+        (o, args) => ((Chart)o).Observe[propertyName].Initialize(args.NewValue);
+
+    private void AddUIElement(object item)
+    {
+        if (canvas is null || item is not DependencyObject view) return;
+        canvas.AddLogicalChild(view);
+    }
+
+    private void RemoveUIElement(object item)
+    {
+        if (canvas is null || item is not DependencyObject view) return;
+        canvas.RemoveLogicalChild(view);
+    }
+
+    private static void OnSeriesSourceChanged(DependencyObject bindable, object oldValue, object newValue)
+    {
+        var chart = (Chart)bindable;
+
+        var seriesObserver = (SeriesSourceObserver)chart.Observe[nameof(SeriesSource)];
+        seriesObserver.Initialize(chart.SeriesSource);
+
+        if (seriesObserver.Series is not null)
+            chart.Series = seriesObserver.Series;
+    }
+
+    private ISeries InflateSeriesTemplate(object item)
+    {
+        var content = (FrameworkElement)SeriesTemplate.LoadContent();
+
+        if (content is not ISeries series)
+            throw new InvalidOperationException("The template must be a valid series.");
+
+        content.DataContext = item;
+
+        return series;
+    }
+
+    private static object GetSeriesSource(ISeries series) =>
+        ((FrameworkElement)series).DataContext!;
 }

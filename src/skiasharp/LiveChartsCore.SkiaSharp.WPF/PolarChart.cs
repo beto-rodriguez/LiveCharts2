@@ -23,8 +23,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -41,10 +39,6 @@ public class PolarChart : Chart, IPolarChartView
 {
     #region fields
 
-    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-    private readonly CollectionDeepObserver<IPolarAxis> _angleObserver;
-    private readonly CollectionDeepObserver<IPolarAxis> _radiusObserver;
-
     #endregion
 
     /// <summary>
@@ -52,20 +46,15 @@ public class PolarChart : Chart, IPolarChartView
     /// </summary>
     public PolarChart()
     {
-        _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _angleObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _radiusObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+        _ = Observe
+            .Collection(nameof(Series))
+            .Collection(nameof(AngleAxes))
+            .Collection(nameof(RadiusAxes));
 
-        SetCurrentValue(AngleAxesProperty, new ObservableCollection<IPolarAxis>()
-            {
-                LiveCharts.DefaultSettings.GetProvider().GetDefaultPolarAxis()
-            });
-        SetCurrentValue(RadiusAxesProperty, new ObservableCollection<IPolarAxis>()
-            {
-                LiveCharts.DefaultSettings.GetProvider().GetDefaultPolarAxis()
-            });
+        SetCurrentValue(AngleAxesProperty, new ObservableCollection<IPolarAxis>());
+        SetCurrentValue(RadiusAxesProperty, new ObservableCollection<IPolarAxis>());
         SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
-        SetCurrentValue(VisualElementsProperty, new ObservableCollection<ChartElement>());
+        SetCurrentValue(VisualElementsProperty, new ObservableCollection<IChartElement>());
         SetCurrentValue(SyncContextProperty, new object());
 
         MouseWheel += OnMouseWheel;
@@ -108,70 +97,24 @@ public class PolarChart : Chart, IPolarChartView
     /// </summary>
     public static readonly DependencyProperty SeriesProperty =
         DependencyProperty.Register(
-            nameof(Series), typeof(IEnumerable<ISeries>), typeof(PolarChart), new PropertyMetadata(null,
-                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
-                {
-                    var chart = (PolarChart)o;
-                    var seriesObserver = chart._seriesObserver;
-                    seriesObserver?.Dispose((IEnumerable<ISeries>)args.OldValue);
-                    seriesObserver?.Initialize((IEnumerable<ISeries>)args.NewValue);
-                    if (chart.core is null) return;
-                    chart.core.Update();
-                },
-                (DependencyObject o, object value) =>
-                {
-                    return value is IEnumerable<ISeries> ? value : new ObservableCollection<ISeries>();
-                }));
+            nameof(Series), typeof(IEnumerable<ISeries>), typeof(PolarChart),
+            new PropertyMetadata(null, InitializeObserver(nameof(Series))));
 
     /// <summary>
     /// The x axes property.
     /// </summary>
     public static readonly DependencyProperty AngleAxesProperty =
         DependencyProperty.Register(
-            nameof(AngleAxes), typeof(IEnumerable<IPolarAxis>), typeof(PolarChart), new PropertyMetadata(null,
-                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
-                {
-                    var chart = (PolarChart)o;
-                    var observer = chart._angleObserver;
-                    observer?.Dispose((IEnumerable<IPolarAxis>)args.OldValue);
-                    observer?.Initialize((IEnumerable<IPolarAxis>)args.NewValue);
-                    if (chart.core is null) return;
-                    chart.core.Update();
-                },
-                (DependencyObject o, object value) =>
-                {
-                    return value is IEnumerable<IPolarAxis>
-                        ? value
-                        : new List<IPolarAxis>()
-                        {
-                                LiveCharts.DefaultSettings.GetProvider().GetDefaultPolarAxis()
-                        };
-                }));
+            nameof(AngleAxes), typeof(IEnumerable<IPolarAxis>), typeof(PolarChart),
+            new PropertyMetadata(null, InitializeObserver(nameof(AngleAxes))));
 
     /// <summary>
     /// The y axes property
     /// </summary>
     public static readonly DependencyProperty RadiusAxesProperty =
         DependencyProperty.Register(
-            nameof(RadiusAxes), typeof(IEnumerable<IPolarAxis>), typeof(PolarChart), new PropertyMetadata(null,
-                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
-                {
-                    var chart = (PolarChart)o;
-                    var observer = chart._radiusObserver;
-                    observer?.Dispose((IEnumerable<IPolarAxis>)args.OldValue);
-                    observer?.Initialize((IEnumerable<IPolarAxis>)args.NewValue);
-                    if (chart.core is null) return;
-                    chart.core.Update();
-                },
-                (DependencyObject o, object value) =>
-                {
-                    return value is IEnumerable<IPolarAxis>
-                        ? value
-                        : new List<IPolarAxis>()
-                        {
-                                LiveCharts.DefaultSettings.GetProvider().GetDefaultPolarAxis()
-                        };
-                }));
+            nameof(RadiusAxes), typeof(IEnumerable<IPolarAxis>), typeof(PolarChart),
+            new PropertyMetadata(null, InitializeObserver(nameof(RadiusAxes))));
 
     #endregion
 
@@ -209,23 +152,23 @@ public class PolarChart : Chart, IPolarChartView
     }
 
     /// <inheritdoc cref="IPolarChartView.Series" />
-    public IEnumerable<ISeries> Series
+    public override ICollection<ISeries> Series
     {
-        get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
+        get => (ICollection<ISeries>)GetValue(SeriesProperty);
         set => SetValue(SeriesProperty, value);
     }
 
     /// <inheritdoc cref="IPolarChartView.AngleAxes" />
-    public IEnumerable<IPolarAxis> AngleAxes
+    public ICollection<IPolarAxis> AngleAxes
     {
-        get => (IEnumerable<IPolarAxis>)GetValue(AngleAxesProperty);
+        get => (ICollection<IPolarAxis>)GetValue(AngleAxesProperty);
         set => SetValue(AngleAxesProperty, value);
     }
 
     /// <inheritdoc cref="IPolarChartView.RadiusAxes" />
-    public IEnumerable<IPolarAxis> RadiusAxes
+    public ICollection<IPolarAxis> RadiusAxes
     {
-        get => (IEnumerable<IPolarAxis>)GetValue(RadiusAxesProperty);
+        get => (ICollection<IPolarAxis>)GetValue(RadiusAxesProperty);
         set => SetValue(RadiusAxesProperty, value);
     }
 
@@ -289,19 +232,10 @@ public class PolarChart : Chart, IPolarChartView
     }
 
     /// <inheritdoc cref="Chart.OnUnloaded"/>
-    protected override void OnUnloaded() =>
+    protected override void OnUnloaded()
+    {
+        Observe.Dispose();
         core?.Unload();
-
-    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        if (core is null) return;
-        core.Update();
-    }
-
-    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (core is null) return;
-        core.Update();
     }
 
     private void OnMouseWheel(object? sender, MouseWheelEventArgs e)

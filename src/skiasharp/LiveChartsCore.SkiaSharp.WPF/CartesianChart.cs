@@ -23,8 +23,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -41,10 +39,6 @@ public class CartesianChart : Chart, ICartesianChartView
 {
     #region fields
 
-    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-    private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
-    private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
-    private readonly CollectionDeepObserver<CoreSection> _sectionsObserver;
     private bool _matchAxesScreenDataRatio;
 
     #endregion
@@ -54,23 +48,18 @@ public class CartesianChart : Chart, ICartesianChartView
     /// </summary>
     public CartesianChart()
     {
-        _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _xObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _sectionsObserver = new CollectionDeepObserver<CoreSection>(
-            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+        _ = Observe
+            .Collection(nameof(Series))
+            .Collection(nameof(XAxes))
+            .Collection(nameof(YAxes))
+            .Collection(nameof(Sections))
+            .Property(nameof(DrawMarginFrame));
 
-        SetCurrentValue(XAxesProperty, new ObservableCollection<ICartesianAxis>()
-            {
-               LiveCharts.DefaultSettings.GetProvider().GetDefaultCartesianAxis()
-            });
-        SetCurrentValue(YAxesProperty, new ObservableCollection<ICartesianAxis>()
-            {
-                LiveCharts.DefaultSettings.GetProvider().GetDefaultCartesianAxis()
-            });
+        SetCurrentValue(XAxesProperty, new ObservableCollection<ICartesianAxis>());
+        SetCurrentValue(YAxesProperty, new ObservableCollection<ICartesianAxis>());
         SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
-        SetCurrentValue(SectionsProperty, new ObservableCollection<CoreSection>());
-        SetCurrentValue(VisualElementsProperty, new ObservableCollection<ChartElement>());
+        SetCurrentValue(SectionsProperty, new ObservableCollection<IChartElement>());
+        SetCurrentValue(VisualElementsProperty, new ObservableCollection<IChartElement>());
         SetCurrentValue(SyncContextProperty, new object());
 
         MouseWheel += OnMouseWheel;
@@ -87,99 +76,40 @@ public class CartesianChart : Chart, ICartesianChartView
     /// </summary>
     public static readonly DependencyProperty SeriesProperty =
         DependencyProperty.Register(
-            nameof(Series), typeof(IEnumerable<ISeries>), typeof(CartesianChart), new PropertyMetadata(null,
-                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
-                {
-                    var chart = (CartesianChart)o;
-                    var seriesObserver = chart._seriesObserver;
-                    seriesObserver?.Dispose((IEnumerable<ISeries>)args.OldValue);
-                    seriesObserver?.Initialize((IEnumerable<ISeries>)args.NewValue);
-                    if (chart.core is null) return;
-                    chart.core.Update();
-                },
-                (DependencyObject o, object value) =>
-                {
-                    return value is IEnumerable<ISeries> ? value : new ObservableCollection<ISeries>();
-                }));
+            nameof(Series), typeof(ICollection<ISeries>), typeof(CartesianChart),
+            new PropertyMetadata(null, InitializeObserver(nameof(Series))));
 
     /// <summary>
     /// The x axes property
     /// </summary>
     public static readonly DependencyProperty XAxesProperty =
         DependencyProperty.Register(
-            nameof(XAxes), typeof(IEnumerable<ICartesianAxis>), typeof(CartesianChart), new PropertyMetadata(null,
-                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
-                {
-                    var chart = (CartesianChart)o;
-                    var observer = chart._xObserver;
-                    observer?.Dispose((IEnumerable<ICartesianAxis>)args.OldValue);
-                    observer?.Initialize((IEnumerable<ICartesianAxis>)args.NewValue);
-                    if (chart.core is null) return;
-                    chart.core.Update();
-                },
-                (DependencyObject o, object value) =>
-                {
-                    return value is IEnumerable<ICartesianAxis>
-                        ? value
-                        : new List<ICartesianAxis>()
-                        {
-                                LiveCharts.DefaultSettings.GetProvider().GetDefaultCartesianAxis()
-                        };
-                }));
+            nameof(XAxes), typeof(ICollection<ICartesianAxis>), typeof(CartesianChart),
+            new PropertyMetadata(null, InitializeObserver(nameof(XAxes))));
 
     /// <summary>
     /// The y axes property
     /// </summary>
     public static readonly DependencyProperty YAxesProperty =
         DependencyProperty.Register(
-            nameof(YAxes), typeof(IEnumerable<ICartesianAxis>), typeof(CartesianChart), new PropertyMetadata(null,
-                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
-                {
-                    var chart = (CartesianChart)o;
-                    var observer = chart._yObserver;
-                    observer?.Dispose((IEnumerable<ICartesianAxis>)args.OldValue);
-                    observer?.Initialize((IEnumerable<ICartesianAxis>)args.NewValue);
-                    if (chart.core is null) return;
-                    chart.core.Update();
-                },
-                (DependencyObject o, object value) =>
-                {
-                    return value is IEnumerable<ICartesianAxis>
-                        ? value
-                        : new List<ICartesianAxis>()
-                        {
-                                LiveCharts.DefaultSettings.GetProvider().GetDefaultCartesianAxis()
-                        };
-                }));
+            nameof(YAxes), typeof(ICollection<ICartesianAxis>), typeof(CartesianChart),
+            new PropertyMetadata(null, InitializeObserver(nameof(YAxes))));
 
     /// <summary>
     /// The sections property
     /// </summary>
     public static readonly DependencyProperty SectionsProperty =
         DependencyProperty.Register(
-            nameof(Sections), typeof(IEnumerable<CoreSection>), typeof(CartesianChart), new PropertyMetadata(null,
-                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
-                {
-                    var chart = (CartesianChart)o;
-                    var observer = chart._sectionsObserver;
-                    observer?.Dispose((IEnumerable<CoreSection>)args.OldValue);
-                    observer?.Initialize((IEnumerable<CoreSection>)args.NewValue);
-                    if (chart.core is null) return;
-                    chart.core.Update();
-                },
-                (DependencyObject o, object value) =>
-                {
-                    return value is IEnumerable<CoreSection>
-                    ? value
-                    : new List<CoreSection>();
-                }));
+            nameof(Sections), typeof(ICollection<IChartElement>), typeof(CartesianChart),
+            new PropertyMetadata(null, InitializeObserver(nameof(Sections))));
 
     /// <summary>
     /// The zoom mode property
     /// </summary>
     public static readonly DependencyProperty DrawMarginFrameProperty =
         DependencyProperty.Register(
-            nameof(DrawMarginFrame), typeof(CoreDrawMarginFrame), typeof(CartesianChart), new PropertyMetadata(null));
+            nameof(DrawMarginFrame), typeof(IChartElement), typeof(CartesianChart),
+            new PropertyMetadata(null, InitializeObserver(nameof(DrawMarginFrame))));
 
     /// <summary>
     /// The zoom mode property
@@ -213,37 +143,37 @@ public class CartesianChart : Chart, ICartesianChartView
         core is null ? throw new Exception("core not found") : (CartesianChartEngine)core;
 
     /// <inheritdoc cref="ICartesianChartView.Series" />
-    public IEnumerable<ISeries> Series
+    public override ICollection<ISeries> Series
     {
-        get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
+        get => (ICollection<ISeries>)GetValue(SeriesProperty);
         set => SetValue(SeriesProperty, value);
     }
 
     /// <inheritdoc cref="ICartesianChartView.XAxes" />
-    public IEnumerable<ICartesianAxis> XAxes
+    public ICollection<ICartesianAxis> XAxes
     {
-        get => (IEnumerable<ICartesianAxis>)GetValue(XAxesProperty);
+        get => (ICollection<ICartesianAxis>)GetValue(XAxesProperty);
         set => SetValue(XAxesProperty, value);
     }
 
     /// <inheritdoc cref="ICartesianChartView.YAxes" />
-    public IEnumerable<ICartesianAxis> YAxes
+    public ICollection<ICartesianAxis> YAxes
     {
-        get => (IEnumerable<ICartesianAxis>)GetValue(YAxesProperty);
+        get => (ICollection<ICartesianAxis>)GetValue(YAxesProperty);
         set => SetValue(YAxesProperty, value);
     }
 
     /// <inheritdoc cref="ICartesianChartView.Sections" />
-    public IEnumerable<CoreSection> Sections
+    public ICollection<IChartElement> Sections
     {
-        get => (IEnumerable<CoreSection>)GetValue(SectionsProperty);
+        get => (ICollection<IChartElement>)GetValue(SectionsProperty);
         set => SetValue(SectionsProperty, value);
     }
 
     /// <inheritdoc cref="ICartesianChartView.DrawMarginFrame" />
-    public CoreDrawMarginFrame? DrawMarginFrame
+    public IChartElement? DrawMarginFrame
     {
-        get => (CoreDrawMarginFrame)GetValue(DrawMarginFrameProperty);
+        get => (IChartElement)GetValue(DrawMarginFrameProperty);
         set => SetValue(DrawMarginFrameProperty, value);
     }
 
@@ -359,14 +289,11 @@ public class CartesianChart : Chart, ICartesianChartView
     }
 
     /// <inheritdoc cref="Chart.OnUnloaded"/>
-    protected override void OnUnloaded() =>
+    protected override void OnUnloaded()
+    {
+        Observe.Dispose();
         core?.Unload();
-
-    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
-        core?.Update();
-
-    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e) =>
-        core?.Update();
+    }
 
     private void OnMouseDown(object sender, MouseButtonEventArgs e)
     {

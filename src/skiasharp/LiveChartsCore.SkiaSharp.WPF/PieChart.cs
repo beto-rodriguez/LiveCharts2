@@ -23,8 +23,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -39,21 +37,18 @@ namespace LiveChartsCore.SkiaSharpView.WPF;
 /// <inheritdoc cref="IPieChartView" />
 public class PieChart : Chart, IPieChartView
 {
-    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="PieChart"/> class.
     /// </summary>
     public PieChart()
     {
-        _seriesObserver = new CollectionDeepObserver<ISeries>(
-            (object? sender, NotifyCollectionChangedEventArgs e) => core?.Update(),
-            (object? sender, PropertyChangedEventArgs e) => core?.Update(),
-            true);
+        _ = Observe
+            .Collection(nameof(Series));
 
         SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
-        SetCurrentValue(VisualElementsProperty, new ObservableCollection<ChartElement>());
+        SetCurrentValue(VisualElementsProperty, new ObservableCollection<IChartElement>());
         SetCurrentValue(SyncContextProperty, new object());
+
         MouseDown += OnMouseDown;
     }
 
@@ -62,20 +57,8 @@ public class PieChart : Chart, IPieChartView
     /// </summary>
     public static readonly DependencyProperty SeriesProperty =
         DependencyProperty.Register(
-            nameof(Series), typeof(IEnumerable<ISeries>), typeof(PieChart), new PropertyMetadata(null,
-                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
-                {
-                    var chart = (PieChart)o;
-                    var seriesObserver = chart._seriesObserver;
-                    seriesObserver?.Dispose((IEnumerable<ISeries>)args.OldValue);
-                    seriesObserver?.Initialize((IEnumerable<ISeries>)args.NewValue);
-                    if (chart.core is null) return;
-                    chart.core.Update();
-                },
-                (DependencyObject o, object value) =>
-                {
-                    return value is IEnumerable<ISeries> ? value : new ObservableCollection<ISeries>();
-                }));
+            nameof(Series), typeof(IEnumerable<ISeries>), typeof(PieChart),
+            new PropertyMetadata(null, InitializeObserver(nameof(Series))));
 
     /// <summary>
     /// The isClockwise property
@@ -115,9 +98,9 @@ public class PieChart : Chart, IPieChartView
     PieChartEngine IPieChartView.Core => core is null ? throw new Exception("core not found") : (PieChartEngine)core;
 
     /// <inheritdoc cref="IPieChartView.Series" />
-    public IEnumerable<ISeries> Series
+    public override ICollection<ISeries> Series
     {
-        get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
+        get => (ICollection<ISeries>)GetValue(SeriesProperty);
         set => SetValue(SeriesProperty, value);
     }
 
@@ -187,8 +170,11 @@ public class PieChart : Chart, IPieChartView
     }
 
     /// <inheritdoc cref="Chart.OnUnloaded"/>
-    protected override void OnUnloaded() =>
+    protected override void OnUnloaded()
+    {
+        Observe.Dispose();
         core?.Unload();
+    }
 
     private void OnMouseDown(object sender, MouseButtonEventArgs e)
     {

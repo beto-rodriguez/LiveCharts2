@@ -29,7 +29,7 @@ using System.Windows;
 using System.Windows.Controls;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
-using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
@@ -44,7 +44,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF;
 /// <seealso cref="Control" />
 public class GeoMap : UserControl, IGeoMapView
 {
-    private readonly CollectionDeepObserver<IGeoSeries> _seriesObserver;
+    private readonly CollectionDeepObserver _seriesObserver;
     private GeoMapChart? _core;
     private MotionCanvas? _canvas;
 
@@ -63,10 +63,7 @@ public class GeoMap : UserControl, IGeoMapView
 
         SizeChanged += GeoMap_SizeChanged;
 
-        _seriesObserver = new CollectionDeepObserver<IGeoSeries>(
-            (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
-            (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
-            true);
+        _seriesObserver = new CollectionDeepObserver(() => _core?.Update());
 
         SetCurrentValue(SeriesProperty, Enumerable.Empty<IGeoSeries>());
         SetCurrentValue(ActiveMapProperty, Maps.GetWorldMap());
@@ -119,7 +116,7 @@ public class GeoMap : UserControl, IGeoMapView
             {
                 var chart = (GeoMap)o;
                 var seriesObserver = chart._seriesObserver;
-                seriesObserver?.Dispose((IEnumerable<IGeoSeries>)args.OldValue);
+                seriesObserver?.Dispose();
                 seriesObserver?.Initialize((IEnumerable<IGeoSeries>)args.NewValue);
                 chart._core?.Update();
             }));
