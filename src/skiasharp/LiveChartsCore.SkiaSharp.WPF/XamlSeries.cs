@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;
@@ -49,13 +48,13 @@ public abstract class XamlSeries : FrameworkElement
     /// </summary>
     public static readonly DependencyProperty AdditionalVisualStatesProperty =
         DependencyProperty.Register(
-            nameof(AdditionalVisualStates), typeof(ICollection<ChartPointState>), typeof(XamlSeries));
+            nameof(AdditionalVisualStates), typeof(ObservableCollection<ChartPointState>), typeof(XamlSeries));
 
     /// <summary>
     /// Gets the additional visual states for the series.
     /// </summary>
-    public ICollection<ChartPointState> AdditionalVisualStates =>
-        (ICollection<ChartPointState>)GetValue(AdditionalVisualStatesProperty)!;
+    public ObservableCollection<ChartPointState> AdditionalVisualStates =>
+        (ObservableCollection<ChartPointState>)GetValue(AdditionalVisualStatesProperty)!;
 
     /// <summary>
     /// Gets the wrapped series that this XAML series represents.

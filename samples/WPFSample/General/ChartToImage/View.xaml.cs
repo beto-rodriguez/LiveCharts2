@@ -22,7 +22,6 @@ public partial class View : UserControl
     {
         CreateImageFromCartesianControl();
         CreateImageFromPieControl();
-        CreateImageFromGeoControl();
     }
 
     private void CreateImageFromCartesianControl()
@@ -38,12 +37,5 @@ public partial class View : UserControl
         var chartControl = (PieChart)FindName("pieChart");
         var skChart = new SKPieChart(chartControl) { Width = 900, Height = 600, };
         skChart.SaveImage("PieImageFromControl.png");
-    }
-
-    private void CreateImageFromGeoControl()
-    {
-        var chartControl = (GeoMap)FindName("geoChart");
-        var skChart = new SKGeoMap(chartControl) { Width = 900, Height = 600, };
-        skChart.SaveImage("MapImageFromControl.png");
     }
 }
