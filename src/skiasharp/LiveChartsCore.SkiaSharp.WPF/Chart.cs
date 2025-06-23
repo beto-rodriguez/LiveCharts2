@@ -54,7 +54,7 @@ public abstract partial class Chart : UserControl, IChartView
     /// <summary>
     /// The canvas
     /// </summary>
-    protected MotionCanvas? canvas;
+    protected MotionCanvas canvas;
 
     /// <summary>
     /// The legend
@@ -77,6 +77,8 @@ public abstract partial class Chart : UserControl, IChartView
     protected Chart()
     {
         LiveCharts.Configure(config => config.UseDefaults());
+
+        Content = canvas = new MotionCanvas();
 
         Observe = new ChartObserver(() => core?.Update(), AddUIElement, RemoveUIElement)
             .Collection(nameof(VisualElements))
@@ -588,8 +590,6 @@ public abstract partial class Chart : UserControl, IChartView
     /// </summary>
     public override void OnApplyTemplate()
     {
-        Content = canvas = new MotionCanvas();
-
         if (SyncContext != null)
             canvas.CanvasCore.Sync = SyncContext;
 
@@ -774,13 +774,13 @@ public abstract partial class Chart : UserControl, IChartView
 
     private void AddUIElement(object item)
     {
-        if (canvas is null || item is not DependencyObject view) return;
+        if (canvas is null || item is not FrameworkElement view) return;
         canvas.AddLogicalChild(view);
     }
 
     private void RemoveUIElement(object item)
     {
-        if (canvas is null || item is not DependencyObject view) return;
+        if (canvas is null || item is not FrameworkElement view) return;
         canvas.RemoveLogicalChild(view);
     }
 

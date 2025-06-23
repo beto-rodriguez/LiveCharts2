@@ -29,6 +29,7 @@
 #pragma warning disable IDE0052 // Remove unread private members
 
 using System;
+using System.Collections.ObjectModel;
 using System.Windows;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Drawing;
@@ -233,3 +234,17 @@ public class ChartPointState : BaseChartPointState { }
 /// <inheritdoc cref="BaseSet"/>
 public class Set : BaseSet { }
 
+/// <summary>
+/// A series collection for WPF XAML parser.
+/// </summary>
+public class SeriesCollection : ObservableCollection<ISeries> { }
+
+/// <summary>
+/// An axes collection for WPF XAML parser.
+/// </summary>
+public class AxesCollection : ObservableCollection<ICartesianAxis> { }
+
+/// <summary>
+/// An axes collection for WPF XAML parser.
+/// </summary>
+public class PolarAxesCollection : ObservableCollection<IPolarAxis> { }
