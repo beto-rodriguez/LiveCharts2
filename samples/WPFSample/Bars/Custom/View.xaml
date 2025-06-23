@@ -16,8 +16,7 @@
             <lvc:SeriesCollection>
                 <lvc:XamlColumnSeries Values="{Binding Values1}"/>
                 <!--
-                Use a non-generic class that inherits from the generic one for WPF XAML compatibility,
-                Teh DiamondColumnSeries is a column series that draws a diamond shape.
+                The DiamondColumnSeries is a column series that draws a diamond shape.
                 -->
                 <local:DiamondColumnSeries Values="{Binding Values2}" />
                 <!--

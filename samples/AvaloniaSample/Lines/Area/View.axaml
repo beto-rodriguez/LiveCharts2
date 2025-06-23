@@ -11,12 +11,12 @@
 
     <lvc:CartesianChart
         DrawMarginFrame="{lvc:Frame
-            Stroke={lvc:SolidColorPaint Color='64b4b4b4'},
-            Fill={lvc:SolidColorPaint Color='32dcdcdc'}}">
+            Stroke={lvc:SolidColorPaint Color='#64b4b4b4'},
+            Fill={lvc:SolidColorPaint Color='#32dcdcdc'}}">
         <lvc:CartesianChart.Series>
             <lvc:XamlLineSeries
                 Values="{Binding Values}"
-                Fill="{lvc:SolidColorPaint Color='6495ED'}"
+                Fill="{lvc:SolidColorPaint Color='#6495ED'}"
                 Stroke="{x:Null}"
                 GeometryFill="{x:Null}"
                 GeometryStroke="{x:Null}"/>
