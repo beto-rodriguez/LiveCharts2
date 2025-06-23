@@ -253,3 +253,8 @@ public class PolarAxesCollection : ObservableCollection<IPolarAxis> { }
 /// An axes collection for WPF XAML parser.
 /// </summary>
 public class SectionsCollection : ObservableCollection<IChartElement> { }
+
+/// <summary>
+/// An axes collection for WPF XAML parser.
+/// </summary>
+public class VisualsCollection : ObservableCollection<IChartElement> { }
