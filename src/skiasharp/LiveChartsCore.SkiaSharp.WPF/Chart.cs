@@ -36,6 +36,7 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
+using LiveChartsCore.SkiaSharpView.TypeConverters;
 using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
 
@@ -379,6 +380,7 @@ public abstract partial class Chart : UserControl, IChartView
     }
 
     /// <inheritdoc cref="IChartView.DrawMargin" />
+    [TypeConverter(typeof(MarginTypeConverter))]
     public Margin? DrawMargin
     {
         get => (Margin)GetValue(DrawMarginProperty);
@@ -441,6 +443,7 @@ public abstract partial class Chart : UserControl, IChartView
     }
 
     /// <inheritdoc cref="IChartView.TooltipBackgroundPaint" />
+    [TypeConverter(typeof(HexToPaintTypeConverter))]
     public Paint? TooltipBackgroundPaint
     {
         get => (Paint?)GetValue(TooltipBackgroundPaintProperty);
@@ -448,6 +451,7 @@ public abstract partial class Chart : UserControl, IChartView
     }
 
     /// <inheritdoc cref="IChartView.TooltipTextPaint" />
+    [TypeConverter(typeof(HexToPaintTypeConverter))]
     public Paint? TooltipTextPaint
     {
         get => (Paint?)GetValue(TooltipTextPaintProperty);
@@ -465,6 +469,7 @@ public abstract partial class Chart : UserControl, IChartView
     public IChartTooltip? Tooltip { get => tooltip; set => tooltip = value; }
 
     /// <inheritdoc cref="IChartView.LegendBackgroundPaint" />
+    [TypeConverter(typeof(HexToPaintTypeConverter))]
     public Paint? LegendBackgroundPaint
     {
         get => (Paint?)GetValue(LegendBackgroundPaintProperty);
@@ -472,6 +477,7 @@ public abstract partial class Chart : UserControl, IChartView
     }
 
     /// <inheritdoc cref="IChartView.LegendTextPaint" />
+    [TypeConverter(typeof(HexToPaintTypeConverter))]
     public Paint? LegendTextPaint
     {
         get => (Paint?)GetValue(LegendTextPaintProperty);
