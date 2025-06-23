@@ -1,16 +1,43 @@
-﻿<UserControl x:Class="WPFSample.Axes.Crosshairs.View"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Axes.Crosshairs;assembly=ViewModelsSamples">
+﻿<UserControl
+    x:Class="WPFSample.Axes.Crosshairs.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Axes.Crosshairs;assembly=ViewModelsSamples">
+
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <Grid>
-        <lvc:CartesianChart
-            Series="{Binding Series}"
-            XAxes="{Binding XAxes}"
-            YAxes="{Binding YAxes}">
-        </lvc:CartesianChart>
-    </Grid>
+
+    <lvc:CartesianChart>
+
+        <lvc:CartesianChart.Series>
+            <lvc:SeriesCollection>
+                <lvc:XamlLineSeries Values="{Binding Values}" />
+            </lvc:SeriesCollection>
+        </lvc:CartesianChart.Series>
+
+        <lvc:CartesianChart.XAxes>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis
+                    CrosshairLabelsBackground="#FF8C00"
+                    CrosshairLabelsPaint="#8B0000"
+                    CrosshairPaint="#FF8C00"
+                    Labeler="{Binding LabelFormatter}"/>
+            </lvc:AxesCollection>
+        </lvc:CartesianChart.XAxes>
+        
+        <lvc:CartesianChart.YAxes>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis
+                    CrosshairLabelsBackground="#FF8C00"
+                    CrosshairLabelsPaint="#8B0000"
+                    CrosshairPaint="#FF8C00"
+                    CrosshairSnapEnabled="True"
+                    Labeler="{Binding LabelFormatter}"/>
+            </lvc:AxesCollection>
+        </lvc:CartesianChart.YAxes>
+
+    </lvc:CartesianChart>
+
 </UserControl>
