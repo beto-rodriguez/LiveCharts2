@@ -37,7 +37,6 @@ public class WPFTemplate : FrameworkTemplate
     {{
         base.OnPropertyChanged(args);
         MapChangeToBaseType(args.Property.Name);
-        AlsoOnPropertyChanged(args.Property.Name);
     }}";
 
     private string GetOnChangedExpression(string expression, string bindableType, string propertyType)

@@ -90,8 +90,6 @@ public partial class {target.Name} : LiveChartsCore.Generators.IXamlWrapper<{bas
 
     {(target.ManualOnPropertyChanged ? string.Empty : template.GetPropertyChangedMetod())}
 
-    partial void AlsoOnPropertyChanged(string? propertyName = null);
-
     private System.Collections.Generic.HashSet<string> _setCommands = [];
 
     private void MapChangeToBaseType(string? propertyName = null)

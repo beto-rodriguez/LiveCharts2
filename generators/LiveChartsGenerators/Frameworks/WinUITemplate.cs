@@ -1,5 +1,4 @@
-﻿
-// The MIT License(MIT)
+﻿// The MIT License(MIT)
 //
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
 //
@@ -23,22 +22,22 @@
 
 namespace LiveChartsGenerators.Frameworks;
 
-public class MauiTemplate : FrameworkTemplate
+public class WinUITemplate : FrameworkTemplate
 {
     public override string DeclareBindableProperty(string propertyName, string propertyType)
-        => @$"public static readonly new global::Microsoft.Maui.Controls.BindableProperty {propertyName}Property";
+        => @$"public static readonly new global::Microsoft.UI.Xaml.DependencyProperty {propertyName}Property";
 
     public override string CreateBindableProperty(
         string propertyName, string propertyType, string bindableType, string defaultValue, string? onChanged = null)
-            => @$"global::Microsoft.Maui.Controls.BindableProperty.Create(propertyName: ""{propertyName}"", returnType: typeof({propertyType}), declaringType: typeof({bindableType}), defaultValue: {defaultValue}{(onChanged is null ? string.Empty : $", propertyChanged: {GetOnChangedExpression(onChanged, bindableType, propertyType)}")});";
+            => @$"global::Microsoft.UI.Xaml.DependencyProperty.Register(name: ""{propertyName}"", propertyType: typeof({propertyType}), ownerType: typeof({bindableType}), typeMetadata: new System.Windows.PropertyMetadata(defaultValue:{defaultValue}{(onChanged is null ? string.Empty : $", propertyChangedCallback: {GetOnChangedExpression(onChanged, bindableType, propertyType)}")}));";
 
     public override string GetPropertyChangedMetod() =>
-        @$"protected override void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string? propertyName = null)
+        @$"protected override void OnPropertyChanged(System.Windows.DependencyPropertyChangedEventArgs args)
     {{
-        base.OnPropertyChanged(propertyName);
-        MapChangeToBaseType(propertyName);
+        base.OnPropertyChanged(args);
+        MapChangeToBaseType(args.Property.Name);
     }}";
 
     private string GetOnChangedExpression(string expression, string bindableType, string propertyType)
-        => $@"(bo, o, n) => {expression}(({bindableType})bo, ({propertyType})o, ({propertyType})n)";
+        => $@"(o, args) => {expression}(({bindableType})o, ({propertyType})args.OldValue, ({propertyType})args.NewValue)";
 }

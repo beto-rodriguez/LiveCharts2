@@ -37,6 +37,5 @@ public class AvaloniaTemplate : FrameworkTemplate
         base.OnPropertyChanged(change);
         var propertyName = change.Property.Name;
         MapChangeToBaseType(propertyName);
-        AlsoOnPropertyChanged(propertyName);
     }}";
 }

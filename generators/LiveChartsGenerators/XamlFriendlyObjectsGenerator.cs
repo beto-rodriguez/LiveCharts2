@@ -468,7 +468,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
         return consumerType switch
         {
             "Maui" => new MauiTemplate(),
-            //"WinUI" => new WinUITemplate(),
+            "WinUI" => new WinUITemplate(),
             "Avalonia" => new AvaloniaTemplate(),
             "WPF" => new WPFTemplate(),
             _ => throw new NotSupportedException($"The consumer type '{consumerType}' is not supported.")
