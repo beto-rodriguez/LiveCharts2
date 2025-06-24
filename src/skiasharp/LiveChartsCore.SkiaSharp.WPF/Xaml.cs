@@ -22,7 +22,7 @@
 
 // ===================================================
 // THIS FILE INCLUDES THE XAML GENERATED OBJECTS.
-// For WPF, we inherit from FramewokrElement to support styles, bindings and data templates.
+// For WPF, we inherit from FrameworkElement to support styles, bindings and data templates.
 // ===================================================
 
 #pragma warning disable IDE1006 // Naming Styles
