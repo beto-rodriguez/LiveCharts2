@@ -23,17 +23,19 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Generators;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
+using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
+using LiveChartsCore.SkiaSharpView.TypeConverters;
 using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
 using Microsoft.UI.Xaml;
@@ -47,8 +49,7 @@ public sealed partial class PieChart : UserControl, IPieChartView
 {
     private Chart? _core;
     private MotionCanvas? _canvas;
-    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-    private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
+    private readonly ChartObserver _observe;
     private ThemeListener? _themeListener;
     private Theme? _chartTheme;
 
@@ -61,20 +62,38 @@ public sealed partial class PieChart : UserControl, IPieChartView
 
         InitializeComponent();
 
-        _seriesObserver = new CollectionDeepObserver<ISeries>(
-            (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
-            (object? sender, PropertyChangedEventArgs e) => _core?.Update());
-        _visualsObserver = new CollectionDeepObserver<ChartElement>(
-           (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
-           (object? sender, PropertyChangedEventArgs e) => _core?.Update());
+        _observe = new ChartObserver(() => _core?.Update(), AddUIElement, RemoveUIElement)
+            .Collection(nameof(Series))
+            .Collection(nameof(VisualElements))
+            .Property(nameof(Title));
+
+        _observe.Add(
+            nameof(SeriesSource),
+            new SeriesSourceObserver(
+                InflateSeriesTemplate,
+                GetSeriesSource,
+                () => SeriesSource is not null && SeriesTemplate is not null));
 
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
 
         SetValue(SeriesProperty, new ObservableCollection<ISeries>());
-        SetValue(VisualElementsProperty, new ObservableCollection<ChartElement>());
+        SetValue(VisualElementsProperty, new ObservableCollection<IChartElement>());
         SetValue(SyncContextProperty, new object());
     }
+
+    #region Generated Bindable Properties
+
+#pragma warning disable IDE1006 // Naming Styles
+#pragma warning disable IDE0052 // Remove unread private member
+
+    private static readonly XamlProperty<IEnumerable<object>> seriesSource = new(onChanged: OnSeriesSourceChanged);
+    private static readonly XamlProperty<DataTemplate> seriesTemplate = new(onChanged: OnSeriesSourceChanged);
+
+#pragma warning restore IDE1006 // Naming Styles
+#pragma warning restore IDE0052 // Remove unread private members
+
+    #endregion
 
     #region dependency properties
 
@@ -90,32 +109,16 @@ public sealed partial class PieChart : UserControl, IPieChartView
     /// </summary>
     public static readonly DependencyProperty SeriesProperty =
         DependencyProperty.Register(
-            nameof(Series), typeof(IEnumerable<ISeries>), typeof(PieChart), new PropertyMetadata(null,
-                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
-                {
-                    var chart = (PieChart)o;
-                    var seriesObserver = chart._seriesObserver;
-                    seriesObserver?.Dispose((IEnumerable<ISeries>)args.OldValue);
-                    seriesObserver?.Initialize((IEnumerable<ISeries>)args.NewValue);
-                    if (chart._core == null) return;
-                    chart._core.Update();
-                }));
+            nameof(Series), typeof(ICollection<ISeries>), typeof(PieChart),
+            new PropertyMetadata(null, InitializeObserver(nameof(Series))));
 
     /// <summary>
     /// The visual elements property
     /// </summary>
     public static readonly DependencyProperty VisualElementsProperty =
         DependencyProperty.Register(
-            nameof(VisualElements), typeof(IEnumerable<ChartElement>), typeof(PieChart), new PropertyMetadata(null,
-                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
-                {
-                    var chart = (PieChart)o;
-                    var observer = chart._visualsObserver;
-                    observer?.Dispose((IEnumerable<ChartElement>)args.OldValue);
-                    observer?.Initialize((IEnumerable<ChartElement>)args.NewValue);
-                    if (chart._core == null) return;
-                    chart._core.Update();
-                }));
+            nameof(VisualElements), typeof(ICollection<IChartElement>), typeof(PieChart),
+            new PropertyMetadata(null, InitializeObserver(nameof(VisualElements))));
 
     /// <summary>
     /// The sync context property
@@ -123,7 +126,7 @@ public sealed partial class PieChart : UserControl, IPieChartView
     public static readonly DependencyProperty SyncContextProperty =
         DependencyProperty.Register(
             nameof(SyncContext), typeof(object), typeof(PieChart), new PropertyMetadata(null,
-                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+                (o, args) =>
                 {
                     var chart = (PieChart)o;
                     if (chart._canvas != null) chart.CoreCanvas.Sync = args.NewValue;
@@ -380,16 +383,16 @@ public sealed partial class PieChart : UserControl, IPieChartView
     }
 
     /// <inheritdoc cref="IPieChartView.Series" />
-    public IEnumerable<ISeries> Series
+    public ICollection<ISeries> Series
     {
-        get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
+        get => (ICollection<ISeries>)GetValue(SeriesProperty);
         set => SetValue(SeriesProperty, value);
     }
 
     /// <inheritdoc cref="IChartView.VisualElements" />
-    public IEnumerable<ChartElement> VisualElements
+    public ICollection<IChartElement> VisualElements
     {
-        get => (IEnumerable<ChartElement>)GetValue(VisualElementsProperty);
+        get => (ICollection<IChartElement>)GetValue(VisualElementsProperty);
         set => SetValue(VisualElementsProperty, value);
     }
 
@@ -429,6 +432,7 @@ public sealed partial class PieChart : UserControl, IPieChartView
     }
 
     /// <inheritdoc cref="IChartView.DrawMargin" />
+    [TypeConverter(typeof(MarginTypeConverter))]
     public Margin? DrawMargin
     {
         get => (Margin)GetValue(DrawMarginProperty);
@@ -501,6 +505,7 @@ public sealed partial class PieChart : UserControl, IPieChartView
     }
 
     /// <inheritdoc cref="IChartView.TooltipBackgroundPaint" />
+    [TypeConverter(typeof(HexToPaintTypeConverter))]
     public Paint? TooltipBackgroundPaint
     {
         get => (Paint?)GetValue(TooltipBackgroundPaintProperty);
@@ -508,6 +513,7 @@ public sealed partial class PieChart : UserControl, IPieChartView
     }
 
     /// <inheritdoc cref="IChartView.TooltipTextPaint" />
+    [TypeConverter(typeof(HexToPaintTypeConverter))]
     public Paint? TooltipTextPaint
     {
         get => (Paint?)GetValue(TooltipTextPaintProperty);
@@ -525,6 +531,7 @@ public sealed partial class PieChart : UserControl, IPieChartView
     public IChartTooltip? Tooltip { get; set; }
 
     /// <inheritdoc cref="IChartView.LegendBackgroundPaint" />
+    [TypeConverter(typeof(HexToPaintTypeConverter))]
     public Paint? LegendBackgroundPaint
     {
         get => (Paint?)GetValue(LegendBackgroundPaintProperty);
@@ -532,6 +539,7 @@ public sealed partial class PieChart : UserControl, IPieChartView
     }
 
     /// <inheritdoc cref="IChartView.LegendTextPaint" />
+    [TypeConverter(typeof(HexToPaintTypeConverter))]
     public Paint? LegendTextPaint
     {
         get => (Paint?)GetValue(LegendTextPaintProperty);
@@ -807,4 +815,43 @@ public sealed partial class PieChart : UserControl, IPieChartView
 
     void IChartView.Invalidate() =>
         CoreCanvas.Invalidate();
+
+    private static void OnSeriesSourceChanged(PieChart chart, object o, object n)
+    {
+        var seriesObserver = (SeriesSourceObserver)chart._observe[nameof(SeriesSource)];
+        seriesObserver.Initialize(chart.SeriesSource);
+
+        if (seriesObserver.Series is not null)
+            chart.Series = seriesObserver.Series;
+    }
+
+    private static PropertyChangedCallback InitializeObserver(string propertyName) =>
+        (o, args) => ((PieChart)o)._observe[propertyName].Initialize(args.NewValue);
+
+    private void AddUIElement(object item)
+    {
+        if (_canvas is null || item is not UIElement uiElement) return;
+        _canvas.Children.Add(uiElement);
+    }
+
+    private void RemoveUIElement(object item)
+    {
+        if (_canvas is null || item is not UIElement uiElement) return;
+        _ = _canvas.Children.Remove(uiElement);
+    }
+
+    private ISeries InflateSeriesTemplate(object item)
+    {
+        var content = (FrameworkElement)SeriesTemplate.LoadContent();
+
+        if (content is not ISeries series)
+            throw new InvalidOperationException("The template must be a valid series.");
+
+        content.DataContext = item;
+
+        return series;
+    }
+
+    private static object GetSeriesSource(ISeries series) =>
+        ((FrameworkElement)series).DataContext!;
 }

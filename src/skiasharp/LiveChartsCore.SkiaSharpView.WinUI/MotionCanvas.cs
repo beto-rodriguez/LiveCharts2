@@ -35,7 +35,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI;
 /// </summary>
 /// <seealso cref="UserControl" />
 /// <seealso cref="Microsoft.UI.Xaml.Markup.IComponentConnector" />
-public class MotionCanvas : UserControl
+public class MotionCanvas : Canvas
 {
     private readonly SKXamlCanvas? _skiaElement;
     private bool _isDrawingLoopRunning;
@@ -48,7 +48,12 @@ public class MotionCanvas : UserControl
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
 
-        Content = _skiaElement = new();
+        _skiaElement = new();
+        Children.Add(_skiaElement);
+        SetLeft(_skiaElement, 0);
+        SetTop(_skiaElement, 0);
+
+        SizeChanged += OnSizeChanged;
         _skiaElement.PaintSurface += OnPaintSurface;
     }
 
@@ -90,8 +95,16 @@ public class MotionCanvas : UserControl
     private void OnCanvasCoreInvalidated(CoreMotionCanvas sender) =>
         RunDrawingLoop();
 
+    private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        if (_skiaElement == null) return;
+        _skiaElement.Width = e.NewSize.Width;
+        _skiaElement.Height = e.NewSize.Height;
+    }
+
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
+        SizeChanged -= OnSizeChanged;
         CanvasCore.Invalidated -= OnCanvasCoreInvalidated;
         CanvasCore.Dispose();
     }

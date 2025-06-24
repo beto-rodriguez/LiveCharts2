@@ -23,17 +23,19 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Generators;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
+using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
+using LiveChartsCore.SkiaSharpView.TypeConverters;
 using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
 using Microsoft.UI.Xaml;
@@ -49,11 +51,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
 
     private Chart? _core;
     private MotionCanvas? _canvas;
-    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-    private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
-    private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
-    private readonly CollectionDeepObserver<CoreSection> _sectionsObserver;
-    private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
+    private readonly ChartObserver _observe;
     private bool _matchAxesScreenDataRatio;
     private ThemeListener? _themeListener;
     private Theme? _chartTheme;
@@ -68,30 +66,46 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
         LiveCharts.Configure(config => config.UseDefaults());
         InitializeComponent();
 
-        _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _xObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _sectionsObserver = new CollectionDeepObserver<CoreSection>(
-            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _visualsObserver = new CollectionDeepObserver<ChartElement>(
-            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+        _observe = new ChartObserver(() => _core?.Update(), AddUIElement, RemoveUIElement)
+            .Collection(nameof(Series))
+            .Collection(nameof(XAxes))
+            .Collection(nameof(YAxes))
+            .Collection(nameof(Sections))
+            .Collection(nameof(VisualElements))
+            .Property(nameof(Title))
+            .Property(nameof(DrawMarginFrame));
+
+        _observe.Add(
+            nameof(SeriesSource),
+            new SeriesSourceObserver(
+                InflateSeriesTemplate,
+                GetSeriesSource,
+                () => SeriesSource is not null && SeriesTemplate is not null));
 
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
 
-        SetValue(XAxesProperty, new ObservableCollection<ICartesianAxis>()
-            {
-                LiveCharts.DefaultSettings.GetProvider().GetDefaultCartesianAxis()
-            });
-        SetValue(YAxesProperty, new ObservableCollection<ICartesianAxis>()
-            {
-                LiveCharts.DefaultSettings.GetProvider().GetDefaultCartesianAxis()
-            });
+        SetValue(XAxesProperty, new ObservableCollection<ICartesianAxis>());
+        SetValue(YAxesProperty, new ObservableCollection<ICartesianAxis>());
         SetValue(SeriesProperty, new ObservableCollection<ISeries>());
-        SetValue(SectionsProperty, new ObservableCollection<CoreSection>());
-        SetValue(VisualElementsProperty, new ObservableCollection<ChartElement>());
+        SetValue(SectionsProperty, new ObservableCollection<IChartElement>());
+        SetValue(VisualElementsProperty, new ObservableCollection<IChartElement>());
         SetValue(SyncContextProperty, new());
     }
+
+
+    #region Generated Bindable Properties
+
+#pragma warning disable IDE1006 // Naming Styles
+#pragma warning disable IDE0052 // Remove unread private member
+
+    private static readonly XamlProperty<IEnumerable<object>> seriesSource = new(onChanged: OnSeriesSourceChanged);
+    private static readonly XamlProperty<DataTemplate> seriesTemplate = new(onChanged: OnSeriesSourceChanged);
+
+#pragma warning restore IDE1006 // Naming Styles
+#pragma warning restore IDE0052 // Remove unread private members
+
+    #endregion
 
     #region dependency properties
 
@@ -107,80 +121,40 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
     /// </summary>
     public static readonly DependencyProperty SeriesProperty =
         DependencyProperty.Register(
-            nameof(Series), typeof(IEnumerable<ISeries>), typeof(CartesianChart), new PropertyMetadata(null,
-                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
-                {
-                    var chart = (CartesianChart)o;
-                    var seriesObserver = chart._seriesObserver;
-                    seriesObserver?.Dispose((IEnumerable<ISeries>)args.OldValue);
-                    seriesObserver?.Initialize((IEnumerable<ISeries>)args.NewValue);
-                    if (chart._core == null) return;
-                    chart._core.Update();
-                }));
+            nameof(Series), typeof(ICollection<ISeries>), typeof(CartesianChart),
+            new PropertyMetadata(null, InitializeObserver(nameof(Series))));
 
     /// <summary>
     /// The x axes property
     /// </summary>
     public static readonly DependencyProperty XAxesProperty =
         DependencyProperty.Register(
-            nameof(XAxes), typeof(IEnumerable<ICartesianAxis>), typeof(CartesianChart), new PropertyMetadata(null,
-                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
-                {
-                    var chart = (CartesianChart)o;
-                    var observer = chart._xObserver;
-                    observer?.Dispose((IEnumerable<ICartesianAxis>)args.OldValue);
-                    observer?.Initialize((IEnumerable<ICartesianAxis>)args.NewValue);
-                    if (chart._core == null) return;
-                    chart._core.Update();
-                }));
+            nameof(XAxes), typeof(ICollection<ICartesianAxis>), typeof(CartesianChart),
+            new PropertyMetadata(null, InitializeObserver(nameof(XAxes))));
 
     /// <summary>
     /// The y axes property
     /// </summary>
     public static readonly DependencyProperty YAxesProperty =
         DependencyProperty.Register(
-            nameof(YAxes), typeof(IEnumerable<ICartesianAxis>), typeof(CartesianChart), new PropertyMetadata(null,
-                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
-                {
-                    var chart = (CartesianChart)o;
-                    var observer = chart._yObserver;
-                    observer?.Dispose((IEnumerable<ICartesianAxis>)args.OldValue);
-                    observer?.Initialize((IEnumerable<ICartesianAxis>)args.NewValue);
-                    if (chart._core == null) return;
-                    chart._core.Update();
-                }));
+            nameof(YAxes), typeof(ICollection<ICartesianAxis>), typeof(CartesianChart),
+            new PropertyMetadata(null, InitializeObserver(nameof(YAxes))));
 
     /// <summary>
     /// The sections property
     /// </summary>
     public static readonly DependencyProperty SectionsProperty =
         DependencyProperty.Register(
-            nameof(Sections), typeof(IEnumerable<CoreSection>), typeof(CartesianChart), new PropertyMetadata(null,
-                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
-                {
-                    var chart = (CartesianChart)o;
-                    var observer = chart._sectionsObserver;
-                    observer?.Dispose((IEnumerable<CoreSection>)args.OldValue);
-                    observer?.Initialize((IEnumerable<CoreSection>)args.NewValue);
-                    if (chart._core == null) return;
-                    chart._core.Update();
-                }));
+            nameof(Sections), typeof(ICollection<IChartElement>), typeof(CartesianChart),
+            new PropertyMetadata(null, InitializeObserver(nameof(Sections))));
 
     /// <summary>
     /// The visual elements property
     /// </summary>
     public static readonly DependencyProperty VisualElementsProperty =
         DependencyProperty.Register(
-            nameof(VisualElements), typeof(IEnumerable<ChartElement>), typeof(CartesianChart), new PropertyMetadata(null,
-                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
-                {
-                    var chart = (CartesianChart)o;
-                    var observer = chart._visualsObserver;
-                    observer?.Dispose((IEnumerable<ChartElement>)args.OldValue);
-                    observer?.Initialize((IEnumerable<ChartElement>)args.NewValue);
-                    if (chart._core == null) return;
-                    chart._core.Update();
-                }));
+            nameof(VisualElements), typeof(ICollection<IChartElement>), typeof(CartesianChart),
+            new PropertyMetadata(null, InitializeObserver(nameof(VisualElements))));
 
     /// <summary>
     /// The sync context property
@@ -188,7 +162,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
     public static readonly DependencyProperty SyncContextProperty =
         DependencyProperty.Register(
             nameof(SyncContext), typeof(object), typeof(CartesianChart), new PropertyMetadata(null,
-                (DependencyObject o, DependencyPropertyChangedEventArgs args) =>
+                (o, args) =>
                 {
                     var chart = (CartesianChart)o;
                     if (chart._canvas != null) chart.CoreCanvas.Sync = args.NewValue;
@@ -201,7 +175,8 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
     /// </summary>
     public static readonly DependencyProperty DrawMarginFrameProperty =
         DependencyProperty.Register(
-            nameof(DrawMarginFrame), typeof(CoreDrawMarginFrame), typeof(CartesianChart), new PropertyMetadata(null));
+            nameof(DrawMarginFrame), typeof(IChartElement), typeof(CartesianChart),
+            new PropertyMetadata(null, InitializeObserver(nameof(DrawMarginFrame))));
 
     /// <summary>
     /// The zoom mode property
@@ -424,6 +399,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
     }
 
     /// <inheritdoc cref="IChartView.DrawMargin" />
+    [TypeConverter(typeof(MarginTypeConverter))]
     public Margin? DrawMargin
     {
         get => (Margin)GetValue(DrawMarginProperty);
@@ -461,44 +437,44 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
     }
 
     /// <inheritdoc cref="ICartesianChartView.Series" />
-    public IEnumerable<ISeries> Series
+    public ICollection<ISeries> Series
     {
-        get => (IEnumerable<ISeries>)GetValue(SeriesProperty);
+        get => (ICollection<ISeries>)GetValue(SeriesProperty);
         set => SetValue(SeriesProperty, value);
     }
 
     /// <inheritdoc cref="ICartesianChartView.XAxes" />
-    public IEnumerable<ICartesianAxis> XAxes
+    public ICollection<ICartesianAxis> XAxes
     {
-        get => (IEnumerable<ICartesianAxis>)GetValue(XAxesProperty);
+        get => (ICollection<ICartesianAxis>)GetValue(XAxesProperty);
         set => SetValue(XAxesProperty, value);
     }
 
     /// <inheritdoc cref="ICartesianChartView.YAxes" />
-    public IEnumerable<ICartesianAxis> YAxes
+    public ICollection<ICartesianAxis> YAxes
     {
-        get => (IEnumerable<ICartesianAxis>)GetValue(YAxesProperty);
+        get => (ICollection<ICartesianAxis>)GetValue(YAxesProperty);
         set => SetValue(YAxesProperty, value);
     }
 
     /// <inheritdoc cref="ICartesianChartView.Sections" />
-    public IEnumerable<CoreSection> Sections
+    public ICollection<IChartElement> Sections
     {
-        get => (IEnumerable<CoreSection>)GetValue(SectionsProperty);
+        get => (ICollection<IChartElement>)GetValue(SectionsProperty);
         set => SetValue(SectionsProperty, value);
     }
 
     /// <inheritdoc cref="IChartView.VisualElements" />
-    public IEnumerable<ChartElement> VisualElements
+    public ICollection<IChartElement> VisualElements
     {
-        get => (IEnumerable<ChartElement>)GetValue(VisualElementsProperty);
+        get => (ICollection<IChartElement>)GetValue(VisualElementsProperty);
         set => SetValue(VisualElementsProperty, value);
     }
 
     /// <inheritdoc cref="ICartesianChartView.DrawMarginFrame" />
-    public CoreDrawMarginFrame? DrawMarginFrame
+    public IChartElement? DrawMarginFrame
     {
-        get => (CoreDrawMarginFrame)GetValue(DrawMarginFrameProperty);
+        get => (IChartElement)GetValue(DrawMarginFrameProperty);
         set => SetValue(DrawMarginFrameProperty, value);
     }
 
@@ -577,6 +553,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
     }
 
     /// <inheritdoc cref="IChartView.LegendBackgroundPaint" />
+    [TypeConverter(typeof(HexToPaintTypeConverter))]
     public Paint? LegendBackgroundPaint
     {
         get => (Paint?)GetValue(LegendBackgroundPaintProperty);
@@ -584,6 +561,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
     }
 
     /// <inheritdoc cref="IChartView.LegendTextPaint" />
+    [TypeConverter(typeof(HexToPaintTypeConverter))]
     public Paint? LegendTextPaint
     {
         get => (Paint?)GetValue(LegendTextPaintProperty);
@@ -608,6 +586,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
     }
 
     /// <inheritdoc cref="IChartView.TooltipBackgroundPaint" />
+    [TypeConverter(typeof(HexToPaintTypeConverter))]
     public Paint? TooltipBackgroundPaint
     {
         get => (Paint?)GetValue(TooltipBackgroundPaintProperty);
@@ -615,6 +594,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
     }
 
     /// <inheritdoc cref="IChartView.TooltipTextPaint" />
+    [TypeConverter(typeof(HexToPaintTypeConverter))]
     public Paint? TooltipTextPaint
     {
         get => (Paint?)GetValue(TooltipTextPaintProperty);
@@ -812,12 +792,6 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
         _themeListener = new(CoreChart.ApplyTheme, DispatcherQueue);
     }
 
-    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
-        _core?.Update();
-
-    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e) =>
-        _core?.Update();
-
     private void OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
         if (_core == null) throw new Exception("Core not found!");
@@ -894,6 +868,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
         _core?.Unload();
+        _observe.Dispose();
         _themeListener?.Dispose();
         _themeListener = null;
     }
@@ -944,4 +919,43 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
 
     void IChartView.Invalidate() =>
         CoreCanvas.Invalidate();
+
+    private static void OnSeriesSourceChanged(CartesianChart chart, object o, object n)
+    {
+        var seriesObserver = (SeriesSourceObserver)chart._observe[nameof(SeriesSource)];
+        seriesObserver.Initialize(chart.SeriesSource);
+
+        if (seriesObserver.Series is not null)
+            chart.Series = seriesObserver.Series;
+    }
+
+    private static PropertyChangedCallback InitializeObserver(string propertyName) =>
+        (o, args) => ((CartesianChart)o)._observe[propertyName].Initialize(args.NewValue);
+
+    private void AddUIElement(object item)
+    {
+        if (_canvas is null || item is not UIElement uiElement) return;
+        _canvas.Children.Add(uiElement);
+    }
+
+    private void RemoveUIElement(object item)
+    {
+        if (_canvas is null || item is not UIElement uiElement) return;
+        _ = _canvas.Children.Remove(uiElement);
+    }
+
+    private ISeries InflateSeriesTemplate(object item)
+    {
+        var content = (FrameworkElement)SeriesTemplate.LoadContent();
+
+        if (content is not ISeries series)
+            throw new InvalidOperationException("The template must be a valid series.");
+
+        content.DataContext = item;
+
+        return series;
+    }
+
+    private static object GetSeriesSource(ISeries series) =>
+        ((FrameworkElement)series).DataContext!;
 }
