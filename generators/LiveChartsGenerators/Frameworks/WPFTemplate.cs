@@ -23,8 +23,10 @@
 
 namespace LiveChartsGenerators.Frameworks;
 
-public class WPFTemplate : FrameworkTemplate
+public class WPFTemplate(FrameworkTemplate.Context context) : FrameworkTemplate(context)
 {
+    public override string Key => "WPF";
+
     public override string DeclareBindableProperty(string propertyName, string propertyType)
         => @$"public static readonly new global::System.Windows.DependencyProperty {propertyName}Property";
 

@@ -22,8 +22,10 @@
 
 namespace LiveChartsGenerators.Frameworks;
 
-public class AvaloniaTemplate : FrameworkTemplate
+public class AvaloniaTemplate(FrameworkTemplate.Context context) : FrameworkTemplate(context)
 {
+    public override string Key => "Avalonia";
+
     public override string DeclareBindableProperty(string propertyName, string propertyType)
         => @$"public static readonly new global::Avalonia.AvaloniaProperty<{propertyType}> {propertyName}Property";
 

@@ -27,8 +27,11 @@ using Microsoft.CodeAnalysis;
 
 namespace LiveChartsGenerators.Frameworks;
 
-public abstract class FrameworkTemplate
+public abstract class FrameworkTemplate(FrameworkTemplate.Context context)
 {
+    public Context ActiveContext => context;
+    public abstract string Key { get; }
+
     public string GetBindablePropertySyntax(XamlObject target, string key, IPropertySymbol property, BindablePropertyInitializer? initializer = null) =>
         GetBindablePropertySyntax(target, key, property.Name, property.Type.ToDisplayString(), initializer);
 
@@ -114,4 +117,10 @@ public abstract class FrameworkTemplate
     public abstract string CreateBindableProperty(
         string propertyName, string propertyType, string bindableType, string defaultValue, string? onChanged = null);
     public abstract string GetPropertyChangedMetod();
+
+    public enum Context
+    {
+        XamlObject,
+        XamlProperty,
+    }
 }

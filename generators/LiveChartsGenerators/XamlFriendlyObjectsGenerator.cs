@@ -78,108 +78,63 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
 
         context.RegisterSourceOutput(xamlObjects.Combine(assemblyAttributes), static (spc, pair) =>
         {
-            try
-            {
-                var (xamlObject, consumerType) = pair;
-                if (xamlObject is not { } value) return;
+            var (xamlObject, consumerType) = pair;
+            if (xamlObject is not { } value) return;
 
-                spc.AddSource(
-                    $"{value.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
-                    SourceText.From(XamlObjectTempaltes.GetTemplate(value, GetFrameworkTemplate(consumerType)), Encoding.UTF8));
-            }
-            catch (Exception ex)
-            {
-                spc.ReportDiagnostic(Diagnostic.Create(
-                    new DiagnosticDescriptor(
-                    id: "GENEX001",
-                    title: "Exception in Generator",
-                    messageFormat: $"Exception: {ex.Message}\n{ex.StackTrace}",
-                    category: "SourceGenerator",
-                    DiagnosticSeverity.Error,
-                    isEnabledByDefault: true),
-                    Location.None));
-            }
+            spc.AddSource(
+                $"{value.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
+                SourceText.From(XamlObjectTempaltes.GetTemplate(value, GetFrameworkTemplate(consumerType, FrameworkTemplate.Context.XamlObject)), Encoding.UTF8));
         });
 
         context.RegisterSourceOutput(motionProperties, (spc, groups) =>
         {
-            try
+            foreach (var group in groups)
             {
-                foreach (var group in groups)
+                if (group is null || group.Key is null) continue;
+
+                foreach (var item in group)
                 {
-                    if (group is null || group.Key is null) continue;
-
-                    foreach (var item in group)
-                    {
-                        if (item is not { } value) return;
-
-                        spc.AddSource(
-                            $"{value.Property.ContainingType.Name}.{value.Property.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
-                            SourceText.From(MotionPropertyTemplates.GetTemplate(value), Encoding.UTF8));
-                    }
+                    if (item is not { } value) return;
 
                     spc.AddSource(
-                        $"{group.Key.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
-                        MotionPropertyTemplates.GetClassTemplate(group));
+                        $"{value.Property.ContainingType.Name}.{value.Property.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
+                        SourceText.From(MotionPropertyTemplates.GetTemplate(value), Encoding.UTF8));
                 }
-            }
-            catch (Exception ex)
-            {
-                spc.ReportDiagnostic(Diagnostic.Create(
-                    new DiagnosticDescriptor(
-                    id: "GENEX001",
-                    title: "Exception in Generator",
-                    messageFormat: $"Exception: {ex.Message}\n{ex.StackTrace}",
-                    category: "SourceGenerator",
-                    DiagnosticSeverity.Error,
-                    isEnabledByDefault: true),
-                    Location.None));
+
+                spc.AddSource(
+                    $"{group.Key.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
+                    MotionPropertyTemplates.GetClassTemplate(group));
             }
         });
 
         context.RegisterSourceOutput(xamlProperties.Combine(assemblyAttributes), (spc, pair) =>
         {
-            try
-            {
-                var (groups, consumerType) = pair;
+            var (groups, consumerType) = pair;
 
-                foreach (var group in groups)
+            foreach (var group in groups)
+            {
+                if (group is null || group.Key is null) continue;
+
+                if (consumerType == "Avalonia")
                 {
-                    if (group is null || group.Key is null) continue;
+                    var name = ((INamedTypeSymbol)group.Key).ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
-                    if (consumerType == "Avalonia")
-                    {
-                        var name = ((INamedTypeSymbol)group.Key).ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-
-                        // exception for avalonia, we need to generate additional code for the base type
-                        spc.AddSource(
-                            $"{name}._avaloina_onChange.g.cs".Replace('<', '_').Replace('>', '_'),
-                            SourceText.From(
-                                BindablePropertyTempaltes.GetAvaloniaBaseTypeTemplate(group, GetFrameworkTemplate(consumerType)),
-                                Encoding.UTF8));
-                    }
-
-                    foreach (var property in group)
-                    {
-                        if (property is not { } value) return;
-
-                        spc.AddSource(
-                            $"{value.DeclaringType.Name}.{value.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
-                            SourceText.From(BindablePropertyTempaltes.GetTemplate(value, GetFrameworkTemplate(consumerType)), Encoding.UTF8));
-                    }
+                    // exception for avalonia, we need to generate additional code for the base type
+                    spc.AddSource(
+                        $"{name}._avaloina_onChange.g.cs".Replace('<', '_').Replace('>', '_'),
+                        SourceText.From(
+                            BindablePropertyTempaltes.GetAvaloniaBaseTypeTemplate(group, GetFrameworkTemplate(consumerType, FrameworkTemplate.Context.XamlProperty)),
+                            Encoding.UTF8));
                 }
-            }
-            catch (Exception ex)
-            {
-                spc.ReportDiagnostic(Diagnostic.Create(
-                    new DiagnosticDescriptor(
-                    id: "GENEX001",
-                    title: "Exception in Generator",
-                    messageFormat: $"Exception: {ex.Message}\n{ex.StackTrace}",
-                    category: "SourceGenerator",
-                    DiagnosticSeverity.Error,
-                    isEnabledByDefault: true),
-                    Location.None));
+
+                foreach (var property in group)
+                {
+                    if (property is not { } value) return;
+
+                    spc.AddSource(
+                        $"{value.DeclaringType.Name}.{value.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
+                        SourceText.From(BindablePropertyTempaltes.GetTemplate(value, GetFrameworkTemplate(consumerType, FrameworkTemplate.Context.XamlProperty)), Encoding.UTF8));
+                }
             }
         });
     }
@@ -463,14 +418,14 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
         };
     }
 
-    private static FrameworkTemplate GetFrameworkTemplate(string consumerType)
+    private static FrameworkTemplate GetFrameworkTemplate(string consumerType, FrameworkTemplate.Context context)
     {
         return consumerType switch
         {
-            "Maui" => new MauiTemplate(),
-            "WinUI" => new WinUITemplate(),
-            "Avalonia" => new AvaloniaTemplate(),
-            "WPF" => new WPFTemplate(),
+            "Maui" => new MauiTemplate(context),
+            "WinUI" => new WinUITemplate(context),
+            "Avalonia" => new AvaloniaTemplate(context),
+            "WPF" => new WPFTemplate(context),
             _ => throw new NotSupportedException($"The consumer type '{consumerType}' is not supported.")
         };
     }

@@ -22,22 +22,29 @@
 
 namespace LiveChartsGenerators.Frameworks;
 
-public class WinUITemplate : FrameworkTemplate
+public class WinUITemplate(FrameworkTemplate.Context context) : FrameworkTemplate(context)
 {
+    public override string Key => "WinUI";
+
     public override string DeclareBindableProperty(string propertyName, string propertyType)
         => @$"public static readonly new global::Microsoft.UI.Xaml.DependencyProperty {propertyName}Property";
 
     public override string CreateBindableProperty(
         string propertyName, string propertyType, string bindableType, string defaultValue, string? onChanged = null)
-            => @$"global::Microsoft.UI.Xaml.DependencyProperty.Register(name: ""{propertyName}"", propertyType: typeof({propertyType}), ownerType: typeof({bindableType}), typeMetadata: new System.Windows.PropertyMetadata(defaultValue:{defaultValue}{(onChanged is null ? string.Empty : $", propertyChangedCallback: {GetOnChangedExpression(onChanged, bindableType, propertyType)}")}));";
+            => @$"global::Microsoft.UI.Xaml.DependencyProperty.Register(name: ""{propertyName}"", propertyType: typeof({propertyType}), ownerType: typeof({bindableType}), typeMetadata: new Microsoft.UI.Xaml.PropertyMetadata(defaultValue:{defaultValue}, propertyChangedCallback: {GetOnChangedExpression(onChanged, bindableType, propertyName, propertyType)}));";
 
-    public override string GetPropertyChangedMetod() =>
-        @$"protected override void OnPropertyChanged(System.Windows.DependencyPropertyChangedEventArgs args)
-    {{
-        base.OnPropertyChanged(args);
-        MapChangeToBaseType(args.Property.Name);
-    }}";
+    public override string GetPropertyChangedMetod() => string.Empty;
 
-    private string GetOnChangedExpression(string expression, string bindableType, string propertyType)
-        => $@"(o, args) => {expression}(({bindableType})o, ({propertyType})args.OldValue, ({propertyType})args.NewValue)";
+    private string GetOnChangedExpression(string? expression, string bindableType, string propertyName, string propertyType)
+    {
+        var changeExpression = expression is null
+            ? string.Empty
+            : $"{expression}(t, ({propertyType})args.OldValue, ({propertyType})args.NewValue);";
+
+        var mapExpression = ActiveContext != Context.XamlObject
+            ? string.Empty
+            : @$"t.MapChangeToBaseType(""{propertyName}"");";
+
+        return $@"(o, args) => {{ var t = ({bindableType})o; {mapExpression} {changeExpression} }}";
+    }
 }

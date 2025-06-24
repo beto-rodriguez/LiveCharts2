@@ -23,8 +23,10 @@
 
 namespace LiveChartsGenerators.Frameworks;
 
-public class MauiTemplate : FrameworkTemplate
+public class MauiTemplate(FrameworkTemplate.Context context) : FrameworkTemplate(context)
 {
+    public override string Key => "Maui";
+
     public override string DeclareBindableProperty(string propertyName, string propertyType)
         => @$"public static readonly new global::Microsoft.Maui.Controls.BindableProperty {propertyName}Property";
 
