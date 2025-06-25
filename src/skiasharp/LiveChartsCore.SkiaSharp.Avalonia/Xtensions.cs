@@ -559,3 +559,21 @@ public class ColorArrayExtension(string colors) : MarkupExtension
     public override object ProvideValue(IServiceProvider serviceProvider) =>
         HexToLvcColorArrayTypeConverter.Parse(colors);
 }
+
+/// <summary>
+/// 
+/// </summary>
+public class ColorExtension(string color) : MarkupExtension
+{
+    /// <summary>
+    /// ...
+    /// </summary>
+    public override object ProvideValue(IServiceProvider serviceProvider)
+    {
+        LvcColor? response = LvcColor.TryParse(color, out var c)
+            ? c
+            : null;
+
+        return response!;
+    }
+}

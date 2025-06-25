@@ -27,7 +27,6 @@ using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Generators;
-using System.Diagnostics.CodeAnalysis;
 
 namespace LiveChartsCore.Painting;
 
@@ -262,6 +261,19 @@ public abstract partial class Paint : Animatable, IDisposable
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
     /// </summary>
     public abstract void Dispose();
+
+    /// <summary>
+    /// Parses a hexadecimal color string.
+    /// </summary>
+    /// <param name="hexString">the hex string.</param>
+    /// <returns>A solid color paint with the color.</returns>
+    /// <exception cref="ArgumentException">Invalid hex color.</exception>
+    public static Paint? Parse(string hexString)
+    {
+        return !LvcColor.TryParse(hexString, out var color)
+            ? throw new ArgumentException("Invalid hexadecimal color string.", nameof(hexString))
+            : LiveCharts.DefaultSettings.GetProvider().GetSolidColorPaint(color);
+    }
 
     private HashSet<IDrawnElement>? GetGeometriesByCanvas(object canvas)
     {
