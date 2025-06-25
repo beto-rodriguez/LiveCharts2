@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
     xmlns:vms="using:ViewModelsSamples.Bars.Custom"
-    xmlns:svg="using:LiveChartsCore.Drawing"
     xmlns:draw="using:LiveChartsCore.SkiaSharpView.Drawing.Geometries"
     xmlns:local="using:ViewModelsSamples.Bars.Custom">
 
@@ -34,7 +33,7 @@
             -->
             <lvc:XamlColumnSeries
                 x:TypeArguments="x:Double, draw:VariableSVGPathGeometry"
-                GeometrySvg="{x:Static svg:SVGPoints.Star}"
+                GeometrySvg="{Binding StarPath}"
                 Values="{Binding Values3}"/>
 
             <!--

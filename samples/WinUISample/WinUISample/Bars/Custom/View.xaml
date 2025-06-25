@@ -1,13 +1,35 @@
-﻿<UserControl x:Class="WinUISample.Bars.Custom.View"
+﻿<UserControl
+    x:Class="WinUISample.Bars.Custom.View"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
     xmlns:vms="using:ViewModelsSamples.Bars.Custom"
+    xmlns:svg="using:LiveChartsCore.Drawing"
+    xmlns:local="using:WinUISample.Bars.Custom"
     mc:Ignorable="d">
+
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <lvc:CartesianChart Series="{Binding Series}" />
+
+    <lvc:CartesianChart>
+        <lvc:CartesianChart.Series>
+            <lvc:XamlColumnSeries Values="{Binding Values1}"/>
+            <!--
+            The DiamondColumnSeries is a custom series that draws a diamond shape
+            -->
+            <local:DiamondColumnSeries Values="{Binding Values2}"/>
+            <!--
+            You can also use SVG paths to draw the geometry
+            the VariableSVGPathGeometry can change the drawn path at runtime
+            -->
+            <local:SvgColumnSeries GeometrySvg="{Binding StarPath}" Values="{Binding Values3}"/>
+            <!--
+            Finally you can also use SkiaSharp to draw your own geometry
+            -->
+            <local:MyGeometryColumnSeries Values="{Binding Values4}"/>
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
 </UserControl>

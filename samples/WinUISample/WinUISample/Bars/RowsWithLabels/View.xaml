@@ -11,8 +11,24 @@
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <Grid>
-        <lvc:CartesianChart Series="{Binding Series}"></lvc:CartesianChart>
-    </Grid>
 
+    <lvc:CartesianChart>
+        <lvc:CartesianChart.Series>
+            <lvc:XamlRowSeries
+                Values="{Binding Values1}"
+                ShowDataLabels="True"
+                DataLabelsSize="14"
+                DataLabelsPosition="End"/>
+            <lvc:XamlRowSeries
+                Values="{Binding Values2}"
+                ShowDataLabels="True"
+                DataLabelsSize="14"
+                DataLabelsPosition="Middle"/>
+            <lvc:XamlRowSeries
+                Values="{Binding Values3}"
+                ShowDataLabels="True"
+                DataLabelsSize="14"
+                DataLabelsPosition="Start"/>
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
 </UserControl>

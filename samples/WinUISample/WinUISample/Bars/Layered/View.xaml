@@ -11,8 +11,22 @@
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <Grid>
-        <lvc:CartesianChart Name="chart" Series="{Binding Series}"></lvc:CartesianChart>
-    </Grid>
+
+    <!--
+      When the bar positon is ignored, all bars are drawn in the same position.
+    -->
+
+    <lvc:CartesianChart>
+        <lvc:CartesianChart.Series>
+            <lvc:XamlColumnSeries
+                Values="{Binding Values1}"
+                MaxBarWidth="999999"
+                IgnoresBarPosition="True"/>
+            <lvc:XamlColumnSeries
+                Values="{Binding Values2}"
+                MaxBarWidth="30"
+                IgnoresBarPosition="True"/>
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
 
 </UserControl>
