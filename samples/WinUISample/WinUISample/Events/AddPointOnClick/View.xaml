@@ -11,10 +11,15 @@
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
+
     <lvc:CartesianChart
-            x:Name="chart"
-            Series="{Binding SeriesCollection}"
-            PointerPressedCommand="{Binding PointerDownCommand}"
-            TooltipPosition="Hidden">
+        PointerPressedCommand="{Binding PointerDownCommand}"
+        TooltipPosition="Hidden">
+        <lvc:CartesianChart.Series>
+            <lvc:XamlLineSeries
+                Values="{Binding Points}"
+                Fill="{x:Null}"
+                DataPadding="{lvc:Point Value='5,5'}"/>
+        </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 </UserControl>

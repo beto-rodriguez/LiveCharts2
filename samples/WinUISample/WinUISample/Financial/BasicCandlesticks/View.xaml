@@ -11,11 +11,19 @@
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <Grid>
-        <lvc:CartesianChart
-            Series="{Binding Series}"
-            XAxes="{Binding XAxes}">
-        </lvc:CartesianChart>
-    </Grid>
 
+    <lvc:CartesianChart>
+
+        <lvc:CartesianChart.Series>
+            <lvc:XamlCandlesticksSeries Values="{Binding Values}"/>
+        </lvc:CartesianChart.Series>
+
+        <lvc:CartesianChart.XAxes>
+            <lvc:XamlDateTimeAxis
+                Interval="1.00:00:00"
+                DateFormatter="{Binding DateFormatter}"
+                LabelsRotation="0"/>
+        </lvc:CartesianChart.XAxes>
+        
+    </lvc:CartesianChart>
 </UserControl>
