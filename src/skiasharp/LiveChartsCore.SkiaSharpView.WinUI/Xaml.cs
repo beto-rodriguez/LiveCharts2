@@ -42,19 +42,47 @@ using Microsoft.UI.Xaml;
 
 namespace LiveChartsCore.SkiaSharpView.WinUI;
 
-[XamlClass(typeof(Axis))]
+[XamlClass(typeof(Axis), PropertyTypeOverride = "MinLimit{=}double{,}MaxLimit{=}double", PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap")]
 public partial class XamlAxis : FrameworkElement, ICartesianAxis
 {
     string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
+    double? IPlane.MinLimit { get => _baseType.MinLimit; set => _baseType.MinLimit = value; }
+    double? IPlane.MaxLimit { get => _baseType.MaxLimit; set => _baseType.MaxLimit = value; }
+
+    private void MinLimitMap(object value)
+    {
+        var doubleValue = (double)value;
+        _baseType.MinLimit = double.IsNaN(doubleValue) ? null : doubleValue;
+    }
+
+    private void MaxLimitMap(object value)
+    {
+        var doubleValue = (double)value;
+        _baseType.MaxLimit = double.IsNaN(doubleValue) ? null : doubleValue;
+    }
 }
 
-[XamlClass(typeof(PolarAxis))]
+[XamlClass(typeof(PolarAxis), PropertyTypeOverride = "MinLimit{=}double{,}MaxLimit{=}double", PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap")]
 public partial class XamlPolarAxis : FrameworkElement, IPolarAxis
 {
     string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
+    double? IPlane.MinLimit { get => _baseType.MinLimit; set => _baseType.MinLimit = value; }
+    double? IPlane.MaxLimit { get => _baseType.MaxLimit; set => _baseType.MaxLimit = value; }
+
+    private void MinLimitMap(object value)
+    {
+        var doubleValue = (double)value;
+        _baseType.MinLimit = double.IsNaN(doubleValue) ? null : doubleValue;
+    }
+
+    private void MaxLimitMap(object value)
+    {
+        var doubleValue = (double)value;
+        _baseType.MaxLimit = double.IsNaN(doubleValue) ? null : doubleValue;
+    }
 }
 
-[XamlClass(typeof(DateTimeAxis), GenerateBaseTypeDeclaration = false)]
+[XamlClass(typeof(DateTimeAxis), PropertyTypeOverride = "MinLimit{=}double{,}MaxLimit{=}double", PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap", GenerateBaseTypeDeclaration = false)]
 public partial class XamlDateTimeAxis : FrameworkElement, ICartesianAxis
 {
     private readonly DateTimeAxis _baseType = new(TimeSpan.FromDays(1), date => date.ToString("d"));
@@ -64,9 +92,23 @@ public partial class XamlDateTimeAxis : FrameworkElement, ICartesianAxis
     private static readonly XamlProperty<Func<DateTime, string>> dateFormatter = new(null, XamlGeneration.OnDateTimeAxisDateFormatterChanged);
 
     string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
+    double? IPlane.MinLimit { get => _baseType.MinLimit; set => _baseType.MinLimit = value; }
+    double? IPlane.MaxLimit { get => _baseType.MaxLimit; set => _baseType.MaxLimit = value; }
+
+    private void MinLimitMap(object value)
+    {
+        var doubleValue = (double)value;
+        _baseType.MinLimit = double.IsNaN(doubleValue) ? null : doubleValue;
+    }
+
+    private void MaxLimitMap(object value)
+    {
+        var doubleValue = (double)value;
+        _baseType.MaxLimit = double.IsNaN(doubleValue) ? null : doubleValue;
+    }
 }
 
-[XamlClass(typeof(TimeSpanAxis), GenerateBaseTypeDeclaration = false)]
+[XamlClass(typeof(TimeSpanAxis), PropertyTypeOverride = "MinLimit{=}double{,}MaxLimit{=}double", PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap", GenerateBaseTypeDeclaration = false)]
 public partial class XamlTimeSpanAxis : FrameworkElement, ICartesianAxis
 {
     private readonly TimeSpanAxis _baseType = new(TimeSpan.FromMilliseconds(1), date => $"{date:fff}ms");
@@ -76,9 +118,23 @@ public partial class XamlTimeSpanAxis : FrameworkElement, ICartesianAxis
     private static readonly XamlProperty<Func<TimeSpan, string>> timeFormatter = new(null, XamlGeneration.OnTimeSpanAxisFormatterChanged);
 
     string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
+    double? IPlane.MinLimit { get => _baseType.MinLimit; set => _baseType.MinLimit = value; }
+    double? IPlane.MaxLimit { get => _baseType.MaxLimit; set => _baseType.MaxLimit = value; }
+
+    private void MinLimitMap(object value)
+    {
+        var doubleValue = (double)value;
+        _baseType.MinLimit = double.IsNaN(doubleValue) ? null : doubleValue;
+    }
+
+    private void MaxLimitMap(object value)
+    {
+        var doubleValue = (double)value;
+        _baseType.MaxLimit = double.IsNaN(doubleValue) ? null : doubleValue;
+    }
 }
 
-[XamlClass(typeof(LogarithmicAxis), GenerateBaseTypeDeclaration = false)]
+[XamlClass(typeof(LogarithmicAxis), PropertyTypeOverride = "MinLimit{=}double{,}MaxLimit{=}double", PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap", GenerateBaseTypeDeclaration = false)]
 public partial class XamlLogarithmicAxis : FrameworkElement, ICartesianAxis
 {
     private readonly LogarithmicAxis _baseType = new(10);
@@ -87,6 +143,20 @@ public partial class XamlLogarithmicAxis : FrameworkElement, ICartesianAxis
     private static readonly XamlProperty<double> logBase = new(10d, XamlGeneration.OnAxisLogBaseChanged);
 
     string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
+    double? IPlane.MinLimit { get => _baseType.MinLimit; set => _baseType.MinLimit = value; }
+    double? IPlane.MaxLimit { get => _baseType.MaxLimit; set => _baseType.MaxLimit = value; }
+
+    private void MinLimitMap(object value)
+    {
+        var doubleValue = (double)value;
+        _baseType.MinLimit = double.IsNaN(doubleValue) ? null : doubleValue;
+    }
+
+    private void MaxLimitMap(object value)
+    {
+        var doubleValue = (double)value;
+        _baseType.MaxLimit = double.IsNaN(doubleValue) ? null : doubleValue;
+    }
 }
 
 [XamlClass(typeof(DrawnLabelVisual), Map = typeof(LabelGeometry), MapPath = "DrawnLabel")]

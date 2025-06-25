@@ -48,7 +48,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI;
 public sealed partial class PieChart : UserControl, IPieChartView
 {
     private Chart? _core;
-    private MotionCanvas? _canvas;
+    private readonly MotionCanvas _canvas;
     private readonly ChartObserver _observe;
     private ThemeListener? _themeListener;
     private Theme? _chartTheme;
@@ -61,6 +61,9 @@ public sealed partial class PieChart : UserControl, IPieChartView
         LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeComponent();
+
+        var canvas = (MotionCanvas)FindName("motionCanvas");
+        _canvas = canvas;
 
         _observe = new ChartObserver(() => _core?.Update(), AddUIElement, RemoveUIElement)
             .Collection(nameof(Series))
@@ -667,12 +670,9 @@ public sealed partial class PieChart : UserControl, IPieChartView
     {
         LiveCharts.Configure(config => config.UseDefaults());
 
-        var canvas = (MotionCanvas)FindName("motionCanvas");
-        _canvas = canvas;
-
         if (_core is null)
         {
-            _core = new PieChartEngine(this, config => config.UseDefaults(), canvas.CanvasCore);
+            _core = new PieChartEngine(this, config => config.UseDefaults(), _canvas.CanvasCore);
 
             if (SyncContext != null)
                 _canvas.CanvasCore.Sync = SyncContext;

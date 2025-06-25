@@ -28,7 +28,9 @@ using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
 using LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
+using LiveChartsCore.SkiaSharpView.TypeConverters;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Markup;
 using SkiaSharp;
 
@@ -47,7 +49,7 @@ public abstract class BaseSkiaPaintExtention : MarkupExtension
     /// <summary>
     /// Gets or sets the stroke width.
     /// </summary>
-    public float StrokeWidth { get; set; } = 1f;
+    public double StrokeWidth { get; set; } = 1f;
 
     /// <summary>
     /// Gets or sets the stroke cap.
@@ -57,7 +59,7 @@ public abstract class BaseSkiaPaintExtention : MarkupExtension
     /// <summary>
     /// Gets or sets the stroke miter.
     /// </summary>
-    public float StrokeMiter { get; set; }
+    public double StrokeMiter { get; set; }
 
     /// <summary>
     /// Gets or sets the stroke join.
@@ -106,9 +108,9 @@ public abstract class BaseSkiaPaintExtention : MarkupExtension
     protected void MapProperties(SkiaPaint paint)
     {
         paint.IsAntialias = IsAntialias;
-        paint.StrokeThickness = StrokeWidth;
+        paint.StrokeThickness = (float)StrokeWidth;
         paint.StrokeCap = StrokeCap;
-        paint.StrokeMiter = StrokeMiter;
+        paint.StrokeMiter = (float)StrokeMiter;
         paint.StrokeJoin = StrokeJoin;
         paint.ImageFilter = ImageFilter;
         paint.PathEffect = PathEffect;
@@ -269,7 +271,7 @@ public class RadialGradientPaintExtension : BaseSkiaPaintExtention
     /// <summary>
     /// Gets or sets the radius.
     /// </summary>
-    public float Radius { get; set; } = 0.5f;
+    public double Radius { get; set; } = 0.5f;
 
     /// <summary>
     /// Gets or sets the colors positions separated by commas,
@@ -320,7 +322,7 @@ public class RadialGradientPaintExtension : BaseSkiaPaintExtention
             }
         }
 
-        var paint = new RadialGradientPaint([.. colors], center, Radius, colorPositions, TileMode);
+        var paint = new RadialGradientPaint([.. colors], center, (float)Radius, colorPositions, TileMode);
 
         MapProperties(paint);
 
@@ -477,7 +479,7 @@ public class DashedExtension : MarkupExtension
     /// <summary>
     /// Gets or sets the dash phase.
     /// </summary>
-    public float Phase { get; set; } = 0f;
+    public double Phase { get; set; } = 0f;
 
     /// <summary>
     /// ...
@@ -499,6 +501,127 @@ public class DashedExtension : MarkupExtension
             dashes.Count == 0
                 ? s_defaultDashes
                 : [.. dashes],
-            Phase);
+            (float)Phase);
+    }
+}
+
+/// <summary>
+/// 
+/// </summary>
+public class PaddingExtension : MarkupExtension
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public string Value { get; set; } = "0,0";
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="serviceProvider"></param>
+    /// <returns></returns>
+    protected override object ProvideValue(IXamlServiceProvider serviceProvider) =>
+        PaddingTypeConverter.ParsePadding(Value);
+}
+
+/// <summary>
+/// 
+/// </summary>
+public class MarginExtension : MarkupExtension
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public string Value { get; set; } = "0,0";
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="serviceProvider"></param>
+    /// <returns></returns>
+    protected override object ProvideValue(IXamlServiceProvider serviceProvider) =>
+        MarginTypeConverter.ParseMargin(Value);
+}
+
+/// <summary>
+/// 
+/// </summary>
+public class PointExtension : MarkupExtension
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public string Value { get; set; } = "0,0";
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="serviceProvider"></param>
+    /// <returns></returns>
+    protected override object ProvideValue(IXamlServiceProvider serviceProvider) =>
+        PointTypeConverter.ParsePoint(Value);
+}
+
+/// <summary>
+/// 
+/// </summary>
+public class ColorArrayExtension : MarkupExtension
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public string Values { get; set; } = "#000";
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="serviceProvider"></param>
+    /// <returns></returns>
+    protected override object ProvideValue(IXamlServiceProvider serviceProvider) =>
+        HexToLvcColorArrayTypeConverter.Parse(Values);
+}
+
+/// <summary>
+/// 
+/// </summary>
+public class ColorExtension : MarkupExtension
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public string Hex { get; set; } = "#00000000";
+
+    /// <summary>
+    /// ...
+    /// </summary>
+    protected override object? ProvideValue(IXamlServiceProvider serviceProvider)
+    {
+        LvcColor? response = LvcColor.TryParse(Hex, out var c)
+            ? c
+            : null;
+
+        return response;
+    }
+}
+
+/// <summary>
+/// 
+/// </summary>
+public class LimitsConverter : IValueConverter
+{
+    /// <inheritdoc/>
+    public object? Convert(object value, Type targetType, object parameter, string language)
+    {
+        return value is double d
+            ? d
+            : double.NaN;
+    }
+
+    /// <inheritdoc/>
+    public object? ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        return value is double d && !double.IsNaN(d)
+            ? d
+            : null;
     }
 }

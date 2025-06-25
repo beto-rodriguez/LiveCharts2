@@ -1,4 +1,5 @@
-﻿// The MIT License(MIT)
+﻿
+// The MIT License(MIT)
 //
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
 //
@@ -50,7 +51,7 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
     #region fields
 
     private Chart? _core;
-    private MotionCanvas? _canvas;
+    private readonly MotionCanvas _canvas;
     private readonly ChartObserver _observe;
     private bool _matchAxesScreenDataRatio;
     private ThemeListener? _themeListener;
@@ -64,7 +65,11 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
     public CartesianChart()
     {
         LiveCharts.Configure(config => config.UseDefaults());
+
         InitializeComponent();
+
+        var canvas = (MotionCanvas)FindName("motionCanvas");
+        _canvas = canvas;
 
         _observe = new ChartObserver(() => _core?.Update(), AddUIElement, RemoveUIElement)
             .Collection(nameof(Series))
@@ -753,13 +758,10 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
     {
         LiveCharts.Configure(config => config.UseDefaults());
 
-        var canvas = (MotionCanvas)FindName("motionCanvas");
-        _canvas = canvas;
-
         if (_core is null)
         {
             _core = new CartesianChartEngine(
-                this, config => config.UseDefaults(), canvas.CanvasCore);
+                this, config => config.UseDefaults(), _canvas.CanvasCore);
 
             OnMatchAxesScreenDataRatioChanged();
 
@@ -930,7 +932,8 @@ public sealed partial class CartesianChart : UserControl, ICartesianChartView
     }
 
     private static PropertyChangedCallback InitializeObserver(string propertyName) =>
-        (o, args) => ((CartesianChart)o)._observe[propertyName].Initialize(args.NewValue);
+        (o, args) =>
+            ((CartesianChart)o)._observe[propertyName].Initialize(args.NewValue);
 
     private void AddUIElement(object item)
     {
