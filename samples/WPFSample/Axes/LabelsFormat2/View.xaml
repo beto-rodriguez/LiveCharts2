@@ -33,7 +33,7 @@
             <lvc:AxesCollection>
                 <lvc:XamlAxis
                     AxisName="Sales"
-                    NamePadding="'0,15"
+                    NamePadding="0,15"
                     Labeler="{Binding Labeler}"
                     LabelsPaint="{lvc:SolidColorPaint
                         Color='#00f',

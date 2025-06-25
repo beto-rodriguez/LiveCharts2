@@ -14,7 +14,7 @@ public class ViewModel
 
     // base 10 log, change the base if you require it.
     // or use any custom scale the logic is the same.
-    public static double LogBase { get; set; } = 10;
+    public double LogBase { get; set; } = 10;
 
     public LogarithmicPoint[] Values { get; set; } = [
         new(1, 1),

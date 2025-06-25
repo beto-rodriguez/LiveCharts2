@@ -1,8 +1,9 @@
-﻿<UserControl x:Class="WPFSample.Axes.LabelsFormat.View"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Axes.LabelsFormat;assembly=ViewModelsSamples">
+﻿<UserControl
+    x:Class="WPFSample.Axes.LabelsFormat.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Axes.LabelsFormat;assembly=ViewModelsSamples">
 
     <UserControl.DataContext>
         <vms:ViewModel/>
@@ -32,7 +33,7 @@
             <lvc:AxesCollection>
                 <lvc:XamlAxis
                     AxisName="Sales"
-                    NamePadding="'0,15"
+                    NamePadding="0,15"
                     Labeler="{Binding Labeler}"
                     LabelsPaint="{lvc:SolidColorPaint
                         Color='#00f',

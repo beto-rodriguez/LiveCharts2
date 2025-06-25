@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml.Controls;
+﻿using LiveChartsCore.SkiaSharpView.WinUI;
+using Microsoft.UI.Xaml.Controls;
 
 namespace WinUISample.Axes.Paging;
 

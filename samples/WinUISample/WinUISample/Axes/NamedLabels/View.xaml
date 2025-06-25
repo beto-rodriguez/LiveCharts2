@@ -11,19 +11,30 @@
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <lvc:CartesianChart
-            Series="{Binding Series}"
-            XAxes="{Binding XAxes}"
-            YAxes="{Binding YAxes}"
-            TooltipPosition="Left"
-            TooltipTextPaint="{Binding TooltipTextPaint}"
-            TooltipBackgroundPaint="{Binding TooltipBackgroundPaint}"
-            TooltipTextSize="16">
-        </lvc:CartesianChart>
-    </Grid>
 
+    <lvc:CartesianChart
+        TooltipPosition="Left"
+        TooltipBackgroundPaint="{lvc:SolidColorPaint Color='#480032'}"
+        TooltipTextPaint="{lvc:SolidColorPaint Color='#F2F4FF', FontFamily='Courier New'}"
+        TooltipTextSize="16">
+
+        <lvc:CartesianChart.Series>
+            <lvc:XamlColumnSeries
+                SeriesName="Sales"
+                Values="{Binding Values1}"/>
+            <lvc:XamlLineSeries
+                SeriesName="Projected"
+                Values="{Binding Values2}"
+                Fill="{x:Null}"/>
+        </lvc:CartesianChart.Series>
+
+        <lvc:CartesianChart.XAxes>
+            <lvc:XamlAxis Labels="{Binding Labels}"/>
+        </lvc:CartesianChart.XAxes>
+
+        <lvc:CartesianChart.YAxes>
+            <lvc:XamlAxis Labeler="{Binding Labeler}"/>
+        </lvc:CartesianChart.YAxes>
+
+    </lvc:CartesianChart>
 </UserControl>

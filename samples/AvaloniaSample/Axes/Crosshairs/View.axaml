@@ -15,14 +15,9 @@
             <lvc:XamlLineSeries Values="{Binding Values}" />
         </lvc:CartesianChart.Series>
 
-        <!--
-        We need to use the {lvc:SolidColorPaint} extension as a workaround for:
-        https://github.com/AvaloniaUI/Avalonia/issues/12194#issuecomment-2988840983
-        -->
-
         <lvc:CartesianChart.XAxes>
             <lvc:XamlAxis
-                CrosshairLabelsBackground="#FF8C00"
+                CrosshairLabelsBackground="{lvc:Color '#FF8C00'}"
                 CrosshairLabelsPaint="{lvc:SolidColorPaint Color='#8B0000'}"
                 CrosshairPaint="{lvc:SolidColorPaint Color='#FF8C00'}"
                 Labeler="{Binding LabelFormatter}"/>
@@ -30,7 +25,7 @@
 
         <lvc:CartesianChart.YAxes>
             <lvc:XamlAxis
-                CrosshairLabelsBackground="#FF8C00"
+                CrosshairLabelsBackground="{lvc:Color '#FF8C00'}"
                 CrosshairLabelsPaint="{lvc:SolidColorPaint Color='#8B0000'}"
                 CrosshairPaint="{lvc:SolidColorPaint Color='#FF8C00'}"
                 CrosshairSnapEnabled="True"

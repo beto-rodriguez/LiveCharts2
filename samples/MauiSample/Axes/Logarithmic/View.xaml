@@ -20,7 +20,7 @@
 
         <lvc:CartesianChart.YAxes>
             <lvc:XamlLogarithmicAxis
-                LogBase="{x:Static vms:ViewModel.LogBase}"
+                LogBase="{Binding LogBase}"
                 SeparatorsPaint="#64b4b4b4"
                 SubseparatorsPaint="{lvc:SolidColorPaint
                     Color='#64b4b4b4',

@@ -1,16 +1,33 @@
-﻿<UserControl x:Class="WinUISample.Axes.Logarithmic.View"
-            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-            xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
-            xmlns:vms="using:ViewModelsSamples.Axes.Logarithmic"
-            mc:Ignorable="d">
+﻿<UserControl
+    x:Class="WinUISample.Axes.Logarithmic.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
+    xmlns:vms="using:ViewModelsSamples.Axes.Logarithmic"
+    xmlns:local="using:WinUISample.Axes.Logarithmic"
+    mc:Ignorable="d">
+
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <lvc:CartesianChart
-        Series="{Binding Series}"
-        YAxes="{Binding YAxes}">
+
+    <lvc:CartesianChart>
+
+        <lvc:CartesianChart.Series>
+            <local:LogarithmicSeries Values="{Binding Values}"/>
+        </lvc:CartesianChart.Series>
+
+        <lvc:CartesianChart.YAxes>
+            <lvc:XamlLogarithmicAxis
+                LogBase="{Binding LogBase}"
+                SeparatorsPaint="{lvc:SolidColorPaint Color='#64b4b4b4'}"
+                SubseparatorsPaint="{lvc:SolidColorPaint
+                    Color='#64b4b4b4',
+                    StrokeWidth=0.5}"
+                SubseparatorsCount="9"/>
+        </lvc:CartesianChart.YAxes>
+
     </lvc:CartesianChart>
 </UserControl>

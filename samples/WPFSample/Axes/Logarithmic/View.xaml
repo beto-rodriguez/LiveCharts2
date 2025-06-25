@@ -21,7 +21,7 @@
         <lvc:CartesianChart.YAxes>
             <lvc:AxesCollection>
                 <lvc:XamlLogarithmicAxis
-                    LogBase="{x:Static vms:ViewModel.LogBase}"
+                    LogBase="{Binding LogBase}"
                     SeparatorsPaint="#64b4b4b4"
                     SubseparatorsPaint="#64b4b4b4"
                     SubseparatorsCount="9"/>

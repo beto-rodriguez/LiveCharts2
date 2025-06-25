@@ -7,18 +7,46 @@
     xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
     xmlns:vms="using:ViewModelsSamples.Axes.MatchScale"
     mc:Ignorable="d">
+
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <Grid>
-        <lvc:CartesianChart
-            Series="{Binding Series}"
-            XAxes="{Binding XAxes}"
-            YAxes="{Binding YAxes}"
-            DrawMarginFrame="{Binding Frame}"
-            MatchAxesScreenDataRatio="True"
-            TooltipPosition="Hidden"
-            ZoomMode="Both">
-        </lvc:CartesianChart>
-    </Grid>
+
+    <lvc:CartesianChart
+        MatchAxesScreenDataRatio="True"
+        DrawMarginFrame="{lvc:Frame Stroke={lvc:SolidColorPaint Color='#64b4b4b4', StrokeWidth=2}}"
+        ZoomMode="Both"
+        TooltipPosition="Hidden">
+
+        <lvc:CartesianChart.Series>
+            <lvc:XamlLineSeries
+                Values="{Binding Values}"
+                Stroke="{lvc:SolidColorPaint Color='#2196f3', StrokeWidth=4}"
+                Fill="{x:Null}"
+                GeometryStroke="{x:Null}"
+                GeometryFill="{x:Null}"/>
+        </lvc:CartesianChart.Series>
+
+        <!--
+            we are forcing the step to 0.1 to highlight that
+            both axes use the same scale
+        -->
+
+        <lvc:CartesianChart.XAxes>
+            <lvc:XamlAxis
+                AxisName="XAxis"
+                SeparatorsPaint="{lvc:SolidColorPaint Color='#64b4b4b4'}"
+                MinStep="0.1"
+                ForceStepToMin="True"/>
+        </lvc:CartesianChart.XAxes>
+
+        <lvc:CartesianChart.YAxes>
+            <lvc:XamlAxis
+                AxisName="YAxis"
+                SeparatorsPaint="{lvc:SolidColorPaint Color='#64b4b4b4'}"
+                MinStep="0.1"
+                ForceStepToMin="True"/>
+        </lvc:CartesianChart.YAxes>
+
+    </lvc:CartesianChart>
 </UserControl>
