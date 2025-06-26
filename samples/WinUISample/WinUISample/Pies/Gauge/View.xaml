@@ -11,6 +11,7 @@
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300"/>
@@ -35,12 +36,11 @@
             <TextBlock Text="Background offset radius"></TextBlock>
             <Slider Width="300" Minimum="0" Maximum="50" Value="{Binding BackgroundOffsetRadius, Mode=TwoWay}" />
         </StackPanel>
-        <lvc:PieChart
-            Grid.Column="1"
-            Series="{Binding Series}"
-            MaxValue="{Binding GaugeTotal}"
-            MaxAngle="{Binding MaxAngle}"
-            InitialRotation="{Binding InitialRotation}"/>
+        <lvc:PieChart Grid.Column="1"
+                      Series="{Binding Series}"
+                      MaxValue="{Binding GaugeTotal}"
+                      MaxAngle="{Binding MaxAngle}"
+                      InitialRotation="{Binding InitialRotation}"/>
     </Grid>
 
 </UserControl>

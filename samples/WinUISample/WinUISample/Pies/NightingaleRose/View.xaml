@@ -11,8 +11,17 @@
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <Grid>
-        <lvc:PieChart Series="{Binding Series}" ></lvc:PieChart>
-    </Grid>
+
+    <lvc:PieChart SeriesSource="{Binding Data}">
+        <lvc:PieChart.SeriesTemplate>
+            <DataTemplate>
+                <lvc:XamlPieSeries
+                    SeriesName="{Binding Name}"
+                    Values="{Binding Values}"
+                    OuterRadiusOffset="{Binding Offset}"
+                    InnerRadius="50"/>
+            </DataTemplate>
+        </lvc:PieChart.SeriesTemplate>
+    </lvc:PieChart>
 
 </UserControl>
