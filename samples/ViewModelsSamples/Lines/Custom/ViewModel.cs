@@ -1,4 +1,6 @@
-﻿namespace ViewModelsSamples.Lines.Custom;
+﻿using LiveChartsCore.Drawing;
+
+namespace ViewModelsSamples.Lines.Custom;
 
 public class ViewModel
 {
@@ -13,4 +15,7 @@ public class ViewModel
 
     public double[] Values4 { get; set; } =
         [4, 5, 2, 4, 3, 2, 1];
+
+    public string PinPath { get; set; } =
+        SVGPoints.Pin;
 }

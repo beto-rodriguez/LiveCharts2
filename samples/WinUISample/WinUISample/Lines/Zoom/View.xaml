@@ -11,8 +11,11 @@
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
+
     <lvc:CartesianChart
-        Series="{Binding SeriesCollection}"
         ZoomMode="X"><!-- mark -->
+        <lvc:CartesianChart.Series>
+            <lvc:XamlLineSeries Values="{Binding Values}"/>
+        </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 </UserControl>

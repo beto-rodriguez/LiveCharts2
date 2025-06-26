@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
     xmlns:vms="clr-namespace:ViewModelsSamples.Lines.Custom;assembly=ViewModelsSamples"
-    xmlns:svg="clr-namespace:LiveChartsCore.Drawing;assembly=LiveChartsCore"
     xmlns:draw="clr-namespace:LiveChartsCore.SkiaSharpView.Drawing.Geometries;assembly=LiveChartsCore.SkiaSharpView"
     xmlns:local="clr-namespace:WPFSample.Lines.Custom">
 
@@ -33,7 +32,7 @@
                 the VariableSVGPathGeometry can change the drawn path at runtime
                 -->
                 <local:CustomVariableSVGPathLineSeries
-                    GeometrySvg="{x:Static svg:SVGPoints.Pin}"
+                    GeometrySvg="{Binding PinPath}"
                     Values="{Binding Values3}"
                     Fill="{x:Null}"
                     GeometrySize="20"/>

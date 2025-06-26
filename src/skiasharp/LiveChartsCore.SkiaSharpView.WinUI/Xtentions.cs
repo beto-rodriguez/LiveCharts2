@@ -612,6 +612,23 @@ public class ColorExtension : MarkupExtension
 /// <summary>
 /// 
 /// </summary>
+public class FloatExtension : MarkupExtension
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public string Value { get; set; } = "0";
+
+    /// <summary>
+    /// ...
+    /// </summary>
+    protected override object? ProvideValue(IXamlServiceProvider serviceProvider) =>
+        float.TryParse(Value, out var value) ? value : 0f;
+}
+
+/// <summary>
+/// 
+/// </summary>
 public class LimitsConverter : IValueConverter
 {
     /// <inheritdoc/>

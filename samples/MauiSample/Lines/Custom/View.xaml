@@ -5,7 +5,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
     xmlns:vms="clr-namespace:ViewModelsSamples.Lines.Custom;assembly=ViewModelsSamples"
-    xmlns:svg="clr-namespace:LiveChartsCore.Drawing;assembly=LiveChartsCore"
     xmlns:draw="clr-namespace:LiveChartsCore.SkiaSharpView.Drawing.Geometries;assembly=LiveChartsCore.SkiaSharpView">
 
     <ContentPage.BindingContext>
@@ -39,7 +38,7 @@
             -->
             <lvc:XamlLineSeries
                 x:TypeArguments="x:Double, draw:VariableSVGPathGeometry"
-                GeometrySvg="{Static svg:SVGPoints.Pin}"
+                GeometrySvg="{Binding PinPath}"
                 Values="{Binding Values3}"
                 Fill="{x:Null}"
                 GeometrySize="20"/>
