@@ -11,11 +11,16 @@
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <Grid>
-        <lvc:CartesianChart
-            SyncContext="{Binding Sync}"
-            Series="{Binding Series}">
-        </lvc:CartesianChart>
-    </Grid>
+
+    <lvc:CartesianChart
+        SyncContext="{Binding Sync}">
+        <lvc:CartesianChart.Series>
+            <lvc:XamlLineSeries
+                Values="{Binding Values}"
+                GeometryFill="{x:Null}"
+                GeometryStroke="{x:Null}"
+                LineSmoothness="0"/>
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
 
 </UserControl>

@@ -6,13 +6,20 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
     xmlns:vms="using:ViewModelsSamples.General.UserDefinedTypes"
+    xmlns:local="using:WinUISample.General.UserDefinedTypes"
     mc:Ignorable="d">
 
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <Grid>
-        <lvc:CartesianChart Series="{Binding Series}"></lvc:CartesianChart>
-    </Grid>
+
+    <lvc:CartesianChart>
+        <lvc:CartesianChart.Series>
+            <local:CustomCityLineSeries
+                SeriesName="Population"
+                Values="{Binding Values}"
+                YToolTipLabelFormatter="{Binding TooltipFormatter}"/>
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
 
 </UserControl>

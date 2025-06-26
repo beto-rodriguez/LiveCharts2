@@ -166,8 +166,21 @@ public partial class XamlDrawnLabelVisual : FrameworkElement, IChartElement, IIn
     private LabelGeometry? DrawnLabel => (LabelGeometry?)_baseType.DrawnElement;
 }
 
-[XamlClass(typeof(RectangularSection))]
-public partial class XamlRectangularSection : FrameworkElement, IChartElement { }
+[XamlClass(typeof(RectangularSection), PropertyTypeOverride = "Xi{=}double{,}Xj{=}double", PropertyChangeMap = "Xi{=}XiMap{,}Xj{=}XjMap")]
+public partial class XamlRectangularSection : FrameworkElement, IChartElement
+{
+    private void XiMap(object value)
+    {
+        var doubleValue = (double)value;
+        _baseType.Xi = double.IsNaN(doubleValue) ? null : doubleValue;
+    }
+
+    private void XjMap(object value)
+    {
+        var doubleValue = (double)value;
+        _baseType.Xj = double.IsNaN(doubleValue) ? null : doubleValue;
+    }
+}
 
 [XamlClass(typeof(ColumnSeries<,,>), TVisual = typeof(RoundedRectangleGeometry))]
 public partial class XamlColumnSeries<TModel, TVisual, TLabel> : XamlSeries, IBarSeries, IInternalSeries

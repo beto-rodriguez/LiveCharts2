@@ -11,13 +11,19 @@
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <Grid>
-        <lvc:CartesianChart Series="{Binding Series}" LegendPosition="Right" >
-            <!-- mark -untilCloses CartesianChart.Legend -->
-            <lvc:CartesianChart.Legend>
-                <vms:CustomLegend></vms:CustomLegend>
-            </lvc:CartesianChart.Legend>
-        </lvc:CartesianChart>
-    </Grid>
+    
+    <lvc:CartesianChart LegendPosition="Right">
+        <!-- mark -untilCloses CartesianChart.Legend -->
+        <lvc:CartesianChart.Legend>
+            <vms:CustomLegend></vms:CustomLegend>
+        </lvc:CartesianChart.Legend>
+        
+        <lvc:CartesianChart.Series>
+            <lvc:XamlColumnSeries
+                SeriesName="Roger" Values="{Binding RogerValues}"/>
+            <lvc:XamlColumnSeries
+                SeriesName="Susan" Values="{Binding SusanValues}" />
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
 
 </UserControl>

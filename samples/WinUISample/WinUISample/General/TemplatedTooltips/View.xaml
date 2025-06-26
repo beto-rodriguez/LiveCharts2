@@ -6,18 +6,21 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
     xmlns:vms="using:ViewModelsSamples.General.TemplatedTooltips"
+    xmlns:local="using:WinUISample.General.TemplatedTooltips"
     mc:Ignorable="d">
 
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <Grid>
-        <lvc:CartesianChart Series="{Binding Series}" TooltipPosition="Top" >
-            <!-- mark -untilCloses CartesianChart.Tooltip -->
-            <lvc:CartesianChart.Tooltip>
-                <vms:CustomTooltip></vms:CustomTooltip>
-            </lvc:CartesianChart.Tooltip>
-        </lvc:CartesianChart>
-    </Grid>
+
+    <lvc:CartesianChart>
+        <lvc:CartesianChart.Tooltip>
+            <vms:CustomTooltip></vms:CustomTooltip>
+        </lvc:CartesianChart.Tooltip>
+        <lvc:CartesianChart.Series>
+            <local:CustomGeometryPointColumnSeries
+                    Values="{Binding Values}"/>
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
 
 </UserControl>

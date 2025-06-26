@@ -411,8 +411,13 @@ public class FromSharedAxesExtension : MarkupExtension
 /// <summary>
 /// The drop shadow extension.
 /// </summary>
-public class ShadowExtension(string stringFormat) : MarkupExtension
+public class ShadowExtension : MarkupExtension
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    public string Value { get; set; } = "0,0,4,4,#000";
+
     /// <summary>
     /// ...
     /// </summary>
@@ -421,9 +426,9 @@ public class ShadowExtension(string stringFormat) : MarkupExtension
         float Dx = 0, Dy = 0, SigmaX = 0, SigmaY = 0;
         var Color = "#000";
 
-        if (stringFormat is not null)
+        if (Value is not null)
         {
-            var split = stringFormat.Split(',');
+            var split = Value.Split(',');
 
             if (split.Length == 5)
             {

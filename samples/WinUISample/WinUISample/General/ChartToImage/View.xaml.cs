@@ -18,7 +18,6 @@ public sealed partial class View : UserControl
     {
         CreateImageFromCartesianControl();
         CreateImageFromPieControl();
-        CreateImageFromGeoControl();
     }
 
     private void CreateImageFromCartesianControl()
@@ -34,12 +33,5 @@ public sealed partial class View : UserControl
         var chartControl = pieChart;
         var skChart = new SKPieChart(chartControl) { Width = 900, Height = 600, };
         skChart.SaveImage("PieImageFromControl.png");
-    }
-
-    private void CreateImageFromGeoControl()
-    {
-        var chartControl = geoChart;
-        var skChart = new SKGeoMap(chartControl) { Width = 900, Height = 600, };
-        skChart.SaveImage("MapImageFromControl.png");
     }
 }
