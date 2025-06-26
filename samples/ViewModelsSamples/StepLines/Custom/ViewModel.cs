@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using LiveChartsCore.Drawing;
 
 namespace ViewModelsSamples.StepLines.Custom;
 
@@ -15,4 +16,7 @@ public partial class ViewModel : ObservableObject
 
     public double[] Values4 { get; set; } =
         [4, 5, 2, 4, 3, 2, 1];
+
+    public string PinPath { get; set; } =
+        SVGPoints.Pin;
 }

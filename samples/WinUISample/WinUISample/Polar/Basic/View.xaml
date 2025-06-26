@@ -6,17 +6,39 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
     xmlns:vms="using:ViewModelsSamples.Polar.Basic"
+    xmlns:local="using:WinUISample.Polar.Basic"
     mc:Ignorable="d">
 
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <Grid>
-        <lvc:PolarChart
-            Series="{Binding Series}"
-            AngleAxes="{Binding AngleAxes}"
-            RadiusAxes="{Binding RadialAxes}"
-            Title="{Binding Title}">
-        </lvc:PolarChart>
-    </Grid>
+
+    <lvc:PolarChart>
+        <lvc:PolarChart.Title>
+            <lvc:XamlDrawnLabelVisual
+            Text="My chart title"
+            Paint="{lvc:SolidColorPaint Color='#303030'}"
+            TextSize="{lvc:Float Value='25'}"
+            Padding="{lvc:Padding Value='15'}"/>
+        </lvc:PolarChart.Title>
+        <lvc:PolarChart.Series>
+            <lvc:XamlPolarLineSeries
+                Values="{Binding Values}"
+                ShowDataLabels="True"
+                GeometrySize="15"
+                DataLabelsSize="8"
+                DataLabelsPosition="Middle"
+                DataLabelsRotation="{Binding CotangentAngle}"
+                IsClosed="True"/>
+        </lvc:PolarChart.Series>
+        <lvc:PolarChart.RadiusAxes>
+            <lvc:XamlPolarAxis
+                LabelsAngle="-60"
+                MaxLimit="30"/>
+        </lvc:PolarChart.RadiusAxes>
+        <lvc:PolarChart.AngleAxes>
+            <lvc:XamlPolarAxis
+                LabelsRotation="{Binding TangentAngle}"/>
+        </lvc:PolarChart.AngleAxes>
+    </lvc:PolarChart>
 </UserControl>

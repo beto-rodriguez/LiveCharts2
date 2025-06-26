@@ -37,7 +37,7 @@
             <lvc:XamlScatterSeries
                 x:TypeArguments="d:ObservablePoint, draw:VariableSVGPathGeometry"
                 Values="{Binding Values2}"
-                GeometrySvg="{Static svg:SVGPoints.Pin}"
+                GeometrySvg="{Binding PinPath}"
                 GeometrySize="40"/>
 
             <!--

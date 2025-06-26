@@ -1,15 +1,18 @@
-﻿<UserControl x:Class="WPFSample.Scatter.Custom.View"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Scatter.Custom;assembly=ViewModelsSamples"
-             xmlns:svg="clr-namespace:LiveChartsCore.Drawing;assembly=LiveChartsCore"
-             xmlns:draw="clr-namespace:LiveChartsCore.SkiaSharpView.Drawing.Geometries;assembly=LiveChartsCore.SkiaSharpView"
-             xmlns:d="clr-namespace:LiveChartsCore.Defaults;assembly=LiveChartsCore"
-             xmlns:local="clr-namespace:WPFSample.Scatter.Custom">
+﻿<UserControl
+    x:Class="WPFSample.Scatter.Custom.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Scatter.Custom;assembly=ViewModelsSamples"
+    xmlns:svg="clr-namespace:LiveChartsCore.Drawing;assembly=LiveChartsCore"
+    xmlns:draw="clr-namespace:LiveChartsCore.SkiaSharpView.Drawing.Geometries;assembly=LiveChartsCore.SkiaSharpView"
+    xmlns:d="clr-namespace:LiveChartsCore.Defaults;assembly=LiveChartsCore"
+    xmlns:local="clr-namespace:WPFSample.Scatter.Custom">
+
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
+
     <lvc:CartesianChart>
         <lvc:CartesianChart.Series>
             <lvc:SeriesCollection>
@@ -26,7 +29,7 @@
                 -->
                 <local:SvgScatterSeries
                     Values="{Binding Values2}"
-                    GeometrySvg="{x:Static svg:SVGPoints.Pin}"
+                    GeometrySvg="{Binding PinPath}"
                     GeometrySize="40"/>
                 <!--
                 Finally you can also use SkiaSharp to draw your own geometry

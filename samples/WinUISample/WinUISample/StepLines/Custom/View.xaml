@@ -6,13 +6,43 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
     xmlns:vms="using:ViewModelsSamples.StepLines.Custom"
+    xmlns:local="using:WinUISample.StepLines.Custom"
     mc:Ignorable="d">
 
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <Grid>
-        <lvc:CartesianChart Series="{Binding Series}"></lvc:CartesianChart>
-    </Grid>
+
+    <lvc:CartesianChart>
+        <lvc:CartesianChart.Series>
+            <lvc:XamlStepLineSeries
+                Values="{Binding Values1}"
+                Fill="{x:Null}"
+                GeometrySize="20"/>
+            <!--
+            The StarStepLineSeries is a step line series that draws a star shape.
+            -->
+            <local:StarStepLineSeries
+                Values="{Binding Values2}"
+                Fill="{x:Null}"
+                GeometrySize="20"/>
+            <!--
+            You can also use SVG paths to draw the geometry
+            the VariableSVGPathGeometry can change the drawn path at runtime
+            -->
+            <local:SvgStepLineSeries
+                GeometrySvg="{Binding PinPath}"
+                Values="{Binding Values3}"
+                Fill="{x:Null}"
+                GeometrySize="20"/>
+            <!--
+            Finally you can also use SkiaSharp to draw your own geometry
+            -->
+            <local:MyGeometryStepLineSeries
+                Values="{Binding Values4}"
+                Fill="{x:Null}"
+                GeometrySize="20"/>
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
 
 </UserControl>

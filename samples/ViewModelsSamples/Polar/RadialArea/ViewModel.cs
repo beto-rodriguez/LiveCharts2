@@ -1,4 +1,6 @@
-﻿namespace ViewModelsSamples.Polar.RadialArea;
+﻿using LiveChartsCore;
+
+namespace ViewModelsSamples.Polar.RadialArea;
 
 public class ViewModel
 {
@@ -10,4 +12,7 @@ public class ViewModel
 
     public string[] Labels { get; set; } =
         ["first", "second", "third", "forth", "fifth"];
+
+    public double TangentAngle { get; set; } =
+        LiveCharts.TangentAngle;
 }

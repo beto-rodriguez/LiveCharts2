@@ -30,7 +30,7 @@
 
         <lvc:PolarChart.AngleAxes>
             <lvc:XamlPolarAxis
-                LabelsRotation="{x:Static c:LiveCharts.TangentAngle}"
+                LabelsRotation="{Binding TangentAngle}"
                 Labels="{Binding Labels}"/>
         </lvc:PolarChart.AngleAxes>
 
