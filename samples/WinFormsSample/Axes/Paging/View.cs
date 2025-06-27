@@ -1,27 +1,38 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.WinForms;
-using ViewModelsSamples.Axes.Paging;
+using SkiaSharp;
+
+#pragma warning disable IDE1006 // Naming Styles
 
 namespace WinFormsSample.Axes.Paging;
 
 public partial class View : UserControl
 {
     private readonly CartesianChart cartesianChart;
+    private readonly Axis xAxis;
+    private readonly int[] values;
 
     public View()
     {
         InitializeComponent();
         Size = new System.Drawing.Size(100, 100);
 
-        var viewModel = new ViewModel();
+        values = Fetch();
+        xAxis = new Axis();
+
+        var series = new ISeries[]
+        {
+            new ColumnSeries<int> { Values = values }
+        };
 
         cartesianChart = new CartesianChart
         {
-            Series = viewModel.Series,
-            XAxes = viewModel.XAxes,
+            Series = series,
+            XAxes = [xAxis],
             ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.X,
-
-            // out of livecharts properties...
             Location = new System.Drawing.Point(0, 50),
             Size = new System.Drawing.Size(100, 50),
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
@@ -29,20 +40,42 @@ public partial class View : UserControl
 
         Controls.Add(cartesianChart);
 
-        var b1 = new Button { Text = "Go to page 1", Location = new System.Drawing.Point(0, 0) };
-        b1.Click += (object sender, System.EventArgs e) => viewModel.GoToPage1();
-        Controls.Add(b1);
+        var panel = new FlowLayoutPanel { Dock = DockStyle.Top, Height = 50 };
+        var btn1 = new Button { Text = "Page 1" };
+        var btn2 = new Button { Text = "Page 2" };
+        var btn3 = new Button { Text = "Page 3" };
+        var btnClear = new Button { Text = "Clear" };
+        btn1.Click += (s, e) => GoToPage(0);
+        btn2.Click += (s, e) => GoToPage(1);
+        btn3.Click += (s, e) => GoToPage(2);
+        btnClear.Click += (s, e) => SeeAll();
+        panel.Controls.AddRange([btn1, btn2, btn3, btnClear]);
+        Controls.Add(panel);
+    }
 
-        var b2 = new Button { Text = "Go to page 2", Location = new System.Drawing.Point(80, 0) };
-        b2.Click += (object sender, System.EventArgs e) => viewModel.GoToPage2();
-        Controls.Add(b2);
+    private void GoToPage(int page)
+    {
+        if (page == 0) { xAxis.MinLimit = -0.5; xAxis.MaxLimit = 10.5; }
+        else if (page == 1) { xAxis.MinLimit = 9.5; xAxis.MaxLimit = 20.5; }
+        else if (page == 2) { xAxis.MinLimit = 19.5; xAxis.MaxLimit = 30.5; }
+    }
 
-        var b3 = new Button { Text = "Go to page 3", Location = new System.Drawing.Point(160, 0) };
-        b3.Click += (object sender, System.EventArgs e) => viewModel.GoToPage3();
-        Controls.Add(b3);
+    private void SeeAll()
+    {
+        xAxis.MinLimit = null;
+        xAxis.MaxLimit = null;
+    }
 
-        var b4 = new Button { Text = "Clear", Location = new System.Drawing.Point(24, 0) };
-        b4.Click += (object sender, System.EventArgs e) => viewModel.SeeAll();
-        Controls.Add(b4);
+    private static int[] Fetch()
+    {
+        var random = new Random();
+        var trend = 100;
+        var values = new System.Collections.Generic.List<int>();
+        for (var i = 0; i < 100; i++)
+        {
+            trend += random.Next(-30, 50);
+            values.Add(trend);
+        }
+        return [.. values];
     }
 }

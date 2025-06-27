@@ -1,6 +1,10 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.WinForms;
-using ViewModelsSamples.Axes.CustomSeparatorsInterval;
+
+#pragma warning disable IDE1006 // Naming Styles
 
 namespace WinFormsSample.Axes.CustomSeparatorsInterval;
 
@@ -13,14 +17,23 @@ public partial class View : UserControl
         InitializeComponent();
         Size = new System.Drawing.Size(50, 50);
 
-        var viewModel = new ViewModel();
+        var values = new int[] { 10, 55, 45, 68, 60, 70, 75, 78 };
+        var customSeparators = new double[] { 0, 10, 25, 50, 100 };
+
+        var series = new ISeries[]
+        {
+            new LineSeries<int> { Values = values }
+        };
+
+        var yAxis = new Axis
+        {
+            CustomSeparators = customSeparators
+        };
 
         cartesianChart = new CartesianChart
         {
-            Series = viewModel.Series,
-            YAxes = viewModel.YAxes,
-
-            // out of livecharts properties...
+            Series = series,
+            YAxes = [yAxis],
             Location = new System.Drawing.Point(0, 0),
             Size = new System.Drawing.Size(50, 50),
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
