@@ -23,7 +23,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
@@ -38,8 +37,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms;
 /// <inheritdoc cref="IPieChartView" />
 public class PieChart : Chart, IPieChartView
 {
-    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-    private IEnumerable<ISeries> _series = [];
+    private ICollection<ISeries> _series = [];
     private bool _isClockwise = true;
     private double _initialRotation;
     private double _maxAngle = 360;
@@ -59,13 +57,11 @@ public class PieChart : Chart, IPieChartView
     public PieChart(IChartTooltip? tooltip = null, IChartLegend? legend = null)
         : base(tooltip, legend)
     {
-        _seriesObserver = new CollectionDeepObserver<ISeries>(
-           (object? sender, NotifyCollectionChangedEventArgs e) => OnPropertyChanged(),
-           (object? sender, PropertyChangedEventArgs e) => OnPropertyChanged(),
-           true);
+        _ = Observe
+           .Collection(nameof(Series));
 
         Series = new ObservableCollection<ISeries>();
-        VisualElements = new ObservableCollection<ChartElement>();
+        VisualElements = new ObservableCollection<IChartElement>();
 
         var c = Controls[0].Controls[0];
         c.MouseDown += OnMouseDown;
@@ -76,16 +72,10 @@ public class PieChart : Chart, IPieChartView
 
     /// <inheritdoc cref="IPieChartView.Series" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public IEnumerable<ISeries> Series
+    public ICollection<ISeries> Series
     {
         get => _series;
-        set
-        {
-            _seriesObserver?.Dispose(_series);
-            _seriesObserver?.Initialize(value);
-            _series = value;
-            OnPropertyChanged();
-        }
+        set { _series = value; Observe[nameof(Series)].Initialize(value); }
     }
 
     /// <inheritdoc cref="IPieChartView.IsClockwise" />

@@ -36,8 +36,8 @@ namespace LiveChartsCore.Kernel.Observers;
 /// <param name="removeFromUI">A delegate that removes an element from the UI.</param>
 public class ChartObserver(
     Action updateChart,
-    Action<object> addToUI,
-    Action<object> removeFromUI)
+    Action<object>? addToUI = null,
+    Action<object>? removeFromUI = null)
         : Dictionary<string, IObserver>
 {
     /// <summary>

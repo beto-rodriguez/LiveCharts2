@@ -23,7 +23,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
@@ -38,15 +37,11 @@ namespace LiveChartsCore.SkiaSharpView.WinForms;
 /// <inheritdoc cref="ICartesianChartView" />
 public class CartesianChart : Chart, ICartesianChartView
 {
-    private readonly CollectionDeepObserver<ISeries> _seriesObserver;
-    private readonly CollectionDeepObserver<ICartesianAxis> _xObserver;
-    private readonly CollectionDeepObserver<ICartesianAxis> _yObserver;
-    private readonly CollectionDeepObserver<CoreSection> _sectionsObserver;
-    private IEnumerable<ISeries> _series = [];
-    private IEnumerable<ICartesianAxis> _xAxes = new List<Axis> { new() };
-    private IEnumerable<ICartesianAxis> _yAxes = new List<Axis> { new() };
-    private IEnumerable<CoreSection> _sections = [];
-    private CoreDrawMarginFrame? _drawMarginFrame;
+    private ICollection<ISeries> _series = [];
+    private ICollection<ICartesianAxis> _xAxes = [];
+    private ICollection<ICartesianAxis> _yAxes = [];
+    private ICollection<IChartElement> _sections = [];
+    private IChartElement? _drawMarginFrame;
     private FindingStrategy _findingStrategy = LiveCharts.DefaultSettings.FindingStrategy;
     private bool _matchAxesScreenDataRatio;
 
@@ -63,22 +58,18 @@ public class CartesianChart : Chart, ICartesianChartView
     public CartesianChart(IChartTooltip? tooltip = null, IChartLegend? legend = null)
         : base(tooltip, legend)
     {
-        _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _xObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _sectionsObserver = new CollectionDeepObserver<CoreSection>(
-            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+        _ = Observe
+            .Collection(nameof(Series))
+            .Collection(nameof(XAxes))
+            .Collection(nameof(YAxes))
+            .Collection(nameof(Sections))
+            .Property(nameof(DrawMarginFrame));
 
-        XAxes =
-            [
-                LiveCharts.DefaultSettings.GetProvider().GetDefaultCartesianAxis()
-            ];
-        YAxes =
-            [
-                LiveCharts.DefaultSettings.GetProvider().GetDefaultCartesianAxis()
-            ];
+        XAxes = new ObservableCollection<ICartesianAxis>();
+        YAxes = new ObservableCollection<ICartesianAxis>();
         Series = new ObservableCollection<ISeries>();
-        VisualElements = new ObservableCollection<ChartElement>();
+        VisualElements = new ObservableCollection<IChartElement>();
+        Sections = new ObservableCollection<IChartElement>();
 
         var c = Controls[0].Controls[0];
 
@@ -92,70 +83,42 @@ public class CartesianChart : Chart, ICartesianChartView
 
     /// <inheritdoc cref="ICartesianChartView.Series" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public IEnumerable<ISeries> Series
+    public ICollection<ISeries> Series
     {
         get => _series;
-        set
-        {
-            _seriesObserver?.Dispose(_series);
-            _seriesObserver?.Initialize(value);
-            _series = value;
-            OnPropertyChanged();
-        }
+        set { _series = value; Observe[nameof(Series)].Initialize(value); }
     }
 
     /// <inheritdoc cref="ICartesianChartView.XAxes" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public IEnumerable<ICartesianAxis> XAxes
+    public ICollection<ICartesianAxis> XAxes
     {
         get => _xAxes;
-        set
-        {
-            _xObserver?.Dispose(_xAxes);
-            _xObserver?.Initialize(value);
-            _xAxes = value;
-            OnPropertyChanged();
-        }
+        set { _xAxes = value; Observe[nameof(XAxes)].Initialize(value); }
     }
 
     /// <inheritdoc cref="ICartesianChartView.YAxes" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public IEnumerable<ICartesianAxis> YAxes
+    public ICollection<ICartesianAxis> YAxes
     {
         get => _yAxes;
-        set
-        {
-            _yObserver?.Dispose(_yAxes);
-            _yObserver?.Initialize(value);
-            _yAxes = value;
-            OnPropertyChanged();
-        }
+        set { _yAxes = value; Observe[nameof(YAxes)].Initialize(value); }
     }
 
     /// <inheritdoc cref="ICartesianChartView.Sections" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public IEnumerable<CoreSection> Sections
+    public ICollection<IChartElement> Sections
     {
         get => _sections;
-        set
-        {
-            _sectionsObserver?.Dispose(_sections);
-            _sectionsObserver?.Initialize(value);
-            _sections = value;
-            OnPropertyChanged();
-        }
+        set { _sections = value; Observe[nameof(Sections)].Initialize(value); }
     }
 
     /// <inheritdoc cref="ICartesianChartView.DrawMarginFrame" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public CoreDrawMarginFrame? DrawMarginFrame
+    public IChartElement? DrawMarginFrame
     {
         get => _drawMarginFrame;
-        set
-        {
-            _drawMarginFrame = value;
-            OnPropertyChanged();
-        }
+        set { _drawMarginFrame = value; Observe[nameof(DrawMarginFrame)].Initialize(value); ; }
     }
 
     /// <inheritdoc cref="ICartesianChartView.ZoomMode" />
@@ -239,12 +202,6 @@ public class CartesianChart : Chart, ICartesianChartView
             ? throw new Exception("core not found")
             : cc.VisualElements.SelectMany(visual => ((VisualElement)visual).IsHitBy(core, new(point)));
     }
-
-    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
-        OnPropertyChanged();
-
-    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e) =>
-        OnPropertyChanged();
 
     private void OnMouseWheel(object? sender, MouseEventArgs e)
     {

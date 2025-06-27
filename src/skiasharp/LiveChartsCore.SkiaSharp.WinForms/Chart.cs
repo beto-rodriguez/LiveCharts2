@@ -22,13 +22,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
+using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
@@ -65,8 +66,7 @@ public abstract class Chart : UserControl, IChartView
     private Margin? _drawMargin = null;
     private TooltipPosition _tooltipPosition = LiveCharts.DefaultSettings.TooltipPosition;
     private IChartElement? _title;
-    private readonly CollectionDeepObserver<ChartElement> _visualsObserver;
-    private IEnumerable<ChartElement> _visuals = [];
+    private ICollection<IChartElement> _visuals = [];
     private Paint? _legendTextPaint = (Paint?)LiveCharts.DefaultSettings.LegendTextPaint;
     private Paint? _legendBackgroundPaint = (Paint?)LiveCharts.DefaultSettings.LegendBackgroundPaint;
     private double _legendTextSize = LiveCharts.DefaultSettings.LegendTextSize;
@@ -110,8 +110,9 @@ public abstract class Chart : UserControl, IChartView
 
         InitializeCore();
 
-        _visualsObserver = new CollectionDeepObserver<ChartElement>(
-            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
+        Observe = new ChartObserver(() => core?.Update())
+            .Collection(nameof(VisualElements))
+            .Property(nameof(Title));
 
         if (core is null) throw new Exception("Core not found!");
         core.Measuring += OnCoreMeasuring;
@@ -124,6 +125,11 @@ public abstract class Chart : UserControl, IChartView
 
         Load += Chart_Load;
     }
+
+    /// <summary>
+    /// Gets the observer responsible for monitoring changes to the chart's state or data.
+    /// </summary>
+    protected ChartObserver Observe { get; }
 
     #region events
 
@@ -188,7 +194,7 @@ public abstract class Chart : UserControl, IChartView
 
     /// <inheritdoc cref="IChartView.Title"/>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public IChartElement? Title { get => _title; set { _title = value; OnPropertyChanged(); } }
+    public IChartElement? Title { get => _title; set { _title = value; Observe[nameof(Title)].Initialize(value); } }
 
     /// <inheritdoc cref="IChartView.SyncContext" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -252,17 +258,7 @@ public abstract class Chart : UserControl, IChartView
 
     /// <inheritdoc cref="IChartView.VisualElements" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public IEnumerable<ChartElement> VisualElements
-    {
-        get => _visuals;
-        set
-        {
-            _visualsObserver?.Dispose(_visuals);
-            _visualsObserver?.Initialize(value);
-            _visuals = value;
-            OnPropertyChanged();
-        }
-    }
+    public ICollection<IChartElement> VisualElements { get => _visuals; set { _visuals = value; Observe[nameof(VisualElements)].Initialize(value); } }
 
     #endregion
 
@@ -298,7 +294,7 @@ public abstract class Chart : UserControl, IChartView
     /// Called when a property changes.
     /// </summary>
     /// <returns></returns>
-    protected void OnPropertyChanged()
+    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         if (core is null || ((IChartView)this).DesignerMode) return;
         core.Update();
@@ -344,12 +340,6 @@ public abstract class Chart : UserControl, IChartView
 
     private void OnCoreMeasuring(IChartView chart) =>
         Measuring?.Invoke(this);
-
-    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
-        OnPropertyChanged();
-
-    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e) =>
-        OnPropertyChanged();
 
     /// <summary>
     /// Called when the mouse goes down.
