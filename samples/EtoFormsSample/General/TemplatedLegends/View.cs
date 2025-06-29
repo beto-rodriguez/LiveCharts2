@@ -1,4 +1,6 @@
 ﻿using Eto.Forms;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Eto;
 using ViewModelsSamples.General.TemplatedLegends;
 
@@ -12,9 +14,15 @@ public class View : Panel
     {
         var viewModel = new ViewModel();
 
+        var series = new ISeries[]
+        {
+            new ColumnSeries<double> { Values = viewModel.RogerValues, Name = "Roger" },
+            new ColumnSeries<double> { Values = viewModel.SusanValues, Name = "Susan" }
+        };
+
         cartesianChart = new CartesianChart
         {
-            Series = viewModel.Series,
+            Series = series,
             LegendPosition = LiveChartsCore.Measure.LegendPosition.Right,
             Legend = new CustomLegend()
         };

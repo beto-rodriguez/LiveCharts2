@@ -1,4 +1,4 @@
-<Project Sdk="Eto.Forms/2.6.0">
+﻿<Project Sdk="Eto.Forms/2.6.0">
 
   <!--
     Set the BuildPlatform property to the Eto platform you wish to build for.
@@ -17,11 +17,58 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Axes\**" />
+    <Compile Remove="Maps\**" />
+    <Compile Remove="Pies\**" />
+    <Compile Remove="Polar\**" />
+    <Compile Remove="Scatter\**" />
+    <Compile Remove="StackedArea\**" />
+    <Compile Remove="StackedBars\**" />
+    <Compile Remove="StepLines\**" />
+    <Compile Remove="Test\**" />
+    <Compile Remove="VisualTest\**" />
+    <EmbeddedResource Remove="Axes\**" />
+    <EmbeddedResource Remove="Maps\**" />
+    <EmbeddedResource Remove="Pies\**" />
+    <EmbeddedResource Remove="Polar\**" />
+    <EmbeddedResource Remove="Scatter\**" />
+    <EmbeddedResource Remove="StackedArea\**" />
+    <EmbeddedResource Remove="StackedBars\**" />
+    <EmbeddedResource Remove="StepLines\**" />
+    <EmbeddedResource Remove="Test\**" />
+    <EmbeddedResource Remove="VisualTest\**" />
+    <None Remove="Axes\**" />
+    <None Remove="Maps\**" />
+    <None Remove="Pies\**" />
+    <None Remove="Polar\**" />
+    <None Remove="Scatter\**" />
+    <None Remove="StackedArea\**" />
+    <None Remove="StackedBars\**" />
+    <None Remove="StepLines\**" />
+    <None Remove="Test\**" />
+    <None Remove="VisualTest\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Images\livecharts.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Images\livecharts.png" />
+    <Compile Include="Axes\ColorsAndPosition\View.cs" />
+    <Compile Include="Axes\Crosshairs\View.cs" />
+    <Compile Include="Axes\CustomSeparatorsInterval\View.cs" />
+    <Compile Include="Axes\DateTimeScaled\View.cs" />
+    <Compile Include="Axes\LabelsFormat2\View.cs" />
+    <Compile Include="Axes\LabelsFormat\View.cs" />
+    <Compile Include="Axes\LabelsRotation\View.cs" />
+    <Compile Include="Axes\Logarithmic\View.cs" />
+    <Compile Include="Axes\MatchScale\View.cs" />
+    <Compile Include="Axes\Multiple\View.cs" />
+    <Compile Include="Axes\NamedLabels\View.cs" />
+    <Compile Include="Axes\Paging\View.cs" />
+    <Compile Include="Axes\Shared\View.cs" />
+    <Compile Include="Axes\Style\View.cs" />
+    <Compile Include="Axes\TimeSpanScaled\View.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +78,11 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Eto\LiveChartsCore.SkiaSharpView.Eto.csproj" />
     <ProjectReference Include="..\ViewModelsSamples\ViewModelsSamples.csproj" />
+    <ProjectReference Include="..\..\generators\LiveChartsGenerators\LiveChartsGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Images\livecharts.png" />
   </ItemGroup>
 
 </Project>
