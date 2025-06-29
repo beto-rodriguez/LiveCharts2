@@ -31,10 +31,9 @@ using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.VisualElements;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using LiveChartsCore.Painting;
 using LiveChartsCore.Themes;
+using LiveChartsCore.Kernel.Observers;
 
 namespace LiveChartsCore.SkiaSharpView.Eto;
 
@@ -65,8 +64,7 @@ public abstract class Chart : Panel, IChartView
     private Margin? _drawMargin = null;
     private TooltipPosition _tooltipPosition = LiveCharts.DefaultSettings.TooltipPosition;
     private IChartElement? _title;
-    private CollectionDeepObserver<ChartElement> _visualsObserver;
-    private IEnumerable<ChartElement> _visuals = [];
+    private ICollection<IChartElement> _visuals = [];
     private Paint? _legendTextPaint = (Paint?)LiveCharts.DefaultSettings.LegendTextPaint;
     private Paint? _legendBackgroundPaint = (Paint?)LiveCharts.DefaultSettings.LegendBackgroundPaint;
     private double _legendTextSize = LiveCharts.DefaultSettings.LegendTextSize;
@@ -99,6 +97,10 @@ public abstract class Chart : Panel, IChartView
 
         InitializeCore();
 
+        Observe = new ChartObserver(() => core?.Update())
+            .Collection(nameof(VisualElements))
+            .Property(nameof(Title));
+
         if (core is null) throw new Exception("Core not found!");
         core.Measuring += OnCoreMeasuring;
         core.UpdateStarted += OnCoreUpdateStarted;
@@ -109,10 +111,12 @@ public abstract class Chart : Panel, IChartView
         c.MouseLeave += Chart_MouseLeave;
 
         Load += Chart_Load;
-
-        _visualsObserver = new CollectionDeepObserver<ChartElement>(
-            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
     }
+
+    /// <summary>
+    /// Gets the observer responsible for monitoring changes to the chart's state or data.
+    /// </summary>
+    protected ChartObserver Observe { get; }
 
     #region events
 
@@ -217,20 +221,10 @@ public abstract class Chart : Panel, IChartView
     public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
 
     /// <inheritdoc cref="IChartView.VisualElements" />
-    public IEnumerable<ChartElement> VisualElements
-    {
-        get => _visuals;
-        set
-        {
-            _visualsObserver?.Dispose(_visuals);
-            _visualsObserver?.Initialize(value);
-            _visuals = value;
-            OnPropertyChanged();
-        }
-    }
+    public ICollection<IChartElement> VisualElements { get => _visuals; set { _visuals = value; Observe[nameof(VisualElements)].Initialize(value); OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView.Title"/>
-    public IChartElement? Title { get => _title; set { _title = value; OnPropertyChanged(); } }
+    public IChartElement? Title { get => _title; set { _title = value; Observe[nameof(Title)].Initialize(value); OnPropertyChanged(); } }
 
     #endregion
 
@@ -261,16 +255,9 @@ public abstract class Chart : Panel, IChartView
     /// <inheritdoc cref="Control.OnUnLoad(EventArgs)"/>
     protected override void OnUnLoad(EventArgs e)
     {
-        //if (tooltip is IDisposable disposableTooltip)
-        //{
-        //    // disposableTooltip.Dispose();
-
-        //    // tooltip = null;
-        //}
-
         base.OnUnLoad(e);
 
-        _visualsObserver = null!;
+        Observe.Dispose();
         core?.Unload();
         OnUnloading();
     }
@@ -314,10 +301,6 @@ public abstract class Chart : Panel, IChartView
     protected virtual void Chart_MouseLeave(object? sender, EventArgs e) => core?.InvokePointerLeft();
 
     private void Chart_Load(object? sender, EventArgs e) => core?.Load();
-
-    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => OnPropertyChanged();
-
-    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e) => OnPropertyChanged();
 
     void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer)
     {

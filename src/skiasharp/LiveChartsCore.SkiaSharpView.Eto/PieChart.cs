@@ -22,8 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using Eto.Forms;
 using LiveChartsCore.Drawing;
@@ -37,8 +35,7 @@ namespace LiveChartsCore.SkiaSharpView.Eto;
 /// <inheritdoc cref="IPieChartView" />
 public class PieChart : Chart, IPieChartView
 {
-    private CollectionDeepObserver<ISeries> _seriesObserver;
-    private IEnumerable<ISeries> _series = [];
+    private ICollection<ISeries> _series = [];
     private bool _isClockwise = true;
     private double _initialRotation;
     private double _maxAngle = 360;
@@ -58,10 +55,8 @@ public class PieChart : Chart, IPieChartView
     public PieChart(IChartTooltip? tooltip = null, IChartLegend? legend = null)
         : base(tooltip, legend)
     {
-        _seriesObserver = new CollectionDeepObserver<ISeries>(
-           (object? sender, NotifyCollectionChangedEventArgs e) => OnPropertyChanged(),
-           (object? sender, PropertyChangedEventArgs e) => OnPropertyChanged(),
-           true);
+        _ = Observe
+           .Collection(nameof(Series));
 
         motionCanvas.MouseDown += OnMouseDown;
     }
@@ -70,16 +65,10 @@ public class PieChart : Chart, IPieChartView
         core is null ? throw new Exception("core not found") : (PieChartEngine)core;
 
     /// <inheritdoc cref="IPieChartView.Series" />
-    public IEnumerable<ISeries> Series
+    public ICollection<ISeries> Series
     {
         get => _series;
-        set
-        {
-            _seriesObserver.Dispose(_series);
-            _seriesObserver.Initialize(value);
-            _series = value;
-            OnPropertyChanged();
-        }
+        set { _series = value; Observe[nameof(Series)].Initialize(value); OnPropertyChanged(); }
     }
 
     /// <inheritdoc cref="IPieChartView.IsClockwise" />
@@ -130,7 +119,6 @@ public class PieChart : Chart, IPieChartView
     protected override void OnUnloading()
     {
         Series = [];
-        _seriesObserver = null!;
         VisualElements = [];
     }
 

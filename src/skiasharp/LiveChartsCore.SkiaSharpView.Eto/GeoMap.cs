@@ -22,12 +22,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using Eto.Forms;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
-using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
@@ -43,7 +41,7 @@ public class GeoMap : Panel, IGeoMapView
 {
     private readonly MotionCanvas _motionCanvas = new();
     private readonly GeoMapChart _core;
-    private CollectionDeepObserver<IGeoSeries> _seriesObserver;
+    private CollectionDeepObserver _seriesObserver;
     private IEnumerable<IGeoSeries> _series = [];
     private DrawnMap _activeMap;
     private MapProjection _mapProjection = MapProjection.Default;
@@ -60,10 +58,7 @@ public class GeoMap : Panel, IGeoMapView
         _activeMap = Maps.GetWorldMap();
 
         _core = new GeoMapChart(this);
-        _seriesObserver = new CollectionDeepObserver<IGeoSeries>(
-            (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
-            (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
-            true);
+        _seriesObserver = new CollectionDeepObserver(() => _core?.Update());
 
         var c = _motionCanvas;
 
@@ -144,8 +139,7 @@ public class GeoMap : Panel, IGeoMapView
         get => _series;
         set
         {
-            _seriesObserver.Dispose(_series);
-            _seriesObserver.Initialize(value);
+            _seriesObserver.Dispose();
             _series = value;
             OnPropertyChanged();
         }

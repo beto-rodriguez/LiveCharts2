@@ -23,8 +23,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using Eto.Forms;
 using LiveChartsCore.Drawing;
@@ -42,12 +40,9 @@ public class PolarChart : Chart, IPolarChartView
     private double _totalAngle = 360;
     private double _innerRadius;
     private double _initialRotation = LiveCharts.DefaultSettings.PolarInitialRotation;
-    private CollectionDeepObserver<ISeries> _seriesObserver;
-    private CollectionDeepObserver<IPolarAxis> _angleObserver;
-    private CollectionDeepObserver<IPolarAxis> _radiusObserver;
-    private IEnumerable<ISeries> _series = [];
-    private IEnumerable<IPolarAxis> _angleAxes = new List<PolarAxis>();
-    private IEnumerable<IPolarAxis> _radiusAxes = new List<PolarAxis>();
+    private ICollection<ISeries> _series = [];
+    private ICollection<IPolarAxis> _angleAxes = [];
+    private ICollection<IPolarAxis> _radiusAxes = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PolarChart"/> class.
@@ -62,19 +57,16 @@ public class PolarChart : Chart, IPolarChartView
     public PolarChart(IChartTooltip? tooltip = null, IChartLegend? legend = null)
         : base(tooltip, legend)
     {
-        _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _angleObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _radiusObserver = new CollectionDeepObserver<IPolarAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
 
-        AngleAxes =
-            [
-                LiveCharts.DefaultSettings.GetProvider().GetDefaultPolarAxis()
-            ];
-        RadiusAxes =
-            [
-                LiveCharts.DefaultSettings.GetProvider().GetDefaultPolarAxis()
-            ];
+        _ = Observe
+            .Collection(nameof(Series))
+            .Collection(nameof(AngleAxes))
+            .Collection(nameof(RadiusAxes));
+
+        AngleAxes = new ObservableCollection<IPolarAxis>();
+        RadiusAxes = new ObservableCollection<IPolarAxis>();
         Series = new ObservableCollection<ISeries>();
+        VisualElements = new ObservableCollection<IChartElement>();
 
         var c = motionCanvas;
 
@@ -131,42 +123,24 @@ public class PolarChart : Chart, IPolarChartView
     }
 
     /// <inheritdoc cref="IPolarChartView.Series" />
-    public IEnumerable<ISeries> Series
+    public ICollection<ISeries> Series
     {
         get => _series;
-        set
-        {
-            _seriesObserver.Dispose(_series);
-            _seriesObserver.Initialize(value);
-            _series = value;
-            OnPropertyChanged();
-        }
+        set { _series = value; Observe[nameof(Series)].Initialize(value); OnPropertyChanged(); }
     }
 
     /// <inheritdoc cref="IPolarChartView.AngleAxes" />
-    public IEnumerable<IPolarAxis> AngleAxes
+    public ICollection<IPolarAxis> AngleAxes
     {
         get => _angleAxes;
-        set
-        {
-            _angleObserver.Dispose(_angleAxes);
-            _angleObserver.Initialize(value);
-            _angleAxes = value;
-            OnPropertyChanged();
-        }
+        set { _angleAxes = value; Observe[nameof(AngleAxes)].Initialize(value); OnPropertyChanged(); }
     }
 
     /// <inheritdoc cref="IPolarChartView.RadiusAxes" />
-    public IEnumerable<IPolarAxis> RadiusAxes
+    public ICollection<IPolarAxis> RadiusAxes
     {
         get => _radiusAxes;
-        set
-        {
-            _radiusObserver.Dispose(_radiusAxes);
-            _radiusObserver.Initialize(value);
-            _radiusAxes = value;
-            OnPropertyChanged();
-        }
+        set { _radiusAxes = value; Observe[nameof(RadiusAxes)].Initialize(value); OnPropertyChanged(); }
     }
 
     /// <summary>
@@ -186,9 +160,6 @@ public class PolarChart : Chart, IPolarChartView
         AngleAxes = [];
         RadiusAxes = [];
         VisualElements = [];
-        _seriesObserver = null!;
-        _angleObserver = null!;
-        _radiusObserver = null!;
     }
 
     /// <inheritdoc cref="IPolarChartView.ScalePixelsToData(LvcPointD, int, int)"/>
@@ -235,12 +206,6 @@ public class PolarChart : Chart, IPolarChartView
             ? throw new Exception("core not found")
             : cc.VisualElements.SelectMany(visual => ((VisualElement)visual).IsHitBy(core, new(point)));
     }
-
-    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
-        OnPropertyChanged();
-
-    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e) =>
-        OnPropertyChanged();
 
     private void OnMouseWheel(object? sender, MouseEventArgs e)
     {
