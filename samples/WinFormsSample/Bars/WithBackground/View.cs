@@ -1,26 +1,48 @@
 ﻿using System.Windows.Forms;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.WinForms;
-using ViewModelsSamples.Bars.WithBackground;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
 
 namespace WinFormsSample.Bars.WithBackground;
 
 public partial class View : UserControl
 {
-    private readonly CartesianChart cartesianChart;
-
     public View()
     {
         InitializeComponent();
         Size = new System.Drawing.Size(50, 50);
 
-        var viewModel = new ViewModel();
+        var values1 = new double[] { 10, 10, 10, 10, 10, 10, 10 };
+        var values2 = new double[] { 3, 10, 5, 3, 7, 3, 8 };
 
-        cartesianChart = new CartesianChart
+        var series = new ISeries[]
         {
-            Series = viewModel.Series,
-            YAxes = viewModel.YAxes,
+            new ColumnSeries<double>
+            {
+                Values = values1,
+                Fill = new SolidColorPaint(new SKColor(180, 180, 180, 50)),
+                IgnoresBarPosition = true,
+                IsHoverable = false
+            },
+            new ColumnSeries<double>
+            {
+                Values = values2,
+                IgnoresBarPosition = true
+            }
+        };
 
-            // out of livecharts properties...
+        var yAxis = new Axis
+        {
+            MinLimit = 0,
+            MaxLimit = 10
+        };
+
+        var cartesianChart = new CartesianChart
+        {
+            Series = series,
+            YAxes = [yAxis],
             Location = new System.Drawing.Point(0, 0),
             Size = new System.Drawing.Size(50, 50),
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom

@@ -1,9 +1,6 @@
-﻿
-using System.Windows.Forms;
-
-namespace WinFormsSample.Lines.CustomPoints
+﻿namespace WinFormsSample.Pies.Nested
 {
-    partial class View : UserControl
+    partial class View
     {
         /// <summary> 
         /// Required designer variable.

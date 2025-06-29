@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
+using LiveChartsCore.SkiaSharpView.Extensions;
 using LiveChartsCore.SkiaSharpView.WinForms;
-using ViewModelsSamples.Pies.Gauge1;
 
 namespace WinFormsSample.Pies.Gauge1;
 
@@ -13,16 +13,19 @@ public partial class View : UserControl
         InitializeComponent();
         Size = new System.Drawing.Size(50, 50);
 
-        var viewModel = new ViewModel();
-
         pieChart = new PieChart
         {
-            Series = viewModel.Series,
+            Series = GaugeGenerator.BuildSolidGauge(
+                new GaugeItem(
+                    30,          // the gauge value
+                    series =>    // the series style
+                    {
+                        series.MaxRadialColumnWidth = 50;
+                        series.DataLabelsSize = 50;
+                    })),
             InitialRotation = -90,
             MinValue = 0,
             MaxValue = 100,
-
-            // out of livecharts properties...
             Location = new System.Drawing.Point(0, 0),
             Size = new System.Drawing.Size(50, 50),
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom

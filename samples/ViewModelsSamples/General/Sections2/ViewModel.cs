@@ -1,5 +1,4 @@
 ﻿using SkiaSharp;
-using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -35,7 +34,7 @@ public class ViewModel
         {
             Xi = 4,
             Xj = 6,
-            Fill = new SolidColorPaint { Color = SKColors.Blue.WithAlpha(20) }
+            Fill = new SolidColorPaint(SKColors.Blue.WithAlpha(20))
         },
     ];
 }
