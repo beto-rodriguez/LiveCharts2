@@ -1,125 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>LiveCharts2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BlazorSample</title>
     <base href="/" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Martian+Mono:wght@500&family=Quicksand:wght@500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="highlightjs/github-dark.min.css">
-    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
-    <link href="perfect-scrollbar/perfect-scrollbar.css" rel="stylesheet">
-    <link href="css/app.css" rel="stylesheet" />
+    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/app.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
     <link href="BlazorSample.styles.css" rel="stylesheet" />
 </head>
 
 <body>
     <div id="app">
-        <div class="d-flex h-100 mt-5 mx-auto">
-            <div class="d-flex flex-row justify-content-center w-100">
-                <div class="lvc-icon-wrap">
-                    <img src="./lvc-icon-outer.svg" class="lvc-icon-component outer" alt="" />
-                    <img src="./lvc-icon-middle.svg" class="lvc-icon-component" alt="" />
-                    <img src="./lvc-icon-inner.svg" class="lvc-icon-component" alt="" />
-                    <svg xmlns="http://www.w3.org/2000/svg" class="wave-outer" viewBox="0 0 310 310">
-                        <path fill="#0086c3" d="M96.84,85.68A10.54,10.54,0,0,0,81.65,86a100,100,0,0,0-.51,135.37,10.52,10.52,0,0,0,15.23.39L148,170.16a10.47,10.47,0,0,1,14.84,0L214,221.34a10.53,10.53,0,0,0,15.27-.43,100,100,0,0,0-.52-134.39,10.52,10.52,0,0,0-15.22-.39l-50.72,50.72a10.49,10.49,0,0,1-14.84,0Z" />
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="wave" viewBox="0 0 310 310">
-                        <path fill="#005b9f" d="M131.8,120.65a10.54,10.54,0,0,0-15.64.87,50,50,0,0,0,.77,63.9,10.45,10.45,0,0,0,15.32.49L148,170.16a10.47,10.47,0,0,1,14.84,0l15.28,15.27a10.53,10.53,0,0,0,15.63-.86,49.95,49.95,0,0,0,.51-62.5,10.51,10.51,0,0,0-15.69-.95l-15.73,15.73a10.49,10.49,0,0,1-14.84,0Z" />
-                    </svg>
-                </div>
-            </div>
-        </div>
-        <h1 id="lvc-hello" class="font-display text-center bold-600">
-            <span class="text-live">Live</span><span class="text-charts">Charts2</span>
-        </h1>
-        <h5 class="text-muted text-center">One moment please...</h5>
+        <svg class="loading-progress">
+            <circle r="40%" cx="50%" cy="50%" />
+            <circle r="40%" cx="50%" cy="50%" />
+        </svg>
+        <div class="loading-progress-text"></div>
     </div>
 
     <div id="blazor-error-ui">
         An unhandled error has occurred.
-        <a href="" class="reload">Reload</a>
-        <a class="dismiss">🗙</a>
+        <a href="." class="reload">Reload</a>
+        <span class="dismiss">🗙</span>
     </div>
-    <script src="highlightjs/highlight.min.js"></script>
-    <script src="perfect-scrollbar/perfect-scrollbar.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
-    <script>
-        window.initializePerfectScroll = function () { new PerfectScrollbar('#perfect-scroll'); };
-        window.hideSideBar = function () {
-            document.getElementById('side-bar').classList.add('d-none');
-            document.getElementById('view-content').classList
-                .remove('bg-white', 'shadow', 'chart-sample', 'rounded', 'p-3', 'mx-auto');
-            document.getElementById('top-row').classList.add('d-none');
-        };
-        window.showSideBar = function () {
-            document.getElementById('side-bar').classList.remove('d-none');
-            document.getElementById('view-content').classList
-                .add('bg-white', 'shadow', 'chart-sample', 'rounded', 'p-3', 'mx-auto');
-            document.getElementById('top-row').classList.remove('d-none');
-        };
-        window.hlElements = function (title, description, code) {
-            var titleElement = document.getElementById('hello-title');
-            var descriptionElement = document.getElementById('hello-description');
-            var codeElement = document.getElementById('hello-code');
-
-            titleElement.innerHTML = title;
-            descriptionElement.innerHTML = description;
-            codeElement.innerHTML = code;
-            hljs.highlightElement(codeElement);
-            codeElement.classList.remove('d-none');
-
-            if (title == "Pie Charts") {
-                document.getElementById('cartesian-chart').classList.add('d-none');
-                document.getElementById('pie-chart').classList.remove('d-none');
-                document.getElementById('gauge-chart').classList.add('d-none');
-                document.getElementById('polar-chart').classList.add('d-none');
-                document.getElementById('geo-chart').classList.add('d-none');
-                document.getElementById('ba-bye').classList.add('d-none');
-            }
-            else if (title == "Gauges") {
-                document.getElementById('cartesian-chart').classList.add('d-none');
-                document.getElementById('pie-chart').classList.add('d-none');
-                document.getElementById('gauge-chart').classList.remove('d-none');
-                document.getElementById('polar-chart').classList.add('d-none');
-                document.getElementById('geo-chart').classList.add('d-none');
-                document.getElementById('ba-bye').classList.add('d-none');
-            }
-            else if (title == "Polar Charts") {
-                document.getElementById('cartesian-chart').classList.add('d-none');
-                document.getElementById('pie-chart').classList.add('d-none');
-                document.getElementById('gauge-chart').classList.add('d-none');
-                document.getElementById('polar-chart').classList.remove('d-none');
-                document.getElementById('geo-chart').classList.add('d-none');
-                document.getElementById('ba-bye').classList.add('d-none');
-            } else if (title == "Geo Maps") {
-                document.getElementById('cartesian-chart').classList.add('d-none');
-                document.getElementById('pie-chart').classList.add('d-none');
-                document.getElementById('gauge-chart').classList.add('d-none');
-                document.getElementById('polar-chart').classList.add('d-none');
-                document.getElementById('geo-chart').classList.remove('d-none');
-                document.getElementById('ba-bye').classList.add('d-none');
-            }
-            else if (title == "Charts everywhere!") {
-                document.getElementById('cartesian-chart').classList.add('d-none');
-                document.getElementById('pie-chart').classList.add('d-none');
-                document.getElementById('gauge-chart').classList.add('d-none');
-                document.getElementById('polar-chart').classList.add('d-none');
-                document.getElementById('geo-chart').classList.add('d-none');
-                document.getElementById('ba-bye').classList.remove('d-none');
-                codeElement.classList.add('d-none');
-            } else {
-                document.getElementById('cartesian-chart').classList.remove('d-none');
-                document.getElementById('pie-chart').classList.add('d-none');
-                document.getElementById('gauge-chart').classList.add('d-none');
-                document.getElementById('polar-chart').classList.add('d-none');
-                document.getElementById('geo-chart').classList.add('d-none');
-                document.getElementById('ba-bye').classList.add('d-none');
-            }
-        }
-    </script>
 </body>
+
 </html>

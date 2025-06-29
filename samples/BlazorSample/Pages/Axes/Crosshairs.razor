@@ -10,4 +10,9 @@
 
 @code {
 	public ViewModel ViewModel { get; set; } = new();
+
+    override void OnInitialized()
+    {
+        ViewModel.Initialize();
+    }
 }
