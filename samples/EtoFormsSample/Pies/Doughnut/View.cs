@@ -1,6 +1,6 @@
 ﻿using Eto.Forms;
+using LiveChartsCore.SkiaSharpView.Extensions;
 using LiveChartsCore.SkiaSharpView.Eto;
-using ViewModelsSamples.Pies.Doughnut;
 
 namespace EtoFormsSample.Pies.Doughnut;
 
@@ -10,11 +10,15 @@ public class View : Panel
 
     public View()
     {
-        var viewModel = new ViewModel();
+        var seriesCollection = new[] { 2, 4, 1, 4, 3 }
+            .AsPieSeries((value, series) =>
+            {
+                series.MaxRadialColumnWidth = 60;
+            });
 
         pieChart = new PieChart
         {
-            Series = viewModel.Series,
+            Series = seriesCollection
         };
 
         Content = pieChart;

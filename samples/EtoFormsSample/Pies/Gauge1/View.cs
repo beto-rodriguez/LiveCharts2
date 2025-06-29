@@ -1,6 +1,6 @@
 ﻿using Eto.Forms;
+using LiveChartsCore.SkiaSharpView.Extensions;
 using LiveChartsCore.SkiaSharpView.Eto;
-using ViewModelsSamples.Pies.Gauge1;
 
 namespace EtoFormsSample.Pies.Gauge1;
 
@@ -10,14 +10,19 @@ public class View : Panel
 
     public View()
     {
-        var viewModel = new ViewModel();
-
         pieChart = new PieChart
         {
-            Series = viewModel.Series,
+            Series = GaugeGenerator.BuildSolidGauge(
+                new GaugeItem(
+                    30,
+                    series =>
+                    {
+                        series.MaxRadialColumnWidth = 50;
+                        series.DataLabelsSize = 50;
+                    })),
             InitialRotation = -90,
             MinValue = 0,
-            MaxValue = 100,
+            MaxValue = 100
         };
 
         Content = pieChart;

@@ -1,6 +1,9 @@
 ﻿using Eto.Forms;
+using LiveChartsCore.Measure;
+using LiveChartsCore.SkiaSharpView.Extensions;
+using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Eto;
-using ViewModelsSamples.Pies.Gauge2;
+using SkiaSharp;
 
 namespace EtoFormsSample.Pies.Gauge2;
 
@@ -10,15 +13,26 @@ public class View : Panel
 
     public View()
     {
-        var viewModel = new ViewModel();
-
         pieChart = new PieChart
         {
-            Series = viewModel.Series,
+            Series = GaugeGenerator.BuildSolidGauge(
+                new GaugeItem(30, series =>
+                {
+                    series.Fill = new SolidColorPaint(SKColors.YellowGreen);
+                    series.DataLabelsSize = 50;
+                    series.DataLabelsPaint = new SolidColorPaint(SKColors.Red);
+                    series.DataLabelsPosition = PolarLabelsPosition.ChartCenter;
+                    series.InnerRadius = 75;
+                }),
+                new GaugeItem(GaugeItem.Background, series =>
+                {
+                    series.InnerRadius = 75;
+                    series.Fill = new SolidColorPaint(new SKColor(100, 181, 246, 90));
+                })),
             InitialRotation = -225,
             MaxAngle = 270,
             MinValue = 0,
-            MaxValue = 100,
+            MaxValue = 100
         };
 
         Content = pieChart;
