@@ -1,15 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <LangVersion>$(GlobalLangVersion)</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.11" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.11" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.6" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,18 +17,16 @@
   </ItemGroup>
 
   <!--
-    from:
-    https://github.com/mono/SkiaSharp/blob/main/binding/IncludeNativeAssets.SkiaSharp.targets#L77C3-L82C15
+    IT SEEMS THIS IS NO LONGER NECESSARY?
 
-    note:
-    not completely sure if this is still needed, but in older versions of SkiaSharp
-    it was needed to include the native assets when publishing the app
+    from:
+    https://github.com/mono/SkiaSharp/blob/main/binding/IncludeNativeAssets.SkiaSharp.targets#L81C3-L86C15
   -->
-  <ItemGroup Condition="('$(UsingMicrosoftNETSdkBlazorWebAssembly)' == 'true' or '$(UsingMicrosoftNETSdkWebAssembly)' == 'true') and '$(TargetFrameworkVersion)' != ''">
+  <!--<ItemGroup Condition="('$(UsingMicrosoftNETSdkBlazorWebAssembly)' == 'true' or '$(UsingMicrosoftNETSdkWebAssembly)' == 'true') and '$(TargetFrameworkVersion)' != ''">
     <NativeFileReference Include="$(MSBuildThisFileDirectory)..\output\native\wasm\libSkiaSharp.a\2.0.23\*.a" Condition="$([MSBuild]::VersionEquals($(TargetFrameworkVersion), '6.0'))" />
     <NativeFileReference Include="$(MSBuildThisFileDirectory)..\output\native\wasm\libSkiaSharp.a\3.1.12\$(_SkiaSharpNativeBinaryType)\*.a" Condition="$([MSBuild]::VersionEquals($(TargetFrameworkVersion), '7.0'))" />
     <NativeFileReference Include="$(MSBuildThisFileDirectory)..\output\native\wasm\libSkiaSharp.a\3.1.34\$(_SkiaSharpNativeBinaryType)\*.a" Condition="$([MSBuild]::VersionEquals($(TargetFrameworkVersion), '8.0'))" />
     <NativeFileReference Include="$(MSBuildThisFileDirectory)..\output\native\wasm\libSkiaSharp.a\3.1.56\$(_SkiaSharpNativeBinaryType)\*.a" Condition="$([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '9.0'))" />
-  </ItemGroup>
+  </ItemGroup>-->
 
 </Project>

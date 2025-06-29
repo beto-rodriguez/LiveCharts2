@@ -1,51 +1,12 @@
-﻿@using LiveChartsCore;
-@using System.Collections.ObjectModel;
-@inject NavigationManager NavigationManager
-@inject IJSRuntime JS
-
-<Router AppAssembly="@typeof(App).Assembly">
+﻿<Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
         <FocusOnNavigate RouteData="@routeData" Selector="h1" />
     </Found>
     <NotFound>
         <PageTitle>Not found</PageTitle>
-        <LayoutView Layout="@typeof(MainLayout)"></LayoutView>
+        <LayoutView Layout="@typeof(MainLayout)" style="max-height: 600px">
+            <p role="alert">Sorry, there's nothing at this address.</p>
+        </LayoutView>
     </NotFound>
 </Router>
-
-@code {
-    public record City(string Name, double Population);
-
-    protected override void OnInitialized()
-    {
-        // this is the recommended place to configure LiveCharts // mark
-        LiveCharts.Configure(config => // mark
-        { // mark
-            // configure LiveCharts here... // mark
-        }); // mark
-    }
-
-    protected override void OnAfterRender(bool firstRender)
-    {
-        base.OnAfterRender(firstRender);
-
-        RenderSidebar(NavigationManager.ToBaseRelativePath(NavigationManager.Uri));
-        NavigationManager.LocationChanged += (object? sender, LocationChangedEventArgs e) =>
-        {
-            RenderSidebar(NavigationManager.ToBaseRelativePath(e.Location));
-        };
-    }
-
-    private void RenderSidebar(string uri)
-    {
-         if (uri.ToLower().Contains("hello") || uri.Length == 0)
-        {
-            JS.InvokeVoidAsync("hideSideBar");
-        }
-        else
-        {
-            JS.InvokeVoidAsync("showSideBar");
-        }
-    }
-}
