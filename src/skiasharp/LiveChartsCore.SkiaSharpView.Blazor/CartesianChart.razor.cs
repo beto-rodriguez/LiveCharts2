@@ -21,8 +21,6 @@
 // SOFTWARE.
 
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -36,48 +34,31 @@ namespace LiveChartsCore.SkiaSharpView.Blazor;
 /// <inheritdoc cref="ICartesianChartView"/>
 public partial class CartesianChart : Chart, ICartesianChartView
 {
-    private CollectionDeepObserver<ISeries>? _seriesObserver;
-    private CollectionDeepObserver<ICartesianAxis>? _xObserver;
-    private CollectionDeepObserver<ICartesianAxis>? _yObserver;
-    private CollectionDeepObserver<CoreSection>? _sectionsObserver;
-
-    private IEnumerable<ISeries> _series = new ObservableCollection<ISeries>();
-    private IEnumerable<ICartesianAxis>? _xAxes;
-    private IEnumerable<ICartesianAxis>? _yAxes;
-    private IEnumerable<CoreSection> _sections = [];
-    private CoreDrawMarginFrame? _drawMarginFrame;
+    private ICollection<ISeries> _series = [];
+    private ICollection<ICartesianAxis> _xAxes = [];
+    private ICollection<ICartesianAxis> _yAxes = [];
+    private ICollection<IChartElement> _sections = [];
+    private IChartElement? _drawMarginFrame;
     private FindingStrategy _findingStrategy = LiveCharts.DefaultSettings.FindingStrategy;
     private bool _matchAxesScreenDataRatio;
 
-    /// <inheritdoc cref="Chart.OnInitialized"/>
-    protected override void OnInitialized()
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CartesianChart"/> class.
+    /// </summary>
+    public CartesianChart()
     {
-        base.OnInitialized();
+        _ = Observe
+            .Collection(nameof(Series))
+            .Collection(nameof(XAxes))
+            .Collection(nameof(YAxes))
+            .Collection(nameof(Sections))
+            .Property(nameof(DrawMarginFrame));
 
-        _seriesObserver = new CollectionDeepObserver<ISeries>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _xObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _yObserver = new CollectionDeepObserver<ICartesianAxis>(OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-        _sectionsObserver = new CollectionDeepObserver<CoreSection>(
-            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
-
-        if (_xAxes is null)
-            XAxes =
-            [
-                LiveCharts.DefaultSettings.GetProvider().GetDefaultCartesianAxis()
-            ];
-
-        if (_yAxes is null)
-            YAxes =
-            [
-                LiveCharts.DefaultSettings.GetProvider().GetDefaultCartesianAxis()
-            ];
-
-        // ToDo: pointer events
-        //var c = Controls[0].Controls[0];
-
-        //c.MouseWheel += OnMouseWheel;
-        //c.MouseDown += OnMouseDown;
-        //c.MouseUp += OnMouseUp;
+        XAxes = new ObservableCollection<ICartesianAxis>();
+        YAxes = new ObservableCollection<ICartesianAxis>();
+        Series = new ObservableCollection<ISeries>();
+        VisualElements = new ObservableCollection<IChartElement>();
+        Sections = new ObservableCollection<IChartElement>();
     }
 
     CartesianChartEngine ICartesianChartView.Core =>
@@ -85,70 +66,42 @@ public partial class CartesianChart : Chart, ICartesianChartView
 
     /// <inheritdoc cref="ICartesianChartView.Series" />
     [Parameter]
-    public IEnumerable<ISeries> Series
+    public ICollection<ISeries> Series
     {
         get => _series;
-        set
-        {
-            _seriesObserver?.Dispose(_series);
-            _seriesObserver?.Initialize(value);
-            _series = value;
-            OnPropertyChanged();
-        }
+        set { _series = value; Observe[nameof(Series)].Initialize(value); OnPropertyChanged(); }
     }
 
     /// <inheritdoc cref="ICartesianChartView.XAxes" />
     [Parameter]
-    public IEnumerable<ICartesianAxis> XAxes
+    public ICollection<ICartesianAxis> XAxes
     {
-        get => _xAxes ?? throw new Exception($"{nameof(XAxes)} can not be null");
-        set
-        {
-            _xObserver?.Dispose(_xAxes);
-            _xObserver?.Initialize(value);
-            _xAxes = value;
-            OnPropertyChanged();
-        }
+        get => _xAxes;
+        set { _xAxes = value; Observe[nameof(XAxes)].Initialize(value); OnPropertyChanged(); }
     }
 
     /// <inheritdoc cref="ICartesianChartView.YAxes" />
     [Parameter]
-    public IEnumerable<ICartesianAxis> YAxes
+    public ICollection<ICartesianAxis> YAxes
     {
-        get => _yAxes ?? throw new Exception($"{nameof(YAxes)} can not be null");
-        set
-        {
-            _yObserver?.Dispose(_yAxes);
-            _yObserver?.Initialize(value);
-            _yAxes = value;
-            OnPropertyChanged();
-        }
+        get => _yAxes;
+        set { _yAxes = value; Observe[nameof(YAxes)].Initialize(value); OnPropertyChanged(); }
     }
 
     /// <inheritdoc cref="ICartesianChartView.Sections" />
     [Parameter]
-    public IEnumerable<CoreSection> Sections
+    public ICollection<IChartElement> Sections
     {
         get => _sections;
-        set
-        {
-            _sectionsObserver?.Dispose(_sections);
-            _sectionsObserver?.Initialize(value);
-            _sections = value;
-            OnPropertyChanged();
-        }
+        set { _sections = value; Observe[nameof(Sections)].Initialize(value); OnPropertyChanged(); }
     }
 
     /// <inheritdoc cref="ICartesianChartView.DrawMarginFrame" />
     [Parameter]
-    public CoreDrawMarginFrame? DrawMarginFrame
+    public IChartElement? DrawMarginFrame
     {
         get => _drawMarginFrame;
-        set
-        {
-            _drawMarginFrame = value;
-            OnPropertyChanged();
-        }
+        set { _drawMarginFrame = value; Observe[nameof(DrawMarginFrame)].Initialize(value); OnPropertyChanged(); }
     }
 
     /// <inheritdoc cref="ICartesianChartView.ZoomMode" />
@@ -263,6 +216,7 @@ public partial class CartesianChart : Chart, ICartesianChartView
     /// <inheritdoc cref="Chart.OnDisposing"/>
     protected override void OnDisposing()
     {
+        base.OnDisposing();
         core?.Unload();
 
         Series = [];
@@ -270,17 +224,7 @@ public partial class CartesianChart : Chart, ICartesianChartView
         YAxes = [];
         Sections = [];
         VisualElements = [];
-        _seriesObserver = null!;
-        _xObserver = null!;
-        _yObserver = null!;
-        _sectionsObserver = null!;
     }
-
-    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
-        OnPropertyChanged();
-
-    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e) =>
-        OnPropertyChanged();
 
     private void MatchAxesScreenDataRatioChanged()
     {

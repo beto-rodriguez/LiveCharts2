@@ -20,8 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Specialized;
-using System.ComponentModel;
+using System.Collections.ObjectModel;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -34,8 +33,7 @@ namespace LiveChartsCore.SkiaSharpView.Blazor;
 /// <inheritdoc cref="IPieChartView"/>
 public partial class PieChart : Chart, IPieChartView
 {
-    private CollectionDeepObserver<ISeries>? _seriesObserver;
-    private IEnumerable<ISeries> _series = new List<ISeries>();
+    private ICollection<ISeries> _series = [];
     private double _initialRotation;
     private bool _isClockwise = true;
     private double _maxAngle = 360;
@@ -43,16 +41,15 @@ public partial class PieChart : Chart, IPieChartView
     private double _minValue;
 
     /// <summary>
-    /// Called when the control is initialized.
+    /// Initializes a new instance of the <see cref="PieChart"/> class.
     /// </summary>
-    protected override void OnInitialized()
+    public PieChart()
     {
-        base.OnInitialized();
+        _ = Observe
+           .Collection(nameof(Series));
 
-        _seriesObserver = new CollectionDeepObserver<ISeries>(
-            (object? sender, NotifyCollectionChangedEventArgs e) => OnPropertyChanged(),
-            (object? sender, PropertyChangedEventArgs e) => OnPropertyChanged(),
-            true);
+        Series = new ObservableCollection<ISeries>();
+        VisualElements = new ObservableCollection<IChartElement>();
     }
 
     PieChartEngine IPieChartView.Core =>
@@ -60,16 +57,10 @@ public partial class PieChart : Chart, IPieChartView
 
     /// <inheritdoc cref="IPieChartView.Series" />
     [Parameter]
-    public IEnumerable<ISeries> Series
+    public ICollection<ISeries> Series
     {
         get => _series;
-        set
-        {
-            _seriesObserver?.Dispose(_series);
-            _seriesObserver?.Initialize(value);
-            _series = value;
-            OnPropertyChanged();
-        }
+        set { _series = value; Observe[nameof(Series)].Initialize(value); OnPropertyChanged(); }
     }
 
     /// <inheritdoc cref="IPieChartView.IsClockwise" />
@@ -127,10 +118,10 @@ public partial class PieChart : Chart, IPieChartView
     /// <inheritdoc cref="Chart.OnDisposing"/>
     protected override void OnDisposing()
     {
+        base.OnDisposing();
         core?.Unload();
 
         Series = Array.Empty<ISeries>();
-        _seriesObserver = null!;
         VisualElements = Array.Empty<ChartElement>();
     }
 }

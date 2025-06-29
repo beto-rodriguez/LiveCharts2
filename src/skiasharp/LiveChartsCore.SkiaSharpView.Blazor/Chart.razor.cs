@@ -20,11 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Specialized;
-using System.ComponentModel;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
+using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
@@ -38,7 +37,7 @@ using Microsoft.JSInterop;
 namespace LiveChartsCore.SkiaSharpView.Blazor;
 
 /// <inheritdoc cref="IChartView" />
-public partial class Chart : IBlazorChart, IDisposable, IChartView
+public abstract partial class Chart : IBlazorChart, IDisposable, IChartView
 {
     [Inject]
     private IJSRuntime JS { get; set; } = null!;
@@ -59,13 +58,23 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView
     private double _canvasWidth;
     private double _canvasHeight;
 
-    private CollectionDeepObserver<ChartElement>? _visualsObserver;
     private LegendPosition _legendPosition = LiveCharts.DefaultSettings.LegendPosition;
     private Margin? _drawMargin = null;
     private TooltipPosition _tooltipPosition = LiveCharts.DefaultSettings.TooltipPosition;
-    private IEnumerable<ChartElement> _visuals = [];
+    private ICollection<IChartElement> _visuals = [];
 
     private Theme? _chartTheme;
+    private IChartElement? _title;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Chart"/> class.
+    /// </summary>
+    protected Chart()
+    {
+        Observe = new ChartObserver(() => core?.Update())
+            .Collection(nameof(VisualElements))
+            .Property(nameof(Title));
+    }
 
     /// <summary>
     /// Called when the control is initialized.
@@ -83,10 +92,13 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView
         LiveCharts.SetUseGPUIfNotSetByUser(true);
 
         LiveCharts.Configure(config => config.UseDefaults());
-
-        _visualsObserver = new CollectionDeepObserver<ChartElement>(
-            OnDeepCollectionChanged, OnDeepCollectionPropertyChanged, true);
     }
+
+
+    /// <summary>
+    /// Gets the observer responsible for monitoring changes to the chart's state or data.
+    /// </summary>
+    protected ChartObserver Observe { get; }
 
     /// <summary>
     /// Called when the control is initialized.
@@ -180,7 +192,11 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView
 
     /// <inheritdoc cref="IChartView.Title"/>
     [Parameter]
-    public IChartElement? Title { get; set; }
+    public IChartElement? Title
+    {
+        get => _title;
+        set { _title = value; Observe[nameof(Title)].Initialize(value); OnPropertyChanged(); }
+    }
 
     /// <inheritdoc cref="IChartView.DrawMargin" />
     [Parameter]
@@ -254,16 +270,10 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView
 
     /// <inheritdoc cref="IChartView.VisualElements" />
     [Parameter]
-    public IEnumerable<ChartElement> VisualElements
+    public ICollection<IChartElement> VisualElements
     {
         get => _visuals;
-        set
-        {
-            _visualsObserver?.Dispose(_visuals);
-            _visualsObserver?.Initialize(value);
-            _visuals = value;
-            OnPropertyChanged();
-        }
+        set { _visuals = value; Observe[nameof(VisualElements)].Initialize(value); OnPropertyChanged(); }
     }
 
     /// <summary>
@@ -356,7 +366,7 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView
     /// <summary>
     /// Called when the control is disposing.
     /// </summary>
-    protected virtual void OnDisposing() => _visualsObserver = null!;
+    protected virtual void OnDisposing() => Observe.Dispose();
 
     /// <summary>
     /// Called when the pointer leaves the control.
@@ -374,10 +384,6 @@ public partial class Chart : IBlazorChart, IDisposable, IChartView
 
         core?.Update();
     }
-
-    private void OnDeepCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => OnPropertyChanged();
-
-    private void OnDeepCollectionPropertyChanged(object? sender, PropertyChangedEventArgs e) => OnPropertyChanged();
 
     void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer)
     {
