@@ -194,7 +194,7 @@ public abstract class Chart : UserControl, IChartView
 
     /// <inheritdoc cref="IChartView.Title"/>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public IChartElement? Title { get => _title; set { _title = value; Observe[nameof(Title)].Initialize(value); } }
+    public IChartElement? Title { get => _title; set { _title = value; Observe[nameof(Title)].Initialize(value); OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartView.SyncContext" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -258,7 +258,7 @@ public abstract class Chart : UserControl, IChartView
 
     /// <inheritdoc cref="IChartView.VisualElements" />
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public ICollection<IChartElement> VisualElements { get => _visuals; set { _visuals = value; Observe[nameof(VisualElements)].Initialize(value); } }
+    public ICollection<IChartElement> VisualElements { get => _visuals; set { _visuals = value; Observe[nameof(VisualElements)].Initialize(value); OnPropertyChanged(); } }
 
     #endregion
 
@@ -310,14 +310,9 @@ public abstract class Chart : UserControl, IChartView
         if (tooltip is IDisposable disposableTooltip) disposableTooltip.Dispose();
         base.OnHandleDestroyed(e);
 
+        Observe.Dispose();
         core?.Unload();
-        OnUnloading();
     }
-
-    /// <summary>
-    /// Called when the control is being unloaded.
-    /// </summary>
-    protected virtual void OnUnloading() { }
 
     /// <inheritdoc cref="ContainerControl.OnParentChanged(EventArgs)"/>
     protected override void OnParentChanged(EventArgs e)

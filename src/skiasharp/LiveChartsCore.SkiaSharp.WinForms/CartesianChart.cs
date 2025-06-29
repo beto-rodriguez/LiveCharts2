@@ -86,7 +86,7 @@ public class CartesianChart : Chart, ICartesianChartView
     public ICollection<ISeries> Series
     {
         get => _series;
-        set { _series = value; Observe[nameof(Series)].Initialize(value); }
+        set { _series = value; Observe[nameof(Series)].Initialize(value); OnPropertyChanged(); }
     }
 
     /// <inheritdoc cref="ICartesianChartView.XAxes" />
@@ -94,7 +94,7 @@ public class CartesianChart : Chart, ICartesianChartView
     public ICollection<ICartesianAxis> XAxes
     {
         get => _xAxes;
-        set { _xAxes = value; Observe[nameof(XAxes)].Initialize(value); }
+        set { _xAxes = value; Observe[nameof(XAxes)].Initialize(value); OnPropertyChanged(); }
     }
 
     /// <inheritdoc cref="ICartesianChartView.YAxes" />
@@ -102,7 +102,7 @@ public class CartesianChart : Chart, ICartesianChartView
     public ICollection<ICartesianAxis> YAxes
     {
         get => _yAxes;
-        set { _yAxes = value; Observe[nameof(YAxes)].Initialize(value); }
+        set { _yAxes = value; Observe[nameof(YAxes)].Initialize(value); OnPropertyChanged(); }
     }
 
     /// <inheritdoc cref="ICartesianChartView.Sections" />
@@ -110,7 +110,7 @@ public class CartesianChart : Chart, ICartesianChartView
     public ICollection<IChartElement> Sections
     {
         get => _sections;
-        set { _sections = value; Observe[nameof(Sections)].Initialize(value); }
+        set { _sections = value; Observe[nameof(Sections)].Initialize(value); OnPropertyChanged(); }
     }
 
     /// <inheritdoc cref="ICartesianChartView.DrawMarginFrame" />
@@ -118,7 +118,7 @@ public class CartesianChart : Chart, ICartesianChartView
     public IChartElement? DrawMarginFrame
     {
         get => _drawMarginFrame;
-        set { _drawMarginFrame = value; Observe[nameof(DrawMarginFrame)].Initialize(value); ; }
+        set { _drawMarginFrame = value; Observe[nameof(DrawMarginFrame)].Initialize(value); OnPropertyChanged(); }
     }
 
     /// <inheritdoc cref="ICartesianChartView.ZoomMode" />

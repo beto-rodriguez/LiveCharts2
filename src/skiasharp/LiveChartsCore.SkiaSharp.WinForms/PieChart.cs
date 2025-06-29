@@ -75,7 +75,7 @@ public class PieChart : Chart, IPieChartView
     public ICollection<ISeries> Series
     {
         get => _series;
-        set { _series = value; Observe[nameof(Series)].Initialize(value); }
+        set { _series = value; Observe[nameof(Series)].Initialize(value); OnPropertyChanged(); }
     }
 
     /// <inheritdoc cref="IPieChartView.IsClockwise" />

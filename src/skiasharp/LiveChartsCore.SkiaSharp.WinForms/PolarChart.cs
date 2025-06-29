@@ -131,11 +131,7 @@ public class PolarChart : Chart, IPolarChartView
     public ICollection<ISeries> Series
     {
         get => _series;
-        set
-        {
-            _series = value;
-            Observe[nameof(Series)].Initialize(value);
-        }
+        set { _series = value; Observe[nameof(Series)].Initialize(value); OnPropertyChanged(); }
     }
 
     /// <inheritdoc cref="IPolarChartView.AngleAxes" />
@@ -143,11 +139,7 @@ public class PolarChart : Chart, IPolarChartView
     public ICollection<IPolarAxis> AngleAxes
     {
         get => _angleAxes;
-        set
-        {
-            _angleAxes = value;
-            Observe[nameof(AngleAxes)].Initialize(value);
-        }
+        set { _angleAxes = value; Observe[nameof(AngleAxes)].Initialize(value); OnPropertyChanged(); }
     }
 
     /// <inheritdoc cref="IPolarChartView.RadiusAxes" />
@@ -155,11 +147,7 @@ public class PolarChart : Chart, IPolarChartView
     public ICollection<IPolarAxis> RadiusAxes
     {
         get => _radiusAxes;
-        set
-        {
-            _radiusAxes = value;
-            Observe[nameof(RadiusAxes)].Initialize(value);
-        }
+        set { _radiusAxes = value; Observe[nameof(RadiusAxes)].Initialize(value); OnPropertyChanged(); }
     }
 
     /// <summary>
