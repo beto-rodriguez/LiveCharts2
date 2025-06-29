@@ -256,10 +256,9 @@ public abstract class Chart : Panel, IChartView
     protected override void OnUnLoad(EventArgs e)
     {
         base.OnUnLoad(e);
-
+        OnUnloading();
         Observe.Dispose();
         core?.Unload();
-        OnUnloading();
     }
 
     /// <summary>
