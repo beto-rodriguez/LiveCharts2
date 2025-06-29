@@ -1,21 +1,29 @@
 ﻿using Eto.Forms;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Eto;
-using ViewModelsSamples.Bars.Spacing;
 
 namespace EtoFormsSample.Bars.Spacing;
 
 public class View : Panel
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="View"/> class.
-    /// </summary>
     public View()
     {
-        var viewModel = new ViewModel();
+        var values = new double[] { 20, 50, 40, 20, 40, 30, 50, 20, 50, 40 };
+
+        var series = new ISeries[]
+        {
+            new ColumnSeries<double>
+            {
+                Values = values,
+                Padding = 0,
+                MaxBarWidth = 99999
+            }
+        };
 
         var cartesianChart = new CartesianChart
         {
-            Series = viewModel.Series,
+            Series = series,
         };
 
         Content = cartesianChart;
