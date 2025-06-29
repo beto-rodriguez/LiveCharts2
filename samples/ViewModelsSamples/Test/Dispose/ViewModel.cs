@@ -5,7 +5,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.Geo;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Extensions;
 
 namespace ViewModelsSamples.Test.Dispose;
@@ -55,11 +54,11 @@ public partial class ViewModel : ObservableObject
         ];
     }
 
-    public IEnumerable<ISeries> CartesianSeries { get; }
+    public ICollection<ISeries> CartesianSeries { get; }
 
-    public IEnumerable<ISeries> PieSeries { get; }
+    public ICollection<ISeries> PieSeries { get; }
 
-    public IEnumerable<ISeries> PolarSeries { get; }
+    public ICollection<ISeries> PolarSeries { get; }
 
-    public IEnumerable<IGeoSeries> GeoSeries { get; }
+    public ICollection<IGeoSeries> GeoSeries { get; }
 }

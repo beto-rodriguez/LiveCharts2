@@ -6,7 +6,6 @@ using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
 using LiveChartsCore.Geo;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Extensions;
 
 namespace ViewModelsSamples.Test.ChangeSeriesInstance;
@@ -24,7 +23,7 @@ public partial class ViewModel : ObservableObject
     private ISeries[]? _cartesianSeries;
 
     [ObservableProperty]
-    private IEnumerable<ISeries>? _pieSeries;
+    private ICollection<ISeries>? _pieSeries;
 
     [ObservableProperty]
     private ISeries[]? _polarSeries;
