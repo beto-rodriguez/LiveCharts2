@@ -10,7 +10,7 @@ namespace ViewModelsSamples.VisualTest.ReattachVisual;
 
 public partial class ViewModel : ObservableObject
 {
-    public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
+    public ICollection<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
     {
         new ColumnSeries<double>
         {
