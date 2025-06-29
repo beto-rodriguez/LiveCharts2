@@ -45,19 +45,9 @@ public partial class View : UserControl
         };
         Controls.Add(_pie);
 
-        // Adding a map chart to the UI...
-        _map = new GeoMap
-        {
-            // For demonstration, leave Series empty or add a sample series if available
-            Location = new System.Drawing.Point(10, 410),
-            Size = new System.Drawing.Size(400, 180)
-        };
-        Controls.Add(_map);
-
         // now lets create the images
         CreateImageFromCartesianControl();
         CreateImageFromPieControl();
-        CreateImageFromGeoControl();
     }
 
     private void CreateImageFromCartesianControl()
@@ -72,12 +62,5 @@ public partial class View : UserControl
         var chartControl = _pie;
         var skChart = new SKPieChart(chartControl) { Width = 900, Height = 600 };
         skChart.SaveImage("PieImageFromControl.png");
-    }
-
-    private void CreateImageFromGeoControl()
-    {
-        var chartControl = _map;
-        var skChart = new SKGeoMap(chartControl) { Width = 900, Height = 600 };
-        skChart.SaveImage("MapImageFromControl.png");
     }
 }

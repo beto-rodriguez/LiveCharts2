@@ -9,8 +9,6 @@ using LiveChartsCore.SkiaSharpView.VisualElements;
 
 namespace WinFormsSample.Lines.Basic;
 
-public class CustomStarLineSeries : LineSeries<int, StarGeometry> { }
-
 public partial class View : UserControl
 {
     public View()
@@ -29,7 +27,7 @@ public partial class View : UserControl
                 Fill = null,
                 GeometrySize = 20
             },
-            new CustomStarLineSeries
+            new LineSeries<int, StarGeometry>
             {
                 Values = values2,
                 Fill = null,
