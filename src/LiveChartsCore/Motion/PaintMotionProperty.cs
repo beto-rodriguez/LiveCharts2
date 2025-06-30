@@ -32,7 +32,7 @@ namespace LiveChartsCore.Motion;
 /// </remarks>
 /// <param name="defaultValue">The default value.</param>
 public class PaintMotionProperty(Paint defaultValue = null!)
-    : MotionProperty<Paint>(defaultValue)
+    : MotionProperty<Paint?>(defaultValue)
 {
     internal static Paint? s_activePaint;
 

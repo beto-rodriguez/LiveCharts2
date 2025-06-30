@@ -31,35 +31,54 @@ public static class AssetsTemplates
 #nullable enable
 namespace LiveChartsCore.Generators;
 
+/// <summary/>
 public class CommandParameters<T1, T2>(T1 parameter1, T2 parameter2)
 {
+    /// <summary/>
     public T1 Parameter1 { get; set; } = parameter1;
+
+    /// <summary/>
     public T2 Parameter2 { get; set; } = parameter2;
 }
 
+/// <summary/>
 public class CommandParameters<T1, T2, T3>(T1 parameter1, T2 parameter2, T3 parameter3)
 {
+    /// <summary/>
     public T1 Parameter1 { get; set; } = parameter1;
+
+    /// <summary/>
     public T2 Parameter2 { get; set; } = parameter2;
+
+    /// <summary/>
     public T3 Parameter3 { get; set; } = parameter3;
 }
 
+/// <summary/>
 public class CommandParameters<T1, T2, T3, T4>(T1 parameter1, T2 parameter2, T3 parameter3, T4 parameter4)
 {
+    /// <summary/>
     public T1 Parameter1 { get; set; } = parameter1;
+    /// <summary/>
     public T2 Parameter2 { get; set; } = parameter2;
+    /// <summary/>
     public T3 Parameter3 { get; set; } = parameter3;
+    /// <summary/>
     public T4 Parameter4 { get; set; } = parameter4;
 }
 
+/// <summary/>
 public static class CommandParameters
 {
+    /// <summary/>
     public static CommandParameters<T1, T2> Create<T1, T2>(T1 first, T2 second)
         => new(first, second);
 
+    /// <summary/>
     public static CommandParameters<T1, T2, T3> Create<T1, T2, T3>(T1 first, T2 second, T3 third)
         => new(first, second, third);
 
+    /// <summary/>
     public static CommandParameters<T1, T2, T3, T4> Create<T1, T2, T3, T4>(T1 first, T2 second, T3 third, T4 fourth)
         => new(first, second, third, fourth);
 }
