@@ -39,9 +39,6 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        context.RegisterPostInitializationOutput(static ctx => ctx.AddSource(
-            "Assets.g.cs", SourceText.From(AssetsTemplates.GetTemplate(), Encoding.UTF8)));
-
         var assemblyAttributes = context.CompilationProvider
             .Select(GetConsumerAssemblyType);
 
