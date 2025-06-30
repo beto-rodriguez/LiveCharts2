@@ -1,35 +1,103 @@
 ﻿@page "/Lines/AutoUpdate"
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.Lines.AutoUpdate
+@using LiveChartsCore;
+@using LiveChartsCore.Defaults;
+@using LiveChartsCore.SkiaSharpView;
+@using System.Collections.ObjectModel
 
 <div>
-	<button type="button" class="btn btn-primary" @onclick="ViewModel.AddItem">Add item</button>
-	<button type="button" class="btn btn-primary" @onclick="ViewModel.RemoveItem">Remove item</button>
-	<button type="button" class="btn btn-primary" @onclick="ViewModel.UpdateItem">Update item</button>
-	<button type="button" class="btn btn-primary" @onclick="ViewModel.ReplaceItem">Replace item</button>
-	<button type="button" class="btn btn-primary" @onclick="ViewModel.AddSeries">Add Series</button>
-	<button type="button" class="btn btn-primary" @onclick="ViewModel.RemoveSeries">Remove Series</button>
-	<button type="button" class="btn btn-primary" @onclick="ToggleConstantChanges">Constant changes</button>
+    <button type="button" class="btn btn-primary" @onclick="AddItem">Add item</button>
+    <button type="button" class="btn btn-primary" @onclick="RemoveItem">Remove item</button>
+    <button type="button" class="btn btn-primary" @onclick="ReplaceItem">Replace item</button>
+    <button type="button" class="btn btn-primary" @onclick="AddSeries">Add Series</button>
+    <button type="button" class="btn btn-primary" @onclick="RemoveSeries">Remove Series</button>
+    <button type="button" class="btn btn-primary" @onclick="ToggleConstantChanges">Constant changes</button>
 </div>
 
 <CartesianChart
-	Series="ViewModel.Series">
+    Series="@seriesCollection">
 </CartesianChart>
 
 @code {
-	private bool? _isStreaming = false;
+    private ObservableCollection<ISeries> seriesCollection;
+    private ObservableCollection<ObservableValue> juanaValues;
+    private Random _random = new Random();
+    private bool? _isStreaming = false;
 
-	public ViewModel ViewModel { get; set; } = new();
+    protected override void OnInitialized()
+    {
+        juanaValues = new ObservableCollection<ObservableValue>
+        {
+            new ObservableValue(2), new ObservableValue(5), new ObservableValue(4)
+        };
+        seriesCollection = new ObservableCollection<ISeries>
+        {
+            new LineSeries<ObservableValue>
+            {
+                Name = "Juana",
+                Values = juanaValues
+            },
+            new LineSeries<ObservableValue>
+            {
+                Name = "Mary",
+                Values = new ObservableCollection<ObservableValue> { new ObservableValue(5), new ObservableValue(4), new ObservableValue(1) }
+            }
+        };
+    }
 
-	public async void ToggleConstantChanges()
-	{
-		_isStreaming = _isStreaming is null ? true : !_isStreaming;
+    private void AddSeries()
+    {
+        seriesCollection.Add(
+            new LineSeries<ObservableValue>
+            {
+                Name = $"User #{seriesCollection.Count}",
+                Values = FetchValues()
+            });
+    }
 
-		while (_isStreaming.Value)
-		{
-			ViewModel.RemoveItem();
-			ViewModel.AddItem();
-			await Task.Delay(100);
-		}
-	}
+    private void RemoveSeries()
+    {
+        if (seriesCollection.Count <= 1) return;
+        seriesCollection.RemoveAt(seriesCollection.Count - 1);
+    }
+
+    private void AddItem()
+    {
+        var newPoint = new ObservableValue { Value = _random.Next(0, 10) };
+        juanaValues.Add(newPoint);
+    }
+
+    private void RemoveItem()
+    {
+        if (juanaValues.Count < 2) return;
+        juanaValues.RemoveAt(0);
+    }
+
+    private void ReplaceItem()
+    {
+        if (juanaValues.Count < 2) return;
+        var randomIndex = _random.Next(0, juanaValues.Count - 1);
+        juanaValues[randomIndex] = new ObservableValue(_random.Next(1, 10));
+    }
+
+    private ObservableCollection<ObservableValue> FetchValues()
+    {
+        return new ObservableCollection<ObservableValue>
+        {
+            new ObservableValue(_random.Next(0, 10)),
+            new ObservableValue(_random.Next(0, 10)),
+            new ObservableValue(_random.Next(0, 10))
+        };
+    }
+
+    public async void ToggleConstantChanges()
+    {
+        _isStreaming = _isStreaming is null ? true : !_isStreaming;
+        while (_isStreaming.Value)
+        {
+            RemoveItem();
+            AddItem();
+            await Task.Delay(100);
+        }
+    }
 }

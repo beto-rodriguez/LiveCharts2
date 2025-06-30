@@ -216,7 +216,6 @@ public partial class CartesianChart : Chart, ICartesianChartView
     /// <inheritdoc cref="Chart.OnDisposing"/>
     protected override void OnDisposing()
     {
-        base.OnDisposing();
         core?.Unload();
 
         Series = [];
@@ -224,6 +223,8 @@ public partial class CartesianChart : Chart, ICartesianChartView
         YAxes = [];
         Sections = [];
         VisualElements = [];
+
+        base.OnDisposing();
     }
 
     private void MatchAxesScreenDataRatioChanged()

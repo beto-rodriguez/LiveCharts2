@@ -1,11 +1,21 @@
 ﻿@page "/Pies/Doughnut"
+@using LiveChartsCore
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.Pies.Doughnut
+@using LiveChartsCore.SkiaSharpView.Extensions
 
 <PieChart
-	Series="ViewModel.Series">
+	Series="Series">
 </PieChart>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new();
+    private ISeries[] Series { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Series = new[] { 2, 4, 1, 4, 3 }
+            .AsPieSeries((value, series) =>
+            {
+                series.MaxRadialColumnWidth = 60;
+            });
+    }
 }

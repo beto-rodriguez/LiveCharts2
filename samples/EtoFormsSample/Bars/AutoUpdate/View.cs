@@ -24,12 +24,12 @@ public class View : Panel
 
         seriesCollection = new ObservableCollection<ISeries>
         {
-            new LineSeries<ObservableValue>
+            new ColumnSeries<ObservableValue>
             {
                 Name = "Juana",
                 Values = juanaValues
             },
-            new LineSeries<ObservableValue>
+            new ColumnSeries<ObservableValue>
             {
                 Name = "Mary",
                 Values = new ObservableCollection<ObservableValue>
@@ -62,7 +62,7 @@ public class View : Panel
     private void AddSeries()
     {
         seriesCollection.Add(
-            new LineSeries<ObservableValue>
+            new ColumnSeries<ObservableValue>
             {
                 Name = $"User #{seriesCollection.Count}",
                 Values = FetchValues()

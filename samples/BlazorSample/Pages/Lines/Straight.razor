@@ -1,11 +1,28 @@
 ﻿@page "/Lines/Straight"
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.Lines.Straight
+@using LiveChartsCore;
+@using LiveChartsCore.SkiaSharpView;
 
 <CartesianChart
-	Series="ViewModel.Series">
+    Series="@series">
 </CartesianChart>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new();
+    private ISeries[] series = new ISeries[]
+    {
+        new LineSeries<double>
+        {
+            Values = new double[] { 5, 0, 5, 0, 5, 0 },
+            Fill = null,
+            GeometrySize = 0,
+            LineSmoothness = 0
+        },
+        new LineSeries<double>
+        {
+            Values = new double[] { 7, 2, 7, 2, 7, 2 },
+            Fill = null,
+            GeometrySize = 0,
+            LineSmoothness = 1
+        }
+    };
 }

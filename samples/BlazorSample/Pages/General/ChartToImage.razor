@@ -1,68 +1,64 @@
 ﻿@page "/General/ChartToImage"
+@using LiveChartsCore
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using LiveChartsCore.SkiaSharpView.SKCharts
-@using ViewModelsSamples.General.ChartToImage
-
-<h1>There are missing features in this sample...</h1>
+@using LiveChartsCore.SkiaSharpView;
+@using LiveChartsCore.SkiaSharpView.SKCharts;
 
 <div style="max-height: 400px">
-	<CartesianChart
-		@ref="_cartesianChart"
-		Series="ViewModel.CatesianSeries">
-	</CartesianChart>
+    <CartesianChart
+        @ref="_cartesianChart"
+        Series="@cartesianSeries">
+    </CartesianChart>
 </div>
 
 <div style="max-height: 400px">
-	<PieChart
-		@ref="_pieChart"
-		Series="ViewModel.PieSeries">
-	</PieChart>
-</div>
-
-<div style="max-height: 400px">
-	<GeoMap
-		@ref="_mapChart"
-		Series="ViewModel.GeoSeries">
-	</GeoMap>
+    <PieChart
+        @ref="_pieChart"
+        Series="@pieSeries">
+    </PieChart>
 </div>
 
 @code {
-	private CartesianChart _cartesianChart = null!;
-	private PieChart _pieChart = null!;
-	private GeoMap _mapChart = null!;
+    private CartesianChart _cartesianChart = null!;
+    private PieChart _pieChart = null!;
 
-	public ViewModel ViewModel { get; set; } = new();
+    private double[] values1 = new double[] { 2, 5, 4 };
+    private double[] values2 = new double[] { 3, 1, 6 };
+    private double[] pieValues1 = new double[] { 2 };
+    private double[] pieValues2 = new double[] { 4 };
+    private double[] pieValues3 = new double[] { 1 };
 
-	protected override void OnAfterRender(bool firstRender)
-	{
-		base.OnAfterRender(firstRender);
+    private ISeries[] cartesianSeries => new ISeries[]
+    {
+        new ColumnSeries<double> { Values = values1 },
+        new LineSeries<double> { Values = values2 }
+    };
 
-		// in this case when the view is rendered // mark
-        // we build our charts controls as images // mark
-		CreateImageFromCartesianControl();
-		CreateImageFromPieControl();
-		CreateImageFromGeoControl();
-	}
+    private ISeries[] pieSeries => new ISeries[]
+    {
+        new PieSeries<double> { Values = pieValues1 },
+        new PieSeries<double> { Values = pieValues2 },
+        new PieSeries<double> { Values = pieValues3 }
+    };
 
-	private void CreateImageFromCartesianControl()
-	{
-		// you can take any chart in the UI, and build an image from it // mark
-		var chartControl = _cartesianChart;
-		var skChart = new SKCartesianChart(chartControl) { Width = 900, Height = 600, };
-		skChart.SaveImage("CartesianImageFromControl.png");
-	}
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        CreateImageFromCartesianControl();
+        CreateImageFromPieControl();
+    }
 
-	private void CreateImageFromPieControl()
-	{
-		var chartControl = _pieChart;
-		var skChart = new SKPieChart(chartControl) { Width = 900, Height = 600, };
-		skChart.SaveImage("PieImageFromControl.png");
-	}
+    private void CreateImageFromCartesianControl()
+    {
+        var chartControl = _cartesianChart;
+        var skChart = new SKCartesianChart(chartControl) { Width = 900, Height = 600 };
+        skChart.SaveImage("CartesianImageFromControl.png");
+    }
 
-	private void CreateImageFromGeoControl()
-	{
-		var chartControl =  _mapChart;
-		var skChart = new SKGeoMap(chartControl) { Width = 900, Height = 600, };
-		skChart.SaveImage("MapImageFromControl.png");
-	}
+    private void CreateImageFromPieControl()
+    {
+        var chartControl = _pieChart;
+        var skChart = new SKPieChart(chartControl) { Width = 900, Height = 600 };
+        skChart.SaveImage("PieImageFromControl.png");
+    }
 }

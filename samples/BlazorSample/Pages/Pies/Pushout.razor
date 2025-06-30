@@ -1,11 +1,23 @@
 ﻿@page "/Pies/Pushout"
+@using LiveChartsCore
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.Pies.Pushout
+@using LiveChartsCore.SkiaSharpView.Extensions
 
 <PieChart
-	Series="ViewModel.Series">
+	Series="Series">
 </PieChart>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new();
+    private ISeries[] Series { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Series = new[] { 6, 5, 4, 3, 2 }.AsPieSeries((value, series) =>
+        {
+            // pushes out the slice with the value of 6 to 30 pixels.
+            if (value != 6) return;
+
+            series.Pushout = 30;
+        });
+    }
 }

@@ -1,13 +1,51 @@
 ﻿@page "/Polar/RadialArea"
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.Polar.Basic
+@using LiveChartsCore.SkiaSharpView
+@using LiveChartsCore
+@using LiveChartsCore.SkiaSharpView.Painting
+@using SkiaSharp
 
 <PolarChart
-	Series="ViewModel.Series"
-	AngleAxes="ViewModel.AngleAxes"
+	Series="Series"
+	AngleAxes="AngleAxes"
 	InitialRotation="-45">
 </PolarChart>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new();
+    private ISeries[] Series { get; set; }
+    private PolarAxis[] AngleAxes { get; set; }
+
+    protected override void OnInitialized()
+    {
+        var values1 = new int[] { 7, 5, 7, 5, 6 };
+        var values2 = new int[] { 2, 7, 5, 9, 7 };
+        var labels = new string[] { "first", "second", "third", "forth", "fifth" };
+        var tangentAngle = LiveCharts.TangentAngle;
+
+        Series = new ISeries[]
+        {
+            new PolarLineSeries<int>
+            {
+                Values = values1,
+                LineSmoothness = 0,
+                GeometrySize = 0,
+                Fill = new SolidColorPaint(SKColor.Parse("#900000ff"))
+            },
+            new PolarLineSeries<int>
+            {
+                Values = values2,
+                LineSmoothness = 1,
+                GeometrySize = 0,
+                Fill = new SolidColorPaint(SKColor.Parse("#90ff0000"))
+            }
+        };
+
+        AngleAxes = new PolarAxis[]
+        {
+            new() {
+                LabelsRotation = tangentAngle,
+                Labels = labels
+            }
+        };
+    }
 }

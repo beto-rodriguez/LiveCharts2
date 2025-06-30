@@ -1,31 +1,58 @@
 ﻿@page "/General/MultiThreading2"
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.General.MultiThreading2
+@using LiveChartsCore;
+@using LiveChartsCore.SkiaSharpView;
+@using System.Collections.ObjectModel
 
-@if (ViewModel != null)
-{
-    <CartesianChart
-	    Series="ViewModel.Series">
-    </CartesianChart>   
-}
+<CartesianChart
+    Series="@series">
+</CartesianChart>
 
 @code {
-    protected override void OnAfterRender(bool firstRender)
-    {
-        base.OnAfterRender(firstRender);
+    private ObservableCollection<int> _values;
+    private int _current;
+    private bool _isReading = true;
+    private ISeries[] series;
 
-        ViewModel = new ViewModel(InvokeOnUIThread);
+    protected override void OnInitialized()
+    {
+        var items = new List<int>();
+        for (var i = 0; i < 1500; i++)
+        {
+            _current += new Random().Next(-9, 10);
+            items.Add(_current);
+        }
+        _values = new ObservableCollection<int>(items);
+        series = new ISeries[]
+        {
+            new LineSeries<int>
+            {
+                Values = _values,
+                GeometryFill = null,
+                GeometryStroke = null
+            }
+        };
+        for (var i = 0; i < 10; i++)
+        {
+            _ = Task.Run(ReadData);
+        }
     }
 
-    public ViewModel? ViewModel { get; set; }
-
-    // this method takes another function as an argument.
-    // the idea is that we are invoking the passed action in the UI thread
-    // but the UI framework will let the view model how to do this.
-    // we will pass the InvokeOnUIThread method to our view model so the view model knows how
-    // to invoke an action in the UI thred.
-    private void InvokeOnUIThread(Action action)
+    private async Task ReadData()
     {
-       InvokeAsync(action);
+        var r = new Random();
+        await Task.Delay(1000);
+        while (_isReading)
+        {
+            await Task.Delay(1);
+            await InvokeAsync(() => UpdateValues(r));
+        }
+    }
+
+    private void UpdateValues(Random r)
+    {
+        _current += r.Next(-9, 10);
+        _values.Add(_current);
+        _values.RemoveAt(0);
     }
 }

@@ -1,12 +1,55 @@
 ﻿@page "/General/Sections"
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.General.Sections
+@using LiveChartsCore;
+@using LiveChartsCore.Defaults;
+@using LiveChartsCore.SkiaSharpView;
+@using LiveChartsCore.SkiaSharpView.Painting;
+@using SkiaSharp;
 
 <CartesianChart
-	Series="ViewModel.Series"
-	Sections="ViewModel.Sections">
+    Series="@series"
+    Sections="@sections">
 </CartesianChart>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new();
+    private static ObservablePoint[] values = new ObservablePoint[]
+    {
+        new ObservablePoint(2.2, 5.4),
+        new ObservablePoint(4.5, 2.5),
+        new ObservablePoint(4.2, 7.4),
+        new ObservablePoint(6.4, 9.9),
+        new ObservablePoint(8.9, 3.9),
+        new ObservablePoint(9.9, 5.2)
+    };
+
+    private ISeries[] series = new ISeries[]
+    {
+        new ScatterSeries<ObservablePoint>
+        {
+            Values = values
+        }
+    };
+
+    private RectangularSection[] sections = new RectangularSection[]
+    {
+        new RectangularSection {
+            Xi = 3,
+            Xj = 4,
+            Fill = new SolidColorPaint(SKColor.Parse("#FFCDD2"))
+        },
+        new RectangularSection {
+            Xi = 5,
+            Xj = 6,
+            Yi = 2,
+            Yj = 8,
+            Fill = new SolidColorPaint(SKColor.Parse("#BBDEFB"))
+        },
+        new RectangularSection {
+            Xi = 8,
+            Label = "A section here!",
+            LabelSize = 14,
+            LabelPaint = new SolidColorPaint(SKColor.Parse("#FF6F00")),
+            Fill = new SolidColorPaint(SKColor.Parse("#F9FBE7"))
+        }
+    };
 }

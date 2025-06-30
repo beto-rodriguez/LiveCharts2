@@ -1,12 +1,33 @@
 ﻿@page "/Axes/TimeSpanScaled"
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.Axes.TimeSpanScaled
+@using LiveChartsCore;
+@using LiveChartsCore.Defaults;
+@using LiveChartsCore.SkiaSharpView;
 
 <CartesianChart
-	Series="ViewModel.Series"
-	XAxes="ViewModel.XAxes">
+    Series="@series"
+    XAxes="@xAxes">
 </CartesianChart>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new();
+    private static TimeSpanPoint[] values = new TimeSpanPoint[]
+    {
+        new() { TimeSpan = TimeSpan.FromMilliseconds(1), Value = 10 },
+        new() { TimeSpan = TimeSpan.FromMilliseconds(2), Value = 6 },
+        new() { TimeSpan = TimeSpan.FromMilliseconds(3), Value = 3 },
+        new() { TimeSpan = TimeSpan.FromMilliseconds(4), Value = 12 },
+        new() { TimeSpan = TimeSpan.FromMilliseconds(5), Value = 8 }
+    };
+
+    private static string Formatter(TimeSpan value) => $"{value:fff}ms";
+
+    private ISeries[] series = new ISeries[]
+    {
+        new ColumnSeries<TimeSpanPoint> { Values = values }
+    };
+
+    private Axis[] xAxes = new Axis[]
+    {
+        new TimeSpanAxis(TimeSpan.FromMilliseconds(1), Formatter)
+    };
 }

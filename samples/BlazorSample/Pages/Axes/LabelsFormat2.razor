@@ -2,34 +2,50 @@
 @using LiveChartsCore.SkiaSharpView.Blazor
 @using LiveChartsCore;
 @using LiveChartsCore.SkiaSharpView;
+@using LiveChartsCore.SkiaSharpView.Painting;
 @using SkiaSharp;
-@using ViewModelsSamples.Axes.LabelsFormat2
-@inject HttpClient Http;
 
-<CartesianChart
-	Series="ViewModel.Series"
-	XAxes="ViewModel.XAxes"
-	YAxes="ViewModel.YAxes">
+<CartesianChart Series="@series"
+                XAxes="@xAxes"
+                YAxes="@yAxes">
 </CartesianChart>
 
 @code {
-    public ViewModel ViewModel { get; set; } = new();
-
-    protected async override Task OnInitializedAsync()
+    static LabelsFormat2()
     {
-        // On .net8, SkiaSharp 2.88.6 and SkiaSharp.HarfBuzz 2.88.6 the MatchCharacter does not load the font.
-        // The MatchCharacter function loads a font from the system,
-        // it seems that on WASM we must load the font manually.
-
-        // In this case, the font was added to the wwwroot folder, then we load it using the HTTPClient
-        // This is only necessary once, ideally when the app starts.
-
-        using var stream = await Http.GetStreamAsync("NotoSansSC-Regular.otf");
-        var typeface = SKTypeface.FromStream(stream);
-
-        LiveCharts.Configure(config => // mark
-            config // mark
-                .UseDefaults() // mark
-                .HasGlobalSKTypeface(typeface)); // mark
+        // Register a font that supports Chinese characters (optional, for full compatibility)
+        LiveCharts.Configure(config =>
+            config.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('汉')));
     }
+
+    private static double[] values1 = new double[] { 426, 583, 104 };
+    private static double[] values2 = new double[] { 200, 558, 458 };
+    private static string[] labels = new string[] { "王", "赵", "张" };
+    private static string Labeler(double value) => value.ToString("C2");
+
+    private ISeries[] series = new ISeries[]
+    {
+        new ColumnSeries<double> { Values = values1 },
+        new ColumnSeries<double> { Values = values2, Fill = null }
+    };
+
+    private Axis[] xAxes = new Axis[]
+    {
+        new Axis
+        {
+            Name = "姓名",
+            Labels = labels
+        }
+    };
+
+    private Axis[] yAxes = new Axis[]
+    {
+        new Axis
+        {
+            Name = "销售额",
+            NamePadding = new LiveChartsCore.Drawing.Padding(0, 15),
+            Labeler = Labeler,
+            LabelsPaint = new SolidColorPaint(SKColors.DarkGreen)
+        }
+    };
 }

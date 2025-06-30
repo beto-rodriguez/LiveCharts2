@@ -1,19 +1,87 @@
 ﻿@page "/Bars/Race"
+@using LiveChartsCore.Defaults
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.Bars.Race
+@using LiveChartsCore;
+@using LiveChartsCore.Kernel;
+@using LiveChartsCore.SkiaSharpView;
+@using LiveChartsCore.SkiaSharpView.Painting;
+@using LiveChartsCore.Themes;
+@using SkiaSharp;
 
 <CartesianChart
-	Series="ViewModel.Series"
-    XAxes="ViewModel.XAxes"
-    YAxes="ViewModel.YAxes"
+    Series="@series"
+    YAxes="@yAxes"
     TooltipPosition="LiveChartsCore.Measure.TooltipPosition.Hidden">
 </CartesianChart>
 
 @code {
-    protected override void OnAfterRender(bool firstRender)
+    private RowSeries<PilotInfo> _series;
+    private ISeries[] series;
+    private Axis[] yAxes;
+    private Random _r = new Random();
+
+    protected override async Task OnInitializedAsync()
     {
-        base.OnAfterRender(firstRender);
+        _series = new RowSeries<PilotInfo>
+        {
+            Values = Fetch(),
+            DataLabelsTranslate = new LiveChartsCore.Drawing.LvcPoint(-1, 0),
+            DataLabelsPaint = new SolidColorPaint(SKColors.Black),
+            DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.End,
+            DataLabelsFormatter = point => ((PilotInfo)point.Context.DataSource).Name,
+        };
+        _series.PointMeasured += OnPointMeasured;
+        series = new ISeries[] { _series };
+        yAxes = new Axis[] { new Axis { IsVisible = false } };
+        _ = StartRace();
     }
 
-    public ViewModel ViewModel { get; set; } = new();
+    private async Task StartRace()
+    {
+        await Task.Delay(1000);
+        while (true)
+        {
+            foreach (var item in _series.Values)
+                item.Value += _r.Next(0, 100);
+            _series.Values = _series.Values.OrderBy(x => x.Value).ToList();
+            await InvokeAsync(StateHasChanged);
+            await Task.Delay(100);
+        }
+    }
+
+    private void OnPointMeasured(ChartPoint point)
+    {
+        var pilot = (PilotInfo)point.Context.DataSource;
+        if (point.Context.Visual is null || pilot is null) return;
+        point.Context.Visual.Fill = pilot.Paint;
+    }
+
+    private static List<PilotInfo> Fetch()
+    {
+        var paints = Enumerable.Range(0, 7)
+            .Select(i => new SolidColorPaint(ColorPalletes.MaterialDesign500[i].AsSKColor()))
+            .ToArray();
+        return new List<PilotInfo>
+        {
+            new PilotInfo("Tsunoda",   500,  paints[0]),
+            new PilotInfo("Sainz",     450,  paints[1]),
+            new PilotInfo("Riccardo",  520,  paints[2]),
+            new PilotInfo("Bottas",    550,  paints[3]),
+            new PilotInfo("Perez",     660,  paints[4]),
+            new PilotInfo("Verstapen", 920,  paints[5]),
+            new PilotInfo("Hamilton",  1000, paints[6])
+        };
+    }
+
+    public class PilotInfo : ObservableValue
+    {
+        public PilotInfo(string name, int value, SolidColorPaint paint)
+        {
+            Name = name;
+            Paint = paint;
+            Value = value;
+        }
+        public string Name { get; set; }
+        public SolidColorPaint Paint { get; set; }
+    }
 }

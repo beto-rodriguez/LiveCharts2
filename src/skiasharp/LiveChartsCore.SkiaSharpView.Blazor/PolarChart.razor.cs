@@ -193,12 +193,13 @@ public partial class PolarChart : Chart, IPolarChartView
     /// <inheritdoc cref="Chart.OnDisposing"/>
     protected override void OnDisposing()
     {
-        base.OnDisposing();
         core?.Unload();
 
-        Series = Array.Empty<ISeries>();
-        AngleAxes = Array.Empty<IPolarAxis>();
-        RadiusAxes = Array.Empty<IPolarAxis>();
-        VisualElements = Array.Empty<ChartElement>();
+        Series = [];
+        AngleAxes = [];
+        RadiusAxes = [];
+        VisualElements = [];
+
+        base.OnDisposing();
     }
 }

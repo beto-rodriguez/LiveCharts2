@@ -1,6 +1,11 @@
 ﻿@page "/Pies/AngularGauge"
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.Pies.AngularGauge
+@using LiveChartsCore.SkiaSharpView.Extensions
+@using LiveChartsCore.SkiaSharpView.VisualElements
+@using LiveChartsCore.Defaults
+@using LiveChartsCore
+@using LiveChartsCore.SkiaSharpView
+@using LiveChartsCore.Kernel
 
 <style>
 	.sample-wrap {
@@ -10,14 +15,14 @@
 	}
 </style>
 
-<button class="btn btn-primary" @onclick="ViewModel.DoRandomChange">
+<button class="btn btn-primary" @onclick="DoRandomChange">
 	Update Value
 </button>
 
 <div class="sample-wrap">
 	<PieChart
-		Series="ViewModel.Series"
-        VisualElements="ViewModel.VisualElements"
+		Series="Series"
+        VisualElements="VisualElements"
 		InitialRotation="-225"
         MaxAngle="270"
         MinValue="0"
@@ -26,5 +31,51 @@
 </div>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new();
+    private readonly Random _random = new();
+    private ICollection<ISeries> Series { get; set; }
+    private ICollection<IChartElement> VisualElements { get; set; }
+    private NeedleVisual _needle;
+
+    protected override void OnInitialized()
+    {
+        var sectionsOuter = 130;
+        var sectionsWidth = 20;
+
+        _needle = new NeedleVisual
+        {
+            Value = 45
+        };
+
+        Series = GaugeGenerator.BuildAngularGaugeSections(
+            new GaugeItem(60, s => SetStyle(sectionsOuter, sectionsWidth, s)),
+            new GaugeItem(30, s => SetStyle(sectionsOuter, sectionsWidth, s)),
+            new GaugeItem(10, s => SetStyle(sectionsOuter, sectionsWidth, s)));
+
+        VisualElements = new List<IChartElement>
+        {
+            new AngularTicksVisual
+            {
+                Labeler = value => value.ToString("N1"),
+                LabelsSize = 16,
+                LabelsOuterOffset = 15,
+                OuterOffset = 65,
+                TicksLength = 20
+            },
+            _needle
+        };
+    }
+
+    private void DoRandomChange()
+    {
+        _needle.Value = _random.Next(0, 100);
+        StateHasChanged();  
+    }
+
+    private static void SetStyle(
+        double sectionsOuter, double sectionsWidth, PieSeries<ObservableValue> series)
+    {
+        series.OuterRadiusOffset = sectionsOuter;
+        series.MaxRadialColumnWidth = sectionsWidth;
+        series.CornerRadius = 0;
+    }
 }

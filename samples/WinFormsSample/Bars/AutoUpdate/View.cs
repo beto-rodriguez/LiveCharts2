@@ -27,12 +27,12 @@ public partial class View : UserControl
         ];
 
         _seriesCollection = [
-            new LineSeries<ObservableValue>
+            new ColumnSeries<ObservableValue>
             {
                 Name = "Juana",
                 Values = _juanaValues
             },
-            new LineSeries<ObservableValue>
+            new ColumnSeries<ObservableValue>
             {
                 Name = "Mary",
                 Values = [new(5), new(4), new(1)]
@@ -73,7 +73,7 @@ public partial class View : UserControl
     private void AddSeries()
     {
         _seriesCollection.Add(
-            new LineSeries<ObservableValue>
+            new ColumnSeries<ObservableValue>
             {
                 Name = $"User #{_seriesCollection.Count}",
                 Values = FetchVales()

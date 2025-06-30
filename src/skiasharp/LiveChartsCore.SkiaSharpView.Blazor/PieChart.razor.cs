@@ -118,10 +118,11 @@ public partial class PieChart : Chart, IPieChartView
     /// <inheritdoc cref="Chart.OnDisposing"/>
     protected override void OnDisposing()
     {
-        base.OnDisposing();
         core?.Unload();
 
-        Series = Array.Empty<ISeries>();
-        VisualElements = Array.Empty<ChartElement>();
+        Series = [];
+        VisualElements = [];
+
+        base.OnDisposing();
     }
 }

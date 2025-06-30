@@ -1,13 +1,71 @@
 ﻿@page "/General/ConditionalDraw"
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.General.ConditionalDraw
+@using LiveChartsCore;
+@using LiveChartsCore.Defaults;
+@using LiveChartsCore.Kernel;
+@using LiveChartsCore.SkiaSharpView;
+@using LiveChartsCore.SkiaSharpView.Painting;
+@using LiveChartsCore.VisualStates;
+@using SkiaSharp;
+@using LiveChartsCore.Drawing;
+@using System.Collections.ObjectModel
 
 <CartesianChart
-	Series="ViewModel.Series"
-    Sections="ViewModel.Sections"
-	YAxes="ViewModel.Y">
+    Series="@series"
+    LegendPosition="LiveChartsCore.Measure.LegendPosition.Right">
 </CartesianChart>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new();
+    private ObservableCollection<ObservableValue> _values = new ObservableCollection<ObservableValue>
+    {
+        new ObservableValue(2),
+        new ObservableValue(3),
+        new ObservableValue(4)
+    };
+    private Random _random = new Random();
+    private ISeries[] series;
+
+    protected override void OnInitialized()
+    {
+        var columnSeries = new ColumnSeries<ObservableValue>
+        {
+            Values = _values
+        };
+        columnSeries.PointMeasured += OnPointMeasured;
+        columnSeries.HasState("Danger", new[]
+        {
+            (nameof(IDrawnElement.Fill), (object)new SolidColorPaint(SKColors.Red))
+        });
+        columnSeries.HasState("Hover", new[]
+        {
+            (nameof(IDrawnElement.DropShadow), (object)new LvcDropShadow(4, 4, 16, 16, new(0, 0, 255)))
+        });
+        series = new ISeries[] { columnSeries };
+        _ = Randomize();
+    }
+
+    private void OnPointMeasured(ChartPoint point)
+    {
+        if (point.Context.DataSource is not ObservableValue observable) return;
+        if (observable.Value > 5)
+        {
+            point.SetState("Danger");
+        }
+        else
+        {
+            point.ClearState("Danger");
+        }
+    }
+
+    private async Task Randomize()
+    {
+        while (true)
+        {
+            await Task.Delay(3000);
+            foreach (var item in _values)
+            {
+                item.Value = _random.Next(1, 10);
+            }
+        }
+    }
 }

@@ -1,17 +1,36 @@
 ﻿@page "/General/Visibility"
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.General.Visibility
+@using LiveChartsCore;
+@using LiveChartsCore.SkiaSharpView;
 
 <div>
-	<button type="button" class="btn btn-primary" @onclick="ViewModel.ToggleSeries0">Toggle first</button>
-	<button type="button" class="btn btn-primary" @onclick="ViewModel.ToggleSeries1">Toggle second</button>
-	<button type="button" class="btn btn-primary" @onclick="ViewModel.ToggleSeries2">Toggle third</button>
+    <button type="button" class="btn btn-primary" @onclick="() => ToggleSeries(0)">Toggle first</button>
+    <button type="button" class="btn btn-primary" @onclick="() => ToggleSeries(1)">Toggle second</button>
+    <button type="button" class="btn btn-primary" @onclick="() => ToggleSeries(2)">Toggle third</button>
 </div>
 
 <CartesianChart
-	Series="ViewModel.Series">
+    Series="@series">
 </CartesianChart>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new();
+    private ISeries[] series;
+
+    protected override void OnInitialized()
+    {
+        series = new ISeries[]
+        {
+            new ColumnSeries<double> { Values = new double[] { 2, 5, 4, 3 }, IsVisible = true },
+            new ColumnSeries<double> { Values = new double[] { 1, 2, 3, 4 }, IsVisible = true },
+            new ColumnSeries<double> { Values = new double[] { 4, 3, 2, 1 }, IsVisible = true }
+        };
+    }
+
+    private void ToggleSeries(int index)
+    {
+        if (series[index] is ISeries s)
+        {
+            s.IsVisible = !s.IsVisible;
+        }
+    }
 }

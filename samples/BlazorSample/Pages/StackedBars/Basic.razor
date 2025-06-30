@@ -1,11 +1,45 @@
 ﻿@page "/StackedBars/Basic"
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.StackedBars.Basic
+@using LiveChartsCore.SkiaSharpView
+@using LiveChartsCore
+@using LiveChartsCore.Kernel
 
 <CartesianChart
-	Series="ViewModel.Series">
+	Series="Series">
 </CartesianChart>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new();
+    private ISeries[] Series { get; set; }
+
+    protected override void OnInitialized()
+    {
+        var values1 = new int[] { 3, 5, -3, 2, 5, -4, -2 };
+        var values2 = new int[] { 4, 2, -3, 2, 3, 4, -2 };
+        var values3 = new int[] { -2, 6, 6, 5, 4, 3, -2 };
+
+        static string formatter(ChartPoint p) =>
+            $"{p.Coordinate.PrimaryValue:N} ({p.StackedValue!.Share:P})";
+
+        Series = new ISeries[]
+        {
+            new StackedColumnSeries<int>
+            {
+                Values = values1,
+                ShowDataLabels = true,
+                YToolTipLabelFormatter = formatter
+            },
+            new StackedColumnSeries<int>
+            {
+                Values = values2,
+                ShowDataLabels = true,
+                YToolTipLabelFormatter = formatter
+            },
+            new StackedColumnSeries<int>
+            {
+                Values = values3,
+                ShowDataLabels = true,
+                YToolTipLabelFormatter = formatter
+            }
+        };
+    }
 }

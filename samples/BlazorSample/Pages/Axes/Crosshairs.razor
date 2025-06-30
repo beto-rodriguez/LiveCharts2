@@ -1,18 +1,57 @@
 ﻿@page "/Axes/Crosshairs"
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.Axes.Crosshairs
+@using LiveChartsCore;
+@using LiveChartsCore.SkiaSharpView;
+@using LiveChartsCore.Measure;
+@using LiveChartsCore.SkiaSharpView.Painting;
+@using SkiaSharp;
 
 <CartesianChart
-	Series="ViewModel.Series"
-	XAxes="ViewModel.XAxes"
-	YAxes="ViewModel.YAxes">
+    Series="@series"
+    XAxes="@xAxes"
+    YAxes="@yAxes">
 </CartesianChart>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new();
+    private static double[] values = new double[] { 200, 558, 458, 249, 457, 339, 587 };
+    private static Func<double, string> labelFormatter = value => value.ToString("N2");
 
-    override void OnInitialized()
+    private ISeries[] series = new ISeries[]
     {
-        ViewModel.Initialize();
+        new LineSeries<double> { Values = values }
+    };
+
+    private Axis xAxis;
+    private Axis yAxis;
+    private Axis[] xAxes;
+    private Axis[] yAxes;
+
+    public Crosshairs()
+    {
+        var crosshairColor = new SKColor(255, 0, 51);
+        var crosshairBackground = new LiveChartsCore.Drawing.LvcColor(255, 0, 51);
+
+        xAxis = new Axis
+        {
+            Name = "X Axis",
+            CrosshairPaint = new SolidColorPaint(crosshairColor, 2),
+            CrosshairLabelsPaint = new SolidColorPaint(SKColors.White),
+            CrosshairLabelsBackground = crosshairBackground,
+            CrosshairPadding = new LiveChartsCore.Drawing.Padding(6)
+        };
+
+        yAxis = new Axis
+        {
+            Name = "Y Axis",
+            Labeler = labelFormatter,
+            CrosshairPaint = new SolidColorPaint(crosshairColor, 2),
+            CrosshairLabelsPaint = new SolidColorPaint(SKColors.White),
+            CrosshairLabelsBackground = crosshairBackground,
+            CrosshairPadding = new LiveChartsCore.Drawing.Padding(6),
+            CrosshairSnapEnabled = true
+        };
+
+        xAxes = new[] { xAxis };
+        yAxes = new[] { yAxis };
     }
 }

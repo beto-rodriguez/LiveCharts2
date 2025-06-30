@@ -17,12 +17,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Axes\**" />
-    <EmbeddedResource Remove="Axes\**" />
-    <None Remove="Axes\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="Images\livecharts.png" />
   </ItemGroup>
 
