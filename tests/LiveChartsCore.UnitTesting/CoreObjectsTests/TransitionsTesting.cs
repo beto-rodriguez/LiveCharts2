@@ -1,5 +1,6 @@
 using System;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -18,11 +19,12 @@ public class TransitionsTesting
 
         r.SetTransition(
             new Animation(easing, duration, int.MaxValue),
-            nameof(r.Y), nameof(r.X), nameof(r.Width), nameof(r.Height));
+            DrawnGeometry.YProperty, DrawnGeometry.XProperty,
+            BoundedDrawnGeometry.WidthProperty, BoundedDrawnGeometry.HeightProperty);
 
         void DrawFrame(long time)
         {
-            a.CurrentTime = time;
+            CoreMotionCanvas.DebugElapsedMilliseconds = time;
             a.IsValid = true;
         }
 
@@ -41,14 +43,16 @@ public class TransitionsTesting
         r.X = 50;
         r.Width = 50;
         r.Height = 50;
-        r.CompleteTransition(nameof(r.Y), nameof(r.X), nameof(r.Width), nameof(r.Height));
+        r.CompleteTransition(
+            DrawnGeometry.YProperty, DrawnGeometry.XProperty,
+            BoundedDrawnGeometry.WidthProperty, BoundedDrawnGeometry.HeightProperty);
 
         r.Y = 100;
         r.X = 100;
         r.Width = 100;
         r.Height = 100;
 
-        a.CurrentTime = time;
+        CoreMotionCanvas.DebugElapsedMilliseconds = time;
         var startTime = 50;
         time = startTime;
 
@@ -86,11 +90,12 @@ public class TransitionsTesting
 
         r.SetTransition(
             new Animation(easing, duration),
-            nameof(r.Y), nameof(r.X), nameof(r.Width), nameof(r.Height));
+            DrawnGeometry.YProperty, DrawnGeometry.XProperty,
+            BoundedDrawnGeometry.WidthProperty, BoundedDrawnGeometry.HeightProperty);
 
         void DrawFrame(long time)
         {
-            a.CurrentTime = time;
+            CoreMotionCanvas.DebugElapsedMilliseconds = time;
             a.IsValid = true;
 
             // Calling the property getter moves the transition with the current animatable time
@@ -108,14 +113,16 @@ public class TransitionsTesting
         r.X = 0;
         r.Width = 0;
         r.Height = 0;
-        r.CompleteTransition(nameof(r.Y), nameof(r.X), nameof(r.Width), nameof(r.Height));
+        r.CompleteTransition(
+            DrawnGeometry.YProperty, DrawnGeometry.XProperty,
+            BoundedDrawnGeometry.WidthProperty, BoundedDrawnGeometry.HeightProperty);
         DrawFrame(time);
 
         Assert.IsTrue(a.IsValid);
 
         r.Y = 100;
         DrawFrame(time);
-        var p = r.MotionProperties[nameof(r.Y)];
+        var p = r.GetPropertyDefinition(nameof(r.Y)).GetMotion(r);
 
         time += 500;
         DrawFrame(time);
@@ -130,12 +137,11 @@ public class TransitionsTesting
     public void KeyFramesTest()
     {
         var f = EasingFunctions.BuildFunctionUsingKeyFrames(
-            new[]
-            {
+            [
                 new KeyFrame { Time = 0, Value = 0, EasingFunction = EasingFunctions.Lineal },
                 new KeyFrame { Time = 0.5f, Value = 1, EasingFunction = EasingFunctions.Lineal },
                 new KeyFrame { Time = 1, Value = 0, EasingFunction = EasingFunctions.Lineal },
-            });
+            ]);
 
         var r = new[] { 0, 0.2f, 0.4f, 0.6f, 0.8f, 1, 0.8f, 0.6f, 0.4f, 0.2f, 0 };
         var i = 0;
@@ -147,15 +153,14 @@ public class TransitionsTesting
         }
 
         f = EasingFunctions.BuildFunctionUsingKeyFrames(
-            new[]
-            {
+            [
                 new KeyFrame { Time = 0, Value = 0, EasingFunction = EasingFunctions.Lineal },
                 new KeyFrame { Time = 0.30f, Value = 0, EasingFunction = EasingFunctions.Lineal },
                 new KeyFrame { Time = 0.80f, Value = 1, EasingFunction = EasingFunctions.Lineal },
                 new KeyFrame { Time = 1, Value = 1, EasingFunction = EasingFunctions.Lineal },
-            });
+            ]);
 
-        r = new[] { 0, 0, 0, 0, 0.2f, 0.4f, 0.6f, 0.8f, 1, 1 };
+        r = [0, 0, 0, 0, 0.2f, 0.4f, 0.6f, 0.8f, 1, 1];
         i = 0;
 
         for (float t = 0; t <= 1; t += 0.1f)
@@ -174,11 +179,11 @@ public class TransitionsTesting
         var easing = EasingFunctions.Lineal;
 
         r.SetTransition(
-            new Animation(easing, duration, int.MaxValue), nameof(r.X));
+            new Animation(easing, duration, int.MaxValue), DrawnGeometry.XProperty);
 
         void DrawFrame(long time)
         {
-            a.CurrentTime = time;
+            CoreMotionCanvas.DebugElapsedMilliseconds = time;
             a.IsValid = true;
         }
 
@@ -186,11 +191,11 @@ public class TransitionsTesting
         DrawFrame(time);
 
         r.X = 0;
-        r.CompleteTransition(nameof(r.X));
+        r.CompleteTransition(DrawnGeometry.XProperty);
 
         r.X = 100;
 
-        a.CurrentTime = time;
+        CoreMotionCanvas.DebugElapsedMilliseconds = time;
         time = 0;
 
         var start = 0d;
