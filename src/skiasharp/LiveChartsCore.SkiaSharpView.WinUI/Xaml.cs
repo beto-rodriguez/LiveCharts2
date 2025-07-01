@@ -42,7 +42,7 @@ using Microsoft.UI.Xaml;
 
 namespace LiveChartsCore.SkiaSharpView.WinUI;
 
-[XamlClass(typeof(Axis), PropertyTypeOverride = "MinLimit{=}double{,}MaxLimit{=}double", PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap")]
+[XamlClass(typeof(Axis), PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap")]
 public partial class XamlAxis : FrameworkElement, ICartesianAxis
 {
     string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
@@ -62,7 +62,7 @@ public partial class XamlAxis : FrameworkElement, ICartesianAxis
     }
 }
 
-[XamlClass(typeof(PolarAxis), PropertyTypeOverride = "MinLimit{=}double{,}MaxLimit{=}double", PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap")]
+[XamlClass(typeof(PolarAxis), PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap")]
 public partial class XamlPolarAxis : FrameworkElement, IPolarAxis
 {
     string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
@@ -82,7 +82,7 @@ public partial class XamlPolarAxis : FrameworkElement, IPolarAxis
     }
 }
 
-[XamlClass(typeof(DateTimeAxis), PropertyTypeOverride = "MinLimit{=}double{,}MaxLimit{=}double", PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap", GenerateBaseTypeDeclaration = false)]
+[XamlClass(typeof(DateTimeAxis), PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap", GenerateBaseTypeDeclaration = false)]
 public partial class XamlDateTimeAxis : FrameworkElement, ICartesianAxis
 {
     private readonly DateTimeAxis _baseType = new(TimeSpan.FromDays(1), date => date.ToString("d"));
@@ -108,7 +108,7 @@ public partial class XamlDateTimeAxis : FrameworkElement, ICartesianAxis
     }
 }
 
-[XamlClass(typeof(TimeSpanAxis), PropertyTypeOverride = "MinLimit{=}double{,}MaxLimit{=}double", PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap", GenerateBaseTypeDeclaration = false)]
+[XamlClass(typeof(TimeSpanAxis), PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap", GenerateBaseTypeDeclaration = false)]
 public partial class XamlTimeSpanAxis : FrameworkElement, ICartesianAxis
 {
     private readonly TimeSpanAxis _baseType = new(TimeSpan.FromMilliseconds(1), date => $"{date:fff}ms");
@@ -134,7 +134,7 @@ public partial class XamlTimeSpanAxis : FrameworkElement, ICartesianAxis
     }
 }
 
-[XamlClass(typeof(LogarithmicAxis), PropertyTypeOverride = "MinLimit{=}double{,}MaxLimit{=}double", PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap", GenerateBaseTypeDeclaration = false)]
+[XamlClass(typeof(LogarithmicAxis), PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap", GenerateBaseTypeDeclaration = false)]
 public partial class XamlLogarithmicAxis : FrameworkElement, ICartesianAxis
 {
     private readonly LogarithmicAxis _baseType = new(10);
@@ -163,10 +163,11 @@ public partial class XamlLogarithmicAxis : FrameworkElement, ICartesianAxis
 public partial class XamlDrawnLabelVisual : FrameworkElement, IChartElement, IInternalInteractable
 {
     private static readonly LabelGeometry _defaultDrawnLabel = new();
-    private LabelGeometry? DrawnLabel => (LabelGeometry?)_baseType.DrawnElement;
+    private LabelGeometry DrawnLabel => (LabelGeometry?)_baseType.DrawnElement
+        ?? throw new Exception("Drawn element not found");
 }
 
-[XamlClass(typeof(RectangularSection), PropertyTypeOverride = "Xi{=}double{,}Xj{=}double", PropertyChangeMap = "Xi{=}XiMap{,}Xj{=}XjMap")]
+[XamlClass(typeof(RectangularSection), PropertyChangeMap = "Xi{=}XiMap{,}Xj{=}XjMap")]
 public partial class XamlRectangularSection : FrameworkElement, IChartElement
 {
     private void XiMap(object value)

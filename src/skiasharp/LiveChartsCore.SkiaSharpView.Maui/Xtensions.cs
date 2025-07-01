@@ -450,7 +450,7 @@ public class ShadowExtension : IMarkupExtension<LvcDropShadow>
     /// <summary>
     /// Gets or sets the color in hex string format.
     /// </summary>
-    public string? Color { get; set; }
+    public string Color { get; set; } = "#555555";
 
     /// <summary>
     /// ...

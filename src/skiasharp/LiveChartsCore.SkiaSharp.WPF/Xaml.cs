@@ -94,7 +94,8 @@ public partial class XamlLogarithmicAxis : FrameworkElement, ICartesianAxis
 public partial class XamlDrawnLabelVisual : FrameworkElement, IChartElement, IInternalInteractable
 {
     private static readonly LabelGeometry _defaultDrawnLabel = new();
-    private LabelGeometry? DrawnLabel => (LabelGeometry?)_baseType.DrawnElement;
+    private LabelGeometry DrawnLabel => (LabelGeometry?)_baseType.DrawnElement
+        ?? throw new Exception("Drawn element not found");
 }
 
 [XamlClass(typeof(RectangularSection))]

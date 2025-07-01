@@ -30,9 +30,14 @@ public class WPFTemplate(FrameworkTemplate.Context context) : FrameworkTemplate(
     public override string DeclareBindableProperty(string propertyName, string propertyType)
         => @$"public static readonly new global::System.Windows.DependencyProperty {propertyName}Property";
 
-    public override string CreateBindableProperty(
-        string propertyName, string propertyType, string bindableType, string defaultValue, string? onChanged = null)
-            => @$"global::System.Windows.DependencyProperty.Register(name: ""{propertyName}"", propertyType: typeof({propertyType}), ownerType: typeof({bindableType}), typeMetadata: new System.Windows.PropertyMetadata(defaultValue:{defaultValue}{(onChanged is null ? string.Empty : $", propertyChangedCallback: {GetOnChangedExpression(onChanged, bindableType, propertyType)}")}));";
+    public override string CreateBindableProperty(string propertyName, string propertyType, string bindableType, string defaultValue, string? onChanged = null)
+    {
+        var sanitizedPropertyType = propertyType.EndsWith("?")
+            ? propertyType.Substring(0, propertyType.Length - 1)
+            : propertyType;
+
+        return @$"global::System.Windows.DependencyProperty.Register(name: ""{propertyName}"", propertyType: typeof({sanitizedPropertyType}), ownerType: typeof({bindableType}), typeMetadata: new System.Windows.PropertyMetadata(defaultValue:{defaultValue}{(onChanged is null ? string.Empty : $", propertyChangedCallback: {GetOnChangedExpression(onChanged, bindableType, propertyType)}")}));";
+    }
 
     public override string GetPropertyChangedMetod() =>
         @$"protected override void OnPropertyChanged(System.Windows.DependencyPropertyChangedEventArgs args)

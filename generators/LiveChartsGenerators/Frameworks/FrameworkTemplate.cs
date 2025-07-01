@@ -97,12 +97,8 @@ public abstract class FrameworkTemplate(FrameworkTemplate.Context context)
         if (target.OverridenNames.TryGetValue(propertyName, out var overridenName))
             propertyName = overridenName;
 
-        var sanitizedPropertyType = property.Type.IsReferenceType && propertyType.EndsWith("?")
-            ? propertyType.Substring(0, propertyType.Length - 1)
-            : propertyType;
-
         return CreateBindableProperty(
-            propertyName, sanitizedPropertyType, target.Name, $"{fallBackName}.{originalPropertyName}");
+            propertyName, propertyType, target.Name, $"{fallBackName}.{originalPropertyName}");
     }
 
     public static (string, string) GetFallbackInfo(ITypeSymbol target)

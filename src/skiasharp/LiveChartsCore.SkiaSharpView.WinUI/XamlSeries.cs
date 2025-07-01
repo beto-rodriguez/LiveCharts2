@@ -64,7 +64,7 @@ public abstract class XamlSeries : FrameworkElement
     /// <summary>
     /// Maps the specified value to the underlying series' values collection.
     /// </summary>
-    protected void ValuesMap(object value) => WrappedSeries.Values = (IEnumerable)value;
+    protected void ValuesMap(object? value) => WrappedSeries.Values = (IEnumerable?)value;
 
     private void OnAdditionalVisualStatesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {

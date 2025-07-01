@@ -94,23 +94,6 @@ public class MotionCanvas : UserControl
         CanvasCore.Dispose();
     }
 
-    /// <inheritdoc cref="IBindableContainer.AddChild(object)"/>
-    public void AddChild(object child)
-    {
-        if (child is not ILogical logicalChild) return;
-        LogicalChildren.Add(logicalChild);
-    }
-
-    /// <inheritdoc cref="IBindableContainer.RemoveChild(object)"/>
-    public void RemoveChild(object child)
-    {
-        if (child is not ILogical logicalChild) return;
-        _ = LogicalChildren.Remove(logicalChild);
-    }
-
-    /// <inheritdoc cref="IBindableContainer.GetChildren()"/>
-    public IEnumerable<object> GetChildren() => LogicalChildren;
-
     // based on:
     // https://github.com/AvaloniaUI/Avalonia/blob/release/11.0.0/samples/RenderDemo/Pages/CustomSkiaPage.cs
     private class ChartFrameOperation(

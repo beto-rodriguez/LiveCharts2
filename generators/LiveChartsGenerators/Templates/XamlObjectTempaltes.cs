@@ -40,6 +40,7 @@ public static class XamlObjectTempaltes
 #nullable enable
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning disable CS0109 // Member does not hide an inherited member; new keyword is not required
+#pragma warning disable CS0618 // ignore obsolete member
 #pragma warning disable IDE0052 // Remove unread private members
 #pragma warning disable IDE1006 // Naming Styles
 {target.FileHeader}
@@ -96,7 +97,7 @@ public partial class {target.Name} : LiveChartsCore.Generators.IXamlWrapper<{bas
     {{
         switch (propertyName)
         {{
-{GetChangesMap(target)}{GetCommandsChangesMap(target)}
+{GetChangesMap(target, template)}{GetCommandsChangesMap(target)}
             default:
                 break;
         }}
@@ -158,7 +159,7 @@ public partial class {target.Name} : LiveChartsCore.Generators.IXamlWrapper<{bas
         add => _baseType.{@event.Name} += value;
         remove => _baseType.{@event.Name} -= value;
     }}
-{template.GetBindablePropertySyntax(target, "_baseType", $"{@event.Name}Command", "System.Windows.Input.ICommand", new(target.Name, "null"))}";
+{template.GetBindablePropertySyntax(target, "_baseType", $"{@event.Name}Command", "System.Windows.Input.ICommand?", new(target.Name, "null"))}";
 
     private static string GetMethodSyntax(IMethodSymbol method)
     {
@@ -210,7 +211,7 @@ public partial class {target.Name} : LiveChartsCore.Generators.IXamlWrapper<{bas
         return @$"    {method.ReturnType} {method.Name}({sb}) => (({path})_baseType).{actualName}({sb1});";
     }
 
-    private static string GetChangesMap(XamlObject target)
+    private static string GetChangesMap(XamlObject target, FrameworkTemplate template)
     {
         var sb = new StringBuilder();
 
@@ -227,9 +228,11 @@ public partial class {target.Name} : LiveChartsCore.Generators.IXamlWrapper<{bas
 
                 var propertyType = property.Type.ToDisplayString();
 
+                var avaloniaWarnFix = template.Key == "Avalonia" ? "!" : string.Empty;
+
                 _ = target.PropertyChangedMap.TryGetValue(property.Name, out var map)
-                    ? sb.AppendLine(@$"            case ""{GetPropertyName(target, property)}"": {map}(GetValue({GetPropertyName(target, property)}Property)); break;")
-                    : sb.AppendLine(@$"            case ""{GetPropertyName(target, property)}"": {path}.{property.Name} = ({propertyType})GetValue({GetPropertyName(target, property)}Property); break;");
+                    ? sb.AppendLine(@$"            case ""{GetPropertyName(target, property)}"": {map}(GetValue({GetPropertyName(target, property)}Property){avaloniaWarnFix}); break;")
+                    : sb.AppendLine(@$"            case ""{GetPropertyName(target, property)}"": {path}.{property.Name} = ({propertyType})GetValue({GetPropertyName(target, property)}Property){avaloniaWarnFix}; break;");
             }
         }
 

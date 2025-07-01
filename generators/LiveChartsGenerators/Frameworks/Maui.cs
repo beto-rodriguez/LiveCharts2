@@ -32,7 +32,13 @@ public class MauiTemplate(FrameworkTemplate.Context context) : FrameworkTemplate
 
     public override string CreateBindableProperty(
         string propertyName, string propertyType, string bindableType, string defaultValue, string? onChanged = null)
-            => @$"global::Microsoft.Maui.Controls.BindableProperty.Create(propertyName: ""{propertyName}"", returnType: typeof({propertyType}), declaringType: typeof({bindableType}), defaultValue: {defaultValue}{(onChanged is null ? string.Empty : $", propertyChanged: {GetOnChangedExpression(onChanged, bindableType, propertyType)}")});";
+    {
+        var sanitizedPropertyType = propertyType.EndsWith("?")
+            ? propertyType.Substring(0, propertyType.Length - 1)
+            : propertyType;
+
+        return @$"global::Microsoft.Maui.Controls.BindableProperty.Create(propertyName: ""{propertyName}"", returnType: typeof({sanitizedPropertyType}), declaringType: typeof({bindableType}), defaultValue: {defaultValue}{(onChanged is null ? string.Empty : $", propertyChanged: {GetOnChangedExpression(onChanged, bindableType, propertyType)}")});";
+    }
 
     public override string GetPropertyChangedMetod() =>
         @$"protected override void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string? propertyName = null)

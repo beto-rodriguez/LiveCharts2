@@ -31,7 +31,13 @@ public class WinUITemplate(FrameworkTemplate.Context context) : FrameworkTemplat
 
     public override string CreateBindableProperty(
         string propertyName, string propertyType, string bindableType, string defaultValue, string? onChanged = null)
-            => @$"global::Microsoft.UI.Xaml.DependencyProperty.Register(name: ""{propertyName}"", propertyType: typeof({propertyType}), ownerType: typeof({bindableType}), typeMetadata: new Microsoft.UI.Xaml.PropertyMetadata(defaultValue:{defaultValue}, propertyChangedCallback: {GetOnChangedExpression(onChanged, bindableType, propertyName, propertyType)}));";
+    {
+        var sanitizedPropertyType = propertyType.EndsWith("?")
+            ? propertyType.Substring(0, propertyType.Length - 1)
+            : propertyType;
+
+        return @$"global::Microsoft.UI.Xaml.DependencyProperty.Register(name: ""{propertyName}"", propertyType: typeof({sanitizedPropertyType}), ownerType: typeof({bindableType}), typeMetadata: new Microsoft.UI.Xaml.PropertyMetadata(defaultValue:{defaultValue}, propertyChangedCallback: {GetOnChangedExpression(onChanged, bindableType, propertyName, propertyType)}));";
+    }
 
     public override string GetPropertyChangedMetod() => string.Empty;
 

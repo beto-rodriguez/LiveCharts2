@@ -131,7 +131,9 @@ public partial class MotionCanvas : IDisposable
         {
             while (!CanvasCore.IsValid && !_disposing)
             {
+#pragma warning disable CA1416 // Validate platform compatibility
                 _glView?.Invalidate();
+#pragma warning restore CA1416 // Validate platform compatibility
                 await Task.Delay(ts);
             }
         }
@@ -139,7 +141,9 @@ public partial class MotionCanvas : IDisposable
         {
             while (!CanvasCore.IsValid && !_disposing)
             {
+#pragma warning disable CA1416 // Validate platform compatibility
                 _canvas?.Invalidate();
+#pragma warning restore CA1416 // Validate platform compatibility
                 await Task.Delay(ts);
             }
         }
