@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsGenerators.Frameworks;
 using Microsoft.CodeAnalysis;
 
 namespace LiveChartsGenerators.Definitions;
@@ -31,7 +32,7 @@ public readonly record struct XamlProperty
     public readonly ITypeSymbol DeclaringType;
     public readonly string Headers;
     public readonly string? DefaultValueExpression = null;
-    public readonly string? OnChangedExpression = null;
+    public readonly FrameworkTemplate.OnChangeInfo? OnChangeInfo = null;
 
     public XamlProperty(
         string name,
@@ -39,14 +40,14 @@ public readonly record struct XamlProperty
         ITypeSymbol declaringType,
         string headers,
         string? defaultValueExpression,
-        string? onChangedExpression)
+        FrameworkTemplate.OnChangeInfo? onChangeInfo)
     {
         Name = name;
         Type = type;
         DeclaringType = declaringType;
         Headers = headers;
         DefaultValueExpression = defaultValueExpression;
-        OnChangedExpression = onChangedExpression;
+        OnChangeInfo = onChangeInfo;
     }
 
     public static Dictionary<int, string> ByPosition = new()

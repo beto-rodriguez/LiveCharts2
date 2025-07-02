@@ -65,7 +65,7 @@ namespace {type.ContainingNamespace};
         propertyName:   ""{propertyName}"",
         propertyType:   typeof({sanitizedPropertyType}),
         getter:         (g)     =>   (({declaringType})g).{propertyName},
-        setter:         (g, v)  =>   (({declaringType})g).{propertyName} = v is {sanitizedPropertyType} s ? s : throw new System.InvalidCastException($""Unable to cast '{{v}}' to type '{target.Property.Type}'""),
+        setter:         (g, v)  =>   (({declaringType})g).{propertyName} = v is {sanitizedPropertyType} s ? s : (({declaringType})g)._{propertyName}MotionProperty.DefaultValue,
         motionGetter:   (g)     =>   (({declaringType})g)._{propertyName}MotionProperty);
 
     private readonly {GetMotionPropertyType(target.Property.Type)} _{propertyName}MotionProperty = new();

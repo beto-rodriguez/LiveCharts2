@@ -332,7 +332,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
             var propertyName = $"{camelCasedName.Substring(0, 1).ToUpperInvariant()}{camelCasedName.Substring(1, camelCasedName.Length - 1)}";
             var propertyType = ((INamedTypeSymbol)fieldSymbol.Type).TypeArguments[0];
             string? defaultValue = null;
-            string? onChanged = null;
+            FrameworkTemplate.OnChangeInfo? onChangeInfo = null;
 
             var syntaxReference = fieldSymbol.DeclaringSyntaxReferences.First();
             var syntaxTree = syntaxReference.SyntaxTree;
@@ -364,7 +364,22 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
                                         defaultValue = argument.Expression.ToString();
                                         break;
                                     case "onChanged:":
-                                        onChanged = argument.Expression.ToString();
+                                        var hasParams = false;
+                                        var hasObjectParams = false;
+
+                                        var info = semanticModel.GetSymbolInfo(argument.Expression);
+                                        // maybe we need to improve the next line?
+                                        if ((info.Symbol ?? info.CandidateSymbols.FirstOrDefault()) is IMethodSymbol methodSymbol)
+                                        {
+                                            hasParams = methodSymbol.Parameters.Length > 2;
+                                            hasObjectParams =
+                                                hasParams &&
+                                                SymbolEqualityComparer.Default.Equals(
+                                                    methodSymbol.Parameters[1].Type, semanticModel.Compilation.ObjectType);
+                                        }
+                                        var onChanged = argument.Expression.ToString();
+                                        onChangeInfo = new FrameworkTemplate.OnChangeInfo(
+                                            onChanged, hasObjectParams, hasParams);
                                         break;
                                     default:
                                         break;
@@ -375,7 +390,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
                 }
             }
 
-            return new(propertyName, propertyType, fieldSymbol.ContainingType, headers, defaultValue, onChanged);
+            return new(propertyName, propertyType, fieldSymbol.ContainingType, headers, defaultValue, onChangeInfo);
         }
 
         return null;

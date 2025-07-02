@@ -30,7 +30,7 @@ public class AvaloniaTemplate(FrameworkTemplate.Context context) : FrameworkTemp
         => @$"public static readonly new global::Avalonia.AvaloniaProperty<{propertyType}> {propertyName}Property";
 
     public override string CreateBindableProperty(
-        string propertyName, string propertyType, string bindableType, string defaultValue, string? onChanged = null)
+        string propertyName, string propertyType, string bindableType, string defaultValue, OnChangeInfo? changeInfo = null)
             => @$"global::Avalonia.AvaloniaProperty.Register<{bindableType}, {propertyType}>(nameof({propertyName}), defaultValue: ({propertyType}){defaultValue}, inherits: true);";
 
     public override string GetPropertyChangedMetod() =>

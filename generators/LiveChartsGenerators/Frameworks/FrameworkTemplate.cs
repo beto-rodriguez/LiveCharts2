@@ -111,12 +111,20 @@ public abstract class FrameworkTemplate(FrameworkTemplate.Context context)
 
     public abstract string DeclareBindableProperty(string propertyName, string propertyType);
     public abstract string CreateBindableProperty(
-        string propertyName, string propertyType, string bindableType, string defaultValue, string? onChanged = null);
+        string propertyName, string propertyType, string bindableType, string defaultValue, OnChangeInfo? changeInfo = null);
     public abstract string GetPropertyChangedMetod();
 
     public enum Context
     {
         XamlObject,
         XamlProperty,
+    }
+
+    public struct OnChangeInfo(
+        string? onChanged, bool isObject = false, bool hasChangeParams = false)
+    {
+        public string? Expression { get; set; } = onChanged;
+        public bool HasChangeObjectParams { get; set; } = isObject;
+        public bool HasChangeParams { get; set; } = hasChangeParams;
     }
 }
