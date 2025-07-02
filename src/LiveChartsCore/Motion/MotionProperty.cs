@@ -50,6 +50,11 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
     /// <inheritdoc cref="IMotionProperty.IsCompleted"/>
     public bool IsCompleted { get; private set; } = true;
 
+    /// <summary>
+    /// Gets the default value of the property.
+    /// </summary>
+    public T DefaultValue { get; } = defaultValue;
+
     object? IMotionProperty.FromValue => FromValue;
 
     object? IMotionProperty.ToValue => ToValue;
