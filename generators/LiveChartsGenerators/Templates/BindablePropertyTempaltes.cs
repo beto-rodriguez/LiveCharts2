@@ -106,8 +106,8 @@ namespace {type.ContainingNamespace};
 
             var cast = onChange.HasChangeObjectParams ? string.Empty : $"({propertyType})";
             var changeExpression = onChange.HasChangeParams
-                ? $@"(c) => {onChange.Expression}(({type})c.Sender, {cast}c.OldValue, {cast}c.NewValue)"
-                : $@"(c) => {onChange.Expression}(({type})c.Sender)";
+                ? $@"{onChange.Expression}(({type})c.Sender, {cast}c.OldValue, {cast}c.NewValue)"
+                : $@"{onChange.Expression}(({type})c.Sender)";
 
             _ = sb.AppendLine($"        [\"{value.Name}\"] = c => {changeExpression},");
         }
