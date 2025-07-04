@@ -28,6 +28,7 @@ using Avalonia.Markup.Xaml.Templates;
 using LiveChartsCore.Generators;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Observers;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
 
@@ -51,37 +52,74 @@ public abstract partial class ChartControl
 {
     static LiveChartsSettings d = LiveCharts.DefaultSettings;
 
+    /// <inheritdoc cref="IChartView.UpdateStarted"/>
     static XamlProperty<ICommand>                   updateStartedCommand;
+    /// <inheritdoc cref="IChartView.DataPointerDown"/>
     static XamlProperty<ICommand>                   dataPointerDownCommand;
+    /// <inheritdoc cref="IChartView.HoveredPointsChanged"/>
     static XamlProperty<ICommand>                   hoveredPointsChangedCommand;
+    /// <inheritdoc cref="IChartView.ChartPointPointerDown"/>
     static XamlProperty<ICommand>                   chartPointPointerDownCommand;
+    /// <inheritdoc cref="IChartView.VisualElementsPointerDown"/>
     static XamlProperty<ICommand>                   visualElementsPointerDownCommand;
+    /// <summary>
+    /// Ocurrs when the chart is pressed.
+    /// </summary>
     static XamlProperty<ICommand>                   pointerPressedCommand;
+    /// <summary>
+    /// Ocurrs when the pointer is moved over the chart.
+    /// </summary>
     static XamlProperty<ICommand>                   pointerMoveCommand;
+    /// <summary>
+    /// Ocurrs when the pointer is released over the chart.
+    /// </summary>
     static XamlProperty<ICommand>                   pointerReleasedCommand;
 
+    /// <inheritdoc cref="IChartView.AnimationsSpeed"/>
     static XamlProperty<TimeSpan>                   animationsSpeed         = new(d.AnimationsSpeed);
+    /// <inheritdoc cref="IChartView.EasingFunction"/>
     static XamlProperty<Func<float, float>?>        easingFunction          = new(d.EasingFunction);
+    /// <inheritdoc cref="IChartView.UpdaterThrottler"/>
     static XamlProperty<TimeSpan>                   updaterThrottler        = new(d.UpdateThrottlingTimeout);
+    /// <inheritdoc cref="IChartView.AutoUpdateEnabled"/>
     static XamlProperty<bool>                       autoUpdateEnabled       = new(true);
 
+    /// <inheritdoc cref="IChartView.DrawMargin"/>
     static XamlProperty<Margin>                     drawMargin              = new(null,                     OnChartPropertyChanged);
+    /// <inheritdoc cref="IChartView.LegendPosition"/>
     static XamlProperty<LegendPosition>             legendPosition          = new(d.LegendPosition,         OnChartPropertyChanged);
+    /// <inheritdoc cref="IChartView.TooltipPosition"/>
     static XamlProperty<TooltipPosition>            tooltipPosition         = new(d.TooltipPosition,        OnChartPropertyChanged);
+    /// <inheritdoc cref="IChartView.LegendTextPaint"/>
     static XamlProperty<Paint?>                     legendTextPaint         = new(d.LegendTextPaint,        OnChartPropertyChanged);
+    /// <inheritdoc cref="IChartView.LegendBackgroundPaint"/>
     static XamlProperty<Paint?>                     legendBackgroundPaint   = new(d.LegendBackgroundPaint,  OnChartPropertyChanged);
+    /// <inheritdoc cref="IChartView.LegendTextSize"/>
     static XamlProperty<double>                     legendTextSize          = new(d.LegendTextSize,         OnChartPropertyChanged);
+    /// <inheritdoc cref="IChartView.TooltipTextPaint"/>
     static XamlProperty<Paint?>                     tooltipTextPaint        = new(d.TooltipTextPaint,       OnChartPropertyChanged);
+    /// <inheritdoc cref="IChartView.TooltipBackgroundPaint"/>
     static XamlProperty<Paint?>                     tooltipBackgroundPaint  = new(d.TooltipBackgroundPaint, OnChartPropertyChanged);
+    /// <inheritdoc cref="IChartView.TooltipTextSize"/>
     static XamlProperty<double>                     tooltipTextSize         = new(d.TooltipTextSize,        OnChartPropertyChanged);
 
+    /// <inheritdoc cref="IChartView.SyncContext"/>
     static XamlProperty<object>                     syncContext             = new(onChanged: OnSyncContextChanged);
 
+    /// <inheritdoc cref="IChartView.Title"/>
     static XamlProperty<IChartElement?>             title                   = new(onChanged: OnObservedPropertyChanged(nameof(Title)));
+    /// <inheritdoc cref="IChartView.VisualElements"/>
     static XamlProperty<ICollection<IChartElement>> visualElements          = new(onChanged: OnObservedPropertyChanged(nameof(VisualElements)));
+    /// <inheritdoc cref="IChartView.Series"/>
     static XamlProperty<ICollection<ISeries>>       series                  = new(onChanged: OnObservedPropertyChanged(nameof(Series)));
 
+    /// <summary>
+    /// Gets or sets the source of the series.
+    /// </summary>
     static XamlProperty<IEnumerable<object>>        seriesSource            = new(onChanged: OnSeriesSourceChanged);
+    /// <summary>
+    /// Gets or sets the template used to create series from the <see cref="SeriesSource"/>.
+    /// </summary>
     static XamlProperty<DataTemplate>               seriesTemplate          = new(onChanged: OnSeriesSourceChanged);
 
     /// <inheritdoc />

@@ -46,12 +46,18 @@ public partial class PolarChart
 {
     static LiveChartsSettings d = LiveCharts.DefaultSettings;
 
+    /// <inheritdoc cref="IPolarChartView.FitToBounds"/>
     static XamlProperty<bool>                           fitToBounds         = new(defaultValue: d.PolarFitToBounds);
+    /// <inheritdoc cref="IPolarChartView.TotalAngle"/>
     static XamlProperty<double>                         totalAngle          = new(defaultValue: d.PolarTotalAngle);
+    /// <inheritdoc cref="IPolarChartView.InnerRadius"/>
     static XamlProperty<double>                         innerRadius         = new(defaultValue: d.PolarInnerRadius);
+    /// <inheritdoc cref="IPolarChartView.InitialRotation"/>
     static XamlProperty<double>                         initialRotation     = new(defaultValue: d.PolarInitialRotation);
 
+    /// <inheritdoc cref="IPolarChartView.AngleAxes"/>
     static XamlProperty<ICollection<IPolarAxis>>        angleAxes           = new(onChanged: OnObservedPropertyChanged(nameof(AngleAxes)));
+    /// <inheritdoc cref="IPolarChartView.RadiusAxes"/>
     static XamlProperty<ICollection<IPolarAxis>>        radiusAxes          = new(onChanged: OnObservedPropertyChanged(nameof(RadiusAxes)));
 
 #pragma warning disable IDE0060 // Remove unused parameter, hack for the source generator
