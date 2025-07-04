@@ -295,6 +295,22 @@ public abstract class Chart
     /// <returns></returns>
     public abstract IEnumerable<ChartPoint> FindHoveredPointsBy(LvcPoint pointerPosition);
 
+    /// <inheritdoc cref="IChartView.GetPointsAt(LvcPointD, FindingStrategy, FindPointFor)"/>
+    public IEnumerable<ChartPoint> GetPointsAt(
+        LvcPointD point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
+    {
+        if (strategy == FindingStrategy.Automatic)
+            strategy = Series.GetFindingStrategy();
+
+        return Series.SelectMany(series =>
+            series.FindHitPoints(this, new(point), strategy, FindPointFor.HoverEvent));
+    }
+
+    /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
+    public IEnumerable<IChartElement> GetVisualsAt(LvcPointD point) =>
+        VisualElements.SelectMany(visual =>
+            ((VisualElement)visual).IsHitBy(this, new(point)));
+
     /// <summary>
     /// Loads the control resources.
     /// </summary>

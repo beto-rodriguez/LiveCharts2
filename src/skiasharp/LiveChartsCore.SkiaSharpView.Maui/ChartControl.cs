@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
@@ -216,21 +215,12 @@ public abstract partial class ChartControl : ChartView, IChartView
 
     /// <inheritdoc cref="IChartView.GetPointsAt(LvcPointD, FindingStrategy, FindPointFor)"/>
     public IEnumerable<ChartPoint> GetPointsAt(
-        LvcPointD point,
-        FindingStrategy strategy = FindingStrategy.Automatic,
-        FindPointFor findPointFor = FindPointFor.HoverEvent)
-    {
-        if (strategy == FindingStrategy.Automatic)
-            strategy = CoreChart.Series.GetFindingStrategy();
-
-        return CoreChart.Series.SelectMany(series =>
-            series.FindHitPoints(CoreChart, new(point), strategy, FindPointFor.HoverEvent));
-    }
+        LvcPointD point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
+            => CoreChart.GetPointsAt(point, strategy, findPointFor);
 
     /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
-    public IEnumerable<IChartElement> GetVisualsAt(LvcPointD point) =>
-        CoreChart.VisualElements.SelectMany(visual =>
-            ((LiveChartsCore.VisualElements.VisualElement)visual).IsHitBy(CoreChart, new(point)));
+    public IEnumerable<IChartElement> GetVisualsAt(LvcPointD point)
+        => CoreChart.GetVisualsAt(point);
 
     void IChartView.InvokeOnUIThread(Action action) => _ = MainThread.InvokeOnMainThreadAsync(action);
 

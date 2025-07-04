@@ -69,29 +69,11 @@ public partial class PolarChart : ChartControl, IPolarChartView
 
     /// <inheritdoc cref="IPolarChartView.ScalePixelsToData(LvcPointD, int, int)"/>
     public LvcPointD ScalePixelsToData(LvcPointD point, int angleAxisIndex = 0, int radiusAxisIndex = 0)
-    {
-        if (CoreChart is not PolarChartEngine cc) throw new Exception("core not found");
-
-        var scaler = new PolarScaler(
-            cc.DrawMarginLocation, cc.DrawMarginSize, cc.AngleAxes[angleAxisIndex], cc.RadiusAxes[radiusAxisIndex],
-            cc.InnerRadius, cc.InitialRotation, cc.TotalAnge);
-
-        return scaler.ToChartValues(point.X, point.Y);
-    }
+        => ((PolarChartEngine)CoreChart).ScalePixelsToData(point, angleAxisIndex, radiusAxisIndex);
 
     /// <inheritdoc cref="IPolarChartView.ScaleDataToPixels(LvcPointD, int, int)"/>
     public LvcPointD ScaleDataToPixels(LvcPointD point, int angleAxisIndex = 0, int radiusAxisIndex = 0)
-    {
-        if (CoreChart is not PolarChartEngine cc) throw new Exception("core not found");
-
-        var scaler = new PolarScaler(
-            cc.DrawMarginLocation, cc.DrawMarginSize, cc.AngleAxes[angleAxisIndex], cc.RadiusAxes[radiusAxisIndex],
-            cc.InnerRadius, cc.InitialRotation, cc.TotalAnge);
-
-        var r = scaler.ToPixels(point.X, point.Y);
-
-        return new LvcPointD { X = (float)r.X, Y = (float)r.Y };
-    }
+        => ((PolarChartEngine)CoreChart).ScaleDataToPixels(point, angleAxisIndex, radiusAxisIndex);
 
     /// <inheritdoc cref="ChartControl.CreateCoreChart"/>
     protected override Chart CreateCoreChart() =>
