@@ -20,12 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.Collections.ObjectModel;
-using System.Windows;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.SkiaSharpView.WPF;
@@ -39,18 +36,8 @@ public partial class PolarChart : ChartControl, IPolarChartView
     public PolarChart()
     {
         _ = Observe
-            .Collection(nameof(Series))
             .Collection(nameof(RadiusAxes))
-            .Collection(nameof(AngleAxes))
-            .Collection(nameof(VisualElements))
-            .Property(nameof(Title));
-
-        Observe.Add(
-            nameof(SeriesSource),
-            new SeriesSourceObserver(
-                InflateSeriesTemplate,
-                GetSeriesSource,
-                () => SeriesSource is not null && SeriesTemplate is not null));
+            .Collection(nameof(AngleAxes));
 
         SetValue(AngleAxesProperty, new ObservableCollection<IPolarAxis>());
         SetValue(RadiusAxesProperty, new ObservableCollection<IPolarAxis>());
@@ -72,19 +59,4 @@ public partial class PolarChart : ChartControl, IPolarChartView
     /// <inheritdoc cref="ChartControl.CreateCoreChart"/>
     protected override Chart CreateCoreChart() =>
         new PolarChartEngine(this, config => config.UseDefaults(), CanvasView.CanvasCore);
-
-    private ISeries InflateSeriesTemplate(object item)
-    {
-        var content = (FrameworkElement)SeriesTemplate.LoadContent();
-
-        if (content is not ISeries series)
-            throw new InvalidOperationException("The template must be a valid series.");
-
-        content.DataContext = item;
-
-        return series;
-    }
-
-    private static object GetSeriesSource(ISeries series) =>
-        ((FrameworkElement)series).DataContext!;
 }

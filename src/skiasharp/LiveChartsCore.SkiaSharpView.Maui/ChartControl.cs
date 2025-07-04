@@ -57,7 +57,17 @@ public abstract partial class ChartControl : ChartView, IChartView
         SizeChanged += (s, e) =>
             CoreChart.Update();
 
-        Observe = new ChartObserver(() => CoreChart?.Update(), AddUIElement, RemoveUIElement);
+        Observe = new ChartObserver(() => CoreChart?.Update(), AddUIElement, RemoveUIElement)
+            .Collection(nameof(Series))
+            .Collection(nameof(VisualElements))
+            .Property(nameof(Title));
+
+        Observe.Add(
+             nameof(SeriesSource),
+             new SeriesSourceObserver(
+                 InflateSeriesTemplate,
+                 GetSeriesSource,
+                 () => SeriesSource is not null && SeriesTemplate is not null));
 
         if (Application.Current is not null)
             Application.Current.RequestedThemeChanged += (sender, args) => CoreChart?.ApplyTheme();
@@ -148,6 +158,20 @@ public abstract partial class ChartControl : ChartView, IChartView
     /// be further customized or populated     with data.</remarks>
     /// <returns>A <see cref="Chart"/> object that serves as the base chart instance.</returns>
     protected abstract Chart CreateCoreChart();
+
+    private ISeries InflateSeriesTemplate(object item)
+    {
+        if (SeriesTemplate.CreateContent() is not View template)
+            throw new InvalidOperationException("The template must be a View.");
+        if (template is not ISeries series)
+            throw new InvalidOperationException("The template is not a valid series.");
+
+        template.BindingContext = item;
+
+        return series;
+    }
+
+    private static object GetSeriesSource(ISeries series) => ((View)series).BindingContext;
 
     private void OnCoreUpdateFinished(IChartView chart) => UpdateFinished?.Invoke(this);
 

@@ -20,13 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.Collections.ObjectModel;
-using System.Windows;
 using System.Windows.Input;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 
@@ -41,20 +38,10 @@ public partial class CartesianChart : ChartControl, ICartesianChartView
     public CartesianChart()
     {
         _ = Observe
-           .Collection(nameof(Series))
            .Collection(nameof(XAxes))
            .Collection(nameof(YAxes))
            .Collection(nameof(Sections))
-           .Collection(nameof(VisualElements))
-           .Property(nameof(Title))
            .Property(nameof(DrawMarginFrame));
-
-        Observe.Add(
-            nameof(SeriesSource),
-            new SeriesSourceObserver(
-                InflateSeriesTemplate,
-                GetSeriesSource,
-                () => SeriesSource is not null && SeriesTemplate is not null));
 
         SetValue(XAxesProperty, new ObservableCollection<ICartesianAxis>());
         SetValue(YAxesProperty, new ObservableCollection<ICartesianAxis>());
@@ -99,19 +86,4 @@ public partial class CartesianChart : ChartControl, ICartesianChartView
         var p = e.GetPosition(this);
         c.Zoom(new LvcPoint((float)p.X, (float)p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
     }
-
-    private ISeries InflateSeriesTemplate(object item)
-    {
-        var content = (FrameworkElement)SeriesTemplate.LoadContent();
-
-        if (content is not ISeries series)
-            throw new InvalidOperationException("The template must be a valid series.");
-
-        content.DataContext = item;
-
-        return series;
-    }
-
-    private static object GetSeriesSource(ISeries series) =>
-        ((FrameworkElement)series).DataContext!;
 }

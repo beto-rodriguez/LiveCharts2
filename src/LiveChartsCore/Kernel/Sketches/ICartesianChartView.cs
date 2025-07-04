@@ -66,14 +66,6 @@ public interface ICartesianChartView : IChartView
     ICollection<IChartElement> Sections { get; set; }
 
     /// <summary>
-    /// Gets or sets the series to plot in the user interface.
-    /// </summary>
-    /// <value>
-    /// The series.
-    /// </value>
-    ICollection<ISeries> Series { get; set; }
-
-    /// <summary>
     /// Gets or sets the draw margin frame.
     /// </summary>
     /// <value>

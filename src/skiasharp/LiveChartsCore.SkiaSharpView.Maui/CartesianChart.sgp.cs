@@ -24,10 +24,8 @@ using System;
 using System.Collections.Generic;
 using LiveChartsCore.Generators;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
-using Microsoft.Maui.Controls;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
 
@@ -53,14 +51,10 @@ public partial class CartesianChart
     static XamlProperty<double>                         zoomingSpeed        = new(defaultValue: d.ZoomSpeed);
     static XamlProperty<FindingStrategy>                findingStrategy     = new(defaultValue: d.FindingStrategy);
 
-    static XamlProperty<ICollection<ISeries>>           series              = new(onChanged: OnObservedPropertyChanged(nameof(Series)));
     static XamlProperty<ICollection<ICartesianAxis>>    xAxes               = new(onChanged: OnObservedPropertyChanged(nameof(XAxes)));
     static XamlProperty<ICollection<ICartesianAxis>>    yAxes               = new(onChanged: OnObservedPropertyChanged(nameof(YAxes)));
     static XamlProperty<ICollection<IChartElement>>     sections            = new(onChanged: OnObservedPropertyChanged(nameof(Sections)));
     static XamlProperty<IChartElement?>                 drawMarginFrame     = new(onChanged: OnObservedPropertyChanged(nameof(DrawMarginFrame)));
-
-    static XamlProperty<IEnumerable<object>>            seriesSource        = new(onChanged: OnSeriesSourceChanged);
-    static XamlProperty<DataTemplate>                   seriesTemplate      = new(onChanged: OnSeriesSourceChanged);
 
     /// <inheritdoc cref="ICartesianChartView.FindingStrategy" />
     [Obsolete($"Renamed to {nameof(FindingStrategy)}")]
@@ -68,15 +62,6 @@ public partial class CartesianChart
     {
         get => ((FindingStrategy)GetValue(FindingStrategyProperty)!).AsOld();
         set => SetValue(FindingStrategyProperty, value.AsNew());
-    }
-
-    static void OnSeriesSourceChanged(CartesianChart chart)
-    {
-        var seriesObserver = (SeriesSourceObserver)chart.Observe[nameof(SeriesSource)];
-        seriesObserver.Initialize(chart.SeriesSource);
-
-        if (seriesObserver.Series is not null)
-            chart.Series = seriesObserver.Series;
     }
 
 #pragma warning disable IDE0060 // Remove unused parameter, hack for the source generator

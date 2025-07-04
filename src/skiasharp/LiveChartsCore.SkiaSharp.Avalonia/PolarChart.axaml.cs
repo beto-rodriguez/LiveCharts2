@@ -26,9 +26,7 @@ using Avalonia;
 using Avalonia.Markup.Xaml;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
@@ -44,18 +42,8 @@ public partial class PolarChart : ChartControl, IPolarChartView
         AvaloniaXamlLoader.Load(this);
 
         _ = Observe
-            .Collection(nameof(Series))
             .Collection(nameof(RadiusAxes))
-            .Collection(nameof(AngleAxes))
-            .Collection(nameof(VisualElements))
-            .Property(nameof(Title));
-
-        Observe.Add(
-            nameof(SeriesSource),
-            new SeriesSourceObserver(
-                InflateSeriesTemplate,
-                GetSeriesSource,
-                () => SeriesSource is not null && SeriesTemplate is not null));
+            .Collection(nameof(AngleAxes));
 
         AngleAxes = new ObservableCollection<IPolarAxis>();
         RadiusAxes = new ObservableCollection<IPolarAxis>();
@@ -68,29 +56,11 @@ public partial class PolarChart : ChartControl, IPolarChartView
 
     /// <inheritdoc cref="IPolarChartView.ScalePixelsToData(LvcPointD, int, int)"/>
     public LvcPointD ScalePixelsToData(LvcPointD point, int angleAxisIndex = 0, int radiusAxisIndex = 0)
-    {
-        if (CoreChart is not PolarChartEngine cc) throw new Exception("core not found");
-
-        var scaler = new PolarScaler(
-            cc.DrawMarginLocation, cc.DrawMarginSize, cc.AngleAxes[angleAxisIndex], cc.RadiusAxes[radiusAxisIndex],
-            cc.InnerRadius, cc.InitialRotation, cc.TotalAnge);
-
-        return scaler.ToChartValues(point.X, point.Y);
-    }
+        => ((PolarChartEngine)CoreChart).ScalePixelsToData(point, angleAxisIndex, radiusAxisIndex);
 
     /// <inheritdoc cref="IPolarChartView.ScaleDataToPixels(LvcPointD, int, int)"/>
     public LvcPointD ScaleDataToPixels(LvcPointD point, int angleAxisIndex = 0, int radiusAxisIndex = 0)
-    {
-        if (CoreChart is not PolarChartEngine cc) throw new Exception("core not found");
-
-        var scaler = new PolarScaler(
-            cc.DrawMarginLocation, cc.DrawMarginSize, cc.AngleAxes[angleAxisIndex], cc.RadiusAxes[radiusAxisIndex],
-            cc.InnerRadius, cc.InitialRotation, cc.TotalAnge);
-
-        var r = scaler.ToPixels(point.X, point.Y);
-
-        return new LvcPointD { X = (float)r.X, Y = (float)r.Y };
-    }
+        => ((PolarChartEngine)CoreChart).ScaleDataToPixels(point, angleAxisIndex, radiusAxisIndex);
 
     /// <inheritdoc cref="ChartControl.CreateCoreChart"/>
     protected override Chart CreateCoreChart() =>
@@ -102,19 +72,4 @@ public partial class PolarChart : ChartControl, IPolarChartView
         base.OnPropertyChanged(change);
         OnXamlPropertyChanged(change);
     }
-
-    private ISeries InflateSeriesTemplate(object item)
-    {
-        var control = SeriesTemplate.Build(item);
-
-        if (control is not ISeries series)
-            throw new InvalidOperationException("The template must be a valid series.");
-
-        control.DataContext = item;
-
-        return series;
-    }
-
-    private static object GetSeriesSource(ISeries series) =>
-        ((StyledElement)series).DataContext!;
 }

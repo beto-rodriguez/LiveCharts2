@@ -86,14 +86,6 @@ public interface IPolarChartView : IChartView
     ICollection<IPolarAxis> RadiusAxes { get; set; }
 
     /// <summary>
-    /// Gets or sets the series to plot in the user interface.
-    /// </summary>
-    /// <value>
-    /// The series.
-    /// </value>
-    ICollection<ISeries> Series { get; set; }
-
-    /// <summary>
     /// Scales a point in pixels to the chart data scale.
     /// </summary>
     /// <param name="point">The point.</param>

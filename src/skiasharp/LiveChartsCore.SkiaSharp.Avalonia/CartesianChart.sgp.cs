@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using Avalonia.Markup.Xaml.Templates;
 using LiveChartsCore.Generators;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Observers;
@@ -53,14 +52,10 @@ public partial class CartesianChart
     static XamlProperty<double>                         zoomingSpeed        = new(defaultValue: d.ZoomSpeed);
     static XamlProperty<FindingStrategy>                findingStrategy     = new(defaultValue: d.FindingStrategy);
 
-    static XamlProperty<ICollection<ISeries>>           series              = new(onChanged: OnObservedPropertyChanged(nameof(Series)));
     static XamlProperty<ICollection<ICartesianAxis>>    xAxes               = new(onChanged: OnObservedPropertyChanged(nameof(XAxes)));
     static XamlProperty<ICollection<ICartesianAxis>>    yAxes               = new(onChanged: OnObservedPropertyChanged(nameof(YAxes)));
     static XamlProperty<ICollection<IChartElement>>     sections            = new(onChanged: OnObservedPropertyChanged(nameof(Sections)));
     static XamlProperty<IChartElement?>                 drawMarginFrame     = new(onChanged: OnObservedPropertyChanged(nameof(DrawMarginFrame)));
-
-    static XamlProperty<IEnumerable<object>>            seriesSource        = new(onChanged: OnSeriesSourceChanged);
-    static XamlProperty<DataTemplate>                   seriesTemplate      = new(onChanged: OnSeriesSourceChanged);
 
     /// <inheritdoc cref="ICartesianChartView.FindingStrategy" />
     [Obsolete($"Renamed to {nameof(FindingStrategy)}")]

@@ -24,10 +24,8 @@ using System;
 using System.Collections.ObjectModel;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
-using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
@@ -45,20 +43,10 @@ public partial class CartesianChart : ChartControl, ICartesianChartView
         InitializeComponent();
 
         _ = Observe
-            .Collection(nameof(Series))
             .Collection(nameof(XAxes))
             .Collection(nameof(YAxes))
             .Collection(nameof(Sections))
-            .Collection(nameof(VisualElements))
-            .Property(nameof(Title))
             .Property(nameof(DrawMarginFrame));
-
-        Observe.Add(
-            nameof(SeriesSource),
-            new SeriesSourceObserver(
-                InflateSeriesTemplate,
-                GetSeriesSource,
-                () => SeriesSource is not null && SeriesTemplate is not null));
 
         SetValue(XAxesProperty, new ObservableCollection<ICartesianAxis>());
         SetValue(YAxesProperty, new ObservableCollection<ICartesianAxis>());
@@ -85,11 +73,11 @@ public partial class CartesianChart : ChartControl, ICartesianChartView
 
     /// <inheritdoc cref="ICartesianChartView.ScalePixelsToData(LvcPointD, int, int)"/>
     public LvcPointD ScalePixelsToData(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)
-        => ((CartesianChartEngine)CoreChart).ScaleDataToPixels(point, xAxisIndex, yAxisIndex);
+        => ((CartesianChartEngine)CoreChart).ScalePixelsToData(point, xAxisIndex, yAxisIndex);
 
     /// <inheritdoc cref="ICartesianChartView.ScaleDataToPixels(LvcPointD, int, int)"/>
     public LvcPointD ScaleDataToPixels(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)
-        => ((CartesianChartEngine)CoreChart).ScalePixelsToData(point, xAxisIndex, yAxisIndex);
+        => ((CartesianChartEngine)CoreChart).ScaleDataToPixels(point, xAxisIndex, yAxisIndex);
 
     /// <inheritdoc cref="ChartControl.CreateCoreChart"/>
     protected override Chart CreateCoreChart() =>
@@ -109,18 +97,4 @@ public partial class CartesianChart : ChartControl, ICartesianChartView
         var pivot = new LvcPoint((float)(p.X * s.Width), (float)(p.Y * s.Height));
         c.Zoom(pivot, ZoomDirection.DefinedByScaleFactor, args.Scale, true);
     }
-
-    private ISeries InflateSeriesTemplate(object item)
-    {
-        if (SeriesTemplate.CreateContent() is not View template)
-            throw new InvalidOperationException("The template must be a View.");
-        if (template is not ISeries series)
-            throw new InvalidOperationException("The template is not a valid series.");
-
-        template.BindingContext = item;
-
-        return series;
-    }
-
-    private static object GetSeriesSource(ISeries series) => ((View)series).BindingContext;
 }

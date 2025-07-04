@@ -86,7 +86,7 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView
     /// <inheritdoc cref="IChartView.SyncContext"/>
     public object SyncContext { get => CoreCanvas.Sync; set => CoreCanvas.Sync = value; }
 
-    /// <inheritdoc cref="IPieChartView.Series"/>
+    /// <inheritdoc cref="IChartView.Series"/>
     public ICollection<ISeries> Series { get; set; } = [];
 
     /// <inheritdoc cref="IChartView.VisualElements"/>

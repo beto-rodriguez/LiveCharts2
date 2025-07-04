@@ -20,12 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.Collections.ObjectModel;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Sketches;
-using Microsoft.UI.Xaml;
 
 namespace LiveChartsCore.SkiaSharpView.WinUI;
 
@@ -39,19 +36,6 @@ public sealed partial class PieChart : ChartControl, IPieChartView
     {
         InitializeComponent();
 
-        _ = Observe
-            .Collection(nameof(Series))
-            .Collection(nameof(VisualElements))
-            .Property(nameof(Title))
-            .Property(nameof(DrawMarginFrame));
-
-        Observe.Add(
-            nameof(SeriesSource),
-            new SeriesSourceObserver(
-                InflateSeriesTemplate,
-                GetSeriesSource,
-                () => SeriesSource is not null && SeriesTemplate is not null));
-
         SetValue(SeriesProperty, new ObservableCollection<ISeries>());
         SetValue(VisualElementsProperty, new ObservableCollection<IChartElement>());
         SetValue(SyncContextProperty, new object());
@@ -62,18 +46,4 @@ public sealed partial class PieChart : ChartControl, IPieChartView
     /// <inheritdoc cref="ChartControl.CreateCoreChart"/>
     protected override Chart CreateCoreChart() =>
          new PieChartEngine(this, config => config.UseDefaults(), CanvasView.CanvasCore);
-
-    private ISeries InflateSeriesTemplate(object item)
-    {
-        var content = (FrameworkElement)SeriesTemplate.LoadContent();
-
-        if (content is not ISeries series)
-            throw new InvalidOperationException("The template must be a valid series.");
-
-        content.DataContext = item;
-
-        return series;
-    }
-
-    private static object GetSeriesSource(ISeries series) => ((FrameworkElement)series).DataContext!;
 }

@@ -25,7 +25,6 @@ using System.Collections.ObjectModel;
 using Avalonia;
 using Avalonia.Markup.Xaml;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
@@ -40,19 +39,6 @@ public partial class PieChart : ChartControl, IPieChartView
     public PieChart()
     {
         AvaloniaXamlLoader.Load(this);
-
-        _ = Observe
-            .Collection(nameof(Series))
-            .Collection(nameof(VisualElements))
-            .Property(nameof(Title))
-            .Property(nameof(DrawMarginFrame));
-
-        Observe.Add(
-            nameof(SeriesSource),
-            new SeriesSourceObserver(
-                InflateSeriesTemplate,
-                GetSeriesSource,
-                () => SeriesSource is not null && SeriesTemplate is not null));
 
         Series = new ObservableCollection<ISeries>();
         VisualElements = new ObservableCollection<IChartElement>();
@@ -71,19 +57,4 @@ public partial class PieChart : ChartControl, IPieChartView
         base.OnPropertyChanged(change);
         OnXamlPropertyChanged(change);
     }
-
-    private ISeries InflateSeriesTemplate(object item)
-    {
-        var control = SeriesTemplate.Build(item);
-
-        if (control is not ISeries series)
-            throw new InvalidOperationException("The template must be a valid series.");
-
-        control.DataContext = item;
-
-        return series;
-    }
-
-    private static object GetSeriesSource(ISeries series) =>
-        ((StyledElement)series).DataContext!;
 }

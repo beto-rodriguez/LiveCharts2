@@ -24,8 +24,10 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Input;
 using Avalonia;
+using Avalonia.Markup.Xaml.Templates;
 using LiveChartsCore.Generators;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
 
@@ -77,6 +79,10 @@ public abstract partial class ChartControl
 
     static XamlProperty<IChartElement?>             title                   = new(onChanged: OnObservedPropertyChanged(nameof(Title)));
     static XamlProperty<ICollection<IChartElement>> visualElements          = new(onChanged: OnObservedPropertyChanged(nameof(VisualElements)));
+    static XamlProperty<ICollection<ISeries>>       series                  = new(onChanged: OnObservedPropertyChanged(nameof(Series)));
+
+    static XamlProperty<IEnumerable<object>>        seriesSource            = new(onChanged: OnSeriesSourceChanged);
+    static XamlProperty<DataTemplate>               seriesTemplate          = new(onChanged: OnSeriesSourceChanged);
 
     /// <inheritdoc />
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -97,6 +103,15 @@ public abstract partial class ChartControl
     {
         chart.CoreCanvas.Sync = newValue;
         chart.CoreChart.Update();
+    }
+
+    static void OnSeriesSourceChanged(ChartControl chart)
+    {
+        var seriesObserver = (SeriesSourceObserver)chart.Observe[nameof(SeriesSource)];
+        seriesObserver.Initialize(chart.SeriesSource);
+
+        if (seriesObserver.Series is not null)
+            chart.Series = seriesObserver.Series;
     }
 
     #pragma warning disable IDE0060 // Remove unused parameter, hack for the source generator

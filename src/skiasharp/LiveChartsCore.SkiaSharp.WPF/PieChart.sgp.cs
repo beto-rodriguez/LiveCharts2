@@ -20,12 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-using System.Windows;
 using LiveChartsCore.Generators;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Observers;
 
 namespace LiveChartsCore.SkiaSharpView.WPF;
 
@@ -52,28 +48,4 @@ public partial class PieChart
     static XamlProperty<double>                         maxAngle            = new(defaultValue: d.PieMaxAngle);
     static XamlProperty<double>                         maxValue            = new(defaultValue: d.PieMaxValue);
     static XamlProperty<double>                         minValue            = new(defaultValue: d.PieMinValue);
-
-    static XamlProperty<ICollection<ISeries>>           series              = new(onChanged: OnObservedPropertyChanged(nameof(Series)));
-
-    static XamlProperty<IEnumerable<object>>            seriesSource        = new(onChanged: OnSeriesSourceChanged);
-    static XamlProperty<DataTemplate>                   seriesTemplate      = new(onChanged: OnSeriesSourceChanged);
-
-    static void OnSeriesSourceChanged(PieChart chart)
-    {
-        var seriesObserver = (SeriesSourceObserver)chart.Observe[nameof(SeriesSource)];
-        seriesObserver.Initialize(chart.SeriesSource);
-
-        if (seriesObserver.Series is not null)
-            chart.Series = seriesObserver.Series;
-    }
-
-#pragma warning disable IDE0060 // Remove unused parameter, hack for the source generator
-    static Action<PieChart, object, object> OnObservedPropertyChanged(
-        string propertyName, object? a = null, object? b = null) =>
-            (chart, o, n) =>
-            {
-                chart.Observe[propertyName].Initialize(n);
-                chart.CoreChart.Update();
-            };
-#pragma warning restore IDE0060 // Remove unused parameter
 }

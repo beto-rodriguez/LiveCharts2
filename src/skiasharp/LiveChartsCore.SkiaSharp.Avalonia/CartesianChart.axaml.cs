@@ -27,7 +27,6 @@ using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 
@@ -47,20 +46,10 @@ public partial class CartesianChart : ChartControl, ICartesianChartView
         AvaloniaXamlLoader.Load(this);
 
         _ = Observe
-           .Collection(nameof(Series))
            .Collection(nameof(XAxes))
            .Collection(nameof(YAxes))
            .Collection(nameof(Sections))
-           .Collection(nameof(VisualElements))
-           .Property(nameof(Title))
            .Property(nameof(DrawMarginFrame));
-
-        Observe.Add(
-            nameof(SeriesSource),
-            new SeriesSourceObserver(
-                InflateSeriesTemplate,
-                GetSeriesSource,
-                () => SeriesSource is not null && SeriesTemplate is not null));
 
         XAxes = new ObservableCollection<ICartesianAxis>();
         YAxes = new ObservableCollection<ICartesianAxis>();
@@ -93,24 +82,11 @@ public partial class CartesianChart : ChartControl, ICartesianChartView
 
     /// <inheritdoc cref="ICartesianChartView.ScalePixelsToData(LvcPointD, int, int)"/>
     public LvcPointD ScalePixelsToData(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)
-    {
-        if (CoreChart is not CartesianChartEngine cc) throw new Exception("core not found");
-        var xScaler = new Scaler(cc.DrawMarginLocation, cc.DrawMarginSize, cc.XAxes[xAxisIndex]);
-        var yScaler = new Scaler(cc.DrawMarginLocation, cc.DrawMarginSize, cc.YAxes[yAxisIndex]);
-
-        return new LvcPointD { X = xScaler.ToChartValues(point.X), Y = yScaler.ToChartValues(point.Y) };
-    }
+        => ((CartesianChartEngine)CoreChart).ScalePixelsToData(point, xAxisIndex, yAxisIndex);
 
     /// <inheritdoc cref="ICartesianChartView.ScaleDataToPixels(LvcPointD, int, int)"/>
     public LvcPointD ScaleDataToPixels(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)
-    {
-        if (CoreChart is not CartesianChartEngine cc) throw new Exception("core not found");
-
-        var xScaler = new Scaler(cc.DrawMarginLocation, cc.DrawMarginSize, cc.XAxes[xAxisIndex]);
-        var yScaler = new Scaler(cc.DrawMarginLocation, cc.DrawMarginSize, cc.YAxes[yAxisIndex]);
-
-        return new LvcPointD { X = xScaler.ToPixels(point.X), Y = yScaler.ToPixels(point.Y) };
-    }
+        => ((CartesianChartEngine)CoreChart).ScaleDataToPixels(point, xAxisIndex, yAxisIndex);
 
     /// <inheritdoc cref="ChartControl.CreateCoreChart"/>
     protected override Chart CreateCoreChart() =>
@@ -147,19 +123,4 @@ public partial class CartesianChart : ChartControl, ICartesianChartView
 
         c.Zoom(pivot, ZoomDirection.DefinedByScaleFactor, 1 - delta, true);
     }
-
-    private ISeries InflateSeriesTemplate(object item)
-    {
-        var control = SeriesTemplate.Build(item);
-
-        if (control is not ISeries series)
-            throw new InvalidOperationException("The template must be a valid series.");
-
-        control.DataContext = item;
-
-        return series;
-    }
-
-    private static object GetSeriesSource(ISeries series) =>
-        ((StyledElement)series).DataContext!;
 }

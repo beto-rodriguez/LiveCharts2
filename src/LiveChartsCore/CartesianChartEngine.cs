@@ -842,7 +842,7 @@ public class CartesianChartEngine(
     public LvcPointD ScaleDataToPixels(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)
     {
         var xScaler = new Scaler(DrawMarginLocation, DrawMarginSize, XAxes[xAxisIndex]);
-        var yScaler = new Scaler(DrawMarginLocation, DrawMarginSize, XAxes[yAxisIndex]);
+        var yScaler = new Scaler(DrawMarginLocation, DrawMarginSize, YAxes[yAxisIndex]);
 
         return new LvcPointD { X = xScaler.ToPixels(point.X), Y = yScaler.ToPixels(point.Y) };
     }

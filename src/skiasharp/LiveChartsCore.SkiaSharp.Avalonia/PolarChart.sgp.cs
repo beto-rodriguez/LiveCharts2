@@ -53,21 +53,8 @@ public partial class PolarChart
     static XamlProperty<double>                         innerRadius         = new(defaultValue: d.PolarInnerRadius);
     static XamlProperty<double>                         initialRotation     = new(defaultValue: d.PolarInitialRotation);
 
-    static XamlProperty<ICollection<ISeries>>           series              = new(onChanged: OnObservedPropertyChanged(nameof(Series)));
     static XamlProperty<ICollection<IPolarAxis>>        angleAxes           = new(onChanged: OnObservedPropertyChanged(nameof(AngleAxes)));
     static XamlProperty<ICollection<IPolarAxis>>        radiusAxes          = new(onChanged: OnObservedPropertyChanged(nameof(RadiusAxes)));
-
-    static XamlProperty<IEnumerable<object>>            seriesSource        = new(onChanged: OnSeriesSourceChanged);
-    static XamlProperty<DataTemplate>                   seriesTemplate      = new(onChanged: OnSeriesSourceChanged);
-
-    static void OnSeriesSourceChanged(PolarChart chart)
-    {
-        var seriesObserver = (SeriesSourceObserver)chart.Observe[nameof(SeriesSource)];
-        seriesObserver.Initialize(chart.SeriesSource);
-
-        if (seriesObserver.Series is not null)
-            chart.Series = seriesObserver.Series;
-    }
 
 #pragma warning disable IDE0060 // Remove unused parameter, hack for the source generator
     static Action<PolarChart, object, object> OnObservedPropertyChanged(
