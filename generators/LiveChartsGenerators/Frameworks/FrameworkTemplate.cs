@@ -33,10 +33,10 @@ public abstract class FrameworkTemplate(FrameworkTemplate.Context context)
     public abstract string Key { get; }
 
     public string GetBindablePropertySyntax(XamlObject target, string key, IPropertySymbol property, BindablePropertyInitializer? initializer = null) =>
-        GetBindablePropertySyntax(target, key, property.Name, property.Type.ToDisplayString(), initializer);
+        GetBindablePropertySyntax(target, key, property.Name, property.Type.ToDisplayString(), property.Type.IsValueType, initializer);
 
     public string GetBindablePropertySyntax(
-        XamlObject target, string key, string propertyName, string propertyType, BindablePropertyInitializer? initializer)
+        XamlObject target, string key, string propertyName, string propertyType, bool isValueTypeProperty, BindablePropertyInitializer? initializer)
     {
         var originalPropertyType = propertyType;
 
@@ -57,7 +57,7 @@ public abstract class FrameworkTemplate(FrameworkTemplate.Context context)
             .Append(@$"    {DeclareBindableProperty(propertyName, propertyType)}");
 
         _ = initializer is not null
-            ? sb.Append(" = ").Append(CreateBindableProperty(propertyName, propertyType, initializer.BindableType, initializer.DefaultValue))
+            ? sb.Append(" = ").Append(CreateBindableProperty(propertyName, propertyType, isValueTypeProperty, initializer.BindableType, initializer.DefaultValue))
             : sb.Append(';').AppendLine();
 
         if (XamlObjectTempaltes.TypeConverters.TryGetValue(originalPropertyType, out var typeConverter))
@@ -98,7 +98,7 @@ public abstract class FrameworkTemplate(FrameworkTemplate.Context context)
             propertyName = overridenName;
 
         return CreateBindableProperty(
-            propertyName, propertyType, target.Name, $"{fallBackName}.{originalPropertyName}");
+            propertyName, propertyType, property.Type.IsValueType, target.Name, $"{fallBackName}.{originalPropertyName}");
     }
 
     public static (string, string) GetFallbackInfo(ITypeSymbol target)
@@ -111,7 +111,7 @@ public abstract class FrameworkTemplate(FrameworkTemplate.Context context)
 
     public abstract string DeclareBindableProperty(string propertyName, string propertyType);
     public abstract string CreateBindableProperty(
-        string propertyName, string propertyType, string bindableType, string defaultValue, OnChangeInfo? changeInfo = null);
+        string propertyName, string propertyType, bool isValueTypeProperty, string bindableType, string defaultValue, OnChangeInfo? changeInfo = null);
     public abstract string GetPropertyChangedMetod();
 
     public enum Context

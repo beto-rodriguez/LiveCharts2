@@ -31,7 +31,7 @@ public class MauiTemplate(FrameworkTemplate.Context context) : FrameworkTemplate
         => @$"public static readonly new global::Microsoft.Maui.Controls.BindableProperty {propertyName}Property";
 
     public override string CreateBindableProperty(
-        string propertyName, string propertyType, string bindableType, string defaultValue, OnChangeInfo? onChangeInfo = null)
+        string propertyName, string propertyType, bool isValueTypeProperty, string bindableType, string defaultValue, OnChangeInfo? onChangeInfo = null)
     {
         var sanitizedPropertyType = propertyType.EndsWith("?")
             ? propertyType.Substring(0, propertyType.Length - 1)

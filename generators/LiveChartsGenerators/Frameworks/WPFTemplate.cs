@@ -31,9 +31,9 @@ public class WPFTemplate(FrameworkTemplate.Context context) : FrameworkTemplate(
         => @$"public static readonly new global::System.Windows.DependencyProperty {propertyName}Property";
 
     public override string CreateBindableProperty(
-        string propertyName, string propertyType, string bindableType, string defaultValue, OnChangeInfo? onChangeInfo = null)
+        string propertyName, string propertyType, bool isValueTypeProperty, string bindableType, string defaultValue, OnChangeInfo? onChangeInfo = null)
     {
-        var sanitizedPropertyType = propertyType.EndsWith("?")
+        var sanitizedPropertyType = !isValueTypeProperty && propertyType.EndsWith("?")
             ? propertyType.Substring(0, propertyType.Length - 1)
             : propertyType;
 
@@ -50,7 +50,7 @@ public class WPFTemplate(FrameworkTemplate.Context context) : FrameworkTemplate(
     private string GetOnChangedExpression(OnChangeInfo onChangeInfo, string bindableType, string propertyType)
     {
         if (!onChangeInfo.HasChangeParams)
-            return $@"(bo, o, n) => {onChangeInfo.Expression}(({bindableType})bo)";
+            return $@"(o, args) => {onChangeInfo.Expression}(({bindableType})o)";
 
         var cast = onChangeInfo.HasChangeObjectParams ? string.Empty : $"({propertyType})";
         return $@"(o, args) => {onChangeInfo.Expression}(({bindableType})o, {cast}args.OldValue, {cast}args.NewValue)";

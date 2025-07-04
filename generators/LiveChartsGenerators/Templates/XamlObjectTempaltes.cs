@@ -159,7 +159,7 @@ public partial class {target.Name} : LiveChartsCore.Generators.IXamlWrapper<{bas
         add => _baseType.{@event.Name} += value;
         remove => _baseType.{@event.Name} -= value;
     }}
-{template.GetBindablePropertySyntax(target, "_baseType", $"{@event.Name}Command", "System.Windows.Input.ICommand?", new(target.Name, "null"))}";
+{template.GetBindablePropertySyntax(target, "_baseType", $"{@event.Name}Command", "System.Windows.Input.ICommand?", false, new(target.Name, "null"))}";
 
     private static string GetMethodSyntax(IMethodSymbol method)
     {

@@ -30,7 +30,7 @@ public class WinUITemplate(FrameworkTemplate.Context context) : FrameworkTemplat
         => @$"public static readonly new global::Microsoft.UI.Xaml.DependencyProperty {propertyName}Property";
 
     public override string CreateBindableProperty(
-        string propertyName, string propertyType, string bindableType, string defaultValue, OnChangeInfo? onChangeInfo = null)
+        string propertyName, string propertyType, bool isValueTypeProperty, string bindableType, string defaultValue, OnChangeInfo? onChangeInfo = null)
     {
         var sanitizedPropertyType = propertyType.EndsWith("?")
             ? propertyType.Substring(0, propertyType.Length - 1)
@@ -49,11 +49,9 @@ public class WinUITemplate(FrameworkTemplate.Context context) : FrameworkTemplat
         {
             var cast = change.HasChangeObjectParams ? string.Empty : $"({propertyType})";
 
-            var expression = change.HasChangeParams
-                ? $@"(bo, o, n) => {change.Expression}(({bindableType})bo, {cast}o, {cast}n)"
-                : $@"(bo, o, n) => {change.Expression}(({bindableType})bo)";
-
-            changeExpression = $"{expression}(t, ({propertyType})args.OldValue, ({propertyType})args.NewValue);";
+            changeExpression = change.HasChangeParams
+                ? $@"{change.Expression}(t, {cast}args.OldValue, {cast}args.NewValue);"
+                : $@"{change.Expression}(t);";
         }
 
         var mapExpression = ActiveContext != Context.XamlObject
