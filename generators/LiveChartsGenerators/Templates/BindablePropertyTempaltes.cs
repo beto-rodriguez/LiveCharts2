@@ -46,6 +46,12 @@ public static class BindablePropertyTempaltes
             typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
             genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters);
 
+        var docs = target.XmlDocs ?? @"
+    /// <summary>
+    ///    Gets or sets the <see cref=""{propertyName}""/> property.
+    /// </summary>
+";
+
         var propertyType = $"global::{target.Type.ToDisplayString(displayFormat2)}";
 
         var sanitizedPropertyType = target.Type.IsReferenceType && propertyType.EndsWith("?")
@@ -70,15 +76,12 @@ namespace {type.ContainingNamespace};
 {GetFormattedAccessibility(type.DeclaredAccessibility)} partial class {declaringType}
 {{
     /// <summary>
-    ///    The <see cref=""{propertyName}""/> property for xaml.
+    ///    The <see cref=""{propertyName}""/> property definition.
     /// </summary>
     {template.DeclareBindableProperty(propertyName, sanitizedPropertyType)} =
         {template.CreateBindableProperty(propertyName, sanitizedPropertyType, target.Type.IsValueType, declaringType, target.DefaultValueExpression ?? "null", target.OnChangeInfo)}
 
-    /// <summary>
-    ///    Gets or sets the <see cref=""{propertyName}""/> property.
-    /// </summary>
-    {converter}public {propertyType} {propertyName}
+    {docs}{converter}    public {propertyType} {propertyName}
     {{
         get => ({propertyType})GetValue({propertyName}Property);
         set => SetValue({propertyName}Property, value);

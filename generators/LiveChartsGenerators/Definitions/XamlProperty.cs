@@ -33,6 +33,7 @@ public readonly record struct XamlProperty
     public readonly string Headers;
     public readonly string? DefaultValueExpression = null;
     public readonly FrameworkTemplate.OnChangeInfo? OnChangeInfo = null;
+    public readonly string? XmlDocs = null;
 
     public XamlProperty(
         string name,
@@ -40,7 +41,8 @@ public readonly record struct XamlProperty
         ITypeSymbol declaringType,
         string headers,
         string? defaultValueExpression,
-        FrameworkTemplate.OnChangeInfo? onChangeInfo)
+        FrameworkTemplate.OnChangeInfo? onChangeInfo,
+        string? xmlDocs)
     {
         Name = name;
         Type = type;
@@ -48,6 +50,7 @@ public readonly record struct XamlProperty
         Headers = headers;
         DefaultValueExpression = defaultValueExpression;
         OnChangeInfo = onChangeInfo;
+        XmlDocs = xmlDocs;
     }
 
     public static Dictionary<int, string> ByPosition = new()

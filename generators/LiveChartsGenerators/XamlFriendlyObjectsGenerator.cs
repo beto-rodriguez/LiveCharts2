@@ -325,6 +325,18 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
             typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
             genericsOptions: SymbolDisplayGenericsOptions.None);
 
+        string? xmlDocs = null;
+
+        if (fieldSymbol.Name.Contains("zoom"))
+        {
+            var d = fieldSymbol.GetDocumentationCommentXml();
+
+            var trivia = fieldDecl.GetLeadingTrivia()
+    .FirstOrDefault(t => t.IsKind(SyntaxKind.SingleLineDocumentationCommentTrivia));
+
+            xmlDocs = trivia.GetStructure()?.ToFullString();
+        }
+
         // Check if field's type is the type you're interested in
         if (fieldSymbol.Type.ToDisplayString(displayFormat) == "LiveChartsCore.Generators.XamlProperty")
         {
@@ -390,7 +402,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
                 }
             }
 
-            return new(propertyName, propertyType, fieldSymbol.ContainingType, headers, defaultValue, onChangeInfo);
+            return new(propertyName, propertyType, fieldSymbol.ContainingType, headers, defaultValue, onChangeInfo, xmlDocs);
         }
 
         return null;
