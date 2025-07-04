@@ -21,26 +21,18 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows;
-using System.Windows.Input;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.Measure;
-using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.WPF;
 
 /// <inheritdoc cref="IPolarChartView" />
-public class PolarChart : Chart, IPolarChartView
+public partial class PolarChart : ChartControl, IPolarChartView
 {
-    #region fields
-
-    #endregion
-
     /// <summary>
     /// Initializes a new instance of the <see cref="PolarChart"/> class.
     /// </summary>
@@ -48,215 +40,51 @@ public class PolarChart : Chart, IPolarChartView
     {
         _ = Observe
             .Collection(nameof(Series))
+            .Collection(nameof(RadiusAxes))
             .Collection(nameof(AngleAxes))
-            .Collection(nameof(RadiusAxes));
+            .Collection(nameof(VisualElements))
+            .Property(nameof(Title));
 
-        SetCurrentValue(AngleAxesProperty, new ObservableCollection<IPolarAxis>());
-        SetCurrentValue(RadiusAxesProperty, new ObservableCollection<IPolarAxis>());
-        SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
-        SetCurrentValue(VisualElementsProperty, new ObservableCollection<IChartElement>());
-        SetCurrentValue(SyncContextProperty, new object());
+        Observe.Add(
+            nameof(SeriesSource),
+            new SeriesSourceObserver(
+                InflateSeriesTemplate,
+                GetSeriesSource,
+                () => SeriesSource is not null && SeriesTemplate is not null));
 
-        MouseWheel += OnMouseWheel;
-        MouseDown += OnMouseDown;
-        MouseUp += OnMouseUp;
+        SetValue(AngleAxesProperty, new ObservableCollection<IPolarAxis>());
+        SetValue(RadiusAxesProperty, new ObservableCollection<IPolarAxis>());
+        SetValue(SeriesProperty, new ObservableCollection<ISeries>());
+        SetValue(VisualElementsProperty, new ObservableCollection<IChartElement>());
+        SetValue(SyncContextProperty, new object());
     }
 
-    #region dependency properties
-
-    /// <summary>
-    /// The fit to bounds property.
-    /// </summary>
-    public static readonly DependencyProperty FitToBoundsProperty =
-        DependencyProperty.Register(nameof(FitToBounds), typeof(bool), typeof(PolarChart),
-            new PropertyMetadata(false, OnDependencyPropertyChanged));
-
-    /// <summary>
-    /// The total angle property.
-    /// </summary>
-    public static readonly DependencyProperty TotalAngleProperty =
-        DependencyProperty.Register(nameof(TotalAngle), typeof(double), typeof(PolarChart),
-            new PropertyMetadata(360d, OnDependencyPropertyChanged));
-
-    /// <summary>
-    /// The inner radius property.
-    /// </summary>
-    public static readonly DependencyProperty InnerRadiusProperty =
-        DependencyProperty.Register(nameof(InnerRadius), typeof(double), typeof(PolarChart),
-            new PropertyMetadata(0d, OnDependencyPropertyChanged));
-
-    /// <summary>
-    /// The initial rotation property.
-    /// </summary>
-    public static readonly DependencyProperty InitialRotationProperty =
-        DependencyProperty.Register(nameof(InitialRotation), typeof(double), typeof(PolarChart),
-            new PropertyMetadata(LiveCharts.DefaultSettings.PolarInitialRotation, OnDependencyPropertyChanged));
-
-    /// <summary>
-    /// The series property.
-    /// </summary>
-    public static readonly DependencyProperty SeriesProperty =
-        DependencyProperty.Register(
-            nameof(Series), typeof(IEnumerable<ISeries>), typeof(PolarChart),
-            new PropertyMetadata(null, InitializeObserver(nameof(Series))));
-
-    /// <summary>
-    /// The x axes property.
-    /// </summary>
-    public static readonly DependencyProperty AngleAxesProperty =
-        DependencyProperty.Register(
-            nameof(AngleAxes), typeof(IEnumerable<IPolarAxis>), typeof(PolarChart),
-            new PropertyMetadata(null, InitializeObserver(nameof(AngleAxes))));
-
-    /// <summary>
-    /// The y axes property
-    /// </summary>
-    public static readonly DependencyProperty RadiusAxesProperty =
-        DependencyProperty.Register(
-            nameof(RadiusAxes), typeof(IEnumerable<IPolarAxis>), typeof(PolarChart),
-            new PropertyMetadata(null, InitializeObserver(nameof(RadiusAxes))));
-
-    #endregion
-
-    #region properties
-
-    PolarChartEngine IPolarChartView.Core =>
-        core is null ? throw new Exception("core not found") : (PolarChartEngine)core;
-
-    /// <inheritdoc cref="IPolarChartView.FitToBounds" />
-    public bool FitToBounds
-    {
-        get => (bool)GetValue(FitToBoundsProperty);
-        set => SetValue(FitToBoundsProperty, value);
-    }
-
-    /// <inheritdoc cref="IPolarChartView.TotalAngle" />
-    public double TotalAngle
-    {
-        get => (double)GetValue(TotalAngleProperty);
-        set => SetValue(TotalAngleProperty, value);
-    }
-
-    /// <inheritdoc cref="IPolarChartView.InnerRadius" />
-    public double InnerRadius
-    {
-        get => (double)GetValue(InnerRadiusProperty);
-        set => SetValue(InnerRadiusProperty, value);
-    }
-
-    /// <inheritdoc cref="IPolarChartView.InitialRotation" />
-    public double InitialRotation
-    {
-        get => (double)GetValue(InitialRotationProperty);
-        set => SetValue(InitialRotationProperty, value);
-    }
-
-    /// <inheritdoc cref="IPolarChartView.Series" />
-    public override ICollection<ISeries> Series
-    {
-        get => (ICollection<ISeries>)GetValue(SeriesProperty);
-        set => SetValue(SeriesProperty, value);
-    }
-
-    /// <inheritdoc cref="IPolarChartView.AngleAxes" />
-    public ICollection<IPolarAxis> AngleAxes
-    {
-        get => (ICollection<IPolarAxis>)GetValue(AngleAxesProperty);
-        set => SetValue(AngleAxesProperty, value);
-    }
-
-    /// <inheritdoc cref="IPolarChartView.RadiusAxes" />
-    public ICollection<IPolarAxis> RadiusAxes
-    {
-        get => (ICollection<IPolarAxis>)GetValue(RadiusAxesProperty);
-        set => SetValue(RadiusAxesProperty, value);
-    }
-
-    #endregion
+    PolarChartEngine IPolarChartView.Core => (PolarChartEngine)CoreChart;
 
     /// <inheritdoc cref="IPolarChartView.ScalePixelsToData(LvcPointD, int, int)"/>
     public LvcPointD ScalePixelsToData(LvcPointD point, int angleAxisIndex = 0, int radiusAxisIndex = 0)
-    {
-        if (core is not PolarChartEngine cc) throw new Exception("core not found");
-
-        var scaler = new PolarScaler(
-            cc.DrawMarginLocation, cc.DrawMarginSize, cc.AngleAxes[angleAxisIndex], cc.RadiusAxes[radiusAxisIndex],
-            cc.InnerRadius, cc.InitialRotation, cc.TotalAnge);
-
-        return scaler.ToChartValues(point.X, point.Y);
-    }
+        => ((PolarChartEngine)CoreChart).ScalePixelsToData(point, angleAxisIndex, radiusAxisIndex);
 
     /// <inheritdoc cref="IPolarChartView.ScaleDataToPixels(LvcPointD, int, int)"/>
     public LvcPointD ScaleDataToPixels(LvcPointD point, int angleAxisIndex = 0, int radiusAxisIndex = 0)
+        => ((PolarChartEngine)CoreChart).ScaleDataToPixels(point, angleAxisIndex, radiusAxisIndex);
+
+    /// <inheritdoc cref="ChartControl.CreateCoreChart"/>
+    protected override Chart CreateCoreChart() =>
+        new PolarChartEngine(this, config => config.UseDefaults(), CanvasView.CanvasCore);
+
+    private ISeries InflateSeriesTemplate(object item)
     {
-        if (core is not PolarChartEngine cc) throw new Exception("core not found");
+        var content = (FrameworkElement)SeriesTemplate.LoadContent();
 
-        var scaler = new PolarScaler(
-            cc.DrawMarginLocation, cc.DrawMarginSize, cc.AngleAxes[angleAxisIndex], cc.RadiusAxes[radiusAxisIndex],
-            cc.InnerRadius, cc.InitialRotation, cc.TotalAnge);
+        if (content is not ISeries series)
+            throw new InvalidOperationException("The template must be a valid series.");
 
-        var r = scaler.ToPixels(point.X, point.Y);
+        content.DataContext = item;
 
-        return new LvcPointD { X = (float)r.X, Y = (float)r.Y };
+        return series;
     }
 
-    /// <inheritdoc cref="IChartView.GetPointsAt(LvcPointD, FindingStrategy, FindPointFor)"/>
-    public override IEnumerable<ChartPoint> GetPointsAt(LvcPointD point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
-    {
-        if (core is not PolarChartEngine cc) throw new Exception("core not found");
-
-        if (strategy == FindingStrategy.Automatic)
-            strategy = cc.Series.GetFindingStrategy();
-
-        return cc.Series.SelectMany(series => series.FindHitPoints(cc, new(point), strategy, findPointFor));
-    }
-
-    /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
-    public override IEnumerable<IChartElement> GetVisualsAt(LvcPointD point)
-    {
-        return core is not PolarChartEngine cc
-            ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((VisualElement)visual).IsHitBy(core, new(point)));
-    }
-
-    /// <summary>
-    /// Initializes the core.
-    /// </summary>
-    /// <exception cref="Exception">canvas not found</exception>
-    protected override void InitializeCore()
-    {
-        if (canvas is null) throw new Exception("canvas not found");
-
-        core = new PolarChartEngine(this, config => config.UseDefaults(), canvas.CanvasCore);
-        core.Update();
-    }
-
-    /// <inheritdoc cref="Chart.OnUnloaded"/>
-    protected override void OnUnloaded()
-    {
-        Observe.Dispose();
-        core?.Unload();
-    }
-
-    private void OnMouseWheel(object? sender, MouseWheelEventArgs e)
-    {
-        //if (core is null) throw new Exception("core not found");
-        //var c = (PolarChart<SkiaSharpDrawingContext>)core;
-        //var p = e.GetPosition(this);
-        //c.Zoom(new PointF((float)p.X, (float)p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
-    }
-
-    private void OnMouseDown(object sender, MouseButtonEventArgs e)
-    {
-        _ = CaptureMouse();
-        var p = e.GetPosition(this);
-        core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y), e.ChangedButton == MouseButton.Right);
-    }
-
-    private void OnMouseUp(object sender, MouseButtonEventArgs e)
-    {
-        var p = e.GetPosition(this);
-        core?.InvokePointerUp(new LvcPoint((float)p.X, (float)p.Y), e.ChangedButton == MouseButton.Right);
-        ReleaseMouseCapture();
-    }
+    private static object GetSeriesSource(ISeries series) =>
+        ((FrameworkElement)series).DataContext!;
 }
