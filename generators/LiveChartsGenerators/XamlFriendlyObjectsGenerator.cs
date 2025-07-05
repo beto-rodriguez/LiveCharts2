@@ -439,6 +439,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
             "LiveChartsCore.SkiaSharpView.Avalonia" => "Avalonia",
             "LiveChartsCore.SkiaSharpView.WPF" => "WPF",
             "LiveChartsCore.SkiaSharpView.WinForms" => "WinForms",
+            "LiveChartsCore.SkiaSharpView.Eto" => "WinForms",
             _ => null
         };
     }

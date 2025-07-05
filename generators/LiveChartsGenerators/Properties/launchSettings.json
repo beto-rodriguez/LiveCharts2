@@ -2,7 +2,7 @@
   "profiles": {
     "Profile 1": {
       "commandName": "DebugRoslynComponent",
-      "targetProject": "..\\..\\src\\skiasharp\\LiveChartsCore.SkiaSharp.WinForms\\LiveChartsCore.SkiaSharpView.WinForms.csproj"
+      "targetProject": "..\\..\\src\\skiasharp\\LiveChartsCore.SkiaSharpView.Eto\\LiveChartsCore.SkiaSharpView.Eto.csproj"
     }
   }
 }
