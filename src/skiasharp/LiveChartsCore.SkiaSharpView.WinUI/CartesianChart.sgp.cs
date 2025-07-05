@@ -49,20 +49,20 @@ public partial class CartesianChart
     static LiveChartsSettings d = LiveCharts.DefaultSettings;
 
     /// <inheritdoc cref="ICartesianChartView.ZoomMode"/>
-    static XamlProperty<ZoomAndPanMode>                 zoomMode            = new(defaultValue: d.ZoomMode);
+    static UIProperty<ZoomAndPanMode>                 zoomMode            = new(defaultValue: d.ZoomMode);
     /// <inheritdoc cref="ICartesianChartView.ZoomingSpeed"/>
-    static XamlProperty<double>                         zoomingSpeed        = new(defaultValue: d.ZoomSpeed);
+    static UIProperty<double>                         zoomingSpeed        = new(defaultValue: d.ZoomSpeed);
     /// <inheritdoc cref="ICartesianChartView.FindingStrategy"/>
-    static XamlProperty<FindingStrategy>                findingStrategy     = new(defaultValue: d.FindingStrategy);
+    static UIProperty<FindingStrategy>                findingStrategy     = new(defaultValue: d.FindingStrategy);
 
     /// <inheritdoc cref="ICartesianChartView.XAxes"/>
-    static XamlProperty<ICollection<ICartesianAxis>>    xAxes               = new(onChanged: OnObservedPropertyChanged(nameof(XAxes)));
+    static UIProperty<ICollection<ICartesianAxis>>    xAxes               = new(onChanged: OnObservedPropertyChanged(nameof(XAxes)));
     /// <inheritdoc cref="ICartesianChartView.YAxes"/>
-    static XamlProperty<ICollection<ICartesianAxis>>    yAxes               = new(onChanged: OnObservedPropertyChanged(nameof(YAxes)));
+    static UIProperty<ICollection<ICartesianAxis>>    yAxes               = new(onChanged: OnObservedPropertyChanged(nameof(YAxes)));
     /// <inheritdoc cref="ICartesianChartView.Sections"/>
-    static XamlProperty<ICollection<IChartElement>>     sections            = new(onChanged: OnObservedPropertyChanged(nameof(Sections)));
+    static UIProperty<ICollection<IChartElement>>     sections            = new(onChanged: OnObservedPropertyChanged(nameof(Sections)));
     /// <inheritdoc cref="ICartesianChartView.DrawMarginFrame"/>
-    static XamlProperty<IChartElement?>                 drawMarginFrame     = new(onChanged: OnObservedPropertyChanged(nameof(DrawMarginFrame)));
+    static UIProperty<IChartElement?>                 drawMarginFrame     = new(onChanged: OnObservedPropertyChanged(nameof(DrawMarginFrame)));
 
     /// <inheritdoc cref="ICartesianChartView.FindingStrategy" />
     [Obsolete($"Renamed to {nameof(FindingStrategy)}")]

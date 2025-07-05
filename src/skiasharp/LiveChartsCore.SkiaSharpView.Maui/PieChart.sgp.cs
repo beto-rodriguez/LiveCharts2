@@ -45,13 +45,13 @@ public partial class PieChart
     static LiveChartsSettings d = LiveCharts.DefaultSettings;
 
     /// <inheritdoc cref="IPieChartView.IsClockwise"/>
-    static XamlProperty<bool>                           isClockwise         = new(defaultValue: d.PieIsClockwise);
+    static UIProperty<bool>                           isClockwise         = new(defaultValue: d.PieIsClockwise);
     /// <inheritdoc cref="IPieChartView.InitialRotation"/>
-    static XamlProperty<double>                         initialRotation     = new(defaultValue: d.PieInitialRotation);
+    static UIProperty<double>                         initialRotation     = new(defaultValue: d.PieInitialRotation);
     /// <inheritdoc cref="IPieChartView.MaxAngle"/>
-    static XamlProperty<double>                         maxAngle            = new(defaultValue: d.PieMaxAngle);
+    static UIProperty<double>                         maxAngle            = new(defaultValue: d.PieMaxAngle);
     /// <inheritdoc cref="IPieChartView.MaxValue"/>
-    static XamlProperty<double>                         maxValue            = new(defaultValue: d.PieMaxValue);
+    static UIProperty<double>                         maxValue            = new(defaultValue: d.PieMaxValue);
     /// <inheritdoc cref="IPieChartView.MinValue"/>
-    static XamlProperty<double>                         minValue            = new(defaultValue: d.PieMinValue);
+    static UIProperty<double>                         minValue            = new(defaultValue: d.PieMinValue);
 }

@@ -120,7 +120,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
                     spc.AddSource(
                         $"{name}._avaloina_onChange.g.cs".Replace('<', '_').Replace('>', '_'),
                         SourceText.From(
-                            BindablePropertyTempaltes.GetAvaloniaBaseTypeTemplate(group, GetFrameworkTemplate(consumerType, FrameworkTemplate.Context.XamlProperty)),
+                            UIPropertyTempaltes.GetAvaloniaBaseTypeTemplate(group, GetFrameworkTemplate(consumerType, FrameworkTemplate.Context.XamlProperty)),
                             Encoding.UTF8));
                 }
 
@@ -130,7 +130,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
 
                     spc.AddSource(
                         $"{value.DeclaringType.Name}.{value.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
-                        SourceText.From(BindablePropertyTempaltes.GetTemplate(value, GetFrameworkTemplate(consumerType, FrameworkTemplate.Context.XamlProperty)), Encoding.UTF8));
+                        SourceText.From(UIPropertyTempaltes.GetTemplate(value, GetFrameworkTemplate(consumerType, FrameworkTemplate.Context.XamlProperty)), Encoding.UTF8));
                 }
             }
         });

@@ -28,7 +28,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace LiveChartsGenerators.Templates;
 
-public static class BindablePropertyTempaltes
+public static class UIPropertyTempaltes
 {
     public static string GetTemplate(XamlProperty target, FrameworkTemplate template)
     {
