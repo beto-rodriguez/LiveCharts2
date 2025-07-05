@@ -35,6 +35,8 @@ public abstract class FrameworkTemplate(FrameworkTemplate.Context context)
     public string GetBindablePropertySyntax(XamlObject target, string key, IPropertySymbol property, BindablePropertyInitializer? initializer = null) =>
         GetBindablePropertySyntax(target, key, property.Name, property.Type.ToDisplayString(), property.Type.IsValueType, initializer);
 
+    public virtual string FullPropertySyntax(XamlProperty property) => string.Empty;
+
     public string GetBindablePropertySyntax(
         XamlObject target, string key, string propertyName, string propertyType, bool isValueTypeProperty, BindablePropertyInitializer? initializer)
     {

@@ -65,7 +65,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
                 static (node, _) =>
                     node is FieldDeclarationSyntax fieldDecl &&
                     fieldDecl.Modifiers.Any(SyntaxKind.StaticKeyword),
-                static (ctx, _) => GetXamlPropertiesToGenerate(ctx.SemanticModel, ctx.Node)
+                static (ctx, _) => GetUIPropertiesToGenerate(ctx.SemanticModel, ctx.Node)
             )
             .Where(symbol => symbol is not null)
             .Collect()
@@ -310,7 +310,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
         return new(symbol, hasExplicitAcessors);
     }
 
-    private static XamlProperty? GetXamlPropertiesToGenerate(SemanticModel semanticModel, SyntaxNode node)
+    private static XamlProperty? GetUIPropertiesToGenerate(SemanticModel semanticModel, SyntaxNode node)
     {
         var fieldDecl = (FieldDeclarationSyntax)node;
         // Assume we only care about one variable per declaration
@@ -338,7 +338,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
         }
 
         // Check if field's type is the type you're interested in
-        if (fieldSymbol.Type.ToDisplayString(displayFormat) == "LiveChartsCore.Generators.XamlProperty")
+        if (fieldSymbol.Type.ToDisplayString(displayFormat) == "LiveChartsCore.Generators.UIProperty")
         {
             var camelCasedName = variable.Identifier.Text;
             var propertyName = $"{camelCasedName.Substring(0, 1).ToUpperInvariant()}{camelCasedName.Substring(1, camelCasedName.Length - 1)}";
@@ -438,6 +438,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
             "LiveChartsCore.SkiaSharpView.WinUI" => "WinUI",
             "LiveChartsCore.SkiaSharpView.Avalonia" => "Avalonia",
             "LiveChartsCore.SkiaSharpView.WPF" => "WPF",
+            "LiveChartsCore.SkiaSharpView.WinForms" => "WinForms",
             _ => null
         };
     }
@@ -450,6 +451,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
             "WinUI" => new WinUITemplate(context),
             "Avalonia" => new AvaloniaTemplate(context),
             "WPF" => new WPFTemplate(context),
+            "WinForms" => new WinformsTemplate(context),
             _ => throw new NotSupportedException($"The consumer type '{consumerType}' is not supported.")
         };
     }
