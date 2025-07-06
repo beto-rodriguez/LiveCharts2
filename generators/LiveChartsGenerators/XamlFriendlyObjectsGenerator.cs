@@ -440,6 +440,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
             "LiveChartsCore.SkiaSharpView.WPF" => "WPF",
             "LiveChartsCore.SkiaSharpView.WinForms" => "WinForms",
             "LiveChartsCore.SkiaSharpView.Eto" => "WinForms",
+            "LiveChartsCore.SkiaSharpView.Blazor" => "Blazor",
             _ => null
         };
     }
@@ -453,6 +454,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
             "Avalonia" => new AvaloniaTemplate(context),
             "WPF" => new WPFTemplate(context),
             "WinForms" => new WinformsTemplate(context),
+            "Blazor" => new BlazorTemplate(context),
             _ => throw new NotSupportedException($"The consumer type '{consumerType}' is not supported.")
         };
     }

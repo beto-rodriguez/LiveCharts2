@@ -25,9 +25,9 @@ using Microsoft.CodeAnalysis;
 
 namespace LiveChartsGenerators.Frameworks;
 
-public class WinformsTemplate(FrameworkTemplate.Context context) : FrameworkTemplate(context)
+public class BlazorTemplate(FrameworkTemplate.Context context) : FrameworkTemplate(context)
 {
-    public override string Key => "WinForms";
+    public override string Key => "Blazor";
 
     public override string DeclareBindableProperty(string propertyName, string propertyType) => string.Empty;
 
@@ -68,7 +68,7 @@ public class WinformsTemplate(FrameworkTemplate.Context context) : FrameworkTemp
         return @$"
     private {propertyType} {field}{(property.DefaultValueExpression is null ? string.Empty : $" = {property.DefaultValueExpression}")};
 
-    {docs}    [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+    {docs}    [Microsoft.AspNetCore.Components.Parameter]
     public {propertyType} {propertyName}
     {{
         get => {field};
