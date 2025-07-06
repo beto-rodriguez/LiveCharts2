@@ -38,14 +38,4 @@ public interface IBlazorChart
     /// Gets or sets the container css class.
     /// </summary>
     string ContainerClass { get; set; }
-
-    /// <summary>
-    /// Gets or sets the legend class.
-    /// </summary>
-    string LegendClass { get; set; }
-
-    /// <summary>
-    /// Gets or sets the tooltip class.
-    /// </summary>
-    string TooltipClass { get; set; }
 }

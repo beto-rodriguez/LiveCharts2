@@ -20,109 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.ObjectModel;
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.Measure;
-using LiveChartsCore.VisualElements;
-using Microsoft.AspNetCore.Components;
 
 namespace LiveChartsCore.SkiaSharpView.Blazor;
 
 /// <inheritdoc cref="IPieChartView"/>
-public partial class PieChart : Chart, IPieChartView
+public partial class PieChart : ChartControl, IPieChartView
 {
-    private ICollection<ISeries> _series = [];
-    private double _initialRotation;
-    private bool _isClockwise = true;
-    private double _maxAngle = 360;
-    private double _maxValue = double.NaN;
-    private double _minValue;
+    PieChartEngine IPieChartView.Core => (PieChartEngine)CoreChart;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PieChart"/> class.
-    /// </summary>
-    public PieChart()
-    {
-        _ = Observe
-           .Collection(nameof(Series));
-
-        Series = new ObservableCollection<ISeries>();
-        VisualElements = new ObservableCollection<IChartElement>();
-    }
-
-    PieChartEngine IPieChartView.Core =>
-        core is null ? throw new Exception("core not found") : (PieChartEngine)core;
-
-    /// <inheritdoc cref="IPieChartView.Series" />
-    [Parameter]
-    public ICollection<ISeries> Series
-    {
-        get => _series;
-        set { _series = value; Observe[nameof(Series)].Initialize(value); OnPropertyChanged(); }
-    }
-
-    /// <inheritdoc cref="IPieChartView.IsClockwise" />
-    [Parameter]
-    public bool IsClockwise { get => _isClockwise; set { _isClockwise = value; OnPropertyChanged(); } }
-
-    /// <inheritdoc cref="IPieChartView.InitialRotation" />
-    [Parameter]
-    public double InitialRotation { get => _initialRotation; set { _initialRotation = value; OnPropertyChanged(); } }
-
-    /// <inheritdoc cref="IPieChartView.MaxAngle" />
-    [Parameter]
-    public double MaxAngle { get => _maxAngle; set { _maxAngle = value; OnPropertyChanged(); } }
-
-    /// <inheritdoc cref="IPieChartView.MaxValue" />
-    [Parameter]
-    public double MaxValue { get => _maxValue; set { _maxValue = value; OnPropertyChanged(); } }
-
-    /// <inheritdoc cref="IPieChartView.MinValue" />
-    [Parameter]
-    public double MinValue { get => _minValue; set { _minValue = value; OnPropertyChanged(); } }
-
-    /// <inheritdoc cref="IChartView.GetPointsAt(LvcPointD, FindingStrategy, FindPointFor)"/>
-    public override IEnumerable<ChartPoint> GetPointsAt(LvcPointD point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
-    {
-        if (core is not PieChartEngine cc) throw new Exception("core not found");
-
-        if (strategy == FindingStrategy.Automatic)
-            strategy = cc.Series.GetFindingStrategy();
-
-        return cc.Series.SelectMany(series => series.FindHitPoints(cc, new(point), strategy, findPointFor));
-    }
-
-    /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
-    public override IEnumerable<IChartElement> GetVisualsAt(LvcPointD point)
-    {
-        return core is not PieChartEngine cc
-            ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((VisualElement)visual).IsHitBy(core, new(point)));
-    }
-
-    /// <summary>
-    /// Initializes the core.
-    /// </summary>
-    protected override void InitializeCore()
-    {
-        if (motionCanvas is null) throw new Exception("MotionCanvas component was not found");
-
-        core = new PieChartEngine(
-            this, config => config.UseDefaults(), motionCanvas.CanvasCore);
-        if (((IChartView)this).DesignerMode) return;
-        core.Update();
-    }
-
-    /// <inheritdoc cref="Chart.OnDisposing"/>
-    protected override void OnDisposing()
-    {
-        core?.Unload();
-
-        Series = [];
-        VisualElements = [];
-
-        base.OnDisposing();
-    }
+    /// <inheritdoc cref="ChartControl.CreateCoreChart"/>
+    protected override Chart CreateCoreChart() =>
+         new PieChartEngine(this, config => config.UseDefaults(), CanvasView.CanvasCore);
 }

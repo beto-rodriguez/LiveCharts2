@@ -1,0 +1,72 @@
+﻿::deep.lvc-content {
+    height: 100%;
+    width: 100%;
+}
+
+::deep canvas {
+    height: 100%;
+    width: 100%;
+}
+
+::deep .lvc-chart-container {
+    height: 100%;
+    width: 100%;
+
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-wrap: nowrap;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    -webkit-justify-content: flex-start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    -webkit-align-content: stretch;
+    -ms-flex-line-pack: stretch;
+    align-content: stretch;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+    ::deep .lvc-chart-container.column {
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        -webkit-flex-wrap: nowrap;
+        -ms-flex-wrap: nowrap;
+        flex-wrap: nowrap;
+        -webkit-justify-content: flex-start;
+        -ms-flex-pack: start;
+        justify-content: flex-start;
+        -webkit-align-content: stretch;
+        -ms-flex-line-pack: stretch;
+        align-content: stretch;
+        -webkit-align-items: center;
+        -ms-flex-align: center;
+        align-items: center;
+    }
+
+::deep .lvc-canvas-container {
+    height: 100%;
+    width: 100%;
+
+    -ms-flex-order: 0;
+    order: 0;
+    -webkit-flex: 1 1 auto;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    -ms-flex-item-align: auto;
+    align-self: auto;
+}
+
+::deep .lvc-miniature {
+    margin-right: 4px;
+    margin-left: 4px;
+}
