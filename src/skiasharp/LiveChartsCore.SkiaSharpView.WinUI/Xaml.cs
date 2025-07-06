@@ -42,7 +42,7 @@ using Microsoft.UI.Xaml;
 
 namespace LiveChartsCore.SkiaSharpView.WinUI;
 
-[XamlClass(typeof(Axis), PropertyTypeOverride = "MinLimit{=}double{,}MaxLimit{=}double", PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap")]
+[XamlClass(typeof(Axis), PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap")]
 public partial class XamlAxis : FrameworkElement, ICartesianAxis
 {
     string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
@@ -62,7 +62,7 @@ public partial class XamlAxis : FrameworkElement, ICartesianAxis
     }
 }
 
-[XamlClass(typeof(PolarAxis), PropertyTypeOverride = "MinLimit{=}double{,}MaxLimit{=}double", PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap")]
+[XamlClass(typeof(PolarAxis), PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap")]
 public partial class XamlPolarAxis : FrameworkElement, IPolarAxis
 {
     string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
@@ -82,14 +82,14 @@ public partial class XamlPolarAxis : FrameworkElement, IPolarAxis
     }
 }
 
-[XamlClass(typeof(DateTimeAxis), PropertyTypeOverride = "MinLimit{=}double{,}MaxLimit{=}double", PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap", GenerateBaseTypeDeclaration = false)]
+[XamlClass(typeof(DateTimeAxis), PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap", GenerateBaseTypeDeclaration = false)]
 public partial class XamlDateTimeAxis : FrameworkElement, ICartesianAxis
 {
     private readonly DateTimeAxis _baseType = new(TimeSpan.FromDays(1), date => date.ToString("d"));
     private static readonly DateTimeAxis _defaultDateTimeAxis = new(TimeSpan.FromDays(1), date => date.ToString("d"));
 
-    private static readonly XamlProperty<TimeSpan> interval = new(TimeSpan.FromDays(1), XamlGeneration.OnAxisIntervalChanged);
-    private static readonly XamlProperty<Func<DateTime, string>> dateFormatter = new(null, XamlGeneration.OnDateTimeAxisDateFormatterChanged);
+    private static readonly UIProperty<TimeSpan> interval = new(TimeSpan.FromDays(1), XamlGeneration.OnAxisIntervalChanged);
+    private static readonly UIProperty<Func<DateTime, string>> dateFormatter = new(null, XamlGeneration.OnDateTimeAxisDateFormatterChanged);
 
     string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
     double? IPlane.MinLimit { get => _baseType.MinLimit; set => _baseType.MinLimit = value; }
@@ -108,14 +108,14 @@ public partial class XamlDateTimeAxis : FrameworkElement, ICartesianAxis
     }
 }
 
-[XamlClass(typeof(TimeSpanAxis), PropertyTypeOverride = "MinLimit{=}double{,}MaxLimit{=}double", PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap", GenerateBaseTypeDeclaration = false)]
+[XamlClass(typeof(TimeSpanAxis), PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap", GenerateBaseTypeDeclaration = false)]
 public partial class XamlTimeSpanAxis : FrameworkElement, ICartesianAxis
 {
     private readonly TimeSpanAxis _baseType = new(TimeSpan.FromMilliseconds(1), date => $"{date:fff}ms");
     private static readonly TimeSpanAxis _defaultTimeSpanAxis = new(TimeSpan.FromMilliseconds(1), date => $"{date:fff}ms");
 
-    private static readonly XamlProperty<TimeSpan> interval = new(TimeSpan.FromSeconds(1), XamlGeneration.OnAxisIntervalChanged);
-    private static readonly XamlProperty<Func<TimeSpan, string>> timeFormatter = new(null, XamlGeneration.OnTimeSpanAxisFormatterChanged);
+    private static readonly UIProperty<TimeSpan> interval = new(TimeSpan.FromSeconds(1), XamlGeneration.OnAxisIntervalChanged);
+    private static readonly UIProperty<Func<TimeSpan, string>> timeFormatter = new(null, XamlGeneration.OnTimeSpanAxisFormatterChanged);
 
     string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
     double? IPlane.MinLimit { get => _baseType.MinLimit; set => _baseType.MinLimit = value; }
@@ -134,13 +134,13 @@ public partial class XamlTimeSpanAxis : FrameworkElement, ICartesianAxis
     }
 }
 
-[XamlClass(typeof(LogarithmicAxis), PropertyTypeOverride = "MinLimit{=}double{,}MaxLimit{=}double", PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap", GenerateBaseTypeDeclaration = false)]
+[XamlClass(typeof(LogarithmicAxis), PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap", GenerateBaseTypeDeclaration = false)]
 public partial class XamlLogarithmicAxis : FrameworkElement, ICartesianAxis
 {
     private readonly LogarithmicAxis _baseType = new(10);
     private static readonly LogarithmicAxis _defaultLogarithmicAxis = new(10);
 
-    private static readonly XamlProperty<double> logBase = new(10d, XamlGeneration.OnAxisLogBaseChanged);
+    private static readonly UIProperty<double> logBase = new(10d, XamlGeneration.OnAxisLogBaseChanged);
 
     string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
     double? IPlane.MinLimit { get => _baseType.MinLimit; set => _baseType.MinLimit = value; }
@@ -163,10 +163,11 @@ public partial class XamlLogarithmicAxis : FrameworkElement, ICartesianAxis
 public partial class XamlDrawnLabelVisual : FrameworkElement, IChartElement, IInternalInteractable
 {
     private static readonly LabelGeometry _defaultDrawnLabel = new();
-    private LabelGeometry? DrawnLabel => (LabelGeometry?)_baseType.DrawnElement;
+    private LabelGeometry DrawnLabel => (LabelGeometry?)_baseType.DrawnElement
+        ?? throw new Exception("Drawn element not found");
 }
 
-[XamlClass(typeof(RectangularSection), PropertyTypeOverride = "Xi{=}double{,}Xj{=}double", PropertyChangeMap = "Xi{=}XiMap{,}Xj{=}XjMap")]
+[XamlClass(typeof(RectangularSection), PropertyChangeMap = "Xi{=}XiMap{,}Xj{=}XjMap")]
 public partial class XamlRectangularSection : FrameworkElement, IChartElement
 {
     private void XiMap(object value)
@@ -268,7 +269,7 @@ public partial class XamlGaugeSeries<TVisual, TLabel> : XamlSeries, IPieSeries, 
     where TLabel : BaseLabelGeometry, new()
 {
     private readonly ObservableValue _value = new(0d);
-    private static readonly XamlProperty<double> gaugeValue = new(0d, OnGaugeValueChanged);
+    private static readonly UIProperty<double> gaugeValue = new(0d, OnGaugeValueChanged);
 
     /// <inheritdoc cref="PieSeries{TModel, TVisual, TLabel}.PieSeries()"/>
     public XamlGaugeSeries()

@@ -94,7 +94,7 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView
     /// <inheritdoc cref="IPolarChartView.RadiusAxes"/>
     public ICollection<IPolarAxis> RadiusAxes { get; set; } = [new PolarAxis()];
 
-    /// <inheritdoc cref="IPolarChartView.Series"/>
+    /// <inheritdoc cref="IChartView.Series"/>
     public ICollection<ISeries> Series { get; set; } = [];
 
     /// <inheritdoc cref="IChartView.VisualElements"/>

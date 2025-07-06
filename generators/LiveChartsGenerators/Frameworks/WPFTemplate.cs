@@ -31,8 +31,14 @@ public class WPFTemplate(FrameworkTemplate.Context context) : FrameworkTemplate(
         => @$"public static readonly new global::System.Windows.DependencyProperty {propertyName}Property";
 
     public override string CreateBindableProperty(
-        string propertyName, string propertyType, string bindableType, string defaultValue, string? onChanged = null)
-            => @$"global::System.Windows.DependencyProperty.Register(name: ""{propertyName}"", propertyType: typeof({propertyType}), ownerType: typeof({bindableType}), typeMetadata: new System.Windows.PropertyMetadata(defaultValue:{defaultValue}{(onChanged is null ? string.Empty : $", propertyChangedCallback: {GetOnChangedExpression(onChanged, bindableType, propertyType)}")}));";
+        string propertyName, string propertyType, bool isValueTypeProperty, string bindableType, string defaultValue, OnChangeInfo? onChangeInfo = null)
+    {
+        var sanitizedPropertyType = !isValueTypeProperty && propertyType.EndsWith("?")
+            ? propertyType.Substring(0, propertyType.Length - 1)
+            : propertyType;
+
+        return @$"global::System.Windows.DependencyProperty.Register(name: ""{propertyName}"", propertyType: typeof({sanitizedPropertyType}), ownerType: typeof({bindableType}), typeMetadata: new System.Windows.PropertyMetadata(defaultValue:{defaultValue}{(onChangeInfo is null ? string.Empty : $", propertyChangedCallback: {GetOnChangedExpression(onChangeInfo.Value, bindableType, propertyType)}")}));";
+    }
 
     public override string GetPropertyChangedMetod() =>
         @$"protected override void OnPropertyChanged(System.Windows.DependencyPropertyChangedEventArgs args)
@@ -41,6 +47,12 @@ public class WPFTemplate(FrameworkTemplate.Context context) : FrameworkTemplate(
         MapChangeToBaseType(args.Property.Name);
     }}";
 
-    private string GetOnChangedExpression(string expression, string bindableType, string propertyType)
-        => $@"(o, args) => {expression}(({bindableType})o, ({propertyType})args.OldValue, ({propertyType})args.NewValue)";
+    private string GetOnChangedExpression(OnChangeInfo onChangeInfo, string bindableType, string propertyType)
+    {
+        if (!onChangeInfo.HasChangeParams)
+            return $@"(o, args) => {onChangeInfo.Expression}(({bindableType})o)";
+
+        var cast = onChangeInfo.HasChangeObjectParams ? string.Empty : $"({propertyType})";
+        return $@"(o, args) => {onChangeInfo.Expression}(({bindableType})o, {cast}args.OldValue, {cast}args.NewValue)";
+    }
 }

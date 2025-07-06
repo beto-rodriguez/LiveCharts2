@@ -20,333 +20,70 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
-using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.WPF;
 
 /// <inheritdoc cref="ICartesianChartView" />
-public class CartesianChart : Chart, ICartesianChartView
+public partial class CartesianChart : ChartControl, ICartesianChartView
 {
-    #region fields
-
-    private bool _matchAxesScreenDataRatio;
-
-    #endregion
-
     /// <summary>
     /// Initializes a new instance of the <see cref="CartesianChart"/> class.
     /// </summary>
     public CartesianChart()
     {
         _ = Observe
-            .Collection(nameof(Series))
-            .Collection(nameof(XAxes))
-            .Collection(nameof(YAxes))
-            .Collection(nameof(Sections))
-            .Property(nameof(DrawMarginFrame));
+           .Collection(nameof(XAxes))
+           .Collection(nameof(YAxes))
+           .Collection(nameof(Sections))
+           .Property(nameof(DrawMarginFrame));
 
-        SetCurrentValue(XAxesProperty, new ObservableCollection<ICartesianAxis>());
-        SetCurrentValue(YAxesProperty, new ObservableCollection<ICartesianAxis>());
-        SetCurrentValue(SeriesProperty, new ObservableCollection<ISeries>());
-        SetCurrentValue(SectionsProperty, new ObservableCollection<IChartElement>());
-        SetCurrentValue(VisualElementsProperty, new ObservableCollection<IChartElement>());
-        SetCurrentValue(SyncContextProperty, new object());
+        SetValue(XAxesProperty, new ObservableCollection<ICartesianAxis>());
+        SetValue(YAxesProperty, new ObservableCollection<ICartesianAxis>());
+        SetValue(SeriesProperty, new ObservableCollection<ISeries>());
+        SetValue(SectionsProperty, new ObservableCollection<IChartElement>());
+        SetValue(VisualElementsProperty, new ObservableCollection<IChartElement>());
+        SetValue(SyncContextProperty, new object());
 
         MouseWheel += OnMouseWheel;
-        MouseDown += OnMouseDown;
-        MouseUp += OnMouseUp;
-        ManipulationDelta += OnManipulationDelta;
-        ManipulationStarting += OnManipulationStarting;
     }
 
-    #region dependency properties
-
-    /// <summary>
-    /// The series property
-    /// </summary>
-    public static readonly DependencyProperty SeriesProperty =
-        DependencyProperty.Register(
-            nameof(Series), typeof(ICollection<ISeries>), typeof(CartesianChart),
-            new PropertyMetadata(null, InitializeObserver(nameof(Series))));
-
-    /// <summary>
-    /// The x axes property
-    /// </summary>
-    public static readonly DependencyProperty XAxesProperty =
-        DependencyProperty.Register(
-            nameof(XAxes), typeof(ICollection<ICartesianAxis>), typeof(CartesianChart),
-            new PropertyMetadata(null, InitializeObserver(nameof(XAxes))));
-
-    /// <summary>
-    /// The y axes property
-    /// </summary>
-    public static readonly DependencyProperty YAxesProperty =
-        DependencyProperty.Register(
-            nameof(YAxes), typeof(ICollection<ICartesianAxis>), typeof(CartesianChart),
-            new PropertyMetadata(null, InitializeObserver(nameof(YAxes))));
-
-    /// <summary>
-    /// The sections property
-    /// </summary>
-    public static readonly DependencyProperty SectionsProperty =
-        DependencyProperty.Register(
-            nameof(Sections), typeof(ICollection<IChartElement>), typeof(CartesianChart),
-            new PropertyMetadata(null, InitializeObserver(nameof(Sections))));
-
-    /// <summary>
-    /// The zoom mode property
-    /// </summary>
-    public static readonly DependencyProperty DrawMarginFrameProperty =
-        DependencyProperty.Register(
-            nameof(DrawMarginFrame), typeof(IChartElement), typeof(CartesianChart),
-            new PropertyMetadata(null, InitializeObserver(nameof(DrawMarginFrame))));
-
-    /// <summary>
-    /// The zoom mode property
-    /// </summary>
-    public static readonly DependencyProperty ZoomModeProperty =
-        DependencyProperty.Register(
-            nameof(ZoomMode), typeof(ZoomAndPanMode), typeof(CartesianChart),
-            new PropertyMetadata(LiveCharts.DefaultSettings.ZoomMode));
-
-    /// <summary>
-    /// The zooming speed property
-    /// </summary>
-    public static readonly DependencyProperty ZoomingSpeedProperty =
-        DependencyProperty.Register(
-            nameof(ZoomingSpeed), typeof(double), typeof(CartesianChart),
-            new PropertyMetadata(LiveCharts.DefaultSettings.ZoomSpeed));
-
-    /// <summary>
-    /// The tool tip finding strategy property
-    /// </summary>
-    public static readonly DependencyProperty FindingStrategyProperty =
-        DependencyProperty.Register(
-            nameof(FindingStrategy), typeof(FindingStrategy), typeof(Chart),
-            new PropertyMetadata(LiveCharts.DefaultSettings.FindingStrategy, OnDependencyPropertyChanged));
-
-    #endregion
-
-    #region properties
-
-    CartesianChartEngine ICartesianChartView.Core =>
-        core is null ? throw new Exception("core not found") : (CartesianChartEngine)core;
-
-    /// <inheritdoc cref="ICartesianChartView.Series" />
-    public override ICollection<ISeries> Series
-    {
-        get => (ICollection<ISeries>)GetValue(SeriesProperty);
-        set => SetValue(SeriesProperty, value);
-    }
-
-    /// <inheritdoc cref="ICartesianChartView.XAxes" />
-    public ICollection<ICartesianAxis> XAxes
-    {
-        get => (ICollection<ICartesianAxis>)GetValue(XAxesProperty);
-        set => SetValue(XAxesProperty, value);
-    }
-
-    /// <inheritdoc cref="ICartesianChartView.YAxes" />
-    public ICollection<ICartesianAxis> YAxes
-    {
-        get => (ICollection<ICartesianAxis>)GetValue(YAxesProperty);
-        set => SetValue(YAxesProperty, value);
-    }
-
-    /// <inheritdoc cref="ICartesianChartView.Sections" />
-    public ICollection<IChartElement> Sections
-    {
-        get => (ICollection<IChartElement>)GetValue(SectionsProperty);
-        set => SetValue(SectionsProperty, value);
-    }
-
-    /// <inheritdoc cref="ICartesianChartView.DrawMarginFrame" />
-    public IChartElement? DrawMarginFrame
-    {
-        get => (IChartElement)GetValue(DrawMarginFrameProperty);
-        set => SetValue(DrawMarginFrameProperty, value);
-    }
-
-    /// <inheritdoc cref="ICartesianChartView.ZoomMode" />
-    public ZoomAndPanMode ZoomMode
-    {
-        get => (ZoomAndPanMode)GetValue(ZoomModeProperty);
-        set => SetValue(ZoomModeProperty, value);
-    }
-
-    ZoomAndPanMode ICartesianChartView.ZoomMode
-    {
-        get => ZoomMode;
-        set => SetValueOrCurrentValue(ZoomModeProperty, value);
-    }
-
-    /// <inheritdoc cref="ICartesianChartView.ZoomingSpeed" />
-    public double ZoomingSpeed
-    {
-        get => (double)GetValue(ZoomingSpeedProperty);
-        set => SetValue(ZoomingSpeedProperty, value);
-    }
-
-    double ICartesianChartView.ZoomingSpeed
-    {
-        get => ZoomingSpeed;
-        set => SetValueOrCurrentValue(ZoomingSpeedProperty, value);
-    }
-
-    /// <inheritdoc cref="ICartesianChartView.FindingStrategy" />
-    [Obsolete($"Renamed to {nameof(FindingStrategy)}")]
-    public TooltipFindingStrategy TooltipFindingStrategy
-    {
-        get => ((FindingStrategy)GetValue(FindingStrategyProperty)!).AsOld();
-        set => SetValue(FindingStrategyProperty, value.AsNew());
-    }
-
-    /// <inheritdoc cref="ICartesianChartView.FindingStrategy" />
-    public FindingStrategy FindingStrategy
-    {
-        get => (FindingStrategy)GetValue(FindingStrategyProperty);
-        set => SetValue(FindingStrategyProperty, value);
-    }
+    CartesianChartEngine ICartesianChartView.Core => (CartesianChartEngine)CoreChart;
 
     /// <inheritdoc cref="ICartesianChartView.MatchAxesScreenDataRatio" />
     public bool MatchAxesScreenDataRatio
     {
-        get => _matchAxesScreenDataRatio;
+        get;
         set
         {
-            _matchAxesScreenDataRatio = value;
-            OnMatchAxesScaleChanged();
+            field = value;
+
+            if (value) SharedAxes.MatchAxesScreenDataRatio(this);
+            else SharedAxes.DisposeMatchAxesScreenDataRatio(this);
         }
     }
-
-    #endregion
 
     /// <inheritdoc cref="ICartesianChartView.ScalePixelsToData(LvcPointD, int, int)"/>
     public LvcPointD ScalePixelsToData(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)
-    {
-        if (core is not CartesianChartEngine cc) throw new Exception("core not found");
-
-        var xScaler = new Scaler(cc.DrawMarginLocation, cc.DrawMarginSize, cc.XAxes[xAxisIndex]);
-        var yScaler = new Scaler(cc.DrawMarginLocation, cc.DrawMarginSize, cc.YAxes[yAxisIndex]);
-
-        return new LvcPointD { X = xScaler.ToChartValues(point.X), Y = yScaler.ToChartValues(point.Y) };
-    }
+        => ((CartesianChartEngine)CoreChart).ScaleDataToPixels(point, xAxisIndex, yAxisIndex);
 
     /// <inheritdoc cref="ICartesianChartView.ScaleDataToPixels(LvcPointD, int, int)"/>
     public LvcPointD ScaleDataToPixels(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)
-    {
-        if (core is not CartesianChartEngine cc) throw new Exception("core not found");
+        => ((CartesianChartEngine)CoreChart).ScalePixelsToData(point, xAxisIndex, yAxisIndex);
 
-        var xScaler = new Scaler(cc.DrawMarginLocation, cc.DrawMarginSize, cc.XAxes[xAxisIndex]);
-        var yScaler = new Scaler(cc.DrawMarginLocation, cc.DrawMarginSize, cc.YAxes[yAxisIndex]);
-
-        return new LvcPointD { X = xScaler.ToPixels(point.X), Y = yScaler.ToPixels(point.Y) };
-    }
-
-    /// <inheritdoc cref="IChartView.GetPointsAt(LvcPointD, FindingStrategy, FindPointFor)"/>
-    public override IEnumerable<ChartPoint> GetPointsAt(LvcPointD point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
-    {
-        if (core is not CartesianChartEngine cc) throw new Exception("core not found");
-
-        if (strategy == FindingStrategy.Automatic)
-            strategy = cc.Series.GetFindingStrategy();
-
-        return cc.Series.SelectMany(series => series.FindHitPoints(cc, new(point), strategy, findPointFor));
-    }
-
-    /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
-    public override IEnumerable<IChartElement> GetVisualsAt(LvcPointD point)
-    {
-        return core is not CartesianChartEngine cc
-            ? throw new Exception("core not found")
-            : cc.VisualElements.SelectMany(visual => ((VisualElement)visual).IsHitBy(core, new(point)));
-    }
-
-    /// <summary>
-    /// Initializes the core.
-    /// </summary>
-    /// <exception cref="Exception">canvas not found</exception>
-    protected override void InitializeCore()
-    {
-        if (canvas is null) throw new Exception("canvas not found");
-
-        core = new CartesianChartEngine(
-            this, config => config.UseDefaults(), canvas.CanvasCore);
-
-        OnMatchAxesScaleChanged();
-
-        core.Update();
-    }
-
-    /// <inheritdoc cref="Chart.OnUnloaded"/>
-    protected override void OnUnloaded()
-    {
-        Observe.Dispose();
-        core?.Unload();
-    }
-
-    private void OnMouseDown(object sender, MouseButtonEventArgs e)
-    {
-        if (Keyboard.Modifiers > 0) return;
-        _ = CaptureMouse();
-        var p = e.GetPosition(this);
-        core?.InvokePointerDown(new LvcPoint((float)p.X, (float)p.Y), e.ChangedButton == MouseButton.Right);
-    }
-
-    private void OnMouseUp(object sender, MouseButtonEventArgs e)
-    {
-        var p = e.GetPosition(this);
-        core?.InvokePointerUp(new LvcPoint((float)p.X, (float)p.Y), e.ChangedButton == MouseButton.Right);
-        ReleaseMouseCapture();
-    }
+    /// <inheritdoc cref="ChartControl.CreateCoreChart"/>
+    protected override Chart CreateCoreChart()
+        => new CartesianChartEngine(this, config => config.UseDefaults(), CanvasView.CanvasCore);
 
     private void OnMouseWheel(object? sender, MouseWheelEventArgs e)
     {
-        if (core is null) throw new Exception("core not found");
-        var c = (CartesianChartEngine)core;
+        var c = (CartesianChartEngine)CoreChart;
         var p = e.GetPosition(this);
         c.Zoom(new LvcPoint((float)p.X, (float)p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
-    }
-
-    private void OnManipulationDelta(object? sender, ManipulationDeltaEventArgs e)
-    {
-        if (core is null) throw new Exception("core not found");
-        var c = (CartesianChartEngine)core;
-        if (e.DeltaManipulation.Scale.Y != 1)
-        {
-            LvcPoint p = new((float)e.ManipulationOrigin.X, (float)e.ManipulationOrigin.Y);
-            c.Zoom(p, ZoomDirection.DefinedByScaleFactor, e.DeltaManipulation.Scale.Y, true);
-            e.Handled = true;
-            return;
-        }
-        if (e.DeltaManipulation.Translation.X != 0 || e.DeltaManipulation.Translation.Y != 0)
-        {
-            LvcPoint p = new((float)e.DeltaManipulation.Translation.X, (float)e.DeltaManipulation.Translation.Y);
-            c.Pan(p, false);
-            e.Handled = true;
-            return;
-        }
-    }
-    private void OnManipulationStarting(object? sender, ManipulationStartingEventArgs e)
-    {
-        e.ManipulationContainer = this;
-        e.Handled = true;
-    }
-
-    private void OnMatchAxesScaleChanged()
-    {
-        if (core is null) return;
-        if (MatchAxesScreenDataRatio) SharedAxes.MatchAxesScreenDataRatio(this);
-        else SharedAxes.DisposeMatchAxesScreenDataRatio(this);
     }
 }

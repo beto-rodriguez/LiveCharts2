@@ -84,12 +84,12 @@ public class LiveChartsSettings
     /// <summary>
     /// Gets or sets the default legend background paint.
     /// </summary>
-    public object? LegendBackgroundPaint { get; set; }
+    public Paint? LegendBackgroundPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the default legend text paint.
     /// </summary>
-    public object? LegendTextPaint { get; set; }
+    public Paint? LegendTextPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the default legend text size.
@@ -107,12 +107,12 @@ public class LiveChartsSettings
     /// <summary>
     /// Gets or sets the default tooltip background paint.
     /// </summary>
-    public object? TooltipBackgroundPaint { get; set; }
+    public Paint? TooltipBackgroundPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the default tooltip text paint.
     /// </summary>
-    public object? TooltipTextPaint { get; set; }
+    public Paint? TooltipTextPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the default tooltip text size.
@@ -152,6 +152,46 @@ public class LiveChartsSettings
     /// Gets or sets a value indicating whether the text is right to left.
     /// </summary>
     public bool IsRightToLeft { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the pie slices are clockwise.
+    /// </summary>
+    public bool PieIsClockwise { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets the initial rotation for pie charts, this value is used to calculate the pie slices.
+    /// </summary>
+    public double PieInitialRotation { get; set; } = 0;
+
+    /// <summary>
+    /// Gets or sets the maximum angle for pie charts, this value is used to calculate the pie slices.
+    /// </summary>
+    public double PieMaxAngle { get; set; } = 360;
+
+    /// <summary>
+    /// Gets or sets the maximum value for pie charts, this value is used to calculate the pie slices.
+    /// </summary>
+    public double PieMaxValue { get; set; } = double.NaN;
+
+    /// <summary>
+    /// Gets or sets the minimum value for pie charts, this value is used to calculate the pie slices.
+    /// </summary>
+    public double PieMinValue { get; set; } = 0d;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the polar series should fit to bounds.
+    /// </summary>
+    public bool PolarFitToBounds { get; set; } = false;
+
+    /// <summary>
+    /// Gets or sets the total angle for polar series, this value is used to calculate the polar chart.
+    /// </summary>
+    public double PolarTotalAngle { get; set; } = 360d;
+
+    /// <summary>
+    /// Gets or sets the outer radius for polar series, this value is used to calculate the polar chart.
+    /// </summary>
+    public double PolarInnerRadius { get; set; } = 0d;
 
     /// <summary>
     /// Adds or replaces a mapping for a given type, the mapper defines how a type is mapped to a <see cref="Coordinate"/>

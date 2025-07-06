@@ -20,8 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
-
 namespace LiveChartsCore.Kernel.Sketches;
 
 /// <summary>
@@ -37,14 +35,6 @@ public interface IPieChartView : IChartView
     /// The core.
     /// </value>
     PieChartEngine Core { get; }
-
-    /// <summary>
-    /// Gets or sets the series.
-    /// </summary>
-    /// <value>
-    /// The series.
-    /// </value>
-    ICollection<ISeries> Series { get; set; }
 
     /// <summary>
     /// Gets or sets the initial rotation in degrees, this angle specifies where the first pie slice will be drawn, then the remaining

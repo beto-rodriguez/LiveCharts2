@@ -28,7 +28,8 @@ namespace LiveChartsCore.Motion;
 /// Defines the <see cref="LvcDropShadow"/> motion property class.
 /// </summary>
 /// <param name="defaultValue"></param>
-public class DropShadowMotionProperty(LvcDropShadow defaultValue = null!) : MotionProperty<LvcDropShadow>(defaultValue)
+public class DropShadowMotionProperty(LvcDropShadow defaultValue = null!)
+    : MotionProperty<LvcDropShadow?>(defaultValue)
 {
     /// <inheritdoc cref="MotionProperty{T}.CanTransitionate"/>
     protected override bool CanTransitionate => true;

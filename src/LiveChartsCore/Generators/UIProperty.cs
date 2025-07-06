@@ -30,7 +30,7 @@ namespace LiveChartsCore.Generators;
 /// <typeparam name="T">The type of the property.</typeparam>
 /// <param name="defaultValue">The default value.</param>
 /// <param name="onChanged">The method to call when the property changes.</param>
-public class XamlProperty<T>(
+public class UIProperty<T>(
     T? defaultValue = default,
     Delegate? onChanged = null)
 {

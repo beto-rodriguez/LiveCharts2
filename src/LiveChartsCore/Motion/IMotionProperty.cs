@@ -65,6 +65,11 @@ public interface IMotionProperty
     object? ToValue { get; }
 
     /// <summary>
+    /// Gets a value indicating whether the operation has completed.
+    /// </summary>
+    bool IsCompleted { get; }
+
+    /// <summary>
     /// Copies into this instance the source property.
     /// </summary>
     /// <param name="source">The source.</param>

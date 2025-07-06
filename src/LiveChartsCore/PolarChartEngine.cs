@@ -123,6 +123,28 @@ public class PolarChartEngine(
             .SelectMany(series => series.FindHitPoints(this, pointerPosition, FindingStrategy.CompareAll, FindPointFor.HoverEvent));
     }
 
+    /// <inheritdoc cref="IPolarChartView.ScalePixelsToData(LvcPointD, int, int)"/>
+    public LvcPointD ScalePixelsToData(LvcPointD point, int angleAxisIndex = 0, int radiusAxisIndex = 0)
+    {
+        var scaler = new PolarScaler(
+            DrawMarginLocation, DrawMarginSize, AngleAxes[angleAxisIndex], RadiusAxes[radiusAxisIndex],
+            InnerRadius, InitialRotation, TotalAnge);
+
+        return scaler.ToChartValues(point.X, point.Y);
+    }
+
+    /// <inheritdoc cref="IPolarChartView.ScaleDataToPixels(LvcPointD, int, int)"/>
+    public LvcPointD ScaleDataToPixels(LvcPointD point, int angleAxisIndex = 0, int radiusAxisIndex = 0)
+    {
+        var scaler = new PolarScaler(
+            DrawMarginLocation, DrawMarginSize, AngleAxes[angleAxisIndex], RadiusAxes[radiusAxisIndex],
+            InnerRadius, InitialRotation, TotalAnge);
+
+        var r = scaler.ToPixels(point.X, point.Y);
+
+        return new LvcPointD { X = (float)r.X, Y = (float)r.Y };
+    }
+
     /// <summary>
     /// Measures this chart.
     /// </summary>

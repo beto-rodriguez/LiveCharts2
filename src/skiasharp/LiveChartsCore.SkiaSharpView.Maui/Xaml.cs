@@ -61,8 +61,8 @@ public partial class XamlDateTimeAxis : EmptyContentView, ICartesianAxis
     private readonly DateTimeAxis _baseType = new(TimeSpan.FromDays(1), date => date.ToString("d"));
     private static readonly DateTimeAxis _defaultDateTimeAxis = new(TimeSpan.FromDays(1), date => date.ToString("d"));
 
-    private static readonly XamlProperty<TimeSpan> interval = new(TimeSpan.FromDays(1), XamlGeneration.OnAxisIntervalChanged);
-    private static readonly XamlProperty<Func<DateTime, string>> dateFormatter = new(null, XamlGeneration.OnDateTimeAxisDateFormatterChanged);
+    private static readonly UIProperty<TimeSpan> interval = new(TimeSpan.FromDays(1), XamlGeneration.OnAxisIntervalChanged);
+    private static readonly UIProperty<Func<DateTime, string>> dateFormatter = new(null, XamlGeneration.OnDateTimeAxisDateFormatterChanged);
 
     string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
 }
@@ -73,8 +73,8 @@ public partial class XamlTimeSpanAxis : EmptyContentView, ICartesianAxis
     private readonly TimeSpanAxis _baseType = new(TimeSpan.FromMilliseconds(1), date => $"{date:fff}ms");
     private static readonly TimeSpanAxis _defaultTimeSpanAxis = new(TimeSpan.FromMilliseconds(1), date => $"{date:fff}ms");
 
-    private static readonly XamlProperty<TimeSpan> interval = new(TimeSpan.FromSeconds(1), XamlGeneration.OnAxisIntervalChanged);
-    private static readonly XamlProperty<Func<TimeSpan, string>> timeFormatter = new(null, XamlGeneration.OnTimeSpanAxisFormatterChanged);
+    private static readonly UIProperty<TimeSpan> interval = new(TimeSpan.FromSeconds(1), XamlGeneration.OnAxisIntervalChanged);
+    private static readonly UIProperty<Func<TimeSpan, string>> timeFormatter = new(null, XamlGeneration.OnTimeSpanAxisFormatterChanged);
 
     string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
 }
@@ -85,7 +85,7 @@ public partial class XamlLogarithmicAxis : EmptyContentView, ICartesianAxis
     private readonly LogarithmicAxis _baseType = new(10);
     private static readonly LogarithmicAxis _defaultLogarithmicAxis = new(10);
 
-    private static readonly XamlProperty<double> logBase = new(10d, XamlGeneration.OnAxisLogBaseChanged);
+    private static readonly UIProperty<double> logBase = new(10d, XamlGeneration.OnAxisLogBaseChanged);
 
     string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
 }
@@ -94,7 +94,8 @@ public partial class XamlLogarithmicAxis : EmptyContentView, ICartesianAxis
 public partial class XamlDrawnLabelVisual : EmptyContentView, IChartElement, IInternalInteractable
 {
     private static readonly LabelGeometry _defaultDrawnLabel = new();
-    private LabelGeometry? DrawnLabel => (LabelGeometry?)_baseType.DrawnElement;
+    private LabelGeometry DrawnLabel => (LabelGeometry?)_baseType.DrawnElement
+        ?? throw new Exception("Drawn element not found");
 }
 
 [XamlClass(typeof(RectangularSection))]
@@ -186,7 +187,7 @@ public partial class XamlGaugeSeries<TVisual, TLabel> : XamlSeries, IPieSeries, 
     where TLabel : BaseLabelGeometry, new()
 {
     private readonly ObservableValue _value = new(0d);
-    private static readonly XamlProperty<double> gaugeValue = new(0d, OnGaugeValueChanged);
+    private static readonly UIProperty<double> gaugeValue = new(0d, OnGaugeValueChanged);
 
     /// <inheritdoc cref="PieSeries{TModel, TVisual, TLabel}.PieSeries()"/>
     public XamlGaugeSeries()

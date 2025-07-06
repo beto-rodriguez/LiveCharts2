@@ -34,7 +34,6 @@ namespace LiveChartsCore.Motion;
 /// <param name="defaultValue">The default value.</param>
 public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
 {
-    private bool _isCompleted = true;
     private float _startTime;
     private float _endTime;
 
@@ -47,6 +46,14 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
     /// Gets the value where the transition finishes.
     /// </summary>
     public T ToValue { get; protected set; } = defaultValue;
+
+    /// <inheritdoc cref="IMotionProperty.IsCompleted"/>
+    public bool IsCompleted { get; private set; } = true;
+
+    /// <summary>
+    /// Gets the default value of the property.
+    /// </summary>
+    public T DefaultValue { get; } = defaultValue;
 
     object? IMotionProperty.FromValue => FromValue;
 
@@ -142,9 +149,9 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
                     $"{(deltaTime <= 0 ? $" invalid delta {deltaTime:N2}" : string.Empty)}");
 #endif
 
-            if (!_isCompleted)
+            if (!IsCompleted)
             {
-                _isCompleted = true;
+                IsCompleted = true;
                 OnCompleted();
             }
 
@@ -215,7 +222,7 @@ public abstract class MotionProperty<T>(T defaultValue) : IMotionProperty
 
         var globalTime = CoreMotionCanvas.ElapsedMilliseconds;
 
-        _isCompleted = false;
+        IsCompleted = false;
         _startTime = globalTime;
         _endTime = globalTime + Animation.Duration;
 

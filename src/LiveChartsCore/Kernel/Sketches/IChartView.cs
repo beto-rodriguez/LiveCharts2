@@ -38,6 +38,11 @@ namespace LiveChartsCore.Kernel.Sketches;
 public interface IChartView
 {
     /// <summary>
+    /// Gets or sets the series collection.
+    /// </summary>
+    ICollection<ISeries> Series { get; set; }
+
+    /// <summary>
     /// Gets the core.
     /// </summary>
     /// <value>

@@ -1,25 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Observers;
 
 namespace LiveChartsCore.UnitTesting.MockedObjects;
 
 public class TestObserver<T> : IDisposable
 {
-    private readonly CollectionDeepObserver<T> observerer;
+    private readonly CollectionDeepObserver observerer;
     private IEnumerable<T> observedCollection;
 
     public TestObserver()
     {
-        observerer = new CollectionDeepObserver<T>(
-            (sender, e) =>
-            {
-                CollectionChangedCount++;
-            },
-            (sender, e) =>
-            {
-                PropertyChangedCount++;
-            });
+        observerer = new CollectionDeepObserver(() => CollectionChangedCount++);
     }
 
     public IEnumerable<T> MyCollection
@@ -27,7 +19,7 @@ public class TestObserver<T> : IDisposable
         get => observedCollection;
         set
         {
-            observerer.Dispose(observedCollection);
+            observerer.Dispose();
             observerer.Initialize(value);
             observedCollection = value;
         }
@@ -38,6 +30,6 @@ public class TestObserver<T> : IDisposable
 
     public void Dispose()
     {
-        observerer.Dispose(observedCollection);
+        observerer.Dispose();
     }
 }

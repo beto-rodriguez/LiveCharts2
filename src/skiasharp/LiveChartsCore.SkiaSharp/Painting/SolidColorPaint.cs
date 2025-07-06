@@ -35,7 +35,8 @@ namespace LiveChartsCore.SkiaSharpView.Painting;
 public class SolidColorPaint : SkiaPaint
 {
     private SkiaSharpDrawingContext? _drawingContext;
-    private SKPaint? _skiaPaint;
+    // internal for testing purposes
+    internal SKPaint? _skiaPaint;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SolidColorPaint"/> class.

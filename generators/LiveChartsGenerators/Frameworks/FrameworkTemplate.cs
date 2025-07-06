@@ -33,10 +33,12 @@ public abstract class FrameworkTemplate(FrameworkTemplate.Context context)
     public abstract string Key { get; }
 
     public string GetBindablePropertySyntax(XamlObject target, string key, IPropertySymbol property, BindablePropertyInitializer? initializer = null) =>
-        GetBindablePropertySyntax(target, key, property.Name, property.Type.ToDisplayString(), initializer);
+        GetBindablePropertySyntax(target, key, property.Name, property.Type.ToDisplayString(), property.Type.IsValueType, initializer);
+
+    public virtual string FullPropertySyntax(XamlProperty property) => string.Empty;
 
     public string GetBindablePropertySyntax(
-        XamlObject target, string key, string propertyName, string propertyType, BindablePropertyInitializer? initializer)
+        XamlObject target, string key, string propertyName, string propertyType, bool isValueTypeProperty, BindablePropertyInitializer? initializer)
     {
         var originalPropertyType = propertyType;
 
@@ -57,7 +59,7 @@ public abstract class FrameworkTemplate(FrameworkTemplate.Context context)
             .Append(@$"    {DeclareBindableProperty(propertyName, propertyType)}");
 
         _ = initializer is not null
-            ? sb.Append(" = ").Append(CreateBindableProperty(propertyName, propertyType, initializer.BindableType, initializer.DefaultValue))
+            ? sb.Append(" = ").Append(CreateBindableProperty(propertyName, propertyType, isValueTypeProperty, initializer.BindableType, initializer.DefaultValue))
             : sb.Append(';').AppendLine();
 
         if (XamlObjectTempaltes.TypeConverters.TryGetValue(originalPropertyType, out var typeConverter))
@@ -97,12 +99,8 @@ public abstract class FrameworkTemplate(FrameworkTemplate.Context context)
         if (target.OverridenNames.TryGetValue(propertyName, out var overridenName))
             propertyName = overridenName;
 
-        var sanitizedPropertyType = property.Type.IsReferenceType && propertyType.EndsWith("?")
-            ? propertyType.Substring(0, propertyType.Length - 1)
-            : propertyType;
-
         return CreateBindableProperty(
-            propertyName, sanitizedPropertyType, target.Name, $"{fallBackName}.{originalPropertyName}");
+            propertyName, propertyType, property.Type.IsValueType, target.Name, $"{fallBackName}.{originalPropertyName}");
     }
 
     public static (string, string) GetFallbackInfo(ITypeSymbol target)
@@ -115,12 +113,20 @@ public abstract class FrameworkTemplate(FrameworkTemplate.Context context)
 
     public abstract string DeclareBindableProperty(string propertyName, string propertyType);
     public abstract string CreateBindableProperty(
-        string propertyName, string propertyType, string bindableType, string defaultValue, string? onChanged = null);
+        string propertyName, string propertyType, bool isValueTypeProperty, string bindableType, string defaultValue, OnChangeInfo? changeInfo = null);
     public abstract string GetPropertyChangedMetod();
 
     public enum Context
     {
         XamlObject,
         XamlProperty,
+    }
+
+    public struct OnChangeInfo(
+        string? onChanged, bool isObject = false, bool hasChangeParams = false)
+    {
+        public string? Expression { get; set; } = onChanged;
+        public bool HasChangeObjectParams { get; set; } = isObject;
+        public bool HasChangeParams { get; set; } = hasChangeParams;
     }
 }

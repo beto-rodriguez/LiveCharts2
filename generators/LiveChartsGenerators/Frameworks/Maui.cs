@@ -31,8 +31,14 @@ public class MauiTemplate(FrameworkTemplate.Context context) : FrameworkTemplate
         => @$"public static readonly new global::Microsoft.Maui.Controls.BindableProperty {propertyName}Property";
 
     public override string CreateBindableProperty(
-        string propertyName, string propertyType, string bindableType, string defaultValue, string? onChanged = null)
-            => @$"global::Microsoft.Maui.Controls.BindableProperty.Create(propertyName: ""{propertyName}"", returnType: typeof({propertyType}), declaringType: typeof({bindableType}), defaultValue: {defaultValue}{(onChanged is null ? string.Empty : $", propertyChanged: {GetOnChangedExpression(onChanged, bindableType, propertyType)}")});";
+        string propertyName, string propertyType, bool isValueTypeProperty, string bindableType, string defaultValue, OnChangeInfo? onChangeInfo = null)
+    {
+        var sanitizedPropertyType = propertyType.EndsWith("?")
+            ? propertyType.Substring(0, propertyType.Length - 1)
+            : propertyType;
+
+        return @$"global::Microsoft.Maui.Controls.BindableProperty.Create(propertyName: ""{propertyName}"", returnType: typeof({sanitizedPropertyType}), declaringType: typeof({bindableType}), defaultValue: {defaultValue}{(onChangeInfo is null ? string.Empty : $", propertyChanged: {GetOnChangedExpression(onChangeInfo.Value, bindableType, propertyType)}")});";
+    }
 
     public override string GetPropertyChangedMetod() =>
         @$"protected override void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string? propertyName = null)
@@ -41,6 +47,12 @@ public class MauiTemplate(FrameworkTemplate.Context context) : FrameworkTemplate
         MapChangeToBaseType(propertyName);
     }}";
 
-    private string GetOnChangedExpression(string expression, string bindableType, string propertyType)
-        => $@"(bo, o, n) => {expression}(({bindableType})bo, ({propertyType})o, ({propertyType})n)";
+    private string GetOnChangedExpression(OnChangeInfo onChangeInfo, string bindableType, string propertyType)
+    {
+        if (!onChangeInfo.HasChangeParams)
+            return $@"(bo, o, n) => {onChangeInfo.Expression}(({bindableType})bo)";
+
+        var cast = onChangeInfo.HasChangeObjectParams ? string.Empty : $"({propertyType})";
+        return $@"(bo, o, n) => {onChangeInfo.Expression}(({bindableType})bo, {cast}o, {cast}n)";
+    }
 }

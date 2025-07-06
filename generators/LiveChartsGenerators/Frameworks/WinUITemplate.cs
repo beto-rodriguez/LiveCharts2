@@ -30,16 +30,29 @@ public class WinUITemplate(FrameworkTemplate.Context context) : FrameworkTemplat
         => @$"public static readonly new global::Microsoft.UI.Xaml.DependencyProperty {propertyName}Property";
 
     public override string CreateBindableProperty(
-        string propertyName, string propertyType, string bindableType, string defaultValue, string? onChanged = null)
-            => @$"global::Microsoft.UI.Xaml.DependencyProperty.Register(name: ""{propertyName}"", propertyType: typeof({propertyType}), ownerType: typeof({bindableType}), typeMetadata: new Microsoft.UI.Xaml.PropertyMetadata(defaultValue:{defaultValue}, propertyChangedCallback: {GetOnChangedExpression(onChanged, bindableType, propertyName, propertyType)}));";
+        string propertyName, string propertyType, bool isValueTypeProperty, string bindableType, string defaultValue, OnChangeInfo? onChangeInfo = null)
+    {
+        var sanitizedPropertyType = propertyType.EndsWith("?")
+            ? propertyType.Substring(0, propertyType.Length - 1)
+            : propertyType;
+
+        return @$"global::Microsoft.UI.Xaml.DependencyProperty.Register(name: ""{propertyName}"", propertyType: typeof({sanitizedPropertyType}), ownerType: typeof({bindableType}), typeMetadata: new Microsoft.UI.Xaml.PropertyMetadata(defaultValue:{defaultValue}, propertyChangedCallback: {GetOnChangedExpression(onChangeInfo, bindableType, propertyName, propertyType)}));";
+    }
 
     public override string GetPropertyChangedMetod() => string.Empty;
 
-    private string GetOnChangedExpression(string? expression, string bindableType, string propertyName, string propertyType)
+    private string GetOnChangedExpression(OnChangeInfo? changeInfo, string bindableType, string propertyName, string propertyType)
     {
-        var changeExpression = expression is null
-            ? string.Empty
-            : $"{expression}(t, ({propertyType})args.OldValue, ({propertyType})args.NewValue);";
+        var changeExpression = string.Empty;
+
+        if (changeInfo is { } change)
+        {
+            var cast = change.HasChangeObjectParams ? string.Empty : $"({propertyType})";
+
+            changeExpression = change.HasChangeParams
+                ? $@"{change.Expression}(t, {cast}args.OldValue, {cast}args.NewValue);"
+                : $@"{change.Expression}(t);";
+        }
 
         var mapExpression = ActiveContext != Context.XamlObject
             ? string.Empty

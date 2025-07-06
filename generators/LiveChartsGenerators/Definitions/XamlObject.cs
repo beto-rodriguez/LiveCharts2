@@ -82,11 +82,11 @@ public readonly record struct XamlObject
         {
             propertyChangedMap = "Values{=}ValuesMap";
             overridenTypes =
-                "Values{=}object{,}" +
-                "DataLabelsFormatter{=}System.Func<LiveChartsCore.Kernel.ChartPoint, string>{,}" +
-                "ToolTipLabelFormatter{=}System.Func<LiveChartsCore.Kernel.ChartPoint, string>{,}" +
-                "XToolTipLabelFormatter{=}System.Func<LiveChartsCore.Kernel.ChartPoint, string>{,}" +
-                "YToolTipLabelFormatter{=}System.Func<LiveChartsCore.Kernel.ChartPoint, string>";
+                "Values{=}object?{,}" +
+                "DataLabelsFormatter{=}System.Func<LiveChartsCore.Kernel.ChartPoint, string>?{,}" +
+                "ToolTipLabelFormatter{=}System.Func<LiveChartsCore.Kernel.ChartPoint, string>?{,}" +
+                "XToolTipLabelFormatter{=}System.Func<LiveChartsCore.Kernel.ChartPoint, string>?{,}" +
+                "YToolTipLabelFormatter{=}System.Func<LiveChartsCore.Kernel.ChartPoint, string>?";
             SeriesArgs["TModel"] = tModel?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
                 ?? "global::System.Object";
             if (tVisual is not null)

@@ -11,14 +11,16 @@
 
     <lvc:CartesianChart>
         <lvc:CartesianChart.Series>
-            <lvc:XamlColumnSeries
-                Values="{Binding Values1}"
-                Padding="2"
-                PointMeasuredCommand="{Binding PointMeasuredCommand}"/>
-            <lvc:XamlColumnSeries
-                Values="{Binding Values2}"
-                Padding="0"
-                PointMeasuredCommand="{Binding PointMeasuredCommand}"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlColumnSeries
+                    Values="{Binding Values1}"
+                    Padding="2"
+                    PointMeasuredCommand="{Binding PointMeasuredCommand}"/>
+                <lvc:XamlColumnSeries
+                    Values="{Binding Values2}"
+                    Padding="0"
+                    PointMeasuredCommand="{Binding PointMeasuredCommand}"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 

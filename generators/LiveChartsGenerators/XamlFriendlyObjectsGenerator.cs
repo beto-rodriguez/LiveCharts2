@@ -39,9 +39,6 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        context.RegisterPostInitializationOutput(static ctx => ctx.AddSource(
-            "Assets.g.cs", SourceText.From(AssetsTemplates.GetTemplate(), Encoding.UTF8)));
-
         var assemblyAttributes = context.CompilationProvider
             .Select(GetConsumerAssemblyType);
 
@@ -68,7 +65,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
                 static (node, _) =>
                     node is FieldDeclarationSyntax fieldDecl &&
                     fieldDecl.Modifiers.Any(SyntaxKind.StaticKeyword),
-                static (ctx, _) => GetXamlPropertiesToGenerate(ctx.SemanticModel, ctx.Node)
+                static (ctx, _) => GetUIPropertiesToGenerate(ctx.SemanticModel, ctx.Node)
             )
             .Where(symbol => symbol is not null)
             .Collect()
@@ -123,7 +120,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
                     spc.AddSource(
                         $"{name}._avaloina_onChange.g.cs".Replace('<', '_').Replace('>', '_'),
                         SourceText.From(
-                            BindablePropertyTempaltes.GetAvaloniaBaseTypeTemplate(group, GetFrameworkTemplate(consumerType, FrameworkTemplate.Context.XamlProperty)),
+                            UIPropertyTempaltes.GetAvaloniaBaseTypeTemplate(group, GetFrameworkTemplate(consumerType, FrameworkTemplate.Context.XamlProperty)),
                             Encoding.UTF8));
                 }
 
@@ -133,7 +130,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
 
                     spc.AddSource(
                         $"{value.DeclaringType.Name}.{value.Name}.g.cs".Replace('<', '_').Replace('>', '_'),
-                        SourceText.From(BindablePropertyTempaltes.GetTemplate(value, GetFrameworkTemplate(consumerType, FrameworkTemplate.Context.XamlProperty)), Encoding.UTF8));
+                        SourceText.From(UIPropertyTempaltes.GetTemplate(value, GetFrameworkTemplate(consumerType, FrameworkTemplate.Context.XamlProperty)), Encoding.UTF8));
                 }
             }
         });
@@ -313,7 +310,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
         return new(symbol, hasExplicitAcessors);
     }
 
-    private static XamlProperty? GetXamlPropertiesToGenerate(SemanticModel semanticModel, SyntaxNode node)
+    private static XamlProperty? GetUIPropertiesToGenerate(SemanticModel semanticModel, SyntaxNode node)
     {
         var fieldDecl = (FieldDeclarationSyntax)node;
         // Assume we only care about one variable per declaration
@@ -328,14 +325,26 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
             typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
             genericsOptions: SymbolDisplayGenericsOptions.None);
 
+        string? xmlDocs = null;
+
+        if (fieldSymbol.Name.Contains("zoom"))
+        {
+            var d = fieldSymbol.GetDocumentationCommentXml();
+
+            var trivia = fieldDecl.GetLeadingTrivia()
+    .FirstOrDefault(t => t.IsKind(SyntaxKind.SingleLineDocumentationCommentTrivia));
+
+            xmlDocs = trivia.GetStructure()?.ToFullString();
+        }
+
         // Check if field's type is the type you're interested in
-        if (fieldSymbol.Type.ToDisplayString(displayFormat) == "LiveChartsCore.Generators.XamlProperty")
+        if (fieldSymbol.Type.ToDisplayString(displayFormat) == "LiveChartsCore.Generators.UIProperty")
         {
             var camelCasedName = variable.Identifier.Text;
             var propertyName = $"{camelCasedName.Substring(0, 1).ToUpperInvariant()}{camelCasedName.Substring(1, camelCasedName.Length - 1)}";
             var propertyType = ((INamedTypeSymbol)fieldSymbol.Type).TypeArguments[0];
             string? defaultValue = null;
-            string? onChanged = null;
+            FrameworkTemplate.OnChangeInfo? onChangeInfo = null;
 
             var syntaxReference = fieldSymbol.DeclaringSyntaxReferences.First();
             var syntaxTree = syntaxReference.SyntaxTree;
@@ -367,7 +376,22 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
                                         defaultValue = argument.Expression.ToString();
                                         break;
                                     case "onChanged:":
-                                        onChanged = argument.Expression.ToString();
+                                        var hasParams = false;
+                                        var hasObjectParams = false;
+
+                                        var info = semanticModel.GetSymbolInfo(argument.Expression);
+                                        // maybe we need to improve the next line?
+                                        if ((info.Symbol ?? info.CandidateSymbols.FirstOrDefault()) is IMethodSymbol methodSymbol)
+                                        {
+                                            hasParams = methodSymbol.Parameters.Length > 2;
+                                            hasObjectParams =
+                                                hasParams &&
+                                                SymbolEqualityComparer.Default.Equals(
+                                                    methodSymbol.Parameters[1].Type, semanticModel.Compilation.ObjectType);
+                                        }
+                                        var onChanged = argument.Expression.ToString();
+                                        onChangeInfo = new FrameworkTemplate.OnChangeInfo(
+                                            onChanged, hasObjectParams, hasParams);
                                         break;
                                     default:
                                         break;
@@ -378,7 +402,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
                 }
             }
 
-            return new(propertyName, propertyType, fieldSymbol.ContainingType, headers, defaultValue, onChanged);
+            return new(propertyName, propertyType, fieldSymbol.ContainingType, headers, defaultValue, onChangeInfo, xmlDocs);
         }
 
         return null;
@@ -414,6 +438,9 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
             "LiveChartsCore.SkiaSharpView.WinUI" => "WinUI",
             "LiveChartsCore.SkiaSharpView.Avalonia" => "Avalonia",
             "LiveChartsCore.SkiaSharpView.WPF" => "WPF",
+            "LiveChartsCore.SkiaSharpView.WinForms" => "WinForms",
+            "LiveChartsCore.SkiaSharpView.Eto" => "WinForms",
+            "LiveChartsCore.SkiaSharpView.Blazor" => "Blazor",
             _ => null
         };
     }
@@ -426,6 +453,8 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
             "WinUI" => new WinUITemplate(context),
             "Avalonia" => new AvaloniaTemplate(context),
             "WPF" => new WPFTemplate(context),
+            "WinForms" => new WinformsTemplate(context),
+            "Blazor" => new BlazorTemplate(context),
             _ => throw new NotSupportedException($"The consumer type '{consumerType}' is not supported.")
         };
     }
