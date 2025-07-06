@@ -36,7 +36,6 @@ public partial class PolarChart : ChartControl, IPolarChartView
     public PolarChart()
     {
         _ = Observe
-            .Collection(nameof(Series))
             .Collection(nameof(AngleAxes))
             .Collection(nameof(RadiusAxes));
 

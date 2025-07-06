@@ -34,9 +34,6 @@ public partial class PieChart : ChartControl, IPieChartView
     /// </summary>
     public PieChart()
     {
-        _ = Observe
-           .Collection(nameof(Series));
-
         Series = new ObservableCollection<ISeries>();
         VisualElements = new ObservableCollection<IChartElement>();
         SyncContext = new object();
