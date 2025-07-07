@@ -60,8 +60,6 @@ public abstract partial class ChartControl : UserControl, IChartView
         SizeChanged += (s, e) =>
             CoreChart.Update();
 
-        Observe = new ChartObserver(() => CoreChart?.Update(), AddUIElement, RemoveUIElement);
-
         MouseDown += Chart_MouseDown;
         MouseMove += OnMouseMove;
         MouseUp += Chart_MouseUp;
@@ -69,6 +67,18 @@ public abstract partial class ChartControl : UserControl, IChartView
 
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
+
+        Observe = new ChartObserver(() => CoreChart?.Update(), AddUIElement, RemoveUIElement)
+            .Collection(nameof(Series))
+            .Collection(nameof(VisualElements))
+            .Property(nameof(Title));
+
+        Observe.Add(
+             nameof(SeriesSource),
+             new SeriesSourceObserver(
+                 InflateSeriesTemplate,
+                 GetSeriesSource,
+                 () => SeriesSource is not null && SeriesTemplate is not null));
 
         //    // hack hack #251201 for:
         //    // https://github.com/beto-rodriguez/LiveCharts2/issues/1383
@@ -227,6 +237,21 @@ public abstract partial class ChartControl : UserControl, IChartView
 
     private void OnMouseLeave(object sender, MouseEventArgs e) =>
         CoreChart?.InvokePointerLeft();
+
+    private ISeries InflateSeriesTemplate(object item)
+    {
+        var content = (FrameworkElement)SeriesTemplate.LoadContent();
+
+        if (content is not ISeries series)
+            throw new InvalidOperationException("The template must be a valid series.");
+
+        content.DataContext = item;
+
+        return series;
+    }
+
+    private static object GetSeriesSource(ISeries series) =>
+        ((FrameworkElement)series).DataContext!;
 
     /// <inheritdoc cref="IChartView.GetPointsAt(LvcPointD, FindingStrategy, FindPointFor)"/>
     public IEnumerable<ChartPoint> GetPointsAt(
