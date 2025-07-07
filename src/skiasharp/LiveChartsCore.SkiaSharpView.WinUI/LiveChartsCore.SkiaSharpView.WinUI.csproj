@@ -63,35 +63,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="GeoMap.xaml" />
-    <None Remove="MotionCanvas.xaml" />
-    <None Remove="PieChart.xaml" />
-    <None Remove="PolarChart.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="CartesianChart.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="MotionCanvas.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Themes\Generic.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="PieChart.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="GeoMap.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
-    <Page Update="PolarChart.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="images\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
@@ -102,15 +73,5 @@
   </ItemGroup>
 
   <Import Project="..\LiveChartsCore.SkiaSharpView.WinUI.Shared\LiveChartsCore.SkiaSharpView.WinUI.Shared.projitems" Label="Shared" />
-
-  <ItemGroup>
-    <Page Remove="C:\_dev\LiveCharts2\src\skiasharp\LiveChartsCore.SkiaSharpView.WinUI.Shared\CartesianChart.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="CartesianChart.xaml.cs">
-      <DependentUpon>CartesianChart.xaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
 
 </Project>

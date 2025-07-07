@@ -436,6 +436,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
         {
             "LiveChartsCore.SkiaSharpView.Maui" => "Maui",
             "LiveChartsCore.SkiaSharpView.WinUI" => "WinUI",
+            "LiveChartsCore.SkiaSharpView.Uno.WinUI" => "WinUI",
             "LiveChartsCore.SkiaSharpView.Avalonia" => "Avalonia",
             "LiveChartsCore.SkiaSharpView.WPF" => "WPF",
             "LiveChartsCore.SkiaSharpView.WinForms" => "WinForms",

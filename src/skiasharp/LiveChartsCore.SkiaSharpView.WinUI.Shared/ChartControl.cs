@@ -42,7 +42,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI;
 public abstract partial class ChartControl : UserControl, IChartView
 {
     private readonly ThemeListener _themeListener;
-    private static bool _isWebAssembly = RuntimeInformation.IsOSPlatform(OSPlatform.Create("BROWSER"));
+    private static readonly bool s_isWebAssembly = RuntimeInformation.IsOSPlatform(OSPlatform.Create("BROWSER"));
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ChartControl"/> class.
@@ -283,7 +283,7 @@ public abstract partial class ChartControl : UserControl, IChartView
 
     void IChartView.InvokeOnUIThread(Action action)
     {
-        if (_isWebAssembly)
+        if (s_isWebAssembly)
         {
             // IF UNO WASM, just run the action directly.
             // is this required on wasm isnt this already implemented in net 9?

@@ -33,9 +33,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI;
 /// <summary>
 /// The motion canvas control for winui.
 /// </summary>
-/// <seealso cref="UserControl" />
-/// <seealso cref="Microsoft.UI.Xaml.Markup.IComponentConnector" />
-public class MotionCanvas : Canvas
+public partial class MotionCanvas : Canvas
 {
     private readonly SKXamlCanvas? _skiaElement;
     private bool _isDrawingLoopRunning;

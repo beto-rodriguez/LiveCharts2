@@ -31,7 +31,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI;
 /// <summary>
 /// A base series class for XAML-based series in LiveCharts.
 /// </summary>
-public abstract class XamlSeries : FrameworkElement
+public abstract partial class XamlSeries : FrameworkElement
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="XamlSeries"/> class.

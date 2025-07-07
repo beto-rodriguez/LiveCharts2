@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Nullable>enable</Nullable>
     <LangVersion>$(GlobalLangVersion)</LangVersion>
@@ -54,6 +54,7 @@
 
     <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
     <ProjectReference Include="..\..\LiveChartsCore.Behaviours\LiveChartsCore.Behaviours.csproj" />
+    <ProjectReference Include="..\..\..\generators\LiveChartsGenerators\LiveChartsGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     
     <!-- if uno then add reference to uno dependencies -->
     <PackageReference Condition="!$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.Uno.WinUI" Version="$(SkiaSharpVersion)" />
