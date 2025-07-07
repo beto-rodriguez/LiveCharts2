@@ -93,6 +93,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Generators", "Generators", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorSample", "samples\BlazorSample\BlazorSample.csproj", "{6E634621-603E-476A-97E5-229B16EAD358}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "LiveChartsCore.SkiaSharpView.WinUI.Shared", "src\skiasharp\LiveChartsCore.SkiaSharpView.WinUI.Shared\LiveChartsCore.SkiaSharpView.WinUI.Shared.shproj", "{0A31AC62-5792-41BE-B39F-C19F600EBBB3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU
@@ -1728,5 +1730,10 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2040E57B-591B-4849-BD29-B4583C81F167}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		src\skiasharp\LiveChartsCore.SkiaSharpView.WinUI.Shared\LiveChartsCore.SkiaSharpView.WinUI.Shared.projitems*{0a31ac62-5792-41be-b39f-c19f600ebbb3}*SharedItemsImports = 13
+		src\skiasharp\LiveChartsCore.SkiaSharpView.WinUI.Shared\LiveChartsCore.SkiaSharpView.WinUI.Shared.projitems*{407d2fdf-11a1-44b7-91ae-d48d37c0a65e}*SharedItemsImports = 5
+		src\skiasharp\LiveChartsCore.SkiaSharpView.WinUI.Shared\LiveChartsCore.SkiaSharpView.WinUI.Shared.projitems*{e050ffe3-98ac-4d3e-99cc-136443921b6f}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

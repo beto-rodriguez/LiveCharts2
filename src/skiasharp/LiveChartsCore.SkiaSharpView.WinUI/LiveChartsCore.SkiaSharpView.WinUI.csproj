@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <LangVersion>$(GlobalLangVersion)</LangVersion>
     <Nullable>enable</Nullable>
@@ -48,7 +48,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.230913002" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.1" />
     <PackageReference Include="SkiaSharp.Views.WinUI" Version="$(SkiaSharpVersion)" />
@@ -63,7 +63,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="CartesianChart.xaml" />
     <None Remove="GeoMap.xaml" />
     <None Remove="MotionCanvas.xaml" />
     <None Remove="PieChart.xaml" />
@@ -71,6 +70,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="CartesianChart.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="MotionCanvas.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -80,9 +82,6 @@
     <Page Update="PieChart.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Update="CartesianChart.xaml">
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="GeoMap.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
@@ -100,6 +99,18 @@
     <Content Update="images\icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <Import Project="..\LiveChartsCore.SkiaSharpView.WinUI.Shared\LiveChartsCore.SkiaSharpView.WinUI.Shared.projitems" Label="Shared" />
+
+  <ItemGroup>
+    <Page Remove="C:\_dev\LiveCharts2\src\skiasharp\LiveChartsCore.SkiaSharpView.WinUI.Shared\CartesianChart.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="CartesianChart.xaml.cs">
+      <DependentUpon>CartesianChart.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>

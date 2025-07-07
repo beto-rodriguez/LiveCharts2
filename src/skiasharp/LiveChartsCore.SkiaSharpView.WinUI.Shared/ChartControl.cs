@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
@@ -41,6 +42,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI;
 public abstract partial class ChartControl : UserControl, IChartView
 {
     private readonly ThemeListener _themeListener;
+    private static bool _isWebAssembly = RuntimeInformation.IsOSPlatform(OSPlatform.Create("BROWSER"));
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ChartControl"/> class.
@@ -79,7 +81,17 @@ public abstract partial class ChartControl : UserControl, IChartView
 
         chartBehaviour.On(this);
 
-        Observe = new ChartObserver(() => CoreChart?.Update(), AddUIElement, RemoveUIElement);
+        Observe = new ChartObserver(() => CoreChart?.Update(), AddUIElement, RemoveUIElement)
+            .Collection(nameof(Series))
+            .Collection(nameof(VisualElements))
+            .Property(nameof(Title));
+
+        Observe.Add(
+             nameof(SeriesSource),
+             new SeriesSourceObserver(
+                 InflateSeriesTemplate,
+                 GetSeriesSource,
+                 () => SeriesSource is not null && SeriesTemplate is not null));
     }
 
     /// <summary>
@@ -254,8 +266,31 @@ public abstract partial class ChartControl : UserControl, IChartView
     public IEnumerable<IChartElement> GetVisualsAt(LvcPointD point)
         => CoreChart.GetVisualsAt(point);
 
+    private ISeries InflateSeriesTemplate(object item)
+    {
+        var content = (FrameworkElement)SeriesTemplate.LoadContent();
+
+        if (content is not ISeries series)
+            throw new InvalidOperationException("The template must be a valid series.");
+
+        content.DataContext = item;
+
+        return series;
+    }
+
+    private static object GetSeriesSource(ISeries series) =>
+        ((FrameworkElement)series).DataContext!;
+
     void IChartView.InvokeOnUIThread(Action action)
     {
+        if (_isWebAssembly)
+        {
+            // IF UNO WASM, just run the action directly.
+            // is this required on wasm isnt this already implemented in net 9?
+            action();
+            return;
+        }
+
         _ = DispatcherQueue.TryEnqueue(
             Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () => action());
     }

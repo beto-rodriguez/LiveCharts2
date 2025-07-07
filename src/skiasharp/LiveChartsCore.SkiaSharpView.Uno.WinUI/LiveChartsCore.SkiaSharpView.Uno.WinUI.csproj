@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Nullable>enable</Nullable>
     <LangVersion>$(GlobalLangVersion)</LangVersion>
@@ -48,7 +48,7 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
 
     <PackageReference Condition="!$(TargetFramework.Contains('-windows'))" Include="Uno.WinUI" Version="5.2.175" />
 
@@ -85,4 +85,5 @@
   <ItemGroup>
     <None Include="images\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
+  <Import Project="..\LiveChartsCore.SkiaSharpView.WinUI.Shared\LiveChartsCore.SkiaSharpView.WinUI.Shared.projitems" Label="Shared" />
 </Project>

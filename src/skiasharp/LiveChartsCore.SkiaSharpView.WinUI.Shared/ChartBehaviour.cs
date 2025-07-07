@@ -55,7 +55,14 @@ public partial class ChartBehaviour : Behaviours.ChartBehaviour
             currentView.ScreenWidthInRawPixels,
             currentView.ScreenHeightInRawPixels);
 #else
-        s_density = element.XamlRoot.RasterizationScale;
+        void getDensity(object s, RoutedEventArgs e)
+        {
+            s_density = element.XamlRoot.RasterizationScale;
+            element.Loaded -= getDensity;
+        }
+
+        if (element.IsLoaded) getDensity(null!, null!);
+        else element.Loaded += getDensity;
 #endif
 
 #if ANDROID
