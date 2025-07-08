@@ -95,6 +95,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorSample", "samples\Bla
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "LiveChartsCore.SkiaSharpView.WinUI.Shared", "src\skiasharp\LiveChartsCore.SkiaSharpView.WinUI.Shared\LiveChartsCore.SkiaSharpView.WinUI.Shared.shproj", "{0A31AC62-5792-41BE-B39F-C19F600EBBB3}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "_Shared", "src\skiasharp\_Shared\_Shared.shproj", "{2AD18DD8-C567-4BCF-A4FA-42519466D6A3}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "_Shared.Xaml", "src\skiasharp\_Shared.Xaml\_Shared.Xaml.shproj", "{8F2BB38B-163C-43AF-9DEE-6F5438BA87B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU
@@ -1733,7 +1737,18 @@ Global
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\skiasharp\LiveChartsCore.SkiaSharpView.WinUI.Shared\LiveChartsCore.SkiaSharpView.WinUI.Shared.projitems*{0a31ac62-5792-41be-b39f-c19f600ebbb3}*SharedItemsImports = 13
-		src\skiasharp\LiveChartsCore.SkiaSharpView.WinUI.Shared\LiveChartsCore.SkiaSharpView.WinUI.Shared.projitems*{407d2fdf-11a1-44b7-91ae-d48d37c0a65e}*SharedItemsImports = 5
-		src\skiasharp\LiveChartsCore.SkiaSharpView.WinUI.Shared\LiveChartsCore.SkiaSharpView.WinUI.Shared.projitems*{e050ffe3-98ac-4d3e-99cc-136443921b6f}*SharedItemsImports = 5
+		src\skiasharp\_Shared.Xaml\_Shared.Xaml.projitems*{0c483597-0f9b-47f0-8b77-ea4980af201d}*SharedItemsImports = 5
+		src\skiasharp\_Shared\_Shared.projitems*{0c483597-0f9b-47f0-8b77-ea4980af201d}*SharedItemsImports = 5
+		src\skiasharp\_Shared\_Shared.projitems*{16c1c709-3249-46b1-b500-09d7e0704f86}*SharedItemsImports = 5
+		src\skiasharp\_Shared.Xaml\_Shared.Xaml.projitems*{28c2252d-ee6d-40a7-8580-0107e15833d3}*SharedItemsImports = 5
+		src\skiasharp\_Shared\_Shared.projitems*{28c2252d-ee6d-40a7-8580-0107e15833d3}*SharedItemsImports = 5
+		src\skiasharp\_Shared\_Shared.projitems*{2ad18dd8-c567-4bcf-a4fa-42519466d6a3}*SharedItemsImports = 13
+		src\skiasharp\_Shared\_Shared.projitems*{80421f95-886f-4831-ad6c-20104c30c4e0}*SharedItemsImports = 5
+		src\skiasharp\_Shared.Xaml\_Shared.Xaml.projitems*{8f2bb38b-163c-43af-9dee-6f5438ba87b0}*SharedItemsImports = 13
+		src\skiasharp\_Shared.Xaml\_Shared.Xaml.projitems*{97c09f18-5a69-4a1f-b73d-514ad5f421fc}*SharedItemsImports = 5
+		src\skiasharp\_Shared\_Shared.projitems*{97c09f18-5a69-4a1f-b73d-514ad5f421fc}*SharedItemsImports = 5
+		src\skiasharp\_Shared\_Shared.projitems*{c3ed1072-a8c6-4892-b93e-e53a34c92253}*SharedItemsImports = 5
+		src\skiasharp\_Shared.Xaml\_Shared.Xaml.projitems*{e050ffe3-98ac-4d3e-99cc-136443921b6f}*SharedItemsImports = 5
+		src\skiasharp\_Shared\_Shared.projitems*{e050ffe3-98ac-4d3e-99cc-136443921b6f}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal
