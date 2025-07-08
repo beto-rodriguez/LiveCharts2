@@ -20,19 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// ==============================================================================
+// 
+// this file contains the Eto specific code for the ChartControl class,
+// the rest of the code can be found in the _Shared project.
+// 
+// ==============================================================================
+
 using System;
-using System.Collections.Generic;
 using Eto.Drawing;
 using Eto.Forms;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Events;
-using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.Measure;
-using LiveChartsCore.Motion;
-using LiveChartsCore.Themes;
-using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.Eto;
 
@@ -51,19 +50,11 @@ public abstract partial class ChartControl : Panel, IChartView
 
         LiveCharts.Configure(config => config.UseDefaults());
 
-        CoreChart = CreateCoreChart();
-
-        Observe = new ChartObserver(() => CoreChart?.Update())
-            .Collection(nameof(Series))
-            .Collection(nameof(VisualElements))
-            .Property(nameof(Title));
+        InitializeCoreChart();
+        InitializeObservers();
 
         Content.SizeChanged += (s, e) =>
             CoreChart.Update();
-
-        CoreChart.Measuring += OnCoreMeasuring;
-        CoreChart.UpdateStarted += OnCoreUpdateStarted;
-        CoreChart.UpdateFinished += OnCoreUpdateFinished;
 
         Content.MouseDown += OnMouseDown;
         Content.MouseMove += OnMouseMove;
@@ -71,20 +62,8 @@ public abstract partial class ChartControl : Panel, IChartView
         Content.MouseLeave += OnMouseLeave;
     }
 
-    /// <summary>
-    /// Gets the canvas view.
-    /// </summary>
+    /// <inheritdoc cref="IChartView.CoreCanvas"/>
     public MotionCanvas CanvasView => (MotionCanvas)Content;
-
-    /// <summary>
-    /// Gets the core chart.
-    /// </summary>
-    public Chart CoreChart { get; }
-
-    /// <summary>
-    /// Gets the chart observer.
-    /// </summary>
-    protected ChartObserver Observe { get; }
 
     bool IChartView.DesignerMode => false;
 
@@ -97,40 +76,6 @@ public abstract partial class ChartControl : Panel, IChartView
     }
 
     LvcSize IChartView.ControlSize => new() { Width = Content.Width, Height = Content.Height };
-
-    /// <inheritdoc cref="IChartView.Tooltip" />
-    public IChartTooltip? Tooltip { get; set; }
-
-    /// <inheritdoc cref="IChartView.Legend" />
-    public IChartLegend? Legend { get => field; set { field = value; CoreChart.Update(); } }
-
-    /// <inheritdoc cref="IChartView.ChartTheme" />
-    public Theme? ChartTheme { get; set { field = value; CoreChart?.Update(); } }
-
-    /// <inheritdoc cref="IChartView.CoreCanvas" />
-    public CoreMotionCanvas CoreCanvas => CanvasView.CanvasCore;
-
-    /// <inheritdoc cref="IChartView.Measuring" />
-    public event ChartEventHandler? Measuring;
-
-    /// <inheritdoc cref="IChartView.UpdateStarted" />
-    public event ChartEventHandler? UpdateStarted;
-
-    /// <inheritdoc cref="IChartView.UpdateFinished" />
-    public event ChartEventHandler? UpdateFinished;
-
-    /// <inheritdoc cref="IChartView.DataPointerDown" />
-    public event ChartPointsHandler? DataPointerDown;
-
-    /// <inheritdoc cref="IChartView.HoveredPointsChanged" />
-    public event ChartPointHoverHandler? HoveredPointsChanged;
-
-    /// <inheritdoc cref="IChartView.ChartPointPointerDown" />
-    [Obsolete($"Use the {nameof(DataPointerDown)} event instead with a {nameof(FindingStrategy)} that used TakeClosest.")]
-    public event ChartPointHandler? ChartPointPointerDown;
-
-    /// <inheritdoc cref="IChartView.VisualElementsPointerDown"/>
-    public event VisualElementsHandler? VisualElementsPointerDown;
 
     void IChartView.InvokeOnUIThread(Action action) =>
         _ = Application.Instance.InvokeAsync(action);
@@ -150,24 +95,6 @@ public abstract partial class ChartControl : Panel, IChartView
         CoreChart.Unload();
     }
 
-    /// <summary>
-    /// Creates the core chart instance for rendering and manipulation.
-    /// </summary>
-    /// <remarks>This method is abstract and must be implemented by derived classes to provide     a specific
-    /// chart type. The returned <see cref="Chart"/> object represents the     foundational chart structure, which can
-    /// be further customized or populated     with data.</remarks>
-    /// <returns>A <see cref="Chart"/> object that serves as the base chart instance.</returns>
-    protected abstract Chart CreateCoreChart();
-
-    private void OnCoreUpdateFinished(IChartView chart) =>
-        UpdateFinished?.Invoke(this);
-
-    private void OnCoreUpdateStarted(IChartView chart) =>
-        UpdateStarted?.Invoke(this);
-
-    private void OnCoreMeasuring(IChartView chart) =>
-        Measuring?.Invoke(this);
-
     private void OnMouseMove(object? sender, MouseEventArgs e)
     {
         base.OnMouseMove(e);
@@ -183,29 +110,4 @@ public abstract partial class ChartControl : Panel, IChartView
 
     private void OnMouseLeave(object? sender, MouseEventArgs e) =>
         CoreChart?.InvokePointerLeft();
-
-    /// <inheritdoc cref="IChartView.GetPointsAt(LvcPointD, FindingStrategy, FindPointFor)"/>
-    public IEnumerable<ChartPoint> GetPointsAt(
-        LvcPointD point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
-            => CoreChart.GetPointsAt(point, strategy, findPointFor);
-
-    /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
-    public IEnumerable<IChartElement> GetVisualsAt(LvcPointD point)
-        => CoreChart.GetVisualsAt(point);
-
-    void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer)
-    {
-        DataPointerDown?.Invoke(this, points);
-        ChartPointPointerDown?.Invoke(this, points.FindClosestTo(pointer));
-    }
-
-    void IChartView.OnHoveredPointsChanged(IEnumerable<ChartPoint>? newPoints, IEnumerable<ChartPoint>? oldPoints) =>
-        HoveredPointsChanged?.Invoke(this, newPoints, oldPoints);
-
-    void IChartView.OnVisualElementPointerDown(
-        IEnumerable<IInteractable> visualElements, LvcPoint pointer) =>
-        VisualElementsPointerDown?.Invoke(this, new VisualElementsEventArgs(CoreChart, visualElements, pointer));
-
-    void IChartView.Invalidate() =>
-        CoreCanvas.Invalidate();
 }

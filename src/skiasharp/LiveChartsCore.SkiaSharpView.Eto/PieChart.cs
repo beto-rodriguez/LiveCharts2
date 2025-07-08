@@ -20,8 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.ObjectModel;
-using LiveChartsCore.Kernel;
+// ==============================================================================
+// 
+// this file contains the Eto specific code for the PieChart class,
+// the rest of the code can be found in the _Shared project.
+// 
+// ==============================================================================
+
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.SkiaSharpView.Eto;
@@ -34,14 +39,6 @@ public partial class PieChart : ChartControl, IPieChartView
     /// </summary>
     public PieChart()
     {
-        Series = new ObservableCollection<ISeries>();
-        VisualElements = new ObservableCollection<IChartElement>();
-        SyncContext = new object();
+        InitializeProperties();
     }
-
-    PieChartEngine IPieChartView.Core => (PieChartEngine)CoreChart;
-
-    /// <inheritdoc cref="ChartControl.CreateCoreChart"/>
-    protected override Chart CreateCoreChart() =>
-         new PieChartEngine(this, config => config.UseDefaults(), CanvasView.CanvasCore);
 }
