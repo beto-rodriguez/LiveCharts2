@@ -21,9 +21,6 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.ObjectModel;
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using Microsoft.Maui.Controls.Xaml;
 
@@ -39,30 +36,7 @@ public partial class PolarChart : ChartControl, IPolarChartView
     /// <exception cref="Exception">Default colors are not valid</exception>
     public PolarChart()
     {
-        InitializeComponent();
-
-        _ = Observe
-            .Collection(nameof(RadiusAxes))
-            .Collection(nameof(AngleAxes));
-
-        SetValue(AngleAxesProperty, new ObservableCollection<IPolarAxis>());
-        SetValue(RadiusAxesProperty, new ObservableCollection<IPolarAxis>());
-        SetValue(SeriesProperty, new ObservableCollection<ISeries>());
-        SetValue(VisualElementsProperty, new ObservableCollection<IChartElement>());
-        SetValue(SyncContextProperty, new object());
+        InitializeObservers();
+        InitializeProperties();
     }
-
-    PolarChartEngine IPolarChartView.Core => (PolarChartEngine)CoreChart;
-
-    /// <inheritdoc cref="IPolarChartView.ScalePixelsToData(LvcPointD, int, int)"/>
-    public LvcPointD ScalePixelsToData(LvcPointD point, int angleAxisIndex = 0, int radiusAxisIndex = 0)
-        => ((PolarChartEngine)CoreChart).ScalePixelsToData(point, angleAxisIndex, radiusAxisIndex);
-
-    /// <inheritdoc cref="IPolarChartView.ScaleDataToPixels(LvcPointD, int, int)"/>
-    public LvcPointD ScaleDataToPixels(LvcPointD point, int angleAxisIndex = 0, int radiusAxisIndex = 0)
-        => ((PolarChartEngine)CoreChart).ScaleDataToPixels(point, angleAxisIndex, radiusAxisIndex);
-
-    /// <inheritdoc cref="ChartControl.CreateCoreChart"/>
-    protected override Chart CreateCoreChart() =>
-        new PolarChartEngine(this, config => config.UseDefaults(), CanvasView.CanvasCore);
 }
