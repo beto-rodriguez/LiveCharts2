@@ -20,6 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// ==============================================================================
+// 
+// this file contains the Blazor specific code for the PieChart class,
+// the rest of the code can be found in the _Shared project.
+// 
+// ==============================================================================
+
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.SkiaSharpView.Blazor;
@@ -27,9 +34,11 @@ namespace LiveChartsCore.SkiaSharpView.Blazor;
 /// <inheritdoc cref="IPieChartView"/>
 public partial class PieChart : ChartControl, IPieChartView
 {
-    PieChartEngine IPieChartView.Core => (PieChartEngine)CoreChart;
-
-    /// <inheritdoc cref="ChartControl.CreateCoreChart"/>
-    protected override Chart CreateCoreChart() =>
-         new PieChartEngine(this, config => config.UseDefaults(), CanvasView.CanvasCore);
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PieChart"/> class.
+    /// </summary>
+    public PieChart()
+    {
+        InitializeProperties();
+    }
 }

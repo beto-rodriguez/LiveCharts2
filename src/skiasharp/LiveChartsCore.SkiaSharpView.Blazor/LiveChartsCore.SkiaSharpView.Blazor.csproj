@@ -27,6 +27,12 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
 
+  <Import Project="..\_Shared\_Shared.projitems" Label="Shared" />
+
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);BLAZOR_LVC</DefineConstants>
+  </PropertyGroup>
+
   <PropertyGroup>
     <!--
     BL0007 tries to warn about using auto properties,
