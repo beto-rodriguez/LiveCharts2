@@ -34,6 +34,7 @@
   </PropertyGroup>
 
   <Import Project="..\_Shared\_Shared.projitems" Label="Shared" />
+  <Import Project="..\_Shared.WinUI\_Shared.WinUI.projitems" Label="Shared" />
   <Import Project="..\_Shared.Xaml\_Shared.Xaml.projitems" Label="Shared" />
 
   <PropertyGroup>
