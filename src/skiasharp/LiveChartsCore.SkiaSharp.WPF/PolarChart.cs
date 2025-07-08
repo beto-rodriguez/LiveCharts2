@@ -20,9 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.ObjectModel;
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.SkiaSharpView.WPF;
@@ -35,28 +32,7 @@ public partial class PolarChart : ChartControl, IPolarChartView
     /// </summary>
     public PolarChart()
     {
-        _ = Observe
-            .Collection(nameof(RadiusAxes))
-            .Collection(nameof(AngleAxes));
-
-        SetValue(AngleAxesProperty, new ObservableCollection<IPolarAxis>());
-        SetValue(RadiusAxesProperty, new ObservableCollection<IPolarAxis>());
-        SetValue(SeriesProperty, new ObservableCollection<ISeries>());
-        SetValue(VisualElementsProperty, new ObservableCollection<IChartElement>());
-        SetValue(SyncContextProperty, new object());
+        InitializeObservers();
+        InitializeProperties();
     }
-
-    PolarChartEngine IPolarChartView.Core => (PolarChartEngine)CoreChart;
-
-    /// <inheritdoc cref="IPolarChartView.ScalePixelsToData(LvcPointD, int, int)"/>
-    public LvcPointD ScalePixelsToData(LvcPointD point, int angleAxisIndex = 0, int radiusAxisIndex = 0)
-        => ((PolarChartEngine)CoreChart).ScalePixelsToData(point, angleAxisIndex, radiusAxisIndex);
-
-    /// <inheritdoc cref="IPolarChartView.ScaleDataToPixels(LvcPointD, int, int)"/>
-    public LvcPointD ScaleDataToPixels(LvcPointD point, int angleAxisIndex = 0, int radiusAxisIndex = 0)
-        => ((PolarChartEngine)CoreChart).ScaleDataToPixels(point, angleAxisIndex, radiusAxisIndex);
-
-    /// <inheritdoc cref="ChartControl.CreateCoreChart"/>
-    protected override Chart CreateCoreChart() =>
-        new PolarChartEngine(this, config => config.UseDefaults(), CanvasView.CanvasCore);
 }

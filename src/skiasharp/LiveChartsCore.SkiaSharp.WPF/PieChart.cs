@@ -20,8 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.ObjectModel;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.SkiaSharpView.WPF;
@@ -34,14 +32,6 @@ public partial class PieChart : ChartControl, IPieChartView
     /// </summary>
     public PieChart()
     {
-        SetValue(SeriesProperty, new ObservableCollection<ISeries>());
-        SetValue(VisualElementsProperty, new ObservableCollection<IChartElement>());
-        SetValue(SyncContextProperty, new object());
+        InitializeProperties();
     }
-
-    PieChartEngine IPieChartView.Core => (PieChartEngine)CoreChart;
-
-    /// <inheritdoc cref="ChartControl.CreateCoreChart"/>
-    protected override Chart CreateCoreChart() =>
-         new PieChartEngine(this, config => config.UseDefaults(), CanvasView.CanvasCore);
 }
