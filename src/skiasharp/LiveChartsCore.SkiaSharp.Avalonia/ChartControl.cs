@@ -20,9 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// ==============================================================================
+// 
+// this file contains the Avalonia specific code for the ChartControl class,
+// the rest of the code can be found in the _Shared project.
+// 
+// ==============================================================================
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -32,14 +37,8 @@ using Avalonia.Rendering;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
-using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.Measure;
-using LiveChartsCore.Motion;
-using LiveChartsCore.Themes;
-using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
@@ -57,11 +56,6 @@ public abstract partial class ChartControl : UserControl, IChartView, ICustomHit
         LiveCharts.Configure(config => config.UseDefaults());
 
         Content = new MotionCanvas();
-        CoreChart = CreateCoreChart();
-
-        CoreChart.Measuring += OnCoreMeasuring;
-        CoreChart.UpdateStarted += OnCoreUpdateStarted;
-        CoreChart.UpdateFinished += OnCoreUpdateFinished;
 
         AttachedToVisualTree += OnAttachedToVisualTree;
         DetachedFromVisualTree += OnDetachedFromVisualTree;
@@ -74,23 +68,12 @@ public abstract partial class ChartControl : UserControl, IChartView, ICustomHit
         SizeChanged += (s, e) =>
             CoreChart.Update();
 
-        Observe = new ChartObserver(() => CoreChart?.Update(), AddUIElement, RemoveUIElement);
+        InitializeCoreChart();
+        InitializeObservers();
     }
 
-    /// <summary>
-    /// Gets the canvas view.
-    /// </summary>
+    /// <inheritdoc cref="IChartView.CoreCanvas"/>
     public MotionCanvas CanvasView => (MotionCanvas)Content!;
-
-    /// <summary>
-    /// Gets the core chart.
-    /// </summary>
-    public Chart CoreChart { get; }
-
-    /// <summary>
-    /// Gets the chart observer.
-    /// </summary>
-    protected ChartObserver Observe { get; }
 
     bool IChartView.DesignerMode => Design.IsDesignMode;
     bool IChartView.IsDarkMode => Application.Current?.ActualThemeVariant == ThemeVariant.Dark;
@@ -103,40 +86,6 @@ public abstract partial class ChartControl : UserControl, IChartView, ICustomHit
     }
     LvcSize IChartView.ControlSize => new() { Width = (float)CanvasView.Bounds.Width, Height = (float)CanvasView.Bounds.Height };
 
-    /// <inheritdoc cref="IChartView.Tooltip" />
-    public IChartTooltip? Tooltip { get; set; }
-
-    /// <inheritdoc cref="IChartView.Legend" />
-    public IChartLegend? Legend { get => field; set { field = value; CoreChart.Update(); } }
-
-    /// <inheritdoc cref="IChartView.ChartTheme" />
-    public Theme? ChartTheme { get; set { field = value; OnChartPropertyChanged(this); } }
-
-    /// <inheritdoc cref="IChartView.CoreCanvas" />
-    public CoreMotionCanvas CoreCanvas => CanvasView.CanvasCore;
-
-    /// <inheritdoc cref="IChartView.Measuring" />
-    public event ChartEventHandler? Measuring;
-
-    /// <inheritdoc cref="IChartView.UpdateFinished" />
-    public event ChartEventHandler? UpdateFinished;
-
-    /// <inheritdoc cref="IChartView.UpdateStarted" />
-    public event ChartEventHandler? UpdateStarted;
-
-    /// <inheritdoc cref="IChartView.DataPointerDown" />
-    public event ChartPointsHandler? DataPointerDown;
-
-    /// <inheritdoc cref="IChartView.HoveredPointsChanged" />
-    public event ChartPointHoverHandler? HoveredPointsChanged;
-
-    /// <inheritdoc cref="IChartView.ChartPointPointerDown" />
-    [Obsolete($"Use the {nameof(DataPointerDown)} event instead with a {nameof(FindingStrategy)} that used TakeClosest.")]
-    public event ChartPointHandler? ChartPointPointerDown;
-
-    /// <inheritdoc cref="IChartView.VisualElementsPointerDown"/>
-    public event VisualElementsHandler? VisualElementsPointerDown;
-
     private void OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e) =>
         CoreChart?.Load();
 
@@ -146,50 +95,8 @@ public abstract partial class ChartControl : UserControl, IChartView, ICustomHit
         CoreChart?.Unload();
     }
 
-    /// <summary>
-    /// Creates the core chart instance for rendering and manipulation.
-    /// </summary>
-    /// <remarks>This method is abstract and must be implemented by derived classes to provide     a specific
-    /// chart type. The returned <see cref="Chart"/> object represents the     foundational chart structure, which can
-    /// be further customized or populated     with data.</remarks>
-    /// <returns>A <see cref="Chart"/> object that serves as the base chart instance.</returns>
-    protected abstract Chart CreateCoreChart();
-
-    /// <inheritdoc cref="IChartView.GetPointsAt(LvcPointD, FindingStrategy, FindPointFor)"/>
-    public IEnumerable<ChartPoint> GetPointsAt(
-        LvcPointD point,
-        FindingStrategy strategy = FindingStrategy.Automatic,
-        FindPointFor findPointFor = FindPointFor.HoverEvent)
-    {
-        if (strategy == FindingStrategy.Automatic)
-            strategy = CoreChart.Series.GetFindingStrategy();
-
-        return CoreChart.Series.SelectMany(series =>
-            series.FindHitPoints(CoreChart, new(point), strategy, FindPointFor.HoverEvent));
-    }
-
-    /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
-    public IEnumerable<IChartElement> GetVisualsAt(LvcPointD point) =>
-        CoreChart.VisualElements.SelectMany(visual =>
-            ((VisualElement)visual).IsHitBy(CoreChart, new(point)));
-
     void IChartView.InvokeOnUIThread(Action action) =>
         Dispatcher.UIThread.Post(action);
-
-    private void OnCoreMeasuring(IChartView chart) => Measuring?.Invoke(this);
-
-    private void OnCoreUpdateFinished(IChartView chart) => UpdateFinished?.Invoke(this);
-
-    private void OnCoreUpdateStarted(IChartView chart)
-    {
-        if (UpdateStartedCommand is not null)
-        {
-            var args = new ChartCommandArgs(this);
-            if (UpdateStartedCommand.CanExecute(args)) UpdateStartedCommand.Execute(args);
-        }
-
-        UpdateStarted?.Invoke(this);
-    }
 
     private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
@@ -256,36 +163,21 @@ public abstract partial class ChartControl : UserControl, IChartView, ICustomHit
         _ = CanvasView.Children.Remove(logical);
     }
 
-    void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer)
+    private ISeries InflateSeriesTemplate(object item)
     {
-        DataPointerDown?.Invoke(this, points);
-        if (DataPointerDownCommand is not null && DataPointerDownCommand.CanExecute(points)) DataPointerDownCommand.Execute(points);
+        var control = SeriesTemplate.Build(item);
 
-        ChartPointPointerDown?.Invoke(this, points.FindClosestTo(pointer));
-#pragma warning disable CS0618 // Type or member is obsolete
-        ChartPointPointerDownCommand?.Execute(points.FindClosestTo(pointer));
-#pragma warning restore CS0618 // Type or member is obsolete
+        if (control is not ISeries series)
+            throw new InvalidOperationException("The template must be a valid series.");
+
+        control.DataContext = item;
+
+        return series;
     }
 
-    void IChartView.OnHoveredPointsChanged(IEnumerable<ChartPoint>? newPoints, IEnumerable<ChartPoint>? oldPoints)
-    {
-        HoveredPointsChanged?.Invoke(this, newPoints, oldPoints);
+    private static object GetSeriesSource(ISeries series) =>
+        ((Control)series).DataContext!;
 
-        var args = new HoverCommandArgs(this, newPoints, oldPoints);
-        if (HoveredPointsChangedCommand is not null && HoveredPointsChangedCommand.CanExecute(args)) HoveredPointsChangedCommand.Execute(args);
-    }
-
-    void IChartView.OnVisualElementPointerDown(
-        IEnumerable<IInteractable> visualElements, LvcPoint pointer)
-    {
-        var args = new VisualElementsEventArgs(CoreChart, visualElements, pointer);
-
-        VisualElementsPointerDown?.Invoke(this, args);
-        if (VisualElementsPointerDownCommand is not null && VisualElementsPointerDownCommand.CanExecute(args))
-            VisualElementsPointerDownCommand.Execute(args);
-    }
-
-    void IChartView.Invalidate() => CoreCanvas.Invalidate();
-
-    bool ICustomHitTest.HitTest(Point point) => new Rect(Bounds.Size).Contains(point);
+    bool ICustomHitTest.HitTest(Point point) =>
+        new Rect(Bounds.Size).Contains(point);
 }

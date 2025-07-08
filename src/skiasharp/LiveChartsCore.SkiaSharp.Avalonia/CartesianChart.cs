@@ -20,13 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// ==============================================================================
+// 
+// this file contains the Avalonia specific code for the CartesianChart class,
+// the rest of the code can be found in the _Shared project.
+// 
+// ==============================================================================
+
 using System;
-using System.Collections.ObjectModel;
-using Avalonia;
 using Avalonia.Input;
-using Avalonia.Markup.Xaml;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 
@@ -43,60 +46,14 @@ public partial class CartesianChart : ChartControl, ICartesianChartView
     /// <exception cref="Exception">Default colors are not valid</exception>
     public CartesianChart()
     {
-        AvaloniaXamlLoader.Load(this);
-
-        _ = Observe
-           .Collection(nameof(XAxes))
-           .Collection(nameof(YAxes))
-           .Collection(nameof(Sections))
-           .Property(nameof(DrawMarginFrame));
-
-        XAxes = new ObservableCollection<ICartesianAxis>();
-        YAxes = new ObservableCollection<ICartesianAxis>();
-        Series = new ObservableCollection<ISeries>();
-        Sections = new ObservableCollection<IChartElement>();
-        VisualElements = new ObservableCollection<IChartElement>();
-        SyncContext = new object();
+        InitializeObservers();
+        InitializeProperties();
 
         var pinchGesture = new PinchGestureRecognizer();
         GestureRecognizers.Add(pinchGesture);
         AddHandler(Gestures.PinchEvent, OnPinched);
 
         PointerWheelChanged += OnPointerWheelChanged;
-    }
-
-    CartesianChartEngine ICartesianChartView.Core => (CartesianChartEngine)CoreChart;
-
-    /// <inheritdoc cref="ICartesianChartView.MatchAxesScreenDataRatio" />
-    public bool MatchAxesScreenDataRatio
-    {
-        get;
-        set
-        {
-            field = value;
-
-            if (value) SharedAxes.MatchAxesScreenDataRatio(this);
-            else SharedAxes.DisposeMatchAxesScreenDataRatio(this);
-        }
-    }
-
-    /// <inheritdoc cref="ICartesianChartView.ScalePixelsToData(LvcPointD, int, int)"/>
-    public LvcPointD ScalePixelsToData(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)
-        => ((CartesianChartEngine)CoreChart).ScalePixelsToData(point, xAxisIndex, yAxisIndex);
-
-    /// <inheritdoc cref="ICartesianChartView.ScaleDataToPixels(LvcPointD, int, int)"/>
-    public LvcPointD ScaleDataToPixels(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)
-        => ((CartesianChartEngine)CoreChart).ScaleDataToPixels(point, xAxisIndex, yAxisIndex);
-
-    /// <inheritdoc cref="ChartControl.CreateCoreChart"/>
-    protected override Chart CreateCoreChart() =>
-        new CartesianChartEngine(this, config => config.UseDefaults(), CanvasView.CanvasCore);
-
-    /// <inheritdoc />
-    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
-    {
-        base.OnPropertyChanged(change);
-        OnXamlPropertyChanged(change);
     }
 
     private void OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)

@@ -20,11 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Collections.ObjectModel;
-using Avalonia;
-using Avalonia.Markup.Xaml;
-using LiveChartsCore.Kernel;
+// ==============================================================================
+// 
+// this file contains the Avalonia specific code for the PieChart class,
+// the rest of the code can be found in the _Shared project.
+// 
+// ==============================================================================
+
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
@@ -35,26 +37,8 @@ public partial class PieChart : ChartControl, IPieChartView
     /// <summary>
     /// Initializes a new instance of the <see cref="PieChart"/> class.
     /// </summary>
-    /// <exception cref="Exception">Default colors are not valid</exception>
     public PieChart()
     {
-        AvaloniaXamlLoader.Load(this);
-
-        Series = new ObservableCollection<ISeries>();
-        VisualElements = new ObservableCollection<IChartElement>();
-        SyncContext = new object();
-    }
-
-    PieChartEngine IPieChartView.Core => (PieChartEngine)CoreChart;
-
-    /// <inheritdoc cref="ChartControl.CreateCoreChart"/>
-    protected override Chart CreateCoreChart() =>
-         new PieChartEngine(this, config => config.UseDefaults(), CanvasView!.CanvasCore);
-
-    /// <inheritdoc />
-    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
-    {
-        base.OnPropertyChanged(change);
-        OnXamlPropertyChanged(change);
+        InitializeProperties();
     }
 }
