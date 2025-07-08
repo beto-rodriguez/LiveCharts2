@@ -47,6 +47,15 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
+
+  <Import Project="..\_Shared\_Shared.projitems" Label="Shared" />
+  <Import Project="..\_Shared.WinUI\_Shared.WinUI.projitems" Label="Shared" />
+  <Import Project="..\_Shared.Xaml\_Shared.Xaml.projitems" Label="Shared" />
+
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);UNO_LVC;WINUI_LVC</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
 
@@ -86,5 +95,4 @@
   <ItemGroup>
     <None Include="images\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
-  <Import Project="..\LiveChartsCore.SkiaSharpView.WinUI.Shared\LiveChartsCore.SkiaSharpView.WinUI.Shared.projitems" Label="Shared" />
 </Project>
