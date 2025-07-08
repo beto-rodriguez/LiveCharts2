@@ -161,7 +161,7 @@ public partial class XamlGaugeSeries<TVisual, TLabel> : XamlSeries, IPieSeries, 
 }
 
 /// <inheritdoc cref="PieSeries{TModel, TVisual, TLabel}"/>
-public class XamlGaugeBackgroundSeries : XamlGaugeSeries<DoughnutGeometry, LabelGeometry>
+public partial class XamlGaugeBackgroundSeries : XamlGaugeSeries<DoughnutGeometry, LabelGeometry>
 {
     internal override void Setup(
         IXamlWrapper<IPieSeries> series, ObservableValue value, DataFactory<ObservableValue> dataFactory)
@@ -169,7 +169,7 @@ public class XamlGaugeBackgroundSeries : XamlGaugeSeries<DoughnutGeometry, Label
 }
 
 /// <inheritdoc cref="PieSeries{TModel, TVisual, TLabel}"/>
-public class XamlAngularGaugeSeries : XamlGaugeSeries<DoughnutGeometry, LabelGeometry>
+public partial class XamlAngularGaugeSeries : XamlGaugeSeries<DoughnutGeometry, LabelGeometry>
 {
     internal override void Setup(
         IXamlWrapper<IPieSeries> series, ObservableValue value, DataFactory<ObservableValue> dataFactory)
