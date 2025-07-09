@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/Sample/">
+    <Project Path="samples/WinFormsSample/WinFormsSample.csproj" />
+    <Project Path="samples/ViewModelsSamples/ViewModelsSamples.csproj" />
+  </Folder>
+  <Project Path="generators/LiveChartsGenerators/LiveChartsGenerators.csproj" />
+  <Project Path="src/LiveChartsCore/LiveChartsCore.csproj" />
+  <Project Path="src/skiasharp/LiveChartsCore.SkiaSharp.WinForms/LiveChartsCore.SkiaSharpView.WinForms.csproj" />
+  <Project Path="src/skiasharp/LiveChartsCore.SkiaSharp/LiveChartsCore.SkiaSharpView.csproj" />
+  <Project Path="src/skiasharp/_Shared/_Shared.shproj" Id="2ad18dd8-c567-4bcf-a4fa-42519466d6a3" />
+</Solution>

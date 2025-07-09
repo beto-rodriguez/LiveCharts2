@@ -1,0 +1,9 @@
+<Solution>
+  <Project Path="generators/LiveChartsGenerators/LiveChartsGenerators.csproj" />
+  <Project Path="src/LiveChartsCore/LiveChartsCore.csproj" />
+  <Project Path="src/skiasharp/LiveChartsCore.SkiaSharp/LiveChartsCore.SkiaSharpView.csproj" />
+  <Project Path="src/skiasharp/LiveChartsCore.SkiaSharpView.Uno.WinUI/LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj" />
+  <Project Path="src/skiasharp/_Shared.WinUI/_Shared.WinUI.shproj" Id="e98bb79a-300e-4556-ac59-47a9aaf1d5f1" />
+  <Project Path="src/skiasharp/_Shared.Xaml/_Shared.Xaml.shproj" Id="8f2bb38b-163c-43af-9dee-6f5438ba87b0" />
+  <Project Path="src/skiasharp/_Shared/_Shared.shproj" Id="2ad18dd8-c567-4bcf-a4fa-42519466d6a3" />
+</Solution>
