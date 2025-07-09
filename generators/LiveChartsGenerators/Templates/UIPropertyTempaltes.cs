@@ -46,7 +46,7 @@ public static class UIPropertyTempaltes
             typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
             genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters);
 
-        var docs = target.XmlDocs ?? @"
+        var docs = target.XmlDocs ?? $@"
     /// <summary>
     ///    Gets or sets the <see cref=""{propertyName}""/> property.
     /// </summary>
