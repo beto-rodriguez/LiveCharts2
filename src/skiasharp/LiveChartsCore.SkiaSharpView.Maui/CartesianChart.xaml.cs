@@ -21,9 +21,7 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.ObjectModel;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using Microsoft.Maui.Controls.Xaml;
@@ -40,48 +38,9 @@ public partial class CartesianChart : ChartControl, ICartesianChartView
     /// <exception cref="Exception">Default colors are not valid</exception>
     public CartesianChart()
     {
-        InitializeComponent();
-
-        _ = Observe
-            .Collection(nameof(XAxes))
-            .Collection(nameof(YAxes))
-            .Collection(nameof(Sections))
-            .Property(nameof(DrawMarginFrame));
-
-        SetValue(XAxesProperty, new ObservableCollection<ICartesianAxis>());
-        SetValue(YAxesProperty, new ObservableCollection<ICartesianAxis>());
-        SetValue(SeriesProperty, new ObservableCollection<ISeries>());
-        SetValue(SectionsProperty, new ObservableCollection<IChartElement>());
-        SetValue(VisualElementsProperty, new ObservableCollection<IChartElement>());
-        SetValue(SyncContextProperty, new object());
+        InitializeObservers();
+        InitializeProperties();
     }
-
-    CartesianChartEngine ICartesianChartView.Core => (CartesianChartEngine)CoreChart;
-
-    /// <inheritdoc cref="ICartesianChartView.MatchAxesScreenDataRatio" />
-    public bool MatchAxesScreenDataRatio
-    {
-        get;
-        set
-        {
-            field = value;
-
-            if (value) SharedAxes.MatchAxesScreenDataRatio(this);
-            else SharedAxes.DisposeMatchAxesScreenDataRatio(this);
-        }
-    }
-
-    /// <inheritdoc cref="ICartesianChartView.ScalePixelsToData(LvcPointD, int, int)"/>
-    public LvcPointD ScalePixelsToData(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)
-        => ((CartesianChartEngine)CoreChart).ScalePixelsToData(point, xAxisIndex, yAxisIndex);
-
-    /// <inheritdoc cref="ICartesianChartView.ScaleDataToPixels(LvcPointD, int, int)"/>
-    public LvcPointD ScaleDataToPixels(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)
-        => ((CartesianChartEngine)CoreChart).ScaleDataToPixels(point, xAxisIndex, yAxisIndex);
-
-    /// <inheritdoc cref="ChartControl.CreateCoreChart"/>
-    protected override Chart CreateCoreChart() =>
-        new CartesianChartEngine(this, config => config.UseDefaults(), CanvasView.CanvasCore);
 
     internal override void OnScrolled(object? sender, Behaviours.Events.ScrollEventArgs args)
     {

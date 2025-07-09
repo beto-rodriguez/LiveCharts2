@@ -43,6 +43,13 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
 	</PropertyGroup>
 
+  <Import Project="..\_Shared\_Shared.projitems" Label="Shared" />
+  <Import Project="..\_Shared.Xaml\_Shared.Xaml.projitems" Label="Shared" />
+
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);MAUI_LVC</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 	  <PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="$(LatestSkiaSharpVersion)" />

@@ -22,31 +22,27 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
-using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Observers;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using LiveChartsCore.SkiaSharpView.WinUI.Helpers;
-using LiveChartsCore.Painting;
+using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.WinUI;
 
-/// <summary>
-/// Defines a geographic map.
-/// </summary>
+/// <inheritdoc cref="IChartView" />
 public sealed partial class GeoMap : UserControl, IGeoMapView
 {
-    private readonly CollectionDeepObserver<IGeoSeries> _seriesObserver;
     private readonly GeoMapChart _core;
+    private readonly CollectionDeepObserver _seriesObserver;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GeoMap"/> class.
@@ -65,10 +61,7 @@ public sealed partial class GeoMap : UserControl, IGeoMapView
 
         SizeChanged += GeoMap_SizeChanged;
 
-        _seriesObserver = new CollectionDeepObserver<IGeoSeries>(
-            (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
-            (object? sender, PropertyChangedEventArgs e) => _core.Update(),
-            true);
+        _seriesObserver = new CollectionDeepObserver(() => _core?.Update());
 
         SetValue(SeriesProperty, Enumerable.Empty<IGeoSeries>());
         SetValue(ActiveMapProperty, Maps.GetWorldMap());
@@ -94,7 +87,7 @@ public sealed partial class GeoMap : UserControl, IGeoMapView
            nameof(SyncContext), typeof(object), typeof(GeoMap), new PropertyMetadata(null, OnDependencyPropertyChanged));
 
     /// <summary>
-    /// The view command property.
+    /// The sync context property.
     /// </summary>
     public static readonly DependencyProperty ViewCommandProperty =
        DependencyProperty.Register(
@@ -121,7 +114,7 @@ public sealed partial class GeoMap : UserControl, IGeoMapView
             {
                 var chart = (GeoMap)o;
                 var seriesObserver = chart._seriesObserver;
-                seriesObserver?.Dispose((IEnumerable<IGeoSeries>)args.OldValue);
+                seriesObserver?.Dispose();
                 seriesObserver?.Initialize((IEnumerable<IGeoSeries>)args.NewValue);
                 chart._core.Update();
             }));
@@ -220,8 +213,12 @@ public sealed partial class GeoMap : UserControl, IGeoMapView
 
     #endregion
 
-    void IGeoMapView.InvokeOnUIThread(Action action) =>
-        UnoPlatformHelpers.InvokeOnUIThread(action, DispatcherQueue);
+    void IGeoMapView.InvokeOnUIThread(Action action)
+    {
+        _ = DispatcherQueue.TryEnqueue(
+            Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal,
+            () => action());
+    }
 
     private void GeoMap_SizeChanged(object sender, SizeChangedEventArgs e) =>
         _core.Update();
@@ -249,7 +246,8 @@ public sealed partial class GeoMap : UserControl, IGeoMapView
         ReleasePointerCapture(e.Pointer);
     }
 
-    private void OnPointerExited(object sender, PointerRoutedEventArgs e) => _core?.InvokePointerLeft();
+    private void OnPointerExited(object sender, PointerRoutedEventArgs e) =>
+        _core?.InvokePointerLeft();
 
     private void OnWheelChanged(object sender, PointerRoutedEventArgs e)
     {

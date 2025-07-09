@@ -20,9 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.ObjectModel;
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel;
+// ==============================================================================
+// 
+// this file contains the Eto specific code for the PolarChart class,
+// the rest of the code can be found in the _Shared project.
+// 
+// ==============================================================================
+
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.SkiaSharpView.Eto;
@@ -35,27 +39,7 @@ public partial class PolarChart : ChartControl, IPolarChartView
     /// </summary>
     public PolarChart()
     {
-        _ = Observe
-            .Collection(nameof(AngleAxes))
-            .Collection(nameof(RadiusAxes));
-
-        AngleAxes = new ObservableCollection<IPolarAxis>();
-        RadiusAxes = new ObservableCollection<IPolarAxis>();
-        Series = new ObservableCollection<ISeries>();
-        VisualElements = new ObservableCollection<IChartElement>();
+        InitializeObservers();
+        InitializeProperties();
     }
-
-    PolarChartEngine IPolarChartView.Core => (PolarChartEngine)CoreChart;
-
-    /// <inheritdoc cref="IPolarChartView.ScalePixelsToData(LvcPointD, int, int)"/>
-    public LvcPointD ScalePixelsToData(LvcPointD point, int angleAxisIndex = 0, int radiusAxisIndex = 0)
-        => ((PolarChartEngine)CoreChart).ScalePixelsToData(point, angleAxisIndex, radiusAxisIndex);
-
-    /// <inheritdoc cref="IPolarChartView.ScaleDataToPixels(LvcPointD, int, int)"/>
-    public LvcPointD ScaleDataToPixels(LvcPointD point, int angleAxisIndex = 0, int radiusAxisIndex = 0)
-        => ((PolarChartEngine)CoreChart).ScaleDataToPixels(point, angleAxisIndex, radiusAxisIndex);
-
-    /// <inheritdoc cref="ChartControl.CreateCoreChart"/>
-    protected override Chart CreateCoreChart() =>
-        new PolarChartEngine(this, config => config.UseDefaults(), CanvasView.CanvasCore);
 }

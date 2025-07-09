@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>e98bb79a-300e-4556-ac59-47a9aaf1d5f1</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>_Shared.WinUI</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)CartesianChart.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ChartBehaviour.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ChartControl.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MotionCanvas.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PieChart.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PolarChart.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ThemeListener.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)XamlSeries.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Xtentions.cs" />
+  </ItemGroup>
+</Project>

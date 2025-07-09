@@ -327,15 +327,8 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
 
         string? xmlDocs = null;
 
-        if (fieldSymbol.Name.Contains("zoom"))
-        {
-            var d = fieldSymbol.GetDocumentationCommentXml();
-
-            var trivia = fieldDecl.GetLeadingTrivia()
-    .FirstOrDefault(t => t.IsKind(SyntaxKind.SingleLineDocumentationCommentTrivia));
-
-            xmlDocs = trivia.GetStructure()?.ToFullString();
-        }
+        var trivia = fieldDecl.GetLeadingTrivia().FirstOrDefault(t => t.IsKind(SyntaxKind.SingleLineDocumentationCommentTrivia));
+        xmlDocs = trivia.GetStructure()?.ToFullString();
 
         // Check if field's type is the type you're interested in
         if (fieldSymbol.Type.ToDisplayString(displayFormat) == "LiveChartsCore.Generators.UIProperty")
@@ -436,6 +429,7 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
         {
             "LiveChartsCore.SkiaSharpView.Maui" => "Maui",
             "LiveChartsCore.SkiaSharpView.WinUI" => "WinUI",
+            "LiveChartsCore.SkiaSharpView.Uno.WinUI" => "WinUI",
             "LiveChartsCore.SkiaSharpView.Avalonia" => "Avalonia",
             "LiveChartsCore.SkiaSharpView.WPF" => "WPF",
             "LiveChartsCore.SkiaSharpView.WinForms" => "WinForms",
