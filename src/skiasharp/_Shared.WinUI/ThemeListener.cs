@@ -45,8 +45,7 @@ public sealed class ThemeListener : IDisposable
         _settings.ColorValuesChanged += Settings_ColorValuesChanged;
 
         // Fallback in case either of the above fail, we'll check when we get activated next.
-        if (Window.Current is not null)
-            Window.Current.CoreWindow.Activated += CoreWindow_Activated;
+        Window.Current?.CoreWindow?.Activated += CoreWindow_Activated;
     }
 
     private void Settings_ColorValuesChanged(UISettings sender, object args) =>
@@ -71,7 +70,6 @@ public sealed class ThemeListener : IDisposable
     public void Dispose()
     {
         _settings.ColorValuesChanged -= Settings_ColorValuesChanged;
-        if (Window.Current is not null)
-            Window.Current.CoreWindow.Activated -= CoreWindow_Activated;
+        Window.Current?.CoreWindow?.Activated -= CoreWindow_Activated;
     }
 }

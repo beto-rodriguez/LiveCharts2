@@ -31,7 +31,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI;
 public partial class ChartBehaviour : Behaviours.ChartBehaviour
 {
     private static double s_density;
-    private static LvcSize s_screenSize;
+    private static LvcSize s_screenSize = new();
 
     /// <inheritdoc />
     public override LvcSize ScreenSize => s_screenSize;

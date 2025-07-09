@@ -168,7 +168,7 @@ public abstract partial class ChartControl : UserControl, IChartView
 
     private ISeries InflateSeriesTemplate(object item)
     {
-        var content = (FrameworkElement)SeriesTemplate.LoadContent();
+        var content = (FrameworkElement?)SeriesTemplate.LoadContent();
 
         if (content is not ISeries series)
             throw new InvalidOperationException("The template must be a valid series.");
