@@ -12,6 +12,18 @@ namespace LiveChartsCore.UnitTesting.SeriesTests;
 [TestClass]
 public class _MemoryTests
 {
+    private static readonly int s_repeatCount;
+    private static readonly double s_treshold;
+
+    static _MemoryTests()
+    {
+        s_repeatCount = 5000;
+        var threshold = 2 * 1024 * 1024 * (s_repeatCount / 5000d); // 2MB each 5000 repeats
+        s_treshold = threshold < 1 * 1024 * 1024
+            ? 1 * 1024 * 1024
+            : threshold; // ensure at least 1MB threshold
+    }
+
     [TestMethod]
     public void ObservableValuesChangingTest()
     {
@@ -102,7 +114,7 @@ public class _MemoryTests
             sut.Series.IsVisible = true;
             totalFramesDrawn += ChangingPaintTasks.DrawChart(sut.Chart, true);
 
-            for (var j = 0; j < 5000; j++)
+            for (var j = 0; j < s_repeatCount; j++)
                 _ = sut.Values.Add(new ObservableValue(2));
             totalFramesDrawn += ChangingPaintTasks.DrawChart(sut.Chart, true);
 
@@ -141,7 +153,7 @@ public class _MemoryTests
         // then enters a loop until animations finish.
 
         Assert.IsTrue(
-            finalMemory - initialMemory < 2 * 1024 * 1024,
+            finalMemory - initialMemory < s_treshold,
             $"[{sut.Series.Name} series] Potential memory leak detected {(finalMemory - initialMemory) / (1024d * 1024):N2}MB, " +
             $"{totalFramesDrawn} frames drawn.");
     }
@@ -169,8 +181,8 @@ public class _MemoryTests
 
         for (var i = 0; i < 100; i++)
         {
-            values = new int[5000];
-            for (var j = 0; j < 5000; j++)
+            values = new int[s_repeatCount];
+            for (var j = 0; j < s_repeatCount; j++)
                 values[j] = 2;
 
             sut.Series.Values = values;
@@ -213,7 +225,7 @@ public class _MemoryTests
         // it changes 100 times, the instance of the values array to a new array of 5,000 elements
 
         Assert.IsTrue(
-            finalMemory - initialMemory < 2 * 1024 * 1024,
+            finalMemory - initialMemory < s_treshold,
             $"[{sut.Series.Name} series] Potential memory leak detected {(finalMemory - initialMemory) / (1024d * 1024):N2}MB, " +
             $"{totalFramesDrawn} frames drawn.");
     }
@@ -238,8 +250,8 @@ public class _MemoryTests
 
         for (var i = 0; i < 100; i++)
         {
-            var newValues = new ObservableValue[5000];
-            for (var j = 0; j < 5000; j++)
+            var newValues = new ObservableValue[s_repeatCount];
+            for (var j = 0; j < s_repeatCount; j++)
                 newValues[j] = new(2);
 
             values = new(newValues);
@@ -285,7 +297,7 @@ public class _MemoryTests
         var mb = (finalMemory - initialMemory) / (1024d * 1024);
 
         Assert.IsTrue(
-            finalMemory - initialMemory < 2 * 1024 * 1024,
+            finalMemory - initialMemory < s_treshold,
             $"[{sut.Series.Name} series] Potential memory leak detected {mb:N2}MB, " +
             $"{totalFramesDrawn} frames drawn.");
     }
