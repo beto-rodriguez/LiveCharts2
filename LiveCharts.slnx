@@ -162,6 +162,7 @@
     <BuildType Solution="Ad-Hoc|*" Project="Debug" />
     <BuildType Solution="AppStore|*" Project="Debug" />
   </Project>
+  <Project Path="src/skiasharp/_Shared.WinUI/_Shared.WinUI.shproj" Id="e98bb79a-300e-4556-ac59-47a9aaf1d5f1" />
   <Project Path="src/skiasharp/_Shared.Xaml/_Shared.Xaml.shproj" />
   <Project Path="src/skiasharp/_Shared/_Shared.shproj" />
 </Solution>
