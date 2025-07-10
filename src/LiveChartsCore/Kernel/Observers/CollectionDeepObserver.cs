@@ -25,6 +25,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+#if NET462
+using System.Linq;
+#endif
 
 namespace LiveChartsCore.Kernel.Observers;
 
@@ -114,7 +117,11 @@ public class CollectionDeepObserver(
 
             case NotifyCollectionChangedAction.Reset:
 
+#if NET462
+                OnItemsRemoved(_itemsListening.ToArray());
+#else
                 OnItemsRemoved(_itemsListening);
+#endif
                 _itemsListening.Clear();
 
                 if (sender is IEnumerable enumerable)
