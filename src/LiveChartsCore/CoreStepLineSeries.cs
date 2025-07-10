@@ -327,6 +327,8 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
                 DrawnGeometry.YProperty.GetMotion(visual.Geometry)!
                     .CopyFrom(Segment.YjProperty.GetMotion(visual.Segment)!);
 
+                visual.Geometry.TranslateTransform = new LvcPoint(-hgs, -hgs);
+
                 visual.Geometry.Width = gs;
                 visual.Geometry.Height = gs;
                 visual.Geometry.RemoveOnCompleted = false;
