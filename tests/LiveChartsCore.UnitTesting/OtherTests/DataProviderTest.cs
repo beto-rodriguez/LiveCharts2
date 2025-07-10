@@ -25,7 +25,7 @@ public class DataProviderTest
             {
                 Width = 100,
                 Height = 100,
-                Series = new[] { sutSeries }
+                Series = [sutSeries]
             };
 
             _ = chart.GetImage();
@@ -48,7 +48,7 @@ public class DataProviderTest
         }
 
         testType(new short[] { 1, 1, 1, 1, 1 });
-        testType(new int[] { 1, 1, 1, 1, 1 });
+        testType([1, 1, 1, 1, 1]);
         testType(new long[] { 1, 1, 1, 1, 1 });
         testType(new float[] { 1, 1, 1, 1, 1 });
         testType(new double[] { 1, 1, 1, 1, 1 });
@@ -174,7 +174,7 @@ public class DataProviderTest
         // finally lets test a mapper
         var sutSeries = new ColumnSeries<City>
         {
-            Values = new City[] { new(1), new(1), new(1), new(1), new(1) },
+            Values = [new(1), new(1), new(1), new(1), new(1)],
             Mapping = (city, index) => new(index, city.Population.Value)
         };
 
@@ -182,7 +182,7 @@ public class DataProviderTest
         {
             Width = 100,
             Height = 100,
-            Series = new[] { sutSeries }
+            Series = [sutSeries]
         };
 
         _ = chart.GetImage();
@@ -204,7 +204,7 @@ public class DataProviderTest
         // finally lets test a mapper
         var sutSeries = new ColumnSeries<City>
         {
-            Values = new City[] { new(1), new(null), new(1), new(null), new(1) },
+            Values = [new(1), new(null), new(1), new(null), new(1)],
             Mapping = (city, index) =>
                 city.Population is null
                     ? Coordinate.Empty
@@ -215,7 +215,7 @@ public class DataProviderTest
         {
             Width = 100,
             Height = 100,
-            Series = new[] { sutSeries }
+            Series = [sutSeries]
         };
 
         _ = chart.GetImage();
@@ -249,7 +249,7 @@ public class DataProviderTest
         // finally lets test a mapper
         var sutSeries = new ColumnSeries<City>
         {
-            Values = new City[] { new(1), null, new(1), null, new(1) },
+            Values = [new(1), null, new(1), null, new(1)],
             Mapping = (city, index) => new(index, city.Population.Value)
         };
 
@@ -257,7 +257,7 @@ public class DataProviderTest
         {
             Width = 100,
             Height = 100,
-            Series = new[] { sutSeries }
+            Series = [sutSeries]
         };
 
         _ = chart.GetImage();
