@@ -187,6 +187,12 @@ public partial class ChartControl
 
     static void OnSyncContextChanged(ChartControl chart, object oldValue, object newValue)
     {
+#if BLAZOR_LVC
+        // hack for blazor, we need to wait for the OnAfterRender to have
+        // a reference to the canvas in the UI, CoreChart is null until then.
+        if (chart.CoreChart is null) return;
+#endif
+
         chart.CoreCanvas.Sync = newValue;
         chart.CoreChart.Update();
     }

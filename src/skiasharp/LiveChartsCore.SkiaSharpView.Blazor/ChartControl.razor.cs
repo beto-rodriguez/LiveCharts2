@@ -86,6 +86,7 @@ public abstract partial class ChartControl : IBlazorChart, IDisposable, IChartVi
         _jsFlexibleContainer.Resized +=
             container => CoreChart?.Update();
 
+        CoreChart.Canvas.Sync = SyncContext;
         CoreChart.Load();
     }
 
