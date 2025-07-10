@@ -2,12 +2,9 @@
 using System.Diagnostics;
 using System.Linq;
 using CommunityToolkit.Mvvm.Input;
-using LiveChartsCore;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Measure;
-using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
@@ -17,18 +14,10 @@ public partial class ViewModel
 {
     private readonly HashSet<ChartPoint> _activePoints = [];
 
-    public FindingStrategy Strategy { get; } = FindingStrategy.ExactMatch;
+    public double[] Values1 { get; set; } = [1, 5, 4, 3];
+    public double[] Values2 { get; set; } = [3, 2, 6, 2];
 
-    public ISeries[] SeriesCollection { get; set; } = [
-        new ColumnSeries<int>([1, 5, 4, 3])
-        {
-            Stroke = new SolidColorPaint { Color = SKColors.Transparent }
-        },
-        new ColumnSeries<int>([3, 2, 6, 2])
-        {
-            Stroke = new SolidColorPaint { Color = SKColors.Transparent }
-        }
-    ];
+    public FindingStrategy Strategy { get; } = FindingStrategy.ExactMatch;
 
     [RelayCommand]
     public void OnPressed(PointerCommandArgs args)
@@ -37,17 +26,17 @@ public partial class ViewModel
 
         foreach (var point in foundPoints)
         {
-            var geometry = (DrawnGeometry)point.Context.Visual!;
+            var visual = point.Context.Visual!;
 
             if (!_activePoints.Contains(point))
             {
-                geometry.Fill = new SolidColorPaint { Color = SKColors.Yellow };
+                visual.Fill = new SolidColorPaint { Color = SKColors.Yellow };
                 _activePoints.Add(point);
             }
             else
             {
                 // clear the fill to the default value
-                geometry.Fill = null;
+                visual.Fill = null;
                 _activePoints.Remove(point);
             }
 
@@ -62,16 +51,14 @@ public partial class ViewModel
         foreach (var hovered in args.NewPoints ?? [])
         {
             // in this case, we will set a black stroke on the drawn gemetry. // mark
-            var geometry = (DrawnGeometry)hovered.Context.Visual!;
-            geometry.Stroke = new SolidColorPaint(SKColors.Black, 3);
+            hovered.Context.Visual!.Stroke = new SolidColorPaint(SKColors.Black, 3);
         }
 
         // the OldPoints contains the points that are not hovered anymore // mark
         foreach (var hovered in args.OldPoints ?? [])
         {
             // now, we will clear the stroke. // mark
-            var geometry = (DrawnGeometry)hovered.Context.Visual!;
-            geometry.Stroke = null;
+            hovered.Context.Visual!.Stroke = null;
         }
 
         Trace.WriteLine(

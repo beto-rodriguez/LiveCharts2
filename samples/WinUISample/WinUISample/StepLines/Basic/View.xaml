@@ -11,8 +11,21 @@
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <Grid>
-        <lvc:CartesianChart Series="{Binding Series}"></lvc:CartesianChart>
-    </Grid>
+
+    <lvc:CartesianChart>
+        <lvc:CartesianChart.Title>
+            <lvc:XamlDrawnLabelVisual
+                Text="My chart title"
+                Paint="{lvc:SolidColorPaint Color='#303030'}"
+                TextSize="{lvc:Float Value='25'}"
+                Padding="{lvc:Padding Value='15'}"/>
+        </lvc:CartesianChart.Title>
+        <lvc:CartesianChart.Series>
+            <lvc:XamlStepLineSeries
+                Values="{Binding Values}"
+                Fill="{x:Null}"
+                GeometrySize="20"/>
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
 
 </UserControl>

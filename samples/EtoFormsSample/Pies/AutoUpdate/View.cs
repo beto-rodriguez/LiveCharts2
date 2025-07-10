@@ -1,58 +1,58 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using Eto.Forms;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Eto;
-using ViewModelsSamples.Pies.AutoUpdate;
 
 namespace EtoFormsSample.Pies.AutoUpdate;
 
 public class View : Panel
 {
     private readonly PieChart piechart;
-    private readonly ViewModel viewModel;
-    private bool? isStreaming = false;
+    private readonly Random _random = new();
 
     public View()
     {
-        viewModel = new ViewModel();
-
         piechart = new PieChart
         {
-            Series = viewModel.Series,
+            Series = new ObservableCollection<ISeries>
+            {
+                new PieSeries<int>{ Values= Fetch() },
+                new PieSeries<int>{ Values= Fetch() },
+            }
         };
 
-        Content = piechart;
-
         var b1 = new Button { Text = "Add series" };
-        b1.Click += (object sender, System.EventArgs e) => viewModel.AddSeries();
+        b1.Click += (sender, e) => piechart.Series.Add(new PieSeries<int> { Values = Fetch() });
 
         var b2 = new Button { Text = "Remove series" };
-        b2.Click += (object sender, System.EventArgs e) => viewModel.RemoveSeries();
+        b2.Click += (sender, e) =>
+        {
+            if (piechart.Series.Count > 0)
+                piechart.Series.Remove(piechart.Series.First());
+        };
 
         var b3 = new Button { Text = "Update all" };
-        b3.Click += (object sender, System.EventArgs e) => viewModel.UpdateAll();
+        b3.Click += (sender, e) =>
+        {
+            foreach (var series in piechart.Series)
+            {
+                if (series is PieSeries<int> pieSeries)
+                {
+                    pieSeries.Values = Fetch();
+                }
+            }
+        };
 
-        var b4 = new Button { Text = "Constant changes" };
-        b4.Click += OnConstantChangesClick;
-
-        var buttons = new StackLayout(b1, b2, b3, b4) { Orientation = Orientation.Horizontal, Padding = 2, Spacing = 4 };
+        var buttons = new StackLayout(b1, b2, b3) { Orientation = Orientation.Horizontal, Padding = 2, Spacing = 4 };
 
         Content = new DynamicLayout(buttons, piechart);
     }
 
-    private async void OnConstantChangesClick(object sender, System.EventArgs e)
+    private int[] Fetch()
     {
-        isStreaming = isStreaming is null ? true : !isStreaming;
-
-        while (isStreaming.Value)
-        {
-            viewModel.RemoveSeries();
-            viewModel.AddSeries();
-            await Task.Delay(1000);
-        }
-    }
-
-    private void B1_Click(object sender, System.EventArgs e)
-    {
-        throw new System.NotImplementedException();
+        return [_random.Next(1, 10)];
     }
 }

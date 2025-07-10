@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Lines.CustomPoints.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Lines.CustomPoints;assembly=ViewModelsSamples">
+<ContentPage
+    x:Class="MauiSample.Lines.CustomPoints.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Lines.CustomPoints;assembly=ViewModelsSamples">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-    <lvc:CartesianChart Series="{Binding Series}"/>
+
+    <lvc:CartesianChart>
+        <lvc:CartesianChart.Series>
+            <lvc:XamlLineSeries
+                x:TypeArguments="vms:DataPoint, vms:ArrowGeometry"
+                GeometrySize="50"
+                GeometryStroke="{x:Null}"
+                GeometryFill="{lvc:SolidColorPaint Color='#C71585'}"
+                Fill="{x:Null}"
+                Values="{Binding Values}"
+                PointMeasuredCommand="{Binding PointMeasuredCommand}"/>
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
 </ContentPage>

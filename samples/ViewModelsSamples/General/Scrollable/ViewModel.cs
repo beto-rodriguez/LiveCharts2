@@ -1,90 +1,43 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Linq;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
 
 namespace ViewModelsSamples.General.Scrollable;
 
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     private bool _isDown = false;
-    private readonly ObservableCollection<ObservablePoint> _values = [];
 
-    public ISeries[] Series { get; set; }
-    public Axis[] ScrollableAxes { get; set; }
-    public ISeries[] ScrollbarSeries { get; set; }
-    public Axis[] InvisibleX { get; set; }
-    public Axis[] InvisibleY { get; set; }
-    public LiveChartsCore.Measure.Margin Margin { get; set; }
-    public RectangularSection[] Thumbs { get; set; }
+    public ObservablePoint[] Values { get; } = Fetch();
 
-    public ViewModel()
-    {
-        var trend = 1000;
-        var r = new Random();
+    [ObservableProperty]
+    public partial double? MinX { get; set; }
 
-        for (var i = 0; i < 500; i++)
-            _values.Add(new ObservablePoint(i, trend += r.Next(-20, 20)));
+    [ObservableProperty]
+    public partial double? MaxX { get; set; }
 
-        Series = [
-            new LineSeries<ObservablePoint>
-            {
-                Values = _values,
-                GeometryStroke = null,
-                GeometryFill = null,
-                DataPadding = new(0, 1)
-            }
-        ];
+    [ObservableProperty]
+    public partial double? MinXThumb { get; set; } = 0;
 
-        ScrollbarSeries = [
-            new LineSeries<ObservablePoint>
-            {
-                Values = _values,
-                GeometryStroke = null,
-                GeometryFill = null,
-                DataPadding = new(0, 1)
-            }
-        ];
-
-        ScrollableAxes = [new Axis()];
-
-        Thumbs = [
-            new RectangularSection
-            {
-                Fill = new SolidColorPaint(new SKColor(255, 205, 210, 100))
-            }
-        ];
-
-        InvisibleX = [new Axis { IsVisible = false }];
-        InvisibleY = [new Axis { IsVisible = false }];
-
-        // force the left margin to be 100 and the right margin 50 in both charts, this will
-        // align the start and end point of the "draw margin",
-        // no matter the size of the labels in the Y axis of both chart.
-        var auto = LiveChartsCore.Measure.Margin.Auto;
-        Margin = new(100, auto, 50, auto);
-    }
+    [ObservableProperty]
+    public partial double? MaxXThumb { get; set; } = 100;
 
     [RelayCommand]
     public void ChartUpdated(ChartCommandArgs args)
     {
-        var cartesianChart = (ICartesianChartView)args.Chart;
-
+        var cartesianChart = (CartesianChartEngine)args.Chart.CoreChart;
         var x = cartesianChart.XAxes.First();
 
-        // update the scroll bar thumb when the chart is updated (zoom/pan)
-        // this will let the user know the current visible range
-        var thumb = Thumbs[0];
+        // when the main chart is updated, we need to update the scroll bar thumb limits
+        // this will sync the scroll bar with the main chart when the user is zooming or panning
 
-        thumb.Xi = x.MinLimit;
-        thumb.Xj = x.MaxLimit;
+        MinXThumb = x.MinLimit;
+        MaxXThumb = x.MaxLimit;
     }
 
     [RelayCommand]
@@ -99,19 +52,40 @@ public partial class ViewModel
         var chart = (ICartesianChartView)args.Chart;
         var positionInData = chart.ScalePixelsToData(args.PointerPosition);
 
-        var thumb = Thumbs[0];
-        var currentRange = thumb.Xj - thumb.Xi;
+        if (MaxXThumb is null || MinXThumb is null)
+        {
+            // if the limits are not defined yet, we skip the update
+            return;
+        }
+
+        var currentRange = MaxXThumb - MinXThumb;
+
+        var min = positionInData.X - currentRange / 2;
+        var max = positionInData.X + currentRange / 2;
 
         // update the scroll bar thumb when the user is dragging the chart
-        thumb.Xi = positionInData.X - currentRange / 2;
-        thumb.Xj = positionInData.X + currentRange / 2;
+        MinXThumb = min;
+        MaxXThumb = max;
 
         // update the chart visible range
-        ScrollableAxes[0].MinLimit = thumb.Xi;
-        ScrollableAxes[0].MaxLimit = thumb.Xj;
+        MinX = min;
+        MaxX = max;
     }
 
     [RelayCommand]
     public void PointerUp(PointerCommandArgs args) =>
         _isDown = false;
+
+    private static ObservablePoint[] Fetch()
+    {
+        var trend = 1000;
+        var r = new Random();
+
+        var values = new ObservablePoint[500];
+
+        for (var i = 0; i < 500; i++)
+            values[i] = new ObservablePoint(i, trend += r.Next(-20, 20));
+
+        return values;
+    }
 }

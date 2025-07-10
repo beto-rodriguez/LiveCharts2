@@ -6,15 +6,24 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
     xmlns:vms="using:ViewModelsSamples.Pies.Icons"
+    xmlns:local="using:WinUISample.Pies.Icons"
     mc:Ignorable="d">
 
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <Grid>
-        <lvc:PieChart
-            Series="{Binding Series}">
-        </lvc:PieChart>
-    </Grid>
+
+    <lvc:PieChart SeriesSource="{Binding Data}">
+        <lvc:PieChart.SeriesTemplate>
+            <DataTemplate>
+                <local:CustomPieSeries
+                    SeriesName="{Binding Name}"
+                    Values="{Binding Values}"
+                    IconName="{Binding Name}"
+                    Icon="{Binding Icon}"
+                    ShowDataLabels="True"/>
+            </DataTemplate>
+        </lvc:PieChart.SeriesTemplate>
+    </lvc:PieChart>
 
 </UserControl>

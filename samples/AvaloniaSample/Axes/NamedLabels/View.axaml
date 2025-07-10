@@ -1,23 +1,37 @@
-<UserControl x:Class="AvaloniaSample.Axes.NamedLabels.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Axes.NamedLabels">
-  <UserControl.DataContext>
-    <vms:ViewModel/>
-  </UserControl.DataContext>
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="*"/>
-    </Grid.RowDefinitions>
+<UserControl
+    x:Class="AvaloniaSample.Axes.NamedLabels.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Axes.NamedLabels">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
     <lvc:CartesianChart
-        Series="{Binding Series}"
-        XAxes="{Binding XAxes}"
-        YAxes="{Binding YAxes}"
         TooltipPosition="Left"
-        TooltipTextPaint="{Binding TooltipTextPaint}"
-        TooltipBackgroundPaint="{Binding TooltipBackgroundPaint}"
+        TooltipBackgroundPaint="{lvc:SolidColorPaint Color='#480032'}"
+        TooltipTextPaint="{lvc:SolidColorPaint Color='#F2F4FF', FontFamily='Courier New'}"
         TooltipTextSize="16">
+
+        <lvc:CartesianChart.Series>
+            <lvc:XamlColumnSeries
+                SeriesName="Sales"
+                Values="{Binding Values1}"/>
+            <lvc:XamlLineSeries
+                SeriesName="Projected"
+                Values="{Binding Values2}"
+                Fill="{x:Null}"/>
+        </lvc:CartesianChart.Series>
+
+        <lvc:CartesianChart.XAxes>
+            <lvc:XamlAxis Labels="{Binding Labels}"/>
+        </lvc:CartesianChart.XAxes>
+
+        <lvc:CartesianChart.YAxes>
+            <lvc:XamlAxis Labeler="{Binding Labeler}"/>
+        </lvc:CartesianChart.YAxes>
+
     </lvc:CartesianChart>
-  </Grid> 
 </UserControl>

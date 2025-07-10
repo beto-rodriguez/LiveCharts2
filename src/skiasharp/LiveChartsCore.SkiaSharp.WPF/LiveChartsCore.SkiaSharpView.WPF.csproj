@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <Nullable>enable</Nullable>
@@ -7,18 +7,6 @@
 
     <TargetFrameworks>
       net462;
-      <!--
-      workaround #250116
-      netx.0-windows and SupportedOSPlatformVersion is a workaround for
-      https://github.com/beto-rodriguez/LiveCharts2/issues/1765
-      this ensures the package is restore to net8 or net6 instead of net462,
-      we cant restore the core to net462 because it has a strong name.
-
-      ideally the user should update the target to net8.0-windows10.0.19041... but the
-      default template as today uses net8.0-windows and causes this issue.
-      -->
-      net6.0-windows;
-      net8.0-windows;
       net6.0-windows10.0.19041;
       net8.0-windows10.0.19041
     </TargetFrameworks>
@@ -39,6 +27,13 @@
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+
+  <Import Project="..\_Shared\_Shared.projitems" Label="Shared" />
+  <Import Project="..\_Shared.Xaml\_Shared.Xaml.projitems" Label="Shared" />
+
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);WPF_LVC</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -81,6 +76,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
+    <ProjectReference Include="..\..\..\generators\LiveChartsGenerators\LiveChartsGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <ItemGroup>

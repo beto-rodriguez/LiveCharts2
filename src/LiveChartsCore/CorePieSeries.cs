@@ -67,7 +67,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
     private bool _isFillSeries;
     private bool _isRelativeToMin;
     private PolarLabelsPosition _labelsPosition = PolarLabelsPosition.Middle;
-    private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _tooltipLabelFormatter;
+    private Func<ChartPoint, string>? _tooltipLabelFormatter;
 
     /// <summary>
     /// Gets or sets the stroke.
@@ -142,6 +142,12 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
     public Func<ChartPoint<TModel, TVisual, TLabel>, string>? ToolTipLabelFormatter
     {
         get => _tooltipLabelFormatter;
+        set => ((IPieSeries)this).TooltipLabelFormatter = value is null ? null : p => value(ConvertToTypedChartPoint(p));
+    }
+
+    Func<ChartPoint, string>? IPieSeries.TooltipLabelFormatter
+    {
+        get => _tooltipLabelFormatter;
         set => SetProperty(ref _tooltipLabelFormatter, value);
     }
 
@@ -174,19 +180,19 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
         double? chartTotal = double.IsNaN(view.MaxValue) ? null : view.MaxValue;
 
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
-        if (Fill is not null)
+        if (Fill is not null && Fill != Paint.Default)
         {
             Fill.ZIndex = actualZIndex + 0.1;
             Fill.SetClipRectangle(pieChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             pieChart.Canvas.AddDrawableTask(Fill);
         }
-        if (Stroke is not null)
+        if (Stroke is not null && Stroke != Paint.Default)
         {
             Stroke.ZIndex = actualZIndex + 0.2;
             Stroke.SetClipRectangle(pieChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             pieChart.Canvas.AddDrawableTask(Stroke);
         }
-        if (ShowDataLabels && DataLabelsPaint is not null)
+        if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
         {
             DataLabelsPaint.ZIndex = 1000 + actualZIndex + 0.3;
             // this does not require clipping...
@@ -240,15 +246,15 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
         var isTangent = false;
         var isCotangent = false;
 
-        if (((int)r & LiveCharts.TangentAngle) != 0)
+        if (((int)r & (int)LiveCharts.TangentAngle) != 0)
         {
-            r -= LiveCharts.TangentAngle;
+            r -= (int)LiveCharts.TangentAngle;
             isTangent = true;
         }
 
-        if (((int)r & LiveCharts.CotangentAngle) != 0)
+        if (((int)r & (int)LiveCharts.CotangentAngle) != 0)
         {
-            r -= LiveCharts.CotangentAngle;
+            r -= (int)LiveCharts.CotangentAngle;
             isCotangent = true;
         }
 
@@ -366,8 +372,10 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
                 _ = everFetched.Add(point);
             }
 
-            Fill?.AddGeometryToPaintTask(pieChart.Canvas, visual);
-            Stroke?.AddGeometryToPaintTask(pieChart.Canvas, visual);
+            if (Fill is not null && Fill != Paint.Default)
+                Fill.AddGeometryToPaintTask(pieChart.Canvas, visual);
+            if (Stroke is not null && Stroke != Paint.Default)
+                Stroke.AddGeometryToPaintTask(pieChart.Canvas, visual);
 
             var dougnutGeometry = visual;
 
@@ -402,7 +410,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
 
             pointsCleanup.Clean(point);
 
-            if (ShowDataLabels && DataLabelsPaint is not null && !IsFillSeries)
+            if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default && !IsFillSeries)
             {
                 var label = (TLabel?)point.Context.Label;
 
@@ -435,7 +443,10 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
 
                 if (isFirstDraw)
                     label.CompleteTransition(
-                        nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
+                        BaseLabelGeometry.TextSizeProperty,
+                        BaseLabelGeometry.XProperty,
+                        BaseLabelGeometry.YProperty,
+                        BaseLabelGeometry.RotateTransformProperty);
 
                 var labelPosition = GetLabelPolarPosition(
                     cx,
@@ -552,8 +563,8 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
             visual.Animate(
                 EasingFunction ?? chart.CoreChart.ActualEasingFunction,
                 AnimationsSpeed ?? chart.CoreChart.ActualAnimationsSpeed,
-                nameof(visual.StartAngle),
-                nameof(visual.SweepAngle));
+                BaseDoughnutGeometry.StartAngleProperty,
+                BaseDoughnutGeometry.SweepAngleProperty);
     }
 
     /// <summary>

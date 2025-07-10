@@ -1,15 +1,24 @@
-﻿<UserControl x:Class="WPFSample.Events.AddPointOnClick.View"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Events.AddPointOnClick;assembly=ViewModelsSamples">
+﻿<UserControl
+    x:Class="WPFSample.Events.AddPointOnClick.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Events.AddPointOnClick;assembly=ViewModelsSamples">
+
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
+
     <lvc:CartesianChart
-        x:Name="chart"
-        Series="{Binding SeriesCollection}"
         PointerPressedCommand="{Binding PointerDownCommand}"
         TooltipPosition="Hidden">
+        <lvc:CartesianChart.Series>
+            <lvc:SeriesCollection>
+                <lvc:XamlLineSeries
+                    Values="{Binding Points}"
+                    Fill="{x:Null}"
+                    DataPadding="5,5"/>
+            </lvc:SeriesCollection>
+        </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 </UserControl>

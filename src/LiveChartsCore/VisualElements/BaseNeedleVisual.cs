@@ -35,11 +35,17 @@ public abstract class BaseNeedleVisual : VisualElement
 {
     private Paint? _fill;
     private double _value;
+    private double _width;
 
     /// <summary>
     /// Gets or sets the value.
     /// </summary>
     public double Value { get => _value; set => SetProperty(ref _value, value); }
+
+    /// <summary>
+    /// Gets or sets the width of the needle.
+    /// </summary>
+    public double Width { get => _width; set => SetProperty(ref _width, value); }
 
     /// <summary>
     /// Gets or sets the fill paint.
@@ -96,6 +102,7 @@ public abstract class BaseNeedleVisual<TGeometry, TLabelGeometry> : BaseNeedleVi
                 X = cx,
                 Y = cy,
                 Radius = h,
+                Width = (float)Width,
                 RotateTransform = initialRotation - 90
             };
             _geometry.Animate(chart);
@@ -104,6 +111,7 @@ public abstract class BaseNeedleVisual<TGeometry, TLabelGeometry> : BaseNeedleVi
         _geometry.X = cx;
         _geometry.Y = cy;
         _geometry.Radius = h;
+        _geometry.Width = (float)Width;
 
         var p = (Value - startValue) / (endValue - startValue);
         _geometry.RotateTransform = (float)(initialRotation + p * completeAngle - 90); // -90 to match the pie start angle

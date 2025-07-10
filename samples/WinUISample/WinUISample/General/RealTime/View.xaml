@@ -11,12 +11,24 @@
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <Grid>
-        <lvc:CartesianChart
-            SyncContext="{Binding Sync}"
-            Series="{Binding Series}"
-            XAxes="{Binding XAxes}">
-        </lvc:CartesianChart>
-    </Grid>
+    
+    <lvc:CartesianChart
+        SyncContext="{Binding Sync}">
+        <lvc:CartesianChart.Series>
+            <lvc:XamlLineSeries
+                Values="{Binding Values}"
+                Fill="{x:Null}"
+                GeometryFill="{x:Null}"
+                GeometryStroke="{x:Null}"/>
+        </lvc:CartesianChart.Series>
+        <lvc:CartesianChart.XAxes>
+            <lvc:XamlDateTimeAxis
+                Interval="0:0:1"
+                DateFormatter="{Binding LabelsFormatter}"
+                AnimationsSpeed="0"
+                SeparatorsPaint="{lvc:SolidColorPaint Color='64B4B4B4'}"
+                CustomSeparators="{Binding Separators}"/>
+        </lvc:CartesianChart.XAxes>
+    </lvc:CartesianChart>
 
 </UserControl>

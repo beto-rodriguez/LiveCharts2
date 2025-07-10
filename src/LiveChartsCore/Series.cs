@@ -29,10 +29,12 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Events;
+using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Providers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
+using LiveChartsCore.VisualStates;
 
 namespace LiveChartsCore;
 
@@ -91,12 +93,12 @@ public abstract class Series<TModel, TVisual, TLabel>
     /// </summary>
     protected bool _geometrySvgChanged = false;
 
-    private readonly CollectionDeepObserver<TModel> _observer;
-    private IReadOnlyCollection<TModel>? _values;
+    private readonly CollectionDeepObserver _observer;
+    private IEnumerable? _values;
     private string? _name;
     private Func<TModel, int, Coordinate>? _mapping;
     private int _zIndex;
-    private Func<ChartPoint<TModel, TVisual, TLabel>, string> _dataLabelsFormatter = x => x.Coordinate.PrimaryValue.ToString();
+    private Func<ChartPoint, string> _dataLabelsFormatter = x => x.Coordinate.PrimaryValue.ToString();
     private LvcPoint _dataPadding = new(0.5f, 0.5f);
     private DataFactory<TModel>? _dataFactory;
     private bool _isVisibleAtLegend = true;
@@ -106,7 +108,7 @@ public abstract class Series<TModel, TVisual, TLabel>
     private TimeSpan? _animationsSpeed;
     private string? _geometrySvg;
     private bool _showDataLabels;
-    private Paint? _dataLabelsPaint;
+    private Paint? _dataLabelsPaint = Paint.Default;
     private double _dataLabelsSize = 16;
     private double _dataLabelsRotation = 0;
     private Padding _dataLabelsPadding = new() { Left = 6, Top = 8, Right = 6, Bottom = 8 };
@@ -124,9 +126,7 @@ public abstract class Series<TModel, TVisual, TLabel>
         if (typeof(IVariableSvgPath).IsAssignableFrom(typeof(TVisual)))
             SeriesProperties |= SeriesProperties.IsSVGPath;
 
-        _observer = new CollectionDeepObserver<TModel>(
-            (sender, e) => NotifySubscribers(),
-            (sender, e) => NotifySubscribers());
+        _observer = new CollectionDeepObserver(NotifySubscribers);
 
         Values = values;
     }
@@ -148,20 +148,20 @@ public abstract class Series<TModel, TVisual, TLabel>
     /// </summary>
     public IReadOnlyCollection<TModel>? Values
     {
-        get => _values;
-        set
-        {
-            _observer?.Dispose(_values);
-            _observer?.Initialize(value);
-            _values = value;
-            OnPropertyChanged();
-        }
+        get => (IReadOnlyCollection<TModel>?)((ISeries)this).Values;
+        set => ((ISeries)this).Values = value;
     }
 
     IEnumerable? ISeries.Values
     {
-        get => Values;
-        set => Values = (IReadOnlyCollection<TModel>?)value;
+        get => _values;
+        set
+        {
+            _observer?.Dispose();
+            _observer?.Initialize(value);
+            _values = value;
+            OnPropertyChanged();
+        }
     }
 
     /// <inheritdoc cref="ISeries.Pivot"/>
@@ -203,6 +203,31 @@ public abstract class Series<TModel, TVisual, TLabel>
     /// The data label formatter.
     /// </value>
     public Func<ChartPoint<TModel, TVisual, TLabel>, string> DataLabelsFormatter
+    {
+        get => _dataLabelsFormatter;
+        // hack #040425...
+        //
+        // 1. this property maybe should have never be of type Func<ChartPoint<...>, string>
+        //    instead of Func<ChartPoint, string>, it is nice to know the type of the point
+        //    but maybe only casting would be enough, this was a design decision to improve
+        //    developer experience.
+        // 2. now when xaml support was introduced:
+        //    In c# the compiler knows the type of the generic args and it is a "great" experience
+        //    but in xaml it is not, we would need to write the type of the 3 generic args,
+        //    it is unessesary complex.
+        //
+        // Solution:
+        //    Lets instead use the Func<ChartPoint, string> type, this also lets us expose this
+        //    property in not strongly typed interfaces like ISeries.
+        //    To avoid breaking changes we will keep the public property as
+        //    Func<ChartPoint<TModel, TVisual, TLabel>, string>, but internally we store it as
+        //    Func<ChartPoint, string>... the problem is that we are changing the reference passed in
+        //    the setter... this could lead to unexpected behavior, but since this function is
+        //    just a formatter, it should not be a problem, lets take the risk and see the feedback.
+        set => ((ISeries)this).DataLabelsFormatter = p => value.Invoke(ConvertToTypedChartPoint(p));
+    }
+
+    Func<ChartPoint, string> ISeries.DataLabelsFormatter
     {
         get => _dataLabelsFormatter;
         set => SetProperty(ref _dataLabelsFormatter, value);
@@ -285,7 +310,7 @@ public abstract class Series<TModel, TVisual, TLabel>
         set
         {
             SetPaintProperty(ref _dataLabelsPaint, value);
-            _showDataLabels = value is not null;
+            _showDataLabels = value is not null && value != Paint.Default;
         }
     }
 
@@ -302,7 +327,7 @@ public abstract class Series<TModel, TVisual, TLabel>
     public double DataLabelsMaxWidth { get => _dataLabelsMaxWidth; set => SetProperty(ref _dataLabelsMaxWidth, value); }
 
     /// <inheritdoc cref="ISeries.VisualStates"/>
-    public Dictionary<string, Action<IDrawnElement, ChartPoint>> VisualStates { get; set; } = [];
+    public VisualStatesDictionary VisualStates { get; } = [];
 
     /// <inheritdoc cref="ISeries.GetStackGroup"/>
     public virtual int GetStackGroup() => 0;
@@ -500,8 +525,7 @@ public abstract class Series<TModel, TVisual, TLabel>
     /// <param name="point">The chart point.</param>
     protected virtual void OnPointerEnter(ChartPoint point)
     {
-        if (VisualStates.TryGetValue("Hover", out var hoverState))
-            point.SetState(hoverState);
+        point.SetState("Hover");
 
         if (ChartPointPointerHover is null || point.IsPointerOver) return;
         point.IsPointerOver = true;
@@ -514,7 +538,7 @@ public abstract class Series<TModel, TVisual, TLabel>
     /// <param name="point">The chart point.</param>
     protected virtual void OnPointerLeft(ChartPoint point)
     {
-        point.ClearCurrentState();
+        point.ClearState("Hover");
 
         if (ChartPointPointerHoverLost is null || !point.IsPointerOver) return;
         point.IsPointerOver = false;

@@ -28,7 +28,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 /// <summary>
 /// Base class for views that display a chart.
 /// </summary>
-public abstract class ChartView : ContentView
+public abstract partial class ChartView : ContentView
 {
     static ChartView()
     {

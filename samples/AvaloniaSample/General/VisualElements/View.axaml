@@ -7,8 +7,6 @@
         <vms:ViewModel/>
     </UserControl.DataContext>
     <lvc:CartesianChart
-        Series="{Binding Series}"
-        VisualElements="{Binding VisualElements}"
-        ZoomMode="X">
+        VisualElements="{Binding VisualElements}">
     </lvc:CartesianChart>
 </UserControl>

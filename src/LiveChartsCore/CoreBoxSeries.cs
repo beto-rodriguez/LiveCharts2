@@ -28,6 +28,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
@@ -87,8 +88,8 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
     public override void Invalidate(Chart chart)
     {
         var cartesianChart = (CartesianChartEngine)chart;
-        var primaryAxis = cartesianChart.YAxes[ScalesYAt];
-        var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
+        var primaryAxis = cartesianChart.GetYAxis(this);
+        var secondaryAxis = cartesianChart.GetXAxis(this);
 
         var drawLocation = cartesianChart.DrawMarginLocation;
         var drawMarginSize = cartesianChart.DrawMarginSize;
@@ -116,19 +117,19 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
         var clipping = GetClipRectangle(cartesianChart);
 
-        if (Stroke is not null)
+        if (Stroke is not null && Stroke != Paint.Default)
         {
             Stroke.ZIndex = actualZIndex + 0.2;
             Stroke.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(Stroke);
         }
-        if (Fill is not null)
+        if (Fill is not null && Fill != Paint.Default)
         {
             Fill.ZIndex = actualZIndex + 0.1;
             Fill.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(Fill);
         }
-        if (ShowDataLabels && DataLabelsPaint is not null)
+        if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
         {
             DataLabelsPaint.ZIndex = actualZIndex + 0.3;
             DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
@@ -219,8 +220,10 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
                 _ = everFetched.Add(point);
             }
 
-            Stroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-            Fill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+            if (Stroke is not null && Stroke != Paint.Default)
+                Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+            if (Fill is not null && Fill != Paint.Default)
+                Fill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
 
             var x = secondary - helper.uwm + helper.cp;
 
@@ -259,7 +262,7 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
 
             pointsCleanup.Clean(point);
 
-            if (ShowDataLabels && DataLabelsPaint is not null)
+            if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
             {
                 var label = (TLabel?)point.Context.Label;
 

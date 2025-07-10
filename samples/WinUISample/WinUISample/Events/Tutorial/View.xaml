@@ -13,10 +13,13 @@
     </UserControl.DataContext>
 
     <lvc:CartesianChart
-        Series="{Binding SeriesCollection}"
         FindingStrategy="{Binding Strategy}"
         PointerPressedCommand="{Binding PressedCommand}"
         HoveredPointsChangedCommand="{Binding HoveredPointsChangedCommand}">
+        <lvc:CartesianChart.Series>
+            <lvc:XamlColumnSeries Values="{Binding Values1}" Stroke="{lvc:SolidColorPaint Color='#00000000'}"/>
+            <lvc:XamlColumnSeries Values="{Binding Values2}" Stroke="{lvc:SolidColorPaint Color='#00000000'}"/>
+        </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 
 </UserControl>

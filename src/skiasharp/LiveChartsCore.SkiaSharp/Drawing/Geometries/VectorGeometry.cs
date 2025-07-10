@@ -71,14 +71,12 @@ public abstract class VectorGeometry<TSegment> : BaseVectorGeometry<TSegment>, I
         using var path = new SKPath();
         var isValid = true;
 
-        var currentTime = CurrentTime;
         var isFirst = true;
         TSegment? last = null;
 
         foreach (var segment in Commands)
         {
             segment.IsValid = true;
-            segment.CurrentTime = currentTime;
 
             if (isFirst)
             {

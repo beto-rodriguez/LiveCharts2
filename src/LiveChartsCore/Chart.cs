@@ -256,7 +256,7 @@ public abstract class Chart
     /// <value>
     /// The visual elements.
     /// </value>
-    public IEnumerable<ChartElement> VisualElements { get; protected set; } =
+    public IEnumerable<IChartElement> VisualElements { get; protected set; } =
         [];
 
     internal event Action<Chart, LvcPoint>? PointerDown;
@@ -294,6 +294,22 @@ public abstract class Chart
     /// <param name="pointerPosition">The pointer position.</param>
     /// <returns></returns>
     public abstract IEnumerable<ChartPoint> FindHoveredPointsBy(LvcPoint pointerPosition);
+
+    /// <inheritdoc cref="IChartView.GetPointsAt(LvcPointD, FindingStrategy, FindPointFor)"/>
+    public IEnumerable<ChartPoint> GetPointsAt(
+        LvcPointD point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
+    {
+        if (strategy == FindingStrategy.Automatic)
+            strategy = Series.GetFindingStrategy();
+
+        return Series.SelectMany(series =>
+            series.FindHitPoints(this, new(point), strategy, FindPointFor.HoverEvent));
+    }
+
+    /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
+    public IEnumerable<IChartElement> GetVisualsAt(LvcPointD point) =>
+        VisualElements.SelectMany(visual =>
+            ((VisualElement)visual).IsHitBy(this, new(point)));
 
     /// <summary>
     /// Loads the control resources.
@@ -714,6 +730,62 @@ public abstract class Chart
         }
 
         return true;
+    }
+
+    /// <summary>
+    /// Measures the title.
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    protected LvcSize MeasureTitle()
+    {
+        // Visual is the recommended type for the title,
+        // more flexibility compared with VisualElement.
+        if (View.Title?.ChartElementSource is Visual v)
+        {
+            return v.GetHitBox().Size;
+        }
+
+        // VisualElement is an older type for the title, this is kept for compatibility.
+        if (View.Title?.ChartElementSource is VisualElement ve)
+        {
+            ve.ClippingMode = ClipMode.None;
+            return ve.Measure(this);
+        }
+
+        throw new Exception("The title must be a Visual or a VisualElement.");
+    }
+
+    /// <summary>
+    /// Adds the title to the chart.
+    /// </summary>
+    /// <exception cref="Exception"></exception>
+    protected void AddTitleToChart()
+    {
+        // Visual is the recommended type for the title,
+        // more flexibility compared with VisualElement.
+        if (View.Title?.ChartElementSource is Visual v && v.DrawnElement is not null)
+        {
+            var size = v.GetHitBox().Size;
+            v.DrawnElement.X = ControlSize.Width * 0.5f - size.Width * 0.5f;
+            v.DrawnElement.Y = 0;
+            v.DrawnElement.TranslateTransform = new(size.Width * 0.5f, size.Height * 0.5f);
+            AddVisual(((IChartElement)v).ChartElementSource);
+            return;
+        }
+
+        // VisualElement is an older type for the title, this is kept for compatibility.
+        if (View.Title?.ChartElementSource is VisualElement ve)
+        {
+            var titleSize = ve.Measure(this);
+            ve.AlignToTopLeftCorner();
+            ve.X = ControlSize.Width * 0.5f - titleSize.Width * 0.5f;
+            ve.Y = 0;
+            AddVisual(((IChartElement)ve).ChartElementSource);
+            return;
+        }
+
+        throw new Exception("The title must be a Visual or a VisualElement.");
     }
 
     private List<ChartPoint> CleanHoveredPoints(HashSet<ChartPoint> hovered)

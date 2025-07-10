@@ -1,20 +1,47 @@
 ﻿using Eto.Forms;
+using LiveChartsCore;
+using LiveChartsCore.Kernel;
+using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Eto;
-using ViewModelsSamples.StackedBars.Basic;
 
 namespace EtoFormsSample.StackedBars.Basic;
 
 public class View : Panel
 {
-    private readonly CartesianChart cartesianChart;
-
     public View()
     {
-        var viewModel = new ViewModel();
+        var values1 = new int[] { 3, 5, -3, 2, 5, -4, -2 };
+        var values2 = new int[] { 4, 2, -3, 2, 3, 4, -2 };
+        var values3 = new int[] { -2, 6, 6, 5, 4, 3, -2 };
 
-        cartesianChart = new CartesianChart
+        static string formatter(ChartPoint p) =>
+            $"{p.Coordinate.PrimaryValue:N} ({p.StackedValue!.Share:P})";
+
+        var series = new ISeries[]
         {
-            Series = viewModel.Series,
+            new StackedColumnSeries<int>
+            {
+                Values = values1,
+                ShowDataLabels = true,
+                YToolTipLabelFormatter = formatter
+            },
+            new StackedColumnSeries<int>
+            {
+                Values = values2,
+                ShowDataLabels = true,
+                YToolTipLabelFormatter = formatter
+            },
+            new StackedColumnSeries<int>
+            {
+                Values = values3,
+                ShowDataLabels = true,
+                YToolTipLabelFormatter = formatter
+            }
+        };
+
+        var cartesianChart = new CartesianChart
+        {
+            Series = series
         };
 
         Content = cartesianChart;

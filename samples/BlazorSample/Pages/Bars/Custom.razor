@@ -1,11 +1,25 @@
 ﻿@page "/Bars/Custom"
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.Bars.Custom
+@using LiveChartsCore;
+@using LiveChartsCore.SkiaSharpView;
+@using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 <CartesianChart
-	Series="ViewModel.Series">
+    Series="@series">
 </CartesianChart>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new();
+    private static double[] values1 = new double[] { 2, 1, 4 };
+    private static double[] values2 = new double[] { 4, 3, 6 };
+    private static double[] values3 = new double[] { -2, 2, 1 };
+    private static double[] values4 = new double[] { 1, 2, 3 };
+    private static string starPath = LiveChartsCore.Drawing.SVGPoints.Star;
+
+    private ISeries[] series = new ISeries[]
+    {
+        new ColumnSeries<double> { Values = values1 },
+        new ColumnSeries<double, DiamondGeometry> { Values = values2 },
+        new ColumnSeries<double, VariableSVGPathGeometry> { Values = values3, GeometrySvg = starPath },
+        new ColumnSeries<double, ViewModelsSamples.Bars.Custom.MyGeometry> { Values = values4 }
+    };
 }

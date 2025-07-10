@@ -12,8 +12,8 @@
         <vms:ViewModel/>
     </UserControl.DataContext>
 
-    <Grid>
-        <lvc:CartesianChart UpdateStartedCommand="{Binding ChartUpdatedCommand}"/>
-    </Grid>
+    <lvc:CartesianChart
+        UpdateStartedCommand="{Binding ChartUpdatedCommand}"
+        PointerPressedCommand="{Binding ChartPressedCommand}"/>
 
 </UserControl>

@@ -26,7 +26,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
-using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
 
@@ -46,7 +46,7 @@ public abstract class CoreHeatLandSeries<TModel> : IGeoSeries, INotifyPropertyCh
     private ICollection<TModel>? _lands;
     private bool _isVisible;
     private readonly HashSet<GeoMapChart> _subscribedTo = [];
-    private readonly CollectionDeepObserver<TModel> _observer;
+    private readonly CollectionDeepObserver _observer;
     private readonly HashSet<LandDefinition> _everUsed = [];
 
     /// <summary>
@@ -56,10 +56,7 @@ public abstract class CoreHeatLandSeries<TModel> : IGeoSeries, INotifyPropertyCh
     public CoreHeatLandSeries(ICollection<TModel>? lands)
     {
         Lands = lands;
-
-        _observer = new CollectionDeepObserver<TModel>(
-            (sender, e) => NotifySubscribers(),
-            (sender, e) => NotifySubscribers());
+        _observer = new CollectionDeepObserver(NotifySubscribers);
     }
 
     /// <summary>
@@ -90,7 +87,7 @@ public abstract class CoreHeatLandSeries<TModel> : IGeoSeries, INotifyPropertyCh
         get => _lands;
         set
         {
-            _observer?.Dispose(_lands);
+            _observer?.Dispose();
             _observer?.Initialize(value);
             _lands = value;
             OnPropertyChanged();

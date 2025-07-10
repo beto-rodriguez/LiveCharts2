@@ -29,21 +29,22 @@ namespace LiveChartsCore.Motion;
 /// </summary>
 public interface IMotionProperty
 {
+#if DEBUG
     /// <summary>
-    /// Gets or sets a value indicating whether this instance is completed.
+    /// Gets or sets the instance that will be used to log the getter of the <see cref="IMotionProperty"/>.
     /// </summary>
-    /// <value>
-    ///   <c>true</c> if this instance is completed; otherwise, <c>false</c>.
-    /// </value>
-    bool IsCompleted { get; set; }
+    Animatable? LogGet { get; set; }
 
     /// <summary>
-    /// Gets the name of the property.
+    /// Gets or sets the instance that will be used to log the setter of the <see cref="IMotionProperty"/>.
     /// </summary>
-    /// <value>
-    /// The name of the property.
-    /// </value>
-    string PropertyName { get; }
+    Animatable? LogSet { get; set; }
+#endif
+
+    /// <summary>
+    /// Finishes the transition.
+    /// </summary>
+    void Finish();
 
     /// <summary>
     /// Gets or sets the animation.
@@ -54,18 +55,23 @@ public interface IMotionProperty
     Animation? Animation { get; set; }
 
     /// <summary>
+    /// Gets the start value of the transition.
+    /// </summary>
+    object? FromValue { get; }
+
+    /// <summary>
+    /// Gets the end value of the transition.
+    /// </summary>
+    object? ToValue { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether the operation has completed.
+    /// </summary>
+    bool IsCompleted { get; }
+
+    /// <summary>
     /// Copies into this instance the source property.
     /// </summary>
     /// <param name="source">The source.</param>
     void CopyFrom(IMotionProperty source);
-
-    /// <summary>
-    /// Saves the property target value.
-    /// </summary>
-    void Save();
-
-    /// <summary>
-    /// Restores the property target value.
-    /// </summary>
-    void Restore(Animatable animatable);
 }

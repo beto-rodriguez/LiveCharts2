@@ -1,15 +1,27 @@
-<UserControl x:Class="AvaloniaSample.StepLines.Basic.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.StepLines.Basic">
-  <UserControl.DataContext>
-    <vms:ViewModel/>
-  </UserControl.DataContext>
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="*"/>
-    </Grid.RowDefinitions>
-    <lvc:CartesianChart Series="{Binding Series}"></lvc:CartesianChart>
-  </Grid>  
+<UserControl
+    x:Class="AvaloniaSample.StepLines.Basic.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.StepLines.Basic">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <lvc:CartesianChart>
+        <lvc:CartesianChart.Title>
+            <lvc:XamlDrawnLabelVisual
+                Text="My chart title"
+                Paint="{lvc:SolidColorPaint Color='#303030'}"
+                TextSize="25"
+                Padding="{lvc:Padding '15'}"/>
+        </lvc:CartesianChart.Title>
+        <lvc:CartesianChart.Series>
+            <lvc:XamlStepLineSeries
+                Values="{Binding Values}"
+                Fill="{x:Null}"
+                GeometrySize="20"/>
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
 </UserControl>

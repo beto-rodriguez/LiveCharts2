@@ -84,12 +84,12 @@ public class LiveChartsSettings
     /// <summary>
     /// Gets or sets the default legend background paint.
     /// </summary>
-    public object? LegendBackgroundPaint { get; set; }
+    public Paint? LegendBackgroundPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the default legend text paint.
     /// </summary>
-    public object? LegendTextPaint { get; set; }
+    public Paint? LegendTextPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the default legend text size.
@@ -107,12 +107,12 @@ public class LiveChartsSettings
     /// <summary>
     /// Gets or sets the default tooltip background paint.
     /// </summary>
-    public object? TooltipBackgroundPaint { get; set; }
+    public Paint? TooltipBackgroundPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the default tooltip text paint.
     /// </summary>
-    public object? TooltipTextPaint { get; set; }
+    public Paint? TooltipTextPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the default tooltip text size.
@@ -154,6 +154,46 @@ public class LiveChartsSettings
     public bool IsRightToLeft { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether the pie slices are clockwise.
+    /// </summary>
+    public bool PieIsClockwise { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets the initial rotation for pie charts, this value is used to calculate the pie slices.
+    /// </summary>
+    public double PieInitialRotation { get; set; } = 0;
+
+    /// <summary>
+    /// Gets or sets the maximum angle for pie charts, this value is used to calculate the pie slices.
+    /// </summary>
+    public double PieMaxAngle { get; set; } = 360;
+
+    /// <summary>
+    /// Gets or sets the maximum value for pie charts, this value is used to calculate the pie slices.
+    /// </summary>
+    public double PieMaxValue { get; set; } = double.NaN;
+
+    /// <summary>
+    /// Gets or sets the minimum value for pie charts, this value is used to calculate the pie slices.
+    /// </summary>
+    public double PieMinValue { get; set; } = 0d;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the polar series should fit to bounds.
+    /// </summary>
+    public bool PolarFitToBounds { get; set; } = false;
+
+    /// <summary>
+    /// Gets or sets the total angle for polar series, this value is used to calculate the polar chart.
+    /// </summary>
+    public double PolarTotalAngle { get; set; } = 360d;
+
+    /// <summary>
+    /// Gets or sets the outer radius for polar series, this value is used to calculate the polar chart.
+    /// </summary>
+    public double PolarInnerRadius { get; set; } = 0d;
+
+    /// <summary>
     /// Adds or replaces a mapping for a given type, the mapper defines how a type is mapped to a <see cref="Coordinate"/>
     /// in the chart.
     /// </summary>
@@ -186,12 +226,25 @@ public class LiveChartsSettings
     /// <exception cref="NotImplementedException"></exception>
     public Func<TModel, int, Coordinate> GetMap<TModel>()
     {
-        return !_mappers.TryGetValue(typeof(TModel), out var mapper)
-            ? throw new NotImplementedException(
-                $"A mapper for type {typeof(TModel)} is not implemented yet, consider using " +
-                $"{nameof(LiveCharts)}.{nameof(LiveCharts.Configure)}() " +
-                $"method to call {nameof(HasMap)}() with the type you are trying to plot.")
-            : (Func<TModel, int, Coordinate>)mapper;
+        if (_mappers.TryGetValue(typeof(TModel), out var mapper))
+            return (Func<TModel, int, Coordinate>)mapper;
+
+        var type = typeof(TModel);
+
+        // most likely a xaml series
+        if (type == typeof(object))
+            throw new Exception(
+                "A mapper for the type to plot was not found. " +
+                "When using custom types in XAML, you must define the series data type, " +
+                "for example to plot a collection of double add the x:TypeArguments=\"x:Double\" attribute " +
+                "to the series XAML, the mapper must also be configured, alternatively, you can also " +
+                "implement IChartEntity in the type your are plotting, for more info see: " +
+                "https://livecharts.dev/docs/wpf/2.0.0-rc5.4/Overview.Mappers");
+
+        throw new NotImplementedException(
+            $"A mapper for type {typeof(TModel)} is not implemented yet, consider using " +
+            $"{nameof(LiveCharts)}.{nameof(LiveCharts.Configure)}() " +
+            $"method to call {nameof(HasMap)}() with the type you are trying to plot.");
     }
 
     internal LiveChartsSettings HasProvider(ChartEngine factory)

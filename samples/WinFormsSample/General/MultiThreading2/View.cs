@@ -1,49 +1,82 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.WinForms;
-using ViewModelsSamples.General.MultiThreading2;
 
 namespace WinFormsSample.General.MultiThreading2;
 
 public partial class View : UserControl
 {
-    private readonly CartesianChart cartesianChart;
+    private readonly ObservableCollection<int> _values;
+    private int _current;
+    private bool _isReading = true;
 
     public View()
     {
         InitializeComponent();
-        Size = new System.Drawing.Size(50, 50);
+        Size = new System.Drawing.Size(600, 400);
 
-        cartesianChart = new CartesianChart
+        // Create initial data
+        var items = new List<int>();
+        for (var i = 0; i < 1500; i++)
         {
-            Series = Enumerable.Empty<ISeries>(),
+            _current += new Random().Next(-9, 10);
+            items.Add(_current);
+        }
+        _values = new ObservableCollection<int>(items);
 
-            // out of livecharts properties...
+        var cartesianChart = new CartesianChart
+        {
+            Series = [
+                new LineSeries<int>
+                {
+                    Values = _values,
+                    GeometryFill = null,
+                    GeometryStroke = null,
+                }
+            ],
             Location = new System.Drawing.Point(0, 0),
-            Size = new System.Drawing.Size(50, 50),
+            Size = new System.Drawing.Size(600, 400),
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
         };
 
         Controls.Add(cartesianChart);
+
+        // Start background tasks to update data
+        for (var i = 0; i < 10; i++)
+        {
+            _ = Task.Run(ReadData);
+        }
     }
 
-    protected override void OnHandleCreated(EventArgs e)
+    private async Task ReadData()
     {
-        base.OnHandleCreated(e);
+        var r = new Random();
+        await Task.Delay(1000);
+        while (_isReading)
+        {
+            await Task.Delay(1);
 
-        var viewModel = new ViewModel(InvokeOnUIThread);
-        cartesianChart.Series = viewModel.Series;
+            // Ensure UI update on UI thread
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() => UpdateValues(r)));
+            }
+            else
+            {
+                UpdateValues(r);
+            }
+        }
     }
 
-    // this method takes another function as an argument.
-    // the idea is that we are invoking the passed action in the UI thread
-    // but the UI framework will let the view model how to do this.
-    // we will pass the InvokeOnUIThread method to our view model so the view model knows how
-    // to invoke an action in the UI thred.
-    private void InvokeOnUIThread(Action action)
+    private void UpdateValues(Random r)
     {
-        _ = BeginInvoke(action);
+        _current += r.Next(-9, 10);
+        _values.Add(_current);
+        _values.RemoveAt(0);
     }
 }

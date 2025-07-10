@@ -1,22 +1,57 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Axes.ColorsAndPosition.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Axes.ColorsAndPosition;assembly=ViewModelsSamples"
-             >
+<ContentPage
+    x:Class="MauiSample.Axes.ColorsAndPosition.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Axes.ColorsAndPosition;assembly=ViewModelsSamples"
+    xmlns:local="clr-namespace:MauiSample.Axes.ColorsAndPosition">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-	<ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            
-            <lvc:CartesianChart
-                Series="{Binding Series}">
-            </lvc:CartesianChart>
-        </Grid>
-    </ContentPage.Content>
+
+    <ContentPage.Resources>
+        <local:StringToPaintConverter x:Key="StringToPaintConverter" />
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto, *">
+
+        <HorizontalStackLayout Grid.Row="0">
+            <Button
+                Text="Toggle color"
+                Margin="6"
+                Command="{Binding TogglePositionCommand}"/>
+            <Button
+                Text="Set new color"
+                Margin="6"
+                Command="{Binding SetNewColorCommand}"/>
+        </HorizontalStackLayout>
+
+        <lvc:CartesianChart Grid.Row="1">
+
+            <lvc:CartesianChart.Series>
+                <lvc:XamlColumnSeries Values="{Binding Values}"/>
+            </lvc:CartesianChart.Series>
+
+            <lvc:CartesianChart.XAxes>
+                <lvc:XamlAxis
+                    AxisName="X axis"
+                    TextSize="20"
+                    Position="{Binding Position}"
+                    LabelsPaint="{Binding Color, Converter={StaticResource StringToPaintConverter}}"
+                    SeparatorsPaint="{Binding Color, Converter={StaticResource StringToPaintConverter}}"/>
+            </lvc:CartesianChart.XAxes>
+
+            <lvc:CartesianChart.YAxes>
+                <lvc:XamlAxis
+                    AxisName="Y axis"
+                    TextSize="20"
+                    Position="{Binding Position}"
+                    LabelsPaint="{Binding Color, Converter={StaticResource StringToPaintConverter}}"
+                    SeparatorsPaint="{Binding Color, Converter={StaticResource StringToPaintConverter}}"/>
+            </lvc:CartesianChart.YAxes>
+
+        </lvc:CartesianChart>
+    </Grid>
 </ContentPage>

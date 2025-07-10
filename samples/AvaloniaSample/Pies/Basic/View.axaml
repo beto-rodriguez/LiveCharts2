@@ -1,12 +1,29 @@
+<UserControl
+    x:Class="AvaloniaSample.Pies.Basic.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Pies.Basic">
 
-<UserControl x:Class="AvaloniaSample.Pies.Basic.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lv="clr-namespace:LiveChartsCore;assembly=LiveChartsCore"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Pies.Basic">
-  <UserControl.DataContext>
-    <vms:ViewModel/>
-  </UserControl.DataContext>
-  <lvc:PieChart Series="{Binding Series}" Title="{Binding Title}"/>
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <lvc:PieChart SeriesSource="{Binding Data}">
+        <lvc:PieChart.SeriesTemplate>
+            <DataTemplate x:DataType="vms:PieData">
+                <lvc:XamlPieSeries
+                    SeriesName="{Binding Name}"
+                    Values="{Binding Values}"/>
+            </DataTemplate>
+        </lvc:PieChart.SeriesTemplate>
+        <lvc:PieChart.Title>
+            <lvc:XamlDrawnLabelVisual
+                Text="My chart title"
+                Paint="{lvc:SolidColorPaint Color='#000'}"
+                TextSize="25"
+                Padding="{lvc:Padding '15'}"/>
+        </lvc:PieChart.Title>
+    </lvc:PieChart>
+
 </UserControl>

@@ -1,4 +1,5 @@
 ﻿using Eto.Forms;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView.Eto;
 using ViewModelsSamples.General.VisualElements;
 
@@ -8,12 +9,23 @@ public class View : Panel
 {
     public View()
     {
-        var viewModel = new ViewModel();
+        var visualElements = new IChartElement[]
+        {
+            new RectangleVisual(),
+            new ScaledRectangleVisual(),
+            new PointerDownAwareVisual(),
+            new SvgVisual(),
+            new ThemedVisual(),
+            new CustomVisual(),
+            new AbsoluteVisual(),
+            new StackedVisual(),
+            new TableVisual(),
+            new ContainerVisual(),
+        };
 
         var cartesianChart = new CartesianChart
         {
-            Series = viewModel.Series,
-            VisualElements = viewModel.VisualElements,
+            VisualElements = visualElements,
             ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.X
         };
 

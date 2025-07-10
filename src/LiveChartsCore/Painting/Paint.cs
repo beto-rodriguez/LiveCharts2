@@ -20,31 +20,42 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#pragma warning disable IDE0290 // Use primary ctor... why suggest this?? you cant do it in this case
+
 using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Generators;
 
 namespace LiveChartsCore.Painting;
 
 /// <summary>
 /// Defines a set of geometries that will be drawn according to this instance specifications.
 /// </summary>
-public abstract class Paint : Animatable, IDisposable
+/// <remarks>
+/// Initializes a new instance of the <see cref="Paint"/> class.
+/// </remarks>
+public abstract partial class Paint : Animatable, IDisposable
 {
     private readonly Dictionary<object, HashSet<IDrawnElement>> _geometriesByCanvas = [];
     private readonly Dictionary<object, LvcRectangle> _clipRectangles = [];
-    private readonly FloatMotionProperty _strokeMiterTransition;
-    private readonly FloatMotionProperty _strokeWidthTransition;
+
+    internal Paint _source;
+
+    /// <param name="strokeThickness">The stroke thickness.</param>
+    /// <param name="strokeMiter">The stroke miter.</param>
+    public Paint(float strokeThickness = 1f, float strokeMiter = 0)
+    {
+        _source = this;
+        _StrokeMiterMotionProperty = new(strokeMiter);
+        _StrokeThicknessMotionProperty = new(strokeThickness);
+    }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Paint"/> class.
+    /// Gets the default paint.
     /// </summary>
-    protected Paint(float strokeThickness = 1f, float strokeMiter = 0f)
-    {
-        _strokeWidthTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeThickness), strokeThickness));
-        _strokeMiterTransition = RegisterMotionProperty(new FloatMotionProperty(nameof(StrokeMiter), strokeMiter));
-    }
+    public static Paint Default { get; } = new DefaultPaint();
 
     /// <summary>
     /// Gets or sets the index of the z.
@@ -99,11 +110,8 @@ public abstract class Paint : Animatable, IDisposable
     /// <value>
     /// The stroke thickness.
     /// </value>
-    public float StrokeThickness
-    {
-        get => _strokeWidthTransition.GetMovement(this);
-        set => _strokeWidthTransition.SetMovement(value, this);
-    }
+    [MotionProperty]
+    public partial float StrokeThickness { get; set; }
 
     /// <summary>
     /// Gets or sets the stroke miter.
@@ -111,16 +119,20 @@ public abstract class Paint : Animatable, IDisposable
     /// <value>
     /// The stroke miter.
     /// </value>
-    public float StrokeMiter
-    {
-        get => _strokeMiterTransition.GetMovement(this);
-        set => _strokeMiterTransition.SetMovement(value, this);
-    }
+    [MotionProperty]
+    public partial float StrokeMiter { get; set; }
 
     /// <summary>
     /// Gets a value indicating whether this instance is empty.
     /// </summary>
     public bool IsEmpty => _geometriesByCanvas.Count == 0;
+
+    /// <summary>
+    /// Transitionates the paint task to the target paint task.
+    /// </summary>
+    /// <param name="progress">The progress.</param>
+    /// <param name="target">The end target.</param>
+    public abstract Paint Transitionate(float progress, Paint target);
 
     /// <summary>
     /// Gets the geometries.
@@ -142,6 +154,8 @@ public abstract class Paint : Animatable, IDisposable
     /// <param name="geometries">The geometries.</param>
     public void SetGeometries(CoreMotionCanvas canvas, HashSet<IDrawnElement> geometries)
     {
+        if (this == Default) return;
+
         _geometriesByCanvas[canvas] = geometries;
         IsValid = false;
     }
@@ -153,6 +167,8 @@ public abstract class Paint : Animatable, IDisposable
     /// <param name="geometry">The geometry.</param>
     public void AddGeometryToPaintTask(CoreMotionCanvas canvas, IDrawnElement geometry)
     {
+        if (this == Default) return;
+
         var g = GetGeometriesByCanvas(canvas);
 
         if (g is null)
@@ -173,6 +189,7 @@ public abstract class Paint : Animatable, IDisposable
     public void RemoveGeometryFromPaintTask(CoreMotionCanvas canvas, IDrawnElement geometry)
     {
         _ = GetGeometriesByCanvas(canvas)?.Remove(geometry);
+        ((Animatable)geometry)._statesTracker = null;
 
         IsValid = false;
     }
@@ -208,8 +225,11 @@ public abstract class Paint : Animatable, IDisposable
     /// </summary>
     /// <param name="canvas">The canvas.</param>
     /// <param name="value">The rectangle.</param>
-    public void SetClipRectangle(CoreMotionCanvas canvas, LvcRectangle value) =>
+    public void SetClipRectangle(CoreMotionCanvas canvas, LvcRectangle value)
+    {
+        if (this == Default) return;
         _clipRectangles[canvas] = value;
+    }
 
     /// <summary>
     /// Initializes the task.
@@ -242,10 +262,33 @@ public abstract class Paint : Animatable, IDisposable
     /// </summary>
     public abstract void Dispose();
 
+    /// <summary>
+    /// Parses a hexadecimal color string.
+    /// </summary>
+    /// <param name="hexString">the hex string.</param>
+    /// <returns>A solid color paint with the color.</returns>
+    /// <exception cref="ArgumentException">Invalid hex color.</exception>
+    public static Paint? Parse(string hexString)
+    {
+        return !LvcColor.TryParse(hexString, out var color)
+            ? throw new ArgumentException("Invalid hexadecimal color string.", nameof(hexString))
+            : LiveCharts.DefaultSettings.GetProvider().GetSolidColorPaint(color);
+    }
+
     private HashSet<IDrawnElement>? GetGeometriesByCanvas(object canvas)
     {
         return _geometriesByCanvas.TryGetValue(canvas, out var geometries)
             ? geometries
             : null;
+    }
+
+    private class DefaultPaint : Paint
+    {
+        public override void ApplyOpacityMask(DrawingContext context, float opacity) { }
+        public override Paint CloneTask() => this;
+        public override void Dispose() { }
+        public override void InitializeTask(DrawingContext drawingContext) { }
+        public override void RestoreOpacityMask(DrawingContext context, float opacity) { }
+        public override Paint Transitionate(float progress, Paint target) => this;
     }
 }

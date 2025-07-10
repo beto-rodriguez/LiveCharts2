@@ -43,17 +43,25 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
 	</PropertyGroup>
 
+  <Import Project="..\_Shared\_Shared.projitems" Label="Shared" />
+  <Import Project="..\_Shared.Xaml\_Shared.Xaml.projitems" Label="Shared" />
+
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);MAUI_LVC</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 	  <PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="$(LatestSkiaSharpVersion)" />
     <PackageReference Include="SkiaSharp.HarfBuzz" Version="$(LatestSkiaSharpVersion)" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
 	</ItemGroup>
 
 	<ItemGroup>
     <ProjectReference Include="..\..\LiveChartsCore\LiveChartsCore.csproj" />
     <ProjectReference Include="..\..\LiveChartsCore.Behaviours\LiveChartsCore.Behaviours.csproj" />
 	  <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
+    <ProjectReference Include="..\..\..\generators\LiveChartsGenerators\LiveChartsGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 	</ItemGroup>
 
   <ItemGroup>

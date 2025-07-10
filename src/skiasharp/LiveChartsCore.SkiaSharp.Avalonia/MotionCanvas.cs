@@ -22,7 +22,9 @@
 
 using System;
 using Avalonia;
+using Avalonia.Collections;
 using Avalonia.Controls;
+using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
@@ -49,6 +51,8 @@ public class MotionCanvas : UserControl
         AttachedToVisualTree += OnAttached;
         DetachedFromVisualTree += OnDetached;
     }
+
+    internal IAvaloniaList<ILogical> Children => LogicalChildren;
 
     /// <summary>
     /// Gets the canvas core.

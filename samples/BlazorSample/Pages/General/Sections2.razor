@@ -1,12 +1,55 @@
 ﻿@page "/General/Sections2"
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.General.Sections2
+@using LiveChartsCore;
+@using LiveChartsCore.Defaults;
+@using LiveChartsCore.SkiaSharpView;
+@using LiveChartsCore.SkiaSharpView.Painting;
+@using SkiaSharp;
 
 <CartesianChart
-	Series="ViewModel.Series"
-	Sections="ViewModel.Sections">
+    Series="@series"
+    Sections="@sections">
 </CartesianChart>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new();
+    private static ObservablePoint[] values = new ObservablePoint[]
+    {
+        new ObservablePoint(2.2, 5.4), new ObservablePoint(4.5, 2.5), new ObservablePoint(4.2, 7.4),
+        new ObservablePoint(6.4, 9.9), new ObservablePoint(4.2, 9.2), new ObservablePoint(5.8, 3.5),
+        new ObservablePoint(7.3, 5.8), new ObservablePoint(8.9, 3.9), new ObservablePoint(6.1, 4.6),
+        new ObservablePoint(9.4, 7.7), new ObservablePoint(8.4, 8.5), new ObservablePoint(3.6, 9.6),
+        new ObservablePoint(4.4, 6.3), new ObservablePoint(5.8, 4.8), new ObservablePoint(6.9, 3.4),
+        new ObservablePoint(7.6, 1.8), new ObservablePoint(8.3, 8.3), new ObservablePoint(9.9, 5.2),
+        new ObservablePoint(8.1, 4.7), new ObservablePoint(7.4, 3.9), new ObservablePoint(6.8, 2.3)
+    };
+
+    private ISeries[] series = new ISeries[]
+    {
+        new ScatterSeries<ObservablePoint>
+        {
+            Values = values,
+            GeometrySize = 10,
+            Stroke = new SolidColorPaint(SKColor.Parse("#00f")),
+            Fill = null
+        }
+    };
+
+    private RectangularSection[] sections = new RectangularSection[]
+    {
+        new RectangularSection {
+            Yi = 8,
+            Yj = 8,
+            Stroke = new SolidColorPaint
+            {
+                Color = SKColor.Parse("#F00"),
+                StrokeThickness = 3,
+                PathEffect = new LiveChartsCore.SkiaSharpView.Painting.Effects.DashEffect(new float[] { 6, 6 })
+            }
+        },
+        new RectangularSection {
+            Xi = 6,
+            Xj = 8,
+            Fill = new SolidColorPaint(SKColor.Parse("#300000FF"))
+        }
+    };
 }

@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Kernel;
 
@@ -288,7 +289,7 @@ public class SeriesContext(IEnumerable<ISeries> series, Chart chart)
     {
         foreach (var series in series)
         {
-            if (!series.IsPieSeries()) continue;
+            if (!series.IsPieSeries() || series.DataLabelsPaint is null || series.DataLabelsPaint == Paint.Default) continue;
             var pieSeries = (IPieSeries)series;
             if (pieSeries.DataLabelsPosition != PolarLabelsPosition.Outer) continue;
             if (series.DataLabelsPaint is null) continue;

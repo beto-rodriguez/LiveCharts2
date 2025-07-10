@@ -1,17 +1,98 @@
-<UserControl x:Class="AvaloniaSample.Axes.Multiple.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Axes.Multiple">
-  <UserControl.DataContext>
-    <vms:ViewModel/>
-  </UserControl.DataContext>
-  <lvc:CartesianChart
-    Series="{Binding Series}"
-    YAxes="{Binding YAxes}"
-    LegendPosition="Left"
-    LegendTextPaint="{Binding LegendTextPaint}"
-    LegendBackgroundPaint="{Binding LedgendBackgroundPaint}"
-    LegendTextSize="16">
-  </lvc:CartesianChart>
+<UserControl
+    x:Class="AvaloniaSample.Axes.Multiple.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Axes.Multiple">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <x:String x:Key="blue">#1976D2</x:String>
+        <x:String x:Key="red">#E53935</x:String>
+        <x:String x:Key="yellow">#C6A700</x:String>
+    </UserControl.Resources>
+
+    <lvc:CartesianChart
+        LegendBackgroundPaint="{lvc:SolidColorPaint Color='#eee', FontFamily='Courier New'}"
+        LegendTextPaint="{lvc:SolidColorPaint Color='#323232'}"
+        LegendTextSize="16"
+        LegendPosition="Left">
+
+        <lvc:CartesianChart.Resources>
+            <ControlTheme x:Key="{x:Type lvc:XamlLineSeries}" TargetType="lvc:XamlLineSeries">
+                <Setter Property="GeometrySize" Value="10"/>
+                <Setter Property="Fill" Value="{x:Null}"/>
+                <Setter Property="LineSmoothness" Value="1"/>
+            </ControlTheme>
+            <ControlTheme x:Key="{x:Type lvc:XamlAxis}" TargetType="lvc:XamlAxis">
+                <Setter Property="NameTextSize" Value="14"/>
+                <Setter Property="NamePadding" Value="{lvc:Padding '0,20'}"/>
+                <Setter Property="TextSize" Value="12"/>
+                <Setter Property="DrawTicksPath" Value="True"/>
+            </ControlTheme>
+        </lvc:CartesianChart.Resources>
+
+        <!--
+        The ScaleYAt property is used to assign a series to a specific Y axis.
+        -->
+
+        <lvc:CartesianChart.Series>
+            <lvc:XamlLineSeries
+                SeriesName="Tens"
+                Values="{Binding Values1}"
+                Stroke="{lvc:SolidColorPaint Color={StaticResource blue}, StrokeWidth=2}"
+                GeometryStroke="{lvc:SolidColorPaint Color={StaticResource blue}, StrokeWidth=2}"
+                ScalesYAt="0"/>
+            <lvc:XamlLineSeries
+                SeriesName="Tens 2"
+                Values="{Binding Values2}"
+                Stroke="{lvc:SolidColorPaint Color={StaticResource blue}, StrokeWidth=2}"
+                GeometryStroke="{lvc:SolidColorPaint Color={StaticResource blue}, StrokeWidth=2}"
+                ScalesYAt="0"/>
+            <lvc:XamlLineSeries
+                SeriesName="Hundreds"
+                Values="{Binding Values3}"
+                Stroke="{lvc:SolidColorPaint Color={StaticResource red}, StrokeWidth=2}"
+                GeometryStroke="{lvc:SolidColorPaint Color={StaticResource red}, StrokeWidth=2}"
+                ScalesYAt="1"/>
+            <lvc:XamlLineSeries
+                SeriesName="Thousands"
+                Values="{Binding Values4}"
+                Stroke="{lvc:SolidColorPaint Color={StaticResource yellow}, StrokeWidth=2}"
+                GeometryStroke="{lvc:SolidColorPaint Color={StaticResource yellow}, StrokeWidth=2}"
+                ScalesYAt="2"/>
+        </lvc:CartesianChart.Series>
+
+        <lvc:CartesianChart.YAxes>
+            <lvc:XamlAxis
+                AxisName="Tens"
+                Padding="{lvc:Padding '0, 0, 20, 0'}"
+                NamePaint="{lvc:SolidColorPaint Color={StaticResource blue}}"
+                LabelsPaint="{lvc:SolidColorPaint Color={StaticResource blue}}"
+                TicksPaint="{lvc:SolidColorPaint Color={StaticResource blue}}"
+                SubticksPaint="{lvc:SolidColorPaint Color={StaticResource blue}}"/>
+            <lvc:XamlAxis
+                AxisName="Hundreds"
+                Padding="{lvc:Padding '20, 0, 0, 0'}"
+                Position="End"
+                ShowSeparatorLines="False"
+                NamePaint="{lvc:SolidColorPaint Color={StaticResource red}}"
+                LabelsPaint="{lvc:SolidColorPaint Color={StaticResource red}}"
+                TicksPaint="{lvc:SolidColorPaint Color={StaticResource red}}"
+                SubticksPaint="{lvc:SolidColorPaint Color={StaticResource red}}"/>
+            <lvc:XamlAxis
+                AxisName="Thousands"
+                Padding="{lvc:Padding '20, 0, 0, 0'}"
+                Position="End"
+                ShowSeparatorLines="False"
+                NamePaint="{lvc:SolidColorPaint Color={StaticResource yellow}}"
+                LabelsPaint="{lvc:SolidColorPaint Color={StaticResource yellow}}"
+                TicksPaint="{lvc:SolidColorPaint Color={StaticResource yellow}}"
+                SubticksPaint="{lvc:SolidColorPaint Color={StaticResource yellow}}"/>
+        </lvc:CartesianChart.YAxes>
+
+    </lvc:CartesianChart>
 </UserControl>

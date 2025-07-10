@@ -11,17 +11,21 @@
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+
+    <Grid RowDefinitions="Auto, *">
         <ComboBox Grid.Row="0"
                   ItemsSource="{Binding Positions}"
-                  DisplayMemberPath="Name"
-                  SelectedValuePath="Position"
-                  SelectedValue="{Binding Position}"/>
-        <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}" TooltipPosition="Top" LegendPosition="Left" />
+                  SelectedItem="{Binding SelectedPosition, Mode=TwoWay}"/>
+        <lvc:CartesianChart Grid.Row="1" TooltipPosition="{Binding SelectedPosition}">
+            <lvc:CartesianChart.Series>
+                <lvc:XamlColumnSeries
+                    Values="{Binding Values1}"
+                    SeriesName="Sales" />
+                <lvc:XamlLineSeries
+                    Values="{Binding Values2}"
+                    SeriesName="Customers" />
+            </lvc:CartesianChart.Series>
+        </lvc:CartesianChart>
     </Grid>
 
 </UserControl>

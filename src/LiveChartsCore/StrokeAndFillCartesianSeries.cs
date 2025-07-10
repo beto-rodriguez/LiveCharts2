@@ -45,8 +45,8 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>(
             where TVisual : DrawnGeometry, new()
             where TLabel : BaseLabelGeometry, new()
 {
-    private Paint? _stroke = null;
-    private Paint? _fill = null;
+    private Paint? _stroke = Paint.Default;
+    private Paint? _fill = Paint.Default;
 
     /// <summary>
     /// Gets or sets the stroke.

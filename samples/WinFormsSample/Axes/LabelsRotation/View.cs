@@ -1,40 +1,76 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
+using LiveChartsCore;
+using LiveChartsCore.Kernel;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.WinForms;
-using ViewModelsSamples.Axes.LabelsRotation;
+
+#pragma warning disable IDE1006 // Naming Styles
 
 namespace WinFormsSample.Axes.LabelsRotation;
 
 public partial class View : UserControl
 {
-    private readonly CartesianChart _cartesianChart;
-    private readonly ViewModel _viewModel;
+    private readonly CartesianChart cartesianChart;
+    private readonly Axis yAxis;
 
     public View()
     {
         InitializeComponent();
         Size = new System.Drawing.Size(100, 100);
 
-        _viewModel = new ViewModel();
+        var values = new double[] { 200, 558, 458, 249, 457, 339, 587 };
+        static string tooltipFormat(ChartPoint point) =>
+            $"This is {Environment.NewLine}" +
+            $"A multi-line label {Environment.NewLine}" +
+            $"With a value of {Environment.NewLine}" + point.Coordinate.PrimaryValue;
+        static string labeler(double value) =>
+            $"This is {Environment.NewLine}" +
+            $"A multi-line label {Environment.NewLine}" +
+            $"With a value of {Environment.NewLine}" + value * 100;
 
-        _cartesianChart = new CartesianChart
+        var series = new ISeries[]
         {
-            Series = _viewModel.Series,
-            YAxes = _viewModel.YAxes,
+            new LineSeries<double>
+            {
+                Values = values,
+                YToolTipLabelFormatter = tooltipFormat
+            }
+        };
 
-            // out of livecharts properties...
+        var xAxis = new Axis
+        {
+            Labeler = labeler,
+            MinStep = 1,
+            LabelsRotation = 45,
+            SeparatorsPaint = new SolidColorPaint(SkiaSharp.SKColors.LightGray, 2)
+        };
+
+        yAxis = new Axis
+        {
+            LabelsRotation = 15, // initial value
+            Labeler = Labelers.Currency,
+            SeparatorsPaint = new SolidColorPaint(SkiaSharp.SKColors.LightGray, 2)
+        };
+
+        cartesianChart = new CartesianChart
+        {
+            Series = series,
+            XAxes = [xAxis],
+            YAxes = [yAxis],
             Location = new System.Drawing.Point(0, 50),
             Size = new System.Drawing.Size(100, 50),
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
         };
 
-        Controls.Add(_cartesianChart);
+        Controls.Add(cartesianChart);
 
-        var b1 = new TrackBar { Location = new System.Drawing.Point(0, 0), Width = 300, Minimum = -360, Maximum = 720 };
-        b1.ValueChanged += (object sender, System.EventArgs e) =>
+        var trackBar = new TrackBar { Location = new System.Drawing.Point(0, 0), Width = 300, Minimum = -360, Maximum = 720, Value = 15 };
+        trackBar.ValueChanged += (sender, e) =>
         {
-            _viewModel.YAxes[0].LabelsRotation = b1.Value;
+            yAxis.LabelsRotation = trackBar.Value;
         };
-
-        Controls.Add(b1);
+        Controls.Add(trackBar);
     }
 }

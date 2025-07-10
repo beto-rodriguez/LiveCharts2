@@ -48,10 +48,10 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
         where TLabel : BaseLabelGeometry, new()
         where TMiniatureGeometry : BoundedDrawnGeometry, new()
 {
-    private Paint? _upStroke = null;
-    private Paint? _upFill = null;
-    private Paint? _downStroke = null;
-    private Paint? _downFill = null;
+    private Paint? _upStroke = Paint.Default;
+    private Paint? _upFill = Paint.Default;
+    private Paint? _downStroke = Paint.Default;
+    private Paint? _downFill = Paint.Default;
     private double _maxBarWidth = 25;
 
     /// <summary>
@@ -112,8 +112,8 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
     public override void Invalidate(Chart chart)
     {
         var cartesianChart = (CartesianChartEngine)chart;
-        var primaryAxis = cartesianChart.YAxes[ScalesYAt];
-        var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
+        var primaryAxis = cartesianChart.GetYAxis(this);
+        var secondaryAxis = cartesianChart.GetXAxis(this);
 
         var drawLocation = cartesianChart.DrawMarginLocation;
         var drawMarginSize = cartesianChart.DrawMarginSize;
@@ -138,31 +138,31 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
         var clipping = GetClipRectangle(cartesianChart);
 
-        if (UpFill is not null)
+        if (UpFill is not null && UpFill != Paint.Default)
         {
             UpFill.ZIndex = actualZIndex + 0.1;
             UpFill.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(UpFill);
         }
-        if (DownFill is not null)
+        if (DownFill is not null && DownFill != Paint.Default)
         {
             DownFill.ZIndex = actualZIndex + 0.1;
             DownFill.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(DownFill);
         }
-        if (UpStroke is not null)
+        if (UpStroke is not null && UpStroke != Paint.Default)
         {
             UpStroke.ZIndex = actualZIndex + 0.2;
             UpStroke.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(UpStroke);
         }
-        if (DownStroke is not null)
+        if (DownStroke is not null && DownStroke != Paint.Default)
         {
             DownStroke.ZIndex = actualZIndex + 0.2;
             DownStroke.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(DownStroke);
         }
-        if (ShowDataLabels && DataLabelsPaint is not null)
+        if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
         {
             DataLabelsPaint.ZIndex = actualZIndex + 0.3;
             DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
@@ -254,17 +254,25 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
 
             if (open > close)
             {
-                UpFill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-                UpStroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-                DownFill?.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visual);
-                DownStroke?.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visual);
+                if (UpFill is not null && UpFill != Paint.Default)
+                    UpFill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                if (UpStroke is not null && UpStroke != Paint.Default)
+                    UpStroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                if (DownFill is not null && DownFill != Paint.Default)
+                    DownFill.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visual);
+                if (DownStroke is not null && DownStroke != Paint.Default)
+                    DownStroke.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visual);
             }
             else
             {
-                DownFill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-                DownStroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-                UpFill?.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visual);
-                UpStroke?.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visual);
+                if (DownFill is not null && DownFill != Paint.Default)
+                    DownFill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                if (DownStroke is not null && DownStroke != Paint.Default)
+                    DownStroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                if (UpFill is not null && UpFill != Paint.Default)
+                    UpFill.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visual);
+                if (UpStroke is not null && UpStroke != Paint.Default)
+                    UpStroke.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visual);
             }
 
             var x = secondary - uwm;
@@ -298,7 +306,7 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
 
             pointsCleanup.Clean(point);
 
-            if (ShowDataLabels && DataLabelsPaint is not null)
+            if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
             {
                 var label = (TLabel?)point.Context.Label;
 
@@ -319,7 +327,10 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
 
                 if (isFirstDraw)
                     label.CompleteTransition(
-                        nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
+                        BaseLabelGeometry.TextSizeProperty,
+                        BaseLabelGeometry.XProperty,
+                        BaseLabelGeometry.YProperty,
+                        BaseLabelGeometry.RotateTransformProperty);
 
                 var m = label.Measure();
                 var labelPosition = GetLabelPosition(

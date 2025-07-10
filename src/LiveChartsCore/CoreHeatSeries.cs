@@ -44,7 +44,6 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
         where TLabel : BaseLabelGeometry, new()
 {
     private Paint? _paintTaks;
-    private Bounds _weightBounds = new();
     private int _heatKnownLength = 0;
     private List<Tuple<double, LvcColor>> _heatStops = [];
     private LvcColor[] _heatMap =
@@ -82,6 +81,9 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
         DataLabelsPosition = DataLabelsPosition.Middle;
     }
 
+    /// <inheritdoc cref="IHeatSeries.WeightBounds"/>
+    public Bounds WeightBounds { get; private set; } = new();
+
     /// <inheritdoc cref="IHeatSeries.HeatMap"/>
     public LvcColor[] HeatMap
     {
@@ -111,8 +113,8 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
         }
 
         var cartesianChart = (CartesianChartEngine)chart;
-        var primaryAxis = cartesianChart.YAxes[ScalesYAt];
-        var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
+        var primaryAxis = cartesianChart.GetYAxis(this);
+        var secondaryAxis = cartesianChart.GetXAxis(this);
 
         var drawLocation = cartesianChart.DrawMarginLocation;
         var drawMarginSize = cartesianChart.DrawMarginSize;
@@ -133,7 +135,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
             _paintTaks.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(_paintTaks);
         }
-        if (ShowDataLabels && DataLabelsPaint is not null)
+        if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
         {
             DataLabelsPaint.ZIndex = actualZIndex + 0.3;
             DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
@@ -165,7 +167,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
             var secondary = secondaryScale.ToPixels(coordinate.SecondaryValue);
             var tertiary = (float)coordinate.TertiaryValue;
 
-            var baseColor = HeatFunctions.InterpolateColor(tertiary, _weightBounds, HeatMap, _heatStops);
+            var baseColor = HeatFunctions.InterpolateColor(tertiary, WeightBounds, HeatMap, _heatStops);
 
             if (point.IsEmpty || !IsVisible)
             {
@@ -254,7 +256,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
 
             pointsCleanup.Clean(point);
 
-            if (ShowDataLabels && DataLabelsPaint is not null)
+            if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
             {
                 var label = (TLabel?)point.Context.Label;
 
@@ -275,7 +277,10 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
 
                 if (isFirstDraw)
                     label.CompleteTransition(
-                        nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
+                        BaseLabelGeometry.TextSizeProperty,
+                        BaseLabelGeometry.XProperty,
+                        BaseLabelGeometry.YProperty,
+                        BaseLabelGeometry.RotateTransformProperty);
 
                 var labelPosition = GetLabelPosition(
                      secondary - uws * 0.5f + p.Left, primary - uwp * 0.5f + p.Top, uws - p.Left - p.Right, uwp - p.Top - p.Bottom,
@@ -297,7 +302,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
     {
         var seriesBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
         var b = seriesBounds.Bounds.TertiaryBounds;
-        _weightBounds = new(_minValue ?? b.Min, _maxValue ?? b.Max);
+        WeightBounds = new(_minValue ?? b.Min, _maxValue ?? b.Max);
         return seriesBounds;
     }
 

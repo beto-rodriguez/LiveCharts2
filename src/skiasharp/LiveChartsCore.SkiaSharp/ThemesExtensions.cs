@@ -25,11 +25,13 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
+using LiveChartsCore.VisualStates;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView;
@@ -121,8 +123,9 @@ public static class ThemesExtensions
                                 ? new SolidColorPaint(new(245, 245, 245))
                                 : new SolidColorPaint(new(45, 45, 45));
 
-                        series.VisualStates["Hover"] = (drawnElement, point) =>
-                            drawnElement.Opacity = 0.8f;
+                        _ = series.HasState("Hover", [
+                                (nameof(DrawnGeometry.Opacity), 0.8f)
+                            ]);
                     })
                     .HasRuleForLineSeries(lineSeries =>
                     {
@@ -140,8 +143,9 @@ public static class ThemesExtensions
                                 ? new SolidColorPaint(new(245, 245, 245))
                                 : new SolidColorPaint(new(45, 45, 45));
 
-                        lineSeries.VisualStates["Hover"] = (drawnElement, point) =>
-                            drawnElement.ScaleTransform = new(1.35f, 1.35f);
+                        _ = lineSeries.HasState("Hover", [
+                                (nameof(DrawnGeometry.ScaleTransform), new LvcPoint(1.35f, 1.35f))
+                            ]);
                     })
                     .HasRuleForStepLineSeries(steplineSeries =>
                     {
@@ -154,8 +158,9 @@ public static class ThemesExtensions
                         steplineSeries.Stroke = new SolidColorPaint(color, 4);
                         steplineSeries.Fill = new SolidColorPaint(color.WithAlpha(50));
 
-                        steplineSeries.VisualStates["Hover"] = (drawnElement, point) =>
-                           drawnElement.ScaleTransform = new(1.35f, 1.35f);
+                        _ = steplineSeries.HasState("Hover", [
+                                (nameof(DrawnGeometry.ScaleTransform), new LvcPoint(1.35f, 1.35f))
+                            ]);
                     })
                     .HasRuleForStackedLineSeries(stackedLine =>
                     {
@@ -266,12 +271,10 @@ public static class ThemesExtensions
                                         ? new SolidColorPaint(new(45, 45, 45))
                                         : new SolidColorPaint(new(245, 245, 245));
 
-                        pieSeries.VisualStates["Hover"] = (drawnElement, point) =>
-                        {
-                            if (drawnElement is not BaseDoughnutGeometry doughnutGeometry) return;
-                            doughnutGeometry.PushOut = (float)pieSeries.HoverPushout;
-                            doughnutGeometry.Opacity = 0.8f;
-                        };
+                        _ = pieSeries.HasState("Hover", [
+                            (nameof(DoughnutGeometry.PushOut), (float)pieSeries.HoverPushout),
+                            (nameof(DoughnutGeometry.Opacity), 0.8f)
+                        ]);
                     })
                     .HasRuleForPolarLineSeries(polarLine =>
                     {
@@ -284,8 +287,9 @@ public static class ThemesExtensions
                         polarLine.Stroke = new SolidColorPaint(color, 4);
                         polarLine.Fill = new SolidColorPaint(color.WithAlpha(50));
 
-                        polarLine.VisualStates["Hover"] = (drawnElement, point) =>
-                            drawnElement.ScaleTransform = new(1.35f, 1.35f);
+                        _ = polarLine.HasState("Hover", [
+                                (nameof(DrawnGeometry.ScaleTransform), new LvcPoint(1.35f, 1.35f))
+                            ]);
                     })
                     .HasRuleForGaugeSeries(gaugeSeries =>
                     {
@@ -310,6 +314,7 @@ public static class ThemesExtensions
                     })
                     .HasRuleFor<BaseNeedleVisual>(needle =>
                     {
+                        needle.Width = 20;
                         needle.Fill =
                             new SolidColorPaint(theme.IsDark ? new(200, 200, 200) : new(30, 30, 30));
                     })

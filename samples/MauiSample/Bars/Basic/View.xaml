@@ -1,15 +1,37 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Bars.Basic.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Bars.Basic;assembly=ViewModelsSamples">
+<ContentPage
+    x:Class="MauiSample.Bars.Basic.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Bars.Basic;assembly=ViewModelsSamples"
+    xmlns:col="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+    xmlns:k="clr-namespace:LiveChartsCore.Kernel.Sketches;assembly=LiveChartsCore">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-    <lvc:CartesianChart
-        Series="{Binding Series}"
-        XAxes="{Binding XAxes}"
-        LegendPosition="Right">
+
+    <lvc:CartesianChart LegendPosition="Right">
+
+        <lvc:CartesianChart.Series>
+            <lvc:XamlColumnSeries SeriesName="Mary" Values="{Binding MaryValues}"/>
+            <lvc:XamlColumnSeries SeriesName="Ana" Values="{Binding AnaValues}"/>
+        </lvc:CartesianChart.Series>
+
+        <!-- We use force to min step to show all the labels always. -->
+
+        <lvc:CartesianChart.XAxes>
+            <lvc:XamlAxis
+                Labels="{Binding Labels}"
+                LabelsRotation="0"
+                SeparatorsPaint="#c8c8c8"
+                SeparatorsAtCenter="False"
+                TicksPaint="#232323"
+                TicksAtCenter="True"
+                MinStep="1"
+                ForceStepToMin="True"/>
+        </lvc:CartesianChart.XAxes>
+
     </lvc:CartesianChart>
 </ContentPage>

@@ -23,7 +23,7 @@
 using System.Collections.Specialized;
 using System.ComponentModel;
 using LiveChartsCore.Geo;
-using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -45,7 +45,7 @@ public partial class GeoMap : IGeoMapView, IDisposable
     private MotionCanvas? _motionCanvas;
     private double _canvasWidth;
     private double _canvasHeight;
-    private CollectionDeepObserver<IGeoSeries>? _seriesObserver;
+    private CollectionDeepObserver? _seriesObserver;
     private GeoMapChart? _core;
     private IEnumerable<IGeoSeries> _series = [];
     private DrawnMap? _activeMap;
@@ -77,21 +77,7 @@ public partial class GeoMap : IGeoMapView, IDisposable
 
         _core = new GeoMapChart(this);
 
-        _seriesObserver = new CollectionDeepObserver<IGeoSeries>(
-            (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
-            (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
-            true);
-
-        // ToDo: Pointer events.
-        //var c = Controls[0].Controls[0];
-
-        //c.MouseDown += OnMouseDown;
-        //c.MouseMove += OnMouseMove;
-        //c.MouseUp += OnMouseUp;
-        //c.MouseLeave += OnMouseLeave;
-        //c.MouseWheel += OnMouseWheel;
-
-        //Resize += GeoMap_Resize;
+        _seriesObserver = new CollectionDeepObserver(() => _core?.Update());
 
         _dom ??= new DomJsInterop(JS);
         var canvasBounds = await _dom.GetBoundingClientRect(_canvasContainer);
@@ -184,7 +170,7 @@ public partial class GeoMap : IGeoMapView, IDisposable
         get => _series;
         set
         {
-            _seriesObserver?.Dispose(_series);
+            _seriesObserver?.Dispose();
             _seriesObserver?.Initialize(value);
             _series = value;
             OnPropertyChanged();

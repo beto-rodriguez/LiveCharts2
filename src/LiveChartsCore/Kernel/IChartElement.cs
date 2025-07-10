@@ -32,6 +32,11 @@ namespace LiveChartsCore.Kernel;
 public interface IChartElement : INotifyPropertyChanged
 {
     /// <summary>
+    /// Gets the chart element.
+    /// </summary>
+    ChartElement ChartElementSource { get; }
+
+    /// <summary>
     /// Gets or sets the object that contains data about the control.
     /// </summary>
     object? Tag { get; set; }

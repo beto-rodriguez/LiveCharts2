@@ -22,12 +22,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
-using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
@@ -44,7 +42,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI;
 public sealed partial class GeoMap : UserControl, IGeoMapView
 {
     private readonly GeoMapChart _core;
-    private readonly CollectionDeepObserver<IGeoSeries> _seriesObserver;
+    private readonly CollectionDeepObserver _seriesObserver;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GeoMap"/> class.
@@ -63,10 +61,7 @@ public sealed partial class GeoMap : UserControl, IGeoMapView
 
         SizeChanged += GeoMap_SizeChanged;
 
-        _seriesObserver = new CollectionDeepObserver<IGeoSeries>(
-            (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
-            (object? sender, PropertyChangedEventArgs e) => _core.Update(),
-            true);
+        _seriesObserver = new CollectionDeepObserver(() => _core?.Update());
 
         SetValue(SeriesProperty, Enumerable.Empty<IGeoSeries>());
         SetValue(ActiveMapProperty, Maps.GetWorldMap());
@@ -119,7 +114,7 @@ public sealed partial class GeoMap : UserControl, IGeoMapView
             {
                 var chart = (GeoMap)o;
                 var seriesObserver = chart._seriesObserver;
-                seriesObserver?.Dispose((IEnumerable<IGeoSeries>)args.OldValue);
+                seriesObserver?.Dispose();
                 seriesObserver?.Initialize((IEnumerable<IGeoSeries>)args.NewValue);
                 chart._core.Update();
             }));

@@ -1,4 +1,4 @@
-<Project Sdk="Eto.Forms/2.6.0">
+﻿<Project Sdk="Eto.Forms/2.6.0">
 
   <!--
     Set the BuildPlatform property to the Eto platform you wish to build for.
@@ -21,16 +21,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Images\livecharts.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.80.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Eto\LiveChartsCore.SkiaSharpView.Eto.csproj" />
     <ProjectReference Include="..\ViewModelsSamples\ViewModelsSamples.csproj" />
+    <ProjectReference Include="..\..\generators\LiveChartsGenerators\LiveChartsGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Images\livecharts.png" />
   </ItemGroup>
 
 </Project>

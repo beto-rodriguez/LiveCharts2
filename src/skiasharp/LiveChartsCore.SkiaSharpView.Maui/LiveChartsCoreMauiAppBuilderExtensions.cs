@@ -40,8 +40,8 @@ public static class LiveChartsCoreMauiAppBuilderExtensions
     {
         AreHandlersRegistered = true;
 
-        return mauiAppBuilder.ConfigureMauiHandlers(
-            handlers =>
-                handlers.AddHandler<ChartView, ChartViewHandler>());
+        return mauiAppBuilder.ConfigureMauiHandlers(handlers => handlers
+            .AddHandler<ChartView, ChartViewHandler>()
+            .AddHandler<EmptyContentView, EmptyViewHandler>());
     }
 }

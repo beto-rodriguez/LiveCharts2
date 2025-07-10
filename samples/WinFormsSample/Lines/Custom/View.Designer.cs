@@ -1,7 +1,9 @@
 ﻿
+using System.Windows.Forms;
+
 namespace WinFormsSample.Lines.CustomPoints
 {
-    partial class View
+    partial class View : UserControl
     {
         /// <summary> 
         /// Required designer variable.

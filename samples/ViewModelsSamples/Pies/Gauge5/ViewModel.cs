@@ -1,44 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using LiveChartsCore;
-using LiveChartsCore.Defaults;
-using LiveChartsCore.Measure;
 using CommunityToolkit.Mvvm.Input;
-using LiveChartsCore.SkiaSharpView.Extensions;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ViewModelsSamples.Pies.Gauge5;
 
-public partial class ViewModel
+public partial class ViewModel : ObservableObject
 {
     private readonly Random _random = new();
 
-    public ObservableValue ObservableValue1 { get; set; }
-    public ObservableValue ObservableValue2 { get; set; }
-    public IEnumerable<ISeries> Series { get; set; }
+    [ObservableProperty]
+    public partial double Value1 { get; set; } = 50;
 
-    public ViewModel()
-    {
-        ObservableValue1 = new ObservableValue { Value = 50 };
-        ObservableValue2 = new ObservableValue { Value = 80 };
-
-        Series = GaugeGenerator.BuildSolidGauge(
-            new GaugeItem(ObservableValue1, series =>
-            {
-                series.Name = "North";
-                series.DataLabelsPosition = PolarLabelsPosition.Start;
-            }),
-            new GaugeItem(ObservableValue2, series =>
-            {
-                series.Name = "South";
-                series.DataLabelsPosition = PolarLabelsPosition.Start;
-            }));
-    }
+    [ObservableProperty]
+    public partial double Value2 { get; set; } = 80;
 
     [RelayCommand]
     public void DoRandomChange()
     {
-        // modifying the Value property updates and animates the chart automatically
-        ObservableValue1.Value = _random.Next(0, 100);
-        ObservableValue2.Value = _random.Next(0, 100);
+        Value1 = _random.Next(0, 100);
+        Value2 = _random.Next(0, 100);
     }
 }

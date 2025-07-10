@@ -1,11 +1,33 @@
 ﻿@page "/Scatter/Basic"
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.Scatter.Basic
+@using LiveChartsCore.SkiaSharpView
+@using LiveChartsCore
+@using LiveChartsCore.Defaults
 
 <CartesianChart
-	Series="ViewModel.Series">
+	Series="Series">
 </CartesianChart>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new();
+    private ISeries[] Series { get; set; }
+
+    protected override void OnInitialized()
+    {
+        var values = new ObservablePoint[]
+        {
+            new(2.2, 5.4),
+            new(3.6, 9.6),
+            new(9.9, 5.2),
+            new(8.1, 4.7),
+            new(5.3, 7.1)
+        };
+
+        Series = new ISeries[]
+        {
+            new ScatterSeries<ObservablePoint>
+            {
+                Values = values
+            }
+        };
+    }
 }

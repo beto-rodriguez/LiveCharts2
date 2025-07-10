@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.General.MultiThreading2.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui">
-    <ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+<ContentPage
+    x:Class="MauiSample.General.MultiThreading2.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.General.MultiThreading2;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
 
-            <lvc:CartesianChart
-                Series="{Binding Series}">
-            </lvc:CartesianChart>
-        </Grid>
-    </ContentPage.Content>
+    <lvc:CartesianChart>
+        <lvc:CartesianChart.Series>
+            <lvc:XamlLineSeries
+                Values="{Binding Values}"
+                GeometryFill="{x:Null}"
+                GeometryStroke="{x:Null}"
+                LineSmoothness="0" />
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
+
 </ContentPage>

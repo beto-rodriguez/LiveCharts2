@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
@@ -58,7 +57,7 @@ public class ChartPoint
     /// <summary>
     /// Gets a new instance of an empty chart point.
     /// </summary>
-    public static ChartPoint Empty => new() { Coordinate = Coordinate.Empty };
+    public static ChartPoint Empty => new();
 
     /// <summary>
     /// Gets the position of the point the collection that was used when the point was drawn.
@@ -68,11 +67,7 @@ public class ChartPoint
     /// <summary>
     /// Gets or sets the coordinate.
     /// </summary>
-    public Coordinate Coordinate
-    {
-        get => Context.Entity.Coordinate;
-        set => Context.Entity.Coordinate = value;
-    }
+    public Coordinate Coordinate => Context.Entity.Coordinate;
 
     /// <summary>
     /// Gets or a value indicating whether this instance is empty, LivveCharts will ignore the point in the chart.
@@ -119,26 +114,31 @@ public class ChartPoint
     /// <summary>
     /// Sets the state of the point.
     /// </summary>
-    /// <param name="state">The state.</param>
-    public void SetState(Action<IDrawnElement, ChartPoint> state)
+    /// <param name="name">The name of the state.</param>
+    public void SetState(string name)
     {
         if (Context.Visual is not Animatable animatable) return;
-
-        foreach (var property in animatable.MotionProperties.Values)
-            property.Save();
-
-        if (Context.Visual is not null)
-            state.Invoke(Context.Visual, this);
+        Context.Series.VisualStates.SetState(name, animatable);
     }
 
     /// <summary>
     /// Clears the current state.
     /// </summary>
-    public void ClearCurrentState()
+    /// <param name="name"></param>
+    public void ClearState(string name)
     {
         if (Context.Visual is not Animatable animatable) return;
-        foreach (var property in animatable.MotionProperties.Values)
-            property.Restore(animatable);
+        Context.Series.VisualStates.ClearState(name, animatable);
+    }
+
+
+    /// <summary>
+    /// Clears all the states.
+    /// </summary>
+    public void ClearStates()
+    {
+        if (Context.Visual is not Animatable animatable) return;
+        Context.Series.VisualStates.ClearStates(animatable);
     }
 }
 

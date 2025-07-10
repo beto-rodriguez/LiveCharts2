@@ -68,7 +68,7 @@ public class PolarChartEngine(
 
     ///<inheritdoc cref="Chart.Series"/>
     public override IEnumerable<ISeries> Series =>
-        view.Series?.Cast<ISeries>() ?? [];
+        view.Series?.Select(x => x.ChartElementSource).Cast<ISeries>() ?? [];
 
     ///<inheritdoc cref="Chart.VisibleSeries"/>
     public override IEnumerable<ISeries> VisibleSeries =>
@@ -123,6 +123,28 @@ public class PolarChartEngine(
             .SelectMany(series => series.FindHitPoints(this, pointerPosition, FindingStrategy.CompareAll, FindPointFor.HoverEvent));
     }
 
+    /// <inheritdoc cref="IPolarChartView.ScalePixelsToData(LvcPointD, int, int)"/>
+    public LvcPointD ScalePixelsToData(LvcPointD point, int angleAxisIndex = 0, int radiusAxisIndex = 0)
+    {
+        var scaler = new PolarScaler(
+            DrawMarginLocation, DrawMarginSize, AngleAxes[angleAxisIndex], RadiusAxes[radiusAxisIndex],
+            InnerRadius, InitialRotation, TotalAnge);
+
+        return scaler.ToChartValues(point.X, point.Y);
+    }
+
+    /// <inheritdoc cref="IPolarChartView.ScaleDataToPixels(LvcPointD, int, int)"/>
+    public LvcPointD ScaleDataToPixels(LvcPointD point, int angleAxisIndex = 0, int radiusAxisIndex = 0)
+    {
+        var scaler = new PolarScaler(
+            DrawMarginLocation, DrawMarginSize, AngleAxes[angleAxisIndex], RadiusAxes[radiusAxisIndex],
+            InnerRadius, InitialRotation, TotalAnge);
+
+        var r = scaler.ToPixels(point.X, point.Y);
+
+        return new LvcPointD { X = (float)r.X, Y = (float)r.Y };
+    }
+
     /// <summary>
     /// Measures this chart.
     /// </summary>
@@ -157,22 +179,20 @@ public class PolarChartEngine(
         var a = view.AngleAxes;
         var r = view.RadiusAxes;
 
-        if (a is null || r is null)
+        if (a is null || !a.Any())
         {
-            // in theory nulls are not valid, see ChartTest.cs for more context.
             var provider = LiveCharts.DefaultSettings.GetProvider();
-
             a = [provider.GetDefaultPolarAxis()];
+        }
+
+        if (r is null || !r.Any())
+        {
+            var provider = LiveCharts.DefaultSettings.GetProvider();
             r = [provider.GetDefaultPolarAxis()];
         }
 
-        AngleAxes = [.. a.Cast<IPolarAxis>()];
-        RadiusAxes = [.. r.Cast<IPolarAxis>()];
-
-        if (AngleAxes.Length == 0 || RadiusAxes.Length == 0)
-        {
-            throw new Exception($"{nameof(AngleAxes)} and {nameof(RadiusAxes)} must contain at least one element.");
-        }
+        AngleAxes = [.. a.Select(x => x.ChartElementSource).Cast<IPolarAxis>()];
+        RadiusAxes = [.. r.Select(x => x.ChartElementSource).Cast<IPolarAxis>()];
 
         var theme = GetTheme();
 
@@ -204,7 +224,7 @@ public class PolarChartEngine(
         // restart axes bounds and meta data
         foreach (var axis in AngleAxes)
         {
-            var ce = (ChartElement)axis;
+            var ce = axis.ChartElementSource;
             ce._isInternalSet = true;
             axis.Initialize(PolarAxisOrientation.Angle);
             if (ce._theme != themeId)
@@ -216,7 +236,7 @@ public class PolarChartEngine(
         }
         foreach (var axis in RadiusAxes)
         {
-            var ce = (ChartElement)axis;
+            var ce = axis.ChartElementSource;
             ce._isInternalSet = true;
             axis.Initialize(PolarAxisOrientation.Radius);
             if (ce._theme != themeId)
@@ -233,7 +253,7 @@ public class PolarChartEngine(
         {
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
 
-            var ce = (ChartElement)series;
+            var ce = series.ChartElementSource;
             ce._isInternalSet = true;
             if (ce._theme != themeId)
             {
@@ -241,8 +261,8 @@ public class PolarChartEngine(
                 ce._theme = themeId;
             }
 
-            var secondaryAxis = AngleAxes[series.ScalesAngleAt];
-            var primaryAxis = RadiusAxes[series.ScalesRadiusAt];
+            var secondaryAxis = GetAngleAxis(series);
+            var primaryAxis = GetRadiusAxis(series);
 
             var seriesBounds = series.GetBounds(this, secondaryAxis, primaryAxis).Bounds;
 
@@ -266,7 +286,7 @@ public class PolarChartEngine(
 
         foreach (var axis in AngleAxes)
         {
-            var ce = (ChartElement)axis;
+            var ce = axis.ChartElementSource;
             ce._isInternalSet = true;
 
             if (!axis.DataBounds.IsEmpty)
@@ -289,7 +309,7 @@ public class PolarChartEngine(
         }
         foreach (var axis in RadiusAxes)
         {
-            var ce = (ChartElement)axis;
+            var ce = axis.ChartElementSource;
             ce._isInternalSet = true;
 
             if (!axis.DataBounds.IsEmpty)
@@ -387,8 +407,7 @@ public class PolarChartEngine(
             float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
             if (View.Title is not null)
             {
-                View.Title.ClippingMode = ClipMode.None;
-                var titleSize = View.Title.Measure(this);
+                var titleSize = MeasureTitle();
                 m.Top = titleSize.Height;
                 ts = titleSize.Height;
                 _titleHeight = titleSize.Height;
@@ -458,15 +477,7 @@ public class PolarChartEngine(
 
         UpdateBounds();
 
-        var title = View.Title;
-        if (title is not null)
-        {
-            var titleSize = title.Measure(this);
-            title.AlignToTopLeftCorner();
-            title.X = ControlSize.Width * 0.5f - titleSize.Width * 0.5f;
-            title.Y = 0;
-            AddVisual(title);
-        }
+        if (View.Title is not null) AddTitleToChart();
 
         var totalAxes = RadiusAxes.Concat(AngleAxes).ToArray();
         foreach (var axis in totalAxes)
@@ -484,7 +495,7 @@ public class PolarChartEngine(
                 // correction by geometry size
                 var p = 0d;
                 if (axis.DataBounds.PaddingMin > p) p = axis.DataBounds.PaddingMin;
-                var ce = (ChartElement)axis;
+                var ce = axis.ChartElementSource;
                 ce._isInternalSet = true;
                 axis.DataBounds.Min = axis.DataBounds.Min - p;
                 axis.VisibleDataBounds.Min = axis.VisibleDataBounds.Min - p;
@@ -497,15 +508,15 @@ public class PolarChartEngine(
                 // correction by geometry size
                 var p = 0d; // Math.Abs(s.ToChartValues(axis.DataBounds.RequestedGeometrySize) - s.ToChartValues(0));
                 if (axis.DataBounds.PaddingMax > p) p = axis.DataBounds.PaddingMax;
-                var ce = (ChartElement)axis;
+                var ce = axis.ChartElementSource;
                 ce._isInternalSet = true;
                 axis.DataBounds.Max = axis.DataBounds.Max + p;
                 axis.VisibleDataBounds.Max = axis.VisibleDataBounds.Max + p;
                 ce._isInternalSet = false;
             }
 
-            if (axis.IsVisible) AddVisual((ChartElement)axis);
-            ((ChartElement)axis).RemoveOldPaints(View); // <- this is probably obsolete.
+            if (axis.IsVisible) AddVisual(axis.ChartElementSource);
+            axis.ChartElementSource.RemoveOldPaints(View); // <- this is probably obsolete.
             // the probable issue is the "IsVisible" property
         }
 
@@ -517,7 +528,7 @@ public class PolarChartEngine(
         foreach (var visual in VisualElements.Where(x => x.IsVisible)) AddVisual(visual);
         foreach (var series in Series)
         {
-            AddVisual((ChartElement)series);
+            AddVisual(series.ChartElementSource);
             _drawnSeries.Add(series.SeriesId);
         }
 
@@ -527,7 +538,7 @@ public class PolarChartEngine(
         {
             if (!axis.IsVisible) continue;
 
-            var ce = (ChartElement)axis;
+            var ce = axis.ChartElementSource;
             ce._isInternalSet = true;
             axis.ActualBounds.HasPreviousState = true;
             ce._isInternalSet = false;
@@ -541,6 +552,24 @@ public class PolarChartEngine(
         Canvas.Invalidate();
         _isFirstDraw = false;
     }
+
+    /// <summary>
+    /// Gets the x axis for the specified series.
+    /// </summary>
+    /// <param name="series">The series.</param>
+    public IPolarAxis GetAngleAxis(IPolarSeries series)
+        // we ensure it is in the axes collection bounds, this is just to
+        // prevent crashes on hot-reload scenarios.
+        => AngleAxes[series.ScalesAngleAt > AngleAxes.Length - 1 ? 0 : series.ScalesAngleAt];
+
+    /// <summary>
+    /// Gets the y axis for the specified series.
+    /// </summary>
+    /// <param name="series">The series.</param>
+    public IPolarAxis GetRadiusAxis(IPolarSeries series)
+        // we ensure it is in the axes collection bounds, this is just to
+        // prevent crashes on hot-reload scenarios.
+        => RadiusAxes[series.ScalesRadiusAt > RadiusAxes.Length - 1 ? 0 : series.ScalesRadiusAt];
 
     /// <inheritdoc cref="Chart.Unload"/>
     public override void Unload()

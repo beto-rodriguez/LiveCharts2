@@ -6,29 +6,51 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
     xmlns:vms="using:ViewModelsSamples.Lines.Properties"
+    xmlns:local="using:WinUISample.Lines.Properties"
     mc:Ignorable="d">
 
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <local:StringToPaintConverter x:Key="StringToPaintConverter"/>
+    </UserControl.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <VariableSizedWrapGrid Orientation="Horizontal">
-            <Button Command="{Binding ChangeValuesInstanceCommand}">values</Button>
-            <Button Command="{Binding ChangeSeriesInstanceCommand}">series</Button>
-            <Button Command="{Binding NewFillCommand}">fill</Button>
-            <Button Command="{Binding NewStrokeCommand}">stroke</Button>
-            <Button Command="{Binding NewGeometryFillCommand}">geometry fill</Button>
-            <Button Command="{Binding NewGeometryStrokeCommand}">geom stroke</Button>
-            <Button Command="{Binding IncreaseLineSmoothnessCommand}">+ smoothness</Button>
-            <Button Command="{Binding DecreaseLineSmoothnessCommand}">- smoothness</Button>
-            <Button Command="{Binding IncreaseGeometrySizeCommand}">+ geom size</Button>
-            <Button Command="{Binding DecreaseGeometrySizeCommand}">- geom size</Button>
-        </VariableSizedWrapGrid>
-        <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}"></lvc:CartesianChart>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button Command="{Binding ChangeValuesInstanceCommand}" Content="new values"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Button Command="{Binding NewFillCommand}" Content="fill"/>
+            <Button Command="{Binding NewStrokeCommand}" Content="stroke"/>
+            <Button Command="{Binding NewGeometryFillCommand}" Content="geo fill"/>
+            <Button Command="{Binding NewGeometryStrokeCommand}" Content="geom stroke"/>
+        </StackPanel>
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
+            <Button Command="{Binding IncreaseLineSmoothnessCommand}" Content="+ smooth"/>
+            <Button Command="{Binding DecreaseLineSmoothnessCommand}" Content="- smooth"/>
+            <Button Command="{Binding IncreaseGeometrySizeCommand}" Content="+ size"/>
+            <Button Command="{Binding DecreaseGeometrySizeCommand}" Content="- size"/>
+        </StackPanel>
+        <lvc:CartesianChart Grid.Row="3">
+            <lvc:CartesianChart.Series>
+                <lvc:XamlLineSeries
+                    Values="{Binding Values}"
+                    Stroke="{Binding Stroke, Converter={StaticResource StringToPaintConverter}}"
+                    Fill="{Binding Fill, Converter={StaticResource StringToPaintConverter}}"
+                    GeometryStroke="{Binding GeometryStroke, Converter={StaticResource StringToPaintConverter}}"
+                    GeometryFill="{Binding GeometryFill, Converter={StaticResource StringToPaintConverter}}"
+                    LineSmoothness="{Binding Smoothness}"
+                    GeometrySize="{Binding GeometrySize}"/>
+            </lvc:CartesianChart.Series>
+        </lvc:CartesianChart>
     </Grid>
 
 </UserControl>

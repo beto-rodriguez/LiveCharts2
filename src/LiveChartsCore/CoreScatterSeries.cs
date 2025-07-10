@@ -49,7 +49,7 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
         where TErrorGeometry : BaseLineGeometry, new()
 {
     private bool _showError;
-    private Paint? _errorPaint;
+    private Paint? _errorPaint = Paint.Default;
     private int? _stackGroup;
     private double _minGeometrySize = 6d;
     private double _geometrySize = 24d;
@@ -116,7 +116,7 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
         set
         {
             SetPaintProperty(ref _errorPaint, value, PaintStyle.Stroke);
-            _showError = value is not null;
+            _showError = value is not null && value != Paint.Default;
         }
     }
 
@@ -127,8 +127,8 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
     public override void Invalidate(Chart chart)
     {
         var cartesianChart = (CartesianChartEngine)chart;
-        var primaryAxis = cartesianChart.YAxes[ScalesYAt];
-        var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
+        var primaryAxis = cartesianChart.GetYAxis(this);
+        var secondaryAxis = cartesianChart.GetXAxis(this);
 
         var drawLocation = cartesianChart.DrawMarginLocation;
         var drawMarginSize = cartesianChart.DrawMarginSize;
@@ -141,25 +141,25 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
         var weightStackIndex = StackGroup ?? ((ISeries)this).SeriesId;
         var weightBounds = chart.SeriesContext.GetWeightBounds(weightStackIndex);
 
-        if (Fill is not null)
+        if (Fill is not null  && Fill != Paint.Default)
         {
             Fill.ZIndex = actualZIndex + 0.1;
             Fill.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(Fill);
         }
-        if (Stroke is not null)
+        if (Stroke is not null && Stroke != Paint.Default)
         {
             Stroke.ZIndex = actualZIndex + 0.2;
             Stroke.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(Stroke);
         }
-        if (ShowError && ErrorPaint is not null)
+        if (ShowError && ErrorPaint is not null && ErrorPaint != Paint.Default)
         {
             ErrorPaint.ZIndex = actualZIndex + 0.3;
             ErrorPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
             cartesianChart.Canvas.AddDrawableTask(ErrorPaint);
         }
-        if (ShowDataLabels && DataLabelsPaint is not null)
+        if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
         {
             DataLabelsPaint.ZIndex = actualZIndex + 0.4;
             DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
@@ -235,7 +235,7 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
                     Height = 0
                 };
 
-                if (ShowError && ErrorPaint is not null)
+                if (ShowError && ErrorPaint is not null && ErrorPaint != Paint.Default)
                 {
                     e = new ErrorVisual<TErrorGeometry>();
 
@@ -266,10 +266,15 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
                     svgVisual.SVGPath = GeometrySvg ?? throw new Exception("svg path is not defined");
             }
 
-            Fill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-            Stroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-            ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, e!.YError);
-            ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, e!.XError);
+            if (Fill is not null && Fill != Paint.Default)
+                Fill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+            if (Stroke is not null && Stroke != Paint.Default)
+                Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+            if (ErrorPaint is not null && ErrorPaint != Paint.Default)
+            {
+                ErrorPaint.AddGeometryToPaintTask(cartesianChart.Canvas, e!.YError);
+                ErrorPaint.AddGeometryToPaintTask(cartesianChart.Canvas, e!.XError);
+            }
 
             var sizedGeometry = visual;
 
@@ -278,7 +283,7 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
             sizedGeometry.Width = gs;
             sizedGeometry.Height = gs;
 
-            if (!coordinate.PointError.IsEmpty && ShowError && ErrorPaint is not null)
+            if (!coordinate.PointError.IsEmpty && ShowError && ErrorPaint is not null && ErrorPaint != Paint.Default)
             {
                 var pe = coordinate.PointError;
 
@@ -303,7 +308,7 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
 
             pointsCleanup.Clean(point);
 
-            if (ShowDataLabels && DataLabelsPaint is not null)
+            if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
             {
                 if (point.Context.Label is not TLabel label)
                 {
@@ -321,7 +326,10 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
 
                 if (isFirstDraw)
                     label.CompleteTransition(
-                        nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
+                        BaseLabelGeometry.TextSizeProperty,
+                        BaseLabelGeometry.XProperty,
+                        BaseLabelGeometry.YProperty,
+                        BaseLabelGeometry.RotateTransformProperty);
 
                 var m = label.Measure();
                 var labelPosition = GetLabelPosition(

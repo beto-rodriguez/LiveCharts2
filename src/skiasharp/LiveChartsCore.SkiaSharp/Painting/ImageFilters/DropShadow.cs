@@ -37,33 +37,47 @@ namespace LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
 /// <param name="sigmaX">The sigma x.</param>
 /// <param name="sigmaY">The sigma y.</param>
 /// <param name="color">The color.</param>
-/// <param name="input">The input.</param>
 public class DropShadow(
     float dx,
     float dy,
     float sigmaX,
     float sigmaY,
-    SKColor color,
-    SKImageFilter? input = null)
-        : ImageFilter
+    SKColor color)
+        : ImageFilter(s_key)
 {
+    internal static object s_key = new();
 
-    /// <summary>
-    /// Clones this instance.
-    /// </summary>
-    /// <returns></returns>
-    /// <exception cref="System.NotImplementedException"></exception>
-    public override ImageFilter Clone()
-    {
-        return new DropShadow(dx, dy, sigmaX, sigmaY, color, input);
-    }
+    private float Dx { get; set; } = dx;
+    private float Dy { get; set; } = dy;
+    private float SigmaX { get; set; } = sigmaX;
+    private float SigmaY { get; set; } = sigmaY;
+    private SKColor Color { get; set; } = color;
 
-    /// <summary>
-    /// Creates the image filter.
-    /// </summary>
-    /// <param name="drawingContext">The drawing context.</param>
-    public override void CreateFilter(SkiaSharpDrawingContext drawingContext)
+    /// <inheritdoc cref="ImageFilter.Clone"/>
+    public override ImageFilter Clone() =>
+        new DropShadow(Dx, Dy, SigmaX, SigmaY, Color);
+
+    /// <inheritdoc cref="ImageFilter.CreateFilter(SkiaSharpDrawingContext)"/>
+    public override void CreateFilter(SkiaSharpDrawingContext drawingContext) =>
+        SKImageFilter = SKImageFilter.CreateDropShadow(Dx, Dy, SigmaX, SigmaY, Color);
+
+    /// <inheritdoc cref="ImageFilter.Transitionate(float, ImageFilter)"/>
+    protected override ImageFilter Transitionate(float progress, ImageFilter target)
     {
-        SKImageFilter = SKImageFilter.CreateDropShadow(dx, dy, sigmaX, sigmaY, color, input);
+        var dropShadow = (DropShadow)target;
+
+        var clone = (DropShadow)Clone();
+
+        clone.Dx = Dx + (dropShadow.Dx - Dx) * progress;
+        clone.Dy = Dy + (dropShadow.Dy - Dy) * progress;
+        clone.SigmaX = SigmaX + (dropShadow.SigmaX - SigmaX) * progress;
+        clone.SigmaY = SigmaY + (dropShadow.SigmaY - SigmaY) * progress;
+        clone.Color = new SKColor(
+            (byte)(Color.Red + (dropShadow.Color.Red - Color.Red) * progress),
+            (byte)(Color.Green + (dropShadow.Color.Green - Color.Green) * progress),
+            (byte)(Color.Blue + (dropShadow.Color.Blue - Color.Blue) * progress),
+            (byte)(Color.Alpha + (dropShadow.Color.Alpha - Color.Alpha) * progress));
+
+        return clone;
     }
 }

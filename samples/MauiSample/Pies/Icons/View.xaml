@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Pies.Icons.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Pies.Icons;assembly=ViewModelsSamples"
-             >
+<ContentPage
+    x:Class="MauiSample.Pies.Icons.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Pies.Icons;assembly=ViewModelsSamples"
+    xmlns:local="clr-namespace:MauiSample.Pies.Icons">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-    <lvc:PieChart
-        Series="{Binding Series}">
+
+    <lvc:PieChart SeriesSource="{Binding Data}">
+        <lvc:PieChart.SeriesTemplate>
+            <DataTemplate x:DataType="vms:BrowserShare">
+                <local:CustomPieSeries
+                    SeriesName="{Binding Name}"
+                    Values="{Binding Values}"
+                    IconName="{Binding Name}"
+                    Icon="{Binding Icon}"
+                    ShowDataLabels="True"/>
+            </DataTemplate>
+        </lvc:PieChart.SeriesTemplate>
     </lvc:PieChart>
 </ContentPage>

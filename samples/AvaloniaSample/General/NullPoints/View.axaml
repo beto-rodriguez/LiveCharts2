@@ -1,15 +1,20 @@
-<UserControl x:Class="AvaloniaSample.General.NullPoints.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.General.NullPoints">
-  <UserControl.DataContext>
-    <vms:ViewModel/>
-  </UserControl.DataContext>
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="*"/>
-    </Grid.RowDefinitions>
-    <lvc:CartesianChart Series="{Binding Series}"></lvc:CartesianChart>
-  </Grid>  
+<UserControl
+    x:Class="AvaloniaSample.General.NullPoints.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.General.NullPoints">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <lvc:CartesianChart>
+        <lvc:CartesianChart.Series>
+            <lvc:XamlLineSeries Values="{Binding Values1}"/>
+            <lvc:XamlLineSeries Values="{Binding Values2}"/>
+            <lvc:XamlLineSeries Values="{Binding Values3}"/>
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
+
 </UserControl>

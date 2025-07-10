@@ -1,6 +1,10 @@
 ﻿@page "/Pies/Gauge3"
+@using LiveChartsCore
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.Pies.Gauge3
+@using LiveChartsCore.SkiaSharpView.Extensions
+@using LiveChartsCore.SkiaSharpView
+@using LiveChartsCore.Defaults
+@using LiveChartsCore.Measure
 
 <style>
 	.sample-wrap {
@@ -12,7 +16,7 @@
 
 <div class="sample-wrap">
 	<PieChart
-		Series="ViewModel.Series"
+		Series="Series"
 		InitialRotation="45"
         MaxAngle="270"
         MinValue="0"
@@ -21,5 +25,28 @@
 </div>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new();
+    private ISeries[] Series { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Series = GaugeGenerator.BuildSolidGauge(
+            new GaugeItem(30, series => SetStyle("Vanessa", series)),
+            new GaugeItem(50, series => SetStyle("Charles", series)),
+            new GaugeItem(70, series => SetStyle("Ana", series)),
+            new GaugeItem(GaugeItem.Background, series =>
+            {
+                series.InnerRadius = 20;
+            }));
+    }
+
+    public static void SetStyle(string name, PieSeries<ObservableValue> series)
+    {
+        series.Name = name;
+        series.DataLabelsPosition = PolarLabelsPosition.Start;
+        series.DataLabelsFormatter =
+                point => $"{point.Coordinate.PrimaryValue} {point.Context.Series.Name}";
+        series.InnerRadius = 20;
+        series.RelativeOuterRadius = 8;
+        series.RelativeInnerRadius = 8;
+    }
 }

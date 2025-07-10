@@ -6,6 +6,7 @@ public static class Index
     [
         "Design/LinearGradients",
         "Design/RadialGradients",
+        "Design/StrokeDashArray",
 
         "Lines/Basic",
         "Lines/AutoUpdate",
@@ -30,14 +31,14 @@ public static class Index
 
         "Pies/Basic",
         "Pies/AutoUpdate",
-        //"Pies/Processing",
         "Pies/Doughnut",
         "Pies/Pushout",
+        "Pies/Nested",
         "Pies/Custom",
         "Pies/Icons",
         "Pies/OutLabels",
         "Pies/NightingaleRose",
-        "Pies/Gauges",
+        //"Pies/Gauges",
         //"Pies/Gauge",
         "Pies/Gauge1",
         "Pies/Gauge2",
@@ -94,9 +95,6 @@ public static class Index
 
         "Events/Tutorial",
         "Events/AddPointOnClick",
-        "Events/Cartesian",
-        "Events/Pie",
-        "Events/Polar",
         //"Events/OverrideFind",
 
         "General/MapPoints",
@@ -110,7 +108,6 @@ public static class Index
         "General/Tooltips",
         //"General/TooltipHoverArea",
         "General/Legends",
-        "General/Animations",
         "General/Visibility",
         "General/TemplatedTooltips",
         "General/TemplatedLegends",

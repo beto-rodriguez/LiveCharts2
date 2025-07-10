@@ -55,6 +55,14 @@ public abstract class PathEffect : IDisposable
     public abstract void CreateEffect(SkiaSharpDrawingContext drawingContext);
 
     /// <summary>
+    /// Transitions the path effect to a new one.
+    /// </summary>
+    /// <param name="progress">The progress.</param>
+    /// <param name="target">The end target.</param>
+    /// <returns></returns>
+    public abstract PathEffect? Transitionate(float progress, PathEffect? target);
+
+    /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
     /// </summary>
     /// <exception cref="NotImplementedException"></exception>

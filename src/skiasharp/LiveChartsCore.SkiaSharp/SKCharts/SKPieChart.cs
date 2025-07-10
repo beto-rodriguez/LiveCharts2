@@ -86,11 +86,11 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView
     /// <inheritdoc cref="IChartView.SyncContext"/>
     public object SyncContext { get => CoreCanvas.Sync; set => CoreCanvas.Sync = value; }
 
-    /// <inheritdoc cref="IPieChartView.Series"/>
-    public IEnumerable<ISeries> Series { get; set; } = [];
+    /// <inheritdoc cref="IChartView.Series"/>
+    public ICollection<ISeries> Series { get; set; } = [];
 
     /// <inheritdoc cref="IChartView.VisualElements"/>
-    public IEnumerable<ChartElement> VisualElements { get; set; } = [];
+    public ICollection<IChartElement> VisualElements { get; set; } = [];
 
     /// <inheritdoc cref="IPieChartView.InitialRotation"/>
     public double InitialRotation { get; set; }
@@ -144,7 +144,7 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView
     public TooltipPosition TooltipPosition { get; set; }
 
     /// <inheritdoc cref="IChartView.Title"/>
-    public VisualElement? Title { get; set; }
+    public IChartElement? Title { get; set; }
 
     /// <inheritdoc cref="IPieChartView.IsClockwise"/>
     public bool IsClockwise { get; set; } = true;

@@ -213,16 +213,16 @@ public class SkiaSharpDrawingContext(
 
             if (ActiveLvcPaint.PaintStyle.HasFlag(PaintStyle.Fill))
             {
-                if (element.Fill is null)
-                    DrawByActivePaint(element, opacity);
+                if (element.Fill is null || element.Fill == ActiveLvcPaint)
+                    DrawElement(element, opacity);
                 else
                     DrawByPaint(element.Fill, element, opacity);
             }
 
             if (ActiveLvcPaint.PaintStyle.HasFlag(PaintStyle.Stroke))
             {
-                if (element.Stroke is null)
-                    DrawByActivePaint(element, opacity);
+                if (element.Stroke is null || element.Stroke == ActiveLvcPaint)
+                    DrawElement(element, opacity);
                 else
                     DrawByPaint(element.Stroke, element, opacity);
             }
@@ -236,6 +236,7 @@ public class SkiaSharpDrawingContext(
     {
         ActiveLvcPaint = paint;
         //ActiveSkiaPaint = paint.SKPaint; set by paint.InitializeTask
+        PaintMotionProperty.s_activePaint = paint;
 
         paint.InitializeTask(this);
     }
@@ -247,33 +248,72 @@ public class SkiaSharpDrawingContext(
 
         ActiveLvcPaint = null!;
         ActiveSkiaPaint = null!;
-    }
-
-    private void DrawByActivePaint(IDrawnElement<SkiaSharpDrawingContext> element, float opacity)
-    {
-        var hasGeometryOpacity = opacity < 1;
-
-        if (hasGeometryOpacity) ActiveLvcPaint!.ApplyOpacityMask(this, opacity);
-        element.Draw(this);
-        if (hasGeometryOpacity) ActiveLvcPaint!.RestoreOpacityMask(this, opacity);
+        PaintMotionProperty.s_activePaint = null!;
     }
 
     private void DrawByPaint(Paint paint, IDrawnElement<SkiaSharpDrawingContext> element, float opacity)
     {
-        var hasGeometryOpacity = opacity < 1;
-
         var originalPaint = ActiveSkiaPaint;
         var originalTask = ActiveLvcPaint;
 
-        paint.InitializeTask(this);
+        // hack for now...
+        // ActiveLvcPaint must be null for this kind of draw method...
+        // normally used to draw tooltips and legends
+        // Improve this? maybe a cleaner way?
+        if (paint != MeasureTask.Instance)
+        {
+            ActiveLvcPaint = paint;
+            paint.InitializeTask(this);
+        }
 
-        if (hasGeometryOpacity) paint.ApplyOpacityMask(this, opacity);
-        element.Draw(this);
-        if (hasGeometryOpacity) paint.RestoreOpacityMask(this, opacity);
+        DrawElement(element, opacity);
 
         paint.Dispose();
 
         ActiveSkiaPaint = originalPaint;
         ActiveLvcPaint = originalTask;
+    }
+
+    private void DrawElement(IDrawnElement<SkiaSharpDrawingContext> element, float opacity)
+    {
+        var hasGeometryOpacity =
+            ActiveLvcPaint is not null &&
+            opacity < 1;
+
+        var hasShadow =
+            ActiveLvcPaint is not null &&
+            element.DropShadow is not null &&
+            element.DropShadow != LvcDropShadow.Empty;
+
+        SKImageFilter? originalFilter = null;
+
+        if (hasGeometryOpacity)
+        {
+            ActiveLvcPaint!.ApplyOpacityMask(this, opacity);
+        }
+
+        if (hasShadow)
+        {
+            var shadow = element.DropShadow!;
+            originalFilter = ActiveSkiaPaint.ImageFilter;
+
+            ActiveSkiaPaint.ImageFilter = SKImageFilter.CreateDropShadow(
+                shadow.Dx, shadow.Dy,
+                shadow.SigmaX, shadow.SigmaY,
+                new(shadow.Color.R, shadow.Color.G, shadow.Color.B, shadow.Color.A));
+        }
+
+        element.Draw(this);
+
+        if (hasShadow)
+        {
+            ActiveSkiaPaint.ImageFilter!.Dispose();
+            ActiveSkiaPaint.ImageFilter = originalFilter;
+        }
+
+        if (hasGeometryOpacity)
+        {
+            ActiveLvcPaint!.RestoreOpacityMask(this, opacity);
+        }
     }
 }

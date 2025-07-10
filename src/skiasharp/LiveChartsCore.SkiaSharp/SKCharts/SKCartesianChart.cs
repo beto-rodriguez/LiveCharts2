@@ -88,22 +88,22 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView
     public object SyncContext { get => CoreCanvas.Sync; set => CoreCanvas.Sync = value; }
 
     /// <inheritdoc cref="ICartesianChartView.XAxes"/>
-    public IEnumerable<ICartesianAxis> XAxes { get; set; } = [new Axis()];
+    public ICollection<ICartesianAxis> XAxes { get; set; } = [new Axis()];
 
     /// <inheritdoc cref="ICartesianChartView.YAxes"/>
-    public IEnumerable<ICartesianAxis> YAxes { get; set; } = [new Axis()];
+    public ICollection<ICartesianAxis> YAxes { get; set; } = [new Axis()];
 
     /// <inheritdoc cref="ICartesianChartView.Sections"/>
-    public IEnumerable<CoreSection> Sections { get; set; } = [];
+    public ICollection<IChartElement> Sections { get; set; } = [];
 
     /// <inheritdoc cref="IChartView.VisualElements"/>
-    public IEnumerable<ChartElement> VisualElements { get; set; } = [];
+    public ICollection<IChartElement> VisualElements { get; set; } = [];
 
-    /// <inheritdoc cref="ICartesianChartView.Series"/>
-    public IEnumerable<ISeries> Series { get; set; } = [];
+    /// <inheritdoc cref="IChartView.Series"/>
+    public ICollection<ISeries> Series { get; set; } = [];
 
     /// <inheritdoc cref="ICartesianChartView.DrawMarginFrame"/>
-    public CoreDrawMarginFrame? DrawMarginFrame { get; set; }
+    public IChartElement? DrawMarginFrame { get; set; }
 
     /// <inheritdoc cref="ICartesianChartView.ZoomMode"/>
     public ZoomAndPanMode ZoomMode { get; set; }
@@ -158,7 +158,7 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView
     public TooltipPosition TooltipPosition { get; set; }
 
     /// <inheritdoc cref="IChartView.Title"/>
-    public VisualElement? Title { get; set; }
+    public IChartElement? Title { get; set; }
 
     /// <inheritdoc cref="IChartView.LegendTextPaint"/>
     public Paint? LegendTextPaint { get; set; }

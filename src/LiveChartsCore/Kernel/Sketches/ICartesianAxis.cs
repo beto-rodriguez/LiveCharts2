@@ -135,7 +135,7 @@ public interface ICartesianAxis : IPlane, INotifyPropertyChanged
     /// <summary>
     /// Gets or sets the shared axes collection, useful to share the zooming an panning between several charts.
     /// </summary>
-    public IEnumerable<ICartesianAxis>? SharedWith { get; set; }
+    IEnumerable<ICartesianAxis>? SharedWith { get; set; }
 
     /// <summary>
     /// Gets or sets the sub-separators paint.
@@ -253,4 +253,10 @@ public interface ICartesianAxis : IPlane, INotifyPropertyChanged
     /// </summary>
     /// <param name="chart">The chart.</param>
     void ClearCrosshair(Chart chart);
+
+    /// <summary>
+    /// Sets the log base.
+    /// </summary>
+    /// <param name="newBase">The new base.</param>
+    void SetLogBase(double newBase);
 }

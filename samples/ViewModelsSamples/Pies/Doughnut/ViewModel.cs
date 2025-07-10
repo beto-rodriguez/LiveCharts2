@@ -1,15 +1,18 @@
-﻿using LiveChartsCore;
-using System.Collections.Generic;
-using LiveChartsCore.SkiaSharpView.Extensions;
+﻿namespace ViewModelsSamples.Pies.Doughnut;
 
-namespace ViewModelsSamples.Pies.Doughnut;
+public class PieData(string name, double value)
+{
+    public string Name { get; set; } = name;
+    public double[] Values { get; set; } = [value];
+}
 
 public class ViewModel
 {
-    // you can convert any array, list or IEnumerable<T> to a pie series collection:
-    public IEnumerable<ISeries> Series { get; set; } =
-        new[] { 2, 4, 1, 4, 3 }.AsPieSeries((value, series) =>
-        {
-            series.MaxRadialColumnWidth = 60;
-        });
+    public PieData[] Data { get; set; } = [
+            new("Mary", 10),
+            new("John", 20),
+            new("Alice", 30),
+            new("Bob", 40),
+            new("Charlie", 50)
+        ];
 }

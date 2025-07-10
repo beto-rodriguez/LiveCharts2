@@ -51,7 +51,7 @@ public abstract class Visual : ChartElement, IInternalInteractable
     /// <summary>
     /// Gets the drawn element.
     /// </summary>
-    protected abstract IDrawnElement? DrawnElement { get; }
+    protected internal abstract IDrawnElement? DrawnElement { get; }
 
     /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
     public override void Invalidate(Chart chart)

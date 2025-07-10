@@ -1,25 +1,74 @@
 ﻿@page "/Events/Tutorial"
-@using LiveChartsCore.Drawing
-@using LiveChartsCore.Kernel
-@using LiveChartsCore.Kernel.Events
-@using LiveChartsCore.Kernel.Sketches
-@using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.Events.Tutorial
+@using LiveChartsCore.Drawing;
+@using LiveChartsCore.Kernel;
+@using LiveChartsCore.Kernel.Events;
+@using LiveChartsCore.Kernel.Sketches;
+@using LiveChartsCore.SkiaSharpView.Blazor;
+@using LiveChartsCore;
+@using LiveChartsCore.SkiaSharpView;
+@using LiveChartsCore.SkiaSharpView.Painting;
+@using SkiaSharp;
 
 <CartesianChart
     @ref="_chart"
-	Series="ViewModel.SeriesCollection"
-	FindingStrategy="ViewModel.Strategy"
+    Series="@series"
+    FindingStrategy="LiveChartsCore.Measure.FindingStrategy.ExactMatch"
     OnPointerDownCallback="OnPointerDown">
 </CartesianChart>
 
 @code {
     private CartesianChart _chart;
-    public ViewModel ViewModel { get; set; } = new();
+    private ISeries[] series = new ISeries[]
+    {
+        new ColumnSeries<double>
+        {
+            Values = new double[] { 1, 5, 4, 3 },
+            Name = "Series 1",
+            Stroke = new SolidColorPaint(SKColors.Transparent)
+        },
+        new ColumnSeries<double>
+        {
+            Values = new double[] { 3, 2, 6, 2 },
+            Name = "Series 2",
+            Stroke = new SolidColorPaint(SKColors.Transparent)
+        }
+    };
+    private HashSet<ChartPoint> _activePoints = new HashSet<ChartPoint>();
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        _chart.HoveredPointsChanged += OnHoveredChanged;
+    }
 
     private void OnPointerDown(PointerEventArgs e)
     {
-        var p = new LvcPointD(e.OffsetX, e.OffsetY);
-        ViewModel.OnPressed(new PointerCommandArgs(_chart, p, e));
+        var foundPoints = _chart.GetPointsAt(new LvcPointD(e.OffsetX, e.OffsetY));
+        foreach (var point in foundPoints)
+        {
+            var visual = point.Context.Visual;
+            if (!_activePoints.Contains(point))
+            {
+                visual.Fill = new SolidColorPaint { Color = SKColors.Yellow };
+                _activePoints.Add(point);
+            }
+            else
+            {
+                visual.Fill = null;
+                _activePoints.Remove(point);
+            }
+        }
+    }
+
+    private void OnHoveredChanged(IChartView chart, IEnumerable<ChartPoint>? newItems, IEnumerable<ChartPoint>? oldItems)
+    {
+        foreach (var hovered in newItems ?? System.Array.Empty<ChartPoint>())
+        {
+            hovered.Context.Visual!.Stroke = new SolidColorPaint(SKColors.Black, 3);
+        }
+        foreach (var hovered in oldItems ?? System.Array.Empty<ChartPoint>())
+        {
+            hovered.Context.Visual!.Stroke = null;
+        }
     }
 }

@@ -52,7 +52,7 @@ public class PieChartEngine(
 
     ///<inheritdoc cref="Chart.Series"/>
     public override IEnumerable<ISeries> Series =>
-        view.Series?.Cast<ISeries>() ?? [];
+        view.Series?.Select(x => x.ChartElementSource).Cast<ISeries>() ?? [];
 
     ///<inheritdoc cref="Chart.VisibleSeries"/>
     public override IEnumerable<ISeries> VisibleSeries =>
@@ -97,7 +97,7 @@ public class PieChartEngine(
     /// <returns></returns>
     public override IEnumerable<ChartPoint> FindHoveredPointsBy(LvcPoint pointerPosition)
     {
-        return view.Series
+        return VisibleSeries
             .Where(series => (series is IPieSeries pieSeries) && !pieSeries.IsFillSeries)
             .Where(series => series.IsHoverable)
             .SelectMany(series => series.FindHitPoints(this, pointerPosition, FindingStrategy.CompareAll, FindPointFor.HoverEvent));
@@ -161,7 +161,7 @@ public class PieChartEngine(
         {
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
 
-            var ce = (ChartElement)series;
+            var ce = series.ChartElementSource;
             ce._isInternalSet = true;
             if (ce._theme != themeId)
             {
@@ -183,13 +183,11 @@ public class PieChartEngine(
 
         InitializeVisualsCollector();
 
-        var title = View.Title;
         var m = new Margin();
         float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
-        if (title is not null)
+        if (View.Title is not null)
         {
-            title.ClippingMode = ClipMode.None;
-            var titleSize = title.Measure(this);
+            var titleSize = MeasureTitle();
             m.Top = titleSize.Height;
             ts = titleSize.Height;
             _titleHeight = titleSize.Height;
@@ -217,14 +215,7 @@ public class PieChartEngine(
 
         UpdateBounds();
 
-        if (title is not null)
-        {
-            var titleSize = title.Measure(this);
-            title.AlignToTopLeftCorner();
-            title.X = ControlSize.Width * 0.5f - titleSize.Width * 0.5f;
-            title.Y = 0;
-            AddVisual(title);
-        }
+        if (View.Title is not null) AddTitleToChart();
 
         // we draw all the series even invisible because it animates the series when hidden.
         // Sections and Visuals are not animated when hidden, thus we just skip them.
@@ -234,7 +225,7 @@ public class PieChartEngine(
         foreach (var visual in VisualElements.Where(x => x.IsVisible)) AddVisual(visual);
         foreach (var series in Series)
         {
-            AddVisual((ChartElement)series);
+            AddVisual(series.ChartElementSource);
             _drawnSeries.Add(series.SeriesId);
         }
 

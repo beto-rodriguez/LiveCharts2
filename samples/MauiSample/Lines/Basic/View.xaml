@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Lines.Basic.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Lines.Basic;assembly=ViewModelsSamples">
+<ContentPage
+    x:Class="MauiSample.Lines.Basic.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Lines.Basic;assembly=ViewModelsSamples"
+    xmlns:draw="clr-namespace:LiveChartsCore.SkiaSharpView.Drawing.Geometries;assembly=LiveChartsCore.SkiaSharpView">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-    <lvc:CartesianChart Series="{Binding Series}" Title="{Binding Title}" />
+
+    <lvc:CartesianChart>
+        <lvc:CartesianChart.Title>
+            <lvc:XamlDrawnLabelVisual
+                Text="My chart title"
+                Paint="#303030"
+                TextSize="25"
+                Padding="15"/>
+        </lvc:CartesianChart.Title>
+        
+        <lvc:CartesianChart.Series>
+            <lvc:XamlLineSeries
+                Values="{Binding Values1}"
+                Fill="{x:Null}"
+                GeometrySize="20"/>
+            <lvc:XamlLineSeries
+                x:TypeArguments="x:Int32, draw:StarGeometry"
+                Values="{Binding Values2}"
+                Fill="{x:Null}"
+                GeometrySize="20"/>
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
+
 </ContentPage>

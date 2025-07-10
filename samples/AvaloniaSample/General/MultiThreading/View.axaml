@@ -1,18 +1,23 @@
-<UserControl x:Class="AvaloniaSample.General.MultiThreading.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.General.MultiThreading">
-  <UserControl.DataContext>
-    <vms:ViewModel/>
-  </UserControl.DataContext>
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="*"/>
-    </Grid.RowDefinitions>
+<UserControl
+    x:Class="AvaloniaSample.General.MultiThreading.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.General.MultiThreading">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
     <lvc:CartesianChart
-        SyncContext="{Binding Sync}"
-        Series="{Binding Series}">
+        SyncContext="{Binding Sync}">
+        <lvc:CartesianChart.Series>
+            <lvc:XamlLineSeries
+                Values="{Binding Values}"
+                GeometryFill="{x:Null}"
+                GeometryStroke="{x:Null}"
+                LineSmoothness="0"/>
+        </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
-  </Grid>
+
 </UserControl>

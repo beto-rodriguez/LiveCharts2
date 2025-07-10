@@ -20,45 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#pragma warning disable IDE1006 // Naming Styles
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Generators;
 
 namespace LiveChartsCore.Motion;
 
 /// <summary>
 /// Defines the animatable container class.
 /// </summary>
-public class AnimatableContainer : Animatable
+public partial class AnimatableContainer : Animatable
 {
-    private readonly PointMotionProperty _locationProperty;
-    private readonly SizeMotionProperty _sizeMotionProperty;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AnimatableContainer"/> class.
-    /// </summary>
-    public AnimatableContainer()
-    {
-        _locationProperty = RegisterMotionProperty(new PointMotionProperty(nameof(Location), new LvcPoint()));
-        _sizeMotionProperty = RegisterMotionProperty(new SizeMotionProperty(nameof(Size), new LvcSize()));
-    }
-
     /// <summary>
     /// Gets or sets the location.
     /// </summary>
-    public LvcPoint Location
-    {
-        get => _locationProperty.GetMovement(this);
-        set => _locationProperty.SetMovement(value, this);
-    }
-
+    [MotionProperty]
+    public partial LvcPoint Location { get; set; }
 
     /// <summary>
     /// Gets or sets the size.
     /// </summary>
-    public LvcSize Size
-    {
-        get => _sizeMotionProperty.GetMovement(this);
-        set => _sizeMotionProperty.SetMovement(value, this);
-    }
+    [MotionProperty]
+    public partial LvcSize Size { get; set; }
 
     /// <summary>
     /// Gets a valuea indicating whewhter the container have a previous state.

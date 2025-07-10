@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Linq;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
 
@@ -33,31 +34,22 @@ namespace LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
 /// Initializes a new instance of the <see cref="ImageFiltersMergeOperation"/> class.
 /// </remarks>
 /// <param name="imageFilters">The image filters.</param>
-public class ImageFiltersMergeOperation(ImageFilter[] imageFilters) : ImageFilter
+public class ImageFiltersMergeOperation(ImageFilter[] imageFilters) : ImageFilter(s_key)
 {
-    private readonly ImageFilter[] _filters = imageFilters;
+    internal static object s_key = new();
 
-    /// <summary>
-    /// Clones this instance.
-    /// </summary>
-    /// <returns></returns>
-    /// <exception cref="System.NotImplementedException"></exception>
-    public override ImageFilter Clone()
-    {
-        return new ImageFiltersMergeOperation(_filters);
-    }
+    private ImageFilter[] Filters { get; set; } = imageFilters;
 
-    /// <summary>
-    /// Creates the image filter.
-    /// </summary>
-    /// <param name="drawingContext">The drawing context.</param>
-    /// <exception cref="System.NotImplementedException"></exception>
+    /// <inheritdoc cref="ImageFilter.Clone"/>
+    public override ImageFilter Clone() => new ImageFiltersMergeOperation(Filters);
+
+    /// <inheritdoc cref="ImageFilter.CreateFilter(SkiaSharpDrawingContext)"/>
     public override void CreateFilter(SkiaSharpDrawingContext drawingContext)
     {
-        var imageFilters = new SKImageFilter[_filters.Length];
+        var imageFilters = new SKImageFilter[Filters.Length];
         var i = 0;
 
-        foreach (var item in _filters)
+        foreach (var item in Filters)
         {
             item.CreateFilter(drawingContext);
             if (item.SKImageFilter is null) throw new System.Exception("Image filter is not valid");
@@ -67,12 +59,38 @@ public class ImageFiltersMergeOperation(ImageFilter[] imageFilters) : ImageFilte
         SKImageFilter = SKImageFilter.CreateMerge(imageFilters);
     }
 
+    /// <inheritdoc cref="ImageFilter.Transitionate(float, ImageFilter)"/>
+    protected override ImageFilter Transitionate(float progress, ImageFilter target)
+    {
+        if (target is not ImageFiltersMergeOperation merge) return target;
+
+        if (merge.Filters.Length != Filters.Length)
+            throw new System.Exception("The image filters must have the same length");
+
+        var clone = (ImageFiltersMergeOperation)Clone();
+        var filters = new ImageFilter[Filters.Length];
+
+        var hasNull = false;
+        for (var i = 0; i < Filters.Length; i++)
+        {
+            var transitionated = Transitionate(Filters[i], merge.Filters[i], progress);
+            filters[i] = transitionated!; // ! ignored, will be filtered out later
+            if (transitionated is null) hasNull = true;
+        }
+
+        clone.Filters = hasNull
+            ? [.. filters.Where(x => x is not null)]
+            : filters;
+
+        return clone;
+    }
+
     /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
     /// </summary>
     public override void Dispose()
     {
-        foreach (var item in _filters)
+        foreach (var item in Filters)
         {
             item.Dispose();
         }

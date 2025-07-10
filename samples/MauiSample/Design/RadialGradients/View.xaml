@@ -1,19 +1,43 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Design.RadialGradients.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Design.RadialGradients;assembly=ViewModelsSamples"
-             >
+<ContentPage
+    x:Class="MauiSample.Design.RadialGradients.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Design.RadialGradients;assembly=ViewModelsSamples">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-	<ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <lvc:PieChart Series="{Binding Series}" LegendPosition="Right"></lvc:PieChart>
-        </Grid>
-    </ContentPage.Content>
+
+    <!--
+    Use the RadialGradientPaint extension to create a circular gradients.
+
+    The Colors property accepts a string with the colors separated by a comma.
+ 
+    The Center property accepts a string with the coordinates separated by a comma,
+    both values are between 0 and 1, where 0,0 is the top left corner and 1,1 is the bottom right corner,
+    default is 0.5,0.5.
+
+    The ColorPositions property accepts a string with the color positions separated by a comma,
+    the positions are between 0 and 1, where 0 is the start of the gradient and 1 is the end of the gradient,
+    this defines the distribution of the colors in the gradient, use null to use the default distribution.
+
+    The TileMode property defines how the gradient is repeated.
+     -->
+
+    <lvc:PieChart>
+        <lvc:PieChart.Series>
+            <lvc:XamlPieSeries
+                SeriesName="Maria"
+                Values="{Binding MariaValues}"
+                Pushout="10"
+                OuterRadiusOffset="20"
+                Fill="{lvc:RadialGradientPaint Colors='#B3E5FC, #01579B'}"/>
+            <lvc:XamlPieSeries
+                SeriesName="Charles"
+                Values="{Binding CharlesValues}"
+                Fill="{lvc:RadialGradientPaint Colors='#FFCDD2, #B71C1C'}"/>
+        </lvc:PieChart.Series>
+    </lvc:PieChart>
 </ContentPage>

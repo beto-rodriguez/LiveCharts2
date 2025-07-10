@@ -63,6 +63,9 @@ public class MotionCanvas : UserControl
     /// </value>
     public CoreMotionCanvas CanvasCore { get; } = new();
 
+    internal void AddLogicalChild(DependencyObject child) => base.AddLogicalChild(child);
+    internal void RemoveLogicalChild(DependencyObject child) => base.RemoveLogicalChild(child);
+
     /// <inheritdoc cref="OnPaintSurface(object?, SKPaintSurfaceEventArgs)" />
     protected virtual void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
     {

@@ -1,12 +1,23 @@
+<UserControl
+    x:Class="AvaloniaSample.Pies.Pushout.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Pies.Pushout">
 
-<UserControl x:Class="AvaloniaSample.Pies.Pushout.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lv="clr-namespace:LiveChartsCore;assembly=LiveChartsCore"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Pies.Pushout">
   <UserControl.DataContext>
     <vms:ViewModel/>
   </UserControl.DataContext>
-  <lvc:PieChart Series="{Binding Series}" />
+
+  <lvc:PieChart SeriesSource="{Binding Data}">
+    <lvc:PieChart.SeriesTemplate>
+      <DataTemplate x:DataType="vms:PieData">
+        <lvc:XamlPieSeries
+          SeriesName="{Binding Name}"
+          Values="{Binding Values}"
+          Pushout="{Binding Pushout}"/>
+      </DataTemplate>
+    </lvc:PieChart.SeriesTemplate>
+  </lvc:PieChart>
+
 </UserControl>

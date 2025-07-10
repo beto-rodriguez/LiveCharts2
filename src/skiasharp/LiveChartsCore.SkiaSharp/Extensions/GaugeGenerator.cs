@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using LiveChartsCore.Defaults;
 
@@ -41,11 +40,11 @@ public static class GaugeGenerator
     /// </summary>
     /// <param name="items">The items.</param>
     /// <returns>A series collection of pie seires.</returns>
-    public static ObservableCollection<PieSeries<ObservableValue>> BuildSolidGauge(
+    public static PieSeries<ObservableValue>[] BuildSolidGauge(
         params GaugeItem[] items)
     {
         if (!items.Any(x => x.IsFillSeriesBuilder))
-            items = items.Concat(new[] { new GaugeItem(GaugeItem.Background) }).ToArray();
+            items = [.. items, new GaugeItem(GaugeItem.Background)];
 
         return Build(GaugeOptions.Solid, items);
     }
@@ -58,16 +57,16 @@ public static class GaugeGenerator
     /// </summary>
     /// <param name="items">The items.</param>
     /// <returns>A series collection of pie seires.</returns>
-    public static ObservableCollection<PieSeries<ObservableValue>> BuildAngularGaugeSections(
+    public static PieSeries<ObservableValue>[] BuildAngularGaugeSections(
         params GaugeItem[] items)
     {
         if (!items.Any(x => x.IsFillSeriesBuilder))
-            items = items.Concat(new[] { new GaugeItem(GaugeItem.Background) }).ToArray();
+            items = [.. items, new GaugeItem(GaugeItem.Background)];
 
         return Build(GaugeOptions.Angular, items);
     }
 
-    private static ObservableCollection<PieSeries<ObservableValue>> Build(
+    private static PieSeries<ObservableValue>[] Build(
         GaugeOptions options, params GaugeItem[] items)
     {
         List<GaugeItem> seriesRules = [];
@@ -95,7 +94,7 @@ public static class GaugeGenerator
                 i++,
                 count,
                 options);
-        });
+        }).ToArray();
 
         var fillSeriesValues = new List<ObservableValue>();
         while (fillSeriesValues.Count < items.Length - 1) fillSeriesValues.Add(new ObservableValue(0));
@@ -116,8 +115,9 @@ public static class GaugeGenerator
             backgroundSeries.DataLabelsPaint = null;
         }
 
-        foreach (var rule in backgroundRules) rule.Builder?.Invoke(backgroundSeries);
+        foreach (var rule in backgroundRules)
+            rule.Builder?.Invoke(backgroundSeries);
 
-        return new ObservableCollection<PieSeries<ObservableValue>>(series.Concat(new[] { backgroundSeries }));
+        return [.. series, backgroundSeries];
     }
 }

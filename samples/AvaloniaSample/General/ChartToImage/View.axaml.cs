@@ -15,7 +15,6 @@ public partial class View : UserControl
         // we render our chart controls as images // mark
         CreateImageFromCartesianControl();
         CreateImageFromPieControl();
-        CreateImageFromGeoControl();
     }
 
     private void CreateImageFromCartesianControl()
@@ -31,13 +30,6 @@ public partial class View : UserControl
         var chartControl = this.FindControl<PieChart>("pieChart");
         var skChart = new SKPieChart(chartControl) { Width = 900, Height = 600, };
         skChart.SaveImage("PieImageFromControl.png");
-    }
-
-    private void CreateImageFromGeoControl()
-    {
-        var chartControl = this.FindControl<GeoMap>("geoChart");
-        var skChart = new SKGeoMap(chartControl) { Width = 900, Height = 600, };
-        skChart.SaveImage("MapImageFromControl.png");
     }
 
     private void InitializeComponent()

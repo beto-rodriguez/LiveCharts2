@@ -11,10 +11,13 @@
     </ContentPage.BindingContext>
 
     <lvc:CartesianChart
-        Series="{Binding SeriesCollection}"
         FindingStrategy="{Binding Strategy}"
         PressedCommand="{Binding PressedCommand}"
         HoveredPointsChangedCommand="{Binding HoveredPointsChangedCommand}">
+        <lvc:CartesianChart.Series>
+            <lvc:XamlColumnSeries Values="{Binding Values1}" Stroke="#00000000"/>
+            <lvc:XamlColumnSeries Values="{Binding Values2}" Stroke="#00000000"/>
+        </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 
 </ContentPage>

@@ -1,25 +1,34 @@
-<UserControl x:Class="AvaloniaSample.Bars.AutoUpdate.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Bars.AutoUpdate">
-  <UserControl.DataContext>
-    <vms:ViewModel/>
-  </UserControl.DataContext>
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="50"/>
-      <RowDefinition Height="*"/>
-    </Grid.RowDefinitions>
-    <StackPanel Grid.Row="0" Orientation="Horizontal">
-      <Button Margin="6" Command="{Binding AddItemCommand}">Add item</Button>
-      <Button Margin="6" Command="{Binding ReplaceItemCommand}">Replace item</Button>
-      <Button Margin="6" Command="{Binding RemoveItemCommand}">Remove item</Button>
-      <Button Margin="6" Command="{Binding AddSeriesCommand}">Add Series</Button>
-      <Button Margin="6" Command="{Binding RemoveSeriesCommand}">Remove Series</Button>
-      <Button Margin="6" Click="ButtonClick">Constant changes</Button>
-    </StackPanel>
-    <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}">
-    </lvc:CartesianChart>
-  </Grid>
+<UserControl
+    x:Class="AvaloniaSample.Bars.AutoUpdate.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Bars.AutoUpdate">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <Grid RowDefinitions="50, 50, *">
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button Margin="6" Command="{Binding AddItemCommand}">Add item</Button>
+            <Button Margin="6" Command="{Binding ReplaceItemCommand}">Replace item</Button>
+            <Button Margin="6" Command="{Binding RemoveItemCommand}">Remove item</Button>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Button Margin="6" Command="{Binding AddSeriesCommand}">Add Series</Button>
+            <Button Margin="6" Command="{Binding RemoveSeriesCommand}">Remove Series</Button>
+        </StackPanel>
+
+        <lvc:CartesianChart Grid.Row="2" SeriesSource="{Binding Data}">
+            <lvc:CartesianChart.SeriesTemplate>
+                <DataTemplate x:DataType="vms:ChartData">
+                    <lvc:XamlColumnSeries
+                        SeriesName="{Binding Name}"
+                        Values="{Binding Values}"/>
+                </DataTemplate>
+            </lvc:CartesianChart.SeriesTemplate>
+        </lvc:CartesianChart>
+    </Grid>
 </UserControl>

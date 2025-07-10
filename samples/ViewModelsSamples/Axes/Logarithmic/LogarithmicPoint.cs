@@ -1,7 +1,7 @@
 ﻿namespace ViewModelsSamples.Axes.Logarithmic;
 
-public struct LogarithmicPoint
+public class LogarithmicPoint(double x, double y)
 {
-    public double X { get; set; }
-    public double Y { get; set; }
+    public double X { get; set; } = x;
+    public double Y { get; set; } = y;
 }

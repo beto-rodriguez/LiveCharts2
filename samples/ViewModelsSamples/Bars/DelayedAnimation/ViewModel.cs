@@ -1,40 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.Bars.DelayedAnimation;
 
-public class ViewModel
+public partial class ViewModel
 {
-    public List<ISeries> Series { get; set; }
+    public float[] Values1 { get; set; } = FetchVales(0);
+    public float[] Values2 { get; set; } = FetchVales(-0.15f);
 
-    public ViewModel()
-    {
-        var columnSeries1 = new ColumnSeries<float>
-        {
-            Values = FetchVales(0),
-            Stroke = null,
-            Padding = 2
-        };
+    // The PointMesured command/event is triggered when a point size
+    // and position is calculated, for this example we use a command,
+    // but you could also subscribe to the series PointMeasured event.
 
-        var columnSeries2 = new ColumnSeries<float>
-        {
-            Values = FetchVales(-0.15f),
-            Stroke = null,
-            Padding = 2
-        };
-
-        columnSeries1.PointMeasured += OnPointMeasured;
-        columnSeries2.PointMeasured += OnPointMeasured;
-
-        Series = [columnSeries1, columnSeries2];
-    }
-
-    private void OnPointMeasured(ChartPoint<float, RoundedRectangleGeometry, LabelGeometry> point)
+    [RelayCommand]
+    private void OnPointMeasured(ChartPoint point)
     {
         var baseAnimationsSpeed = 800f; // in milliseconds
         var perPointDelay = 100f; // in milliseconds
@@ -47,7 +30,7 @@ public class ViewModel
         // the function must return a value from 0 to 1, where 0 is the initial state
         // and 1 is the end state
 
-        point.Visual?.SetTransition(
+        point.Context.Visual?.SetTransition(
             new Animation(progress =>
             {
                 var d = delay / speed;
@@ -59,12 +42,12 @@ public class ViewModel
             TimeSpan.FromMilliseconds(speed)));
     }
 
-    private static List<float> FetchVales(float offset)
+    private static float[] FetchVales(float offset)
     {
         var values = new List<float>();
 
         // the EasingFunctions.BounceInOut, is just
-        // a function that takes a double and returns a double
+        // a function that looks nice!
 
         var fx = EasingFunctions.BounceInOut;
         var x = 0f;
@@ -75,6 +58,6 @@ public class ViewModel
             x += 0.025f;
         }
 
-        return values;
+        return [.. values];
     }
 }

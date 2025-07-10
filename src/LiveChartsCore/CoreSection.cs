@@ -207,8 +207,8 @@ public abstract class CoreSection<TSizedGeometry, TLabelGeometry> : CoreSection
         var drawMarginSize = chart.DrawMarginSize;
 
         var cartesianChart = (CartesianChartEngine)chart;
-        var primaryAxis = cartesianChart.YAxes[ScalesYAt];
-        var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
+        var primaryAxis = cartesianChart.GetYAxis(ScalesYAt);
+        var secondaryAxis = cartesianChart.GetXAxis(ScalesXAt);
 
         var secondaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
         var primaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
@@ -291,7 +291,7 @@ public abstract class CoreSection<TSizedGeometry, TLabelGeometry> : CoreSection
 
                 _labelGeometry.Animate(
                     cartesianChart.ActualEasingFunction, cartesianChart.ActualAnimationsSpeed,
-                    nameof(_labelGeometry.X), nameof(_labelGeometry.Y));
+                    BaseLabelGeometry.XProperty, BaseLabelGeometry.YProperty);
 
                 _labelGeometry.VerticalAlign = Align.Start;
                 _labelGeometry.HorizontalAlign = Align.Start;

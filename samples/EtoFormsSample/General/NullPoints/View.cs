@@ -1,20 +1,37 @@
 ﻿using Eto.Forms;
+using LiveChartsCore;
+using LiveChartsCore.Defaults;
+using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Eto;
-using ViewModelsSamples.General.NullPoints;
 
 namespace EtoFormsSample.General.NullPoints;
 
 public class View : Panel
 {
-    private readonly CartesianChart cartesianChart;
-
     public View()
     {
-        var viewModel = new ViewModel();
-
-        cartesianChart = new CartesianChart
+        var values1 = new double?[] { 5, 4, null, 3, 2, 6, 5, 6, 2 };
+        var values2 = new double?[] { 2, 6, 5, 3, null, 5, 2, 4, null };
+        var values3 = new ObservablePoint?[]
         {
-            Series = viewModel.Series,
+            new() { X = 0, Y = 1 },
+            new() { X = 1, Y = 4 },
+            null,
+            new() { X = 4, Y = 5 },
+            new() { X = 6, Y = 1 },
+            new() { X = 8, Y = 6 },
+        };
+
+        var series = new ISeries[]
+        {
+            new LineSeries<double?> { Name = "Series 1", Values = values1 },
+            new LineSeries<double?> { Name = "Series 2", Values = values2 },
+            new LineSeries<ObservablePoint?> { Name = "Series 3", Values = values3 }
+        };
+
+        var cartesianChart = new CartesianChart
+        {
+            Series = series,
         };
 
         Content = cartesianChart;

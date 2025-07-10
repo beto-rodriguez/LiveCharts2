@@ -20,44 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Motion;
+using LiveChartsCore.Generators;
 
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
 /// Defines a needle geometry.
 /// </summary>
-public abstract class BaseNeedleGeometry : DrawnGeometry
+public abstract partial class BaseNeedleGeometry : DrawnGeometry
 {
-    private readonly FloatMotionProperty _rProperty;
-    private readonly FloatMotionProperty _wProperty;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="BaseNeedleGeometry"/> class.
-    /// </summary>
-    public BaseNeedleGeometry()
-    {
-        _rProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Radius), 0f));
-        _wProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Width), 20f));
-    }
-
     /// <summary>
     /// Gets or sets the radius.
     /// </summary>
-    public float Radius
-    {
-        get => _rProperty.GetMovement(this);
-        set => _rProperty.SetMovement(value, this);
-    }
+    [MotionProperty]
+    public partial float Radius { get; set; }
 
     /// <summary>
     /// Gets or sets the width.
     /// </summary>
-    public float Width
-    {
-        get => _wProperty.GetMovement(this);
-        set => _wProperty.SetMovement(value, this);
-    }
+    [MotionProperty]
+    public partial float Width { get; set; }
 
     /// <inheritdoc cref="IDrawnElement.Measure()"/>
     public override LvcSize Measure() =>

@@ -35,6 +35,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting;
 public class SolidColorPaint : SkiaPaint
 {
     private SkiaSharpDrawingContext? _drawingContext;
+    // internal for testing purposes
     internal SKPaint? _skiaPaint;
 
     /// <summary>
@@ -96,7 +97,6 @@ public class SolidColorPaint : SkiaPaint
     }
 
     /// <inheritdoc cref="Paint.InitializeTask(DrawingContext)" />
-
     public override void InitializeTask(DrawingContext drawingContext)
     {
         var skiaContext = (SkiaSharpDrawingContext)drawingContext;
@@ -135,6 +135,27 @@ public class SolidColorPaint : SkiaPaint
         skiaContext.ActiveSkiaPaint = _skiaPaint;
     }
 
+    /// <inheritdoc cref="Paint.Transitionate(float, Paint)"/>
+    public override Paint Transitionate(float progress, Paint target)
+    {
+        if (target._source is not SolidColorPaint paint) return target;
+
+        var clone = (SolidColorPaint)CloneTask();
+
+        clone.StrokeThickness = StrokeThickness + progress * (paint.StrokeThickness - StrokeThickness);
+        clone.StrokeMiter = StrokeMiter + progress * (paint.StrokeMiter - StrokeMiter);
+        clone.PathEffect = PathEffect?.Transitionate(progress, paint.PathEffect);
+        clone.ImageFilter = ImageFilters.ImageFilter.Transitionate(ImageFilter, paint.ImageFilter, progress);
+
+        clone.Color = new SKColor(
+            (byte)(Color.Red + progress * (paint.Color.Red - Color.Red)),
+            (byte)(Color.Green + progress * (paint.Color.Green - Color.Green)),
+            (byte)(Color.Blue + progress * (paint.Color.Blue - Color.Blue)),
+            (byte)(Color.Alpha + progress * (paint.Color.Alpha - Color.Alpha)));
+
+        return clone;
+    }
+
     /// <inheritdoc cref="Paint.ApplyOpacityMask(DrawingContext, float)" />
     public override void ApplyOpacityMask(DrawingContext context, float opacity)
     {
@@ -154,6 +175,12 @@ public class SolidColorPaint : SkiaPaint
         var skiaContext = (SkiaSharpDrawingContext)context;
         skiaContext.ActiveSkiaPaint.Color = Color;
     }
+
+    /// <summary>
+    /// Returns a string that represents the current object.
+    /// </summary>
+    /// <returns>a string.</returns>
+    public override string ToString() => $"({Color.Red}, {Color.Green}, {Color.Blue})";
 
     /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.

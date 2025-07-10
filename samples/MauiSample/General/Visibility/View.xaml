@@ -1,28 +1,31 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.General.Visibility.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.General.Visibility;assembly=ViewModelsSamples"
-             >
+<ContentPage
+    x:Class="MauiSample.General.Visibility.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.General.Visibility;assembly=ViewModelsSamples">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-	<ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            
-            <StackLayout Grid.Row="0" Orientation="Horizontal">
-                <Button Margin="6" Command="{Binding ToggleSeries0Command}" Text="toggle 1" />
-                <Button Margin="6" Command="{Binding ToggleSeries1Command}" Text="toggle 2"/>
-                <Button Margin="6" Command="{Binding ToggleSeries2Command}" Text="toggle 3"/>
-            </StackLayout>
 
-            <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}"></lvc:CartesianChart>
+    <Grid RowDefinitions="Auto, *">
 
-        </Grid>
-    </ContentPage.Content>
+        <StackLayout Grid.Row="0" Orientation="Horizontal">
+            <Button Margin="6" Command="{Binding Data[0].ToggleVisibilityCommand}" Text="toggle 1" />
+            <Button Margin="6" Command="{Binding Data[1].ToggleVisibilityCommand}" Text="toggle 2"/>
+            <Button Margin="6" Command="{Binding Data[2].ToggleVisibilityCommand}" Text="toggle 3"/>
+        </StackLayout>
+
+        <lvc:CartesianChart Grid.Row="1" SeriesSource="{Binding Data}">
+            <lvc:CartesianChart.SeriesTemplate>
+                <DataTemplate x:DataType="vms:PlotData">
+                    <lvc:XamlColumnSeries
+                        Values="{Binding Values}"
+                        IsVisible="{Binding IsVisible}"/>
+                </DataTemplate>
+            </lvc:CartesianChart.SeriesTemplate>
+        </lvc:CartesianChart>
+    </Grid>
 </ContentPage>

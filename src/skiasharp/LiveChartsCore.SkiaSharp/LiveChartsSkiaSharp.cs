@@ -27,7 +27,10 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.SkiaSharpView.TypeConverters;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView;
@@ -64,6 +67,14 @@ public static class LiveChartsSkiaSharp
     public static LiveChartsSettings AddSkiaSharp(this LiveChartsSettings settings)
     {
         LiveCharts.HasBackend = true;
+
+        PropertyDefinition.Parsers[typeof(Paint)] = HexToPaintTypeConverter.Parse;
+        PropertyDefinition.Parsers[typeof(LvcColor)] = HexToLvcColorTypeConverter.Parse;
+        PropertyDefinition.Parsers[typeof(Margin)] = MarginTypeConverter.ParseMargin;
+        PropertyDefinition.Parsers[typeof(Padding)] = PaddingTypeConverter.ParsePadding;
+        PropertyDefinition.Parsers[typeof(LvcPointD)] = PointDTypeConverter.ParsePoint;
+        PropertyDefinition.Parsers[typeof(LvcPoint)] = PointTypeConverter.ParsePoint;
+
         return settings.HasProvider(new SkiaSharpProvider());
     }
 

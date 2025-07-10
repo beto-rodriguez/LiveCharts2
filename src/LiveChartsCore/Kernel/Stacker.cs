@@ -149,16 +149,31 @@ public class Stacker
     public StackedValue GetStack(ChartPoint point, int seriesStackPosition)
     {
         var index = point.Coordinate.SecondaryValue;
-        var p = _stack[seriesStackPosition][index];
+
+        if (!_stack[seriesStackPosition].TryGetValue(index, out var p))
+        {
+            p = new StackedValue
+            {
+                Start = 0,
+                End = 0,
+                NegativeStart = 0,
+                NegativeEnd = 0,
+            };
+        }
+
+        if (!_totals.TryGetValue(index, out var total))
+        {
+            total = new StackedTotal();
+        }
 
         return new StackedValue
         {
             Start = p.Start,
             End = p.End,
-            Total = _totals[index].Positive,
+            Total = total.Positive,
             NegativeStart = p.NegativeStart,
             NegativeEnd = p.NegativeEnd,
-            NegativeTotal = _totals[index].Negative
+            NegativeTotal = total.Negative
         };
     }
 }

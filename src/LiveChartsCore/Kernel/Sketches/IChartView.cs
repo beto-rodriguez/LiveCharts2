@@ -38,6 +38,11 @@ namespace LiveChartsCore.Kernel.Sketches;
 public interface IChartView
 {
     /// <summary>
+    /// Gets or sets the series collection.
+    /// </summary>
+    ICollection<ISeries> Series { get; set; }
+
+    /// <summary>
     /// Gets the core.
     /// </summary>
     /// <value>
@@ -175,7 +180,7 @@ public interface IChartView
     /// <summary>
     /// Gets or sets the chart title.
     /// </summary>
-    VisualElement? Title { get; set; }
+    IChartElement? Title { get; set; }
 
     /// <summary>
     /// Gets or sets the legend.
@@ -196,7 +201,7 @@ public interface IChartView
     /// <summary>
     /// Gets or sets the visual elements.
     /// </summary>
-    IEnumerable<ChartElement> VisualElements { get; set; }
+    ICollection<IChartElement> VisualElements { get; set; }
 
     /// <summary>
     /// Occurs when the pointer goes down over a chart point(s).

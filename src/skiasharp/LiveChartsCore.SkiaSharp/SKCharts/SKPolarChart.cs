@@ -89,16 +89,16 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView
     public object SyncContext { get => CoreCanvas.Sync; set => CoreCanvas.Sync = value; }
 
     /// <inheritdoc cref="IPolarChartView.AngleAxes"/>
-    public IEnumerable<IPolarAxis> AngleAxes { get; set; } = [new PolarAxis()];
+    public ICollection<IPolarAxis> AngleAxes { get; set; } = [new PolarAxis()];
 
     /// <inheritdoc cref="IPolarChartView.RadiusAxes"/>
-    public IEnumerable<IPolarAxis> RadiusAxes { get; set; } = [new PolarAxis()];
+    public ICollection<IPolarAxis> RadiusAxes { get; set; } = [new PolarAxis()];
 
-    /// <inheritdoc cref="IPolarChartView.Series"/>
-    public IEnumerable<ISeries> Series { get; set; } = [];
+    /// <inheritdoc cref="IChartView.Series"/>
+    public ICollection<ISeries> Series { get; set; } = [];
 
     /// <inheritdoc cref="IChartView.VisualElements"/>
-    public IEnumerable<ChartElement> VisualElements { get; set; } = [];
+    public ICollection<IChartElement> VisualElements { get; set; } = [];
 
     /// <inheritdoc cref="IChartView.Legend"/>
     public IChartLegend? Legend { get; set; } = new SKDefaultLegend();
@@ -170,7 +170,7 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView
     public double TooltipTextSize { get; set; } = LiveCharts.DefaultSettings.TooltipTextSize;
 
     /// <inheritdoc cref="IChartView.Title"/>
-    public VisualElement? Title { get; set; }
+    public IChartElement? Title { get; set; }
 
     /// <inheritdoc cref="IChartView.Measuring" />
     public event ChartEventHandler? Measuring;

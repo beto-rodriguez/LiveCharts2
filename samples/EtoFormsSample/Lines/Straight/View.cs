@@ -1,20 +1,38 @@
 ﻿using Eto.Forms;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Eto;
-using ViewModelsSamples.Lines.Straight;
 
 namespace EtoFormsSample.Lines.Straight;
 
 public class View : Panel
 {
-    private readonly CartesianChart cartesianChart;
-
     public View()
     {
-        var viewModel = new ViewModel();
+        var values1 = new double[] { 5, 0, 5, 0, 5, 0 };
+        var values2 = new double[] { 7, 2, 7, 2, 7, 2 };
 
-        cartesianChart = new CartesianChart
+        var series = new ISeries[]
         {
-            Series = viewModel.Series,
+            new LineSeries<double>
+            {
+                Values = values1,
+                Fill = null,
+                GeometrySize = 0,
+                LineSmoothness = 0
+            },
+            new LineSeries<double>
+            {
+                Values = values2,
+                Fill = null,
+                GeometrySize = 0,
+                LineSmoothness = 1
+            }
+        };
+
+        var cartesianChart = new CartesianChart
+        {
+            Series = series
         };
 
         Content = cartesianChart;

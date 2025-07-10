@@ -1,69 +1,87 @@
-﻿// NOTE: // mark
-// BECAUSE THIS VIEWMODEL IS SHARED WITH OTHER VIEWS // mark
-// THE _viewModel.ChartUpdated, _viewModel.PointerDown and _viewModel.PointerUp METHODS // mark
-// are repeated in Eto, Eto forms do not support Command binding, please // mark
-// ignore the viewmodel RelayCommands and use the events instead. // mark
-
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Eto.Forms;
+using LiveChartsCore.Defaults;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Eto;
-using ViewModelsSamples.General.Scrollable;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
 
 namespace EtoFormsSample.General.Scrollable;
 
 public class View : Panel
 {
-    private readonly ViewModel _viewModel = new();
+    private readonly CartesianChart _mainChart;
     private readonly CartesianChart _scrollBarChart;
     private bool _isDown = false;
+    private readonly ObservableCollection<ObservablePoint> _values = new();
 
     public View()
     {
-        var viewModel = _viewModel;
+        var trend = 1000;
+        var r = new Random();
+        for (var i = 0; i < 500; i++)
+            _values.Add(new ObservablePoint(i, trend += r.Next(-20, 20)));
 
-        var cartesianChart = new CartesianChart
+        var auto = LiveChartsCore.Measure.Margin.Auto;
+
+        _mainChart = new CartesianChart
         {
-            Series = viewModel.Series,
-            XAxes = viewModel.ScrollableAxes,
+            Series = [
+                new LineSeries<ObservablePoint>
+                {
+                    Values = _values,
+                    GeometryStroke = null,
+                    GeometryFill = null,
+                    DataPadding = new(0, 1)
+                }
+            ],
+            XAxes = [new Axis()],
             ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.X,
-            DrawMargin = viewModel.Margin
+            DrawMargin = new(100, auto, 50, auto)
         };
+        _mainChart.UpdateStarted += OnChart_Updated;
 
-        cartesianChart.UpdateStarted += OnChart_Updated;
-
-        var cartesianChart2 = _scrollBarChart = new CartesianChart
+        _scrollBarChart = new CartesianChart
         {
-            Series = viewModel.ScrollbarSeries,
-            DrawMargin = viewModel.Margin,
-            Sections = viewModel.Thumbs,
-            XAxes = viewModel.InvisibleX,
-            YAxes = viewModel.InvisibleY,
+            Series = [
+                new LineSeries<ObservablePoint>
+                {
+                    Values = _values,
+                    GeometryStroke = null,
+                    GeometryFill = null,
+                    DataPadding = new(0, 1)
+                }
+            ],
+            DrawMargin = new(100, auto, 50, auto),
+            Sections = [
+                new RectangularSection
+                {
+                    Fill = new SolidColorPaint(new SKColor(255, 205, 210, 100))
+                }
+            ],
+            XAxes = [new Axis { IsVisible = false }],
+            YAxes = [new Axis { IsVisible = false }],
             TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Hidden
         };
-
-        cartesianChart2.MouseDown += CartesianChart2_MouseDown;
-        cartesianChart2.MouseMove += CartesianChart2_MouseMove;
-        cartesianChart2.MouseUp += CartesianChart2_MouseUp;
+        _scrollBarChart.MouseDown += CartesianChart2_MouseDown;
+        _scrollBarChart.MouseMove += CartesianChart2_MouseMove;
+        _scrollBarChart.MouseUp += CartesianChart2_MouseUp;
 
         Content = new DynamicLayout(
-            new DynamicRow(new DynamicControl() { Control = cartesianChart, YScale = true }),
-            new DynamicRow(new DynamicControl() { Control = cartesianChart2, YScale = true }));
+            new DynamicRow(new DynamicControl { Control = _mainChart, YScale = true }),
+            new DynamicRow(new DynamicControl { Control = _scrollBarChart, YScale = true })
+        );
     }
 
     private void OnChart_Updated(IChartView chart)
     {
-        var vm = _viewModel;
-
         var cartesianChart = (CartesianChart)chart;
-
         var x = cartesianChart.XAxes.First();
-
-        // update the scroll bar thumb when the chart is updated (zoom/pan)
-        // this will let the user know the current visible range
-        var thumb = vm.Thumbs[0];
-
+        var thumb = (RectangularSection)_scrollBarChart.Sections.First();
         thumb.Xi = x.MinLimit;
         thumb.Xj = x.MaxLimit;
     }
@@ -76,26 +94,17 @@ public class View : Panel
     private void CartesianChart2_MouseMove(object sender, MouseEventArgs e)
     {
         if (!_isDown) return;
-
-        var vm = _viewModel;
-        var scrollBarChart = _scrollBarChart;
-
-        var positionInData = scrollBarChart.ScalePixelsToData(new(e.Location.X, e.Location.Y));
-
-        var thumb = vm.Thumbs[0];
+        var positionInData = _scrollBarChart.ScalePixelsToData(new(e.Location.X, e.Location.Y));
+        var thumb = (RectangularSection)_scrollBarChart.Sections.First();
         var currentRange = thumb.Xj - thumb.Xi;
-
-        // update the scroll bar thumb when the user is dragging the chart
         thumb.Xi = positionInData.X - currentRange / 2;
         thumb.Xj = positionInData.X + currentRange / 2;
-
-        // update the chart visible range
-        vm.ScrollableAxes[0].MinLimit = thumb.Xi;
-        vm.ScrollableAxes[0].MaxLimit = thumb.Xj;
+        _mainChart.XAxes.First().MinLimit = thumb.Xi;
+        _mainChart.XAxes.First().MaxLimit = thumb.Xj;
     }
 
     private void CartesianChart2_MouseUp(object sender, MouseEventArgs e)
     {
-        _isDown = true;
+        _isDown = false;
     }
 }

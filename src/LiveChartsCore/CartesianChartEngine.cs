@@ -53,11 +53,13 @@ public class CartesianChartEngine(
     private int _nextSeries = 0;
     private double _zoomingSpeed = 0;
     private ZoomAndPanMode _zoomMode;
-    private CoreDrawMarginFrame? _previousDrawMarginFrame;
+    private ChartElement? _previousDrawMarginFrame;
     private const double MaxAxisBound = 0.05;
     private const double MaxAxisActiveBound = 0.15;
     private HashSet<CartesianChartEngine>? _sharedEvents;
     private HashSet<ICartesianAxis> _crosshair = [];
+    private ICartesianAxis[]? _virtualX;
+    private ICartesianAxis[]? _virtualY;
 
     /// <summary>
     /// Gets the x axes.
@@ -83,12 +85,12 @@ public class CartesianChartEngine(
     /// <value>
     /// The sections.
     /// </value>
-    public IEnumerable<CoreSection> Sections { get; private set; } =
+    public IEnumerable<IChartElement> Sections { get; private set; } =
         [];
 
     ///<inheritdoc cref="Chart.Series"/>
     public override IEnumerable<ISeries> Series =>
-        _chartView.Series?.Cast<ISeries>() ?? [];
+        _chartView.Series?.Select(x => x.ChartElementSource).Cast<ISeries>() ?? [];
 
     ///<inheritdoc cref="Chart.VisibleSeries"/>
     public override IEnumerable<ISeries> VisibleSeries =>
@@ -372,25 +374,11 @@ public class CartesianChartEngine(
         var viewDrawMargin = _chartView.DrawMargin;
         ControlSize = _chartView.ControlSize;
 
-        var x = _chartView.XAxes;
-        var y = _chartView.YAxes;
+        var x = GetAxesCollection(_chartView.XAxes, ref _virtualX);
+        var y = GetAxesCollection(_chartView.YAxes, ref _virtualY);
 
-        if (x is null || y is null)
-        {
-            // in theory nulls are not valid, see ChartTest.cs for more context.
-            var provider = LiveCharts.DefaultSettings.GetProvider();
-
-            x = [provider.GetDefaultCartesianAxis()];
-            y = [provider.GetDefaultCartesianAxis()];
-        }
-
-        XAxes = [.. x.Cast<ICartesianAxis>()];
-        YAxes = [.. y.Cast<ICartesianAxis>()];
-
-        if (XAxes.Length == 0 || YAxes.Length == 0)
-        {
-            throw new Exception($"{nameof(XAxes)} and {nameof(YAxes)} must contain at least one element.");
-        }
+        XAxes = [.. x.Select(x => x.ChartElementSource).Cast<ICartesianAxis>()];
+        YAxes = [.. y.Select(x => x.ChartElementSource).Cast<ICartesianAxis>()];
 
         _zoomingSpeed = _chartView.ZoomingSpeed;
         _zoomMode = _chartView.ZoomMode;
@@ -404,7 +392,7 @@ public class CartesianChartEngine(
         FindingStrategy = _chartView.FindingStrategy;
         Tooltip = _chartView.Tooltip;
 
-        Sections = _chartView.Sections?.Where(static x => x.IsVisible) ?? [];
+        Sections = _chartView.Sections?.Select(x => x.ChartElementSource).Where(static x => x.IsVisible) ?? [];
         VisualElements = _chartView.VisualElements ?? [];
 
         ActualAnimationsSpeed = _chartView.AnimationsSpeed == TimeSpan.MaxValue
@@ -422,7 +410,7 @@ public class CartesianChartEngine(
         // restart axes bounds and meta data
         foreach (var axis in XAxes)
         {
-            var ce = (ChartElement)axis;
+            var ce = axis.ChartElementSource;
             ce._isInternalSet = true;
             axis.OnMeasureStarted(this, AxisOrientation.X);
             if (ce._theme != themeId)
@@ -435,7 +423,7 @@ public class CartesianChartEngine(
         }
         foreach (var axis in YAxes)
         {
-            var ce = (ChartElement)axis;
+            var ce = axis.ChartElementSource;
             ce._isInternalSet = true;
             axis.OnMeasureStarted(this, AxisOrientation.Y);
             if (ce._theme != themeId)
@@ -454,7 +442,7 @@ public class CartesianChartEngine(
         {
             if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
 
-            var ce = (ChartElement)series;
+            var ce = series.ChartElementSource;
             ce._isInternalSet = true;
             if (ce._theme != themeId)
             {
@@ -462,8 +450,8 @@ public class CartesianChartEngine(
                 ce._theme = themeId;
             }
 
-            var xAxis = XAxes[series.ScalesXAt];
-            var yAxis = YAxes[series.ScalesYAt];
+            var xAxis = GetXAxis(series);
+            var yAxis = GetYAxis(series);
 
             var seriesBounds = series.GetBounds(this, xAxis, yAxis).Bounds;
             if (seriesBounds.IsEmpty)
@@ -483,7 +471,7 @@ public class CartesianChartEngine(
 
         foreach (var axis in XAxes)
         {
-            var ce = (ChartElement)axis;
+            var ce = axis.ChartElementSource;
             ce._isInternalSet = true;
 
             if (!axis.DataBounds.IsEmpty)
@@ -505,7 +493,7 @@ public class CartesianChartEngine(
         }
         foreach (var axis in YAxes)
         {
-            var ce = (ChartElement)axis;
+            var ce = axis.ChartElementSource;
             ce._isInternalSet = true;
 
             if (!axis.DataBounds.IsEmpty)
@@ -531,13 +519,11 @@ public class CartesianChartEngine(
         InitializeVisualsCollector();
 
         // measure and draw title.
-        var title = View.Title;
         var m = new Margin();
         float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
-        if (title is not null)
+        if (View.Title is not null)
         {
-            title.ClippingMode = ClipMode.None;
-            var titleSize = title.Measure(this);
+            var titleSize = MeasureTitle();
             m.Top = titleSize.Height;
             ts = titleSize.Height;
             _titleHeight = titleSize.Height;
@@ -736,14 +722,7 @@ public class CartesianChartEngine(
         UpdateBounds();
         DrawMarginDefined?.Invoke(this);
 
-        if (title is not null)
-        {
-            var titleSize = title.Measure(this);
-            title.AlignToTopLeftCorner();
-            title.X = ControlSize.Width * 0.5f - titleSize.Width * 0.5f;
-            title.Y = 0;
-            AddVisual(title);
-        }
+        if (View.Title is not null) AddTitleToChart();
 
         var totalAxes = XAxes.Concat(YAxes);
 
@@ -763,7 +742,7 @@ public class CartesianChartEngine(
                 // correction by geometry size
                 var p = Math.Abs(s.ToChartValues(axis.DataBounds.RequestedGeometrySize) - s.ToChartValues(0));
                 if (axis.DataBounds.PaddingMin > p) p = axis.DataBounds.PaddingMin;
-                var ce = (ChartElement)axis;
+                var ce = axis.ChartElementSource;
                 ce._isInternalSet = true;
                 axis.DataBounds.Min = axis.DataBounds.Min - p;
                 axis.VisibleDataBounds.Min = axis.VisibleDataBounds.Min - p;
@@ -777,15 +756,15 @@ public class CartesianChartEngine(
                 // correction by geometry size
                 var p = Math.Abs(s.ToChartValues(axis.DataBounds.RequestedGeometrySize) - s.ToChartValues(0));
                 if (axis.DataBounds.PaddingMax > p) p = axis.DataBounds.PaddingMax;
-                var ce = (ChartElement)axis;
+                var ce = axis.ChartElementSource;
                 ce._isInternalSet = true;
                 axis.DataBounds.Max = axis.DataBounds.Max + p;
                 axis.VisibleDataBounds.Max = axis.VisibleDataBounds.Max + p;
                 ce._isInternalSet = false;
             }
 
-            if (axis.IsVisible) AddVisual((ChartElement)axis);
-            ((ChartElement)axis).RemoveOldPaints(View); // <- this is probably obsolete.
+            if (axis.IsVisible) AddVisual(axis.ChartElementSource);
+            axis.ChartElementSource.RemoveOldPaints(View); // <- this is probably obsolete.
             // the probable issue is the "IsVisible" property
         }
 
@@ -798,11 +777,12 @@ public class CartesianChartEngine(
         foreach (var visual in VisualElements.Where(static x => x.IsVisible)) AddVisual(visual);
         foreach (var series in Series)
         {
-            AddVisual((ChartElement)series);
+            AddVisual(series.ChartElementSource);
             _drawnSeries.Add(series.SeriesId);
         }
 
-        var actualDrawMarginFrame = _chartView.DrawMarginFrame ?? theme.DrawMarginFrameGetter?.Invoke();
+        var actualDrawMarginFrame = _chartView.DrawMarginFrame?.ChartElementSource
+            ?? theme.DrawMarginFrameGetter?.Invoke();
 
         if (_previousDrawMarginFrame is not null && _chartView.DrawMarginFrame != _previousDrawMarginFrame)
         {
@@ -813,17 +793,17 @@ public class CartesianChartEngine(
         }
         if (actualDrawMarginFrame is not null)
         {
-            var ce = (ChartElement)actualDrawMarginFrame;
+            var ce = actualDrawMarginFrame;
             if (ce._theme != themeId)
             {
                 ce._isInternalSet = true;
-                theme.ApplyStyleToDrawMarginFrame(actualDrawMarginFrame);
+                theme.ApplyStyleToDrawMarginFrame((CoreDrawMarginFrame)ce);
                 ce._theme = themeId;
                 ce._isInternalSet = false;
             }
 
             if (actualDrawMarginFrame.IsVisible) AddVisual(actualDrawMarginFrame);
-            _previousDrawMarginFrame = actualDrawMarginFrame;
+            _previousDrawMarginFrame = ce;
         }
 
         CollectVisuals();
@@ -832,7 +812,7 @@ public class CartesianChartEngine(
         {
             if (!axis.IsVisible) continue;
 
-            var ce = (ChartElement)axis;
+            var ce = axis.ChartElementSource;
             ce._isInternalSet = true;
             axis.ActualBounds.HasPreviousState = true;
             ce._isInternalSet = false;
@@ -849,10 +829,60 @@ public class CartesianChartEngine(
         _isFirstDraw = false;
     }
 
+    /// <inheritdoc cref="ICartesianChartView.ScalePixelsToData(LvcPointD, int, int)"/>
+    public LvcPointD ScalePixelsToData(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)
+    {
+        var xScaler = new Scaler(DrawMarginLocation, DrawMarginSize, XAxes[xAxisIndex]);
+        var yScaler = new Scaler(DrawMarginLocation, DrawMarginSize, YAxes[yAxisIndex]);
+
+        return new LvcPointD { X = xScaler.ToChartValues(point.X), Y = yScaler.ToChartValues(point.Y) };
+    }
+
+    /// <inheritdoc cref="ICartesianChartView.ScaleDataToPixels(LvcPointD, int, int)"/>
+    public LvcPointD ScaleDataToPixels(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)
+    {
+        var xScaler = new Scaler(DrawMarginLocation, DrawMarginSize, XAxes[xAxisIndex]);
+        var yScaler = new Scaler(DrawMarginLocation, DrawMarginSize, YAxes[yAxisIndex]);
+
+        return new LvcPointD { X = xScaler.ToPixels(point.X), Y = yScaler.ToPixels(point.Y) };
+    }
+
+    /// <summary>
+    /// Gets the x axis for the specified series.
+    /// </summary>
+    /// <param name="index">The index.</param>
+    public ICartesianAxis GetXAxis(int index)
+        // we ensure it is in the axes collection bounds, this is just to
+        // prevent crashes on hot-reload scenarios.
+        => XAxes[index > XAxes.Length - 1 ? 0 : index];
+
+    /// <summary>
+    /// Gets the y axis for the specified series.
+    /// </summary>
+    /// <param name="index">The index.</param>
+    public ICartesianAxis GetYAxis(int index)
+        // we ensure it is in the axes collection bounds, this is just to
+        // prevent crashes on hot-reload scenarios.
+        => YAxes[index > YAxes.Length - 1 ? 0 : index];
+
+    /// <summary>
+    /// Gets the x axis for the specified series.
+    /// </summary>
+    /// <param name="series">The series.</param>
+    public ICartesianAxis GetXAxis(ICartesianSeries series) => GetXAxis(series.ScalesXAt);
+
+    /// <summary>
+    /// Gets the y axis for the specified series.
+    /// </summary>
+    /// <param name="series">The series.</param>
+    public ICartesianAxis GetYAxis(ICartesianSeries series) => GetYAxis(series.ScalesYAt);
+
     /// <inheritdoc cref="Chart.Unload"/>
     public override void Unload()
     {
         base.Unload();
+        _virtualX = null;
+        _virtualY = null;
         _crosshair = [];
         _sharedEvents = null;
         _zoomingSection = null;
@@ -1141,6 +1171,23 @@ public class CartesianChartEngine(
                     yi.SetLimits(limits.DataMax - ym, limits.DataMax);
             }
         }
+    }
+
+    private ICollection<ICartesianAxis> GetAxesCollection(
+        ICollection<ICartesianAxis>? viewAxes,
+        ref ICartesianAxis[]? virtualAxes)
+    {
+        if (viewAxes is not null && viewAxes.Count > 0) return viewAxes;
+
+        if (virtualAxes is null)
+        {
+            var provider = LiveCharts.DefaultSettings.GetProvider();
+            var virtualAxis = provider.GetDefaultCartesianAxis();
+            virtualAxis.PropertyChanged += (s, e) => Update();
+            virtualAxes = [virtualAxis];
+        }
+
+        return virtualAxes;
     }
 
     private void OnPointerLeft() => base.InvokePointerLeft();

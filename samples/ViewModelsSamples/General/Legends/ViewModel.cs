@@ -1,113 +1,43 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using LiveChartsCore;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore.Measure;
-using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.General.Legends;
 
-public class ViewModel : INotifyPropertyChanged
+public partial class ViewModel : ObservableObject
 {
-    private LegendPosition _position;
-    private AvailablePosition _selectedPosition;
+    public LegendPosition[] Positions { get; } = [
+        LegendPosition.Hidden,
+        LegendPosition.Top,
+        LegendPosition.Bottom,
+        LegendPosition.Right,
+        LegendPosition.Left
+    ];
 
-    public ViewModel()
-    {
-        _selectedPosition = Positions[0];
-    }
+    [ObservableProperty]
+    public partial LegendPosition SelectedPosition { get; set; } =
+        LegendPosition.Left;
 
-    public IEnumerable<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
-    {
-        new ColumnSeries<double>
-        {
-            Name = "Peru",
-            Values = new ObservableCollection<double> { 3, 7, 3,},
-        },
-        new ColumnSeries<double>
-        {
-            Name = "Egypt",
-            Values = new ObservableCollection<double> { 5, 3, 2 },
-        },
-        new ColumnSeries<double>
-        {
-            Name = "Portugal",
-            Values = new ObservableCollection<double> { 8, 2, 4 },
-        },
-        new ColumnSeries<double>
-        {
-            Name = "El Salvador",
-            Values = new ObservableCollection<double> { 3, 7, 3,},
-        },
-        new ColumnSeries<double>
-        {
-            Name = "Slovenia",
-            Values = new ObservableCollection<double> { 5, 3, 2 },
-        },
-        new ColumnSeries<double>
-        {
-            Name = "Morocco",
-            Values = new ObservableCollection<double> { 8, 2, 4 },
-        },
-        new ColumnSeries<double>
-        {
-            Name = "Canada",
-            Values = new ObservableCollection<double> { 3, 7, 3,},
-        },
-        new ColumnSeries<double>
-        {
-            Name = "United kingdom",
-            Values = new ObservableCollection<double> { 5, 3, 2 },
-        },
-        new ColumnSeries<double>
-        {
-            Name = "Zimbawe",
-            Values = new ObservableCollection<double> { 8, 2, 4 },
-        },
-        new ColumnSeries<double>
-        {
-            Name = "Cabo verde",
-            Values = new ObservableCollection<double> { 3, 7, 3,},
-        },
-        new ColumnSeries<double>
-        {
-            Name = "France",
-            Values = new ObservableCollection<double> { 5, 3, 2 },
-        },
-        new ColumnSeries<double>
-        {
-            Name = "China",
-            Values = new ObservableCollection<double> { 8, 2, 4 },
-        }
-    };
+    public ChartData[] Data { get; set; } = [
+        new ChartData("Peru", [3, 7, 3]),
+        new ChartData("Colombia", [4, 6, 2]),
+        new ChartData("Mexico", [5, 5, 5]),
+        new ChartData("Argentina", [6, 4, 6]),
+        new ChartData("Chile", [7, 3, 7]),
+        new ChartData("Ecuador", [8, 2, 8]),
+        new ChartData("Bolivia", [9, 1, 9]),
+        new ChartData("Venezuela", [10, 0, 10]),
+        new ChartData("Uruguay", [11, 1, 11]),
+        new ChartData("Paraguay", [12, 2, 12]),
+        new ChartData("Brazil", [13, 3, 13]),
+        new ChartData("Costa Rica", [14, 4, 14]),
+        new ChartData("Panama", [15, 5, 15]),
+        new ChartData("Honduras", [16, 6, 16])
+    ];
 
-    public List<AvailablePosition> Positions => new()
-    {
-        new AvailablePosition("hidden", LegendPosition.Hidden),
-        new AvailablePosition("top", LegendPosition.Top),
-        new AvailablePosition("bottom", LegendPosition.Bottom),
-        new AvailablePosition("right", LegendPosition.Right),
-        new AvailablePosition("left", LegendPosition.Left)
-    };
+}
 
-    public AvailablePosition SelectedPosition
-    {
-        get => _selectedPosition;
-        set
-        {
-            _selectedPosition = value;
-            OnPropertyChanged();
-            Position = _selectedPosition.Position;
-        }
-    }
-
-    public LegendPosition Position { get => _position; set { _position = value; OnPropertyChanged(); } }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
+public class ChartData(string name, double[] values)
+{
+    public string Name { get; } = name;
+    public double[] Values { get; } = values;
 }

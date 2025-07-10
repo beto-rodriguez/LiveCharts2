@@ -36,6 +36,7 @@ public partial class JsFlexibleContainer : IDisposable
 
     private DomJsInterop? _dom;
     private readonly string _id = Guid.NewGuid().ToString();
+    private double _previousSize = 0;
 
     /// <summary>
     /// Gets the width.
@@ -81,7 +82,7 @@ public partial class JsFlexibleContainer : IDisposable
     /// <returns></returns>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (_dom is null) _dom = new DomJsInterop(JS);
+        _dom ??= new DomJsInterop(JS);
 
         var wrapperBounds = await _dom.GetBoundingClientRect(Container);
 
@@ -100,6 +101,11 @@ public partial class JsFlexibleContainer : IDisposable
         Width = newSize.Width;
         Height = newSize.Height;
 
+        var size = Width * Height;
+        if (Math.Abs(size - _previousSize) < 0.01)
+            return; // no significant change
+
+        _previousSize = size;
         Resized?.Invoke(this);
     }
 

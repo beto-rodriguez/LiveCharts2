@@ -1,13 +1,31 @@
-<UserControl x:Class="AvaloniaSample.Axes.Logarithmic.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Axes.Logarithmic">
+<UserControl
+    x:Class="AvaloniaSample.Axes.Logarithmic.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Axes.Logarithmic">
+
   <UserControl.DataContext>
     <vms:ViewModel/>
   </UserControl.DataContext>
-  <lvc:CartesianChart
-    Series="{Binding Series}"
-    YAxes="{Binding YAxes}">
-  </lvc:CartesianChart>
+
+    <lvc:CartesianChart>
+
+        <lvc:CartesianChart.Series>
+            <lvc:XamlLineSeries
+                x:TypeArguments="vms:LogarithmicPoint"
+                Values="{Binding Values}"/>
+        </lvc:CartesianChart.Series>
+
+        <lvc:CartesianChart.YAxes>
+            <lvc:XamlLogarithmicAxis
+                LogBase="{Binding LogBase}"
+                SeparatorsPaint="{lvc:SolidColorPaint Color='#64b4b4b4'}"
+                SubseparatorsPaint="{lvc:SolidColorPaint
+                    Color='#64b4b4b4',
+                    StrokeWidth=0.5}"
+                SubseparatorsCount="9"/>
+        </lvc:CartesianChart.YAxes>
+
+    </lvc:CartesianChart>
 </UserControl>

@@ -47,13 +47,23 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
+
+  <Import Project="..\_Shared\_Shared.projitems" Label="Shared" />
+  <Import Project="..\_Shared.WinUI\_Shared.WinUI.projitems" Label="Shared" />
+  <Import Project="..\_Shared.Xaml\_Shared.Xaml.projitems" Label="Shared" />
+
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);UNO_LVC;WINUI_LVC</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
 
     <PackageReference Condition="!$(TargetFramework.Contains('-windows'))" Include="Uno.WinUI" Version="5.2.175" />
 
     <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
     <ProjectReference Include="..\..\LiveChartsCore.Behaviours\LiveChartsCore.Behaviours.csproj" />
+    <ProjectReference Include="..\..\..\generators\LiveChartsGenerators\LiveChartsGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     
     <!-- if uno then add reference to uno dependencies -->
     <PackageReference Condition="!$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.Uno.WinUI" Version="$(SkiaSharpVersion)" />

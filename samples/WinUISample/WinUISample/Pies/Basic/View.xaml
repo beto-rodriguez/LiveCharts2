@@ -11,11 +11,22 @@
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <Grid>
-        <lvc:PieChart
-            Series="{Binding Series}"
-            Title="{Binding Title}">
-        </lvc:PieChart>
-    </Grid>
+
+    <lvc:PieChart SeriesSource="{Binding Data}">
+        <lvc:PieChart.SeriesTemplate>
+            <DataTemplate>
+                <lvc:XamlPieSeries
+                    SeriesName="{Binding Name}"
+                    Values="{Binding Values}"/>
+            </DataTemplate>
+        </lvc:PieChart.SeriesTemplate>
+        <lvc:PieChart.Title>
+            <lvc:XamlDrawnLabelVisual
+                Text="My chart title"
+                Paint="{lvc:SolidColorPaint Color='#000'}"
+                TextSize="{lvc:Float Value='25'}"
+                Padding="{lvc:Padding Value='15'}"/>
+        </lvc:PieChart.Title>
+    </lvc:PieChart>
 
 </UserControl>

@@ -1,23 +1,36 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Bars.Race.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Bars.Race;assembly=ViewModelsSamples">
+<ContentPage
+    x:Class="MauiSample.Bars.Race.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Bars.Race;assembly=ViewModelsSamples">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-	<ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <lvc:CartesianChart
-                Series="{Binding Series}"
-                XAxes="{Binding XAxes}"
-                YAxes="{Binding YAxes}"
-                TooltipPosition="Hidden">
-            </lvc:CartesianChart>
-        </Grid>
-    </ContentPage.Content>
+
+    <lvc:CartesianChart TooltipPosition="Hidden">
+
+        <lvc:CartesianChart.Series>
+            <lvc:XamlRowSeries
+                Values="{Binding Data}"
+                DataLabelsFormatter="{Binding LabelsFormatter}"
+                ShowDataLabels="True"
+                DataLabelsPosition="End"
+                DataLabelsTranslate="-1,0"
+                MaxBarWidth="50"
+                Padding="10"
+                PointMeasuredCommand="{Binding PointMeasuredCommand}"/>
+        </lvc:CartesianChart.Series>
+
+        <lvc:CartesianChart.XAxes>
+            <lvc:XamlAxis SeparatorsPaint="#dcdcdc"/>
+        </lvc:CartesianChart.XAxes>
+
+        <lvc:CartesianChart.YAxes>
+            <lvc:XamlAxis IsVisible="False"/>
+        </lvc:CartesianChart.YAxes>
+
+    </lvc:CartesianChart>
 </ContentPage>

@@ -29,6 +29,7 @@ using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
+using LiveChartsCore.VisualStates;
 
 namespace LiveChartsCore;
 
@@ -190,7 +191,12 @@ public interface ISeries : IChartElement
     /// Gets the visual states, states define the look of chart points when they are in a certain state, for example
     /// the hover, active, or selected states.
     /// </summary>
-    Dictionary<string, Action<IDrawnElement, ChartPoint>> VisualStates { get; }
+    VisualStatesDictionary VisualStates { get; }
+
+    /// <summary>
+    /// Gets or sets the data labels formatter, the function receives a <see cref="ChartPoint"/> instance and must return a string.
+    /// </summary>
+    Func<ChartPoint, string> DataLabelsFormatter { get; set; }
 
     /// <summary>
     /// Gets the tool tip text for a give chart point.

@@ -22,8 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -33,7 +31,7 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
-using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
@@ -45,7 +43,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia;
 /// <inheritdoc cref="IGeoMapView"/>
 public partial class GeoMap : UserControl, IGeoMapView
 {
-    private readonly CollectionDeepObserver<IGeoSeries> _seriesObserver;
+    private readonly CollectionDeepObserver _seriesObserver;
     private readonly GeoMapChart _core;
 
     /// <summary>
@@ -56,10 +54,7 @@ public partial class GeoMap : UserControl, IGeoMapView
         InitializeComponent();
         LiveCharts.Configure(config => config.UseDefaults());
         _core = new GeoMapChart(this);
-        _seriesObserver = new CollectionDeepObserver<IGeoSeries>(
-            (object? sender, NotifyCollectionChangedEventArgs e) => _core?.Update(),
-            (object? sender, PropertyChangedEventArgs e) => _core?.Update(),
-            true);
+        _seriesObserver = new CollectionDeepObserver(() => _core?.Update());
 
         Background = new SolidColorBrush(new Color(0, 0, 0, 0));
 
@@ -219,7 +214,7 @@ public partial class GeoMap : UserControl, IGeoMapView
 
         if (change.Property.Name == nameof(Series))
         {
-            _seriesObserver?.Dispose((IEnumerable<IGeoSeries>?)change.OldValue);
+            _seriesObserver?.Dispose();
             _seriesObserver?.Initialize((IEnumerable<IGeoSeries>?)change.NewValue);
         }
 
