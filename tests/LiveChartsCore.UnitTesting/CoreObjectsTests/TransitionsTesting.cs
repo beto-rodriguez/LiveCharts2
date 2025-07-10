@@ -78,6 +78,9 @@ public class TransitionsTesting
 
         // not completed yet because the duration of the animation in this case is infinite
         Assert.IsTrue(!a.IsValid);
+
+        // clean the debug time
+        CoreMotionCanvas.DebugElapsedMilliseconds = -1;
     }
 
     [TestMethod]
@@ -135,6 +138,9 @@ public class TransitionsTesting
         time += 500;
         DrawFrame(time);
         Assert.IsTrue(p.IsCompleted);
+
+        // clean the debug time
+        CoreMotionCanvas.DebugElapsedMilliseconds = -1;
     }
 
     [TestMethod]
@@ -229,5 +235,8 @@ public class TransitionsTesting
 
             time += 10;
         }
+
+        // clean the debug time
+        CoreMotionCanvas.DebugElapsedMilliseconds = -1;
     }
 }
