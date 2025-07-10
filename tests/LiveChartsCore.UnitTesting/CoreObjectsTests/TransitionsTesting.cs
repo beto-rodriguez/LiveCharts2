@@ -130,6 +130,10 @@ public class TransitionsTesting
 
         time += 500;
         DrawFrame(time);
+        Assert.IsTrue(!p.IsCompleted);
+
+        time += 500;
+        DrawFrame(time);
         Assert.IsTrue(p.IsCompleted);
     }
 
