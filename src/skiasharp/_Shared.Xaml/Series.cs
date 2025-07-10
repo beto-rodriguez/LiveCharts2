@@ -104,6 +104,12 @@ public partial class XamlStackedAreaSeries<TModel, TVisual, TLabel> : XamlSeries
     where TLabel : BaseLabelGeometry, new()
 { }
 
+[XamlClass(typeof(StackedStepAreaSeries<,,>), TVisual = typeof(CircleGeometry))]
+public partial class XamlStackedStepAreaSeries<TModel, TVisual, TLabel> : XamlSeries, IStepLineSeries, IInternalSeries
+    where TVisual : BoundedDrawnGeometry, new()
+    where TLabel : BaseLabelGeometry, new()
+{ }
+
 [XamlClass(typeof(StackedColumnSeries<,,>), TVisual = typeof(RoundedRectangleGeometry))]
 public partial class XamlStackedColumnSeries<TModel, TVisual, TLabel> : XamlSeries, IBarSeries, IInternalSeries
     where TVisual : BoundedDrawnGeometry, new()

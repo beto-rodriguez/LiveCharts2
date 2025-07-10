@@ -14,9 +14,9 @@
 
     <lvc:CartesianChart>
         <lvc:CartesianChart.Series>
-            <lvc:XamlStepLineSeries Values="{Binding Values1}"/>
-            <lvc:XamlStepLineSeries Values="{Binding Values2}"/>
-            <lvc:XamlStepLineSeries Values="{Binding Values3}"/>
+            <lvc:XamlStackedStepAreaSeries Values="{Binding Values1}"/>
+            <lvc:XamlStackedStepAreaSeries Values="{Binding Values2}"/>
+            <lvc:XamlStackedStepAreaSeries Values="{Binding Values3}"/>
         </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 
