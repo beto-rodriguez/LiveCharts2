@@ -6,30 +6,25 @@ namespace LiveChartsCore.UnitTesting.MockedObjects;
 
 public class TestObserver<T> : IDisposable
 {
-    private readonly CollectionDeepObserver observerer;
-    private IEnumerable<T> observedCollection;
+    private readonly CollectionDeepObserver _observerer;
 
     public TestObserver()
     {
-        observerer = new CollectionDeepObserver(() => CollectionChangedCount++);
+        _observerer = new CollectionDeepObserver(() => ChangesCount++);
     }
 
     public IEnumerable<T> MyCollection
     {
-        get => observedCollection;
+        get;
         set
         {
-            observerer.Dispose();
-            observerer.Initialize(value);
-            observedCollection = value;
+            _observerer.Dispose();
+            _observerer.Initialize(value);
+            field = value;
         }
     }
 
-    public int CollectionChangedCount { get; private set; }
-    public int PropertyChangedCount { get; private set; }
+    public int ChangesCount { get; private set; }
 
-    public void Dispose()
-    {
-        observerer.Dispose();
-    }
+    public void Dispose() => _observerer.Dispose();
 }
