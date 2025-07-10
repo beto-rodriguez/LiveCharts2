@@ -436,8 +436,9 @@ public class DataFactory<TModel>
             }
 
             point.Context.DataSource = item;
-            entity.MetaData.EntityIndex = index++;
+            entity.MetaData.EntityIndex = index;
             entity.Coordinate = mapper(item, index);
+            index++;
 
             yield return entity;
         }
