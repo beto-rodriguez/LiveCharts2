@@ -60,14 +60,14 @@ public class RadialGradientPaint : SkiaPaint
     /// space the colors, default is null.
     /// </param>
     /// <param name="tileMode">
-    /// The shader tile mode, default is <see cref="SKShaderTileMode.Repeat"/>.
+    /// The shader tile mode, default is <see cref="SKShaderTileMode.Clamp"/>.
     /// </param>
     public RadialGradientPaint(
         SKColor[] gradientStops,
         SKPoint? center = null,
         float radius = 0.5f,
         float[]? colorPos = null,
-        SKShaderTileMode tileMode = SKShaderTileMode.Repeat)
+        SKShaderTileMode tileMode = SKShaderTileMode.Clamp)
     {
         _gradientStops = gradientStops;
         center ??= new SKPoint(0.5f, 0.5f);
@@ -264,5 +264,6 @@ public class RadialGradientPaint : SkiaPaint
     }
 
     private static SKRect GetDrawRectangleSize(SkiaSharpDrawingContext drawingContext) =>
+        // ideally, we should also let the user use the shape bounds.
         new(0, 0, drawingContext.Info.Width, drawingContext.Info.Height);
 }

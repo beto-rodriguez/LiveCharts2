@@ -243,7 +243,7 @@ public class LinearGradientPaintExtension : BaseSkiaPaintExtention
     /// <summary>
     /// Gets or sets the tile mode.
     /// </summary>
-    public SKShaderTileMode TileMode { get; set; } = SKShaderTileMode.Repeat;
+    public SKShaderTileMode TileMode { get; set; } = SKShaderTileMode.Clamp;
 
     /// <inheritdoc/>
     protected override object OnValueRequested(object serviceProvider)
@@ -320,7 +320,7 @@ public class RadialGradientPaintExtension : BaseSkiaPaintExtention
     /// <summary>
     /// Gets or sets the tile mode.
     /// </summary>
-    public SKShaderTileMode TileMode { get; set; } = SKShaderTileMode.Repeat;
+    public SKShaderTileMode TileMode { get; set; } = SKShaderTileMode.Clamp;
 
     /// <inheritdoc/>
     protected override object OnValueRequested(object serviceProvider)

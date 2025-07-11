@@ -49,14 +49,14 @@ namespace LiveChartsCore.SkiaSharpView.Painting;
 /// space the colors, default is null.
 /// </param>
 /// <param name="tileMode">
-/// The shader tile mode, default is <see cref="SKShaderTileMode.Repeat"/>.
+/// The shader tile mode, default is <see cref="SKShaderTileMode.Clamp"/>.
 /// </param>
 public class LinearGradientPaint(
     SKColor[] gradientStops,
     SKPoint startPoint,
     SKPoint endPoint,
     float[]? colorPos = null,
-    SKShaderTileMode tileMode = SKShaderTileMode.Repeat)
+    SKShaderTileMode tileMode = SKShaderTileMode.Clamp)
         : SkiaPaint
 {
     private SkiaSharpDrawingContext? _drawingContext;
@@ -300,5 +300,6 @@ public class LinearGradientPaint(
     }
 
     private static SKRect GetDrawRectangleSize(SkiaSharpDrawingContext drawingContext) =>
+        // ideally, we should also let the user use the shape bounds.
         new(0, 0, drawingContext.Info.Width, drawingContext.Info.Height);
 }
