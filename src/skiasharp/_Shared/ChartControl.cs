@@ -133,7 +133,7 @@ public abstract partial class ChartControl
 
     private void InitializeObservers()
     {
-#if AVALONIA_LVC || MAUI_LVC || UNO_LVC || MAUI_LVC || WPF_LVC
+#if AVALONIA_LVC || MAUI_LVC || WINUI_LVC || MAUI_LVC || WPF_LVC
         Observe = new ChartObserver(() => CoreChart?.Update(), AddUIElement, RemoveUIElement)
 #else
         Observe = new ChartObserver(() => CoreChart?.Update())
@@ -142,7 +142,7 @@ public abstract partial class ChartControl
             .Collection(nameof(VisualElements))
             .Property(nameof(Title));
 
-#if AVALONIA_LVC || MAUI_LVC || UNO_LVC || MAUI_LVC || WPF_LVC
+#if AVALONIA_LVC || MAUI_LVC || WINUI_LVC || MAUI_LVC || WPF_LVC
         // if xaml... add the series template/source observer
         Observe.Add(
              nameof(SeriesSource),
