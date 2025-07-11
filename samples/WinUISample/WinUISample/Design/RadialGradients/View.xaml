@@ -28,7 +28,7 @@
     The TileMode property defines how the gradient is repeated.
      -->
 
-    <lvc:PieChart>
+    <lvc:PieChart LegendPosition="Right">
         <lvc:PieChart.Series>
             <lvc:XamlPieSeries
                 SeriesName="Maria"
