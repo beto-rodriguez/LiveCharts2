@@ -17,6 +17,5 @@
     <Compile Include="$(MSBuildThisFileDirectory)PolarChart.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ThemeListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)XamlSeries.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Xtentions.cs" />
   </ItemGroup>
 </Project>

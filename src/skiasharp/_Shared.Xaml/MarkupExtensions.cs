@@ -22,21 +22,64 @@
 
 using System;
 using System.Collections.Generic;
-using System.Windows.Markup;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
 using LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
+using LiveChartsCore.SkiaSharpView.TypeConverters;
 using SkiaSharp;
 
+#if AVALONIA_LVC
+using Extension = Avalonia.Markup.Xaml.MarkupExtension;
+namespace LiveChartsCore.SkiaSharpView.Avalonia;
+#elif MAUI_LVC
+using Extension = Microsoft.Maui.Controls.Xaml.IMarkupExtension;
+namespace LiveChartsCore.SkiaSharpView.Maui;
+#elif WINUI_LVC
+using Extension = Microsoft.UI.Xaml.Markup.MarkupExtension;
+namespace LiveChartsCore.SkiaSharpView.WinUI;
+#elif WPF_LVC
+using Extension = System.Windows.Markup.MarkupExtension;
 namespace LiveChartsCore.SkiaSharpView.WPF;
+#endif
+
+/// <summary>
+/// The base LiveCharts extension.
+/// </summary>
+public abstract class BaseExtension : Extension
+{
+    /// <summary>
+    /// Gets the value to provide for the extension.
+    /// </summary>
+#if WINUI_LVC
+    protected override object ProvideValue(Microsoft.UI.Xaml.IXamlServiceProvider serviceProvider)
+#elif MAUI_LVC
+    public object ProvideValue(IServiceProvider serviceProvider)
+#else
+    public override object ProvideValue(IServiceProvider serviceProvider)
+#endif
+    {
+#pragma warning disable IDE0022 // Use expression body for method
+        return OnValueRequested(serviceProvider);
+#pragma warning restore IDE0022 // Use expression body for method
+    }
+
+    /// <summary>
+    /// Gets the value to provide for the extension, <paramref name="serviceProvider"/> is
+    /// the UI framework service provider, in case required use #IF directives to cast it
+    /// to the UI framework type.
+    /// </summary>
+    /// <param name="serviceProvider">The service provider.</param>
+    /// <returns></returns>
+    protected abstract object OnValueRequested(object serviceProvider);
+}
 
 /// <summary>
 /// The base skia paint extension.
 /// </summary>
-public abstract class BaseSkiaPaintExtention : MarkupExtension
+public abstract class BaseSkiaPaintExtention : BaseExtension
 {
     /// <summary>
     /// Gets or sets a value indicating whether the paint should be antialias.
@@ -46,7 +89,7 @@ public abstract class BaseSkiaPaintExtention : MarkupExtension
     /// <summary>
     /// Gets or sets the stroke width.
     /// </summary>
-    public float StrokeWidth { get; set; } = 1f;
+    public double StrokeWidth { get; set; } = 1f;
 
     /// <summary>
     /// Gets or sets the stroke cap.
@@ -56,7 +99,7 @@ public abstract class BaseSkiaPaintExtention : MarkupExtension
     /// <summary>
     /// Gets or sets the stroke miter.
     /// </summary>
-    public float StrokeMiter { get; set; }
+    public double StrokeMiter { get; set; }
 
     /// <summary>
     /// Gets or sets the stroke join.
@@ -105,9 +148,9 @@ public abstract class BaseSkiaPaintExtention : MarkupExtension
     protected void MapProperties(SkiaPaint paint)
     {
         paint.IsAntialias = IsAntialias;
-        paint.StrokeThickness = StrokeWidth;
+        paint.StrokeThickness = (float)StrokeWidth;
         paint.StrokeCap = StrokeCap;
-        paint.StrokeMiter = StrokeMiter;
+        paint.StrokeMiter = (float)StrokeMiter;
         paint.StrokeJoin = StrokeJoin;
         paint.ImageFilter = ImageFilter;
         paint.PathEffect = PathEffect;
@@ -154,10 +197,8 @@ public class SolidColorPaintExtension : BaseSkiaPaintExtention
     /// </summary>
     public string? Color { get; set; } = "#00000000";
 
-    /// <summary>
-    /// ...
-    /// </summary>
-    public override object ProvideValue(IServiceProvider serviceProvider)
+    /// <inheritdoc/>
+    protected override object OnValueRequested(object serviceProvider)
     {
         if (!SKColor.TryParse(Color, out var color))
             return new SolidColorPaint(SKColors.Transparent);
@@ -204,10 +245,8 @@ public class LinearGradientPaintExtension : BaseSkiaPaintExtention
     /// </summary>
     public SKShaderTileMode TileMode { get; set; } = SKShaderTileMode.Repeat;
 
-    /// <summary>
-    /// ...
-    /// </summary>
-    public override object ProvideValue(IServiceProvider serviceProvider)
+    /// <inheritdoc/>
+    protected override object OnValueRequested(object serviceProvider)
     {
         var colorsHexArray = Colors?.Split(',');
         if (colorsHexArray is null || colorsHexArray.Length == 0)
@@ -268,7 +307,7 @@ public class RadialGradientPaintExtension : BaseSkiaPaintExtention
     /// <summary>
     /// Gets or sets the radius.
     /// </summary>
-    public float Radius { get; set; } = 0.5f;
+    public double Radius { get; set; } = 0.5f;
 
     /// <summary>
     /// Gets or sets the colors positions separated by commas,
@@ -283,10 +322,8 @@ public class RadialGradientPaintExtension : BaseSkiaPaintExtention
     /// </summary>
     public SKShaderTileMode TileMode { get; set; } = SKShaderTileMode.Repeat;
 
-    /// <summary>
-    /// ...
-    /// </summary>
-    public override object ProvideValue(IServiceProvider serviceProvider)
+    /// <inheritdoc/>
+    protected override object OnValueRequested(object serviceProvider)
     {
         var colorsHexArray = Colors?.Split(',');
         if (colorsHexArray is null || colorsHexArray.Length == 0)
@@ -319,7 +356,7 @@ public class RadialGradientPaintExtension : BaseSkiaPaintExtention
             }
         }
 
-        var paint = new RadialGradientPaint([.. colors], center, Radius, colorPositions, TileMode);
+        var paint = new RadialGradientPaint([.. colors], center, (float)Radius, colorPositions, TileMode);
 
         MapProperties(paint);
 
@@ -330,7 +367,7 @@ public class RadialGradientPaintExtension : BaseSkiaPaintExtention
 /// <summary>
 /// The frame extension.
 /// </summary>
-public class FrameExtension : MarkupExtension
+public class FrameExtension : BaseExtension
 {
     /// <summary>
     /// Gets or sets the fill.
@@ -342,10 +379,8 @@ public class FrameExtension : MarkupExtension
     /// </summary>
     public Paint? Stroke { get; set; }
 
-    /// <summary>
-    /// ...
-    /// </summary>
-    public override object ProvideValue(IServiceProvider serviceProvider)
+    /// <inheritdoc/>
+    protected override object OnValueRequested(object serviceProvider)
     {
         return new DrawMarginFrame
         {
@@ -358,7 +393,7 @@ public class FrameExtension : MarkupExtension
 /// <summary>
 /// The from shared axes extension.
 /// </summary>
-public class FromSharedAxesExtension : MarkupExtension
+public class FromSharedAxesExtension : BaseExtension
 {
     /// <summary>
     /// Gets or sets the pair instance.
@@ -370,10 +405,8 @@ public class FromSharedAxesExtension : MarkupExtension
     /// </summary>
     public PairElement Element { get; set; }
 
-    /// <summary>
-    /// ...
-    /// </summary>
-    public override object ProvideValue(IServiceProvider serviceProvider)
+    /// <inheritdoc/>
+    protected override object OnValueRequested(object serviceProvider)
     {
 #pragma warning disable IDE0046 // Convert to conditional expression
         if (AxesPair is null || AxesPair.First is null || AxesPair.Second is null)
@@ -408,19 +441,36 @@ public class FromSharedAxesExtension : MarkupExtension
 /// <summary>
 /// The drop shadow extension.
 /// </summary>
-public class ShadowExtension(string stringFormat) : MarkupExtension
+public class ShadowExtension : BaseExtension
 {
     /// <summary>
-    /// ...
+    /// Initializes a new instance of the <see cref="ShadowExtension"/> class.
     /// </summary>
-    public override object ProvideValue(IServiceProvider serviceProvider)
+    public ShadowExtension() { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ShadowExtension"/> class.
+    /// </summary>
+    /// <param name="stringFormat">The string format example: "2,2,8,8,#000" or "2,2,8,#000" or "2,8,#000".</param>
+    public ShadowExtension(string stringFormat)
+    {
+        Value = stringFormat;
+    }
+
+    /// <summary>
+    /// The Shadow in string format example: "2,2,8,8,#000" or "2,2,8,#000" or "2,8,#000".
+    /// </summary>
+    public string Value { get; set; } = "0,0,4,4,#000";
+
+    /// <inheritdoc/>
+    protected override object OnValueRequested(object serviceProvider)
     {
         float Dx = 0, Dy = 0, SigmaX = 0, SigmaY = 0;
         var Color = "#000";
 
-        if (stringFormat is not null)
+        if (Value is not null)
         {
-            var split = stringFormat.Split(',');
+            var split = Value.Split(',');
 
             if (split.Length == 5)
             {
@@ -462,9 +512,9 @@ public class ShadowExtension(string stringFormat) : MarkupExtension
 }
 
 /// <summary>
-/// 
+/// The dashed extension.
 /// </summary>
-public class DashedExtension : MarkupExtension
+public class DashedExtension : BaseExtension
 {
     private static readonly float[] s_defaultDashes = [2, 2];
 
@@ -476,12 +526,10 @@ public class DashedExtension : MarkupExtension
     /// <summary>
     /// Gets or sets the dash phase.
     /// </summary>
-    public float Phase { get; set; } = 0f;
+    public double Phase { get; set; } = 0f;
 
-    /// <summary>
-    /// ...
-    /// </summary>
-    public override object ProvideValue(IServiceProvider serviceProvider)
+    /// <inheritdoc/>
+    protected override object OnValueRequested(object serviceProvider)
     {
         if (Array is null) return new DashEffect(s_defaultDashes);
 
@@ -498,6 +546,197 @@ public class DashedExtension : MarkupExtension
             dashes.Count == 0
                 ? s_defaultDashes
                 : [.. dashes],
-            Phase);
+            (float)Phase);
     }
 }
+
+/// <summary>
+/// The padding extension.
+/// </summary>
+public class PaddingExtension : BaseExtension
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PaddingExtension"/> class.
+    /// </summary>
+    public PaddingExtension() { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PaddingExtension"/> class with a string format.
+    /// </summary>
+    /// <param name="stringFormat">The string format, example: "0,0" or "10,20,30,40".</param>
+    public PaddingExtension(string stringFormat)
+    {
+        Value = stringFormat;
+    }
+
+    /// <summary>
+    /// The value in string format, example: "0,0" or "10,20,30,40".
+    /// </summary>
+    public string Value { get; set; } = "0,0";
+
+    /// <inheritdoc/>
+    protected override object OnValueRequested(object serviceProvider) =>
+        PaddingTypeConverter.ParsePadding(Value);
+}
+
+/// <summary>
+/// The margin extension.
+/// </summary>
+public class MarginExtension : BaseExtension
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MarginExtension"/> class.
+    /// </summary>
+    public MarginExtension() { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MarginExtension"/> class with a string format.
+    /// </summary>
+    /// <param name="stringFormat">The string format, example: "0,0" or "10,20,30,40".</param>
+    public MarginExtension(string stringFormat)
+    {
+        Value = stringFormat;
+    }
+
+    /// <summary>
+    /// The value in string format, example: "0,0" or "10,20,30,40".
+    /// </summary>
+    public string Value { get; set; } = "0,0";
+
+    /// <inheritdoc/>
+    protected override object OnValueRequested(object serviceProvider) =>
+        MarginTypeConverter.ParseMargin(Value);
+}
+
+/// <summary>
+/// The point extension.
+/// </summary>
+public class PointExtension : BaseExtension
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PointExtension"/> class.
+    /// </summary>
+    public PointExtension() { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PointExtension"/> class with a string format.
+    /// </summary>
+    /// <param name="stringFormat">The string format, example: "0,0" or "10,20".</param>
+    public PointExtension(string stringFormat)
+    {
+        Value = stringFormat;
+    }
+
+    /// <summary>
+    /// The value in string format, example: "0,0" or "10,20".
+    /// </summary>
+    public string Value { get; set; } = "0,0";
+
+    /// <inheritdoc/>
+    protected override object OnValueRequested(object serviceProvider) =>
+        PointTypeConverter.ParsePoint(Value);
+}
+
+/// <summary>
+/// The color array extension.
+/// </summary>
+public class ColorArrayExtension : BaseExtension
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ColorArrayExtension"/> class.
+    /// </summary>
+    public ColorArrayExtension() { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ColorArrayExtension"/> class with a string format.
+    /// </summary>
+    /// <param name="stringFormat">The string format, example: "#000,#FFF,#F00".</param>
+    public ColorArrayExtension(string stringFormat)
+    {
+        Values = stringFormat;
+    }
+
+    /// <summary>
+    /// Gets or sets the values in string format, example: "#000,#FFF,#F00".
+    /// </summary>
+    public string Values { get; set; } = "#000";
+
+    /// <inheritdoc/>
+    protected override object OnValueRequested(object serviceProvider) =>
+        HexToLvcColorArrayTypeConverter.Parse(Values);
+}
+
+/// <summary>
+/// The color extension.
+/// </summary>
+public class ColorExtension : BaseExtension
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ColorExtension"/> class.
+    /// </summary>
+    public ColorExtension() { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ColorExtension"/> class with a string format.
+    /// </summary>
+    /// <param name="stringFormat">The string format, example: "#00000000" or "#FFF" or "#F00".</param>
+    public ColorExtension(string stringFormat)
+    {
+        Hex = stringFormat;
+    }
+
+    /// <summary>
+    /// The color in hex format, default value is #00000000.
+    /// </summary>
+    public string Hex { get; set; } = "#00000000";
+
+    /// <inheritdoc/>
+    protected override object OnValueRequested(object serviceProvider)
+    {
+        LvcColor? response = LvcColor.TryParse(Hex, out var c)
+            ? c
+            : null;
+
+        return response!;
+    }
+}
+
+#if WINUI_LVC
+/// <summary>
+/// The float extension, becase WinUI parses numeric strings as double.
+/// </summary>
+public class FloatExtension : BaseExtension
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public string Value { get; set; } = "0";
+
+    /// <inheritdoc/>
+    protected override object OnValueRequested(object serviceProvider) =>
+        float.TryParse(Value, out var value) ? value : 0f;
+}
+
+/// <summary>
+/// The limits converter, this converter is used to convert nullable double values to double values,
+/// this is necessary because WinUI does not support nullable value types in XAML.
+/// </summary>
+public class LimitsConverter : Microsoft.UI.Xaml.Data.IValueConverter
+{
+    /// <inheritdoc/>
+    public object? Convert(object value, Type targetType, object parameter, string language)
+    {
+        return value is double d
+            ? d
+            : double.NaN;
+    }
+
+    /// <inheritdoc/>
+    public object? ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        return value is double d && !double.IsNaN(d)
+            ? d
+            : null;
+    }
+}
+#endif

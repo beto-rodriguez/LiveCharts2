@@ -10,5 +10,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Series.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PolarAxes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MarkupExtensions.cs" />
   </ItemGroup>
 </Project>
