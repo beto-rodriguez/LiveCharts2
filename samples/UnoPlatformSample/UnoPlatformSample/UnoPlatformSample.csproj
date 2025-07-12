@@ -1,4 +1,4 @@
-<Project Sdk="Uno.Sdk">
+﻿<Project Sdk="Uno.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net9.0-android;net9.0-ios;net9.0-browserwasm;net9.0-desktop</TargetFrameworks>
 
@@ -38,7 +38,18 @@
     </UnoFeatures>
   </PropertyGroup>
 
-  <ItemGroup>
+    <ItemGroup>
+        <Page Include="..\..\WinUISample\WinUISample\Axes\ColorsAndPosition\*.xaml">
+            <Link>Sample\%(RecursiveDir)%(Filename)%(Extension)</Link>
+        </Page>
+        <Compile Include="..\..\WinUISample\WinUISample\Axes\ColorsAndPosition\*.cs">
+            <Link>Sample\%(RecursiveDir)%(Filename)%(Extension)</Link>
+            <DependentUpon>%(Filename).xaml</DependentUpon>
+        </Compile>
+    </ItemGroup>
+
+
+    <ItemGroup>
     <ProjectReference Include="..\..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Uno.WinUI\LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj" />
     <ProjectReference Include="..\..\ViewModelsSamples\ViewModelsSamples.csproj" />
   </ItemGroup>

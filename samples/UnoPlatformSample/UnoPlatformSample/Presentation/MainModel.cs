@@ -1,8 +1,16 @@
+using System.ComponentModel;
+using Uno.Extensions;
+using Uno.Extensions.Reactive;
+using ViewModelsSamples;
+
 namespace UnoPlatformSample.Presentation;
 
-public partial record MainModel
+public partial record MainModel : INotifyPropertyChanged
 {
     private INavigator _navigator;
+    private string selectedSample = "...";
+
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public MainModel(
         IStringLocalizer localizer,
@@ -10,19 +18,17 @@ public partial record MainModel
         INavigator navigator)
     {
         _navigator = navigator;
-        Title = "Main";
-        Title += $" - {localizer["ApplicationName"]}";
-        Title += $" - {appInfo?.Value?.Environment}";
     }
 
-    public string? Title { get; }
-
-    public IState<string> Name => State<string>.Value(this, () => string.Empty);
-
-    public async Task GoToSecond()
+    public string[] Samples { get; } = ViewModelsSamples.Index.Samples;
+    public string SelectedSample 
     {
-        var name = await Name;
-        await _navigator.NavigateViewModelAsync<SecondModel>(this, data: new Entity(name!));
+        get => selectedSample; 
+        set { selectedSample = value; OnSelectedSampleChanged(value); } 
     }
 
+    private void OnSelectedSampleChanged(string value)
+    {
+        _navigator.NavigateViewModelAsync<SecondModel>(this, data: new Entity(value));
+    }
 }

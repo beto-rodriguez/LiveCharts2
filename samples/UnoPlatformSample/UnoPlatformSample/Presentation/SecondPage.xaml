@@ -9,22 +9,21 @@
       xmlns:um="using:Uno.Material"
       Background="{ThemeResource BackgroundBrush}">
 
+    <Page.Resources>
+        <local:IndexToContentConverter x:Key="IndexToContentConverter" />
+    </Page.Resources>
+    
     <Grid utu:SafeArea.Insets="VisibleBounds">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <utu:NavigationBar Content="Second Page" />
+        <utu:NavigationBar Content="{Binding Entity.Name}" />
 
-        <StackPanel Grid.Row="1"
-          HorizontalAlignment="Center"
-          VerticalAlignment="Center">
-            <TextBlock Text="{Binding Entity.Name}"
-        HorizontalAlignment="Center"
-        VerticalAlignment="Center"
-        Margin="8" />
-        </StackPanel>
+        <ContentControl
+            Grid.Row="1"
+            Content="{Binding Entity.Name, Converter={StaticResource IndexToContentConverter}}"/>
 
     </Grid>
 </Page>
