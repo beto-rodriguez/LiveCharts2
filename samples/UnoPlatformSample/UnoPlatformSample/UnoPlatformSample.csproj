@@ -39,15 +39,14 @@
   </PropertyGroup>
 
     <ItemGroup>
-        <Page Include="..\..\WinUISample\WinUISample\Axes\ColorsAndPosition\*.xaml">
-            <Link>Sample\%(RecursiveDir)%(Filename)%(Extension)</Link>
+        <Page Include="..\..\WinUISample\WinUISample\Samples\**\*.xaml">
+            <Link>Samples\%(RecursiveDir)%(Filename)%(Extension)</Link>
         </Page>
-        <Compile Include="..\..\WinUISample\WinUISample\Axes\ColorsAndPosition\*.cs">
-            <Link>Sample\%(RecursiveDir)%(Filename)%(Extension)</Link>
+        <Compile Include="..\..\WinUISample\WinUISample\Samples\**\*.cs">
+            <Link>Samples\%(RecursiveDir)%(Filename)%(Extension)</Link>
             <DependentUpon>%(Filename).xaml</DependentUpon>
         </Compile>
     </ItemGroup>
-
 
     <ItemGroup>
     <ProjectReference Include="..\..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Uno.WinUI\LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj" />
