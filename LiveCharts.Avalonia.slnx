@@ -1,6 +1,10 @@
 <Solution>
   <Folder Name="/Sample/">
     <Project Path="samples/AvaloniaSample/AvaloniaSample.csproj" />
+    <Project Path="samples/AvaloniaSample/Platforms/AvaloniaSample.Android/AvaloniaSample.Android.csproj">
+      <Deploy />
+    </Project>
+    <Project Path="samples/AvaloniaSample/Platforms/AvaloniaSample.Desktop/AvaloniaSample.Desktop.csproj" />
     <Project Path="samples/ViewModelsSamples/ViewModelsSamples.csproj" />
   </Folder>
   <Project Path="generators/LiveChartsGenerators/LiveChartsGenerators.csproj" />
