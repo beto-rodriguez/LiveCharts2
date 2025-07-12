@@ -23,7 +23,7 @@
         it seems that nested extensions are not working in Uno
         CSC : error UXAML0001: MarkupExtension SolidColorPaintExtension is not supported.
         -->
-`
+
         <lvc:CartesianChart.Series>
             <lvc:XamlLineSeries
                 Values="{Binding Values}"
