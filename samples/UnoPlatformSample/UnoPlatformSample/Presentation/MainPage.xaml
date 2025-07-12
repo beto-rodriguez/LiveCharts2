@@ -9,38 +9,25 @@
     NavigationCacheMode="Required"
     Background="{ThemeResource BackgroundBrush}">
 
-    <ScrollViewer IsTabStop="True">
-        <Grid utu:SafeArea.Insets="VisibleBounds">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
+    <Grid
+        RowDefinitions="Auto,*"
+        utu:SafeArea.Insets="VisibleBounds">
 
-            <utu:NavigationBar Content="LiveCharts demo" />
+        <utu:NavigationBar
+            Content="LiveCharts demo" />
 
-            <StackPanel
-                Grid.Row="1">
-                <TextBlock
-                    Text="Select a sample to run:"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Margin="8" />
-                <ComboBox
-                    ItemsSource="{Binding Samples}"
-                    SelectedValue="{Binding SelectedSample,Mode=TwoWay}"/>
-            </StackPanel>
+        <StackPanel
+            Grid.Row="1">
+            <TextBlock
+                Text="Select a sample to run:"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Margin="8" />
+            <ComboBox
+                ItemsSource="{Binding Samples}"
+                SelectedValue="{Binding SelectedSample,Mode=TwoWay}"/>
+        </StackPanel>
 
-            <!--<StackPanel Grid.Row="1"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Spacing="16">
-                <TextBox Text="{Binding Name, Mode=TwoWay}"
-            PlaceholderText="Enter your name:" />
-                <Button Content="Go to Second Page"
-            AutomationProperties.AutomationId="SecondPageButton"
-            Command="{Binding GoToSecond}" />
-            </StackPanel>-->
-        </Grid>
-    </ScrollViewer>
+    </Grid>
 
 </Page>
