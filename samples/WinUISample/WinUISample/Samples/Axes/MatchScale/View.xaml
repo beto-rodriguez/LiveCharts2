@@ -14,10 +14,16 @@
 
     <lvc:CartesianChart
         MatchAxesScreenDataRatio="True"
-        DrawMarginFrame="{lvc:Frame Stroke={lvc:SolidColorPaint Color='#64b4b4b4', StrokeWidth=2}}"
         ZoomMode="Both"
         TooltipPosition="Hidden">
 
+        <!--
+        DrawMarginFrame="{lvc:Frame Stroke={lvc:SolidColorPaint Color='#64b4b4b4', StrokeWidth=2}}"
+
+        it seems that nested extensions are not working in Uno
+        CSC : error UXAML0001: MarkupExtension SolidColorPaintExtension is not supported.
+        -->
+`
         <lvc:CartesianChart.Series>
             <lvc:XamlLineSeries
                 Values="{Binding Values}"
