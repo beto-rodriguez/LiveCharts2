@@ -35,6 +35,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI;
 public abstract partial class ChartControl : UserControl, IChartView
 {
     private readonly ThemeListener _themeListener;
+    private readonly ChartBehaviour _chartBehaviour;
     private static readonly bool s_isWebAssembly = RuntimeInformation.IsOSPlatform(OSPlatform.Create("BROWSER"));
 
     /// <summary>
@@ -60,17 +61,16 @@ public abstract partial class ChartControl : UserControl, IChartView
 
         _themeListener = new(CoreChart.ApplyTheme, DispatcherQueue);
 
-        // We use the behaviours assembly to share support for Uno
-        var chartBehaviour = new ChartBehaviour();
+        _chartBehaviour = new ChartBehaviour();
 
-        chartBehaviour.Pressed += OnPressed;
-        chartBehaviour.Moved += OnMoved;
-        chartBehaviour.Released += OnReleased;
-        chartBehaviour.Scrolled += OnScrolled;
-        chartBehaviour.Pinched += OnPinched;
-        chartBehaviour.Exited += OnExited;
+        _chartBehaviour.Pressed += OnPressed;
+        _chartBehaviour.Moved += OnMoved;
+        _chartBehaviour.Released += OnReleased;
+        _chartBehaviour.Scrolled += OnScrolled;
+        _chartBehaviour.Pinched += OnPinched;
+        _chartBehaviour.Exited += OnExited;
 
-        chartBehaviour.On(this);
+        _chartBehaviour.On(this);
     }
 
     /// <summary>
@@ -95,6 +95,7 @@ public abstract partial class ChartControl : UserControl, IChartView
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
         _themeListener.Dispose();
+        _chartBehaviour.Off(this);
         Observe.Dispose();
         CoreChart.Unload();
     }

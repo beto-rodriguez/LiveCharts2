@@ -47,7 +47,7 @@ public partial class ChartBehaviour : Behaviours.ChartBehaviour
     {
         // TODO: Detect the DPI and screen size changes.
 
-#if HAS_UNO_WINUI
+#if HAS_UNO || HAS_UNO_WINUI
         var currentView = Windows.Graphics.Display.DisplayInformation.GetForCurrentView();
 
         s_density = currentView.LogicalDpi / 96.0f;
@@ -95,6 +95,46 @@ public partial class ChartBehaviour : Behaviours.ChartBehaviour
         element.PointerReleased += OnUnoPointerReleased;
         element.PointerWheelChanged += OnUnoPointerWheelChanged;
         element.PointerExited += OnUnoPointerExited;
+
+#endif
+    }
+
+    /// <summary>
+    /// Detaches the native events from the specified element.
+    /// </summary>
+    /// <param name="element">The element.</param>
+    public void Off(FrameworkElement element)
+    {
+#if ANDROID
+
+        element.Touch -= OnAndroidTouched;
+        element.Hover -= OnAndroidHover;
+
+#elif MACCATALYST || IOS
+
+        element.UserInteractionEnabled = false;
+#if MACCATALYST
+        element.RemoveGestureRecognizer(MacCatalystHoverGestureRecognizer);
+#endif
+        element.RemoveGestureRecognizer(MacCatalystLongPressGestureRecognizer);
+        element.RemoveGestureRecognizer(MacCatalystPinchGestureRecognizer);
+        element.RemoveGestureRecognizer(MacCatalystPanGestureRecognizer);
+
+#elif WINDOWS
+
+        element.PointerPressed -= OnWindowsPointerPressed;
+        element.PointerMoved -= OnWindowsPointerMoved;
+        element.PointerReleased -= OnWindowsPointerReleased;
+        element.PointerWheelChanged -= OnWindowsPointerWheelChanged;
+        element.PointerExited -= OnWindowsPointerExited;
+
+#elif HAS_UNO || HAS_UNO_WINUI
+
+        element.PointerPressed -= OnUnoPointerPressed;
+        element.PointerMoved -= OnUnoPointerMoved;
+        element.PointerReleased -= OnUnoPointerReleased;
+        element.PointerWheelChanged -= OnUnoPointerWheelChanged;
+        element.PointerExited -= OnUnoPointerExited;
 
 #endif
     }
