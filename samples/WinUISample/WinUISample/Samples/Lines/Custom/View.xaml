@@ -1,0 +1,51 @@
+﻿<UserControl
+    x:Class="WinUISample.Lines.Custom.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
+    xmlns:vms="using:ViewModelsSamples.Lines.Custom"
+    xmlns:local="using:WinUISample.Lines.Custom"
+    mc:Ignorable="d">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <lvc:CartesianChart>
+        <lvc:CartesianChart.Series>
+            <!--
+            The CustomStarLineSeries is a line series that draws a star shape.
+            -->
+            <lvc:XamlLineSeries
+                Values="{Binding Values1}"
+                Fill="{x:Null}"
+                GeometrySize="20"/>
+
+            <local:CustomStarLineSeries
+                Values="{Binding Values2}"
+                Fill="{x:Null}"
+                GeometrySize="20"/>
+
+            <!--
+            You can also use SVG paths to draw the geometry
+            the VariableSVGPathGeometry can change the drawn path at runtime
+            -->
+            <local:CustomVariableSVGPathLineSeries
+                GeometrySvg="{Binding PinPath}"
+                Values="{Binding Values3}"
+                Fill="{x:Null}"
+                GeometrySize="20"/>
+
+            <!--
+            Finally you can also use SkiaSharp to draw your own geometry
+            -->
+            <local:CustomMyGeometryLineSeries
+                Values="{Binding Values4}"
+                Fill="{x:Null}"
+                GeometrySize="20"/>
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
+
+</UserControl>
