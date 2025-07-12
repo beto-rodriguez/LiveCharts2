@@ -1,0 +1,46 @@
+<Project Sdk="Uno.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net9.0-android;net9.0-ios;net9.0-browserwasm;net9.0-desktop</TargetFrameworks>
+
+    <OutputType>Exe</OutputType>
+    <UnoSingleProject>true</UnoSingleProject>
+
+    <!-- Display name -->
+    <ApplicationTitle>UnoPlatformSample</ApplicationTitle>
+    <!-- App Identifier -->
+    <ApplicationId>com.companyname.UnoPlatformSample</ApplicationId>
+    <!-- Versions -->
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+    <!-- Package Publisher -->
+    <ApplicationPublisher>btord</ApplicationPublisher>
+    <!-- Package Description -->
+    <Description>UnoPlatformSample powered by Uno Platform.</Description>
+
+    <!--
+      UnoFeatures let's you quickly add and manage implicit package references based on the features you want to use.
+      https://aka.platform.uno/singleproject-features
+    -->
+    <UnoFeatures>
+      Material;
+      Dsp;
+      Hosting;
+      Toolkit;
+      Logging;
+      MVUX;
+      Configuration;
+      HttpKiota;
+      Serialization;
+      Localization;
+      Navigation;
+      ThemeService;
+      SkiaRenderer;
+    </UnoFeatures>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Uno.WinUI\LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj" />
+    <ProjectReference Include="..\..\ViewModelsSamples\ViewModelsSamples.csproj" />
+  </ItemGroup>
+
+</Project>
