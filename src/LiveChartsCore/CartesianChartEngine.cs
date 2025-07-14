@@ -436,6 +436,8 @@ public class CartesianChartEngine(
 
         // get seriesBounds
         SetDrawMargin(ControlSize, new Margin());
+        var areAllColumns = true;
+        var columnsFlags = SeriesProperties.Bar | SeriesProperties.PrimaryAxisVerticalOrientation;
 
         foreach (var series in VisibleSeries.Cast<ICartesianSeries>())
         {
@@ -460,6 +462,7 @@ public class CartesianChartEngine(
             }
 
             AppendLimits(xAxis, yAxis, seriesBounds);
+            areAllColumns &= (series.SeriesProperties & columnsFlags) == columnsFlags;
 
             ce._isInternalSet = false;
         }
@@ -745,6 +748,15 @@ public class CartesianChartEngine(
                 ce._isInternalSet = true;
                 axis.DataBounds.Min = axis.DataBounds.Min - p;
                 axis.VisibleDataBounds.Min = axis.VisibleDataBounds.Min - p;
+
+                if (areAllColumns && axis.Orientation == AxisOrientation.Y &&
+                    axis.DataBounds.Min + p >= 0 && axis.DataBounds.Max + p >= 0)
+                {
+                    // exception when all columns and positive
+                    if (axis.VisibleDataBounds.Min < 0)
+                        axis.VisibleDataBounds.Min = 0;
+                }
+
                 ce._isInternalSet = false;
             }
 
@@ -759,6 +771,15 @@ public class CartesianChartEngine(
                 ce._isInternalSet = true;
                 axis.DataBounds.Max = axis.DataBounds.Max + p;
                 axis.VisibleDataBounds.Max = axis.VisibleDataBounds.Max + p;
+
+                if (areAllColumns && axis.Orientation == AxisOrientation.Y &&
+                    axis.DataBounds.Min - p <= 0 && axis.DataBounds.Max - p <= 0)
+                {
+                    // exception when all columns and negative
+                    if (axis.VisibleDataBounds.Min > 0)
+                        axis.VisibleDataBounds.Min = 0;
+                }
+
                 ce._isInternalSet = false;
             }
 
