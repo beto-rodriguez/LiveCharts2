@@ -155,8 +155,11 @@ public abstract partial class ChartControl
         onRemove = RemoveUIElement;
 #endif
 
+#if !BLAZOR_LVC
+        // in blazor this is initialized in the ChartControl constructor.
         _observer = new ChartObserver(
             ConfigureObserver, () => CoreChart?.Update(), onAdd, onRemove);
+#endif
     }
 
     private void OnCoreUpdateStarted(IChartView chart)

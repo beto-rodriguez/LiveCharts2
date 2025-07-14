@@ -228,12 +228,17 @@ public partial class ChartControl
 #endif
                 chart.CoreChart.Update();
 
+#if !BLAZOR_LVC
+                // dont reset in blazor... it seems that blazor sets
+                // the series property on any seriescollection change...
+                // not sure if there is a way to configure this.
                 if (propertyName == nameof(Series))
                 {
                     // when the series collection changes, we re-start the series count.
                     // it makes sense... and also it helps the SeriesSourceObserver
                     chart.CoreChart.ResetNextSeriesId();
                 }
+#endif
             };
 #pragma warning restore IDE0060 // Remove unused parameter
 
