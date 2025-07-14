@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
@@ -33,9 +34,9 @@ public partial class ViewModel : ObservableObject
         }
     };
 
-    public IEnumerable<RectangularSection> Sections { get; set; } = new ObservableCollection<RectangularSection>
+    public IEnumerable<IChartElement> Sections { get; set; } = new ObservableCollection<IChartElement>
     {
-        new()
+        new RectangularSection()
         {
             Xi = 0,
             Xj = 4,
