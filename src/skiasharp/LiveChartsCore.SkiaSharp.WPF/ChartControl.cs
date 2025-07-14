@@ -20,6 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// ==============================================================================
+// 
+// this file contains the WPF specific code for the ChartControl class,
+// the rest of the code can be found in the _Shared project.
+// 
+// ==============================================================================
+
 using System;
 using System.ComponentModel;
 using System.Windows;
