@@ -50,7 +50,6 @@ public class CartesianChartEngine(
 {
     private readonly ICartesianChartView _chartView = view;
     private BoundedDrawnGeometry? _zoomingSection;
-    private int _nextSeries = 0;
     private double _zoomingSpeed = 0;
     private ZoomAndPanMode _zoomMode;
     private ChartElement? _previousDrawMarginFrame;
@@ -440,7 +439,7 @@ public class CartesianChartEngine(
 
         foreach (var series in VisibleSeries.Cast<ICartesianSeries>())
         {
-            if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
+            if (series.SeriesId == -1) series.SeriesId = GetNextSeriesId();
 
             var ce = series.ChartElementSource;
             ce._isInternalSet = true;

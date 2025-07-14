@@ -48,8 +48,6 @@ public class PolarChartEngine(
     CoreMotionCanvas canvas)
         : Chart(canvas, defaultPlatformConfig, view, ChartKind.Polar)
 {
-    private int _nextSeries = 0;
-
     /// <summary>
     /// Gets the angle axes.
     /// </summary>
@@ -251,7 +249,7 @@ public class PolarChartEngine(
         SetDrawMargin(ControlSize, new Margin());
         foreach (var series in VisibleSeries.Cast<IPolarSeries>())
         {
-            if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
+            if (series.SeriesId == -1) series.SeriesId = GetNextSeriesId();
 
             var ce = series.ChartElementSource;
             ce._isInternalSet = true;

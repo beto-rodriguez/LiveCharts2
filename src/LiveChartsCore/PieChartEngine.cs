@@ -48,7 +48,6 @@ public class PieChartEngine(
     CoreMotionCanvas canvas)
         : Chart(canvas, defaultPlatformConfig, view, ChartKind.Pie)
 {
-    private int _nextSeries = 0;
 
     ///<inheritdoc cref="Chart.Series"/>
     public override IEnumerable<ISeries> Series =>
@@ -159,7 +158,7 @@ public class PieChartEngine(
 
         foreach (var series in VisibleSeries.Cast<IPieSeries>())
         {
-            if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
+            if (series.SeriesId == -1) series.SeriesId = GetNextSeriesId();
 
             var ce = series.ChartElementSource;
             ce._isInternalSet = true;

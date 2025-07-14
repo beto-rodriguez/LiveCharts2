@@ -50,7 +50,7 @@ public abstract class Chart
     internal float _titleHeight = 0f;
     internal LvcSize _legendSize;
     internal bool _preserveFirstDraw = false;
-    internal readonly HashSet<int> _drawnSeries = [];
+    internal HashSet<int> _drawnSeries = [];
     internal bool _isFirstDraw = true;
     private readonly ActionThrottler _updateThrottler;
     private readonly ActionThrottler _tooltipThrottler;
@@ -61,6 +61,8 @@ public abstract class Chart
     private bool _isPanning = false;
     private readonly HashSet<ChartPoint> _activePoints = [];
     private LvcSize _previousSize = new();
+    private int _nextSeriesId = 0;
+
 #if NET5_0_OR_GREATER
     private readonly bool _isMobile;
     private bool _isTooltipCanceled;
@@ -730,6 +732,18 @@ public abstract class Chart
         }
 
         return true;
+    }
+
+    /// <summary>
+    /// Gets the next series id.
+    /// </summary>
+    /// <returns></returns>
+    protected int GetNextSeriesId() => _nextSeriesId++;
+
+    internal void ResetNextSeriesId()
+    {
+        _nextSeriesId = 0;
+        _drawnSeries = [];
     }
 
     /// <summary>
