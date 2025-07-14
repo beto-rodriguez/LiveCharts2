@@ -47,7 +47,7 @@
   <Import Project="..\_Shared.Xaml\_Shared.Xaml.projitems" Label="Shared" />
 
   <PropertyGroup>
-    <DefineConstants>$(DefineConstants);MAUI_LVC</DefineConstants>
+    <DefineConstants>$(DefineConstants);MAUI_LVC;XAML_LVC</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

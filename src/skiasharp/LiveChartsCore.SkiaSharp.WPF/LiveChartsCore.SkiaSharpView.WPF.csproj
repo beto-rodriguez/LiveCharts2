@@ -33,7 +33,7 @@
   <Import Project="..\_Shared.Xaml\_Shared.Xaml.projitems" Label="Shared" />
 
   <PropertyGroup>
-    <DefineConstants>$(DefineConstants);WPF_LVC</DefineConstants>
+    <DefineConstants>$(DefineConstants);WPF_LVC;XAML_LVC</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup>

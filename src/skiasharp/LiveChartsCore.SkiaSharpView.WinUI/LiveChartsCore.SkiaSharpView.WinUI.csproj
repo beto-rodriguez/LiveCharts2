@@ -38,7 +38,7 @@
   <Import Project="..\_Shared.Xaml\_Shared.Xaml.projitems" Label="Shared" />
 
   <PropertyGroup>
-    <DefineConstants>$(DefineConstants);WINUI_LVC</DefineConstants>
+    <DefineConstants>$(DefineConstants);WINUI_LVC;XAML_LVC</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

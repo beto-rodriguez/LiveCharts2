@@ -161,8 +161,8 @@ public partial class ChartControl
     /// <inheritdoc cref="IChartView.Series"/>
     static UIProperty<ICollection<ISeries>>       series                  = new(onChanged: OnObservedPropertyChanged(nameof(Series)));
 
-#if AVALONIA_LVC || MAUI_LVC || UNO_LVC || WINUI_LVC || WPF_LVC
-    // templates are nly supported in Avalonia, Maui, Uno, WinUI and WPF.
+#if XAML_LVC
+    // templates are only supported in xaml (Avalonia, Maui, Uno, WinUI and WPF).
 
     /// <summary>
     /// Gets or sets the source of the series.

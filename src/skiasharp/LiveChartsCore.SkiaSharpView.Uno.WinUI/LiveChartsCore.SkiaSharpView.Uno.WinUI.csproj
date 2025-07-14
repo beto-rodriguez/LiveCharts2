@@ -53,7 +53,7 @@
   <Import Project="..\_Shared.Xaml\_Shared.Xaml.projitems" Label="Shared" />
 
   <PropertyGroup>
-    <DefineConstants>$(DefineConstants);UNO_LVC;WINUI_LVC</DefineConstants>
+    <DefineConstants>$(DefineConstants);UNO_LVC;WINUI_LVC;XAML_LVC</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

@@ -73,7 +73,7 @@ public abstract partial class ChartControl
     /// <inheritdoc cref="IChartView.CoreCanvas" />
     public CoreMotionCanvas CoreCanvas => CanvasView.CanvasCore;
 
-#if AVALONIA_LVC || MAUI_LVC || WINUI_LVC || MAUI_LVC || WPF_LVC
+#if XAML_LVC
     private bool HasValidSource =>
         SeriesSource is not null && SeriesTemplate is not null;
 #endif
@@ -150,7 +150,7 @@ public abstract partial class ChartControl
         Action<object>? onAdd = null;
         Action<object>? onRemove = null;
 
-#if AVALONIA_LVC || MAUI_LVC || WINUI_LVC || MAUI_LVC || WPF_LVC
+#if XAML_LVC
         onAdd = AddUIElement;
         onRemove = RemoveUIElement;
 #endif
@@ -185,7 +185,7 @@ public abstract partial class ChartControl
             .Collection(nameof(VisualElements), () => VisualElements)
             .Property(nameof(Title), () => Title);
 
-#if AVALONIA_LVC || MAUI_LVC || WINUI_LVC || MAUI_LVC || WPF_LVC
+#if XAML_LVC
         // if xaml... add the series template/source observer
         observe.AddObserver(
              new SeriesSourceObserver(
