@@ -220,12 +220,20 @@ public partial class ChartControl
                     throw new InvalidOperationException("The chart observer is not initialized.");
 
                 chart._observer[propertyName].Observer.Initialize(n);
+
 #if BLAZOR_LVC
                 // hack for blazor, we need to wait for the OnAfterRender to have
                 // a reference to the canvas in the UI, CoreChart is null until then.
                 if (chart.CoreChart is null) return;
 #endif
                 chart.CoreChart.Update();
+
+                if (propertyName == nameof(Series))
+                {
+                    // when the series collection changes, we re-start the series count.
+                    // it makes sense... and also it helps the SeriesSourceObserver
+                    chart.CoreChart.ResetNextSeriesId();
+                }
             };
 #pragma warning restore IDE0060 // Remove unused parameter
 
