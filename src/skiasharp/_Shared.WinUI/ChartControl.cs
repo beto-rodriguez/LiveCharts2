@@ -47,17 +47,14 @@ public abstract partial class ChartControl : UserControl, IChartView
 
         Content = new MotionCanvas();
 
-        InitializeCoreChart();
-        InitializeObservers();
-
         SizeChanged += (s, e) =>
             CoreChart.Update();
+
+        InitializeChartControl();
+        InitializeObservedProperties();
 
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
-
-        SizeChanged += (s, e) =>
-            CoreChart.Update();
 
         _themeListener = new(CoreChart.ApplyTheme, DispatcherQueue);
 
@@ -69,8 +66,6 @@ public abstract partial class ChartControl : UserControl, IChartView
         _chartBehaviour.Scrolled += OnScrolled;
         _chartBehaviour.Pinched += OnPinched;
         _chartBehaviour.Exited += OnExited;
-
-        _chartBehaviour.On(this);
     }
 
     /// <summary>
@@ -89,14 +84,19 @@ public abstract partial class ChartControl : UserControl, IChartView
     }
     LvcSize IChartView.ControlSize => new() { Width = (float)CanvasView.ActualWidth, Height = (float)CanvasView.ActualHeight };
 
-    private void OnLoaded(object sender, RoutedEventArgs e) =>
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        _themeListener.Listen();
+        _chartBehaviour.On(this);
+        StartObserving();
         CoreChart.Load();
+    }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
         _themeListener.Dispose();
         _chartBehaviour.Off(this);
-        Observe.Dispose();
+        StopObserving();
         CoreChart.Unload();
     }
 

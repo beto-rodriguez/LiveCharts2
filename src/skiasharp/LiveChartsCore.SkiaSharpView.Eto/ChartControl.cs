@@ -50,8 +50,8 @@ public abstract partial class ChartControl : Panel, IChartView
 
         LiveCharts.Configure(config => config.UseDefaults());
 
-        InitializeCoreChart();
-        InitializeObservers();
+        InitializeChartControl();
+        InitializeObservedProperties();
 
         Content.SizeChanged += (s, e) =>
             CoreChart.Update();
@@ -84,6 +84,7 @@ public abstract partial class ChartControl : Panel, IChartView
     protected override void OnLoadComplete(EventArgs e)
     {
         base.OnLoadComplete(e);
+        StartObserving();
         CoreChart.Load();
     }
 
@@ -91,7 +92,7 @@ public abstract partial class ChartControl : Panel, IChartView
     protected override void OnUnLoad(EventArgs e)
     {
         base.OnUnLoad(e);
-        Observe.Dispose();
+        StopObserving();
         CoreChart.Unload();
     }
 

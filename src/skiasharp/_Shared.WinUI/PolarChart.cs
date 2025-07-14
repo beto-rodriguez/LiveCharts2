@@ -26,13 +26,4 @@ namespace LiveChartsCore.SkiaSharpView.WinUI;
 
 /// <inheritdoc cref="IPolarChartView" />
 public sealed partial class PolarChart : ChartControl, IPolarChartView
-{
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PolarChart"/> class.
-    /// </summary>
-    public PolarChart()
-    {
-        InitializeObservers();
-        InitializeProperties();
-    }
-}
+{ }

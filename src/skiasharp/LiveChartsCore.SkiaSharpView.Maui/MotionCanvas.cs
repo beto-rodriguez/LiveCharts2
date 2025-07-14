@@ -50,12 +50,11 @@ public class MotionCanvas : AbsoluteLayout
     {
         InitializeView();
 
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
+
         _density = DeviceDisplay.MainDisplayInfo.Density;
         DeviceDisplay.MainDisplayInfoChanged += MainDisplayInfoChanged;
-
-        CanvasCore.Invalidated += OnCanvasCoreInvalidated;
-        Unloaded += OnUnloaded;
-        Loaded += OnLoaded;
     }
 
     /// <summary>
@@ -72,18 +71,6 @@ public class MotionCanvas : AbsoluteLayout
     /// <returns></returns>
     public void Invalidate() =>
         RunDrawingLoop();
-
-    /// <inheritdoc cref="NavigableElement.OnParentSet"/>
-    protected override void OnParentSet()
-    {
-        base.OnParentSet();
-
-        if (Parent == null)
-        {
-            CanvasCore.Invalidated -= OnCanvasCoreInvalidated;
-            CanvasCore.Dispose();
-        }
-    }
 
     private void OnCanvasViewPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
     {
@@ -143,11 +130,18 @@ public class MotionCanvas : AbsoluteLayout
         _isDrawingLoopRunning = false;
     }
 
-    private void OnLoaded(object? sender, EventArgs e) =>
+    private void OnLoaded(object? sender, EventArgs e)
+    {
         _isLoaded = true;
+        CanvasCore.Invalidated += OnCanvasCoreInvalidated;
+    }
 
-    private void OnUnloaded(object? sender, EventArgs e) =>
+    private void OnUnloaded(object? sender, EventArgs e)
+    {
         _isLoaded = false;
+        CanvasCore.Invalidated -= OnCanvasCoreInvalidated;
+        CanvasCore.Dispose();
+    }
 
     private void MainDisplayInfoChanged(object? sender, EventArgs e) =>
         _density = DeviceDisplay.MainDisplayInfo.Density;

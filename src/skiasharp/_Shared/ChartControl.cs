@@ -200,7 +200,7 @@ public abstract partial class ChartControl
     /// <summary>
     /// Initializes the observed properties.
     /// </summary>
-    protected virtual void IninializeObservedProperties() { }
+    protected virtual void InitializeObservedProperties() { }
 
     void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer)
     {

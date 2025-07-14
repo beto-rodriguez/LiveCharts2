@@ -20,22 +20,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+// ==============================================================================
+// 
+// this file contains the MAUI specific code for the PolarChart class,
+// the rest of the code can be found in the _Shared project.
+// 
+// ==============================================================================
+
 using LiveChartsCore.Kernel.Sketches;
 using Microsoft.Maui.Controls.Xaml;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
 
-/// <inheritdoc cref="IPieChartView"/>
+/// <inheritdoc cref="IPolarChartView"/>
 [XamlCompilation(XamlCompilationOptions.Compile)]
-public partial class PieChart : ChartControl, IPieChartView
-{
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PieChart"/> class.
-    /// </summary>
-    /// <exception cref="Exception">Default colors are not valid</exception>
-    public PieChart()
-    {
-        InitializeProperties();
-    }
-}
+public partial class PolarChart : ChartControl, IPolarChartView
+{ }

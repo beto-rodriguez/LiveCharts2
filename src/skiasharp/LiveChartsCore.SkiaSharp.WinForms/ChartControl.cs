@@ -59,8 +59,8 @@ public abstract partial class ChartControl : UserControl, IChartView
 
         LiveCharts.Configure(config => config.UseDefaults());
 
-        InitializeCoreChart();
-        InitializeObservers();
+        InitializeChartControl();
+        InitializeObservedProperties();
 
         motionCanvas.Resize += (s, e) =>
             CoreChart.Update();
@@ -107,6 +107,7 @@ public abstract partial class ChartControl : UserControl, IChartView
     protected override void OnParentChanged(EventArgs e)
     {
         base.OnParentChanged(e);
+        StartObserving();
         CoreChart?.Load();
     }
 
@@ -119,7 +120,7 @@ public abstract partial class ChartControl : UserControl, IChartView
     {
         base.OnHandleDestroyed(e);
 
-        Observe.Dispose();
+        StopObserving();
         CoreChart?.Unload();
     }
 

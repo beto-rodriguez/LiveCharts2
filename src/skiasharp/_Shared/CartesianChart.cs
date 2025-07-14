@@ -82,8 +82,8 @@ public partial class CartesianChart : ChartControl, ICartesianChartView
             .Property(nameof(DrawMarginFrame), () => DrawMarginFrame);
     }
 
-    /// <inheritdoc cref="ChartControl.IninializeObservedProperties"/>
-    protected override void IninializeObservedProperties()
+    /// <inheritdoc cref="ChartControl.InitializeObservedProperties"/>
+    protected override void InitializeObservedProperties()
     {
         XAxes = new ObservableCollection<ICartesianAxis>();
         YAxes = new ObservableCollection<ICartesianAxis>();

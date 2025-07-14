@@ -67,8 +67,8 @@ public partial class PolarChart
             .Collection(nameof(RadiusAxes), () => RadiusAxes);
     }
 
-    /// <inheritdoc cref="ChartControl.IninializeObservedProperties"/>
-    protected override void IninializeObservedProperties()
+    /// <inheritdoc cref="ChartControl.InitializeObservedProperties"/>
+    protected override void InitializeObservedProperties()
     {
         AngleAxes = new ObservableCollection<IPolarAxis>();
         RadiusAxes = new ObservableCollection<IPolarAxis>();

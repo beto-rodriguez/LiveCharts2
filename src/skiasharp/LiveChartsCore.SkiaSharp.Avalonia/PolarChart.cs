@@ -27,21 +27,10 @@
 // 
 // ==============================================================================
 
-using System;
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
 /// <inheritdoc cref="IPolarChartView" />
 public partial class PolarChart : ChartControl, IPolarChartView
-{
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PolarChart"/> class.
-    /// </summary>
-    /// <exception cref="Exception">Default colors are not valid</exception>
-    public PolarChart()
-    {
-        InitializeObservers();
-        InitializeProperties();
-    }
-}
+{ }

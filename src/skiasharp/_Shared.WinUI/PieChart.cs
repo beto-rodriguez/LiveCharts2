@@ -26,12 +26,4 @@ namespace LiveChartsCore.SkiaSharpView.WinUI;
 
 /// <inheritdoc cref="IChartView" />
 public sealed partial class PieChart : ChartControl, IPieChartView
-{
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PieChart"/> class.
-    /// </summary>
-    public PieChart()
-    {
-        InitializeProperties();
-    }
-}
+{ }

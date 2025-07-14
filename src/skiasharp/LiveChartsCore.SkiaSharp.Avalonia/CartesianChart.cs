@@ -46,9 +46,6 @@ public partial class CartesianChart : ChartControl, ICartesianChartView
     /// <exception cref="Exception">Default colors are not valid</exception>
     public CartesianChart()
     {
-        InitializeObservers();
-        InitializeProperties();
-
         var pinchGesture = new PinchGestureRecognizer();
         GestureRecognizers.Add(pinchGesture);
         AddHandler(Gestures.PinchEvent, OnPinched);

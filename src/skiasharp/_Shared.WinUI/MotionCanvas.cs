@@ -46,12 +46,15 @@ public partial class MotionCanvas : Canvas
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
 
+        SizeChanged += OnSizeChanged;
+
+#pragma warning disable IDE0028 // Simplify collection initialization
         _skiaElement = new();
+#pragma warning restore IDE0028 // Simplify collection initialization
         Children.Add(_skiaElement);
         SetLeft(_skiaElement, 0);
         SetTop(_skiaElement, 0);
 
-        SizeChanged += OnSizeChanged;
         _skiaElement.PaintSurface += OnPaintSurface;
     }
 
@@ -109,7 +112,6 @@ public partial class MotionCanvas : Canvas
 
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
-        SizeChanged -= OnSizeChanged;
         CanvasCore.Invalidated -= OnCanvasCoreInvalidated;
         CanvasCore.Dispose();
     }

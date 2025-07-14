@@ -45,11 +45,11 @@ public abstract partial class ChartControl : UserControl, IChartView
 
         Content = new MotionCanvas();
 
-        InitializeCoreChart();
-        InitializeObservers();
-
         SizeChanged += (s, e) =>
             CoreChart.Update();
+
+        InitializeChartControl();
+        InitializeObservedProperties();
 
         MouseDown += Chart_MouseDown;
         MouseMove += OnMouseMove;
@@ -58,15 +58,6 @@ public abstract partial class ChartControl : UserControl, IChartView
 
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
-
-        //    // hack hack #251201 for:
-        //    // https://github.com/beto-rodriguez/LiveCharts2/issues/1383
-        //    // when the chart starts with Visibility.Collapsed
-        //    // the OnApplyTemplate() is not called, BUT the Loaded event is called...
-        //    // this result in the core not being loaded, and the chart not updating.
-        //    // so in this case, we load the core here.
-        //    if (core is not null && !core.IsLoaded)
-        //        core.Load();
     }
 
     /// <summary>
@@ -85,12 +76,15 @@ public abstract partial class ChartControl : UserControl, IChartView
     }
     LvcSize IChartView.ControlSize => new() { Width = (float)CanvasView.ActualWidth, Height = (float)CanvasView.ActualHeight };
 
-    private void OnLoaded(object sender, RoutedEventArgs e) =>
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        StartObserving();
         CoreChart.Load();
+    }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
-        Observe.Dispose();
+        StopObserving();
         CoreChart?.Unload();
     }
 

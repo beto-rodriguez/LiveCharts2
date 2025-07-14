@@ -49,8 +49,8 @@ public partial class PieChart : ChartControl, IPieChartView
     protected override Chart CreateCoreChart() =>
          new PieChartEngine(this, config => config.UseDefaults(), CanvasView!.CanvasCore);
 
-    /// <inheritdoc cref="ChartControl.IninializeObservedProperties"/>
-    protected override void IninializeObservedProperties()
+    /// <inheritdoc cref="ChartControl.InitializeObservedProperties"/>
+    protected override void InitializeObservedProperties()
     {
         Series = new ObservableCollection<ISeries>();
         VisualElements = new ObservableCollection<IChartElement>();

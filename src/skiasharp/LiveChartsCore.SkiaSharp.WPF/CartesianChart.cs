@@ -35,9 +35,6 @@ public partial class CartesianChart : ChartControl, ICartesianChartView
     /// </summary>
     public CartesianChart()
     {
-        InitializeObservers();
-        InitializeProperties();
-
         MouseWheel += OnMouseWheel;
     }
 

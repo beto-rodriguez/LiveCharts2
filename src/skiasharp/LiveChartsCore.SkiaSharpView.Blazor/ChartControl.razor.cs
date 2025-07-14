@@ -56,7 +56,8 @@ public abstract partial class ChartControl : IBlazorChart, IDisposable, IChartVi
 
         LiveCharts.Configure(config => config.UseDefaults());
 
-        InitializeObservers();
+        _observer = new(ConfigureObserver, () => CoreChart?.Update());
+        InitializeObservedProperties();
 
         // will be initialized in OnAfterRender, because we need the canvas element reference
         CoreChart = null!;
@@ -81,7 +82,8 @@ public abstract partial class ChartControl : IBlazorChart, IDisposable, IChartVi
     {
         if (!firstRender) return;
 
-        InitializeCoreChart();
+        InitializeChartControl();
+        StartObserving();
 
         _jsFlexibleContainer.Resized +=
             container => CoreChart?.Update();
@@ -160,7 +162,7 @@ public abstract partial class ChartControl : IBlazorChart, IDisposable, IChartVi
 
     void IDisposable.Dispose()
     {
-        Observe.Dispose();
+        StopObserving();
         CoreChart.Unload();
     }
 }

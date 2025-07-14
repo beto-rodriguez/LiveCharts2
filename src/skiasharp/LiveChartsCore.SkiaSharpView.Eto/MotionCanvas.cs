@@ -42,7 +42,6 @@ public class MotionCanvas : SkiaDrawable
     public MotionCanvas()
     {
         Paint += new EventHandler<SKPaintEventArgs>(SkControl_PaintSurface);
-        CanvasCore.Invalidated += CanvasCore_Invalidated;
     }
 
     /// <summary>
@@ -52,6 +51,14 @@ public class MotionCanvas : SkiaDrawable
     /// The canvas core.
     /// </value>
     public CoreMotionCanvas CanvasCore { get; } = new();
+
+    /// <inheritdoc cref="Control.OnLoadComplete(EventArgs)"/>
+    protected override void OnLoadComplete(EventArgs e)
+    {
+        base.OnLoadComplete(e);
+
+        CanvasCore.Invalidated += CanvasCore_Invalidated;
+    }
 
     /// <inheritdoc cref="Control.OnUnLoad(EventArgs)"/>
     protected override void OnUnLoad(EventArgs e)

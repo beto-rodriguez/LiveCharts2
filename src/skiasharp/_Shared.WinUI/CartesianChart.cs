@@ -30,15 +30,6 @@ namespace LiveChartsCore.SkiaSharpView.WinUI;
 /// <inheritdoc cref="IChartView" />
 public sealed partial class CartesianChart : ChartControl, ICartesianChartView
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CartesianChart"/> class.
-    /// </summary>
-    public CartesianChart()
-    {
-        InitializeObservers();
-        InitializeProperties();
-    }
-
     /// <inheritdoc cref="ChartControl.OnScrolled"/>
     protected override void OnScrolled(object? sender, ScrollEventArgs args)
     {

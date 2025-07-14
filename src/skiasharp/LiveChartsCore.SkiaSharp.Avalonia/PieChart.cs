@@ -33,12 +33,4 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
 /// <inheritdoc cref="IPieChartView" />
 public partial class PieChart : ChartControl, IPieChartView
-{
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PieChart"/> class.
-    /// </summary>
-    public PieChart()
-    {
-        InitializeProperties();
-    }
-}
+{ }

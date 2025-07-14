@@ -41,11 +41,6 @@ public sealed class ThemeListener : IDisposable
         CurrentTheme = Application.Current.RequestedTheme;
 
         DispatcherQueue = dispatcherQueue ?? DispatcherQueue.GetForCurrentThread();
-
-        _settings.ColorValuesChanged += Settings_ColorValuesChanged;
-
-        // Fallback in case either of the above fail, we'll check when we get activated next.
-        Window.Current?.CoreWindow?.Activated += CoreWindow_Activated;
     }
 
     private void Settings_ColorValuesChanged(UISettings sender, object args) =>
@@ -62,6 +57,17 @@ public sealed class ThemeListener : IDisposable
         if (CurrentTheme == Application.Current.RequestedTheme) return;
         CurrentTheme = Application.Current.RequestedTheme;
         ThemeChanged?.Invoke();
+    }
+
+    /// <summary>
+    /// Adds the event handlers to listen for theme changes.
+    /// </summary>
+    public void Listen()
+    {
+        _settings.ColorValuesChanged += Settings_ColorValuesChanged;
+
+        // Fallback in case either of the above fail, we'll check when we get activated next.
+        Window.Current?.CoreWindow?.Activated += CoreWindow_Activated;
     }
 
     /// <summary>

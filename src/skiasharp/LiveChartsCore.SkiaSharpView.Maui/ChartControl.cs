@@ -20,6 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// ==============================================================================
+// 
+// this file contains the MAUI specific code for the ChartControl class,
+// the rest of the code can be found in the _Shared project.
+// 
+// ==============================================================================
+
 using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Events;
@@ -42,11 +49,14 @@ public abstract partial class ChartControl : ChartView, IChartView
 
         Content = new MotionCanvas();
 
-        InitializeCoreChart();
-        InitializeObservers();
-
         SizeChanged += (s, e) =>
             CoreChart.Update();
+
+        InitializeChartControl();
+        InitializeObservedProperties();
+
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
 
         if (Application.Current is not null)
             Application.Current.RequestedThemeChanged += (sender, args) => CoreChart?.ApplyTheme();
@@ -70,19 +80,16 @@ public abstract partial class ChartControl : ChartView, IChartView
     }
     LvcSize IChartView.ControlSize => new() { Width = (float)CanvasView.Width, Height = (float)CanvasView.Height };
 
-    /// <inheritdoc cref="NavigableElement.OnParentSet"/>
-    protected override void OnParentSet()
+    private void OnLoaded(object? sender, EventArgs e)
     {
-        base.OnParentSet();
-
-        if (Parent == null)
-        {
-            Observe.Dispose();
-            CoreChart?.Unload();
-            return;
-        }
-
+        StartObserving();
         CoreChart?.Load();
+    }
+
+    private void OnUnloaded(object? sender, EventArgs e)
+    {
+        StopObserving();
+        CoreChart?.Unload();
     }
 
     private ISeries InflateSeriesTemplate(object item)
@@ -147,5 +154,6 @@ public abstract partial class ChartControl : ChartView, IChartView
     internal override void OnExited(object? sender, Behaviours.Events.EventArgs args) =>
         CoreChart.InvokePointerLeft();
 
-    void IChartView.InvokeOnUIThread(Action action) => _ = MainThread.InvokeOnMainThreadAsync(action);
+    void IChartView.InvokeOnUIThread(Action action) =>
+        MainThread.BeginInvokeOnMainThread(action);
 }

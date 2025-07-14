@@ -37,15 +37,6 @@ namespace LiveChartsCore.SkiaSharpView.Blazor;
 /// <inheritdoc cref="ICartesianChartView"/>
 public partial class CartesianChart : ChartControl, ICartesianChartView
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CartesianChart"/> class.
-    /// </summary>
-    public CartesianChart()
-    {
-        InitializeObservers();
-        InitializeProperties();
-    }
-
     /// <inheritdoc cref="ChartControl.OnWheel(WheelEventArgs)" />
     protected override void OnWheel(WheelEventArgs e)
     {

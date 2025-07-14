@@ -20,7 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+// ==============================================================================
+// 
+// this file contains the MAUI specific code for the CartesianChart class,
+// the rest of the code can be found in the _Shared project.
+// 
+// ==============================================================================
+
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
@@ -32,16 +38,6 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 [XamlCompilation(XamlCompilationOptions.Compile)]
 public partial class CartesianChart : ChartControl, ICartesianChartView
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CartesianChart"/> class.
-    /// </summary>
-    /// <exception cref="Exception">Default colors are not valid</exception>
-    public CartesianChart()
-    {
-        InitializeObservers();
-        InitializeProperties();
-    }
-
     internal override void OnScrolled(object? sender, Behaviours.Events.ScrollEventArgs args)
     {
         var c = (CartesianChartEngine)CoreChart;

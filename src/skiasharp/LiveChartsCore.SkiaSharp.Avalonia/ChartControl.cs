@@ -68,8 +68,8 @@ public abstract partial class ChartControl : UserControl, IChartView, ICustomHit
         SizeChanged += (s, e) =>
             CoreChart.Update();
 
-        InitializeCoreChart();
-        InitializeObservers();
+        InitializeChartControl();
+        InitializeObservedProperties();
     }
 
     /// <inheritdoc cref="IChartView.CoreCanvas"/>
@@ -86,12 +86,15 @@ public abstract partial class ChartControl : UserControl, IChartView, ICustomHit
     }
     LvcSize IChartView.ControlSize => new() { Width = (float)CanvasView.Bounds.Width, Height = (float)CanvasView.Bounds.Height };
 
-    private void OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e) =>
+    private void OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
+    {
+        StartObserving();
         CoreChart?.Load();
+    }
 
     private void OnDetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
     {
-        Observe.Dispose();
+        StopObserving();
         CoreChart?.Unload();
     }
 
