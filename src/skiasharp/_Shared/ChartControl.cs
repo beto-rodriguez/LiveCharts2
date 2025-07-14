@@ -54,15 +54,12 @@ namespace LiveChartsCore.SkiaSharpView.WPF;
 /// <inheritdoc cref="ICartesianChartView" />
 public abstract partial class ChartControl
 {
+    private ChartObserver? _observer;
+
     /// <summary>
     /// Gets the core chart.
     /// </summary>
     public Chart CoreChart { get; private set; } = null!;
-
-    /// <summary>
-    /// Gets the chart observer.
-    /// </summary>
-    protected ChartObserver Observe { get; private set; } = null!;
 
     /// <inheritdoc cref="IChartView.Tooltip" />
     public IChartTooltip? Tooltip { get; set; }
@@ -75,6 +72,11 @@ public abstract partial class ChartControl
 
     /// <inheritdoc cref="IChartView.CoreCanvas" />
     public CoreMotionCanvas CoreCanvas => CanvasView.CanvasCore;
+
+#if AVALONIA_LVC || MAUI_LVC || WINUI_LVC || MAUI_LVC || WPF_LVC
+    private bool HasValidSource =>
+        SeriesSource is not null && SeriesTemplate is not null;
+#endif
 
     /// <inheritdoc cref="IChartView.Measuring" />
     public event ChartEventHandler? Measuring;
@@ -131,35 +133,30 @@ public abstract partial class ChartControl
     private void OnCoreUpdateFinished(IChartView chart) =>
         UpdateFinished?.Invoke(this);
 
-    private void InitializeObservers()
-    {
-#if AVALONIA_LVC || MAUI_LVC || WINUI_LVC || MAUI_LVC || WPF_LVC
-        Observe = new ChartObserver(() => CoreChart?.Update(), AddUIElement, RemoveUIElement)
-#else
-        Observe = new ChartObserver(() => CoreChart?.Update())
-#endif
-            .Collection(nameof(Series))
-            .Collection(nameof(VisualElements))
-            .Property(nameof(Title));
+    private void StartObserving() =>
+        _observer?.Initialize();
 
-#if AVALONIA_LVC || MAUI_LVC || WINUI_LVC || MAUI_LVC || WPF_LVC
-        // if xaml... add the series template/source observer
-        Observe.Add(
-             nameof(SeriesSource),
-             new SeriesSourceObserver(
-                 InflateSeriesTemplate,
-                 GetSeriesSource,
-                 () => SeriesSource is not null && SeriesTemplate is not null));
-#endif
-    }
+    private void StopObserving() =>
+        _observer?.Dispose();
 
-    private void InitializeCoreChart()
+    private void InitializeChartControl()
     {
         CoreChart = CreateCoreChart();
 
         CoreChart.Measuring += OnCoreMeasuring;
         CoreChart.UpdateStarted += OnCoreUpdateStarted;
         CoreChart.UpdateFinished += OnCoreUpdateFinished;
+
+        Action<object>? onAdd = null;
+        Action<object>? onRemove = null;
+
+#if AVALONIA_LVC || MAUI_LVC || WINUI_LVC || MAUI_LVC || WPF_LVC
+        onAdd = AddUIElement;
+        onRemove = RemoveUIElement;
+#endif
+
+        _observer = new ChartObserver(
+            ConfigureObserver, () => CoreChart?.Update(), onAdd, onRemove);
     }
 
     private void OnCoreUpdateStarted(IChartView chart)
@@ -173,6 +170,34 @@ public abstract partial class ChartControl
 
         UpdateStarted?.Invoke(this);
     }
+
+    /// <summary>
+    /// Configures the observer properties.
+    /// </summary>
+    /// <param name="observe">The current observer.</param>
+    protected virtual ChartObserver ConfigureObserver(ChartObserver observe)
+    {
+        observe
+            .Collection(nameof(Series), () => Series)
+            .Collection(nameof(VisualElements), () => VisualElements)
+            .Property(nameof(Title), () => Title);
+
+#if AVALONIA_LVC || MAUI_LVC || WINUI_LVC || MAUI_LVC || WPF_LVC
+        // if xaml... add the series template/source observer
+        observe.AddObserver(
+             new SeriesSourceObserver(
+                 () => Series, value => Series = value, InflateSeriesTemplate, GetSeriesSource, () => HasValidSource),
+             nameof(SeriesSource),
+             () => SeriesSource);
+#endif
+
+        return observe;
+    }
+
+    /// <summary>
+    /// Initializes the observed properties.
+    /// </summary>
+    protected virtual void IninializeObservedProperties() { }
 
     void IChartView.OnDataPointerDown(IEnumerable<ChartPoint> points, LvcPoint pointer)
     {

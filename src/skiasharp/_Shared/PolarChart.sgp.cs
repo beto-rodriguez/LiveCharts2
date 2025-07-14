@@ -80,21 +80,6 @@ public partial class PolarChart
     /// <inheritdoc cref="IPolarChartView.RadiusAxes"/>
     static UIProperty<ICollection<IPolarAxis>>        radiusAxes          = new(onChanged: OnObservedPropertyChanged(nameof(RadiusAxes)));
 
-#pragma warning disable IDE0060 // Remove unused parameter, hack for the source generator
-    static Action<PolarChart, object, object> OnObservedPropertyChanged(
-        string propertyName, object? a = null, object? b = null) =>
-            (chart, o, n) =>
-            {
-                chart.Observe[propertyName].Initialize(n);
-#if BLAZOR_LVC
-                // hack for blazor, we need to wait for the OnAfterRender to have
-                // a reference to the canvas in the UI, CoreChart is null until then.
-                if (chart.CoreChart is null) return;
-#endif
-                chart.CoreChart.Update();
-            };
-#pragma warning restore IDE0060 // Remove unused parameter
-
 #if AVALONIA_LVC
     /// <inheritdoc />
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

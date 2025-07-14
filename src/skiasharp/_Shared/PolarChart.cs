@@ -23,6 +23,7 @@
 using System.Collections.ObjectModel;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Sketches;
 
 #if AVALONIA_LVC
@@ -58,14 +59,16 @@ public partial class PolarChart
     protected override Chart CreateCoreChart() =>
         new PolarChartEngine(this, config => config.UseDefaults(), CanvasView.CanvasCore);
 
-    private void InitializeObservers()
+    /// <inheritdoc cref="ChartControl.ConfigureObserver(ChartObserver)"/>
+    protected override ChartObserver ConfigureObserver(ChartObserver observe)
     {
-        _ = Observe
-            .Collection(nameof(RadiusAxes))
-            .Collection(nameof(AngleAxes));
+        return base.ConfigureObserver(observe)
+            .Collection(nameof(AngleAxes), () => AngleAxes)
+            .Collection(nameof(RadiusAxes), () => RadiusAxes);
     }
 
-    private void InitializeProperties()
+    /// <inheritdoc cref="ChartControl.IninializeObservedProperties"/>
+    protected override void IninializeObservedProperties()
     {
         AngleAxes = new ObservableCollection<IPolarAxis>();
         RadiusAxes = new ObservableCollection<IPolarAxis>();

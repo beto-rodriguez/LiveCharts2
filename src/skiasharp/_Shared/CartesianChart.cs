@@ -23,6 +23,7 @@
 using System.Collections.ObjectModel;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Sketches;
 
 #if AVALONIA_LVC
@@ -71,16 +72,18 @@ public partial class CartesianChart : ChartControl, ICartesianChartView
     protected override Chart CreateCoreChart() =>
         new CartesianChartEngine(this, config => config.UseDefaults(), CanvasView.CanvasCore);
 
-    private void InitializeObservers()
+    /// <inheritdoc cref="ChartControl.ConfigureObserver(ChartObserver)"/>
+    protected override ChartObserver ConfigureObserver(ChartObserver observe)
     {
-        _ = Observe
-           .Collection(nameof(XAxes))
-           .Collection(nameof(YAxes))
-           .Collection(nameof(Sections))
-           .Property(nameof(DrawMarginFrame));
+        return base.ConfigureObserver(observe)
+            .Collection(nameof(XAxes), () => XAxes)
+            .Collection(nameof(YAxes), () => YAxes)
+            .Collection(nameof(Sections), () => Sections)
+            .Property(nameof(DrawMarginFrame), () => DrawMarginFrame);
     }
 
-    private void InitializeProperties()
+    /// <inheritdoc cref="ChartControl.IninializeObservedProperties"/>
+    protected override void IninializeObservedProperties()
     {
         XAxes = new ObservableCollection<ICartesianAxis>();
         YAxes = new ObservableCollection<ICartesianAxis>();

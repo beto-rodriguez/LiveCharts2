@@ -175,11 +175,11 @@ public partial class ChartControl
 
     static void OnSeriesSourceChanged(ChartControl chart)
     {
-        var seriesObserver = (SeriesSourceObserver)chart.Observe[nameof(SeriesSource)];
-        seriesObserver.Initialize(chart.SeriesSource);
+        if (chart._observer is null)
+            throw new InvalidOperationException("The chart observer is not initialized.");
 
-        if (seriesObserver.Series is not null)
-            chart.Series = seriesObserver.Series;
+        var seriesObserver = (SeriesSourceObserver)chart._observer[nameof(SeriesSource)].Observer;
+        seriesObserver.Initialize(chart.SeriesSource);
     }
 #endif
 
@@ -205,11 +205,21 @@ public partial class ChartControl
     }
 
 #pragma warning disable IDE0060 // Remove unused parameter, hack for the source generator
-    static Action<ChartControl, object, object> OnObservedPropertyChanged(
-        string propertyName, object? a = null, object? b = null) =>
+    /// <summary>
+    /// Called when an observed property changes.
+    /// </summary>
+    /// <param name="propertyName">The property name.</param>
+    /// <param name="oldValue">The old property value.</param>
+    /// <param name="newValue">The new property value.</param>
+    /// <returns></returns>
+    protected static Action<ChartControl, object, object> OnObservedPropertyChanged(
+        string propertyName, object? oldValue = null, object? newValue = null) =>
             (chart, o, n) =>
             {
-                chart.Observe[propertyName].Initialize(n);
+                if (chart._observer is null)
+                    throw new InvalidOperationException("The chart observer is not initialized.");
+
+                chart._observer[propertyName].Observer.Initialize(n);
 #if BLAZOR_LVC
                 // hack for blazor, we need to wait for the OnAfterRender to have
                 // a reference to the canvas in the UI, CoreChart is null until then.

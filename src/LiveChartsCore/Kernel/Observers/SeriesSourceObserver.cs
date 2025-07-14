@@ -37,6 +37,12 @@ namespace LiveChartsCore.Kernel.Observers;
 /// collection. It supports collections that implement <see cref="INotifyCollectionChanged"/> for automatic
 /// synchronization of additions, removals, and replacements. If the source collection does not implement  <see
 /// cref="INotifyCollectionChanged"/>, the mapping is performed once during initialization.</remarks>
+/// <param name="seriesGetter">
+/// A function that retrieves the collection of series associated with the observer.
+/// </param>
+/// <param name="seriesSetter">
+/// An action that sets the collection of series associated with the observer.
+/// </param>
 /// <param name="sourceToSeriesMap">
 /// A function that maps a source object to an <see cref="ISeries"/> object.
 /// </param>
@@ -47,6 +53,8 @@ namespace LiveChartsCore.Kernel.Observers;
 /// A function that determines whether the observer can build series from the source collection.
 /// </param>
 public class SeriesSourceObserver(
+    Func<ICollection<ISeries>> seriesGetter,
+    Action<ICollection<ISeries>> seriesSetter,
     Func<object, ISeries> sourceToSeriesMap,
     Func<ISeries, object> seriesToSourceMap,
     Func<bool> canBuildFromSource)
@@ -54,33 +62,23 @@ public class SeriesSourceObserver(
 {
     private IEnumerable<object>? _trackedCollection;
 
-    /// <summary>
-    /// Gets the collection of series associated with the current instance.
-    /// </summary>
-    public ICollection<ISeries>? Series { get; private set; }
-
     /// <inheritdoc cref="IObserver.Initialize(object?)"/>
     public void Initialize(object? instance)
     {
+        if (_trackedCollection == instance)
+            return;
+
         if (_trackedCollection is not null)
             Dispose();
 
         if (!canBuildFromSource()) return;
         if (instance is not IEnumerable<object> enumerable) return;
 
-        ICollection<ISeries> inflatedSeries;
-
         if (instance is INotifyCollectionChanged incc)
-        {
             incc.CollectionChanged += OnSeriesSourceCollectionChanged;
-            inflatedSeries = new ObservableCollection<ISeries>(enumerable.Select(sourceToSeriesMap));
-        }
-        else
-        {
-            inflatedSeries = [.. enumerable.Select(sourceToSeriesMap)];
-        }
 
-        Series = inflatedSeries;
+        seriesSetter(new ObservableCollection<ISeries>(enumerable.Select(sourceToSeriesMap)));
+
         _trackedCollection = enumerable;
     }
 
@@ -91,13 +89,15 @@ public class SeriesSourceObserver(
 
         incc.CollectionChanged -= OnSeriesSourceCollectionChanged;
 
-        Series = null;
+        OnItemsRemoved(_trackedCollection);
+
         _trackedCollection = null;
+        seriesSetter([]);
     }
 
     private void OnSeriesSourceCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (Series is null) return;
+        if (seriesGetter() is null) return;
 
         switch (e.Action)
         {
@@ -140,24 +140,26 @@ public class SeriesSourceObserver(
 
     private void OnItemsAdded(IEnumerable newItems)
     {
-        if (Series is null) return;
+        var series = seriesGetter();
+        if (series is null) return;
 
         foreach (var item in newItems)
-            Series.Add(sourceToSeriesMap(item));
+            series.Add(sourceToSeriesMap(item));
     }
 
     private void OnItemsRemoved(IEnumerable oldItems)
     {
-        if (Series is null) return;
+        var series = seriesGetter();
+        if (series is null) return;
 
-        var hash = Series.ToDictionary(
+        var hash = series.ToDictionary(
             series => seriesToSourceMap(series),
             series => series);
 
         foreach (var item in oldItems)
         {
-            if (!hash.TryGetValue(item, out var series)) continue;
-            _ = Series.Remove(series);
+            if (!hash.TryGetValue(item, out var s)) continue;
+            _ = series.Remove(s);
         }
     }
 }

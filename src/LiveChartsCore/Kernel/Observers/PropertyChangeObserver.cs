@@ -51,6 +51,9 @@ public class PropertyChangeObserver(
     /// <inheritdoc cref="IObserver.Initialize(object?)"/>
     public void Initialize(object? instance)
     {
+        if (_trackedElement == instance)
+            return;
+
         if (_trackedElement is not null)
             Dispose();
 

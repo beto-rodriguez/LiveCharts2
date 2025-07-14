@@ -61,6 +61,9 @@ public class CollectionDeepObserver(
     /// <inheritdoc cref="IObserver.Initialize(object?)"/>
     public void Initialize(object? instance)
     {
+        if (_trackedCollection == instance)
+            return;
+
         if (_trackedCollection is not null)
             Dispose();
 
