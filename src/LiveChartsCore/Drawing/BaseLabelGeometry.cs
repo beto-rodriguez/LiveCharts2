@@ -195,7 +195,14 @@ public abstract partial class BaseLabelGeometry : Animatable, IDrawnElement
 #endif
 
     Paint? IDrawnElement.Stroke { get; set; }
-    Paint? IDrawnElement.Fill { get; set; }
+
+    // quick hack...
+    // draw labels using the fill property when activepaint is not null.
+    Paint? IDrawnElement.Fill
+    {
+        get => Paint;
+        set => Paint = value;
+    }
 
     /// <inheritdoc cref="IDrawnElement.Measure()"/>
     public abstract LvcSize Measure();
