@@ -422,7 +422,11 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
                     if (label is null)
                     {
                         var l = new TLabel { X = x - hgs, Y = scaler.CenterY - hgs, RotateTransform = (float)actualRotation, MaxWidth = (float)DataLabelsMaxWidth };
-                        l.Animate(EasingFunction ?? chart.ActualEasingFunction, AnimationsSpeed ?? chart.ActualAnimationsSpeed);
+                        l.Animate(
+                            EasingFunction ?? chart.ActualEasingFunction,
+                            AnimationsSpeed ?? chart.ActualAnimationsSpeed,
+                            BaseLabelGeometry.XProperty,
+                            BaseLabelGeometry.YProperty);
                         label = l;
                         data.TargetPoint.Context.Label = l;
                     }

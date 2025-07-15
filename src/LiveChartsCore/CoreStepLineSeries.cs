@@ -358,7 +358,11 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
                     if (label is null)
                     {
                         var l = new TLabel { X = x - hgs, Y = p - hgs, RotateTransform = (float)DataLabelsRotation, MaxWidth = (float)DataLabelsMaxWidth };
-                        l.Animate(EasingFunction ?? cartesianChart.ActualEasingFunction, AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed);
+                        l.Animate(
+                            EasingFunction ?? cartesianChart.ActualEasingFunction,
+                            AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed,
+                            BaseLabelGeometry.XProperty,
+                            BaseLabelGeometry.YProperty);
                         label = l;
                         point.Context.Label = l;
                     }

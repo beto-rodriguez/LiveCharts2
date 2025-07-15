@@ -445,7 +445,11 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
                     if (label is null)
                     {
                         var l = new TLabel { X = x - hgs, Y = p - hgs, RotateTransform = (float)DataLabelsRotation, MaxWidth = (float)DataLabelsMaxWidth };
-                        l.Animate(EasingFunction ?? cartesianChart.ActualEasingFunction, AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed);
+                        l.Animate(
+                            EasingFunction ?? cartesianChart.ActualEasingFunction,
+                            AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed,
+                            BaseLabelGeometry.XProperty,
+                            BaseLabelGeometry.YProperty);
                         label = l;
                         data.TargetPoint.Context.Label = l;
                     }

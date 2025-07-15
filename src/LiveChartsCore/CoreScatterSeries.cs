@@ -313,7 +313,11 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
                 if (point.Context.Label is not TLabel label)
                 {
                     var l = new TLabel { X = x - hgs, Y = y - hgs, RotateTransform = (float)DataLabelsRotation, MaxWidth = (float)DataLabelsMaxWidth };
-                    l.Animate(EasingFunction ?? cartesianChart.ActualEasingFunction, AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed);
+                    l.Animate(
+                        EasingFunction ?? cartesianChart.ActualEasingFunction,
+                        AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed,
+                        BaseLabelGeometry.XProperty,
+                        BaseLabelGeometry.YProperty);
                     label = l;
                     point.Context.Label = l;
                 }
