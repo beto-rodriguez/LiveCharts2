@@ -433,10 +433,10 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
             if (_zeroLine is null)
             {
                 _zeroLine = new TLineGeometry();
-                ZeroPaint.AddGeometryToPaintTask(cartesianChart.Canvas, _zeroLine);
                 InitializeLine(_zeroLine, cartesianChart);
                 UpdateSeparator(_zeroLine, x, y, lxi, lxj, lyi, lyj, UpdateMode.UpdateAndComplete);
             }
+            ZeroPaint.AddGeometryToPaintTask(cartesianChart.Canvas, _zeroLine);
 
             UpdateSeparator(_zeroLine, x, y, lxi, lxj, lyi, lyj, UpdateMode.Update);
         }
