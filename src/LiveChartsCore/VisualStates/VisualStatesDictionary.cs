@@ -44,8 +44,9 @@ public class VisualStatesDictionary : Dictionary<string, DrawnPropertiesDictiona
     /// </summary>
     /// <param name="stateName">The state name.</param>
     /// <param name="animatable">The animatable instance.</param>
-    public void SetState(string stateName, Animatable animatable)
+    public void SetState(string stateName, Animatable? animatable)
     {
+        if (animatable is null) return;
         animatable._statesTracker ??= new();
         var state = this[stateName];
 
@@ -76,9 +77,11 @@ public class VisualStatesDictionary : Dictionary<string, DrawnPropertiesDictiona
     /// </summary>
     /// <param name="stateName">The state name.</param>
     /// <param name="animatable">The animatable instance.</param>
-    public void ClearState(string stateName, Animatable animatable)
+    public void ClearState(string stateName, Animatable? animatable)
     {
-        if (animatable._statesTracker is null) return;
+        if (animatable is null) return;
+        if (animatable._statesTracker is null || !animatable._statesTracker.ActiveStates.Contains(stateName))
+            return;
         var state = this[stateName];
 
         foreach (var setter in state.Values)
@@ -123,8 +126,9 @@ public class VisualStatesDictionary : Dictionary<string, DrawnPropertiesDictiona
     /// Clears all the states of the instance.
     /// </summary>
     /// <param name="animatable">The animatable.</param>
-    public void ClearStates(Animatable animatable)
+    public void ClearStates(Animatable? animatable)
     {
+        if (animatable is null) return;
         if (animatable._statesTracker is null) return;
 
         foreach (var stateName in animatable._statesTracker.ActiveStatesList)
@@ -150,6 +154,18 @@ public class VisualStatesDictionary : Dictionary<string, DrawnPropertiesDictiona
         animatable._statesTracker.ActiveStatesList.Clear();
         animatable._statesTracker.OriginalValues.Clear();
     }
+
+    /// <inheritdoc cref="SetState(string, Animatable)"/>
+    public void SetState(string stateName, IDrawnElement? element)
+        => SetState(stateName, (Animatable?)element);
+
+    /// <inheritdoc cref="ClearState(string, Animatable)"/>
+    public void ClearState(string stateName, IDrawnElement? element)
+        => ClearState(stateName, (Animatable?)element);
+
+    /// <inheritdoc cref="ClearStates(Animatable)"/>
+    public void ClearStates(IDrawnElement? element)
+        => ClearStates((Animatable?)element);
 
     /// <summary>
     /// Defines a collection of drawn properties.

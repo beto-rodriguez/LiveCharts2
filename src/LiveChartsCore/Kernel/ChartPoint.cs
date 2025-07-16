@@ -110,36 +110,6 @@ public class ChartPoint
     /// <returns>The distance in pixels.</returns>
     public double DistanceTo(LvcPoint point, FindingStrategy strategy) =>
         Context.HoverArea?.DistanceTo(point, strategy) ?? double.NaN;
-
-    /// <summary>
-    /// Sets the state of the point.
-    /// </summary>
-    /// <param name="name">The name of the state.</param>
-    public void SetState(string name)
-    {
-        if (Context.Visual is not Animatable animatable) return;
-        Context.Series.VisualStates.SetState(name, animatable);
-    }
-
-    /// <summary>
-    /// Clears the current state.
-    /// </summary>
-    /// <param name="name"></param>
-    public void ClearState(string name)
-    {
-        if (Context.Visual is not Animatable animatable) return;
-        Context.Series.VisualStates.ClearState(name, animatable);
-    }
-
-
-    /// <summary>
-    /// Clears all the states.
-    /// </summary>
-    public void ClearStates()
-    {
-        if (Context.Visual is not Animatable animatable) return;
-        Context.Series.VisualStates.ClearStates(animatable);
-    }
 }
 
 /// <summary>
