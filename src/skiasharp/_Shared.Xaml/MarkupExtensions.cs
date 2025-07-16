@@ -35,6 +35,7 @@ using SkiaSharp;
 using Extension = Avalonia.Markup.Xaml.MarkupExtension;
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 #elif MAUI_LVC
+using Microsoft.Maui.Controls;
 using Extension = Microsoft.Maui.Controls.Xaml.IMarkupExtension;
 namespace LiveChartsCore.SkiaSharpView.Maui;
 #elif WINUI_LVC
@@ -441,6 +442,9 @@ public class FromSharedAxesExtension : BaseExtension
 /// <summary>
 /// The drop shadow extension.
 /// </summary>
+#if MAUI_LVC
+[ContentProperty(nameof(Value))]
+#endif
 public class ShadowExtension : BaseExtension
 {
     /// <summary>
@@ -553,6 +557,9 @@ public class DashedExtension : BaseExtension
 /// <summary>
 /// The padding extension.
 /// </summary>
+#if MAUI_LVC
+[ContentProperty(nameof(Value))]
+#endif
 public class PaddingExtension : BaseExtension
 {
     /// <summary>
@@ -582,6 +589,9 @@ public class PaddingExtension : BaseExtension
 /// <summary>
 /// The margin extension.
 /// </summary>
+#if MAUI_LVC
+[ContentProperty(nameof(Value))]
+#endif
 public class MarginExtension : BaseExtension
 {
     /// <summary>
@@ -611,6 +621,9 @@ public class MarginExtension : BaseExtension
 /// <summary>
 /// The point extension.
 /// </summary>
+#if MAUI_LVC
+[ContentProperty(nameof(Value))]
+#endif
 public class PointExtension : BaseExtension
 {
     /// <summary>
@@ -640,6 +653,9 @@ public class PointExtension : BaseExtension
 /// <summary>
 /// The color array extension.
 /// </summary>
+#if MAUI_LVC
+[ContentProperty(nameof(Values))]
+#endif
 public class ColorArrayExtension : BaseExtension
 {
     /// <summary>
@@ -669,6 +685,9 @@ public class ColorArrayExtension : BaseExtension
 /// <summary>
 /// The color extension.
 /// </summary>
+#if MAUI_LVC
+[ContentProperty(nameof(Hex))]
+#endif
 public class ColorExtension : BaseExtension
 {
     /// <summary>
