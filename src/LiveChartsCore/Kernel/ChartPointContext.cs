@@ -99,7 +99,7 @@ public class ChartPointContext
     /// <value>
     /// The label.
     /// </value>
-    public object? Label { get; internal set; }
+    public IDrawnElement? Label { get; internal set; }
 
     /// <summary>
     /// Gets or sets the area that triggers the ToolTip.
