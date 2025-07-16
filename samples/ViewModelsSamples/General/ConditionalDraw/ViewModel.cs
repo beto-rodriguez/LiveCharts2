@@ -24,15 +24,20 @@ public partial class ViewModel
     [RelayCommand]
     private void OnPointMeasured(ChartPoint point)
     {
-        if (point.Context.DataSource is not ObservableValue observable) return;
+        var ctx = point.Context;
+        if (ctx.DataSource is not ObservableValue observable) return;
+
+        var states = ctx.Series.VisualStates;
 
         if (observable.Value > 5)
         {
-            point.SetState("Danger");
+            states.SetState("Danger", ctx.Visual);
+            states.SetState("LabelDanger", ctx.Label);
         }
         else
         {
-            point.ClearState("Danger");
+            states.ClearState("Danger", ctx.Visual);
+            states.ClearState("LabelDanger", ctx.Label);
         }
     }
 
@@ -46,7 +51,7 @@ public partial class ViewModel
 
             foreach (var item in Values)
             {
-                item.Value = r.Next(1, 10);
+                item.Value = r.Next(0, 10);
             }
         }
     }

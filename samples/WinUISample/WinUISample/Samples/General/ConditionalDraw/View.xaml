@@ -13,9 +13,11 @@
         <vms:ViewModel/>
     </UserControl.DataContext>
 
-    <lvc:CartesianChart>
+    <lvc:CartesianChart TooltipPosition="Bottom">
         <lvc:CartesianChart.Series>
             <lvc:XamlColumnSeries
+                ShowDataLabels="True"
+                DataLabelsSize="15"
                 Values="{Binding Values}"
                 PointMeasuredCommand="{Binding PointMeasuredCommand}">
                 <!--
@@ -30,6 +32,17 @@
                             <lvc:Set
                                 PropertyName="Fill"
                                 Value="{lvc:SolidColorPaint Color='#f00'}"/>
+                        </lvc:ChartPointState.Setters>
+                    </lvc:ChartPointState>
+
+                    <lvc:ChartPointState Name="LabelDanger">
+                        <lvc:ChartPointState.Setters>
+                            <lvc:Set
+                                PropertyName="Paint"
+                                Value="{lvc:SolidColorPaint Color='#f00'}"/>
+                            <lvc:Set
+                                PropertyName="TextSize"
+                                Value="30"/>
                         </lvc:ChartPointState.Setters>
                     </lvc:ChartPointState>
 

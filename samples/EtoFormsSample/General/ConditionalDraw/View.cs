@@ -30,6 +30,8 @@ public class View : Panel
 
         var columnSeries = new ColumnSeries<ObservableValue>
         {
+            ShowDataLabels = true,
+            DataLabelsSize = 15,
             Values = _values,
         };
 
@@ -37,19 +39,23 @@ public class View : Panel
 
         // define the danger state, a red fill.
         columnSeries.HasState("Danger", [
-            (nameof(IDrawnElement.Fill), (object)new SolidColorPaint(SKColors.Red))
+            (nameof(IDrawnElement.Fill), new SolidColorPaint(SKColors.Red))
+        ]);
+
+        columnSeries.HasState("LabelDanger", [
+            (nameof(IDrawnElement.Paint), new SolidColorPaint(SKColors.Red)),
+            (nameof(BaseLabelGeometry.TextSize), 30f),
         ]);
 
         // the hover state is fired when the mouse is over the point
-        columnSeries.HasState("Hover", new[]
-        {
-            (nameof(IDrawnElement.DropShadow), (object)new LvcDropShadow(4, 4, 16, 16, new(0, 0, 255)))
-        });
+        columnSeries.HasState("Hover", [
+            (nameof(IDrawnElement.DropShadow), new LvcDropShadow(4, 4, 16, 16, new(0, 0, 255)))
+        ]);
 
         var cartesianChart = new CartesianChart
         {
             Series = [columnSeries],
-            LegendPosition = LiveChartsCore.Measure.LegendPosition.Right,
+            TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Left,
         };
 
         Content = cartesianChart;
@@ -58,14 +64,20 @@ public class View : Panel
 
     private void OnPointMeasured(ChartPoint point)
     {
-        if (point.Context.DataSource is not ObservableValue observable) return;
+        var ctx = point.Context;
+        if (ctx.DataSource is not ObservableValue observable) return;
+
+        var states = ctx.Series.VisualStates;
+
         if (observable.Value > 5)
         {
-            point.SetState("Danger");
+            states.SetState("Danger", ctx.Visual);
+            states.SetState("LabelDanger", ctx.Label);
         }
         else
         {
-            point.ClearState("Danger");
+            states.ClearState("Danger", ctx.Visual);
+            states.ClearState("LabelDanger", ctx.Label);
         }
     }
 
