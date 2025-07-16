@@ -34,12 +34,15 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 /// </summary>
 public abstract class InMemorySkiaSharpChart
 {
+    private readonly IChartView? _chartView;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="InMemorySkiaSharpChart"/> class.
     /// </summary>
-    public InMemorySkiaSharpChart()
+    public InMemorySkiaSharpChart(IChartView? chartView = null)
     {
         LiveCharts.Configure(config => config.UseDefaults());
+        _chartView = chartView;
     }
 
     /// <inheritdoc cref="IChartView.CoreCanvas"/>
@@ -136,6 +139,20 @@ public abstract class InMemorySkiaSharpChart
     {
         if (CoreChart is null || CoreChart is not Chart skiaChart)
             throw new Exception("Something is missing :(");
+
+        if (_chartView is not null)
+        {
+            _chartView.CoreCanvas.DrawFrame(
+                new SkiaSharpDrawingContext(
+                    CoreCanvas,
+                    new SKImageInfo(Width, Height),
+                    surface!,
+                    canvas,
+                    Background,
+                    clearCanvasOnBeginDraw));
+
+            return;
+        }
 
         skiaChart.Canvas.DisableAnimations = true;
 
