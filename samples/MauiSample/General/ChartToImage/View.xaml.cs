@@ -22,14 +22,14 @@ public partial class View : ContentPage
     {
         // you can take any chart in the UI, and build an image from it // mark
         var chartControl = (CartesianChart)FindByName("cartesianChart");
-        var skChart = new SKCartesianChart(chartControl) { Width = 900, Height = 600, };
+        var skChart = new SKCartesianChart(chartControl);
         skChart.SaveImage(Path.Combine(_folderPath, "CartesianImageFromControl.png"));
     }
 
     private void CreateImageFromPieControl()
     {
         var chartControl = (PieChart)FindByName("pieChart");
-        var skChart = new SKPieChart(chartControl) { Width = 900, Height = 600, };
+        var skChart = new SKPieChart(chartControl);
         skChart.SaveImage(Path.Combine(_folderPath, "PieImageFromControl.png"));
     }
 }

@@ -53,14 +53,14 @@ public partial class View : UserControl
     private void CreateImageFromCartesianControl()
     {
         var chartControl = _cartesian;
-        var skChart = new SKCartesianChart(chartControl) { Width = 900, Height = 600 };
+        var skChart = new SKCartesianChart(chartControl);
         skChart.SaveImage("CartesianImageFromControl.png");
     }
 
     private void CreateImageFromPieControl()
     {
         var chartControl = _pie;
-        var skChart = new SKPieChart(chartControl) { Width = 900, Height = 600 };
+        var skChart = new SKPieChart(chartControl);
         skChart.SaveImage("PieImageFromControl.png");
     }
 }
