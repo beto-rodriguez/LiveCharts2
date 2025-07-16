@@ -213,7 +213,7 @@ public class SkiaSharpDrawingContext(
 
             if (ActiveLvcPaint.PaintStyle.HasFlag(PaintStyle.Fill))
             {
-                if (element.Fill is null || element.Fill == ActiveLvcPaint)
+                if (element.Fill is null)
                     DrawElement(element, opacity);
                 else
                     DrawByPaint(element.Fill, element, opacity);
@@ -221,7 +221,7 @@ public class SkiaSharpDrawingContext(
 
             if (ActiveLvcPaint.PaintStyle.HasFlag(PaintStyle.Stroke))
             {
-                if (element.Stroke is null || element.Stroke == ActiveLvcPaint)
+                if (element.Stroke is null)
                     DrawElement(element, opacity);
                 else
                     DrawByPaint(element.Stroke, element, opacity);
