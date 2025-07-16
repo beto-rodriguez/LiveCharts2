@@ -525,7 +525,7 @@ public abstract class Series<TModel, TVisual, TLabel>
     /// <param name="point">The chart point.</param>
     protected virtual void OnPointerEnter(ChartPoint point)
     {
-        point.SetState("Hover");
+        point.Context.Series.VisualStates.SetState("Hover", point.Context.Visual);
 
         if (ChartPointPointerHover is null || point.IsPointerOver) return;
         point.IsPointerOver = true;
@@ -538,7 +538,7 @@ public abstract class Series<TModel, TVisual, TLabel>
     /// <param name="point">The chart point.</param>
     protected virtual void OnPointerLeft(ChartPoint point)
     {
-        point.ClearState("Hover");
+        point.Context.Series.VisualStates.ClearState("Hover", point.Context.Visual);
 
         if (ChartPointPointerHoverLost is null || !point.IsPointerOver) return;
         point.IsPointerOver = false;
