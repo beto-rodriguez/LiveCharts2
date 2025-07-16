@@ -46,7 +46,7 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView
     /// Initializes a new instance of the <see cref="SKPolarChart"/> class.
     /// </summary>
     /// <param name="chartView">The chart view source to build the image from.</param>
-    public SKPolarChart(IChartView chartView)
+    public SKPolarChart(IChartView? chartView = null)
         : base(chartView)
     {
         LiveCharts.Configure(config => config.UseDefaults());
