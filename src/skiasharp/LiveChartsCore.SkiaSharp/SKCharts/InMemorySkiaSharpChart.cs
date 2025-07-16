@@ -34,12 +34,15 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 /// </summary>
 public abstract class InMemorySkiaSharpChart
 {
+    private readonly IChartView? _chartView;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="InMemorySkiaSharpChart"/> class.
     /// </summary>
-    public InMemorySkiaSharpChart()
+    public InMemorySkiaSharpChart(IChartView? chartView = null)
     {
         LiveCharts.Configure(config => config.UseDefaults());
+        _chartView = chartView;
     }
 
     /// <inheritdoc cref="IChartView.CoreCanvas"/>
@@ -64,7 +67,11 @@ public abstract class InMemorySkiaSharpChart
     /// <value>
     /// The height.
     /// </value>
-    public int Height { get; set; } = 600;
+    public int Height
+    {
+        get => _chartView is null ? field : (int)_chartView.ControlSize.Height;
+        set { field = value; WarnSize(); }
+    } = 600;
 
     /// <summary>
     /// Gets or sets the width.
@@ -72,7 +79,11 @@ public abstract class InMemorySkiaSharpChart
     /// <value>
     /// The width.
     /// </value>
-    public int Width { get; set; } = 900;
+    public int Width
+    {
+        get => _chartView is null ? field : (int)_chartView.ControlSize.Width;
+        set { field = value; WarnSize(); }
+    } = 900;
 
     /// <summary>
     /// Gets the current <see cref="SKSurface"/>.
@@ -120,10 +131,8 @@ public abstract class InMemorySkiaSharpChart
     /// </summary>
     /// <param name="canvas">The canvas</param>
     /// <param name="clearCanvasOnBeginDraw">Indicates whether the canvas should be cleared when the draw starts, default is false.</param>
-    public virtual void SaveImage(SKCanvas canvas, bool clearCanvasOnBeginDraw = false)
-    {
+    public virtual void SaveImage(SKCanvas canvas, bool clearCanvasOnBeginDraw = false) =>
         DrawOnCanvas(canvas, null, clearCanvasOnBeginDraw);
-    }
 
     /// <summary>
     /// Draws the chart to the specified canvas.
@@ -136,6 +145,20 @@ public abstract class InMemorySkiaSharpChart
     {
         if (CoreChart is null || CoreChart is not Chart skiaChart)
             throw new Exception("Something is missing :(");
+
+        if (_chartView is not null)
+        {
+            _chartView.CoreCanvas.DrawFrame(
+                new SkiaSharpDrawingContext(
+                    CoreCanvas,
+                    new SKImageInfo(Width, Height),
+                    surface!,
+                    canvas,
+                    Background,
+                    clearCanvasOnBeginDraw));
+
+            return;
+        }
 
         skiaChart.Canvas.DisableAnimations = true;
 
@@ -155,5 +178,16 @@ public abstract class InMemorySkiaSharpChart
                 clearCanvasOnBeginDraw));
 
         if (!ExplicitDisposing) skiaChart.Unload();
+    }
+
+    private void WarnSize()
+    {
+#if DEBUG
+        if (_chartView is null) return;
+        throw new InvalidOperationException(
+           $"The chart image dimensions are ignored when built from an {nameof(IChartView)} instance. " +
+           $"If you need the chart in a specific size, please use the parameterless contructor and build " +
+           $"the chart from there, or resize the chart in UI first to the desired size.");
+#endif
     }
 }
