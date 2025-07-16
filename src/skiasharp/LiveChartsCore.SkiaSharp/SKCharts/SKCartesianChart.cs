@@ -41,12 +41,13 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView
 {
     private LvcColor _backColor;
-    private bool _matchAxesScreenDataRatio;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SKCartesianChart"/> class.
     /// </summary>
-    public SKCartesianChart()
+    /// <param name="chartView">The chart view source to build the image from.</param>
+    public SKCartesianChart(ICartesianChartView? chartView = null)
+        : base(chartView)
     {
         LiveCharts.Configure(config => config.UseDefaults());
 
@@ -56,23 +57,6 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView
         Core.UpdateFinished += OnCoreUpdateFinished;
 
         CoreChart = Core;
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SKCartesianChart"/> class.
-    /// </summary>
-    /// <param name="view">The view.</param>
-    public SKCartesianChart(ICartesianChartView view) : this()
-    {
-        XAxes = view.XAxes;
-        YAxes = view.YAxes;
-        Series = view.Series;
-        Sections = view.Sections;
-        DrawMarginFrame = view.DrawMarginFrame;
-        LegendPosition = view.LegendPosition;
-        Title = view.Title;
-        DrawMargin = view.DrawMargin;
-        VisualElements = view.VisualElements;
     }
 
     bool IChartView.DesignerMode => false;
@@ -203,10 +187,10 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView
     /// <inheritdoc cref="ICartesianChartView.MatchAxesScreenDataRatio" />
     public bool MatchAxesScreenDataRatio
     {
-        get => _matchAxesScreenDataRatio;
+        get;
         set
         {
-            _matchAxesScreenDataRatio = value;
+            field = value;
 
             if (value) SharedAxes.MatchAxesScreenDataRatio(this);
             else SharedAxes.DisposeMatchAxesScreenDataRatio(this);

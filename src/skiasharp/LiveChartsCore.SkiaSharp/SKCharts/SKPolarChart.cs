@@ -45,7 +45,9 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView
     /// <summary>
     /// Initializes a new instance of the <see cref="SKPolarChart"/> class.
     /// </summary>
-    public SKPolarChart()
+    /// <param name="chartView">The chart view source to build the image from.</param>
+    public SKPolarChart(IChartView chartView)
+        : base(chartView)
     {
         LiveCharts.Configure(config => config.UseDefaults());
 
@@ -55,25 +57,6 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView
         Core.UpdateFinished += OnCoreUpdateFinished;
 
         CoreChart = Core;
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SKPolarChart"/> class.
-    /// </summary>
-    /// <param name="view">The view.</param>
-    public SKPolarChart(IPolarChartView view) : this()
-    {
-        AngleAxes = view.AngleAxes;
-        RadiusAxes = view.RadiusAxes;
-        Series = view.Series;
-        FitToBounds = view.FitToBounds;
-        TotalAngle = view.TotalAngle;
-        InnerRadius = view.InnerRadius;
-        InitialRotation = view.InitialRotation;
-        LegendPosition = view.LegendPosition;
-        Title = view.Title;
-        DrawMargin = view.DrawMargin;
-        VisualElements = view.VisualElements;
     }
 
     bool IChartView.DesignerMode => false;

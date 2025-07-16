@@ -45,7 +45,9 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView
     /// <summary>
     /// Initializes a new instance of the <see cref="SKPieChart"/> class.
     /// </summary>
-    public SKPieChart()
+    /// <param name="chartView">The chart view source to build the image from.</param>
+    public SKPieChart(IPieChartView? chartView = null)
+        : base(chartView)
     {
         LiveCharts.Configure(config => config.UseDefaults());
 
@@ -55,23 +57,6 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView
         Core.UpdateFinished += OnCoreUpdateFinished;
 
         CoreChart = Core;
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SKPieChart"/> class.
-    /// </summary>
-    /// <param name="view">The view.</param>
-    public SKPieChart(IPieChartView view) : this()
-    {
-        Series = view.Series;
-        InitialRotation = view.InitialRotation;
-        MaxAngle = view.MaxAngle;
-        MaxValue = view.MaxValue;
-        MinValue = view.MinValue;
-        LegendPosition = view.LegendPosition;
-        Title = view.Title;
-        DrawMargin = view.DrawMargin;
-        VisualElements = view.VisualElements;
     }
 
     bool IChartView.DesignerMode => false;
