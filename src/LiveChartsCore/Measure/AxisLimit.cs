@@ -88,7 +88,7 @@ public struct AxisLimit(double min, double max, double minDelta, double dataMin,
         }
 
         // both limits are not defined, we need to set them to default values.
-        min = minDefault;
+        min = scale * minDefault;
         max = scale * maxDefault;
     }
 }
