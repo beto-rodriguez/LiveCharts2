@@ -297,5 +297,16 @@ public class AxisTesting
 
         AxisLimit.ValidateLimits(ref min, ref max, step);
         Assert.IsTrue(min == 5 - (maxDefault - minDefault) * step && max == 5);
+
+        // ==============================================================
+        // CASE 9
+        // ensure double.MinValue is also treated as unset.
+        // ===============================================================
+        min = double.MinValue;
+        max = double.MinValue;
+        step = 0d;
+
+        AxisLimit.ValidateLimits(ref min, ref max, step);
+        Assert.IsTrue(min == minDefault && max == maxDefault);
     }
 }
