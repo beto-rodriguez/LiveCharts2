@@ -24,15 +24,15 @@ public class AxisTesting
         {
             Width = 1000,
             Height = 1000,
-            Series = new ISeries[]
-            {
+            Series =
+            [
                 new LineSeries<double>
                 {
-                    Values = new double[] { 1, 2, 3 }
+                    Values = [1, 2, 3]
                 }
-            },
-            XAxes = new[] { x },
-            YAxes = new[] { y }
+            ],
+            XAxes = [x],
+            YAxes = [y]
         };
 
         _ = chart.GetImage();
@@ -51,14 +51,14 @@ public class AxisTesting
         {
             Width = 1000,
             Height = 1000,
-            Series = new ISeries[]
-            {
+            Series =
+            [
                 new LineSeries<double>
                 {
-                    Values = new double[] { 1, 2, 3 }
+                    Values = [1, 2, 3]
                 },
-            },
-            XAxes = new[] { new Axis { MinLimit = 0, MaxLimit = 100000, ForceStepToMin = true, MinStep = 1, LabelsPaint = new SolidColorPaint(SKColors.Red) } }
+            ],
+            XAxes = [new Axis { MinLimit = 0, MaxLimit = 100000, ForceStepToMin = true, MinStep = 1, LabelsPaint = new SolidColorPaint(SKColors.Red) }]
         };
 
         bool succeed;
@@ -89,14 +89,14 @@ public class AxisTesting
         {
             Width = 1000,
             Height = 1000,
-            Series = new ISeries[]
-            {
+            Series =
+            [
                 new LineSeries<double>
                 {
-                    Values = new double[] { 1, 2, 3 }
+                    Values = [1, 2, 3]
                 }
-            },
-            XAxes = new[] { x }
+            ],
+            XAxes = [x]
         };
 
         var sw = new Stopwatch();
@@ -115,16 +115,16 @@ public class AxisTesting
         {
             Width = 1000,
             Height = 1000,
-            Series = new ISeries[]
-            {
+            Series =
+            [
                 new ColumnSeries<DateTimePoint>
                 {
                     Values = new ObservableCollection<DateTimePoint>
                     {
-                        new DateTimePoint(new DateTime(2021, 1, 1), 3)
+                        new(new DateTime(2021, 1, 1), 3)
                     }
                 }
-            }
+            ]
         };
 
         var sw = new Stopwatch();
@@ -144,14 +144,14 @@ public class AxisTesting
         {
             Width = 1000,
             Height = 1000,
-            Series = new ISeries[]
-            {
+            Series =
+            [
                 new LineSeries<double>
                 {
-                    Values = new double[] { 1, 2, 3 }
+                    Values = [1, 2, 3]
                 }
-            },
-            XAxes = new[] { new Axis { MinLimit = 0, MaxLimit = 1e100, LabelsPaint = new SolidColorPaint(SKColors.Red) } }
+            ],
+            XAxes = [new Axis { MinLimit = 0, MaxLimit = 1e100, LabelsPaint = new SolidColorPaint(SKColors.Red) }]
         };
 
         var sw = new Stopwatch();
