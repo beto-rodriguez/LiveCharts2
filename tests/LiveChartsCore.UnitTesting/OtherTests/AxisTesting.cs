@@ -8,6 +8,7 @@ using SkiaSharp;
 using LiveChartsCore.Defaults;
 using System.Diagnostics;
 using LiveChartsCore.UnitTesting.CoreObjectsTests;
+using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.UnitTesting.OtherTests;
 
@@ -195,5 +196,106 @@ public class AxisTesting
         Assert.IsTrue(y1._size.Width > 0 && y2._size.Height > 0);
         Assert.IsTrue(y1._size == y2._size);
         Assert.IsTrue(y1.activeSeparators.Count == y2.activeSeparators.Count);
+    }
+
+    [TestMethod]
+    public void LimitsValidation()
+    {
+        // When an axis has not enough data, it must decide the limits by itself.
+        // this test ensures that this decision is made correctly.
+
+        // when there is no data in the axis, the limits are initialized to
+        // double.MaxValue or double.MinValue depending on the axis direction.
+        const double unset = double.MaxValue;
+        const double minDefault = 0;
+        const double maxDefault = 10;
+
+        // ===============================================================
+        // CASE 1
+        // when both not set, limits are 0 and 10, just a default value.
+        // ===============================================================
+        var max = unset;
+        var min = unset;
+        var step = 0d; // the step is 0 by default, meaning that the library will decide it.
+
+        AxisLimit.ValidateLimits(ref min, ref max, step);
+        Assert.IsTrue(min == minDefault && max == maxDefault);
+
+        // ===============================================================
+        // CASE 2
+        // when the step is defined, we need to consider it.
+        // ===============================================================
+        max = unset;
+        min = unset;
+        step = 0.1;
+
+        AxisLimit.ValidateLimits(ref min, ref max, step);
+        Assert.IsTrue(min == minDefault * step && max == maxDefault * step);
+
+        // ==============================================================
+        // CASE 3
+        // when the min is set, but the max is not, we need to calculate the max
+        // ===============================================================
+        min = 5;
+        max = unset;
+        step = 0d;
+
+        AxisLimit.ValidateLimits(ref min, ref max, step);
+        Assert.IsTrue(min == 5 && max == 5 + (maxDefault - minDefault));
+
+        // ==============================================================
+        // CASE 4
+        // when the max is set, but the min is not, we need to calculate the min
+        // ===============================================================
+        min = unset;
+        max = 5;
+        step = 0d;
+
+        AxisLimit.ValidateLimits(ref min, ref max, step);
+        Assert.IsTrue(min == 5 - (maxDefault - minDefault) && max == 5);
+
+        // ==============================================================
+        // CASE 5
+        // when both are set, we do nothing.
+        // ===============================================================
+        min = 5;
+        max = 10;
+        step = 0d;
+
+        AxisLimit.ValidateLimits(ref min, ref max, step);
+        Assert.IsTrue(min == 5 && max == 10);
+
+        // ==============================================================
+        // CASE 6
+        // when both are set, but the step is defined, we do nothing.
+        // ===============================================================
+        min = 5;
+        max = 10;
+        step = 0.1;
+
+        AxisLimit.ValidateLimits(ref min, ref max, step);
+        Assert.IsTrue(min == 5 && max == 10);
+
+        // ==============================================================
+        // CASE 7
+        // when min is set, max is not, step defined, we calculate the max
+        // ===============================================================
+        min = 5;
+        max = unset;
+        step = 0.1;
+
+        AxisLimit.ValidateLimits(ref min, ref max, step);
+        Assert.IsTrue(min == 5 && max == 5 + (maxDefault - minDefault) * step);
+
+        // ==============================================================
+        // CASE 8
+        // when max is set, min is not, step defined, we calculate the min
+        // ===============================================================
+        min = unset;
+        max = 5;
+        step = 0.1;
+
+        AxisLimit.ValidateLimits(ref min, ref max, step);
+        Assert.IsTrue(min == 5 - (maxDefault - minDefault) * step && max == 5);
     }
 }
