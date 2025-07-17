@@ -63,15 +63,32 @@ public struct AxisLimit(double min, double max, double minDelta, double dataMin,
 
     internal static void ValidateLimits(ref double min, ref double max, double step)
     {
-        var isMax =
-            min is double.MaxValue or double.MinValue ||
-            max is double.MaxValue or double.MinValue;
+        var isMinDefined = min is not (double.MaxValue or double.MinValue);
+        var isMaxDefined = max is not (double.MaxValue or double.MinValue);
 
-        if (!isMax) return;
+        if (isMinDefined && isMaxDefined)
+            return; // both limits are defined, nothing to do.
 
+        const double minDefault = 0;
+        const double maxDefault = 10;
         var scale = step == 0 ? 1 : step;
 
-        min = 0;
-        max = scale * 10;
+        if (isMinDefined && !isMaxDefined)
+        {
+            // only min is defined, we need to set max.
+            max = min + scale * maxDefault;
+            return;
+        }
+
+        if (!isMinDefined && isMaxDefined)
+        {
+            // only max is defined, we need to set min.
+            min = max - scale * maxDefault;
+            return;
+        }
+
+        // both limits are not defined, we need to set them to default values.
+        min = minDefault;
+        max = scale * maxDefault;
     }
 }
