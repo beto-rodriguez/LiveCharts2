@@ -1,5 +1,6 @@
 ﻿using LiveChartsCore;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Measure;
 
 namespace ViewModelsSamples.Axes.MatchScale;
 
@@ -20,6 +21,10 @@ public static class CustomScaleExtensions
 
         var xMin = x.MinLimit ?? x.DataBounds.Min;
         var xMax = x.MaxLimit ?? x.DataBounds.Max;
+
+        // validating the limits ensures that when the chart is empty
+        // the axis limits use a rasonable default value.
+        AxisLimit.ValidateLimits(ref xMin, ref xMax, x.MinStep);
 
         x.SetLimits(xMin, xMax, notify: false);
 

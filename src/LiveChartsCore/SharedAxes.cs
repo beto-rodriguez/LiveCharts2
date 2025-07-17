@@ -23,7 +23,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 
@@ -52,7 +51,7 @@ public static class SharedAxes
                     .Select(x => (ICartesianAxis)x.ChartElementSource)
                 ];
 
-            axis.MeasureStarted += (Chart chart, ICartesianAxis obj) =>
+            axis.MeasureStarted += (chart, obj) =>
             {
                 var cc = (CartesianChartEngine)chart;
                 cc.SubscribeSharedEvents(sharedInstance);
@@ -67,19 +66,20 @@ public static class SharedAxes
     /// </summary>
     /// <param name="chart">The chart.</param>
     public static void MatchAxesScreenDataRatio(this ICartesianChartView chart) =>
-        ((CartesianChartEngine)chart.CoreChart).DrawMarginDefined += MatchAxesScreenDataRatioDelegate;
+        ((CartesianChartEngine)chart.CoreChart).DrawMarginDefined += OnDrawMarginDefined;
 
     /// <summary>
     /// Disposes the match axes screen data ratio functionality.
     /// </summary>
     /// <param name="chart">The chart.</param>
     public static void DisposeMatchAxesScreenDataRatio(this ICartesianChartView chart) =>
-        ((CartesianChartEngine)chart.CoreChart).DrawMarginDefined -= MatchAxesScreenDataRatioDelegate;
+        ((CartesianChartEngine)chart.CoreChart).DrawMarginDefined -= OnDrawMarginDefined;
 
-    private static void MatchAxesScreenDataRatioDelegate(CartesianChartEngine chart)
+    private static void OnDrawMarginDefined(CartesianChartEngine chart)
     {
         var drawMarginSize = chart.DrawMarginSize;
         ICartesianAxis source, target;
+        float sourceDimension, targetDimension;
 
         if (chart.XAxes.Length > 1 || chart.YAxes.Length > 1)
         {
@@ -88,51 +88,43 @@ public static class SharedAxes
                 $"Why is this required? please open an issue at github explaining the need of this feature.");
         }
 
-        if (drawMarginSize.Height > drawMarginSize.Width)
+        if (drawMarginSize.Height < drawMarginSize.Width)
         {
             source = chart.XAxes[0];
             target = chart.YAxes[0];
+            sourceDimension = drawMarginSize.Width;
+            targetDimension = drawMarginSize.Height;
         }
         else
         {
             source = chart.YAxes[0];
             target = chart.XAxes[0];
+            sourceDimension = drawMarginSize.Height;
+            targetDimension = drawMarginSize.Width;
         }
 
-        MatchSlopes(drawMarginSize, source, target);
-    }
+        var min = source.MinLimit ?? source.DataBounds.Min;
+        var max = source.MaxLimit ?? source.DataBounds.Max;
 
-    private static void MatchSlopes(LvcSize drawMarginSize, ICartesianAxis source, ICartesianAxis target)
-    {
-        var minSourceData = source.MinLimit ?? source.DataBounds.Min;
-        var maxSourceData = source.MaxLimit ?? source.DataBounds.Max;
+        AxisLimit.ValidateLimits(ref min, ref max, source.MinStep);
+        source.SetLimits(min, max, notify: false);
 
-        AxisLimit.ValidateLimits(ref minSourceData, ref maxSourceData, source.MinStep);
+        var sourceScreenDataRatio = sourceDimension / (max - min);
 
-        source.SetLimits(
-            minSourceData,
-            maxSourceData,
-            notify: false);
-
-        var sourceDimension = source.Orientation == AxisOrientation.X
-            ? drawMarginSize.Width
-            : drawMarginSize.Height;
-
-        var sourceScreenDataRatio = sourceDimension / (maxSourceData - minSourceData);
-
-        var targetDimension = target.Orientation == AxisOrientation.X
-            ? drawMarginSize.Width
-            : drawMarginSize.Height;
-
-        var desiredTargetDelta = targetDimension / sourceScreenDataRatio;
-
-        var minTargetData = target.MinLimit ?? target.DataBounds.Min;
-        var maxTargetData = target.MaxLimit ?? target.DataBounds.Max;
-        var midTargetData = (minTargetData + maxTargetData) * 0.5f;
+        const int timesScale = 1;
+        var targetDelta = targetDimension / (sourceScreenDataRatio * timesScale);
+        var midTarget = GetMidPoint(target);
 
         target.SetLimits(
-            midTargetData - 0.5f * desiredTargetDelta,
-            midTargetData + 0.5f * desiredTargetDelta,
+            midTarget - 0.5f * targetDelta,
+            midTarget + 0.5f * targetDelta,
             notify: false);
+    }
+
+    private static double GetMidPoint(ICartesianAxis axis)
+    {
+        var min = axis.MinLimit ?? axis.DataBounds.Min;
+        var max = axis.MaxLimit ?? axis.DataBounds.Max;
+        return (min + max) * 0.5f;
     }
 }

@@ -61,7 +61,13 @@ public struct AxisLimit(double min, double max, double minDelta, double dataMin,
     /// </summary>
     public double MinDelta { get; set; } = minDelta;
 
-    internal static void ValidateLimits(ref double min, ref double max, double step)
+    /// <summary>
+    /// Validates the limits of the axis, if the limits are not defined.
+    /// </summary>
+    /// <param name="min">The possible min value.</param>
+    /// <param name="max">The possible max value.</param>
+    /// <param name="step">The axis step, if greather than 0, the range will be based on this value.</param>
+    public static void ValidateLimits(ref double min, ref double max, double step)
     {
         var isMinDefined = min is not (double.MaxValue or double.MinValue);
         var isMaxDefined = max is not (double.MaxValue or double.MinValue);
