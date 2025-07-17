@@ -63,6 +63,18 @@ public partial class ViewModel : ObservableObject
         var min = positionInData.X - currentRange / 2;
         var max = positionInData.X + currentRange / 2;
 
+        // optional, use the data bounds as limits for the thumb
+        if (min < Values[0].X)
+        {
+            min = Values[0].X;
+            max = min + currentRange;
+        }
+        if (max > Values[^1].X)
+        {
+            max = Values[^1].X;
+            min = max - currentRange;
+        }
+
         // update the scroll bar thumb when the user is dragging the chart
         MinXThumb = min;
         MaxXThumb = max;
