@@ -308,7 +308,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
         var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
         var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;
 
-        AxisLimit.ValidateLimits(ref min, ref max);
+        AxisLimit.ValidateLimits(ref min, ref max, MinStep);
 
         _animatableBounds.MaxVisibleBound = max;
         _animatableBounds.MinVisibleBound = min;
@@ -871,7 +871,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
         var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
         var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;
 
-        AxisLimit.ValidateLimits(ref min, ref max);
+        AxisLimit.ValidateLimits(ref min, ref max, MinStep);
 
         if (s < _minStep) s = _minStep;
         if (_forceStepToMin) s = _minStep;
@@ -906,7 +906,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
         var max = MaxLimit is null ? DataBounds.Max : MaxLimit.Value;
         var min = MinLimit is null ? DataBounds.Min : MinLimit.Value;
 
-        AxisLimit.ValidateLimits(ref min, ref max);
+        AxisLimit.ValidateLimits(ref min, ref max, MinStep);
 
         var maxd = DataBounds.Max;
         var mind = DataBounds.Min;
@@ -940,7 +940,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
     }
 
     /// <inheritdoc cref="ICartesianAxis.SetLimits(double, double, double, bool, bool)"/>
-    public void SetLimits(double min, double max, double step = -1, bool propagateShared = true, bool notify = false)
+    public void SetLimits(double min, double max, double step = 0, bool propagateShared = true, bool notify = false)
     {
         var shared = propagateShared ? (SharedWith ?? []) : [];
 
@@ -1052,7 +1052,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
         var max = MaxLimit is null ? _visibleDataBounds.Max : MaxLimit.Value;
         var min = MinLimit is null ? _visibleDataBounds.Min : MinLimit.Value;
 
-        AxisLimit.ValidateLimits(ref min, ref max);
+        AxisLimit.ValidateLimits(ref min, ref max, MinStep);
 
         const double testSeparators = 25;
         var s = (max - min) / testSeparators;

@@ -61,7 +61,7 @@ public struct AxisLimit(double min, double max, double minDelta, double dataMin,
     /// </summary>
     public double MinDelta { get; set; } = minDelta;
 
-    internal static void ValidateLimits(ref double min, ref double max)
+    internal static void ValidateLimits(ref double min, ref double max, double step)
     {
         var isMax =
             min is double.MaxValue or double.MinValue ||
@@ -69,7 +69,9 @@ public struct AxisLimit(double min, double max, double minDelta, double dataMin,
 
         if (!isMax) return;
 
+        var scale = step == 0 ? 1 : step;
+
         min = 0;
-        max = 10;
+        max = scale * 10;
     }
 }

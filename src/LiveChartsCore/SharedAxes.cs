@@ -107,6 +107,8 @@ public static class SharedAxes
         var minSourceData = source.MinLimit ?? source.DataBounds.Min;
         var maxSourceData = source.MaxLimit ?? source.DataBounds.Max;
 
+        AxisLimit.ValidateLimits(ref minSourceData, ref maxSourceData, source.MinStep);
+
         source.SetLimits(
             minSourceData,
             maxSourceData,

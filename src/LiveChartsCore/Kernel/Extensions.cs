@@ -222,7 +222,7 @@ public static class Extensions
         var max = axis.MaxLimit is null ? bounds.Max : axis.MaxLimit.Value;
         var min = axis.MinLimit is null ? bounds.Min : axis.MinLimit.Value;
 
-        AxisLimit.ValidateLimits(ref min, ref max);
+        AxisLimit.ValidateLimits(ref min, ref max, axis.MinStep);
 
         var unit = axis.UnitWidth;
 
