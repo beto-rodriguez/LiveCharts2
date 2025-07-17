@@ -403,8 +403,6 @@ public class LiveChartsSettings
         Theme t;
         _theme = t = new Theme();
 
-        LiveCharts.HasDefaultTheme = true;
-
         builder(t);
 
         return this;
@@ -434,6 +432,8 @@ public class LiveChartsSettings
     /// <returns></returns>
     public LiveChartsSettings AddDefaultMappers()
     {
+        LiveCharts.HasDefaultMappers = true;
+
         return
             HasMap<short>((model, index) => new(index, model))
             .HasMap<int>((model, index) => new(index, model))
