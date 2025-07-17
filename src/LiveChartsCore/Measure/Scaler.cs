@@ -76,8 +76,13 @@ public class Scaler
 
             if (maxLimit is not null || minLimit is not null)
             {
-                MaxVal = axis.IsInverted ? minLimit ?? MinVal : maxLimit ?? MaxVal;
-                MinVal = axis.IsInverted ? maxLimit ?? MaxVal : minLimit ?? MinVal;
+                var possibleMax = axis.IsInverted ? minLimit ?? MinVal : maxLimit ?? MaxVal;
+                var possibeMin = axis.IsInverted ? maxLimit ?? MaxVal : minLimit ?? MinVal;
+
+                AxisLimit.ValidateLimits(ref possibleMax, ref possibeMin, axis.MinStep);
+
+                MaxVal = possibleMax;
+                MinVal = possibeMin;
             }
             else
             {
@@ -106,8 +111,13 @@ public class Scaler
 
             if (maxLimit is not null || minLimit is not null)
             {
-                MaxVal = axis.IsInverted ? maxLimit ?? MinVal : minLimit ?? MaxVal;
-                MinVal = axis.IsInverted ? minLimit ?? MaxVal : maxLimit ?? MinVal;
+                var possibleMax = axis.IsInverted ? maxLimit ?? MinVal : minLimit ?? MaxVal;
+                var possibeMin = axis.IsInverted ? minLimit ?? MaxVal : maxLimit ?? MinVal;
+
+                AxisLimit.ValidateLimits(ref possibleMax, ref possibeMin, axis.MinStep);
+
+                MaxVal = possibleMax;
+                MinVal = possibeMin;
             }
             else
             {
