@@ -940,7 +940,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
     }
 
     /// <inheritdoc cref="ICartesianAxis.SetLimits(double, double, double, bool, bool)"/>
-    public void SetLimits(double min, double max, double step = 0, bool propagateShared = true, bool notify = false)
+    public void SetLimits(double min, double max, double step = -1, bool propagateShared = true, bool notify = false)
     {
         var shared = propagateShared ? (SharedWith ?? []) : [];
 
