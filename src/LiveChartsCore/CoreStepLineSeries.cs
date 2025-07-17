@@ -249,6 +249,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
                         visual.Segment.Yj = p;
 
                         point.Context.Visual = null;
+                        point.Context.AdditionalVisuals = null;
                     }
 
                     if (point.Context.Label is not null)
