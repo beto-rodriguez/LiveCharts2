@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Painting;
 
@@ -42,6 +43,8 @@ public class CoreMotionCanvas : IDisposable
     private double _lastDrawTime = 0;
     private double _totalFrames = 0;
     private double _totalSeconds = 0;
+    private bool _isDrawingLoopRunning = false;
+    private TimeSpan _nextFrameDelay = s_baseFrameDelay;
     private static readonly double s_ticksPerMillisecond = Stopwatch.Frequency / 1000d;
     private static readonly TimeSpan s_baseFrameDelay = TimeSpan.FromMilliseconds(1000d / LiveCharts.TargetFps);
     private static readonly long s_jitterThreshold = s_baseFrameDelay.Ticks / 2;
@@ -102,8 +105,6 @@ public class CoreMotionCanvas : IDisposable
     /// Gets the animatables collection.
     /// </summary>
     public HashSet<Animatable> Trackers { get; } = [];
-
-    internal TimeSpan _nextFrameDelay = s_baseFrameDelay;
 
     /// <summary>
     /// Draws the frame.
@@ -186,7 +187,7 @@ public class CoreMotionCanvas : IDisposable
 
                 if (_totalSeconds > 0)
                     context.LogOnCanvas(
-                        $"FSP [{_totalFrames / _totalSeconds:N2}]        " +
+                        $"FSP [{_totalFrames / _totalSeconds:N2}]" +
                         $"render time [ last {_lastDrawTime:N2}ms / average {_totalDrawTime / _totalFrames:N2}ms ]");
             }
 
@@ -300,6 +301,25 @@ public class CoreMotionCanvas : IDisposable
                 count++;
 
         return count;
+    }
+
+    /// <summary>
+    /// Runs the drawing loop asynchronously, a custom alternative when the
+    /// target platform does not support CompositionTarget or equivalent.
+    /// </summary>
+    /// <param name="invalidator">An action that invalidates the control.</param>
+    public async void RunDrawingLoop(Action invalidator)
+    {
+        if (_isDrawingLoopRunning) return;
+        _isDrawingLoopRunning = true;
+
+        while (!IsValid)
+        {
+            invalidator();
+            await Task.Delay(_nextFrameDelay);
+        }
+
+        _isDrawingLoopRunning = false;
     }
 
     /// <summary>
