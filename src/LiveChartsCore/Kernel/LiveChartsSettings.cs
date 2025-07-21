@@ -384,7 +384,7 @@ public class LiveChartsSettings
     /// Removes a map from the settings.
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
-    /// <returns></returns>
+    /// <returns>The current settings.</returns>
     public LiveChartsSettings RemoveMap<TModel>()
     {
         _ = _mappers.Remove(typeof(TModel));
@@ -395,7 +395,7 @@ public class LiveChartsSettings
     /// Adds the default styles.
     /// </summary>
     /// <param name="builder">The builder.</param>
-    /// <returns></returns>
+    /// <returns>The current settings.</returns>
     public LiveChartsSettings HasTheme(Action<Theme> builder)
     {
         Theme t;
@@ -409,7 +409,6 @@ public class LiveChartsSettings
     /// <summary>
     /// Gets the styles builder.
     /// </summary>
-    /// <returns></returns>
     public Theme GetTheme() =>
         (Theme?)_theme ?? throw new Exception("A theme is required.");
 
@@ -427,10 +426,10 @@ public class LiveChartsSettings
     /// <summary>
     /// Enables LiveCharts to be able to plot short, int, long, float, double, decimal, short?, int?, long?, float?, double?, decimal?.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The current settings.</returns>
     public LiveChartsSettings AddDefaultMappers()
     {
-        LiveCharts.HasDefaultMappers = true;
+        LiveCharts.s_hasDefaultMappers = true;
 
         return
             HasMap<short>((model, index) => new(index, model))
@@ -445,5 +444,45 @@ public class LiveChartsSettings
             .HasMap<float?>((model, index) => new(index, model!.Value))
             .HasMap<double?>((model, index) => new(index, model!.Value))
             .HasMap<decimal?>((model, index) => new(index, (double)model!.Value));
+    }
+
+    /// <summary>
+    /// Indicates whether hardware acceleration is used to render the charts, this will only work if
+    /// the current platform and device supports it. See also. <seealso cref="LiveCharts.UseGPU"/>.
+    /// </summary>
+    /// <param name="useHardwareAcceleration">
+    /// Indicates whether hardware acceleration is used, this will only work
+    /// if the platform and device support it, default is true. This is ignored in Avalonia, in avalonia the
+    /// frame rate and rendering cadence is determined by the Avalonia rendering loop.
+    /// </param>
+    /// <param name="tryUseVSync">
+    /// Indicates whether the rendering cadence should be aligned with the display refresh rate,
+    /// gpu acceleration is required for this to work. This is ignored in Avalonia, in avalonia the frame rate
+    /// and rendering cadence is determined by the Avalonia rendering loop.
+    /// </param>
+    /// <param name="targetFps">
+    /// The target frames per second for the rendering engine, this property is ignored when
+    /// <see cref="LiveCharts.TryUseVSync"/> is true and GPU acceleration is enabled,
+    /// This is ignored in Avalonia, in avalonia the frame rate and rendering cadence is determined by the
+    /// Avalonia rendering loop.
+    /// </param>
+    /// <param name="showFps">
+    /// When true, The chart will also draw the frames per second in the top left corner of the chart.
+    /// </param>
+    /// <returns>The current settings.</returns>
+    public LiveChartsSettings RenderingSettings(
+        bool useHardwareAcceleration,
+        bool tryUseVSync,
+        double targetFps = 60,
+        bool showFps = false)
+    {
+        LiveCharts.s_hasDefaultHardwareAcceleration = true;
+
+        LiveCharts.UseGPU = useHardwareAcceleration;
+        LiveCharts.TryUseVSync = tryUseVSync;
+        LiveCharts.TargetFps = targetFps;
+        LiveCharts.ShowFPS = showFps;
+
+        return this;
     }
 }
