@@ -21,12 +21,12 @@
 // SOFTWARE.
 
 using System;
-using System.Threading.Tasks;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Devices;
 using Microsoft.Maui.Layouts;
+using SkiaSharp;
 using SkiaSharp.Views.Maui;
 using SkiaSharp.Views.Maui.Controls;
 
@@ -37,9 +37,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 /// </summary>
 public class MotionCanvas : AbsoluteLayout
 {
-    private bool _isDrawingLoopRunning = false;
-    private bool _isLoaded = true;
-    private double _density = 1;
+    private readonly Renderer _renderer;
     private SKCanvasView? _canvasView;
     private SKGLView? _glView;
 
@@ -50,11 +48,11 @@ public class MotionCanvas : AbsoluteLayout
     {
         InitializeView();
 
+        CanvasCore = new();
+        _renderer = new(CanvasCore, InvalidateChart);
+
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
-
-        _density = DeviceDisplay.MainDisplayInfo.Density;
-        DeviceDisplay.MainDisplayInfoChanged += MainDisplayInfoChanged;
     }
 
     /// <summary>
@@ -65,29 +63,31 @@ public class MotionCanvas : AbsoluteLayout
     /// </value>
     public CoreMotionCanvas CanvasCore { get; } = new();
 
-    /// <summary>
-    /// Invalidates this instance.
-    /// </summary>
-    /// <returns></returns>
-    public void Invalidate() =>
-        RunDrawingLoop();
+    private void InvalidateChart()
+    {
+        _canvasView?.InvalidateSurface();
+        _glView?.InvalidateSurface();
+    }
 
     private void OnCanvasViewPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
     {
-        args.Surface.Canvas.Scale((float)_density, (float)_density);
+        if (_renderer.Density != 1)
+            args.Surface.Canvas.Scale(_renderer.Density, _renderer.Density);
+
         CanvasCore.DrawFrame(
-            new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
+            new SkiaSharpDrawingContext(
+                CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
     }
 
     private void OnGlViewPaintSurface(object? sender, SKPaintGLSurfaceEventArgs args)
     {
-        args.Surface.Canvas.Scale((float)_density, (float)_density);
-        CanvasCore.DrawFrame(
-            new SkiaSharpDrawingContext(CanvasCore, new SkiaSharp.SKImageInfo((int)Width, (int)Height), args.Surface, args.Surface.Canvas));
-    }
+        if (_renderer.Density != 1)
+            args.Surface.Canvas.Scale(_renderer.Density, _renderer.Density);
 
-    private void OnCanvasCoreInvalidated(CoreMotionCanvas sender) =>
-        Invalidate();
+        CanvasCore.DrawFrame(
+            new SkiaSharpDrawingContext(
+                CanvasCore, new SKImageInfo((int)Width, (int)Height), args.Surface, args.Surface.Canvas));
+    }
 
     private void InitializeView()
     {
@@ -113,36 +113,176 @@ public class MotionCanvas : AbsoluteLayout
         }
     }
 
-    private async void RunDrawingLoop()
-    {
-        if (_isDrawingLoopRunning) return;
-        _isDrawingLoopRunning = true;
-
-        var ts = TimeSpan.FromSeconds(1 / LiveCharts.MaxFps);
-
-        while (!CanvasCore.IsValid && _isLoaded)
-        {
-            _canvasView?.InvalidateSurface();
-            _glView?.InvalidateSurface();
-            await Task.Delay(ts);
-        }
-
-        _isDrawingLoopRunning = false;
-    }
-
-    private void OnLoaded(object? sender, EventArgs e)
-    {
-        _isLoaded = true;
-        CanvasCore.Invalidated += OnCanvasCoreInvalidated;
-    }
+    private void OnLoaded(object? sender, EventArgs e) =>
+        _renderer.Start();
 
     private void OnUnloaded(object? sender, EventArgs e)
     {
-        _isLoaded = false;
-        CanvasCore.Invalidated -= OnCanvasCoreInvalidated;
+        _renderer.Stop();
         CanvasCore.Dispose();
     }
+}
+
+/// <summary>
+/// Defines the renderer class for Maui.
+/// </summary>
+public partial class Renderer
+{
+    private readonly CoreMotionCanvas _canvas;
+    private readonly Action _invalidator;
+
+    /// <summary>
+    /// Gets the screen density of the device.
+    /// </summary>
+    public float Density { get; private set; } = 1;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Renderer"/> class.
+    /// </summary>
+    /// <param name="canvas">The livecharts canvas.</param>
+    /// <param name="invalidator">The action to invalidate the canvas.</param>
+    public Renderer(CoreMotionCanvas canvas, Action invalidator)
+    {
+        Density = (float)DeviceDisplay.MainDisplayInfo.Density;
+        DeviceDisplay.MainDisplayInfoChanged += MainDisplayInfoChanged;
+
+        _canvas = canvas;
+        _invalidator = invalidator;
+    }
+
+    /// <summary>
+    /// Starts the rendering loop for the canvas.
+    /// </summary>
+    public void Start()
+    {
+        if (!LiveCharts.UseVSync)
+        {
+            _canvas.Invalidated += StartLiveChartsDrawingLoop;
+            return;
+        }
+
+#if WINDOWS
+        StartWindowsRenderer();
+#elif ANDROID
+        StartAndroidRenderer();
+#else
+        // if no platform-specific renderer is available,
+        // then use the livecharts drawing loop,
+        // slower but works on all platforms
+
+        _canvas.Invalidated += StartLiveChartsDrawingLoop;
+#endif
+    }
+
+    /// <summary>
+    /// Ends the rendering loop for the canvas.
+    /// </summary>
+    public void Stop()
+    {
+        if (!LiveCharts.UseVSync)
+        {
+            _canvas.Invalidated -= StartLiveChartsDrawingLoop;
+            return;
+        }
+
+#if WINDOWS
+        StopWindowsRenderer();
+#elif ANDROID
+        StopAndroidRenderer();
+#else
+        _canvas.Invalidated -= StartLiveChartsDrawingLoop;
+#endif
+    }
+
+    private void StartLiveChartsDrawingLoop(CoreMotionCanvas canvas) =>
+        _canvas.RunDrawingLoop(_invalidator);
 
     private void MainDisplayInfoChanged(object? sender, EventArgs e) =>
-        _density = DeviceDisplay.MainDisplayInfo.Density;
+        Density = (float)DeviceDisplay.MainDisplayInfo.Density;
 }
+
+#if WINDOWS
+
+public partial class Renderer
+{
+    private void StartWindowsRenderer()
+    {
+        Microsoft.UI.Xaml.Media.CompositionTarget.Rendering += OnRendering;
+        _canvas.Invalidated += OnLiveChartsCanvasInvalidated;
+    }
+
+    private void StopWindowsRenderer()
+    {
+        Microsoft.UI.Xaml.Media.CompositionTarget.Rendering -= OnRendering;
+        _canvas.Invalidated -= OnLiveChartsCanvasInvalidated;
+    }
+
+    private void OnRendering(object? sender, object e)
+    {
+        // this is called on every vsync tick
+        if (_canvas.IsValid) return;
+        _invalidator();
+    }
+
+    private void OnLiveChartsCanvasInvalidated(CoreMotionCanvas obj) =>
+        // this is the first call to invalidate the canvas
+        // when livecharts detect a change in the data/properties
+        _invalidator();
+}
+
+#endif
+
+#if ANDROID
+
+public class VSyncTicker(Action onFrameTick)
+    : Java.Lang.Object, Android.Views.Choreographer.IFrameCallback
+{
+    private readonly Android.Views.Choreographer _chor = Android.Views.Choreographer.Instance!;
+
+    public void Start() =>
+        _chor.PostFrameCallback(this);
+
+    // frameTimeNanos:
+    // the absolute timestamp (in nanoseconds) that the system’s choreographer assigns to this frame.
+    public void DoFrame(long frameTimeNanos)
+    {
+        onFrameTick();
+        _chor.PostFrameCallback(this);
+    }
+
+    public void Stop() =>
+        _chor.RemoveFrameCallback(this);
+}
+
+public partial class Renderer
+{
+    private VSyncTicker _vsyncTicker = null!;
+
+    private void StartAndroidRenderer()
+    {
+        _vsyncTicker = new VSyncTicker(OnRendering);
+        _vsyncTicker.Start();
+        _canvas.Invalidated += OnLiveChartsCanvasInvalidated;
+    }
+
+    private void StopAndroidRenderer()
+    {
+        _vsyncTicker.Stop();
+        _vsyncTicker = null!;
+        _canvas.Invalidated -= OnLiveChartsCanvasInvalidated;
+    }
+
+    private void OnRendering()
+    {
+        // this is called on every vsync tick
+        if (_canvas.IsValid) return;
+        _invalidator();
+    }
+
+    private void OnLiveChartsCanvasInvalidated(CoreMotionCanvas obj) =>
+        // this is the first call to invalidate the canvas
+        // when livecharts detect a change in the data/properties
+        _invalidator();
+}
+
+#endif
