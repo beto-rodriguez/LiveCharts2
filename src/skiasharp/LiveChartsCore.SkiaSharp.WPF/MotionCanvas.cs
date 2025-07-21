@@ -20,17 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using LiveChartsCore.Motion;
-using LiveChartsCore.SkiaSharpView.Drawing;
-using SkiaSharp;
-using SkiaSharp.Views.Desktop;
-using SkiaSharp.Views.WPF;
-
+using LiveChartsCore.SkiaSharpView.WPF.Rendering;
 namespace LiveChartsCore.SkiaSharpView.WPF;
 
 /// <summary>
@@ -39,123 +32,33 @@ namespace LiveChartsCore.SkiaSharpView.WPF;
 /// <seealso cref="Control" />
 public class MotionCanvas : UserControl
 {
-    private SKElement? _skiaElement;
-#if NET6_0_OR_GREATER
-    // workaround #250115
-    private SKGLElement? _skiaGlElement;
-#endif
-    private bool _isDrawingLoopRunning = false;
+    private readonly CanvasRenderSettings<CPURenderMode, GPURenderMode, CompositionTargetTicker> _settings;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
     /// </summary>
     public MotionCanvas()
     {
+        _settings = new();
+
+        Content = _settings.RenderMode;
+
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
     }
 
-    /// <summary>
-    /// Gets the canvas core.
-    /// </summary>
-    /// <value>
-    /// The canvas core.
-    /// </value>
+    /// <inheritdoc cref="CoreMotionCanvas"/>
     public CoreMotionCanvas CanvasCore { get; } = new();
 
-    internal void AddLogicalChild(DependencyObject child) => base.AddLogicalChild(child);
-    internal void RemoveLogicalChild(DependencyObject child) => base.RemoveLogicalChild(child);
+    internal void AddLogicalChild(DependencyObject child) =>
+        base.AddLogicalChild(child);
 
-    /// <inheritdoc cref="OnPaintSurface(object?, SKPaintSurfaceEventArgs)" />
-    protected virtual void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
-    {
-        var density = GetPixelDensity();
-        args.Surface.Canvas.Scale(density.dpix, density.dpiy);
-        CanvasCore.DrawFrame(
-            new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
-    }
+    internal void RemoveLogicalChild(DependencyObject child) =>
+        base.RemoveLogicalChild(child);
 
-    /// <inheritdoc cref="OnPaintGlSurface(object?, SKPaintGLSurfaceEventArgs)" />
-    protected virtual void OnPaintGlSurface(object? sender, SKPaintGLSurfaceEventArgs args)
-    {
-        var density = GetPixelDensity();
-        args.Surface.Canvas.Scale(density.dpix, density.dpiy);
+    private void OnLoaded(object sender, RoutedEventArgs e) =>
+        _settings.Initialize(CanvasCore);
 
-        var c = (((Control)Parent).Background is not SolidColorBrush bg)
-            ? Colors.White
-            : bg.Color;
-
-        CanvasCore.DrawFrame(
-            new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas)
-            {
-                Background = new SKColor(c.R, c.G, c.B)
-            });
-    }
-
-    private void InitializeElement()
-    {
-        if (LiveCharts.UseGPU)
-        {
-#if NET6_0_OR_GREATER
-            // workaround #250115
-            Content = _skiaGlElement = new SKGLElement();
-            _skiaGlElement.PaintSurface += OnPaintGlSurface;
-#else
-            throw new PlatformNotSupportedException(
-                "GPU rendering is only supported in .NET 6.0 or greater, " +
-                "because https://github.com/mono/SkiaSharp/issues/3111 needs to be fixed.");
-#endif
-        }
-        else
-        {
-            Content = _skiaElement = new SKElement();
-            _skiaElement.PaintSurface += OnPaintSurface;
-        }
-    }
-
-    private ResolutionHelper GetPixelDensity()
-    {
-        var presentationSource = PresentationSource.FromVisual(this);
-        if (presentationSource is null) return new(1f, 1f);
-        var compositionTarget = presentationSource.CompositionTarget;
-        if (compositionTarget is null) return new(1f, 1f);
-
-        var matrix = compositionTarget.TransformToDevice;
-        return new((float)matrix.M11, (float)matrix.M22);
-    }
-
-    private void OnCanvasCoreInvalidated(CoreMotionCanvas sender) =>
-        RunDrawingLoop();
-
-    private void OnLoaded(object sender, RoutedEventArgs e)
-    {
-        InitializeElement();
-        CanvasCore.Invalidated += OnCanvasCoreInvalidated;
-    }
-
-    private void OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        CanvasCore.Invalidated -= OnCanvasCoreInvalidated;
-        CanvasCore.Dispose();
-    }
-
-    private async void RunDrawingLoop()
-    {
-        if (_isDrawingLoopRunning) return;
-        _isDrawingLoopRunning = true;
-
-        var ts = TimeSpan.FromSeconds(1 / LiveCharts.MaxFps);
-
-        while (!CanvasCore.IsValid)
-        {
-            _skiaElement?.InvalidateVisual();
-#if NET6_0_OR_GREATER
-            // workaround #250115
-            _skiaGlElement?.InvalidateVisual();
-#endif
-            await Task.Delay(ts);
-        }
-
-        _isDrawingLoopRunning = false;
-    }
+    private void OnUnloaded(object sender, RoutedEventArgs e) =>
+        _settings.Dispose(CanvasCore);
 }
