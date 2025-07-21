@@ -20,8 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// Ignore Spelling: Skia Lvc
-
 using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -52,9 +50,21 @@ public static class LiveChartsSkiaSharp
     /// <returns>The settings.</returns>
     public static LiveChartsSettings UseDefaults(this LiveChartsSettings settings)
     {
-        if (!LiveCharts.HasBackend) _ = settings.AddSkiaSharp();
-        if (!LiveCharts.HasDefaultTheme) _ = settings.AddDefaultTheme();
-        if (!LiveCharts.HasDefaultMappers) _ = settings.AddDefaultMappers();
+        if (!LiveCharts.s_hasBackend)
+            _ = settings.AddSkiaSharp();
+
+        if (!LiveCharts.s_hasDefaultTheme)
+            _ = settings.AddDefaultTheme();
+
+        if (!LiveCharts.s_hasDefaultMappers)
+            _ = settings.AddDefaultMappers();
+
+        if (!LiveCharts.s_hasDefaultHardwareAcceleration)
+            _ = settings.RenderingSettings(
+                useHardwareAcceleration: true,
+                tryUseVSync: true,
+                targetFps: 60, // 60 as a fallback when VSync is not available
+                showFps: false);
 
         return settings;
     }
@@ -66,7 +76,7 @@ public static class LiveChartsSkiaSharp
     /// <returns></returns>
     public static LiveChartsSettings AddSkiaSharp(this LiveChartsSettings settings)
     {
-        LiveCharts.HasBackend = true;
+        LiveCharts.s_hasBackend = true;
 
         PropertyDefinition.Parsers[typeof(Paint)] = HexToPaintTypeConverter.Parse;
         PropertyDefinition.Parsers[typeof(LvcColor)] = HexToLvcColorTypeConverter.Parse;
