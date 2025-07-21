@@ -53,7 +53,7 @@ public static class ThemesExtensions
         Action<Theme>? themeSettings = null,
         LvcThemeKind requestedTheme = LvcThemeKind.Unknown)
     {
-        LiveCharts.HasDefaultTheme = true;
+        LiveCharts.s_hasDefaultTheme = true;
 
         return settings
             .HasTheme(theme =>
