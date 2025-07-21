@@ -1,1 +1,1 @@
-For Uno, open ./samples/UnoPlatform_v5/UnoPlatform.slnx
+For Uno, open ./samples/UnoPlatform/UnoPlatform.slnx
