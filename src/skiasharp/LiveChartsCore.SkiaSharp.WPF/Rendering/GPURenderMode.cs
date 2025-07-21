@@ -63,12 +63,8 @@ internal class GPURenderMode : SKGLElement, IRenderMode
         if (density.dpix != 1 || density.dpiy != 1)
             args.Surface.Canvas.Scale(density.dpix, density.dpiy);
 
-        var c = ((Control)Parent).Background is not SolidColorBrush bg
-            ? Colors.White
-            : bg.Color;
-
         FrameRequest?.Invoke(
-            new SkiaSharpDrawingContext(_canvas, args.Info, args.Surface, new SKColor(c.R, c.G, c.B)));
+            new SkiaSharpDrawingContext(_canvas, args.Info, args.Surface, SKColor.Empty));
     }
 
     private ResolutionHelper GetPixelDensity()
@@ -80,5 +76,20 @@ internal class GPURenderMode : SKGLElement, IRenderMode
 
         var matrix = compositionTarget.TransformToDevice;
         return new((float)matrix.M11, (float)matrix.M22);
+    }
+
+    private SKColor GetBackground(DependencyObject? element)
+    {
+        if (element is not FrameworkElement fe)
+            return SKColors.Transparent;
+
+        if (fe is Control control && control.Background is SolidColorBrush bg)
+            return new SKColor(bg.Color.R, bg.Color.G, bg.Color.B, bg.Color.A);
+
+        var parent = fe.Parent ?? fe.TemplatedParent;
+
+        return parent is null
+            ? SKColors.Transparent
+            : GetBackground(parent);
     }
 }
