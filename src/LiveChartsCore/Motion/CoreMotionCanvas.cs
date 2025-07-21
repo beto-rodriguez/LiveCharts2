@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Painting;
 
@@ -43,8 +42,7 @@ public class CoreMotionCanvas : IDisposable
     private double _lastDrawTime = 0;
     private double _totalFrames = 0;
     private double _totalSeconds = 0;
-    private bool _isDrawingLoopRunning = false;
-    private TimeSpan _nextFrameDelay = s_baseFrameDelay;
+    internal TimeSpan _nextFrameDelay = s_baseFrameDelay;
     private static readonly double s_ticksPerMillisecond = Stopwatch.Frequency / 1000d;
     private static readonly TimeSpan s_baseFrameDelay = TimeSpan.FromMilliseconds(1000d / LiveCharts.TargetFps);
     private static readonly long s_jitterThreshold = s_baseFrameDelay.Ticks / 2;
@@ -53,6 +51,8 @@ public class CoreMotionCanvas : IDisposable
     {
         s_clock.Start();
     }
+
+    internal delegate void FrameRequestHandler(DrawingContext context);
 
     /// <summary>
     /// Gets the clock elapsed time in milliseconds.
@@ -187,8 +187,10 @@ public class CoreMotionCanvas : IDisposable
 
                 if (_totalSeconds > 0)
                     context.LogOnCanvas(
-                        $"FSP [{_totalFrames / _totalSeconds:N2}]" +
-                        $"render time [ last {_lastDrawTime:N2}ms / average {_totalDrawTime / _totalFrames:N2}ms ]");
+                        $"FPS [ {_totalFrames / _totalSeconds:N2} ]  " +
+                        $"render time [ last {_lastDrawTime:N2}ms / average {_totalDrawTime / _totalFrames:N2}ms ]  " +
+                        $"GPU [ {LiveCharts.UseGPU} ]  " +
+                        $"VSync [ {LiveCharts.UseGPU && LiveCharts.TryUseVSync} ]");
             }
 
             IsValid = isValid;
@@ -202,8 +204,13 @@ public class CoreMotionCanvas : IDisposable
 
             if (showFps)
             {
+                // restart the count when the canvas is valid.
                 _frames = 0;
                 _fspSw = null;
+                _totalDrawTime = 0;
+                _lastDrawTime = 0;
+                _totalFrames = 0;
+                _totalSeconds = 0;
             }
         }
 
@@ -301,25 +308,6 @@ public class CoreMotionCanvas : IDisposable
                 count++;
 
         return count;
-    }
-
-    /// <summary>
-    /// Runs the drawing loop asynchronously, a custom alternative when the
-    /// target platform does not support CompositionTarget or equivalent.
-    /// </summary>
-    /// <param name="invalidator">An action that invalidates the control.</param>
-    public async void RunDrawingLoop(Action invalidator)
-    {
-        if (_isDrawingLoopRunning) return;
-        _isDrawingLoopRunning = true;
-
-        while (!IsValid)
-        {
-            invalidator();
-            await Task.Delay(_nextFrameDelay);
-        }
-
-        _isDrawingLoopRunning = false;
     }
 
     /// <summary>
