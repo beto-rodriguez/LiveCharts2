@@ -20,13 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Threading.Tasks;
+using LiveChartsCore.Behaviours;
 using LiveChartsCore.Motion;
-using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.WinUI.Rendering;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using SkiaSharp.Views.Windows;
+
+#pragma warning disable IDE0028 // Simplify collection initialization
 
 namespace LiveChartsCore.SkiaSharpView.WinUI;
 
@@ -35,84 +35,37 @@ namespace LiveChartsCore.SkiaSharpView.WinUI;
 /// </summary>
 public partial class MotionCanvas : Canvas
 {
-    private readonly SKXamlCanvas? _skiaElement;
-    private bool _isDrawingLoopRunning;
+    private readonly CanvasRenderSettings<CPURenderMode, GPURenderMode, NativeFrameTicker> _settings;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
     /// </summary>
     public MotionCanvas()
     {
+        _settings = new();
+
+        Children.Add((UIElement)_settings.RenderMode);
+
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
 
         SizeChanged += OnSizeChanged;
-
-#pragma warning disable IDE0028 // Simplify collection initialization
-        _skiaElement = new();
-#pragma warning restore IDE0028 // Simplify collection initialization
-        Children.Add(_skiaElement);
-        SetLeft(_skiaElement, 0);
-        SetTop(_skiaElement, 0);
-
-        _skiaElement.PaintSurface += OnPaintSurface;
     }
 
-    /// <summary>
-    /// Gets the canvas core.
-    /// </summary>
-    /// <value>
-    /// The canvas core.
-    /// </value>
+    /// <inheritdoc cref="CoreMotionCanvas"/>
     public CoreMotionCanvas CanvasCore { get; } = new();
-
-    private void OnLoaded(object sender, RoutedEventArgs e) =>
-        CanvasCore.Invalidated += OnCanvasCoreInvalidated;
-
-    private void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
-    {
-#if HAS_UNO_WINUI
-        var scale = Windows.Graphics.Display.DisplayInformation.GetForCurrentView().LogicalDpi / 96.0f;
-        args.Surface.Canvas.Scale((float)scale, (float)scale);
-        CanvasCore.DrawFrame(
-            new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
-#else
-        var scaleFactor = XamlRoot.RasterizationScale;
-        args.Surface.Canvas.Scale((float)scaleFactor, (float)scaleFactor);
-        CanvasCore.DrawFrame(
-            new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
-#endif
-    }
-
-    private async void RunDrawingLoop()
-    {
-        if (_isDrawingLoopRunning || _skiaElement == null) return;
-        _isDrawingLoopRunning = true;
-
-        var ts = TimeSpan.FromSeconds(1 / LiveCharts.MaxFps);
-
-        while (!CanvasCore.IsValid)
-        {
-            _skiaElement?.Invalidate();
-            await Task.Delay(ts);
-        }
-
-        _isDrawingLoopRunning = false;
-    }
-
-    private void OnCanvasCoreInvalidated(CoreMotionCanvas sender) =>
-        RunDrawingLoop();
 
     private void OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
-        if (_skiaElement == null) return;
-        _skiaElement.Width = e.NewSize.Width;
-        _skiaElement.Height = e.NewSize.Height;
+        var fe = (FrameworkElement)_settings.RenderMode;
+
+        fe.Width = e.NewSize.Width;
+        fe.Height = e.NewSize.Height;
     }
 
-    private void OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        CanvasCore.Invalidated -= OnCanvasCoreInvalidated;
-        CanvasCore.Dispose();
-    }
+    private void OnLoaded(object sender, RoutedEventArgs e) =>
+        _settings.Initialize(CanvasCore);
+
+    private void OnUnloaded(object sender, RoutedEventArgs e) =>
+        _settings.Dispose(CanvasCore);
 }
