@@ -120,8 +120,8 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView
         }
     }
 
-    /// <inheritdoc cref="InMemorySkiaSharpChart.DrawOnCanvas(SKCanvas, SKSurface?, bool)"/>
-    public override void DrawOnCanvas(SKCanvas canvas, SKSurface? surface, bool clearCanvasOnBeginDraw = false)
+    /// <inheritdoc cref="InMemorySkiaSharpChart.DrawOnCanvas(SKSurface, bool)"/>
+    public override void DrawOnCanvas(SKSurface surface, bool clearCanvasOnBeginDraw = false)
     {
         Canvas.DisableAnimations = true;
 
@@ -131,8 +131,7 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView
             new SkiaSharpDrawingContext(
                 Canvas,
                 new SKImageInfo(Width, Height),
-                surface!,
-                canvas,
+                surface,
                 Background,
                 clearCanvasOnBeginDraw));
 
