@@ -20,9 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using SkiaSharp;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using SkiaSharp.Views.Windows;
 
 namespace LiveChartsCore.SkiaSharpView.WinUI.Rendering;
@@ -55,7 +57,7 @@ internal partial class CPURenderMode : SKXamlCanvas, IRenderMode
         if (density.DpiX != 1 || density.DpiY != 1)
             e.Surface.Canvas.Scale(density.DpiX, density.DpiY);
 
-        FrameRequest?.Invoke(new SkiaSharpDrawingContext(_canvas, e.Info, e.Surface, SKColor.Empty));
+        FrameRequest?.Invoke(new SkiaSharpDrawingContext(_canvas, e.Info, e.Surface, GetBackground().AsSKColor()));
     }
 
     public void InvalidateRenderer() =>
@@ -76,5 +78,16 @@ internal partial class CPURenderMode : SKXamlCanvas, IRenderMode
     {
         public float DpiX { get; } = dpiX;
         public float DpiY { get; } = dpiY;
+    }
+
+    private LvcColor GetBackground()
+    {
+        var parentBg = Parent is Control control && control.Background is SolidColorBrush bg
+            ? new LvcColor(bg.Color.R, bg.Color.G, bg.Color.B, bg.Color.A)
+            : LvcColor.Empty;
+
+        return parentBg != LvcColor.Empty
+            ? parentBg
+            : _canvas._virtualBackgroundColor;
     }
 }
