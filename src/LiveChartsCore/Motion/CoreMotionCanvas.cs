@@ -46,6 +46,7 @@ public class CoreMotionCanvas : IDisposable
     private static readonly double s_ticksPerMillisecond = Stopwatch.Frequency / 1000d;
     private static readonly TimeSpan s_baseFrameDelay = TimeSpan.FromMilliseconds(1000d / LiveCharts.TargetFps);
     private static readonly long s_jitterThreshold = s_baseFrameDelay.Ticks / 2;
+    internal LvcColor _virtualBackgroundColor;
 
     static CoreMotionCanvas()
     {

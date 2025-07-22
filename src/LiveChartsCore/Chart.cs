@@ -55,7 +55,6 @@ public abstract class Chart
     private readonly ActionThrottler _updateThrottler;
     private readonly ActionThrottler _tooltipThrottler;
     private readonly ActionThrottler _panningThrottler;
-    private LvcPoint _pointerPanningStartPosition = new(-10, -10);
     private LvcPoint _pointerPanningPosition = new(-10, -10);
     private LvcPoint _pointerPreviousPanningPosition = new(-10, -10);
     private bool _isPanning = false;
@@ -347,7 +346,6 @@ public abstract class Chart
     {
         _isPanning = true;
         _pointerPreviousPanningPosition = point;
-        _pointerPanningStartPosition = point;
 
         lock (Canvas.Sync)
         {
@@ -613,6 +611,7 @@ public abstract class Chart
     {
         var theme = View.ChartTheme ?? LiveCharts.DefaultSettings.GetTheme();
         theme.Setup(View.IsDarkMode);
+        Canvas._virtualBackgroundColor = theme.VirtualBackroundColor;
         return theme;
     }
 

@@ -68,6 +68,7 @@ public static class ThemesExtensions
                         if (theme.IsDark)
                         {
                             theme.Colors = ColorPalletes.MaterialDesign200;
+                            theme.VirtualBackroundColor = new(0, 0, 0);
                             theme.TooltipBackgroundPaint =
                                 new SolidColorPaint(new(45, 45, 45, 230))
                                 {
@@ -79,6 +80,7 @@ public static class ThemesExtensions
                         else
                         {
                             theme.Colors = ColorPalletes.MaterialDesign500;
+                            theme.VirtualBackroundColor = new(255, 255, 255);
                             theme.TooltipBackgroundPaint =
                                 new SolidColorPaint(new(235, 235, 235, 230))
                                 {
