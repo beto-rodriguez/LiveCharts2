@@ -299,6 +299,7 @@ public class LinearGradientPaint(
         GC.SuppressFinalize(this);
     }
 
+    // ideally, we should also let the user use the shape bounds.
     private static SKRect GetDrawRectangleSize(SkiaSharpDrawingContext drawingContext)
     {
         var space = drawingContext.Canvas.LocalClipBounds;
