@@ -542,7 +542,7 @@ public abstract class Chart
     /// Initializes the visuals collector.
     /// </summary>
     protected void InitializeVisualsCollector() =>
-        _toDeleteElements = new HashSet<IChartElement>(_everMeasuredElements);
+        _toDeleteElements = [.. _everMeasuredElements];
 
     /// <summary>
     /// Adds a visual element to the chart.
@@ -702,12 +702,18 @@ public abstract class Chart
 
         foreach (var point in hovered)
         {
-            if (_activePoints.Contains(point)) continue;
+            if (_activePoints.Contains(point) &&
+                point.HoverKey.Item1 == point.Coordinate.PrimaryValue &&
+                point.HoverKey.Item2 == point.Coordinate.SecondaryValue)
+            {
+                continue;
+            }
 
             point.Context.Series.OnPointerEnter(point);
 
             _ = _activePoints.Add(point);
             _ = added.Add(point);
+            point.HoverKey = (point.Coordinate.PrimaryValue, point.Coordinate.SecondaryValue);
         }
 
         var removed = CleanHoveredPoints(hovered);
@@ -810,7 +816,7 @@ public abstract class Chart
 
 #if NET5_0_OR_GREATER
 #else
-        active = active.ToArray();
+        active = [.. active];
 #endif
 
         foreach (var point in active)

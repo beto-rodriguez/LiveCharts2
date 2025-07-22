@@ -54,6 +54,8 @@ public class ChartPoint
         Context = new ChartPointContext();
     }
 
+    internal (double, double) HoverKey { get; set; }
+
     /// <summary>
     /// Gets a new instance of an empty chart point.
     /// </summary>
