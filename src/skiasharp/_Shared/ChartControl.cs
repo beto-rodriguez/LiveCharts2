@@ -73,6 +73,12 @@ public abstract partial class ChartControl
     /// <inheritdoc cref="IChartView.CoreCanvas" />
     public CoreMotionCanvas CoreCanvas => CanvasView.CanvasCore;
 
+    /// <inheritdoc cref="IChartView.UpdaterThrottler" />
+    public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
+
+    /// <inheritdoc cref="IChartView.AutoUpdateEnabled" />
+    public bool AutoUpdateEnabled { get; set; } = true;
+
 #if XAML_LVC
     private bool HasValidSource =>
         SeriesSource is not null && SeriesTemplate is not null;

@@ -127,10 +127,6 @@ public partial class ChartControl
     static UIProperty<TimeSpan>                   animationsSpeed         = new(d.AnimationsSpeed);
     /// <inheritdoc cref="IChartView.EasingFunction"/>
     static UIProperty<Func<float, float>?>        easingFunction          = new(d.EasingFunction);
-    /// <inheritdoc cref="IChartView.UpdaterThrottler"/>
-    static UIProperty<TimeSpan>                   updaterThrottler        = new(d.UpdateThrottlingTimeout);
-    /// <inheritdoc cref="IChartView.AutoUpdateEnabled"/>
-    static UIProperty<bool>                       autoUpdateEnabled       = new(true);
 
     /// <inheritdoc cref="IChartView.DrawMargin"/>
     static UIProperty<Margin>                     drawMargin              = new(null,                     OnChartPropertyChanged);
