@@ -53,6 +53,7 @@ public class GeoMap : UserControl, IGeoMapView
     /// </summary>
     public GeoMap()
     {
+        LiveCharts.s_forceDefaultHardwareAcceleration = true;
         LiveCharts.Configure(config => config.UseDefaults());
 
         MouseDown += OnMouseDown;

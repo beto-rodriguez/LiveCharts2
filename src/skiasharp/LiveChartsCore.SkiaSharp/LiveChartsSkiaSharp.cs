@@ -61,7 +61,7 @@ public static class LiveChartsSkiaSharp
 
         if (!LiveCharts.s_hasDefaultHardwareAcceleration)
             _ = settings.RenderingSettings(
-                useHardwareAcceleration: true,
+                useHardwareAcceleration: !LiveCharts.s_forceDefaultHardwareAcceleration,
                 tryUseVSync: true,
                 targetFps: 60, // 60 as a fallback when VSync is not available
                 showFps: false);
@@ -107,7 +107,9 @@ public static class LiveChartsSkiaSharp
     /// <param name="alphaOverrides">The alpha overrides.</param>
     /// <returns></returns>
     public static SKColor AsSKColor(this LvcColor color, byte? alphaOverrides = null) =>
-        new(color.R, color.G, color.B, alphaOverrides ?? color.A);
+        color == LvcColor.Empty
+            ? SKColor.Empty
+            : new(color.R, color.G, color.B, alphaOverrides ?? color.A);
 
     /// <summary>
     /// Creates a new color based on the 

@@ -48,6 +48,7 @@ public abstract partial class ChartControl : UserControl, IChartView
     /// <exception cref="Exception">Default colors are not valid</exception>
     protected ChartControl()
     {
+        LiveCharts.s_forceDefaultHardwareAcceleration = true;
         LiveCharts.Configure(config => config.UseDefaults());
 
         Content = new MotionCanvas();

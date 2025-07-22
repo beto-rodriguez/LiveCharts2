@@ -35,6 +35,7 @@ public static class LiveCharts
     internal static bool s_hasBackend = false;
     internal static bool s_hasDefaultTheme = false;
     internal static bool s_hasDefaultMappers = false;
+    internal static bool s_forceDefaultHardwareAcceleration = false;
     internal static bool s_hasDefaultHardwareAcceleration = false;
 
     /// <summary>
