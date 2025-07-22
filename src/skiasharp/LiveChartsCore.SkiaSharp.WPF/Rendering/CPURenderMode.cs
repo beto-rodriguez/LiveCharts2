@@ -21,6 +21,9 @@
 // SOFTWARE.
 
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp.Views.Desktop;
@@ -59,7 +62,8 @@ internal class CPURenderMode : SKElement, IRenderMode
         if (density.dpix != 1 || density.dpiy != 1)
             args.Surface.Canvas.Scale(density.dpix, density.dpiy);
 
-        FrameRequest?.Invoke(new SkiaSharpDrawingContext(_canvas, args.Info, args.Surface));
+        FrameRequest?.Invoke(
+            new SkiaSharpDrawingContext(_canvas, args.Info, args.Surface, GetBackground().AsSKColor()));
     }
 
     private ResolutionHelper GetPixelDensity()
@@ -71,5 +75,16 @@ internal class CPURenderMode : SKElement, IRenderMode
 
         var matrix = compositionTarget.TransformToDevice;
         return new((float)matrix.M11, (float)matrix.M22);
+    }
+
+    private LvcColor GetBackground()
+    {
+        var parentBg = Parent is Control control && control.Background is SolidColorBrush bg
+            ? new LvcColor(bg.Color.R, bg.Color.G, bg.Color.B, bg.Color.A)
+            : LvcColor.Empty;
+
+        return parentBg != LvcColor.Empty
+            ? parentBg
+            : _canvas._virtualBackgroundColor;
     }
 }
