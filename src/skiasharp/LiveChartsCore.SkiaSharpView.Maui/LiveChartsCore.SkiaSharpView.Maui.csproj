@@ -43,6 +43,7 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
 	</PropertyGroup>
 
+  <Import Project="..\..\_Shared.Native\_Shared.Native.projitems" Label="Shared" />
   <Import Project="..\_Shared\_Shared.projitems" Label="Shared" />
   <Import Project="..\_Shared.Xaml\_Shared.Xaml.projitems" Label="Shared" />
 
@@ -59,7 +60,6 @@
 
 	<ItemGroup>
     <ProjectReference Include="..\..\LiveChartsCore\LiveChartsCore.csproj" />
-    <ProjectReference Include="..\..\LiveChartsCore.Behaviours\LiveChartsCore.Behaviours.csproj" />
 	  <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
 	</ItemGroup>
 
