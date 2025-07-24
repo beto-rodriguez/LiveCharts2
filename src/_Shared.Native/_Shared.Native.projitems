@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>ebf70b6d-1416-4cc6-a540-f4ebf2371819</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>_Shared.Native</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)ChartBehaviour.Android.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ChartBehaviour.MacCatalyst.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ChartBehaviour.Windows.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ChartBehaviour._shared.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\EventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\Handler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\PinchEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\PinchHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\PressedEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\PressedHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\ScreenEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\ScreenHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\ScrollEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\ScrollHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NativeTicker.Android.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NativeTicker.Fallback.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NativeTicker.Mac.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NativeTicker.Windows.cs" />
+  </ItemGroup>
+</Project>

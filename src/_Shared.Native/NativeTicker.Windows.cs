@@ -20,11 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if IOS || MACCATALYST
+#if WINDOWS
 
-using CoreAnimation;
-using Foundation;
 using LiveChartsCore.Motion;
+using Microsoft.UI.Xaml.Media;
 
 namespace LiveChartsCore.Behaviours;
 
@@ -32,22 +31,25 @@ internal partial class NativeFrameTicker : IFrameTicker
 {
     private IRenderMode _renderMode = null!;
     private CoreMotionCanvas _canvas = null!;
-    private CADisplayLink _displayLink = null!;
 
     public void InitializeTicker(CoreMotionCanvas canvas, IRenderMode renderMode)
     {
         _canvas = canvas;
         _renderMode = renderMode;
-        _displayLink = CADisplayLink.Create(OnFrameTick);
-        _displayLink.AddToRunLoop(NSRunLoop.Main, NSRunLoopMode.Common);
 
         _canvas.Invalidated += OnCoreInvalidated;
+        CompositionTarget.Rendering += OnCompositonTargetRendering;
+
+#if DEBUG
+        System.Diagnostics.Trace.WriteLine(
+            "[LiveCharts Info] FrameSync: CompositionTarget.Rendering (Windows)");
+#endif
     }
 
     private void OnCoreInvalidated(CoreMotionCanvas obj) =>
         _renderMode.InvalidateRenderer();
 
-    private void OnFrameTick()
+    private void OnCompositonTargetRendering(object? sender, object e)
     {
         if (_canvas.IsValid) return;
         _renderMode.InvalidateRenderer();
@@ -55,13 +57,11 @@ internal partial class NativeFrameTicker : IFrameTicker
 
     public void DisposeTicker()
     {
+        CompositionTarget.Rendering -= OnCompositonTargetRendering;
         _canvas.Invalidated -= OnCoreInvalidated;
 
         _canvas = null!;
         _renderMode = null!;
-        _displayLink.Invalidate();
-        _displayLink.Dispose();
-        _displayLink = null!;
     }
 }
 

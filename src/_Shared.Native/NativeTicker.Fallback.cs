@@ -20,8 +20,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Runtime.CompilerServices;
+//#if !WINDOWS && !ANDROID && !IOS && !MACCATALYST
+//using LiveChartsCore.Motion;
 
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.WinUI")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Uno.WinUI")]
-[assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Maui")]
+//namespace LiveChartsCore.Behaviours;
+
+//internal partial class NativeFrameTicker : IFrameTicker
+//{
+//    private readonly AsyncLoopTicker _asyncLoopTicker = new();
+
+//    void IFrameTicker.InitializeTicker(CoreMotionCanvas canvas, IRenderMode renderMode) =>
+//        _asyncLoopTicker.InitializeTicker(canvas, renderMode);
+
+//    void IFrameTicker.DisposeTicker() =>
+//        _asyncLoopTicker.DisposeTicker();
+//}
+//#endif
