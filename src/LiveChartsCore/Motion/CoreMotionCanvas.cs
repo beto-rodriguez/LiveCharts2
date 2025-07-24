@@ -47,6 +47,7 @@ public class CoreMotionCanvas : IDisposable
     private static readonly TimeSpan s_baseFrameDelay = TimeSpan.FromMilliseconds(1000d / LiveCharts.TargetFps);
     private static readonly long s_jitterThreshold = s_baseFrameDelay.Ticks / 2;
     internal LvcColor _virtualBackgroundColor;
+    internal static string? s_externalRenderer;
 
     static CoreMotionCanvas()
     {
@@ -187,11 +188,25 @@ public class CoreMotionCanvas : IDisposable
                 MeasureFPS(drawStartTime);
 
                 if (_totalSeconds > 0)
-                    context.LogOnCanvas(
-                        $"FPS [ {_totalFrames / _totalSeconds:N2} ]  " +
-                        $"render time [ last {_lastDrawTime:N2}ms / average {_totalDrawTime / _totalFrames:N2}ms ]  " +
-                        $"GPU [ {LiveCharts.UseGPU} ]  " +
-                        $"VSync [ {LiveCharts.UseGPU && LiveCharts.TryUseVSync} ]");
+                {
+                    if (s_externalRenderer is null)
+                    {
+                        // LiveCharts is controlling the GPU and VSync
+                        context.LogOnCanvas(
+                            $"FPS [ {_totalFrames / _totalSeconds:N2} ]  " +
+                            $"render time [ last {_lastDrawTime:N2}ms / average {_totalDrawTime / _totalFrames:N2}ms ]  " +
+                            $"GPU [ {LiveCharts.UseGPU} ]  " +
+                            $"VSync [ {LiveCharts.UseGPU && LiveCharts.TryUseVSync} ]");
+                    }
+                    else
+                    {
+                        // Avalonia or Uno-desktop is controlling the GPU and VSync
+                        context.LogOnCanvas(
+                            $"FPS [ {_totalFrames / _totalSeconds:N2} ]  " +
+                            $"render time [ last {_lastDrawTime:N2}ms / average {_totalDrawTime / _totalFrames:N2}ms ]  " +
+                            $"GPU and VSync controlled by {s_externalRenderer}");
+                    }
+                }
             }
 
             IsValid = isValid;

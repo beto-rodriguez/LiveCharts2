@@ -48,6 +48,7 @@ public class MotionCanvas : UserControl
     /// </summary>
     public MotionCanvas()
     {
+        CoreMotionCanvas.s_externalRenderer = "Avalonia";
         AttachedToVisualTree += OnAttached;
         DetachedFromVisualTree += OnDetached;
     }

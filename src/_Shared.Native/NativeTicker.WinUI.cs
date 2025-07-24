@@ -41,8 +41,14 @@ internal partial class NativeFrameTicker : IFrameTicker
         CompositionTarget.Rendering += OnCompositonTargetRendering;
 
 #if DEBUG
+#if DESKTOP
+        CoreMotionCanvas.s_externalRenderer = "Uno Desktop";
+        System.Diagnostics.Trace.WriteLine(
+            "[LiveCharts Info] FrameSync: CompositionTarget.Rendering");
+#else
         System.Diagnostics.Trace.WriteLine(
             "[LiveCharts Info] FrameSync: CompositionTarget.Rendering (Windows)");
+#endif
 #endif
     }
 

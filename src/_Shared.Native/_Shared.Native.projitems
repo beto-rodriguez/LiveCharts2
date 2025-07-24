@@ -26,6 +26,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)NativeTicker.NoUI.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeTicker.Android.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeTicker.Mac.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeTicker.Windows.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NativeTicker.WinUI.cs" />
   </ItemGroup>
 </Project>
