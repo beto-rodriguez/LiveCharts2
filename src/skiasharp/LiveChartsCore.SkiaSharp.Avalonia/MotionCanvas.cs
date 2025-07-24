@@ -71,7 +71,7 @@ public class MotionCanvas : UserControl
         if (_isDeatached) return;
 
         context.Custom(new ChartFrameOperation(
-            CanvasCore, new Rect(0, 0, Bounds.Width, Bounds.Height)));
+            CanvasCore, new Rect(0, 0, Bounds.Width, Bounds.Height), GetBackground().AsSKColor()));
 
         if (CanvasCore.IsValid) return;
         _ = Dispatcher.UIThread.InvokeAsync(InvalidateVisual, DispatcherPriority.Background);
@@ -97,7 +97,8 @@ public class MotionCanvas : UserControl
     // https://github.com/AvaloniaUI/Avalonia/blob/release/11.0.0/samples/RenderDemo/Pages/CustomSkiaPage.cs
     private class ChartFrameOperation(
         CoreMotionCanvas motionCanvas,
-        Rect bounds)
+        Rect bounds,
+        SKColor background)
             : ICustomDrawOperation
     {
         public Rect Bounds { get; } = bounds;
@@ -114,6 +115,7 @@ public class MotionCanvas : UserControl
                 new SkiaSharpDrawingContext(motionCanvas,
                     new SKImageInfo((int)Bounds.Width, (int)Bounds.Height),
                     lease.SkSurface,
+                    background,
                     false));
         }
 
@@ -122,5 +124,16 @@ public class MotionCanvas : UserControl
         public bool HitTest(Point p) => false;
 
         public bool Equals(ICustomDrawOperation? other) => false;
+    }
+
+    private LiveChartsCore.Drawing.LvcColor GetBackground()
+    {
+        var parentBg = Parent is UserControl control && control.Background is SolidColorBrush bg
+            ? new LiveChartsCore.Drawing.LvcColor(bg.Color.R, bg.Color.G, bg.Color.B, bg.Color.A)
+            : LiveChartsCore.Drawing.LvcColor.Empty;
+
+        return parentBg != LiveChartsCore.Drawing.LvcColor.Empty
+            ? parentBg
+            : CanvasCore._virtualBackgroundColor;
     }
 }
