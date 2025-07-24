@@ -108,12 +108,12 @@ public class MotionCanvas : UserControl
                 throw new Exception("SkiaSharp is not supported.");
 
             using var lease = leaseFeature.Lease();
+            if (lease.SkSurface is null) return;
 
             motionCanvas.DrawFrame(
                 new SkiaSharpDrawingContext(motionCanvas,
                     new SKImageInfo((int)Bounds.Width, (int)Bounds.Height),
                     lease.SkSurface,
-                    lease.SkCanvas,
                     false));
         }
 
