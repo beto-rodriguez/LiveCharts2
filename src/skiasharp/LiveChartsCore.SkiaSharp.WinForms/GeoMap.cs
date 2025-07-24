@@ -22,12 +22,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows.Forms;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
@@ -58,6 +56,7 @@ public partial class GeoMap : UserControl, IGeoMapView
     public GeoMap()
     {
         InitializeComponent();
+        LiveCharts.s_isHardwareAccelerationByDefault = false;
         LiveCharts.Configure(config => config.UseDefaults());
         _activeMap = Maps.GetWorldMap();
 

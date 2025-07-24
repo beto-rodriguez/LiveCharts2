@@ -57,6 +57,7 @@ public abstract partial class ChartControl : UserControl, IChartView
         Name = "CartesianChart";
         ResumeLayout(true);
 
+        LiveCharts.s_isHardwareAccelerationByDefault = false;
         LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeChartControl();

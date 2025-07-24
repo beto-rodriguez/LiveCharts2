@@ -24,6 +24,7 @@ using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp.Views.Desktop;
@@ -73,17 +74,11 @@ public partial class MotionCanvas : UserControl
 
     private void SkControl_PaintSurface(object sender, SKPaintSurfaceEventArgs e) =>
         CanvasCore.DrawFrame(
-            new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
+            new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, GetBackground().AsSKColor()));
 
-#if NET6_0_OR_GREATER
-    // workaround #250115
     private void SkglControl_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e) =>
         CanvasCore.DrawFrame(
-            new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas)
-            {
-                Background = new SkiaSharp.SKColor(Parent!.BackColor.R, Parent.BackColor.G, Parent.BackColor.B)
-            });
-#endif
+            new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, GetBackground().AsSKColor()));
 
     private void CanvasCore_Invalidated(CoreMotionCanvas sender) =>
         RunDrawingLoop();
@@ -93,19 +88,21 @@ public partial class MotionCanvas : UserControl
         if (_isDrawingLoopRunning) return;
         _isDrawingLoopRunning = true;
 
-        var ts = TimeSpan.FromSeconds(1 / LiveCharts.MaxFps);
+        var ts = TimeSpan.FromSeconds(1 / LiveCharts.TargetFps);
 
         while (!CanvasCore.IsValid)
         {
             _skControl?.Invalidate();
-#if NET6_0_OR_GREATER
-            // workaround #250115
             _skglControl?.Invalidate();
-#endif
 
             await Task.Delay(ts);
         }
 
         _isDrawingLoopRunning = false;
     }
+
+    private LvcColor GetBackground() =>
+        true
+            ? new LvcColor(Parent!.BackColor.R, Parent.BackColor.G, Parent.BackColor.B)
+            : CanvasCore._virtualBackgroundColor; // are themes relevant in  Win Forms?
 }
