@@ -61,7 +61,7 @@ public static class LiveChartsSkiaSharp
 
         if (!LiveCharts.s_hasDefaultHardwareAcceleration)
             _ = settings.RenderingSettings(
-                useHardwareAcceleration: !LiveCharts.s_forceDefaultHardwareAcceleration,
+                useHardwareAcceleration: LiveCharts.s_isHardwareAccelerationByDefault,
                 tryUseVSync: true,
                 targetFps: 60, // 60 as a fallback when VSync is not available
                 showFps: false);
