@@ -71,7 +71,7 @@ public class MotionCanvas : SkiaDrawable
 
     private void SkControl_PaintSurface(object sender, SKPaintEventArgs e) =>
         CanvasCore.DrawFrame(
-            new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
+            new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface));
 
     private void CanvasCore_Invalidated(CoreMotionCanvas sender) =>
         RunDrawingLoop();
@@ -81,7 +81,7 @@ public class MotionCanvas : SkiaDrawable
         if (_isDrawingLoopRunning) return;
         _isDrawingLoopRunning = true;
 
-        var ts = TimeSpan.FromSeconds(1 / LiveCharts.MaxFps);
+        var ts = TimeSpan.FromSeconds(1 / LiveCharts.TargetFps);
 
         while (!CanvasCore.IsValid)
         {
