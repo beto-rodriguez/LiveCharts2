@@ -20,51 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Threading.Tasks;
+#if !HAS_UI
 
-namespace LiveChartsCore.Motion;
+// This code is reached maybe only on test environments.
+// HAS_UI is true when the target framework contains any of the following:
+// -windows, -android, -ios, -maccatalyst, -tizen, -desktop, -browserwasm
 
-internal class AsyncLoopTicker : IFrameTicker
+using LiveChartsCore.Motion;
+
+namespace LiveChartsCore.Behaviours;
+
+internal partial class NativeFrameTicker : IFrameTicker
 {
-    private IRenderMode _renderMode = null!;
-    private CoreMotionCanvas _canvas = null!;
-    private bool _isDrawingLoopRunning = false;
+    // use the livecharts async loop ticker when there is no UI available.
+    private readonly IFrameTicker _ticker = new AsyncLoopTicker();
 
-    public void InitializeTicker(CoreMotionCanvas canvas, IRenderMode renderMode)
-    {
-        _canvas = canvas;
-        _renderMode = renderMode;
+    public void InitializeTicker(CoreMotionCanvas canvas, IRenderMode renderMode) =>
+        _ticker.InitializeTicker(canvas, renderMode);
 
-        _canvas.Invalidated += OnCoreInvalidated;
-
-#if DEBUG
-        System.Diagnostics.Trace.WriteLine(
-            "[LiveCharts Info] FrameSync: LiveCharts internal loop (no platform ticker)");
-#endif
-    }
-
-    private void OnCoreInvalidated(CoreMotionCanvas obj) =>
-        _ = RunDrawingLoop();
-
-    private async Task RunDrawingLoop()
-    {
-        if (_isDrawingLoopRunning) return;
-        _isDrawingLoopRunning = true;
-
-        while (!_canvas.IsValid)
-        {
-            _renderMode.InvalidateRenderer();
-            await Task.Delay(_canvas._nextFrameDelay);
-        }
-
-        _isDrawingLoopRunning = false;
-    }
-
-    public void DisposeTicker()
-    {
-        _canvas.Invalidated -= OnCoreInvalidated;
-
-        _canvas = null!;
-        _renderMode = null!;
-    }
+    public void DisposeTicker() =>
+        _ticker.DisposeTicker();
 }
+
+#endif

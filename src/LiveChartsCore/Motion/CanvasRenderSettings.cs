@@ -22,27 +22,22 @@
 
 namespace LiveChartsCore.Motion;
 
-internal class CanvasRenderSettings<TCPURenderMode, TGPURenderMode, TVSyncTicker>
-    where TCPURenderMode : IRenderMode, new()
-    where TGPURenderMode : IRenderMode, new()
-    where TVSyncTicker : IFrameTicker, new()
+internal class CanvasRenderSettings<TCPURenderMode, TGPURenderMode, TVSyncTicker>(
+    IRenderMode? renderMode = null)
+        where TCPURenderMode : IRenderMode, new()
+        where TGPURenderMode : IRenderMode, new()
+        where TVSyncTicker : IFrameTicker, new()
 {
     private static bool? s_canUseGPU;
 
-    public CanvasRenderSettings()
-    {
-        RenderMode = LiveCharts.UseGPU && CanUseGPU()
+    public IRenderMode RenderMode { get; } = renderMode ??
+        (LiveCharts.UseGPU && CanUseGPU()
             ? new TGPURenderMode()
-            : new TCPURenderMode();
+            : new TCPURenderMode());
 
-        Ticker = LiveCharts.TryUseVSync
-            ? new TVSyncTicker()
-            : new AsyncLoopTicker();
-    }
-
-    public IRenderMode RenderMode { get; }
-
-    public IFrameTicker Ticker { get; }
+    public IFrameTicker Ticker { get; } = LiveCharts.TryUseVSync
+        ? new TVSyncTicker()
+        : new AsyncLoopTicker();
 
     public void Initialize(CoreMotionCanvas canvas)
     {

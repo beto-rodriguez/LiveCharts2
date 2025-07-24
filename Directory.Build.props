@@ -11,4 +11,16 @@
     <LatestSkiaSharpVersion>3.119.0</LatestSkiaSharpVersion> <!-- used for views that use the SkiaSharp 3 as default -->
 
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' != '' and 
+    (
+      $(TargetFramework.Contains('-windows')) or
+      $(TargetFramework.Contains('-android')) or
+      $(TargetFramework.Contains('-ios')) or
+      $(TargetFramework.Contains('-maccatalyst')) or
+      $(TargetFramework.Contains('-desktop')) or
+      $(TargetFramework.Contains('-browserwasm'))
+    )">
+    <DefineConstants>$(DefineConstants);HAS_UI</DefineConstants>
+  </PropertyGroup>
 </Project>

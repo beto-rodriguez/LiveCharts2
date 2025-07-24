@@ -41,7 +41,11 @@ internal partial class CPURenderMode : SKXamlCanvas, IRenderMode
         PaintSurface += OnPaintSurface;
 
 #if DEBUG
+#if DESKTOP
+        System.Diagnostics.Trace.WriteLine($"[LiveCharts Info] LiveCharts is using Uno's Skia renderer.");
+#else
         System.Diagnostics.Trace.WriteLine($"[LiveCharts Info] LiveCharts is using {nameof(CPURenderMode)}.");
+#endif
 #endif
     }
 
