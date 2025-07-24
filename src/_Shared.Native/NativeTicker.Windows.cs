@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if WINDOWS
+#if WINDOWS || DESKTOP
 
 using LiveChartsCore.Motion;
 using Microsoft.UI.Xaml.Media;

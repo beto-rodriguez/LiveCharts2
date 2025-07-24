@@ -24,7 +24,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Events\ScrollEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\ScrollHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeTicker.Android.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeTicker.Fallback.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeTicker.Mac.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NativeTicker.Windows.cs" />
   </ItemGroup>
