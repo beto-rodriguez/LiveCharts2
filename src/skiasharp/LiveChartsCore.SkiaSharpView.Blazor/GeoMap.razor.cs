@@ -26,6 +26,7 @@ using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
+using LiveChartsCore.SkiaSharpView.Blazor.JsInterop;
 using LiveChartsCore.SkiaSharpView.Painting;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;

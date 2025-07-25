@@ -31,28 +31,13 @@
 
 @implements IDisposable
 
-@if(LiveCharts.UseGPU)
-{
-    <SKGLView
-	    @ref="_glView"
-	    OnPaintSurface="OnPaintGlSurface"
-	    IgnorePixelScaling="true"
-	    @onpointerdown="OnPointerDown"
-	    @onpointermove="OnPointerMove"
-	    @onpointerup="OnPointerUp"
-	    @onpointerout="OnPointerOut"
-	    @onmousewheel="OnWheel">
-    </SKGLView>
-}
-else
-{
-    <SKCanvasView
-	    @ref="_canvas"
-	    OnPaintSurface="OnPaintSurface"
-	    @onpointerdown="OnPointerDown"
-	    @onpointermove="OnPointerMove"
-	    @onpointerup="OnPointerUp"
-	    @onpointerout="OnPointerOut"
-	    @onmousewheel="OnWheel" >
-    </SKCanvasView>
-}
+<SKGLView
+	@ref="_glView"
+	OnPaintSurface="OnPaintGlSurface"
+	IgnorePixelScaling="true"
+	@onpointerdown="OnPointerDown"
+	@onpointermove="OnPointerMove"
+	@onpointerup="OnPointerUp"
+	@onpointerout="OnPointerOut"
+	@onmousewheel="OnWheel">
+</SKGLView>
