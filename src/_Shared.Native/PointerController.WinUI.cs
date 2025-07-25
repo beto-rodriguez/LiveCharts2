@@ -27,17 +27,31 @@ using Microsoft.UI.Xaml.Input;
 
 namespace LiveChartsCore.Native;
 
-/// <summary>
-/// A class that adds platform-specific events to the chart.
-/// </summary>
-public partial class PointerController
+internal partial class PointerController
 {
-    /// <summary>
-    /// Called on windows pointer pressed events.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="e">The event args.</param>
-    protected void OnWindowsPointerPressed(object sender, PointerRoutedEventArgs e)
+    private void InitializePlatform(object view)
+    {
+        var winUIView = (UIElement)view;
+
+        winUIView.PointerPressed += OnWindowsPointerPressed;
+        winUIView.PointerMoved += OnWindowsPointerMoved;
+        winUIView.PointerReleased += OnWindowsPointerReleased;
+        winUIView.PointerWheelChanged += OnWindowsPointerWheelChanged;
+        winUIView.PointerExited += OnWindowsPointerExited;
+    }
+
+    private void DisposePlatform(object view)
+    {
+        var winUIView = (UIElement)view;
+
+        winUIView.PointerPressed -= OnWindowsPointerPressed;
+        winUIView.PointerMoved -= OnWindowsPointerMoved;
+        winUIView.PointerReleased -= OnWindowsPointerReleased;
+        winUIView.PointerWheelChanged -= OnWindowsPointerWheelChanged;
+        winUIView.PointerExited -= OnWindowsPointerExited;
+    }
+
+    private void OnWindowsPointerPressed(object sender, PointerRoutedEventArgs e)
     {
         var p = e.GetCurrentPoint(sender as UIElement);
         if (p is null) return;
@@ -47,12 +61,7 @@ public partial class PointerController
             new(new(p.Position.X, p.Position.Y), p.Properties.IsRightButtonPressed, e));
     }
 
-    /// <summary>
-    /// Called on windows pointer moved events.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="e">The events.</param>
-    protected void OnWindowsPointerMoved(object sender, PointerRoutedEventArgs e)
+    private void OnWindowsPointerMoved(object sender, PointerRoutedEventArgs e)
     {
         var p = e.GetCurrentPoint(sender as UIElement);
         if (p is null) return;
@@ -62,12 +71,7 @@ public partial class PointerController
             new(new(p.Position.X, p.Position.Y), e));
     }
 
-    /// <summary>
-    /// Called on windows pointer released events.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="e">The event args.</param>
-    protected void OnWindowsPointerReleased(object sender, PointerRoutedEventArgs e)
+    private void OnWindowsPointerReleased(object sender, PointerRoutedEventArgs e)
     {
         var p = e.GetCurrentPoint(sender as UIElement);
         if (p is null) return;
@@ -77,26 +81,14 @@ public partial class PointerController
             new(new(p.Position.X, p.Position.Y), p.Properties.IsRightButtonPressed, e));
     }
 
-    /// <summary>
-    /// Called on windows pointer wheel changed events.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="e">The event args.</param>
-    protected void OnWindowsPointerWheelChanged(object sender, PointerRoutedEventArgs e)
+    private void OnWindowsPointerWheelChanged(object sender, PointerRoutedEventArgs e)
     {
         var p = e.GetCurrentPoint(sender as UIElement);
         Scrolled?.Invoke(sender, new(new(p.Position.X, p.Position.Y), p.Properties.MouseWheelDelta, e));
     }
 
-    /// <summary>
-    /// Called on windows pointer entered events.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="e">The event args.</param>
-    protected void OnWindowsPointerExited(object sender, PointerRoutedEventArgs e)
-    {
+    private void OnWindowsPointerExited(object sender, PointerRoutedEventArgs e) =>
         Exited?.Invoke(sender, new(e));
-    }
 }
 
 #endif

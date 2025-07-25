@@ -29,55 +29,69 @@ using UIKit;
 
 namespace LiveChartsCore.Native;
 
-/// <summary>
-/// A class that adds platform-specific events to the chart.
-/// </summary>
-public partial class PointerController
+internal partial class PointerController
 {
     private DateTime _previousPress = DateTime.MinValue;
-
+    private float _previousScale = 1;
+    private UILongPressGestureRecognizer _longPressGestureRecognizer;
+    private UIPinchGestureRecognizer _pinchGestureRecognizer;
+    private UIPanGestureRecognizer _panGestureRecognizer;
 #if MACCATALYST
-
-    /// <summary>
-    /// Gets the hover gesture recognizer.
-    /// </summary>
-    protected UIHoverGestureRecognizer MacCatalystHoverGestureRecognizer { get; }
-
+    private UIHoverGestureRecognizer _hoverGestureRecognizer;
 #endif
 
-    /// <summary>
-    /// Gets the long press gesture recognizer.
-    /// </summary>
-    protected UILongPressGestureRecognizer MacCatalystLongPressGestureRecognizer { get; }
+    private void InitializePlatform(object view)
+    {
+        var macView = (UIView)view;
 
-    /// <summary>
-    /// Gets the pinch gesture recognizer.
-    /// </summary>
-    protected UIPinchGestureRecognizer MacCatalystPinchGestureRecognizer { get; }
+        macView.UserInteractionEnabled = true;
 
-    /// <summary>
-    /// Gets the pan gesture recognizer.
-    /// </summary>
-    protected UIPanGestureRecognizer MacCatalystPanGestureRecognizer { get; }
+        macView.AddGestureRecognizer(_longPressGestureRecognizer);
+        macView.AddGestureRecognizer(_pinchGestureRecognizer);
+        macView.AddGestureRecognizer(_panGestureRecognizer);
+#if MACCATALYST
+        macView.AddGestureRecognizer(_hoverGestureRecognizer);
+#endif
+    }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PointerController"/> class.
-    /// </summary>
+    private void DisposePlatform(object view)
+    {
+        var macView = (UIView)view;
+
+        macView.RemoveGestureRecognizer(_longPressGestureRecognizer);
+        macView.RemoveGestureRecognizer(_pinchGestureRecognizer);
+        macView.RemoveGestureRecognizer(_panGestureRecognizer);
+
+        _longPressGestureRecognizer.Dispose();
+        _pinchGestureRecognizer.Dispose();
+        _panGestureRecognizer.Dispose();
+
+        _longPressGestureRecognizer = null!;
+        _pinchGestureRecognizer = null!;
+        _panGestureRecognizer = null!;
+
+#if MACCATALYST
+        macView.RemoveGestureRecognizer(_hoverGestureRecognizer);
+        _hoverGestureRecognizer.Dispose();
+        _hoverGestureRecognizer = null!;
+#endif
+    }
+
     public PointerController()
     {
 #if MACCATALYST
-        MacCatalystHoverGestureRecognizer = new UIHoverGestureRecognizer(OnHover);
+        _hoverGestureRecognizer = new UIHoverGestureRecognizer(OnHover);
 #endif
-        MacCatalystLongPressGestureRecognizer = new UILongPressGestureRecognizer(OnLongPress)
+        _longPressGestureRecognizer = new UILongPressGestureRecognizer(OnLongPress)
         {
             MinimumPressDuration = 0,
             ShouldRecognizeSimultaneously = (g1, g2) => true
         };
-        MacCatalystPinchGestureRecognizer = new UIPinchGestureRecognizer(OnPinch)
+        _pinchGestureRecognizer = new UIPinchGestureRecognizer(OnPinch)
         {
             ShouldRecognizeSimultaneously = (g1, g2) => true
         };
-        MacCatalystPanGestureRecognizer = new UIPanGestureRecognizer(OnPan)
+        _panGestureRecognizer = new UIPanGestureRecognizer(OnPan)
         {
 #if MACCATALYST
             AllowedScrollTypesMask = UIScrollTypeMask.Discrete | UIScrollTypeMask.Continuous,
@@ -88,7 +102,6 @@ public partial class PointerController
     }
 
 #if MACCATALYST
-
     private void OnHover(UIHoverGestureRecognizer e)
     {
         var view = e.View;
@@ -109,7 +122,6 @@ public partial class PointerController
                 break;
         }
     }
-
 #endif
 
     private void OnLongPress(UILongPressGestureRecognizer e)
@@ -139,8 +151,6 @@ public partial class PointerController
                 break;
         }
     }
-
-    private float _previousScale = 1;
 
     private void OnPinch(UIPinchGestureRecognizer e)
     {

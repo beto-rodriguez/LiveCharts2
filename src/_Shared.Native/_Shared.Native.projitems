@@ -10,9 +10,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)PointerController.Android.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PointerController.MacCatalyst.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PointerController.Windows.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PointerController._shared.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PointerController.Mac.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PointerController.WinUI.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PointerController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\EventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\Handler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\PinchEventArgs.cs" />

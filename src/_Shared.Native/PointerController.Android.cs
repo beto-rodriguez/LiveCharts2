@@ -28,11 +28,9 @@ using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Native;
 
-/// <summary>
-/// A class that adds platform-specific events to the chart.
-/// </summary>
-public abstract partial class PointerController
+internal abstract partial class PointerController
 {
+    private LvcSize _screenSize = new(320, 480); // only used to implement a workaround for https://github.com/dotnet/maui/issues/18547.
     private bool _isPinching;
     private bool _isDown;
     private LvcPoint _lastTouch;
@@ -41,12 +39,29 @@ public abstract partial class PointerController
     private CustomScaleListener _customScaleListener = null!;
     private DateTime _previousPress = DateTime.MinValue;
 
-    /// <summary>
-    /// Called on android hover events.
-    /// </summary>
-    /// <param name="sender">the sender.</param>
-    /// <param name="e">the event args.</param>
-    protected void OnAndroidHover(object? sender, View.HoverEventArgs e)
+    private void InitializePlatform(object view)
+    {
+        var androidView = (View)view;
+
+        androidView.Touch += OnAndroidTouched;
+        androidView.Hover += OnAndroidHover;
+    }
+
+    private void DisposePlatform(object view)
+    {
+        var androidView = (View)view;
+
+        androidView.Touch -= OnAndroidTouched;
+        androidView.Hover -= OnAndroidHover;
+
+        _scaleDetector?.Dispose();
+        _scaleDetector = null;
+
+        _customScaleListener.Dispose();
+        _customScaleListener = null!;
+    }
+
+    private void OnAndroidHover(object? sender, View.HoverEventArgs e)
     {
         if (e.Event is null) return;
 
@@ -54,12 +69,7 @@ public abstract partial class PointerController
         Moved?.Invoke(sender, new(p, e.Event));
     }
 
-    /// <summary>
-    /// Called on android touch events.
-    /// </summary>
-    /// <param name="sender">the sender.</param>
-    /// <param name="e">the event args.</param>
-    protected void OnAndroidTouched(object? sender, View.TouchEventArgs e)
+    private void OnAndroidTouched(object? sender, View.TouchEventArgs e)
     {
         var viewGroup = (ViewGroup?)sender;
         if (e.Event is null || viewGroup is null) return;
@@ -131,7 +141,7 @@ public abstract partial class PointerController
         _lastTouch = p;
 
         var yTolerance = 0.20 * viewGroup.Height / Density;
-        var screenTolerance = 0.25 * ScreenSize.Height / Density;
+        var screenTolerance = 0.25 * _screenSize.Height / Density;
         if (screenTolerance < yTolerance) yTolerance = screenTolerance;
 
         var yMovement = Math.Abs(p.Y - _touchStart.Y);
