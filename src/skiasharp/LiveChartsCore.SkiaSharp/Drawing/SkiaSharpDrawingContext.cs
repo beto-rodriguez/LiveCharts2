@@ -129,10 +129,17 @@ public class SkiaSharpDrawingContext(
             FakeBoldText = true
         };
 
-        Canvas.DrawText(
-            log,
-            new SKPoint(50, 10 + p.TextSize),
-            p);
+        var lines = log.Split('`');
+
+        for (var i = 0; i < lines.Length; i++)
+        {
+            var line = lines[i];
+            if (string.IsNullOrWhiteSpace(line)) continue;
+            Canvas.DrawText(
+                line,
+                new SKPoint(50, 10 + p.TextSize * i),
+                p);
+        }
     }
 
     /// <inheritdoc cref="DrawingContext.Draw(IDrawnElement)"/>

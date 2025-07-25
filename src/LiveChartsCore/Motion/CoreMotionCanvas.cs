@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Painting;
 
@@ -38,6 +39,7 @@ public class CoreMotionCanvas : IDisposable
     internal HashSet<Paint> _paintTasks = [];
     private int _frames = 0;
     private Stopwatch? _fspSw;
+    private int _jitteredDrawCount;
     private double _totalDrawTime = 0;
     private double _lastDrawTime = 0;
     private double _totalFrames = 0;
@@ -189,23 +191,20 @@ public class CoreMotionCanvas : IDisposable
 
                 if (_totalSeconds > 0)
                 {
-                    if (s_externalRenderer is null)
-                    {
-                        // LiveCharts is controlling the GPU and VSync
-                        context.LogOnCanvas(
-                            $"FPS [ {_totalFrames / _totalSeconds:N2} ]  " +
-                            $"render time [ last {_lastDrawTime:N2}ms / average {_totalDrawTime / _totalFrames:N2}ms ]  " +
-                            $"GPU [ {LiveCharts.UseGPU} ]  " +
-                            $"VSync [ {LiveCharts.UseGPU && LiveCharts.TryUseVSync} ]");
-                    }
-                    else
-                    {
-                        // Avalonia or Uno-desktop is controlling the GPU and VSync
-                        context.LogOnCanvas(
-                            $"FPS [ {_totalFrames / _totalSeconds:N2} ]  " +
-                            $"render time [ last {_lastDrawTime:N2}ms / average {_totalDrawTime / _totalFrames:N2}ms ]  " +
-                            $"GPU and VSync controlled by {s_externalRenderer}");
-                    }
+                    var sb = new StringBuilder();
+
+                    sb.Append($"FPS                     [ {_totalFrames / _totalSeconds:N2} ]");
+                    sb.Append($"`render time last/avrg   [ {_lastDrawTime:N2} / {_totalDrawTime / _totalFrames:N2} ] ms");
+
+                    sb.Append(s_externalRenderer is null
+                            ? $"`GPU / VSync             [ {LiveCharts.UseGPU} / {LiveCharts.UseGPU && LiveCharts.TryUseVSync} ]"
+                            : $"`GPU / VSync by          [ {s_externalRenderer} ]");
+
+                    if (_jitteredDrawCount > 0)
+                        sb.Append(
+                              $"`jittered draws          [ {_jitteredDrawCount} ]");
+
+                    context.LogOnCanvas(sb.ToString());
                 }
             }
 
@@ -230,14 +229,25 @@ public class CoreMotionCanvas : IDisposable
             }
         }
 
-        var timeInDrawOperation = s_clock.ElapsedTicks - drawStartTime;
-        var delay = s_baseFrameDelay.Ticks - timeInDrawOperation;
+        if (!LiveCharts.TryUseVSync)
+        {
+            var timeInDrawOperation = s_clock.ElapsedTicks - drawStartTime;
+            var delay = s_baseFrameDelay.Ticks - timeInDrawOperation;
 
-        var frameDelay = delay <= s_jitterThreshold
-            ? s_baseFrameDelay
-            : new TimeSpan(delay);
+            TimeSpan frameDelay;
 
-        _nextFrameDelay = frameDelay;
+            if (delay <= s_jitterThreshold)
+            {
+                _jitteredDrawCount++;
+                frameDelay = s_baseFrameDelay;
+            }
+            else
+            {
+                frameDelay = new TimeSpan(delay);
+            }
+
+            _nextFrameDelay = frameDelay;
+        }
     }
 
     /// <summary>
