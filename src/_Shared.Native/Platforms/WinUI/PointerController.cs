@@ -53,8 +53,12 @@ internal partial class PointerController : INativePointerController
 
     private void OnWindowsPointerPressed(object sender, PointerRoutedEventArgs e)
     {
-        var p = e.GetCurrentPoint(sender as UIElement);
+        var element = (UIElement)sender;
+
+        var p = e.GetCurrentPoint(element);
         if (p is null) return;
+
+        _ = element.CapturePointer(e.Pointer);
 
         Pressed?.Invoke(
             sender,
@@ -73,8 +77,12 @@ internal partial class PointerController : INativePointerController
 
     private void OnWindowsPointerReleased(object sender, PointerRoutedEventArgs e)
     {
-        var p = e.GetCurrentPoint(sender as UIElement);
+        var element = (UIElement)sender;
+
+        var p = e.GetCurrentPoint(element);
         if (p is null) return;
+
+        element.ReleasePointerCapture(element.PointerCaptures[0]);
 
         Released?.Invoke(
             sender,
