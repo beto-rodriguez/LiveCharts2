@@ -20,7 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if WINDOWS || DESKTOP
+#if WINDOWS || DESKTOP || BROWSERWASM
+
+// on desktop and browserwasm the uno implementation of composition target rendering is used.
+// for the rest of the uno targets, the native ticker is used.
 
 using LiveChartsCore.Motion;
 using Microsoft.UI.Xaml.Media;
