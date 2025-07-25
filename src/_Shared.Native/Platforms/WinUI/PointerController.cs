@@ -20,7 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if WINDOWS
+#if WINDOWS || DESKTOP || BROWSERWASM
+
+// on desktop and browserwasm the uno implementation of pointer events is used.
 
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;

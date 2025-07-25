@@ -32,6 +32,7 @@ using System.Runtime.InteropServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Native;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -42,7 +43,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI;
 public abstract partial class ChartControl : UserControl, IChartView
 {
     private readonly ThemeListener _themeListener;
-    private readonly ChartBehaviour _chartBehaviour;
+    private readonly PointerController _pointerController;
     private static readonly bool s_isWebAssembly = RuntimeInformation.IsOSPlatform(OSPlatform.Create("BROWSER"));
 
     /// <summary>
@@ -65,14 +66,14 @@ public abstract partial class ChartControl : UserControl, IChartView
 
         _themeListener = new(CoreChart.ApplyTheme, DispatcherQueue);
 
-        _chartBehaviour = new ChartBehaviour();
+        _pointerController = new PointerController();
 
-        _chartBehaviour.Pressed += OnPressed;
-        _chartBehaviour.Moved += OnMoved;
-        _chartBehaviour.Released += OnReleased;
-        _chartBehaviour.Scrolled += OnScrolled;
-        _chartBehaviour.Pinched += OnPinched;
-        _chartBehaviour.Exited += OnExited;
+        _pointerController.Pressed += OnPressed;
+        _pointerController.Moved += OnMoved;
+        _pointerController.Released += OnReleased;
+        _pointerController.Scrolled += OnScrolled;
+        _pointerController.Pinched += OnPinched;
+        _pointerController.Exited += OnExited;
     }
 
     /// <summary>
@@ -94,7 +95,7 @@ public abstract partial class ChartControl : UserControl, IChartView
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
         _themeListener.Listen();
-        _chartBehaviour.On(this);
+        _pointerController.InitializeController(this);
         StartObserving();
         CoreChart.Load();
     }
@@ -102,7 +103,7 @@ public abstract partial class ChartControl : UserControl, IChartView
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
         _themeListener.Dispose();
-        _chartBehaviour.Off(this);
+        _pointerController.DisposeController(this);
         StopObserving();
         CoreChart.Unload();
     }
@@ -154,25 +155,9 @@ public abstract partial class ChartControl : UserControl, IChartView
     private void OnExited(object? sender, Native.Events.EventArgs args) =>
         CoreChart?.InvokePointerLeft();
 
-    /// <summary>
-    /// Invoked when a scroll event occurs, allowing derived classes to handle or respond to the event.
-    /// </summary>
-    /// <remarks>This method is designed to be overridden in derived classes to provide custom handling for
-    /// scroll events. If not overridden, the base implementation does nothing.</remarks>
-    /// <param name="sender">The source of the scroll event. This can be <see langword="null"/> if the event is not associated with a
-    /// specific sender.</param>
-    /// <param name="args">The event data containing details about the scroll action, such as scroll direction and position.</param>
-    protected virtual void OnScrolled(object? sender, Native.Events.ScrollEventArgs args) { }
+    internal virtual void OnScrolled(object? sender, Native.Events.ScrollEventArgs args) { }
 
-    /// <summary>
-    /// Handles the pinch gesture event, allowing zooming functionality in the chart.
-    /// </summary>
-    /// <remarks>This method is invoked when a pinch gesture is detected. It enables zooming in or out of the chart
-    /// based on the scroll delta provided in the event arguments. Override this method in a derived class to customize the
-    /// behavior of pinch gestures.</remarks>
-    /// <param name="sender">The source of the event. This can be <see langword="null"/>.</param>
-    /// <param name="args">The event data containing information about the pinch gesture, including its location and scroll delta.</param>
-    protected virtual void OnPinched(object? sender, Native.Events.PinchEventArgs args) { }
+    internal virtual void OnPinched(object? sender, Native.Events.PinchEventArgs args) { }
 
     private ISeries InflateSeriesTemplate(object item)
     {
@@ -193,8 +178,6 @@ public abstract partial class ChartControl : UserControl, IChartView
     {
         if (s_isWebAssembly)
         {
-            // IF UNO WASM, just run the action directly.
-            // is this required on wasm isnt this already implemented in net 9?
             action();
             return;
         }
