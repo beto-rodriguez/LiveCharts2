@@ -28,7 +28,7 @@ using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Native;
 
-internal abstract partial class PointerController
+internal partial class PointerController : INativePointerController
 {
     private LvcSize _screenSize = new(320, 480); // only used to implement a workaround for https://github.com/dotnet/maui/issues/18547.
     private bool _isPinching;
@@ -39,7 +39,7 @@ internal abstract partial class PointerController
     private CustomScaleListener _customScaleListener = null!;
     private DateTime _previousPress = DateTime.MinValue;
 
-    private void InitializePlatform(object view)
+    public void InitializeController(object view)
     {
         var androidView = (View)view;
 
@@ -47,7 +47,7 @@ internal abstract partial class PointerController
         androidView.Hover += OnAndroidHover;
     }
 
-    private void DisposePlatform(object view)
+    public void DisposeController(object view)
     {
         var androidView = (View)view;
 

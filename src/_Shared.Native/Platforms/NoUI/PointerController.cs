@@ -20,26 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Native.Events;
+#if !HAS_UI
+
+// This code is reached maybe only on test environments.
+// HAS_UI is true when the target framework contains any of the following:
+// -windows, -android, -ios, -maccatalyst, -tizen, -desktop, -browserwasm
 
 namespace LiveChartsCore.Native;
 
-internal partial class PointerController
+internal partial class PointerController : INativePointerController
 {
-    public static LvcSize ScreenSize { get; private set; } = new(320, 480);
+    public void InitializeController(object view)
+    {
+        // ignored.
+    }
 
-    public static double Density { get; private set; } = 1.0;
-
-    public event PressedHandler? Pressed;
-
-    public event PressedHandler? Released;
-
-    public event ScreenHandler? Moved;
-
-    public event Handler? Exited;
-
-    public event PinchHandler? Pinched;
-
-    public event ScrollHandler? Scrolled;
+    public void DisposeController(object view)
+    {
+        // ignored.
+    }
 }
+
+#endif

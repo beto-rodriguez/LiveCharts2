@@ -29,7 +29,7 @@ using UIKit;
 
 namespace LiveChartsCore.Native;
 
-internal partial class PointerController
+internal partial class PointerController : INativePointerController
 {
     private DateTime _previousPress = DateTime.MinValue;
     private float _previousScale = 1;
@@ -40,7 +40,7 @@ internal partial class PointerController
     private UIHoverGestureRecognizer _hoverGestureRecognizer;
 #endif
 
-    private void InitializePlatform(object view)
+    public void InitializeController(object view)
     {
         var macView = (UIView)view;
 
@@ -54,7 +54,7 @@ internal partial class PointerController
 #endif
     }
 
-    private void DisposePlatform(object view)
+    public void DisposeController(object view)
     {
         var macView = (UIView)view;
 

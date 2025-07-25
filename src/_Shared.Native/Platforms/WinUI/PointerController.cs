@@ -27,9 +27,9 @@ using Microsoft.UI.Xaml.Input;
 
 namespace LiveChartsCore.Native;
 
-internal partial class PointerController
+internal partial class PointerController : INativePointerController
 {
-    private void InitializePlatform(object view)
+    public void InitializeController(object view)
     {
         var winUIView = (UIElement)view;
 
@@ -40,7 +40,7 @@ internal partial class PointerController
         winUIView.PointerExited += OnWindowsPointerExited;
     }
 
-    private void DisposePlatform(object view)
+    public void DisposeController(object view)
     {
         var winUIView = (UIElement)view;
 

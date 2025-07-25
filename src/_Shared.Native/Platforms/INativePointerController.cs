@@ -20,26 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Native.Events;
-
 namespace LiveChartsCore.Native;
 
-internal partial class PointerController
+internal interface INativePointerController
 {
-    public static LvcSize ScreenSize { get; private set; } = new(320, 480);
+    void InitializeController(object view);
 
-    public static double Density { get; private set; } = 1.0;
-
-    public event PressedHandler? Pressed;
-
-    public event PressedHandler? Released;
-
-    public event ScreenHandler? Moved;
-
-    public event Handler? Exited;
-
-    public event PinchHandler? Pinched;
-
-    public event ScrollHandler? Scrolled;
+    void DisposeController(object view);
 }

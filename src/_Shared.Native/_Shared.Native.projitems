@@ -9,9 +9,11 @@
     <Import_RootNamespace>_Shared.Native</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)PointerController.Android.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PointerController.Mac.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PointerController.WinUI.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Platforms\Android\PointerController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Platforms\INativePointerController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Platforms\Mac\PointerController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Platforms\NoUI\PointerController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Platforms\WinUI\PointerController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PointerController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\EventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\Handler.cs" />
@@ -23,9 +25,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)Events\ScreenHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\ScrollEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\ScrollHandler.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeTicker.NoUI.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeTicker.Android.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeTicker.Mac.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NativeTicker.WinUI.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Platforms\NoUI\NativeTicker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Platforms\Android\NativeTicker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Platforms\Mac\NativeTicker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Platforms\WinUI\NativeTicker.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Platforms\Android\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Platforms\Mac\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Platforms\WinUI\" />
   </ItemGroup>
 </Project>
