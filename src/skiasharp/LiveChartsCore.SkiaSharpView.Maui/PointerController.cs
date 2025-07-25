@@ -20,111 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if IOS || MACCATALYST
-using PlatformView = Microsoft.Maui.Platform.ContentView;
-#elif ANDROID
-using PlatformView = Microsoft.Maui.Platform.ContentViewGroup;
-#elif WINDOWS
-using PlatformView = Microsoft.Maui.Platform.ContentPanel;
-#else
-using PlatformView = System.Object;
-#endif
-
 using LiveChartsCore.Drawing;
 using Microsoft.Maui.Devices;
 
-namespace LiveChartsCore.SkiaSharpView.Maui;
+namespace LiveChartsCore.Native;
 
-/// <summary>
-/// The chart behaviour for MAUI.
-/// </summary>
-public partial class PointerController : Native.PointerController
+internal partial class PointerController
 {
-    private static double s_density;
-    private static LvcSize s_screenSize;
-
     static PointerController()
     {
-        var deviceDisplay = DeviceDisplay.Current;
-        deviceDisplay.MainDisplayInfoChanged += (_, args) =>
-        {
-            var displayInfo = args.DisplayInfo;
-            UpdateScreenInfo(displayInfo);
-        };
-
-        UpdateScreenInfo(deviceDisplay.MainDisplayInfo);
-        return;
-
-        static void UpdateScreenInfo(DisplayInfo displayInfo)
-        {
-            s_density = displayInfo.Density;
-            s_screenSize = new LvcSize((float)displayInfo.Width, (float)displayInfo.Height);
-        }
+        DeviceDisplay.Current.MainDisplayInfoChanged += OnMainDisplayInfoChanged;
+        UpdateScreenInfo(DeviceDisplay.Current.MainDisplayInfo);
     }
 
-    /// <inheritdoc />
-    public override LvcSize ScreenSize => s_screenSize;
+    private static void OnMainDisplayInfoChanged(object? sender, DisplayInfoChangedEventArgs e) =>
+        UpdateScreenInfo(e.DisplayInfo);
 
-    /// <inheritdoc />
-    public override double Density => s_density;
-
-    /// <summary>
-    /// Attaches the native events on the specified platform view.
-    /// </summary>
-    /// <param name="platformView">The platform view.</param>
-    public void On(PlatformView platformView)
+    private static void UpdateScreenInfo(DisplayInfo displayInfo)
     {
-#if ANDROID
-        platformView.Touch += OnAndroidTouched;
-        platformView.Hover += OnAndroidHover;
-#endif
-
-#if MACCATALYST || IOS
-        platformView.UserInteractionEnabled = true;
-#if MACCATALYST
-        platformView.AddGestureRecognizer(MacCatalystHoverGestureRecognizer);
-#endif
-        platformView.AddGestureRecognizer(MacCatalystLongPressGestureRecognizer);
-        platformView.AddGestureRecognizer(MacCatalystPinchGestureRecognizer);
-        platformView.AddGestureRecognizer(MacCatalystPanGestureRecognizer);
-#endif
-
-#if WINDOWS
-        platformView.PointerPressed += OnWindowsPointerPressed;
-        platformView.PointerMoved += OnWindowsPointerMoved;
-        platformView.PointerReleased += OnWindowsPointerReleased;
-        platformView.PointerWheelChanged += OnWindowsPointerWheelChanged;
-        platformView.PointerExited += OnWindowsPointerExited;
-#endif
-    }
-
-    /// <summary>
-    /// Detaches the native events on the specified platform view.
-    /// </summary>
-    /// <param name="platformView">The platform view.</param>
-    public void Off(PlatformView platformView)
-    {
-#if ANDROID
-        platformView.Touch -= OnAndroidTouched;
-        platformView.Hover -= OnAndroidHover;
-#endif
-
-#if MACCATALYST || IOS
-        platformView.UserInteractionEnabled = false;
-#if MACCATALYST
-        platformView.RemoveGestureRecognizer(MacCatalystHoverGestureRecognizer);
-#endif
-        platformView.RemoveGestureRecognizer(MacCatalystLongPressGestureRecognizer);
-        platformView.RemoveGestureRecognizer(MacCatalystPinchGestureRecognizer);
-        platformView.RemoveGestureRecognizer(MacCatalystPanGestureRecognizer);
-#endif
-
-#if WINDOWS
-        platformView.PointerPressed -= OnWindowsPointerPressed;
-        platformView.PointerMoved -= OnWindowsPointerMoved;
-        platformView.PointerReleased -= OnWindowsPointerReleased;
-        platformView.PointerWheelChanged -= OnWindowsPointerWheelChanged;
-        platformView.PointerExited -= OnWindowsPointerExited;
-#endif
+        Density = displayInfo.Density;
+        ScreenSize = new LvcSize((float)displayInfo.Width, (float)displayInfo.Height);
     }
 }

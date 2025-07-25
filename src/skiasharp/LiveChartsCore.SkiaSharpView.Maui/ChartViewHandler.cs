@@ -30,6 +30,7 @@ using PlatformView = Microsoft.Maui.Platform.ContentPanel;
 using PlatformView = System.Object;
 #endif
 
+using LiveChartsCore.Native;
 using LiveChartsCore.Native.Events;
 using Microsoft.Maui.Handlers;
 
@@ -40,7 +41,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 /// </summary>
 public class ChartViewHandler : ContentViewHandler
 {
-    private readonly PointerController _chartBehaviour;
+    private readonly PointerController _pointerController;
 
     private ChartView? ChartView => VirtualView as ChartView;
 
@@ -49,26 +50,27 @@ public class ChartViewHandler : ContentViewHandler
     /// </summary>
     public ChartViewHandler()
     {
-        _chartBehaviour = new PointerController();
-        _chartBehaviour.Pressed += OnPressed;
-        _chartBehaviour.Moved += OnMoved;
-        _chartBehaviour.Released += OnReleased;
-        _chartBehaviour.Scrolled += OnScrolled;
-        _chartBehaviour.Pinched += OnPinched;
-        _chartBehaviour.Exited += OnExited;
+        _pointerController = new PointerController();
+
+        _pointerController.Pressed += OnPressed;
+        _pointerController.Moved += OnMoved;
+        _pointerController.Released += OnReleased;
+        _pointerController.Scrolled += OnScrolled;
+        _pointerController.Pinched += OnPinched;
+        _pointerController.Exited += OnExited;
     }
 
     /// <inheritdoc />
     protected override void ConnectHandler(PlatformView platformView)
     {
         base.ConnectHandler(platformView);
-        _chartBehaviour.On(platformView);
+        _pointerController.InitializeController(platformView);
     }
 
     /// <inheritdoc />
     protected override void DisconnectHandler(PlatformView platformView)
     {
-        _chartBehaviour.Off(platformView);
+        _pointerController.DisposeController(platformView);
         base.DisconnectHandler(platformView);
     }
 
