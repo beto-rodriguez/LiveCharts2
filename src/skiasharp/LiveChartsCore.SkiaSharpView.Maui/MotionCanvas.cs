@@ -22,7 +22,7 @@
 
 using System;
 using LiveChartsCore.Motion;
-using LiveChartsCore.Behaviours;
+using LiveChartsCore.Native;
 using LiveChartsCore.SkiaSharpView.Maui.Rendering;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Layouts;

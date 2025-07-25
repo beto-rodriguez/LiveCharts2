@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace LiveChartsCore.Behaviours.Events;
+namespace LiveChartsCore.Native.Events;
 
 /// <summary>
 /// Defines the scrroll event handler.

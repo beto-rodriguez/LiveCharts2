@@ -27,7 +27,7 @@
 // 
 // ==============================================================================
 
-using LiveChartsCore.Behaviours.Events;
+using LiveChartsCore.Native.Events;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;

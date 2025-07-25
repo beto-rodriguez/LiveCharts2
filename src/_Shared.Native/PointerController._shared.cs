@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Behaviours.Events;
+using LiveChartsCore.Native.Events;
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Behaviours;
+namespace LiveChartsCore.Native;
 
 /// <summary>
 /// A class that adds platform-specific events to the chart.

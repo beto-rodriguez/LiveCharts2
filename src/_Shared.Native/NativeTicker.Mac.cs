@@ -26,7 +26,7 @@ using CoreAnimation;
 using Foundation;
 using LiveChartsCore.Motion;
 
-namespace LiveChartsCore.Behaviours;
+namespace LiveChartsCore.Native;
 
 internal partial class NativeFrameTicker : IFrameTicker
 {

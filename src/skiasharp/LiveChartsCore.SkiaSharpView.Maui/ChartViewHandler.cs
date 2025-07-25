@@ -30,7 +30,7 @@ using PlatformView = Microsoft.Maui.Platform.ContentPanel;
 using PlatformView = System.Object;
 #endif
 
-using LiveChartsCore.Behaviours.Events;
+using LiveChartsCore.Native.Events;
 using Microsoft.Maui.Handlers;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;

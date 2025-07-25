@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Behaviours;
+using LiveChartsCore.Native;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.WinUI.Rendering;
 using Microsoft.UI.Xaml;

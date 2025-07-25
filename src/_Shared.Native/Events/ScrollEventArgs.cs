@@ -22,7 +22,7 @@
 
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Behaviours.Events;
+namespace LiveChartsCore.Native.Events;
 
 /// <summary>
 /// Defines the scroll event args.

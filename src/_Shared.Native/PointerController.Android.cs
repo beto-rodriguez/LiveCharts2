@@ -26,7 +26,7 @@ using System;
 using Android.Views;
 using LiveChartsCore.Drawing;
 
-namespace LiveChartsCore.Behaviours;
+namespace LiveChartsCore.Native;
 
 /// <summary>
 /// A class that adds platform-specific events to the chart.

@@ -38,7 +38,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 /// <summary>
 /// The chart behaviour for MAUI.
 /// </summary>
-public partial class PointerController : Behaviours.PointerController
+public partial class PointerController : Native.PointerController
 {
     private static double s_density;
     private static LvcSize s_screenSize;

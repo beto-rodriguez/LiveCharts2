@@ -119,7 +119,7 @@ public abstract partial class ChartControl : UserControl, IChartView
         _ = CanvasView.Children.Remove(uiElement);
     }
 
-    private void OnPressed(object? sender, Behaviours.Events.PressedEventArgs args)
+    private void OnPressed(object? sender, Native.Events.PressedEventArgs args)
     {
         // is this working on all platforms?
         //if (args.KeyModifiers > 0) return;
@@ -131,7 +131,7 @@ public abstract partial class ChartControl : UserControl, IChartView
         CoreChart?.InvokePointerDown(args.Location, args.IsSecondaryPress);
     }
 
-    private void OnMoved(object? sender, Behaviours.Events.ScreenEventArgs args)
+    private void OnMoved(object? sender, Native.Events.ScreenEventArgs args)
     {
         var location = args.Location;
 
@@ -142,7 +142,7 @@ public abstract partial class ChartControl : UserControl, IChartView
         CoreChart?.InvokePointerMove(location);
     }
 
-    private void OnReleased(object? sender, Behaviours.Events.PressedEventArgs args)
+    private void OnReleased(object? sender, Native.Events.PressedEventArgs args)
     {
         var cArgs = new PointerCommandArgs(this, new(args.Location.X, args.Location.Y), args);
         if (PointerReleasedCommand?.CanExecute(cArgs) == true)
@@ -151,7 +151,7 @@ public abstract partial class ChartControl : UserControl, IChartView
         CoreChart?.InvokePointerUp(args.Location, args.IsSecondaryPress);
     }
 
-    private void OnExited(object? sender, Behaviours.Events.EventArgs args) =>
+    private void OnExited(object? sender, Native.Events.EventArgs args) =>
         CoreChart?.InvokePointerLeft();
 
     /// <summary>
@@ -162,7 +162,7 @@ public abstract partial class ChartControl : UserControl, IChartView
     /// <param name="sender">The source of the scroll event. This can be <see langword="null"/> if the event is not associated with a
     /// specific sender.</param>
     /// <param name="args">The event data containing details about the scroll action, such as scroll direction and position.</param>
-    protected virtual void OnScrolled(object? sender, Behaviours.Events.ScrollEventArgs args) { }
+    protected virtual void OnScrolled(object? sender, Native.Events.ScrollEventArgs args) { }
 
     /// <summary>
     /// Handles the pinch gesture event, allowing zooming functionality in the chart.
@@ -172,7 +172,7 @@ public abstract partial class ChartControl : UserControl, IChartView
     /// behavior of pinch gestures.</remarks>
     /// <param name="sender">The source of the event. This can be <see langword="null"/>.</param>
     /// <param name="args">The event data containing information about the pinch gesture, including its location and scroll delta.</param>
-    protected virtual void OnPinched(object? sender, Behaviours.Events.PinchEventArgs args) { }
+    protected virtual void OnPinched(object? sender, Native.Events.PinchEventArgs args) { }
 
     private ISeries InflateSeriesTemplate(object item)
     {

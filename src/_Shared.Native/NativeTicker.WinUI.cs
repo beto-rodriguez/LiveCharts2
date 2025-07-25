@@ -28,7 +28,7 @@
 using LiveChartsCore.Motion;
 using Microsoft.UI.Xaml.Media;
 
-namespace LiveChartsCore.Behaviours;
+namespace LiveChartsCore.Native;
 
 internal partial class NativeFrameTicker : IFrameTicker
 {

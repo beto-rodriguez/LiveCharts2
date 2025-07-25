@@ -25,7 +25,7 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 
-namespace LiveChartsCore.Behaviours;
+namespace LiveChartsCore.Native;
 
 /// <summary>
 /// A class that adds platform-specific events to the chart.
