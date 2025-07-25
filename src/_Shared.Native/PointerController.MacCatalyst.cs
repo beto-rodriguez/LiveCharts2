@@ -32,7 +32,7 @@ namespace LiveChartsCore.Behaviours;
 /// <summary>
 /// A class that adds platform-specific events to the chart.
 /// </summary>
-public partial class ChartBehaviour
+public partial class PointerController
 {
     private DateTime _previousPress = DateTime.MinValue;
 
@@ -61,9 +61,9 @@ public partial class ChartBehaviour
     protected UIPanGestureRecognizer MacCatalystPanGestureRecognizer { get; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ChartBehaviour"/> class.
+    /// Initializes a new instance of the <see cref="PointerController"/> class.
     /// </summary>
-    public ChartBehaviour()
+    public PointerController()
     {
 #if MACCATALYST
         MacCatalystHoverGestureRecognizer = new UIHoverGestureRecognizer(OnHover);

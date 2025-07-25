@@ -31,7 +31,7 @@ namespace LiveChartsCore.Behaviours;
 /// <summary>
 /// A class that adds platform-specific events to the chart.
 /// </summary>
-public abstract partial class ChartBehaviour
+public abstract partial class PointerController
 {
     private bool _isPinching;
     private bool _isDown;

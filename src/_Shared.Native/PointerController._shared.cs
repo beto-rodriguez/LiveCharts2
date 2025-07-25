@@ -28,7 +28,7 @@ namespace LiveChartsCore.Behaviours;
 /// <summary>
 /// A class that adds platform-specific events to the chart.
 /// </summary>
-public abstract partial class ChartBehaviour
+public abstract partial class PointerController
 {
     /// <summary>
     /// Gets or sets the screen size, only used internally by the Android handler, to implement a

@@ -40,7 +40,7 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 /// </summary>
 public class ChartViewHandler : ContentViewHandler
 {
-    private readonly ChartBehaviour _chartBehaviour;
+    private readonly PointerController _chartBehaviour;
 
     private ChartView? ChartView => VirtualView as ChartView;
 
@@ -49,7 +49,7 @@ public class ChartViewHandler : ContentViewHandler
     /// </summary>
     public ChartViewHandler()
     {
-        _chartBehaviour = new ChartBehaviour();
+        _chartBehaviour = new PointerController();
         _chartBehaviour.Pressed += OnPressed;
         _chartBehaviour.Moved += OnMoved;
         _chartBehaviour.Released += OnReleased;

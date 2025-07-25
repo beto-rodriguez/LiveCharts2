@@ -28,7 +28,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI;
 /// <summary>
 /// The chart behaviour for WinUI and Uno Platform.
 /// </summary>
-public partial class ChartBehaviour : Behaviours.ChartBehaviour
+public partial class ChartBehaviour : Behaviours.PointerController
 {
     private static double s_density;
     private static LvcSize s_screenSize = new();

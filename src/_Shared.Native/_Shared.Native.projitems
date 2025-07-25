@@ -9,10 +9,10 @@
     <Import_RootNamespace>_Shared.Native</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)ChartBehaviour.Android.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ChartBehaviour.MacCatalyst.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ChartBehaviour.Windows.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ChartBehaviour._shared.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PointerController.Android.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PointerController.MacCatalyst.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PointerController.Windows.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PointerController._shared.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\EventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\Handler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\PinchEventArgs.cs" />

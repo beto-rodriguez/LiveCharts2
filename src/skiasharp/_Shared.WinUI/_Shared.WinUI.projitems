@@ -10,7 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CartesianChart.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ChartBehaviour.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PointerController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ChartControl.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MotionCanvas.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PieChart.cs" />
