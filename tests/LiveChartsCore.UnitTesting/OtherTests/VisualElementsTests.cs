@@ -58,8 +58,7 @@ public class VisualElementsTests
                 new SkiaSharpDrawingContext(
                     chart.CoreCanvas,
                     new SKImageInfo(chart.Width, chart.Height),
-                    null!,
-                    canvas,
+                    surface,
                     SKColors.White,
                     true));
         }
