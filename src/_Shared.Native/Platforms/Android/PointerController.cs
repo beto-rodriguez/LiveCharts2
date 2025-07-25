@@ -39,6 +39,15 @@ internal partial class PointerController : INativePointerController
     private CustomScaleListener _customScaleListener = null!;
     private DateTime _previousPress = DateTime.MinValue;
 
+    private float Density
+    {
+        get
+        {
+            var metrics = Android.App.Application.Context.Resources?.DisplayMetrics;
+            return metrics?.Density ?? 1f;
+        }
+    }
+
     public void InitializeController(object view)
     {
         var androidView = (View)view;
