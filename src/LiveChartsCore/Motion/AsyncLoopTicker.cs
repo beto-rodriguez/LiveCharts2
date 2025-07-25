@@ -51,7 +51,7 @@ internal class AsyncLoopTicker : IFrameTicker
         if (_isDrawingLoopRunning) return;
         _isDrawingLoopRunning = true;
 
-        while (!_canvas.IsValid)
+        while (_canvas is not null && !_canvas.IsValid)
         {
             _renderMode.InvalidateRenderer();
             await Task.Delay(_canvas._nextFrameDelay);
