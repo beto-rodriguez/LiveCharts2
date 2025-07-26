@@ -6,7 +6,6 @@
     <UnoSingleProject>true</UnoSingleProject>
     <OutputType>Library</OutputType>
     <SkiaSharpVersion>$(LatestSkiaSharpVersion)</SkiaSharpVersion>
-    <UnoFeatures>SkiaRenderer</UnoFeatures>
 
     <TargetFrameworks>
       net8.0;net8.0-android;net8.0-ios;net8.0-maccatalyst;
