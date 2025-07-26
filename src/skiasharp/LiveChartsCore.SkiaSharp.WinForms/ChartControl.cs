@@ -32,6 +32,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms;
@@ -56,9 +57,6 @@ public abstract partial class ChartControl : UserControl, IChartView
         Controls.Add(motionCanvas);
         Name = "CartesianChart";
         ResumeLayout(true);
-
-        LiveCharts.s_isHardwareAccelerationByDefault = false;
-        LiveCharts.Configure(config => config.UseDefaults());
 
         InitializeChartControl();
         InitializeObservedProperties();

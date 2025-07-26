@@ -54,7 +54,7 @@ namespace LiveChartsCore.SkiaSharpView.WinForms
         /// </summary>
         private void InitializeComponent()
         {
-            if (LiveCharts.UseGPU)
+            if (LiveCharts.RenderingSettings.UseGPU)
             {
                 this._skglControl = new SKGLControl();
                 this._skglControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;

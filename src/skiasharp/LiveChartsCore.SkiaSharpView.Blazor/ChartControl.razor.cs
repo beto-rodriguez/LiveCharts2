@@ -47,15 +47,6 @@ public abstract partial class ChartControl : IBlazorChart, IDisposable, IChartVi
     /// </summary>
     protected ChartControl()
     {
-        // on blazor by default we use the GPU
-        // just because it looks MUCH better
-        // the user can disable this feature by calling
-        // LiveCharts.UseGPU = false;
-        // or by setting the UseGPU property to false in the chart
-        LiveCharts.SetUseGPUIfNotSetByUser(true);
-
-        LiveCharts.Configure(config => config.UseDefaults());
-
         _observer = new(ConfigureObserver, () => CoreChart?.Update());
         InitializeObservedProperties();
 

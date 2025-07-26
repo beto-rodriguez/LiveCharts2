@@ -20,72 +20,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Windows;
-using System.Windows.Controls;
+using Microsoft.UI.Xaml.Controls;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Motion;
-using LiveChartsCore.SkiaSharpView.WPF.Rendering;
-namespace LiveChartsCore.SkiaSharpView.WPF;
+
+#pragma warning disable IDE0028 // Simplify collection initialization
+
+namespace LiveChartsCore.SkiaSharpView.WinUI;
 
 /// <summary>
-/// Defines the motion canvas control for WPF, <see cref="CoreMotionCanvas"/>.
+/// The motion canvas control for WinUI and Uno Platform.
 /// </summary>
-/// <seealso cref="Control" />
-public class MotionCanvas : UserControl
+public partial class MotionCanvas : Canvas
 {
     /// <summary>
     /// Gets the recommended rendering settings for Uno and WinUI.
     /// </summary>
-    public static RenderingSettings RecommendedWPFRenderingSettings { get; }
+    public static RenderingSettings RecommendedUnoRenderingSettings { get; }
         = new()
         {
             // GPU disabled in WPF by default for 2 reasons:
             //   1. https://github.com/mono/SkiaSharp/issues/3309
             //   2. OpenTK pointer events are sluggish.
-            UseGPU = false,
+            UseGPU = true,
 
             // TryUseVSync makes no sense when GPU is false
-            TryUseVSync = false,
+            TryUseVSync = true,
 
             // Because GPU is false, this is the target FPS:
             LiveChartsRenderLoopFPS = 60,
 
             // make this true to see the FPS in the top left corner of the chart
-            ShowFPS = false
+            ShowFPS = true
         };
-
-    private readonly CanvasRenderSettings<CPURenderMode, GPURenderMode, CompositionTargetTicker> _settings;
 
     static MotionCanvas()
     {
-        LiveCharts.Configure(config => config.UseDefaults(RecommendedWPFRenderingSettings));
+        LiveCharts.Configure(config => config.UseDefaults(RecommendedUnoRenderingSettings));
     }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
-    /// </summary>
-    public MotionCanvas()
-    {
-        _settings = new();
-
-        Content = _settings.RenderMode;
-
-        Loaded += OnLoaded;
-        Unloaded += OnUnloaded;
-    }
-
-    /// <inheritdoc cref="CoreMotionCanvas"/>
-    public CoreMotionCanvas CanvasCore { get; } = new();
-
-    internal void AddLogicalChild(DependencyObject child) =>
-        base.AddLogicalChild(child);
-
-    internal void RemoveLogicalChild(DependencyObject child) =>
-        base.RemoveLogicalChild(child);
-
-    private void OnLoaded(object sender, RoutedEventArgs e) =>
-        _settings.Initialize(CanvasCore);
-
-    private void OnUnloaded(object sender, RoutedEventArgs e) =>
-        _settings.Dispose(CanvasCore);
 }

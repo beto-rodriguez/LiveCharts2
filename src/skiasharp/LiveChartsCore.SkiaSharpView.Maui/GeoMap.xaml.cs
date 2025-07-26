@@ -52,7 +52,6 @@ public partial class GeoMap : ContentView, IGeoMapView
     public GeoMap()
     {
         InitializeComponent();
-        LiveCharts.Configure(config => config.UseDefaults());
         _core = new GeoMapChart(this);
 
         SizeChanged += GeoMap_SizeChanged;

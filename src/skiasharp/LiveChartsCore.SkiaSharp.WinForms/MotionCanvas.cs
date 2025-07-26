@@ -22,9 +22,9 @@
 
 using System;
 using System.ComponentModel;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp.Views.Desktop;
@@ -35,9 +35,36 @@ namespace LiveChartsCore.SkiaSharpView.WinForms;
 /// The motion canvas control for windows forms, <see cref="CoreMotionCanvas"/>.
 /// </summary>
 /// <seealso cref="UserControl" />
-public partial class MotionCanvas : UserControl
+public partial class MotionCanvas : UserControl, IRenderMode
 {
-    private bool _isDrawingLoopRunning = false;
+    private IFrameTicker _ticker = null!;
+
+    /// <summary>
+    /// Gets the recommended rendering settings for WinForms.
+    /// </summary>
+    public static RenderingSettings RecommendedWinFormsRenderingSettings { get; } =
+        new()
+        {
+            // GPU disabled in WinForms by default for 2 reasons:
+            //   1. https://github.com/mono/SkiaSharp/issues/3309
+            //   2. OpenTK pointer events are sluggish (at least in WPF).
+            UseGPU = false,
+
+            // TryUseVSync makes no sense when GPU is false.
+            // Also, WinForms does not support VSync (at least not implemented by livecharts).
+            TryUseVSync = false,
+
+            // Because GPU is false, this is the target FPS:
+            LiveChartsRenderLoopFPS = 60,
+
+            // make this true to see the FPS in the top left corner of the chart
+            ShowFPS = false
+        };
+
+    static MotionCanvas()
+    {
+        LiveCharts.Configure(config => config.UseDefaults(RecommendedWinFormsRenderingSettings));
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
@@ -47,12 +74,13 @@ public partial class MotionCanvas : UserControl
         InitializeComponent();
     }
 
-    /// <summary>
-    /// Gets the canvas core.
-    /// </summary>
-    /// <value>
-    /// The canvas core.
-    /// </value>
+    event CoreMotionCanvas.FrameRequestHandler IRenderMode.FrameRequest
+    {
+        add => throw new NotImplementedException();
+        remove => throw new NotImplementedException();
+    }
+
+    /// <inheritdoc cref="CoreMotionCanvas"/>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public CoreMotionCanvas CanvasCore { get; } = new();
 
@@ -60,15 +88,15 @@ public partial class MotionCanvas : UserControl
     protected override void CreateHandle()
     {
         base.CreateHandle();
-        CanvasCore.Invalidated += CanvasCore_Invalidated;
+        _ticker = new AsyncLoopTicker();
+        _ticker.InitializeTicker(CanvasCore, this);
     }
 
     /// <inheritdoc cref="Control.OnHandleDestroyed(EventArgs)"/>
     protected override void OnHandleDestroyed(EventArgs e)
     {
         base.OnHandleDestroyed(e);
-
-        CanvasCore.Invalidated -= CanvasCore_Invalidated;
+        _ticker.DisposeTicker();
         CanvasCore.Dispose();
     }
 
@@ -80,29 +108,20 @@ public partial class MotionCanvas : UserControl
         CanvasCore.DrawFrame(
             new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, GetBackground().AsSKColor()));
 
-    private void CanvasCore_Invalidated(CoreMotionCanvas sender) =>
-        RunDrawingLoop();
-
-    private async void RunDrawingLoop()
-    {
-        if (_isDrawingLoopRunning) return;
-        _isDrawingLoopRunning = true;
-
-        var ts = TimeSpan.FromSeconds(1 / LiveCharts.TargetFps);
-
-        while (!CanvasCore.IsValid)
-        {
-            _skControl?.Invalidate();
-            _skglControl?.Invalidate();
-
-            await Task.Delay(ts);
-        }
-
-        _isDrawingLoopRunning = false;
-    }
-
     private LvcColor GetBackground() =>
         true
             ? new LvcColor(Parent!.BackColor.R, Parent.BackColor.G, Parent.BackColor.B)
             : CanvasCore._virtualBackgroundColor; // are themes relevant in  Win Forms?
+
+    void IRenderMode.InitializeRenderMode(CoreMotionCanvas canvas) =>
+        throw new NotImplementedException();
+
+    void IRenderMode.InvalidateRenderer()
+    {
+        _skControl?.Invalidate();
+        _skglControl?.Invalidate();
+    }
+
+    void IRenderMode.DisposeRenderMode() =>
+        throw new NotImplementedException();
 }

@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Blazor.JsInterop;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -37,6 +38,30 @@ public partial class MotionCanvas : IDisposable, IRenderMode
     private DotNetObjectReference<MotionCanvas>? _dotNetRef;
     private DomJsInterop? _dom;
     private IFrameTicker _ticker = null!;
+
+    /// <summary>
+    /// Gets the recommended rendering settings for Blazor.
+    /// </summary>
+    public static RenderingSettings RecommendedBlazorRenderingSettings { get; }
+        = new()
+        {
+            // Actually only GL view is supported in Blazor.
+            UseGPU = true,
+
+            // uses requestAnimationFrame under the hood.
+            TryUseVSync = true,
+
+            // A fallback value when VSync is not used.
+            LiveChartsRenderLoopFPS = 60,
+
+            // make this true to see the FPS in the top left corner of the chart
+            ShowFPS = false
+        };
+
+    static MotionCanvas()
+    {
+        LiveCharts.Configure(config => config.UseDefaults(RecommendedBlazorRenderingSettings));
+    }
 
     [Inject]
     private IJSRuntime JS { get; set; } = null!;
@@ -127,7 +152,7 @@ public partial class MotionCanvas : IDisposable, IRenderMode
         _dom ??= new DomJsInterop(JS);
         _dotNetRef = DotNetObjectReference.Create(this);
 
-        _ticker = LiveCharts.TryUseVSync
+        _ticker = LiveCharts.RenderingSettings.TryUseVSync
             ? new RequestAnimationFrameTicker(_dom, _dotNetRef)
             : new AsyncLoopTicker();
 

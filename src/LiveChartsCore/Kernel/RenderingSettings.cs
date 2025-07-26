@@ -46,7 +46,7 @@ public class RenderingSettings
     /// <summary>
     /// Defines the desired frames per second when using the LiveCharts render loop, this has no effect
     /// when <see cref="TryUseVSync"/> is true and <see cref="UseGPU"/> is true.
-    /// Default is 60.
+    /// Default is 60. This is ignored in Avalonia, the frame rate is determined by Avalonia itself.
     /// </summary>
     public double LiveChartsRenderLoopFPS { get; set; } = 60;
 

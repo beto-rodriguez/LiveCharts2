@@ -51,8 +51,6 @@ public abstract partial class ChartControl : UserControl, IChartView
     /// </summary>
     public ChartControl()
     {
-        LiveCharts.Configure(config => config.UseDefaults());
-
         Content = new MotionCanvas();
 
         SizeChanged += (s, e) =>

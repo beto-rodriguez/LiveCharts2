@@ -51,7 +51,6 @@ public sealed partial class GeoMap : UserControl, IGeoMapView
     {
         Content = new MotionCanvas();
 
-        LiveCharts.Configure(config => config.UseDefaults());
         _core = new GeoMapChart(this);
 
         PointerPressed += OnPointerPressed;

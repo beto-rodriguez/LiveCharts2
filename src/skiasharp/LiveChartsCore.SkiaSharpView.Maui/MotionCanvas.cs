@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Native;
 using LiveChartsCore.SkiaSharpView.Maui.Rendering;
@@ -34,7 +35,33 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 /// </summary>
 public class MotionCanvas : AbsoluteLayout
 {
+    /// <summary>
+    /// Gets the recommended rendering settings for MAUI.
+    /// </summary>
+    public static RenderingSettings RecommendedMAUIRenderingSettings { get; }
+        = new()
+        {
+            // GPU via SKGLView
+            UseGPU = true,
+
+            // Windows:         CompositionTarget.Rendering
+            // Android:         Coreograoher
+            // IOS/Catalyst:    CADisplayLink
+            TryUseVSync = true,
+
+            // fallback value when VSync is not used.
+            LiveChartsRenderLoopFPS = 60,
+
+            // make this true to see the FPS in the top left corner of the chart
+            ShowFPS = false
+        };
+
     private readonly CanvasRenderSettings<CPURenderMode, GPURenderMode, NativeFrameTicker> _settings;
+
+    static MotionCanvas()
+    {
+        LiveCharts.Configure(config => config.UseDefaults(RecommendedMAUIRenderingSettings));
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
