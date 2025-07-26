@@ -56,10 +56,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
     <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
-    <!--
-    in windows then use the winui package, the rest of the uno platfroms
-    should be handled by <UnoFeatures>SkiaRenderer</UnoFeatures>
-    -->
+    <!-- in windows then use the winui package, the rest of the platfroms should be handled by the Uno SDK -->
     <PackageReference Condition="$(TargetFramework.Contains('-windows'))" Include="SkiaSharp.Views.WinUI" Version="$(LatestSkiaSharpVersion)" />
   </ItemGroup>
 
