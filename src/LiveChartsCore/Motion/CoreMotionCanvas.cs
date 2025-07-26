@@ -46,7 +46,7 @@ public class CoreMotionCanvas : IDisposable
     private double _totalSeconds = 0;
     internal TimeSpan _nextFrameDelay = s_baseFrameDelay;
     private static readonly double s_ticksPerMillisecond = Stopwatch.Frequency / 1000d;
-    private static readonly TimeSpan s_baseFrameDelay = TimeSpan.FromMilliseconds(1000d / LiveCharts.TargetFps);
+    private static readonly TimeSpan s_baseFrameDelay = TimeSpan.FromMilliseconds(1000d / LiveCharts.RenderingSettings.LiveChartsRenderLoopFPS);
     private static readonly long s_jitterThreshold = s_baseFrameDelay.Ticks / 2;
     internal LvcColor _virtualBackgroundColor;
     internal static string? s_externalRenderer;
@@ -125,7 +125,7 @@ public class CoreMotionCanvas : IDisposable
                 $"thread: {Environment.CurrentManagedThreadId}");
 #endif
 
-        var showFps = LiveCharts.ShowFPS;
+        var showFps = LiveCharts.RenderingSettings.ShowFPS;
         var drawStartTime = s_clock.ElapsedTicks;
 
         lock (Sync)
@@ -197,7 +197,7 @@ public class CoreMotionCanvas : IDisposable
                     sb.Append($"`render time last/avrg   [ {_lastDrawTime:N2} / {_totalDrawTime / _totalFrames:N2} ] ms");
 
                     sb.Append(s_externalRenderer is null
-                            ? $"`GPU / VSync             [ {LiveCharts.UseGPU} / {LiveCharts.UseGPU && LiveCharts.TryUseVSync} ]"
+                            ? $"`GPU / VSync             [ {LiveCharts.RenderingSettings.UseGPU} / {LiveCharts.RenderingSettings.UseGPU && LiveCharts.RenderingSettings.TryUseVSync} ]"
                             : $"`GPU / VSync by          [ {s_externalRenderer} ]");
 
                     if (_jitteredDrawCount > 0)
@@ -229,7 +229,7 @@ public class CoreMotionCanvas : IDisposable
             }
         }
 
-        if (!LiveCharts.TryUseVSync)
+        if (!LiveCharts.RenderingSettings.TryUseVSync)
         {
             var timeInDrawOperation = s_clock.ElapsedTicks - drawStartTime;
             var delay = s_baseFrameDelay.Ticks - timeInDrawOperation;

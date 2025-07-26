@@ -30,14 +30,6 @@ namespace LiveChartsCore;
 /// </summary>
 public static class LiveCharts
 {
-    private static bool s_useGPU = true;
-    private static bool s_gpuSetByUser = false;
-    internal static bool s_hasBackend = false;
-    internal static bool s_hasDefaultTheme = false;
-    internal static bool s_hasDefaultMappers = false;
-    internal static bool s_isHardwareAccelerationByDefault = true;
-    internal static bool s_hasDefaultHardwareAcceleration = false;
-
     /// <summary>
     /// A constant that indicates that the tool tip should not add the current label.
     /// </summary>
@@ -55,47 +47,19 @@ public static class LiveCharts
     public static bool EnableLogging { get; set; } = false;
 
     /// <summary>
-    /// Gets or sets a value indicating whether LiveCharts should show the frames per second.
-    /// </summary>
-    public static bool ShowFPS { get; set; } = false;
-
-    /// <summary>
     /// Gets or sets the maximum fps requested.
     /// </summary>
-    [Obsolete($"Renamed to {nameof(TargetFps)}")]
-    public static double MaxFps { get => TargetFps; set => TargetFps = value; }
-
-    /// <summary>
-    /// Gets or sets the target frames per second for the rendering engine,
-    /// this property is ignored when <see cref="TryUseVSync"/> is true and
-    /// GPU acceleration is enabled, default is 60 fps.
-    /// </summary>
-    public static double TargetFps { get; set; } = 60;
-
-    /// <summary>
-    /// Attempts to align rendering cadence with display refresh rate (VSync) when supported.
-    /// Requires GPU acceleration. May be ignored in software-mode or virtual environments.
-    /// In WPF and WinUI the rendering cadence is regulated by the CompositionTarget.Rendering event,
-    /// which dispatches frame updates synchronized with the display refresh cycle.
-    /// In Avalonia, this value is ignored as the chart is rendered based on Avalonia's rendering loop.
-    /// </summary>
-    public static bool TryUseVSync { get; set; } = true;
-
-    /// <summary>
-    /// Gets or sets a value indicating whether LiveCharts should use the GPU for rendering.
-    /// When set to true, the library will attempt to use GPU acceleration.
-    /// This has no effect on Avalonia since Avalonia determines the rendering backend.
-    /// When GPU rendering is not available, it will fallback to software rendering.
-    /// </summary>
-    public static bool UseGPU
+    [Obsolete($"Renamed to {nameof(RenderingSettings)}.{nameof(RenderingSettings.LiveChartsRenderLoopFPS)}")]
+    public static double MaxFps
     {
-        get => s_useGPU;
-        set
-        {
-            s_useGPU = value;
-            s_gpuSetByUser = true;
-        }
+        get => RenderingSettings.LiveChartsRenderLoopFPS;
+        set => RenderingSettings.LiveChartsRenderLoopFPS = value;
     }
+
+    /// <summary>
+    /// Defines the rendering settins for LiveCharts.
+    /// </summary>
+    public static RenderingSettings RenderingSettings { get; internal set; } = null!;
 
     /// <summary>
     /// Gets the current settings.
@@ -160,11 +124,5 @@ public static class LiveCharts
     {
         if (ticks < 0) ticks = 0;
         return TimeSpan.FromTicks((long)ticks);
-    }
-
-    internal static void SetUseGPUIfNotSetByUser(bool value)
-    {
-        if (s_gpuSetByUser) return;
-        s_useGPU = value;
     }
 }

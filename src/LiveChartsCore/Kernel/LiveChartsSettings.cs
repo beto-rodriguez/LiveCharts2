@@ -39,6 +39,10 @@ public class LiveChartsSettings
     private readonly Dictionary<Type, object> _mappers = [];
     private object _theme = new();
 
+    internal bool HasBackedDefined => _currentProvider is not null;
+    internal bool HasThemeDefined => _theme is not null and Theme;
+    internal bool HasMappersDefined => _mappers.Count > 0;
+
     /// <summary>
     /// Gets or sets the default easing function.
     /// </summary>
@@ -429,8 +433,6 @@ public class LiveChartsSettings
     /// <returns>The current settings.</returns>
     public LiveChartsSettings AddDefaultMappers()
     {
-        LiveCharts.s_hasDefaultMappers = true;
-
         return
             HasMap<short>((model, index) => new(index, model))
             .HasMap<int>((model, index) => new(index, model))
@@ -447,41 +449,14 @@ public class LiveChartsSettings
     }
 
     /// <summary>
-    /// Indicates whether hardware acceleration is used to render the charts, this will only work if
-    /// the current platform and device supports it. See also. <seealso cref="LiveCharts.UseGPU"/>.
+    /// Defines the rendering settings for LiveCharts.
     /// </summary>
-    /// <param name="useHardwareAcceleration">
-    /// Indicates whether hardware acceleration is used, this will only work
-    /// if the platform and device support it, default is true. This is ignored in Avalonia, in avalonia the
-    /// frame rate and rendering cadence is determined by the Avalonia rendering loop.
-    /// </param>
-    /// <param name="tryUseVSync">
-    /// Indicates whether the rendering cadence should be aligned with the display refresh rate,
-    /// gpu acceleration is required for this to work. This is ignored in Avalonia, in avalonia the frame rate
-    /// and rendering cadence is determined by the Avalonia rendering loop.
-    /// </param>
-    /// <param name="targetFps">
-    /// The target frames per second for the rendering engine, this property is ignored when
-    /// <see cref="LiveCharts.TryUseVSync"/> is true and GPU acceleration is enabled,
-    /// This is ignored in Avalonia, in avalonia the frame rate and rendering cadence is determined by the
-    /// Avalonia rendering loop.
-    /// </param>
-    /// <param name="showFps">
-    /// When true, The chart will also draw the frames per second in the top left corner of the chart.
-    /// </param>
+    /// <param name="settings">The rendering settings.</param>
     /// <returns>The current settings.</returns>
     public LiveChartsSettings RenderingSettings(
-        bool useHardwareAcceleration,
-        bool tryUseVSync,
-        double targetFps = 60,
-        bool showFps = false)
+        RenderingSettings settings)
     {
-        LiveCharts.s_hasDefaultHardwareAcceleration = true;
-
-        LiveCharts.UseGPU = useHardwareAcceleration;
-        LiveCharts.TryUseVSync = tryUseVSync;
-        LiveCharts.TargetFps = targetFps;
-        LiveCharts.ShowFPS = showFps;
+        LiveCharts.RenderingSettings = settings;
 
         return this;
     }

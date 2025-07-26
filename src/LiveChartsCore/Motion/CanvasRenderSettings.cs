@@ -31,11 +31,11 @@ internal class CanvasRenderSettings<TCPURenderMode, TGPURenderMode, TVSyncTicker
     private static bool? s_canUseGPU;
 
     public IRenderMode RenderMode { get; } = renderMode ??
-        (LiveCharts.UseGPU && CanUseGPU()
+        (LiveCharts.RenderingSettings.UseGPU && CanUseGPU()
             ? new TGPURenderMode()
             : new TCPURenderMode());
 
-    public IFrameTicker Ticker { get; } = LiveCharts.TryUseVSync
+    public IFrameTicker Ticker { get; } = LiveCharts.RenderingSettings.TryUseVSync
         ? new TVSyncTicker()
         : new AsyncLoopTicker();
 
@@ -71,7 +71,7 @@ internal class CanvasRenderSettings<TCPURenderMode, TGPURenderMode, TVSyncTicker
         catch
         {
             s_canUseGPU = false;
-            LiveCharts.UseGPU = false;
+            LiveCharts.RenderingSettings.UseGPU = false;
 
             return false;
         }

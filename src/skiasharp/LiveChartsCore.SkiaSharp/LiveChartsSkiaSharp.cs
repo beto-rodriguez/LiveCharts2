@@ -47,24 +47,22 @@ public static class LiveChartsSkiaSharp
     /// Configures LiveCharts using the default settings for SkiaSharp.
     /// </summary>
     /// <param name="settings">The settings.</param>
+    /// <param name="renderingSettings">The optional rendering settings.</param>
     /// <returns>The settings.</returns>
-    public static LiveChartsSettings UseDefaults(this LiveChartsSettings settings)
+    public static LiveChartsSettings UseDefaults(
+        this LiveChartsSettings settings, RenderingSettings? renderingSettings = null)
     {
-        if (!LiveCharts.s_hasBackend)
+        if (!LiveCharts.DefaultSettings.HasBackedDefined)
             _ = settings.AddSkiaSharp();
 
-        if (!LiveCharts.s_hasDefaultTheme)
+        if (!LiveCharts.DefaultSettings.HasThemeDefined)
             _ = settings.AddDefaultTheme();
 
-        if (!LiveCharts.s_hasDefaultMappers)
+        if (!LiveCharts.DefaultSettings.HasMappersDefined)
             _ = settings.AddDefaultMappers();
 
-        if (!LiveCharts.s_hasDefaultHardwareAcceleration)
-            _ = settings.RenderingSettings(
-                useHardwareAcceleration: LiveCharts.s_isHardwareAccelerationByDefault,
-                tryUseVSync: true,
-                targetFps: 60, // 60 as a fallback when VSync is not available
-                showFps: false);
+        if (LiveCharts.RenderingSettings is null)
+            _ = settings.RenderingSettings(renderingSettings ?? RenderingSettings.Default);
 
         return settings;
     }
@@ -76,8 +74,6 @@ public static class LiveChartsSkiaSharp
     /// <returns></returns>
     public static LiveChartsSettings AddSkiaSharp(this LiveChartsSettings settings)
     {
-        LiveCharts.s_hasBackend = true;
-
         PropertyDefinition.Parsers[typeof(Paint)] = HexToPaintTypeConverter.Parse;
         PropertyDefinition.Parsers[typeof(LvcColor)] = HexToLvcColorTypeConverter.Parse;
         PropertyDefinition.Parsers[typeof(Margin)] = MarginTypeConverter.ParseMargin;
