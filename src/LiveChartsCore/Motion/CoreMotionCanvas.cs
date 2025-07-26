@@ -193,16 +193,20 @@ public class CoreMotionCanvas : IDisposable
                 {
                     var sb = new StringBuilder();
 
-                    sb.Append($"FPS                     [ {_totalFrames / _totalSeconds:N2} ]");
-                    sb.Append($"`render time last/avrg   [ {_lastDrawTime:N2} / {_totalDrawTime / _totalFrames:N2} ] ms");
+#if DEBUG
+                    sb.Append($"[~~ {_totalFrames / _totalSeconds:N2} ~~] FPS (DEBUG DECRESED PERFORMANCE)");
+#else
+                    sb.Append($"[ {_totalFrames / _totalSeconds:N2} ] FPS");
+#endif
+                    sb.Append($"`[ {_lastDrawTime:N2}ms / {_totalDrawTime / _totalFrames:N2}ms ] render time last / avrg");
 
                     sb.Append(s_externalRenderer is null
-                            ? $"`GPU / VSync             [ {LiveCharts.RenderingSettings.UseGPU} / {LiveCharts.RenderingSettings.UseGPU && LiveCharts.RenderingSettings.TryUseVSync} ]"
-                            : $"`GPU / VSync by          [ {s_externalRenderer} ]");
+                            ? $"`[ {LiveCharts.RenderingSettings.UseGPU} / {LiveCharts.RenderingSettings.UseGPU && LiveCharts.RenderingSettings.TryUseVSync} ] GPU / VSync"
+                            : $"`[ {s_externalRenderer} ] handling GPU / VSync by");
 
                     if (_jitteredDrawCount > 0)
                         sb.Append(
-                              $"`jittered draws          [ {_jitteredDrawCount} ]");
+                              $"`[ {_jitteredDrawCount} ] jittered draws");
 
                     context.LogOnCanvas(sb.ToString());
                 }
