@@ -151,7 +151,7 @@ public abstract class InMemorySkiaSharpChart
                 new SkiaSharpDrawingContext(
                     CoreCanvas,
                     new SKImageInfo(Width, Height),
-                    surface,
+                    surface.Canvas,
                     Background,
                     clearCanvasOnBeginDraw));
 
@@ -170,7 +170,7 @@ public abstract class InMemorySkiaSharpChart
             new SkiaSharpDrawingContext(
                 CoreCanvas,
                 new SKImageInfo(Width, Height),
-                surface,
+                surface.Canvas,
                 Background,
                 clearCanvasOnBeginDraw));
 
