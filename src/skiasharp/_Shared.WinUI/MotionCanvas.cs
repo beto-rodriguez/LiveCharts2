@@ -42,7 +42,8 @@ public partial class MotionCanvas : Canvas
     /// </summary>
     public MotionCanvas()
     {
-#if __UNO_SKIA__ || DESKTOP || BROWSERWASM
+#if (__UNO_SKIA__ || DESKTOP) && !BROWSERWASM
+        // no wasm, see note #250727
         // then force the skiarendermode.
         _settings = new(new SkiaRenderMode());
 #else
