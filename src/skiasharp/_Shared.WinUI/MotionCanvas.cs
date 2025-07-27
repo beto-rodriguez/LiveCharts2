@@ -42,11 +42,9 @@ public partial class MotionCanvas : Canvas
     /// </summary>
     public MotionCanvas()
     {
-#if DESKTOP
-        // The CPURenderMode class inherits from SKXamlCanvas which is the control Uno uses to
-        // render SkiaSharp on the netx-destop target.
-        // as of today, SwapChainPanel is not available on the netx-desktop target.
-        _settings = new(new CPURenderMode());
+#if __UNO_SKIA__ || DESKTOP || BROWSERWASM
+        // then force the skiarendermode.
+        _settings = new(new SkiaRenderMode());
 #else
         _settings = new();
 #endif

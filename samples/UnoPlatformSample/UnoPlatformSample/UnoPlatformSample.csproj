@@ -21,22 +21,16 @@
       UnoFeatures let's you quickly add and manage implicit package references based on the features you want to use.
       https://aka.platform.uno/singleproject-features
     -->
-    <UnoFeatures>
-      Material;
-      Dsp;
-      Hosting;
-      Toolkit;
-      Logging;
-      MVUX;
-      Configuration;
-      HttpKiota;
-      Serialization;
-      Localization;
-      Navigation;
-      ThemeService;
-      SkiaRenderer;
-    </UnoFeatures>
+      <!--
+      <UnoFeatures>
+      defined in the root Directory.Build.props file
+      </UnoFeatures>
+      -->
   </PropertyGroup>
+
+    <PropertyGroup>
+        <LiveChartsUnoFeatures>$(UnoFeatures)</LiveChartsUnoFeatures>
+    </PropertyGroup>
 
     <ItemGroup>
         <Page Include="..\..\WinUISample\WinUISample\Samples\**\*.xaml">

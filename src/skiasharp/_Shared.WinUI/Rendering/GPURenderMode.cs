@@ -57,7 +57,7 @@ internal partial class GPURenderMode : SKSwapChainPanel, IRenderMode
         if (density.DpiX != 1 || density.DpiY != 1)
             e.Surface.Canvas.Scale(density.DpiX, density.DpiY);
 
-        FrameRequest?.Invoke(new SkiaSharpDrawingContext(_canvas, e.Info, e.Surface, GetBackground().AsSKColor()));
+        FrameRequest?.Invoke(new SkiaSharpDrawingContext(_canvas, e.Info, e.Surface.Canvas, GetBackground().AsSKColor()));
     }
 
     public void InvalidateRenderer() =>

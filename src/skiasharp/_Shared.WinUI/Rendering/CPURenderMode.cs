@@ -41,11 +41,7 @@ internal partial class CPURenderMode : SKXamlCanvas, IRenderMode
         PaintSurface += OnPaintSurface;
 
 #if DEBUG
-#if DESKTOP
-        System.Diagnostics.Trace.WriteLine($"[LiveCharts Info] LiveCharts is using Uno's Skia renderer.");
-#else
         System.Diagnostics.Trace.WriteLine($"[LiveCharts Info] LiveCharts is using {nameof(CPURenderMode)}.");
-#endif
 #endif
     }
 
@@ -61,7 +57,8 @@ internal partial class CPURenderMode : SKXamlCanvas, IRenderMode
         if (density.DpiX != 1 || density.DpiY != 1)
             e.Surface.Canvas.Scale(density.DpiX, density.DpiY);
 
-        FrameRequest?.Invoke(new SkiaSharpDrawingContext(_canvas, e.Info, e.Surface, GetBackground().AsSKColor()));
+        FrameRequest?.Invoke(new SkiaSharpDrawingContext(
+            _canvas, e.Info, e.Surface.Canvas, GetBackground().AsSKColor()));
     }
 
     public void InvalidateRenderer() =>
