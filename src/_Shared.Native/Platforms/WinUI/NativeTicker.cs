@@ -20,10 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if WINDOWS || DESKTOP || BROWSERWASM
+#if WINDOWS || __UNO_SKIA__ || DESKTOP || BROWSERWASM
 
-// on desktop and browserwasm the uno implementation of composition target rendering is used.
-// for the rest of the uno targets, the native ticker is used.
+// reachable on winui, maui winui, uno winui and uno with skia renderer
 
 using LiveChartsCore.Motion;
 using Microsoft.UI.Xaml.Media;
@@ -44,14 +43,11 @@ internal partial class NativeFrameTicker : IFrameTicker
         CompositionTarget.Rendering += OnCompositonTargetRendering;
 
 #if DEBUG
-#if DESKTOP
-        CoreMotionCanvas.s_externalRenderer = "Uno Desktop";
+#if __UNO_SKIA__ || DESKTOP || BROWSERWASM
+        CoreMotionCanvas.s_externalRenderer = "Uno SkiaRenderer via CompositionTarget.Rendering";
+#endif
         System.Diagnostics.Trace.WriteLine(
             "[LiveCharts Info] FrameSync: CompositionTarget.Rendering");
-#else
-        System.Diagnostics.Trace.WriteLine(
-            "[LiveCharts Info] FrameSync: CompositionTarget.Rendering (Windows)");
-#endif
 #endif
     }
 

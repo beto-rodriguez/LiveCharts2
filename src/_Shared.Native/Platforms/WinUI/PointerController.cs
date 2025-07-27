@@ -20,13 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if WINDOWS || DESKTOP || BROWSERWASM
+#if WINDOWS || __UNO_SKIA__ || DESKTOP || BROWSERWASM
 
-// on desktop and browserwasm the uno implementation of pointer events is used.
+// reachable on winui, maui winui, uno winui and uno with skia renderer
 
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
-
 namespace LiveChartsCore.Native;
 
 internal partial class PointerController : INativePointerController
@@ -99,6 +98,8 @@ internal partial class PointerController : INativePointerController
 
     private void OnWindowsPointerExited(object sender, PointerRoutedEventArgs e) =>
         Exited?.Invoke(sender, new(e));
+
+
 }
 
 #endif

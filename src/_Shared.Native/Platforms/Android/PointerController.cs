@@ -20,7 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if ANDROID
+#if ANDROID && !__UNO_SKIA__
+
+// reachable on maui android or uno android (without skia renderer)
 
 using System;
 using Android.Views;
