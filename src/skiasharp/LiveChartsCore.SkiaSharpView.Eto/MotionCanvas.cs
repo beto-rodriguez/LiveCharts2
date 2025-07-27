@@ -102,7 +102,7 @@ public class MotionCanvas : SkiaDrawable, IRenderMode
 
     private void SkControl_PaintSurface(object sender, SKPaintEventArgs e) =>
         CanvasCore.DrawFrame(
-            new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface));
+            new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface.Canvas));
 
 
     void IRenderMode.InitializeRenderMode(CoreMotionCanvas canvas) =>

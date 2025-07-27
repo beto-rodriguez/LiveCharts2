@@ -49,8 +49,6 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView
     public SKCartesianChart(ICartesianChartView? chartView = null)
         : base(chartView)
     {
-        LiveCharts.Configure(config => config.UseDefaults());
-
         Core = new CartesianChartEngine(this, config => config.UseDefaults(), CoreCanvas);
         Core.Measuring += OnCoreMeasuring;
         Core.UpdateStarted += OnCoreUpdateStarted;

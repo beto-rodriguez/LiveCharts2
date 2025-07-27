@@ -63,7 +63,7 @@ internal class CPURenderMode : SKElement, IRenderMode
             args.Surface.Canvas.Scale(density.dpix, density.dpiy);
 
         FrameRequest?.Invoke(
-            new SkiaSharpDrawingContext(_canvas, args.Info, args.Surface, GetBackground().AsSKColor()));
+            new SkiaSharpDrawingContext(_canvas, args.Info, args.Surface.Canvas, GetBackground().AsSKColor()));
     }
 
     private ResolutionHelper GetPixelDensity()

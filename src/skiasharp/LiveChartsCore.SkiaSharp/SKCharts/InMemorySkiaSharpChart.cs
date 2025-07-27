@@ -32,17 +32,16 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 /// <summary>
 /// A chart that is able to generate images or draw to a given canvas.
 /// </summary>
-public abstract class InMemorySkiaSharpChart
+/// <remarks>
+/// Initializes a new instance of the <see cref="InMemorySkiaSharpChart"/> class.
+/// </remarks>
+public abstract class InMemorySkiaSharpChart(IChartView? chartView = null)
 {
-    private readonly IChartView? _chartView;
+    private readonly IChartView? _chartView = chartView;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="InMemorySkiaSharpChart"/> class.
-    /// </summary>
-    public InMemorySkiaSharpChart(IChartView? chartView = null)
+    static InMemorySkiaSharpChart()
     {
         LiveCharts.Configure(config => config.UseDefaults());
-        _chartView = chartView;
     }
 
     /// <inheritdoc cref="IChartView.CoreCanvas"/>

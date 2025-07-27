@@ -67,7 +67,7 @@ internal class GPURenderMode : SKGLView, IRenderMode
             e.Surface.Canvas.Scale(_pixelDensity, _pixelDensity);
 
         FrameRequest?.Invoke(
-            new SkiaSharpDrawingContext(_canvas, e.Info, e.Surface, GetBackground().AsSKColor()));
+            new SkiaSharpDrawingContext(_canvas, e.Info, e.Surface.Canvas, GetBackground().AsSKColor()));
     }
 
     private void MainDisplayInfoChanged(object? sender, EventArgs e) =>

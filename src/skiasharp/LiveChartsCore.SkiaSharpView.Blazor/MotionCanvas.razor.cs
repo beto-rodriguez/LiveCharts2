@@ -142,7 +142,8 @@ public partial class MotionCanvas : IDisposable, IRenderMode
         _ = OnPointerOutCallback.InvokeAsync(e);
 
     private void OnPaintGlSurface(SKPaintGLSurfaceEventArgs e) =>
-        CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface));
+        CanvasCore.DrawFrame(
+            new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface.Canvas));
 
     /// <inheritdoc/>
     protected override void OnAfterRender(bool firstRender)

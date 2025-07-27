@@ -386,7 +386,7 @@ public class ChangingPaintTasks
                 new SkiaSharpDrawingContext(
                     canvas,
                     new SKImageInfo(100, 100),
-                    SKSurface.Create(new SKImageInfo(100, 100))));
+                    SKSurface.Create(new SKImageInfo(100, 100)).Canvas));
         }
 
         return frames;

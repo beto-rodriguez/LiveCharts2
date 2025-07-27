@@ -67,7 +67,7 @@ internal class CPURenderMode : SKCanvasView, IRenderMode
             args.Surface.Canvas.Scale(_pixelDensity, _pixelDensity);
 
         FrameRequest?.Invoke(
-            new SkiaSharpDrawingContext(_canvas, args.Info, args.Surface, GetBackground().AsSKColor()));
+            new SkiaSharpDrawingContext(_canvas, args.Info, args.Surface.Canvas, GetBackground().AsSKColor()));
     }
 
     private void MainDisplayInfoChanged(object? sender, EventArgs e) =>

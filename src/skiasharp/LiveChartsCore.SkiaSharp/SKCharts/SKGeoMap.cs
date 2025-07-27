@@ -44,8 +44,6 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView
     /// </summary>
     public SKGeoMap()
     {
-        LiveCharts.Configure(config => config.UseDefaults());
-
         _core = new GeoMapChart(this);
         ActiveMap = Maps.GetWorldMap();
     }
