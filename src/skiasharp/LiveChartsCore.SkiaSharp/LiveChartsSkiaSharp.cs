@@ -62,7 +62,48 @@ public static class LiveChartsSkiaSharp
             _ = settings.AddDefaultMappers();
 
         if (LiveCharts.RenderingSettings is null)
-            _ = settings.RenderingSettings(renderingSettings ?? RenderingSettings.Default);
+        {
+            var targetRenderSettings = renderingSettings ?? RenderingSettings.Default;
+
+            // the next conditions are used to test the rendering settings across
+            // multiple os/frameworks via cli flags.
+
+#if __GPU_ENABLED__
+        targetRenderSettings.UseGPU = true;
+#endif
+#if __VSYNC_ENABLED__
+        targetRenderSettings.TryUseVSync = true;
+#endif
+#if __FPS_10__
+        targetRenderSettings.LiveChartsRenderLoopFPS = 10;
+#endif
+#if __FPS_20__
+        targetRenderSettings.LiveChartsRenderLoopFPS = 20;
+#endif
+#if __FPS_30__
+        targetRenderSettings.LiveChartsRenderLoopFPS = 30;
+#endif
+#if __FPS_45__
+        targetRenderSettings.LiveChartsRenderLoopFPS = 45;
+#endif
+#if __FPS_60__
+        targetRenderSettings.LiveChartsRenderLoopFPS = 60;
+#endif
+#if __FPS_75__
+        targetRenderSettings.LiveChartsRenderLoopFPS = 75;
+#endif
+#if __FPS_90__
+        targetRenderSettings.LiveChartsRenderLoopFPS = 90;
+#endif
+#if __FPS_120__
+        targetRenderSettings.LiveChartsRenderLoopFPS = 120;
+#endif
+#if __GPU_ENABLED__ || __VSYNC_ENABLED__ || __FPS_10__ || __FPS_20__ || __FPS_30__ || __FPS_45__ || __FPS_60__ || __FPS_75__ || __FPS_90__ || __FPS_120__
+        targetRenderSettings.ShowFPS = true;
+#endif
+
+            _ = settings.RenderingSettings(targetRenderSettings);
+        }
 
         return settings;
     }

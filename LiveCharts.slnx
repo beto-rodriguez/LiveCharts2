@@ -83,6 +83,7 @@
       <BuildType Solution="Ad-Hoc|*" Project="Release" />
       <BuildType Solution="AppStore|*" Project="Release" />
       <Deploy Solution="Debug|Any CPU" />
+      <Deploy Solution="Release|Any CPU" />
     </Project>
   </Folder>
   <Folder Name="/Samples/WinForms/">
@@ -115,6 +116,10 @@
     <File Path=".editorconfig" />
     <File Path="Directory.Build.props" />
     <File Path="global.json" />
+  </Folder>
+  <Folder Name="/Solution Items/RenderingSettings/">
+    <File Path="build/RenderSettings.Build.props" />
+    <File Path="build/RenderSettings.Uno.Build.props" />
   </Folder>
   <Folder Name="/Tests/">
     <Project Path="tests/LiveChartsCore.UnitTesting/LiveChartsCore.UnitTesting.csproj">

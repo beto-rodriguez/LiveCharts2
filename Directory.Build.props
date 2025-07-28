@@ -10,22 +10,6 @@
     <SkiaSharpVersion>2.88.9</SkiaSharpVersion>
     <LatestSkiaSharpVersion>3.119.0</LatestSkiaSharpVersion> <!-- used for views that use the SkiaSharp 3 as default -->
 
-    <UnoFeatures>
-      Material;
-      Dsp;
-      Hosting;
-      Toolkit;
-      Logging;
-      MVUX;
-      Configuration;
-      HttpKiota;
-      Serialization;
-      Localization;
-      Navigation;
-      ThemeService;
-      SkiaRenderer;
-    </UnoFeatures>
-
   </PropertyGroup>
 
   <PropertyGroup Condition="
@@ -40,5 +24,5 @@
     )">
     <DefineConstants>$(DefineConstants);HAS_UI_LVC</DefineConstants>
   </PropertyGroup>
-  
+
 </Project>

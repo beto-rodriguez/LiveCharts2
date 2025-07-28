@@ -40,7 +40,7 @@ internal partial class CPURenderMode : SKXamlCanvas, IRenderMode
         _canvas = canvas;
         PaintSurface += OnPaintSurface;
 
-        CoreMotionCanvas.s_rendererName = nameof(CPURenderMode);
+        CoreMotionCanvas.s_rendererName = $"{nameof(CPURenderMode)} and {nameof(SKXamlCanvas)}"; ;
     }
 
     public void DisposeRenderMode()

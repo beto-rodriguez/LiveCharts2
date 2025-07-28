@@ -1,0 +1,11 @@
+<Project>
+
+  <PropertyGroup Condition="'$(Skia)' == ''">
+    <SkiaRenderer>true</SkiaRenderer>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Skia)' == 'true'">
+    <UnoFeatures>$(UnoFeatures);SkiaRenderer</UnoFeatures>
+  </PropertyGroup>
+
+</Project>

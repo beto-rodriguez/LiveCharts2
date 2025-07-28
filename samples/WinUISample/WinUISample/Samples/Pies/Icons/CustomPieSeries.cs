@@ -1,12 +1,10 @@
 using Microsoft.UI.Xaml;
-using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.WinUI;
-using ViewModelsSamples.Pies.Icons;
 
 namespace WinUISample.Pies.Icons;
 
-public class CustomPieSeries : XamlPieSeries<double, DoughnutGeometry, SvgLabel>
+public partial class CustomPieSeries : XamlPieSeries<double, DoughnutGeometry, SvgLabel>
 {
     public CustomPieSeries()
     {

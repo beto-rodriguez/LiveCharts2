@@ -74,7 +74,7 @@ internal partial class SkiaRenderMode : Grid, IRenderMode
             IsHitTestVisible = true;
 
             _canvas = canvas;
-            CoreMotionCanvas.s_externalRenderer = nameof(SkiaRenderMode);
+            CoreMotionCanvas.s_externalRenderer = $"{nameof(SkiaRenderMode)} via {nameof(SKCanvasElement)}";
         }
 
         private void SkiaRenderMode_PointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e) =>

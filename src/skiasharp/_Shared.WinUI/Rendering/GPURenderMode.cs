@@ -40,7 +40,7 @@ internal partial class GPURenderMode : SKSwapChainPanel, IRenderMode
         _canvas = canvas;
         PaintSurface += OnPaintSurface;
 
-        CoreMotionCanvas.s_rendererName = nameof(CPURenderMode);
+        CoreMotionCanvas.s_rendererName = $"{nameof(GPURenderMode)} and {nameof(SKSwapChainPanel)}";
     }
 
     public void DisposeRenderMode()

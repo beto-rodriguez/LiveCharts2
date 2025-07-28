@@ -42,6 +42,8 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
 
+  <Import Project="./../../../build/RenderSettings.Build.props"/>
+
   <PropertyGroup>
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
   </PropertyGroup>

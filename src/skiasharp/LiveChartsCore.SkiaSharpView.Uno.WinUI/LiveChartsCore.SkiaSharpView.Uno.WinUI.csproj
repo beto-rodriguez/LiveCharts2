@@ -12,10 +12,6 @@
       net9.0;net9.0-android;net9.0-ios;net9.0-browserwasm;net9.0-desktop
     </TargetFrameworks>
 
-    <UnoFeatures>
-      
-    </UnoFeatures>
-
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">
       $(TargetFrameworks);
       net8.0-windows10.0.19041.0;
@@ -48,6 +44,8 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
+
+  <Import Project="./../../../build/RenderSettings.Uno.Build.props"/>
 
   <Import Project="..\..\_Shared.Native\_Shared.Native.projitems" Label="Shared" />
   <Import Project="..\_Shared\_Shared.projitems" Label="Shared" />

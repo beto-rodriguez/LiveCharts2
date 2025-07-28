@@ -42,17 +42,15 @@ public partial class MotionCanvas : Canvas
         // ---------------------------------
         = new()
         {
-            // ignored, defined by uno
+            // both ignored, defined by uno skia renderer
             UseGPU = true,
-
-            // ignored, defined by uno
             TryUseVSync = true,
 
             // fallback value when VSync is not used.
             LiveChartsRenderLoopFPS = 60,
 
             // make this true to see the FPS in the top left corner of the chart
-            ShowFPS = true
+            ShowFPS = false
         };
 #elif WINDOWS
         // ---------------------------------
@@ -79,21 +77,39 @@ public partial class MotionCanvas : Canvas
         // ---------------------------------
         = new()
         {
-            // ignored, defined by uno
+            // use hardware acceleration
             UseGPU = true,
 
-            // ignored, defined by uno
+            // via Choreographer
             TryUseVSync = true,
 
             // fallback value when VSync is not used.
             LiveChartsRenderLoopFPS = 60,
 
             // make this true to see the FPS in the top left corner of the chart
-            ShowFPS = true
+            ShowFPS = false
+        };
+#elif (IOS || MACCATALYST) && !__UNO_SKIA__
+        // ---------------------------------
+        // if ios/catalyst without skia renderer
+        // ---------------------------------
+        = new()
+        {
+            // use hardware acceleration
+            UseGPU = true,
+
+            // via CADisplayLink
+            TryUseVSync = true,
+
+            // fallback value when VSync is not used.
+            LiveChartsRenderLoopFPS = 60,
+
+            // make this true to see the FPS in the top left corner of the chart
+            ShowFPS = false
         };
 #else
         // ---------------------------------
-        // fallback settings
+        // fallback settings, probably only reached on wasm without skia renderer
         // ---------------------------------
         = new()
         {
@@ -107,7 +123,7 @@ public partial class MotionCanvas : Canvas
             LiveChartsRenderLoopFPS = 60,
 
             // make this true to see the FPS in the top left corner of the chart
-            ShowFPS = true
+            ShowFPS = false
         };
 #endif
 

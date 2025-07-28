@@ -115,13 +115,20 @@ public class SkiaSharpDrawingContext(
     {
         using var p = new SKPaint
         {
-            Color = SKColors.Blue,
+            Color = SKColors.White,
             TextSize = 14,
-            IsAntialias = true,
-            FakeBoldText = true
+            IsAntialias = true
+        };
+
+        using var backgroundPaint = new SKPaint
+        {
+            Color = SKColors.Black.WithAlpha(180),
+            Style = SKPaintStyle.Fill
         };
 
         var lines = log.Split('`');
+
+        Canvas.DrawRect(new(10, 0, 400, (p.TextSize + 4f) * lines.Length), backgroundPaint);
 
         for (var i = 0; i < lines.Length; i++)
         {
@@ -129,7 +136,7 @@ public class SkiaSharpDrawingContext(
             if (string.IsNullOrWhiteSpace(line)) continue;
             Canvas.DrawText(
                 line,
-                new SKPoint(50, 10 + p.TextSize * i),
+                new SKPoint(10, 10 + 2 + (p.TextSize + 4f) * i),
                 p);
         }
     }

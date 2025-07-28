@@ -42,7 +42,9 @@ public class CoreMotionCanvas : IDisposable
     private int _jitteredDrawCount;
     private double _totalDrawTime = 0;
     private double _lastDrawTime = 0;
-    private double _totalFrames = 0;
+    private double _lastKnownFPS = 0;
+    private double _averageRenderTime = 0;
+    private double _totalFrames = double.Epsilon;
     private double _totalSeconds = 0;
     internal TimeSpan _nextFrameDelay = s_baseFrameDelay;
     private static readonly double s_ticksPerMillisecond = Stopwatch.Frequency / 1000d;
@@ -191,34 +193,31 @@ public class CoreMotionCanvas : IDisposable
             {
                 MeasureFPS(drawStartTime);
 
-                if (_totalSeconds > 0)
-                {
-                    var sb = new StringBuilder();
+                var sb = new StringBuilder();
 
 #if DEBUG
-                    sb.Append($"[~~ {_totalFrames / _totalSeconds:N2} ~~] FPS (DEBUG)");
+                sb.Append($"[~~ {_lastKnownFPS:N2} ~~] FPS (DEBUG)");
 #else
-                    sb.Append($"[ {_totalFrames / _totalSeconds:N2} ] FPS");
+                sb.Append($"[ {_lastKnownFPS:N2} ] FPS");
 #endif
-                    sb.Append($"`[ {_lastDrawTime:N2}ms / {_totalDrawTime / _totalFrames:N2}ms ] render time last / avrg");
+                sb.Append($"`[ {_lastDrawTime:N2}ms / {_averageRenderTime:N2}ms ] render time last / avrg");
 
-                    if (s_externalRenderer is null)
-                    {
-                        sb.Append($"`[ {(LiveCharts.RenderingSettings.UseGPU ? "GPU" : "CPU")} ] via {s_rendererName}");
-                        var isVSynced = LiveCharts.RenderingSettings.UseGPU && LiveCharts.RenderingSettings.TryUseVSync;
-                        sb.Append($"`[ {(isVSynced ? "VSync" : "VSync disabled")} ] handled by {s_tickerName}");
-                    }
-                    else
-                    {
-                        sb.Append($"`{s_externalRenderer} handling GPU / VSync");
-                    }
-
-                    if (_jitteredDrawCount > 0)
-                        sb.Append(
-                              $"`[ {_jitteredDrawCount} ] jittered draws");
-
-                    context.LogOnCanvas(sb.ToString());
+                if (s_externalRenderer is null)
+                {
+                    sb.Append($"`[ {(LiveCharts.RenderingSettings.UseGPU ? "GPU" : "CPU")} ] via {s_rendererName}");
+                    var isVSynced = LiveCharts.RenderingSettings.UseGPU && LiveCharts.RenderingSettings.TryUseVSync;
+                    sb.Append($"`[ {(isVSynced ? "VSync" : "VSync disabled")} ] handled by {s_tickerName}");
                 }
+                else
+                {
+                    sb.Append($"`{s_externalRenderer} handling GPU / VSync");
+                }
+
+                if (_jitteredDrawCount > 0)
+                    sb.Append(
+                            $"`[ {_jitteredDrawCount} ] jittered draws");
+
+                context.LogOnCanvas(sb.ToString());
             }
 
             IsValid = isValid;
@@ -236,7 +235,6 @@ public class CoreMotionCanvas : IDisposable
                 _frames = 0;
                 _fspSw = null;
                 _totalDrawTime = 0;
-                _lastDrawTime = 0;
                 _totalFrames = 0;
                 _totalSeconds = 0;
             }
@@ -383,6 +381,8 @@ public class CoreMotionCanvas : IDisposable
 
             _totalFrames += logEach;
             _totalSeconds += elapsedSeconds;
+            _lastKnownFPS = _totalFrames / _totalSeconds;
+            _averageRenderTime = _totalDrawTime / _totalFrames;
 
             // it not exactly the last frame time, is the 20th frame time
             // so we can actually read the time in the log.
