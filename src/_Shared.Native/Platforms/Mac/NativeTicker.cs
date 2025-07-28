@@ -45,10 +45,7 @@ internal partial class NativeFrameTicker : IFrameTicker
 
         _canvas.Invalidated += OnCoreInvalidated;
 
-#if DEBUG
-        System.Diagnostics.Trace.WriteLine(
-            "[LiveCharts Info] FrameSync: CADisplayLink (iOS/Catalyst)");
-#endif
+        CoreMotionCanvas.s_tickerName = "CADisplayLink iOS/Catalyst";
     }
 
     private void OnCoreInvalidated(CoreMotionCanvas obj) =>

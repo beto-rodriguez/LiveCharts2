@@ -36,6 +36,7 @@ internal class AsyncLoopTicker : IFrameTicker
         _renderMode = renderMode;
 
         _canvas.Invalidated += OnCoreInvalidated;
+        CoreMotionCanvas.s_tickerName = nameof(AsyncLoopTicker);
 
 #if DEBUG
         System.Diagnostics.Trace.WriteLine(

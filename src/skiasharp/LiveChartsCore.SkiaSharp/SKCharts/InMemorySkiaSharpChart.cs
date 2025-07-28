@@ -93,7 +93,7 @@ public abstract class InMemorySkiaSharpChart(IChartView? chartView = null)
         using var surface = SKSurface.Create(new SKImageInfo(Width, Height));
         using var canvas = surface.Canvas;
 
-        DrawOnCanvas(surface);
+        DrawOnCanvas(canvas);
 
         return surface.Snapshot();
     }
@@ -128,18 +128,18 @@ public abstract class InMemorySkiaSharpChart(IChartView? chartView = null)
     /// <summary>
     /// Draws the image to the specified canvas.
     /// </summary>
-    /// <param name="surface">The surface.</param>
+    /// <param name="canvas">The canvas.</param>
     /// <param name="clearCanvasOnBeginDraw">Indicates whether the canvas should be cleared when the draw starts, default is false.</param>
-    public virtual void SaveImage(SKSurface surface, bool clearCanvasOnBeginDraw = false) =>
-        DrawOnCanvas(surface, clearCanvasOnBeginDraw);
+    public virtual void SaveImage(SKCanvas canvas, bool clearCanvasOnBeginDraw = false) =>
+        DrawOnCanvas(canvas, clearCanvasOnBeginDraw);
 
     /// <summary>
     /// Draws the chart to the specified canvas.
     /// </summary>
-    /// <param name="surface">The surface.</param>
+    /// <param name="canvas">The canvas.</param>
     /// <param name="clearCanvasOnBeginDraw">[probably an obsolete param] Indicates whether the canvas should be cleared when the draw starts, default is false.</param>
     /// <exception cref="Exception"></exception>
-    public virtual void DrawOnCanvas(SKSurface surface, bool clearCanvasOnBeginDraw = false)
+    public virtual void DrawOnCanvas(SKCanvas canvas, bool clearCanvasOnBeginDraw = false)
     {
         if (CoreChart is null || CoreChart is not Chart skiaChart)
             throw new Exception("Something is missing :(");
@@ -150,7 +150,7 @@ public abstract class InMemorySkiaSharpChart(IChartView? chartView = null)
                 new SkiaSharpDrawingContext(
                     CoreCanvas,
                     new SKImageInfo(Width, Height),
-                    surface.Canvas,
+                    canvas,
                     Background,
                     clearCanvasOnBeginDraw));
 
@@ -169,7 +169,7 @@ public abstract class InMemorySkiaSharpChart(IChartView? chartView = null)
             new SkiaSharpDrawingContext(
                 CoreCanvas,
                 new SKImageInfo(Width, Height),
-                surface.Canvas,
+                canvas,
                 Background,
                 clearCanvasOnBeginDraw));
 

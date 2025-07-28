@@ -44,10 +44,7 @@ internal partial class NativeFrameTicker : IFrameTicker
 
         _canvas.Invalidated += OnCoreInvalidated;
 
-#if DEBUG
-        System.Diagnostics.Trace.WriteLine(
-            "[LiveCharts Info] FrameSync: Choreographer (Android)");
-#endif
+        CoreMotionCanvas.s_tickerName = "Choreographer Android";
     }
 
     private void OnCoreInvalidated(CoreMotionCanvas obj) =>

@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if __UNO_SKIA__ || DESKTOP || BROWSERWASM
+#if __UNO_SKIA__ || DESKTOP
 
 using System.Diagnostics;
 using LiveChartsCore.Drawing;
@@ -74,9 +74,7 @@ internal partial class SkiaRenderMode : Grid, IRenderMode
             IsHitTestVisible = true;
 
             _canvas = canvas;
-#if DEBUG
-            Trace.WriteLine($"[LiveCharts Info] LiveCharts is using {nameof(SkiaRenderMode)}.");
-#endif
+            CoreMotionCanvas.s_externalRenderer = nameof(SkiaRenderMode);
         }
 
         private void SkiaRenderMode_PointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e) =>

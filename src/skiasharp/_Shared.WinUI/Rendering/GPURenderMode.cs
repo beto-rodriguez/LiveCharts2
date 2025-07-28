@@ -40,9 +40,7 @@ internal partial class GPURenderMode : SKSwapChainPanel, IRenderMode
         _canvas = canvas;
         PaintSurface += OnPaintSurface;
 
-#if DEBUG
-        System.Diagnostics.Trace.WriteLine($"[LiveCharts Info] LiveCharts is using {nameof(GPURenderMode)}.");
-#endif
+        CoreMotionCanvas.s_rendererName = nameof(CPURenderMode);
     }
 
     public void DisposeRenderMode()

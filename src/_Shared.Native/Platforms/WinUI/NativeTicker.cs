@@ -42,13 +42,7 @@ internal partial class NativeFrameTicker : IFrameTicker
         _canvas.Invalidated += OnCoreInvalidated;
         CompositionTarget.Rendering += OnCompositonTargetRendering;
 
-#if DEBUG
-#if __UNO_SKIA__ || DESKTOP || BROWSERWASM
-        CoreMotionCanvas.s_externalRenderer = "Uno SkiaRenderer via CompositionTarget.Rendering";
-#endif
-        System.Diagnostics.Trace.WriteLine(
-            "[LiveCharts Info] FrameSync: CompositionTarget.Rendering");
-#endif
+        CoreMotionCanvas.s_tickerName = "CompositionTarget.Rendering WinUI";
     }
 
     private void OnCoreInvalidated(CoreMotionCanvas obj) =>

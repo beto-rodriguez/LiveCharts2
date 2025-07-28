@@ -36,7 +36,7 @@ public partial class MotionCanvas : Canvas
     /// Gets the recommended rendering settings for Uno and WinUI.
     /// </summary>
     public static RenderingSettings RecommendedUnoRenderingSettings { get; }
-#if (__UNO_SKIA__ || DESKTOP) && !BROWSERWASM
+#if __UNO_SKIA__ || DESKTOP
         // ---------------------------------
         // if skia renderer
         // ---------------------------------
@@ -52,34 +52,7 @@ public partial class MotionCanvas : Canvas
             LiveChartsRenderLoopFPS = 60,
 
             // make this true to see the FPS in the top left corner of the chart
-            ShowFPS = false
-        };
-#elif BROWSERWASM
-        // note #250727
-        // ---------------------------------
-        // for a reason the browser wasm using the skia renderer
-        // just throws, at least on uno sdk 6.1.23 and skiasharp view 3.119.0
-        // it seems that _visual field is missing in wasm builds, which is used by the
-        // Uno.WinUI.Graphics2DSK.SKCanvasElement.
-        // so for wasm, lets render the charts our way.
-        // Unhandled dispatcher exception: Error: Field not found: Microsoft.UI.Composition.ContainerVisual Microsoft.UI.Xaml.UIElement._visual Due to: Could not find field in class (   at LiveChartsCore.SkiaSharpView.WinUI.Rendering.SkiaRenderMode.SkiaRenderMode2.InvalidateRenderer() in /_/src/skiasharp/_Shared.WinUI/Rendering/SkiaRenderMode.cs:line 89
-        // at LiveChartsCore.SkiaSharpView.WinUI.Rendering.SkiaRenderMode.InvalidateRenderer() in /_/src/skiasharp/_Shared.WinUI/Rendering/SkiaRenderMode.cs:line 62
-        // at LiveChartsCore.Native.NativeFrameTicker.OnCompositonTargetRendering(Object sender, Object e) in /_/src/_Shared.Native/Platforms/WinUI/NativeTicker.cs:line 60
-        // at Uno.UI.Dispatching.NativeDispatcher.DispatchItems() in C:\a\1\s\src\Uno.UI.Dispatching\Native\NativeDispatcher.cs:line 106
-        // at Uno.UI.Dispatching.NativeDispatcher.DispatcherCallback() in C:\a\1\s\src\Uno.UI.Dispatching\Native\NativeDispatcher.wasm.cs:line 25
-        // at Uno.UI.Dispatching.NativeDispatcher.__Wrapper_DispatcherCallback_1192908908(JSMarshalerArgument* __arguments_buffer) in C:\a\1\s\src\Uno.UI.Dispatching\obj\Uno.UI.Dispatching.Wasm\Release\net9.0\Microsoft.Interop.JavaScript.JSImportGenerator\Microsoft.Interop.JavaScript.JSExportGenerator\JSExports.g.cs:line 35
-        // Error: Field not found: Microsoft.UI.Composition.ContainerVisual Microsoft.UI.Xaml.UIElement._visual Due to: Could not find field in class
-        // ---------------------------------
-        = new()
-        {
-            // try use gl
-            UseGPU = true,
-            // connect to the browser's requestAnimationFrame via uno?
-            TryUseVSync = true,
-            // fallback value when VSync is not used.
-            LiveChartsRenderLoopFPS = 20,
-            // make this true to see the FPS in the top left corner of the chart
-            ShowFPS = false
+            ShowFPS = true
         };
 #elif WINDOWS
         // ---------------------------------
@@ -116,11 +89,31 @@ public partial class MotionCanvas : Canvas
             LiveChartsRenderLoopFPS = 60,
 
             // make this true to see the FPS in the top left corner of the chart
-            ShowFPS = false
+            ShowFPS = true
+        };
+#else
+        // ---------------------------------
+        // fallback settings
+        // ---------------------------------
+        = new()
+        {
+            // ignored, defined by uno
+            UseGPU = false,
+
+            // ignored, defined by uno
+            TryUseVSync = false,
+
+            // fallback value when VSync is not used.
+            LiveChartsRenderLoopFPS = 60,
+
+            // make this true to see the FPS in the top left corner of the chart
+            ShowFPS = true
         };
 #endif
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     static MotionCanvas()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     {
         LiveCharts.Configure(config => config.UseDefaults(RecommendedUnoRenderingSettings));
     }

@@ -50,6 +50,8 @@ public class CoreMotionCanvas : IDisposable
     private static readonly long s_jitterThreshold = s_baseFrameDelay.Ticks / 2;
     internal LvcColor _virtualBackgroundColor;
     internal static string? s_externalRenderer;
+    internal static string? s_rendererName;
+    internal static string? s_tickerName;
 
     static CoreMotionCanvas()
     {
@@ -194,15 +196,22 @@ public class CoreMotionCanvas : IDisposable
                     var sb = new StringBuilder();
 
 #if DEBUG
-                    sb.Append($"[~~ {_totalFrames / _totalSeconds:N2} ~~] FPS (DEBUG DECRESED PERFORMANCE)");
+                    sb.Append($"[~~ {_totalFrames / _totalSeconds:N2} ~~] FPS (DEBUG)");
 #else
                     sb.Append($"[ {_totalFrames / _totalSeconds:N2} ] FPS");
 #endif
                     sb.Append($"`[ {_lastDrawTime:N2}ms / {_totalDrawTime / _totalFrames:N2}ms ] render time last / avrg");
 
-                    sb.Append(s_externalRenderer is null
-                            ? $"`[ {LiveCharts.RenderingSettings.UseGPU} / {LiveCharts.RenderingSettings.UseGPU && LiveCharts.RenderingSettings.TryUseVSync} ] GPU / VSync"
-                            : $"`[ {s_externalRenderer} ] handling GPU / VSync by");
+                    if (s_externalRenderer is null)
+                    {
+                        sb.Append($"`[ {(LiveCharts.RenderingSettings.UseGPU ? "GPU" : "CPU")} ] via {s_rendererName}");
+                        var isVSynced = LiveCharts.RenderingSettings.UseGPU && LiveCharts.RenderingSettings.TryUseVSync;
+                        sb.Append($"`[ {(isVSynced ? "VSync" : "VSync disabled")} ] handled by {s_tickerName}");
+                    }
+                    else
+                    {
+                        sb.Append($"`{s_externalRenderer} handling GPU / VSync");
+                    }
 
                     if (_jitteredDrawCount > 0)
                         sb.Append(
