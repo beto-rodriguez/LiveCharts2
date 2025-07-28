@@ -9,12 +9,17 @@
 
     <TargetFrameworks>
       net8.0;net8.0-android;net8.0-ios;net8.0-maccatalyst;
-      net9.0-desktop;net9.0-browserwasm;
+      net9.0;net9.0-android;net9.0-ios;net9.0-browserwasm;net9.0-desktop
     </TargetFrameworks>
+
+    <UnoFeatures>
+      
+    </UnoFeatures>
 
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">
       $(TargetFrameworks);
-      net8.0-windows10.0.19041.0
+      net8.0-windows10.0.19041.0;
+      net9.0-windows10.0.26100.0;
     </TargetFrameworks>
 
     <EnableMsixTooling Condition="$([MSBuild]::IsOSPlatform('windows'))">true</EnableMsixTooling>
