@@ -7,9 +7,21 @@
     <GlobalLangVersion>preview</GlobalLangVersion>
 
     <MauiVersion>8.0.82</MauiVersion>
-    <SkiaSharpVersion>2.88.9</SkiaSharpVersion>
+    <MinSkiaSharpVersion>2.88.9</MinSkiaSharpVersion>
     <LatestSkiaSharpVersion>3.119.0</LatestSkiaSharpVersion> <!-- used for views that use the SkiaSharp 3 as default -->
 
+  </PropertyGroup>
+
+  <!--
+  used to test the library on multiple render modes,
+  the IsPacking check ensures that this config is not used in the NuGet packages.
+  -->
+  <PropertyGroup Condition="'$(IsPacking)' != 'true'">
+    <GPU>true</GPU>
+    <VSYNC>true</VSYNC>
+    <FPS>30</FPS>
+    <Diagnose>true</Diagnose>
+    <UsesUnoSkiaRenderer>true</UsesUnoSkiaRenderer>
   </PropertyGroup>
 
   <PropertyGroup Condition="

@@ -55,12 +55,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-    <PackageReference Include="SkiaSharp" Version="$(SkiaSharpVersion)" />
-    <PackageReference Include="SkiaSharp.HarfBuzz" Version="$(SkiaSharpVersion)" />
+    <PackageReference Include="SkiaSharp" Version="$(MinSkiaSharpVersion)" />
+    <PackageReference Include="SkiaSharp.HarfBuzz" Version="$(MinSkiaSharpVersion)" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\generators\LiveChartsGenerators\LiveChartsGenerators.csproj"  OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\..\LiveChartsCore\LiveChartsCore.csproj" />
   </ItemGroup>
 

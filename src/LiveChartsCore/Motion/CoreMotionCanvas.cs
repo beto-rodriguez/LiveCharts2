@@ -204,13 +204,14 @@ public class CoreMotionCanvas : IDisposable
 
                 if (s_externalRenderer is null)
                 {
-                    sb.Append($"`[ {(LiveCharts.RenderingSettings.UseGPU ? "GPU" : "CPU")} ] via {s_rendererName}");
+                    sb.Append($"`{s_rendererName}");
                     var isVSynced = LiveCharts.RenderingSettings.UseGPU && LiveCharts.RenderingSettings.TryUseVSync;
                     sb.Append($"`[ {(isVSynced ? "VSync" : "VSync disabled")} ] handled by {s_tickerName}");
                 }
                 else
                 {
-                    sb.Append($"`{s_externalRenderer} handling GPU / VSync");
+                    sb.Append($"`{s_externalRenderer}");
+                    sb.Append($"`{s_tickerName}");
                 }
 
                 if (_jitteredDrawCount > 0)

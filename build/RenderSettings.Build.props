@@ -1,11 +1,21 @@
 <Project>
-
+  
   <PropertyGroup Condition="'$(GPU)' == 'true'">
-    <DefineConstants>$(DefineConstants);__GPU_ENABLED__</DefineConstants>
+    <DefineConstants>$(DefineConstants);__GPU_TRUE__</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(GPU)' == 'false'">
+    <DefineConstants>$(DefineConstants);__GPU_FALSE__</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(VSYNC)' == 'true'">
-    <DefineConstants>$(DefineConstants);__VSYNC_ENABLED__</DefineConstants>
+    <DefineConstants>$(DefineConstants);__VSYNC_TRUE__</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(VSYNC)' == 'false'">
+    <DefineConstants>$(DefineConstants);__VSYNC_FALSE__</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Diagnose)' == 'true'">
+    <DefineConstants>$(DefineConstants);__DIAGNOSE__</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(FPS)' == '10'">

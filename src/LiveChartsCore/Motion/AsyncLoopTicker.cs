@@ -37,11 +37,6 @@ internal class AsyncLoopTicker : IFrameTicker
 
         _canvas.Invalidated += OnCoreInvalidated;
         CoreMotionCanvas.s_tickerName = nameof(AsyncLoopTicker);
-
-#if DEBUG
-        System.Diagnostics.Trace.WriteLine(
-            "[LiveCharts Info] FrameSync: LiveCharts internal loop (no platform ticker)");
-#endif
     }
 
     private void OnCoreInvalidated(CoreMotionCanvas obj) =>

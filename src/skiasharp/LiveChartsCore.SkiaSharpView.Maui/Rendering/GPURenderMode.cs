@@ -46,9 +46,7 @@ internal class GPURenderMode : SKGLView, IRenderMode
         _pixelDensity = (float)DeviceDisplay.MainDisplayInfo.Density;
         DeviceDisplay.MainDisplayInfoChanged += MainDisplayInfoChanged;
 
-#if DEBUG
-        System.Diagnostics.Trace.WriteLine($"[LiveCharts Info] LiveCharts is using {nameof(GPURenderMode)}.");
-#endif
+        CoreMotionCanvas.s_rendererName = $"{nameof(GPURenderMode)} and {nameof(SKGLView)}";
     }
 
     public void DisposeRenderMode()

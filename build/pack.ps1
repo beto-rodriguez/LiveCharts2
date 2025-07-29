@@ -47,7 +47,7 @@ foreach ($p in $projects) {
         Remove-Item $($folder + "/bin") -Force -Recurse
     }
 
-    $expression = "dotnet pack $($p.src) -o $nupkgOutputPath -c $configuration -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg"
+    $expression = "dotnet pack $($p.src) -o $nupkgOutputPath -c $configuration -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg -p:IsPacking=true"
 
     Write-Progress -Activity "$name" -Status "Packing..."
     $result = Invoke-Expression $expression

@@ -42,9 +42,7 @@ internal class CPURenderMode : SKElement, IRenderMode
         _canvas = canvas;
         PaintSurface += OnPaintSurface;
 
-#if DEBUG
-        System.Diagnostics.Trace.WriteLine($"[LiveCharts Info] LiveCharts is using {nameof(CPURenderMode)}.");
-#endif
+        CoreMotionCanvas.s_rendererName = $"{nameof(CPURenderMode)} and {nameof(SKElement)}";
     }
 
     public void DisposeRenderMode()

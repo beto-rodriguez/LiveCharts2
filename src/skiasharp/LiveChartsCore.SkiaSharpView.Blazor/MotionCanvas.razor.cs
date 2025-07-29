@@ -194,8 +194,11 @@ public partial class MotionCanvas : IDisposable, IRenderMode
         DomJsInterop jsInterop, DotNetObjectReference<MotionCanvas> dotnetRef)
             : IFrameTicker
     {
-        public async void InitializeTicker(CoreMotionCanvas canvas, IRenderMode renderMode) =>
-           await jsInterop.StartFrameTicker(dotnetRef);
+        public async void InitializeTicker(CoreMotionCanvas canvas, IRenderMode renderMode)
+        {
+            await jsInterop.StartFrameTicker(dotnetRef);
+            CoreMotionCanvas.s_tickerName = $"{nameof(RequestAnimationFrameTicker)}";
+        }
 
         public async void DisposeTicker() =>
             await jsInterop.StopFrameTicker(dotnetRef);

@@ -46,9 +46,7 @@ internal class CPURenderMode : SKCanvasView, IRenderMode
         _pixelDensity = (float)DeviceDisplay.MainDisplayInfo.Density;
         DeviceDisplay.MainDisplayInfoChanged += MainDisplayInfoChanged;
 
-#if DEBUG
-        System.Diagnostics.Trace.WriteLine($"[LiveCharts Info] LiveCharts is using {nameof(CPURenderMode)}.");
-#endif
+        CoreMotionCanvas.s_rendererName = $"{nameof(CPURenderMode)} and {nameof(SKCanvasView)}";
     }
 
     public void DisposeRenderMode()

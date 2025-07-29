@@ -37,8 +37,16 @@
             ThemeService;
         </UnoFeatures>
 
+        <!--
+          TO ENABLE SKIARENDERER, USE THE DIRECTORY.BUILD.PROPERTIES IN THE
+          ROOT OF THE REPO.
+        -->
+
     </PropertyGroup>
 
+    <Import Project="./../Directory.Build.props"/>
+    <Import Project="./../../../Directory.Build.props"/>
+    <Import Project="./../../../build/RenderSettings.Build.props"/>
     <Import Project="./../../../build/RenderSettings.Uno.Build.props"/>
 
     <ItemGroup>

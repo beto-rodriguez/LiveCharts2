@@ -42,9 +42,7 @@ internal class GPURenderMode : SKGLElement, IRenderMode
         _canvas = canvas;
         PaintSurface += OnPaintSurface;
 
-#if DEBUG
-        System.Diagnostics.Trace.WriteLine($"[LiveCharts Info] LiveCharts is using {nameof(GPURenderMode)}.");
-#endif
+        CoreMotionCanvas.s_rendererName = $"{nameof(GPURenderMode)} and {nameof(SKGLElement)}";
     }
 
     public void DisposeRenderMode()

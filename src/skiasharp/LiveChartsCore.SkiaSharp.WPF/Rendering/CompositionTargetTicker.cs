@@ -38,6 +38,8 @@ internal class CompositionTargetTicker : IFrameTicker
 
         _canvas.Invalidated += OnCoreInvalidated;
         CompositionTarget.Rendering += OnCompositonTargetRendering;
+
+        CoreMotionCanvas.s_tickerName = $"{nameof(CompositionTarget)}";
     }
 
     private void OnCoreInvalidated(CoreMotionCanvas obj) =>
