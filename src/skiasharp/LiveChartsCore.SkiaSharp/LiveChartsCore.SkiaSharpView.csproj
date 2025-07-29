@@ -65,6 +65,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="LiveChartsGenerators" Version="1.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="images\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
