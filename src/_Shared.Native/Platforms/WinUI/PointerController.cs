@@ -24,12 +24,16 @@
 
 // reachable on winui, maui winui, uno winui and uno with skia renderer
 
+using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 namespace LiveChartsCore.Native;
 
 internal partial class PointerController : INativePointerController
 {
+    private bool _isPinching;
+    private DateTime _pressedTime;
+
     public void InitializeController(object view)
     {
         var winUIView = (UIElement)view;
@@ -39,6 +43,11 @@ internal partial class PointerController : INativePointerController
         winUIView.PointerReleased += OnWindowsPointerReleased;
         winUIView.PointerWheelChanged += OnWindowsPointerWheelChanged;
         winUIView.PointerExited += OnWindowsPointerExited;
+
+        winUIView.ManipulationMode = ManipulationModes.Scale;
+        winUIView.ManipulationStarted += OnPinchSarted;
+        winUIView.ManipulationDelta += OnPinching;
+        winUIView.ManipulationCompleted += OnPinchCompleted;
     }
 
     public void DisposeController(object view)
@@ -50,6 +59,10 @@ internal partial class PointerController : INativePointerController
         winUIView.PointerReleased -= OnWindowsPointerReleased;
         winUIView.PointerWheelChanged -= OnWindowsPointerWheelChanged;
         winUIView.PointerExited -= OnWindowsPointerExited;
+
+        winUIView.ManipulationStarted -= OnPinchSarted;
+        winUIView.ManipulationDelta -= OnPinching;
+        winUIView.ManipulationCompleted -= OnPinchCompleted;
     }
 
     private void OnWindowsPointerPressed(object sender, PointerRoutedEventArgs e)
@@ -59,15 +72,22 @@ internal partial class PointerController : INativePointerController
         var p = e.GetCurrentPoint(element);
         if (p is null) return;
 
+#if DESKTOP
         _ = element.CapturePointer(e.Pointer);
+#endif
 
         Pressed?.Invoke(
             sender,
             new(new(p.Position.X, p.Position.Y), p.Properties.IsRightButtonPressed, e));
+
+        _pressedTime = DateTime.Now;
     }
 
     private void OnWindowsPointerMoved(object sender, PointerRoutedEventArgs e)
     {
+        // wait 100ms to ensure it is not a pinch gesture.
+        if (_isPinching || ((DateTime.Now - _pressedTime).TotalMilliseconds < 100)) return;
+
         var p = e.GetCurrentPoint(sender as UIElement);
         if (p is null) return;
 
@@ -83,7 +103,9 @@ internal partial class PointerController : INativePointerController
         var p = e.GetCurrentPoint(element);
         if (p is null) return;
 
+#if DESKTOP
         element.ReleasePointerCapture(element.PointerCaptures[0]);
+#endif
 
         Released?.Invoke(
             sender,
@@ -99,7 +121,18 @@ internal partial class PointerController : INativePointerController
     private void OnWindowsPointerExited(object sender, PointerRoutedEventArgs e) =>
         Exited?.Invoke(sender, new(e));
 
+    private void OnPinchSarted(object sender, ManipulationStartedRoutedEventArgs e) =>
+        _isPinching = true;
 
+    private void OnPinching(object sender, ManipulationDeltaRoutedEventArgs e)
+    {
+        var element = (UIElement)sender;
+
+        Pinched?.Invoke(sender, new(e.Delta.Scale, new(e.Position.X, e.Position.Y), e));
+    }
+
+    private void OnPinchCompleted(object sender, ManipulationCompletedRoutedEventArgs e) =>
+        _isPinching = false;
 }
 
 #endif

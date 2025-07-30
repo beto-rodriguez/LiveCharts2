@@ -47,8 +47,14 @@ public sealed partial class CartesianChart : ChartControl, ICartesianChartView
     {
         var c = (CartesianChartEngine)CoreChart;
         var p = args.PinchStart;
-        var s = c.ControlSize;
-        var pivot = new LvcPoint((float)(p.X * s.Width), (float)(p.Y * s.Height));
+        var pivot = new LvcPoint(p.X, p.Y);
         c.Zoom(pivot, ZoomDirection.DefinedByScaleFactor, args.Scale, true);
+
+        // hack:
+        // when the pinch started, the isPanning property is set to true,
+        // when the pinch is completed, the pointerUp will be called,
+        // and within that method panning will occur, lets prevent that
+        // by setting isPanning to false here.
+        c._isPanning = false;
     }
 }

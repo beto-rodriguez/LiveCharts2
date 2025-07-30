@@ -57,7 +57,7 @@ public abstract class Chart
     private readonly ActionThrottler _panningThrottler;
     private LvcPoint _pointerPanningPosition = new(-10, -10);
     private LvcPoint _pointerPreviousPanningPosition = new(-10, -10);
-    private bool _isPanning = false;
+    internal bool _isPanning = false;
     private readonly HashSet<ChartPoint> _activePoints = [];
     private LvcSize _previousSize = new();
     private int _nextSeriesId = 0;
