@@ -54,7 +54,13 @@
   <ItemGroup>
     <ProjectReference Include="..\..\LiveChartsCore\LiveChartsCore.csproj" />
     <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
-    <ProjectReference Include="..\..\..\generators\LiveChartsGenerators\LiveChartsGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LiveChartsGenerators" Version="1.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.SkiaSharpView.Blazor.JsInterop;
 using LiveChartsCore.SkiaSharpView.Blazor.JsInterop.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -82,6 +83,8 @@ public partial class JsFlexibleContainer : IDisposable
     /// <returns></returns>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (!firstRender) return;
+
         _dom ??= new DomJsInterop(JS);
 
         var wrapperBounds = await _dom.GetBoundingClientRect(Container);

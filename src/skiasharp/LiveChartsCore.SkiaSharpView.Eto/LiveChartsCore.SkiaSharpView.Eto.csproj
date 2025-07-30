@@ -47,7 +47,13 @@
   <ItemGroup>
     <PackageReference Include="Eto.SkiaDraw" Version="0.2.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-    <ProjectReference Include="..\..\..\generators\LiveChartsGenerators\LiveChartsGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LiveChartsGenerators" Version="1.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>

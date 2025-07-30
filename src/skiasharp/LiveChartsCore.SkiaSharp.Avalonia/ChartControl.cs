@@ -53,8 +53,6 @@ public abstract partial class ChartControl : UserControl, IChartView, ICustomHit
     /// </summary>
     protected ChartControl()
     {
-        LiveCharts.Configure(config => config.UseDefaults());
-
         Content = new MotionCanvas();
 
         AttachedToVisualTree += OnAttachedToVisualTree;

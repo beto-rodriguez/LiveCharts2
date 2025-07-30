@@ -42,19 +42,13 @@ public class GeoMap : Panel, IGeoMapView
     private readonly MotionCanvas _motionCanvas = new();
     private readonly GeoMapChart _core;
     private CollectionDeepObserver _seriesObserver;
-    private IEnumerable<IGeoSeries> _series = [];
     private DrawnMap _activeMap;
-    private MapProjection _mapProjection = MapProjection.Default;
-    private Paint? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { PaintStyle = PaintStyle.Stroke };
-    private Paint? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { PaintStyle = PaintStyle.Fill };
-    private object? _viewCommand = null;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GeoMap"/> class.
     /// </summary>
     public GeoMap()
     {
-        LiveCharts.Configure(config => config.UseDefaults());
         _activeMap = Maps.GetWorldMap();
 
         _core = new GeoMapChart(this);
@@ -90,13 +84,13 @@ public class GeoMap : Panel, IGeoMapView
     /// <inheritdoc cref="IGeoMapView.ViewCommand" />
     public object? ViewCommand
     {
-        get => _viewCommand;
+        get;
         set
         {
-            _viewCommand = value;
+            field = value;
             if (value is not null) _core.ViewTo(value);
         }
-    }
+    } = null;
     /// <inheritdoc cref="IGeoMapView.ActiveMap"/>
     public DrawnMap ActiveMap { get => _activeMap; set { _activeMap = value; OnPropertyChanged(); } }
 
@@ -107,43 +101,43 @@ public class GeoMap : Panel, IGeoMapView
     float IGeoMapView.Height => ClientSize.Height;
 
     /// <inheritdoc cref="IGeoMapView.MapProjection"/>
-    public MapProjection MapProjection { get => _mapProjection; set { _mapProjection = value; OnPropertyChanged(); } }
+    public MapProjection MapProjection { get; set { field = value; OnPropertyChanged(); } } = MapProjection.Default;
 
     /// <inheritdoc cref="IGeoMapView.Stroke"/>
     public Paint? Stroke
     {
-        get => _stroke;
+        get;
         set
         {
             if (value is not null) value.PaintStyle = PaintStyle.Stroke;
-            _stroke = value;
+            field = value;
             OnPropertyChanged();
         }
-    }
+    } = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { PaintStyle = PaintStyle.Stroke };
 
     /// <inheritdoc cref="IGeoMapView.Fill"/>
     public Paint? Fill
     {
-        get => _fill;
+        get;
         set
         {
             if (value is not null) value.PaintStyle = PaintStyle.Fill;
-            _fill = value;
+            field = value;
             OnPropertyChanged();
         }
-    }
+    } = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { PaintStyle = PaintStyle.Fill };
 
     /// <inheritdoc cref="IGeoMapView.Series"/>
     public IEnumerable<IGeoSeries> Series
     {
-        get => _series;
+        get;
         set
         {
             _seriesObserver.Dispose();
-            _series = value;
+            field = value;
             OnPropertyChanged();
         }
-    }
+    } = [];
 
     void IGeoMapView.InvokeOnUIThread(Action action) =>
         Application.Instance.InvokeAsync(action).Wait();

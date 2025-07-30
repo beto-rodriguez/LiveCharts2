@@ -1137,6 +1137,12 @@ public class CartesianChartEngine(
         }
     }
 
+    internal void ClearPointerDown()
+    {
+        _isPanning = false;
+        _sectionZoomingStart = null;
+    }
+
     internal void SubscribeSharedEvents(HashSet<CartesianChartEngine> instance)
     {
         // An experimental feature, it allows a chart to propagate some events to other charts,

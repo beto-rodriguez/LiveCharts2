@@ -44,8 +44,6 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView
     /// </summary>
     public SKGeoMap()
     {
-        LiveCharts.Configure(config => config.UseDefaults());
-
         _core = new GeoMapChart(this);
         ActiveMap = Maps.GetWorldMap();
     }
@@ -120,8 +118,8 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView
         }
     }
 
-    /// <inheritdoc cref="InMemorySkiaSharpChart.DrawOnCanvas(SKCanvas, SKSurface?, bool)"/>
-    public override void DrawOnCanvas(SKCanvas canvas, SKSurface? surface, bool clearCanvasOnBeginDraw = false)
+    /// <inheritdoc cref="InMemorySkiaSharpChart.DrawOnCanvas(SKCanvas, bool)"/>
+    public override void DrawOnCanvas(SKCanvas canvas, bool clearCanvasOnBeginDraw = false)
     {
         Canvas.DisableAnimations = true;
 
@@ -131,7 +129,6 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView
             new SkiaSharpDrawingContext(
                 Canvas,
                 new SKImageInfo(Width, Height),
-                surface!,
                 canvas,
                 Background,
                 clearCanvasOnBeginDraw));

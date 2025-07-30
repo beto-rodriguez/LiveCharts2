@@ -30,6 +30,7 @@ using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
 using Avalonia.Threading;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
@@ -44,10 +45,35 @@ public class MotionCanvas : UserControl
     private bool _isDeatached = false;
 
     /// <summary>
+    /// Gets the recommended rendering settings for Avalonia.
+    /// </summary>
+    public static RenderingSettings RecommendedAvaloniaRenderingSettings { get; }
+        = new()
+        {
+            // Ignored, handled by Avalonia
+            UseGPU = true,
+
+            // Ignored, handled by Avalonia
+            TryUseVSync = true,
+
+            // Ignored, handled by Avalonia
+            LiveChartsRenderLoopFPS = 60,
+
+            // make this true to see the FPS in the top left corner of the chart
+            ShowFPS = false
+        };
+
+    static MotionCanvas()
+    {
+        LiveCharts.Configure(config => config.UseDefaults(RecommendedAvaloniaRenderingSettings));
+    }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
     /// </summary>
     public MotionCanvas()
     {
+        CoreMotionCanvas.s_externalRenderer = "Avalonia renderer";
         AttachedToVisualTree += OnAttached;
         DetachedFromVisualTree += OnDetached;
     }
@@ -71,7 +97,7 @@ public class MotionCanvas : UserControl
         if (_isDeatached) return;
 
         context.Custom(new ChartFrameOperation(
-            CanvasCore, new Rect(0, 0, Bounds.Width, Bounds.Height)));
+            CanvasCore, new Rect(0, 0, Bounds.Width, Bounds.Height), GetBackground().AsSKColor()));
 
         if (CanvasCore.IsValid) return;
         _ = Dispatcher.UIThread.InvokeAsync(InvalidateVisual, DispatcherPriority.Background);
@@ -97,7 +123,8 @@ public class MotionCanvas : UserControl
     // https://github.com/AvaloniaUI/Avalonia/blob/release/11.0.0/samples/RenderDemo/Pages/CustomSkiaPage.cs
     private class ChartFrameOperation(
         CoreMotionCanvas motionCanvas,
-        Rect bounds)
+        Rect bounds,
+        SKColor background)
             : ICustomDrawOperation
     {
         public Rect Bounds { get; } = bounds;
@@ -108,12 +135,13 @@ public class MotionCanvas : UserControl
                 throw new Exception("SkiaSharp is not supported.");
 
             using var lease = leaseFeature.Lease();
+            if (lease.SkSurface is null) return;
 
             motionCanvas.DrawFrame(
                 new SkiaSharpDrawingContext(motionCanvas,
                     new SKImageInfo((int)Bounds.Width, (int)Bounds.Height),
-                    lease.SkSurface,
                     lease.SkCanvas,
+                    background,
                     false));
         }
 
@@ -122,5 +150,16 @@ public class MotionCanvas : UserControl
         public bool HitTest(Point p) => false;
 
         public bool Equals(ICustomDrawOperation? other) => false;
+    }
+
+    private LiveChartsCore.Drawing.LvcColor GetBackground()
+    {
+        var parentBg = Parent is UserControl control && control.Background is SolidColorBrush bg
+            ? new LiveChartsCore.Drawing.LvcColor(bg.Color.R, bg.Color.G, bg.Color.B, bg.Color.A)
+            : LiveChartsCore.Drawing.LvcColor.Empty;
+
+        return parentBg != LiveChartsCore.Drawing.LvcColor.Empty
+            ? parentBg
+            : CanvasCore._virtualBackgroundColor;
     }
 }

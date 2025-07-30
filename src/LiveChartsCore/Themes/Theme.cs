@@ -38,7 +38,6 @@ public class Theme
     private readonly object _darkId = new();
     private bool _initialized = false;
     private bool _lastKnownDarkMode = false;
-    private bool _isUIDark;
     internal LvcThemeKind _themeRequest = LvcThemeKind.Unknown;
 
     /// <summary>
@@ -50,10 +49,13 @@ public class Theme
     /// Gets a value indicating whether the theme is dark.
     /// When the <see cref="RequestedTheme"/> is Unknown, the theme is determined by the system settings.
     /// </summary>
-    public bool IsDark =>
-        RequestedTheme == LvcThemeKind.Unknown
-            ? _isUIDark
+    public bool IsDark
+    {
+        get => RequestedTheme == LvcThemeKind.Unknown
+            ? field
             : RequestedTheme == LvcThemeKind.Dark;
+        private set;
+    }
 
     /// <summary>
     /// Gets or sets the theme request.
@@ -64,6 +66,13 @@ public class Theme
     /// Gets or sets the theme colors.
     /// </summary>
     public LvcColor[] Colors { get; set; } = [];
+
+    /// <summary>
+    /// Gets or sets the virtual background color,
+    /// it means the color to use to clear the canvas before drawing,
+    /// if the control has a background color set, this property will be ignored.
+    /// </summary>
+    public LvcColor VirtualBackroundColor { get; set; } = new(255, 255, 255);
 
     /// <summary>
     /// Gets or sets the default easing function.
@@ -330,7 +339,7 @@ public class Theme
 
     internal void Setup(bool isUIDark)
     {
-        _isUIDark = isUIDark;
+        IsDark = isUIDark;
         if (!_initialized || _lastKnownDarkMode != IsDark)
         {
             _lastKnownDarkMode = IsDark;

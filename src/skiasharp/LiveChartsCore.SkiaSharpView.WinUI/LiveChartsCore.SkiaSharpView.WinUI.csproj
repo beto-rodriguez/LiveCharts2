@@ -33,6 +33,7 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
 
+  <Import Project="..\..\_Shared.Native\_Shared.Native.projitems" Label="Shared" />
   <Import Project="..\_Shared\_Shared.projitems" Label="Shared" />
   <Import Project="..\_Shared.WinUI\_Shared.WinUI.projitems" Label="Shared" />
   <Import Project="..\_Shared.Xaml\_Shared.Xaml.projitems" Label="Shared" />
@@ -59,15 +60,20 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.230913002" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.1" />
-    <PackageReference Include="SkiaSharp.Views.WinUI" Version="$(SkiaSharpVersion)" />
-    <PackageReference Include="SkiaSharp.HarfBuzz" Version="$(SkiaSharpVersion)" />
+    <PackageReference Include="SkiaSharp.Views.WinUI" Version="$(LatestSkiaSharpVersion)" />
+    <PackageReference Include="SkiaSharp.HarfBuzz" Version="$(LatestSkiaSharpVersion)" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\LiveChartsCore\LiveChartsCore.csproj" />
-    <ProjectReference Include="..\..\LiveChartsCore.Behaviours\LiveChartsCore.Behaviours.csproj" />
     <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
-    <ProjectReference Include="..\..\..\generators\LiveChartsGenerators\LiveChartsGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LiveChartsGenerators" Version="1.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

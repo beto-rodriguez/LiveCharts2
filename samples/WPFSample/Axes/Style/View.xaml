@@ -5,7 +5,7 @@
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
     xmlns:vms="clr-namespace:ViewModelsSamples.Axes.Style;assembly=ViewModelsSamples"
-    Background="#303030">
+    >
 
     <UserControl.DataContext>
         <vms:ViewModel/>
@@ -19,6 +19,7 @@
     </UserControl.Resources>
 
     <lvc:CartesianChart
+        Background="#303030"
         Margin="20"
         DrawMarginFrame="{lvc:Frame Stroke={lvc:SolidColorPaint Color={StaticResource gray}, StrokeWidth=2}}"
         ZoomMode="Both"

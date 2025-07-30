@@ -41,10 +41,10 @@ public abstract partial class ChartView : ContentView
         }
     }
 
-    internal virtual void OnPressed(object? sender, Behaviours.Events.PressedEventArgs args) { }
-    internal virtual void OnMoved(object? sender, Behaviours.Events.ScreenEventArgs args) { }
-    internal virtual void OnReleased(object? sender, Behaviours.Events.PressedEventArgs args) { }
-    internal virtual void OnScrolled(object? sender, Behaviours.Events.ScrollEventArgs args) { }
-    internal virtual void OnPinched(object? sender, Behaviours.Events.PinchEventArgs args) { }
-    internal virtual void OnExited(object? sender, Behaviours.Events.EventArgs args) { }
+    internal virtual void OnPressed(object? sender, Native.Events.PressedEventArgs args) { }
+    internal virtual void OnMoved(object? sender, Native.Events.ScreenEventArgs args) { }
+    internal virtual void OnReleased(object? sender, Native.Events.PressedEventArgs args) { }
+    internal virtual void OnScrolled(object? sender, Native.Events.ScrollEventArgs args) { }
+    internal virtual void OnPinched(object? sender, Native.Events.PinchEventArgs args) { }
+    internal virtual void OnExited(object? sender, Native.Events.EventArgs args) { }
 }

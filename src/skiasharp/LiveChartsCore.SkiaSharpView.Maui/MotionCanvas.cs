@@ -21,14 +21,12 @@
 // SOFTWARE.
 
 using System;
-using System.Threading.Tasks;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Motion;
-using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.Native;
+using LiveChartsCore.SkiaSharpView.Maui.Rendering;
 using Microsoft.Maui.Controls;
-using Microsoft.Maui.Devices;
 using Microsoft.Maui.Layouts;
-using SkiaSharp.Views.Maui;
-using SkiaSharp.Views.Maui.Controls;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
 
@@ -37,112 +35,56 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 /// </summary>
 public class MotionCanvas : AbsoluteLayout
 {
-    private bool _isDrawingLoopRunning = false;
-    private bool _isLoaded = true;
-    private double _density = 1;
-    private SKCanvasView? _canvasView;
-    private SKGLView? _glView;
+    /// <summary>
+    /// Gets the recommended rendering settings for MAUI.
+    /// </summary>
+    public static RenderingSettings RecommendedMAUIRenderingSettings { get; }
+        = new()
+        {
+            // GPU via SKGLView
+            UseGPU = true,
+
+            // Windows:         CompositionTarget.Rendering
+            // Android:         Coreograoher
+            // IOS/Catalyst:    CADisplayLink
+            TryUseVSync = true,
+
+            // fallback value when VSync is not used.
+            LiveChartsRenderLoopFPS = 60,
+
+            // make this true to see the FPS in the top left corner of the chart
+            ShowFPS = false
+        };
+
+    private readonly CanvasRenderSettings<CPURenderMode, GPURenderMode, NativeFrameTicker> _settings;
+
+    static MotionCanvas()
+    {
+        LiveCharts.Configure(config => config.UseDefaults(RecommendedMAUIRenderingSettings));
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
     /// </summary>
     public MotionCanvas()
     {
-        InitializeView();
+        _settings = new();
+
+        var view = (View)_settings.RenderMode;
+        AbsoluteLayout.SetLayoutBounds(view, new(0, 0, 1, 1));
+        AbsoluteLayout.SetLayoutFlags(view, AbsoluteLayoutFlags.SizeProportional | AbsoluteLayoutFlags.PositionProportional);
+        Children.Add(view);
 
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
-
-        _density = DeviceDisplay.MainDisplayInfo.Density;
-        DeviceDisplay.MainDisplayInfoChanged += MainDisplayInfoChanged;
     }
 
-    /// <summary>
-    /// Gets the canvas core.
-    /// </summary>
-    /// <value>
-    /// The canvas core.
-    /// </value>
+    /// <inheritdoc cref="CoreMotionCanvas"/>
     public CoreMotionCanvas CanvasCore { get; } = new();
 
-    /// <summary>
-    /// Invalidates this instance.
-    /// </summary>
-    /// <returns></returns>
-    public void Invalidate() =>
-        RunDrawingLoop();
+    private void OnLoaded(object? sender, EventArgs e) =>
+        _settings.Initialize(CanvasCore);
 
-    private void OnCanvasViewPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
-    {
-        args.Surface.Canvas.Scale((float)_density, (float)_density);
-        CanvasCore.DrawFrame(
-            new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
-    }
-
-    private void OnGlViewPaintSurface(object? sender, SKPaintGLSurfaceEventArgs args)
-    {
-        args.Surface.Canvas.Scale((float)_density, (float)_density);
-        CanvasCore.DrawFrame(
-            new SkiaSharpDrawingContext(CanvasCore, new SkiaSharp.SKImageInfo((int)Width, (int)Height), args.Surface, args.Surface.Canvas));
-    }
-
-    private void OnCanvasCoreInvalidated(CoreMotionCanvas sender) =>
-        Invalidate();
-
-    private void InitializeView()
-    {
-        if (LiveCharts.UseGPU)
-        {
-            _glView = new SKGLView();
-            _glView.PaintSurface += OnGlViewPaintSurface;
-
-            AbsoluteLayout.SetLayoutBounds(_glView, new(0, 0, 1, 1));
-            AbsoluteLayout.SetLayoutFlags(_glView, AbsoluteLayoutFlags.SizeProportional | AbsoluteLayoutFlags.PositionProportional);
-
-            Children.Add(_glView);
-        }
-        else
-        {
-            _canvasView = new SKCanvasView();
-            _canvasView.PaintSurface += OnCanvasViewPaintSurface;
-
-            AbsoluteLayout.SetLayoutBounds(_canvasView, new(0, 0, 1, 1));
-            AbsoluteLayout.SetLayoutFlags(_canvasView, AbsoluteLayoutFlags.SizeProportional | AbsoluteLayoutFlags.PositionProportional);
-
-            Children.Add(_canvasView);
-        }
-    }
-
-    private async void RunDrawingLoop()
-    {
-        if (_isDrawingLoopRunning) return;
-        _isDrawingLoopRunning = true;
-
-        var ts = TimeSpan.FromSeconds(1 / LiveCharts.MaxFps);
-
-        while (!CanvasCore.IsValid && _isLoaded)
-        {
-            _canvasView?.InvalidateSurface();
-            _glView?.InvalidateSurface();
-            await Task.Delay(ts);
-        }
-
-        _isDrawingLoopRunning = false;
-    }
-
-    private void OnLoaded(object? sender, EventArgs e)
-    {
-        _isLoaded = true;
-        CanvasCore.Invalidated += OnCanvasCoreInvalidated;
-    }
-
-    private void OnUnloaded(object? sender, EventArgs e)
-    {
-        _isLoaded = false;
-        CanvasCore.Invalidated -= OnCanvasCoreInvalidated;
-        CanvasCore.Dispose();
-    }
-
-    private void MainDisplayInfoChanged(object? sender, EventArgs e) =>
-        _density = DeviceDisplay.MainDisplayInfo.Density;
+    private void OnUnloaded(object? sender, EventArgs e) =>
+        _settings.Dispose(CanvasCore);
 }

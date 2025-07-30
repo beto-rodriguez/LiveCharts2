@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>ebf70b6d-1416-4cc6-a540-f4ebf2371819</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>_Shared.Native</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Platforms\Android\PointerController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Platforms\INativePointerController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Platforms\Mac\PointerController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Platforms\NativeHelpers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Platforms\NoUI\PointerController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Platforms\WinUI\PointerController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PointerController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\EventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\Handler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\PinchEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\PinchHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\PressedEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\PressedHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\ScreenEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\ScreenHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\ScrollEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Events\ScrollHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Platforms\NoUI\NativeTicker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Platforms\Android\NativeTicker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Platforms\Mac\NativeTicker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Platforms\WinUI\NativeTicker.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Platforms\Android\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Platforms\Mac\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Platforms\WinUI\" />
+  </ItemGroup>
+</Project>

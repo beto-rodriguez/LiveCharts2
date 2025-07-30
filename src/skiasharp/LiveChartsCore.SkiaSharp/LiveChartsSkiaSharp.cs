@@ -20,8 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// Ignore Spelling: Skia Lvc
-
 using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
@@ -49,12 +47,69 @@ public static class LiveChartsSkiaSharp
     /// Configures LiveCharts using the default settings for SkiaSharp.
     /// </summary>
     /// <param name="settings">The settings.</param>
+    /// <param name="renderingSettings">The optional rendering settings.</param>
     /// <returns>The settings.</returns>
-    public static LiveChartsSettings UseDefaults(this LiveChartsSettings settings)
+    public static LiveChartsSettings UseDefaults(
+        this LiveChartsSettings settings, RenderingSettings? renderingSettings = null)
     {
-        if (!LiveCharts.HasBackend) _ = settings.AddSkiaSharp();
-        if (!LiveCharts.HasDefaultTheme) _ = settings.AddDefaultTheme();
-        if (!LiveCharts.HasDefaultMappers) _ = settings.AddDefaultMappers();
+        if (!LiveCharts.DefaultSettings.HasBackedDefined)
+            _ = settings.AddSkiaSharp();
+
+        if (!LiveCharts.DefaultSettings.HasThemeDefined)
+            _ = settings.AddDefaultTheme();
+
+        if (!LiveCharts.DefaultSettings.HasMappersDefined)
+            _ = settings.AddDefaultMappers();
+
+        if (LiveCharts.RenderingSettings is null)
+        {
+            var targetRenderSettings = renderingSettings ?? RenderingSettings.Default;
+
+            // the next conditions are used to test the rendering settings across
+            // multiple os/frameworks via cli flags.
+
+#if __GPU_TRUE__
+            targetRenderSettings.UseGPU = true;
+#endif
+#if __GPU_FALSE__
+            targetRenderSettings.UseGPU = false;
+#endif
+#if __VSYNC_TRUE__
+            targetRenderSettings.TryUseVSync = true;
+#endif
+#if __VSYNC_FALSE__
+            targetRenderSettings.TryUseVSync = false;
+#endif
+#if __FPS_10__
+            targetRenderSettings.LiveChartsRenderLoopFPS = 10;
+#endif
+#if __FPS_20__
+            targetRenderSettings.LiveChartsRenderLoopFPS = 20;
+#endif
+#if __FPS_30__
+            targetRenderSettings.LiveChartsRenderLoopFPS = 30;
+#endif
+#if __FPS_45__
+            targetRenderSettings.LiveChartsRenderLoopFPS = 45;
+#endif
+#if __FPS_60__
+            targetRenderSettings.LiveChartsRenderLoopFPS = 60;
+#endif
+#if __FPS_75__
+            targetRenderSettings.LiveChartsRenderLoopFPS = 75;
+#endif
+#if __FPS_90__
+            targetRenderSettings.LiveChartsRenderLoopFPS = 90;
+#endif
+#if __FPS_120__
+            targetRenderSettings.LiveChartsRenderLoopFPS = 120;
+#endif
+#if __DIAGNOSE__
+            targetRenderSettings.ShowFPS = true;
+#endif
+
+            _ = settings.RenderingSettings(targetRenderSettings);
+        }
 
         return settings;
     }
@@ -66,8 +121,6 @@ public static class LiveChartsSkiaSharp
     /// <returns></returns>
     public static LiveChartsSettings AddSkiaSharp(this LiveChartsSettings settings)
     {
-        LiveCharts.HasBackend = true;
-
         PropertyDefinition.Parsers[typeof(Paint)] = HexToPaintTypeConverter.Parse;
         PropertyDefinition.Parsers[typeof(LvcColor)] = HexToLvcColorTypeConverter.Parse;
         PropertyDefinition.Parsers[typeof(Margin)] = MarginTypeConverter.ParseMargin;
@@ -97,7 +150,9 @@ public static class LiveChartsSkiaSharp
     /// <param name="alphaOverrides">The alpha overrides.</param>
     /// <returns></returns>
     public static SKColor AsSKColor(this LvcColor color, byte? alphaOverrides = null) =>
-        new(color.R, color.G, color.B, alphaOverrides ?? color.A);
+        color == LvcColor.Empty
+            ? SKColor.Empty
+            : new(color.R, color.G, color.B, alphaOverrides ?? color.A);
 
     /// <summary>
     /// Creates a new color based on the 

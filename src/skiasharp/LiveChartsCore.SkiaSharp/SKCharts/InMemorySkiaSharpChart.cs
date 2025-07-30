@@ -32,17 +32,16 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 /// <summary>
 /// A chart that is able to generate images or draw to a given canvas.
 /// </summary>
-public abstract class InMemorySkiaSharpChart
+/// <remarks>
+/// Initializes a new instance of the <see cref="InMemorySkiaSharpChart"/> class.
+/// </remarks>
+public abstract class InMemorySkiaSharpChart(IChartView? chartView = null)
 {
-    private readonly IChartView? _chartView;
+    private readonly IChartView? _chartView = chartView;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="InMemorySkiaSharpChart"/> class.
-    /// </summary>
-    public InMemorySkiaSharpChart(IChartView? chartView = null)
+    static InMemorySkiaSharpChart()
     {
         LiveCharts.Configure(config => config.UseDefaults());
-        _chartView = chartView;
     }
 
     /// <inheritdoc cref="IChartView.CoreCanvas"/>
@@ -94,7 +93,7 @@ public abstract class InMemorySkiaSharpChart
         using var surface = SKSurface.Create(new SKImageInfo(Width, Height));
         using var canvas = surface.Canvas;
 
-        DrawOnCanvas(canvas, surface);
+        DrawOnCanvas(canvas);
 
         return surface.Snapshot();
     }
@@ -129,19 +128,18 @@ public abstract class InMemorySkiaSharpChart
     /// <summary>
     /// Draws the image to the specified canvas.
     /// </summary>
-    /// <param name="canvas">The canvas</param>
+    /// <param name="canvas">The canvas.</param>
     /// <param name="clearCanvasOnBeginDraw">Indicates whether the canvas should be cleared when the draw starts, default is false.</param>
     public virtual void SaveImage(SKCanvas canvas, bool clearCanvasOnBeginDraw = false) =>
-        DrawOnCanvas(canvas, null, clearCanvasOnBeginDraw);
+        DrawOnCanvas(canvas, clearCanvasOnBeginDraw);
 
     /// <summary>
     /// Draws the chart to the specified canvas.
     /// </summary>
     /// <param name="canvas">The canvas.</param>
-    /// <param name="surface">The surface.</param>
     /// <param name="clearCanvasOnBeginDraw">[probably an obsolete param] Indicates whether the canvas should be cleared when the draw starts, default is false.</param>
     /// <exception cref="Exception"></exception>
-    public virtual void DrawOnCanvas(SKCanvas canvas, SKSurface? surface = null, bool clearCanvasOnBeginDraw = false)
+    public virtual void DrawOnCanvas(SKCanvas canvas, bool clearCanvasOnBeginDraw = false)
     {
         if (CoreChart is null || CoreChart is not Chart skiaChart)
             throw new Exception("Something is missing :(");
@@ -152,7 +150,6 @@ public abstract class InMemorySkiaSharpChart
                 new SkiaSharpDrawingContext(
                     CoreCanvas,
                     new SKImageInfo(Width, Height),
-                    surface!,
                     canvas,
                     Background,
                     clearCanvasOnBeginDraw));
@@ -172,7 +169,6 @@ public abstract class InMemorySkiaSharpChart
             new SkiaSharpDrawingContext(
                 CoreCanvas,
                 new SKImageInfo(Width, Height),
-                surface!,
                 canvas,
                 Background,
                 clearCanvasOnBeginDraw));

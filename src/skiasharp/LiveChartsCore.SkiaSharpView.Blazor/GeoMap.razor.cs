@@ -20,12 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Specialized;
-using System.ComponentModel;
 using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
+using LiveChartsCore.SkiaSharpView.Blazor.JsInterop;
 using LiveChartsCore.SkiaSharpView.Painting;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -47,12 +46,7 @@ public partial class GeoMap : IGeoMapView, IDisposable
     private double _canvasHeight;
     private CollectionDeepObserver? _seriesObserver;
     private GeoMapChart? _core;
-    private IEnumerable<IGeoSeries> _series = [];
     private DrawnMap? _activeMap;
-    private MapProjection _mapProjection = MapProjection.Default;
-    private Paint? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { PaintStyle = PaintStyle.Stroke };
-    private Paint? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { PaintStyle = PaintStyle.Fill };
-    private object? _viewCommand = null;
 
     /// <summary>
     /// Called when the control initializes.
@@ -61,7 +55,6 @@ public partial class GeoMap : IGeoMapView, IDisposable
     {
         base.OnInitialized();
 
-        LiveCharts.Configure(config => config.UseDefaults());
         _activeMap = Maps.GetWorldMap();
     }
 
@@ -108,13 +101,13 @@ public partial class GeoMap : IGeoMapView, IDisposable
     [Parameter]
     public object? ViewCommand
     {
-        get => _viewCommand;
+        get;
         set
         {
-            _viewCommand = value;
+            field = value;
             if (value is not null) _core?.ViewTo(value);
         }
-    }
+    } = null;
     /// <inheritdoc cref="IGeoMapView.ActiveMap"/>
     [Parameter]
     public DrawnMap ActiveMap
@@ -135,47 +128,47 @@ public partial class GeoMap : IGeoMapView, IDisposable
 
     /// <inheritdoc cref="IGeoMapView.MapProjection"/>
     [Parameter]
-    public MapProjection MapProjection { get => _mapProjection; set { _mapProjection = value; OnPropertyChanged(); } }
+    public MapProjection MapProjection { get; set { field = value; OnPropertyChanged(); } } = MapProjection.Default;
 
     /// <inheritdoc cref="IGeoMapView.Stroke"/>
     [Parameter]
     public Paint? Stroke
     {
-        get => _stroke;
+        get;
         set
         {
             if (value is not null) value.PaintStyle = PaintStyle.Stroke;
-            _stroke = value;
+            field = value;
             OnPropertyChanged();
         }
-    }
+    } = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { PaintStyle = PaintStyle.Stroke };
 
     /// <inheritdoc cref="IGeoMapView.Fill"/>
     [Parameter]
     public Paint? Fill
     {
-        get => _fill;
+        get;
         set
         {
             if (value is not null) value.PaintStyle = PaintStyle.Fill;
-            _fill = value;
+            field = value;
             OnPropertyChanged();
         }
-    }
+    } = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { PaintStyle = PaintStyle.Fill };
 
     /// <inheritdoc cref="IGeoMapView.Series"/>
     [Parameter]
     public IEnumerable<IGeoSeries> Series
     {
-        get => _series;
+        get;
         set
         {
             _seriesObserver?.Dispose();
             _seriesObserver?.Initialize(value);
-            _series = value;
+            field = value;
             OnPropertyChanged();
         }
-    }
+    } = [];
 
     void IGeoMapView.InvokeOnUIThread(Action action) =>
         _ = InvokeAsync(action); //.Wait();

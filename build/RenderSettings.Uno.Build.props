@@ -1,0 +1,12 @@
+<Project>
+
+  <PropertyGroup Condition="'$(UsesUnoSkiaRenderer)' == 'true'">
+    <UnoFeatures>$(UnoFeatures);SkiaRenderer</UnoFeatures>
+    <DefineConstants>$(DefineConstants);__USES_UNO_RENDERER__</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(UsesUnoSkiaRenderer)' == 'false'">
+    <DefineConstants>$(DefineConstants);__NO_USES_UNO_RENDERER__</DefineConstants>
+  </PropertyGroup>
+
+</Project>

@@ -38,13 +38,13 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 [XamlCompilation(XamlCompilationOptions.Compile)]
 public partial class CartesianChart : ChartControl, ICartesianChartView
 {
-    internal override void OnScrolled(object? sender, Behaviours.Events.ScrollEventArgs args)
+    internal override void OnScrolled(object? sender, Native.Events.ScrollEventArgs args)
     {
         var c = (CartesianChartEngine)CoreChart;
         c.Zoom(args.Location, args.ScrollDelta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
     }
 
-    internal override void OnPinched(object? sender, Behaviours.Events.PinchEventArgs args)
+    internal override void OnPinched(object? sender, Native.Events.PinchEventArgs args)
     {
         var c = (CartesianChartEngine)CoreChart;
         var p = args.PinchStart;

@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Painting;
 
@@ -36,18 +37,30 @@ public class CoreMotionCanvas : IDisposable
 {
     private static readonly Stopwatch s_clock = new();
     internal HashSet<Paint> _paintTasks = [];
-    private object _sync = new();
-
     private int _frames = 0;
     private Stopwatch? _fspSw;
-    private double _lastKnowFps = 0;
-    private double _totalFrames = 0;
+    private int _jitteredDrawCount;
+    private double _totalDrawTime = 0;
+    private double _lastDrawTime = 0;
+    private double _lastKnownFPS = 0;
+    private double _averageRenderTime = 0;
+    private double _totalFrames = double.Epsilon;
     private double _totalSeconds = 0;
+    internal TimeSpan _nextFrameDelay = s_baseFrameDelay;
+    private static readonly double s_ticksPerMillisecond = Stopwatch.Frequency / 1000d;
+    private static readonly TimeSpan s_baseFrameDelay = TimeSpan.FromMilliseconds(1000d / LiveCharts.RenderingSettings.LiveChartsRenderLoopFPS);
+    private static readonly long s_jitterThreshold = s_baseFrameDelay.Ticks / 2;
+    internal LvcColor _virtualBackgroundColor;
+    internal static string? s_externalRenderer;
+    internal static string? s_rendererName;
+    internal static string? s_tickerName;
 
     static CoreMotionCanvas()
     {
         s_clock.Start();
     }
+
+    internal delegate void FrameRequestHandler(DrawingContext context);
 
     /// <summary>
     /// Gets the clock elapsed time in milliseconds.
@@ -94,7 +107,7 @@ public class CoreMotionCanvas : IDisposable
     /// <value>
     /// The synchronize.
     /// </value>
-    public object Sync { get => _sync; internal set => _sync = value ?? new object(); }
+    public object Sync { get; internal set => field = value ?? new object(); } = new();
 
     /// <summary>
     /// Gets the animatables collection.
@@ -116,7 +129,8 @@ public class CoreMotionCanvas : IDisposable
                 $"thread: {Environment.CurrentManagedThreadId}");
 #endif
 
-        var showFps = LiveCharts.ShowFPS;
+        var showFps = LiveCharts.RenderingSettings.ShowFPS;
+        var drawStartTime = s_clock.ElapsedTicks;
 
         lock (Sync)
         {
@@ -177,11 +191,34 @@ public class CoreMotionCanvas : IDisposable
 
             if (showFps)
             {
-                MeasureFPS();
+                MeasureFPS(drawStartTime);
 
-                if (_totalSeconds > 0)
-                    context.LogOnCanvas(
-                        $"[fps] last {_lastKnowFps:N2}, average {_totalFrames / _totalSeconds:N2}");
+                var sb = new StringBuilder();
+
+#if DEBUG
+                sb.Append($"[~~ {_lastKnownFPS:N2} ~~] FPS (DEBUG)");
+#else
+                sb.Append($"[ {_lastKnownFPS:N2} ] FPS");
+#endif
+                sb.Append($"`[ {_lastDrawTime:N2}ms / {_averageRenderTime:N2}ms ] render time last / avrg");
+
+                if (s_externalRenderer is null)
+                {
+                    sb.Append($"`{s_rendererName}");
+                    var isVSynced = LiveCharts.RenderingSettings.UseGPU && LiveCharts.RenderingSettings.TryUseVSync;
+                    sb.Append($"`[ {(isVSynced ? "VSync" : "VSync disabled")} ] handled by {s_tickerName}");
+                }
+                else
+                {
+                    sb.Append($"`{s_externalRenderer}");
+                    sb.Append($"`{s_tickerName}");
+                }
+
+                if (_jitteredDrawCount > 0)
+                    sb.Append(
+                            $"`[ {_jitteredDrawCount} ] jittered draws");
+
+                context.LogOnCanvas(sb.ToString());
             }
 
             IsValid = isValid;
@@ -195,9 +232,33 @@ public class CoreMotionCanvas : IDisposable
 
             if (showFps)
             {
+                // restart the count when the canvas is valid.
                 _frames = 0;
                 _fspSw = null;
+                _totalDrawTime = 0;
+                _totalFrames = 0;
+                _totalSeconds = 0;
             }
+        }
+
+        if (!LiveCharts.RenderingSettings.TryUseVSync)
+        {
+            var timeInDrawOperation = s_clock.ElapsedTicks - drawStartTime;
+            var delay = s_baseFrameDelay.Ticks - timeInDrawOperation;
+
+            TimeSpan frameDelay;
+
+            if (delay <= s_jitterThreshold)
+            {
+                _jitteredDrawCount++;
+                frameDelay = s_baseFrameDelay;
+            }
+            else
+            {
+                frameDelay = new TimeSpan(delay);
+            }
+
+            _nextFrameDelay = frameDelay;
         }
     }
 
@@ -299,8 +360,13 @@ public class CoreMotionCanvas : IDisposable
         IsValid = true;
     }
 
-    private void MeasureFPS()
+    private void MeasureFPS(long drawStartTime)
     {
+        if (s_clock.ElapsedMilliseconds < 3000)
+            return; // we only start measuring after 3 seconds, to improve accuracy.
+
+        _totalDrawTime += (s_clock.ElapsedTicks - drawStartTime) / s_ticksPerMillisecond;
+
         if (_fspSw is null)
         {
             _fspSw = new();
@@ -313,10 +379,15 @@ public class CoreMotionCanvas : IDisposable
         if (_frames % logEach == 0)
         {
             var elapsedSeconds = _fspSw.ElapsedMilliseconds / 1000d;
-            _lastKnowFps = logEach / elapsedSeconds;
 
             _totalFrames += logEach;
             _totalSeconds += elapsedSeconds;
+            _lastKnownFPS = _totalFrames / _totalSeconds;
+            _averageRenderTime = _totalDrawTime / _totalFrames;
+
+            // it not exactly the last frame time, is the 20th frame time
+            // so we can actually read the time in the log.
+            _lastDrawTime = (s_clock.ElapsedTicks - drawStartTime) / s_ticksPerMillisecond;
 
             _fspSw.Restart();
         }

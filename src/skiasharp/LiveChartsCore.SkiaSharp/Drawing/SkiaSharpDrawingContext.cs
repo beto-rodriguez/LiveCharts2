@@ -35,13 +35,11 @@ namespace LiveChartsCore.SkiaSharpView.Drawing;
 /// </remarks>
 /// <param name="motionCanvas">The motion canvas.</param>
 /// <param name="info">The information.</param>
-/// <param name="surface">The surface.</param>
 /// <param name="canvas">The canvas.</param>
 /// <param name="clearOnBeginDraw">Indicates whether the canvas is cleared on frame draw.</param>
 public class SkiaSharpDrawingContext(
     CoreMotionCanvas motionCanvas,
     SKImageInfo info,
-    SKSurface? surface,
     SKCanvas canvas,
     bool clearOnBeginDraw = true)
         : DrawingContext
@@ -51,18 +49,16 @@ public class SkiaSharpDrawingContext(
     /// </summary>
     /// <param name="motionCanvas">The motion canvas.</param>
     /// <param name="info">The information.</param>
-    /// <param name="surface">The surface.</param>
     /// <param name="canvas">The canvas.</param>
     /// <param name="background">The background.</param>
     /// <param name="clearOnBeginDraw">Indicates whether the canvas is cleared on frame draw.</param>
     public SkiaSharpDrawingContext(
         CoreMotionCanvas motionCanvas,
         SKImageInfo info,
-        SKSurface? surface,
         SKCanvas canvas,
         SKColor background,
         bool clearOnBeginDraw = true)
-        : this(motionCanvas, info, surface, canvas, clearOnBeginDraw)
+        : this(motionCanvas, info, canvas, clearOnBeginDraw)
     {
         Background = background;
     }
@@ -84,20 +80,12 @@ public class SkiaSharpDrawingContext(
     public SKImageInfo Info { get; set; } = info;
 
     /// <summary>
-    /// Gets or sets the surface.
-    /// </summary>
-    /// <value>
-    /// The surface.
-    /// </value>
-    public SKSurface? Surface { get; set; } = surface;
-
-    /// <summary>
     /// Gets or sets the canvas.
     /// </summary>
     /// <value>
     /// The canvas.
     /// </value>
-    public SKCanvas Canvas { get; set; } = canvas;
+    public SKCanvas Canvas { get; } = canvas;
 
     /// <summary>
     /// Gets or sets the paint.
@@ -127,16 +115,30 @@ public class SkiaSharpDrawingContext(
     {
         using var p = new SKPaint
         {
-            Color = SKColors.Blue,
+            Color = SKColors.White,
             TextSize = 14,
-            IsAntialias = true,
-            FakeBoldText = true
+            IsAntialias = true
         };
 
-        Canvas.DrawText(
-            log,
-            new SKPoint(50, 10 + p.TextSize),
-            p);
+        using var backgroundPaint = new SKPaint
+        {
+            Color = SKColors.Black.WithAlpha(180),
+            Style = SKPaintStyle.Fill
+        };
+
+        var lines = log.Split('`');
+
+        Canvas.DrawRect(new(10, 0, 400, (p.TextSize + 4f) * lines.Length), backgroundPaint);
+
+        for (var i = 0; i < lines.Length; i++)
+        {
+            var line = lines[i];
+            if (string.IsNullOrWhiteSpace(line)) continue;
+            Canvas.DrawText(
+                line,
+                new SKPoint(10, 10 + 2 + (p.TextSize + 4f) * i),
+                p);
+        }
     }
 
     /// <inheritdoc cref="DrawingContext.Draw(IDrawnElement)"/>

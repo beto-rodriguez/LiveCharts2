@@ -20,27 +20,51 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Kernel;
 using LiveChartsCore.Motion;
+using LiveChartsCore.SkiaSharpView.Blazor.JsInterop;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 using SkiaSharp.Views.Blazor;
 
 namespace LiveChartsCore.SkiaSharpView.Blazor;
 
 /// <inheritdoc cref="CoreMotionCanvas"/>
-public partial class MotionCanvas : IDisposable
+public partial class MotionCanvas : IDisposable, IRenderMode
 {
     private SKGLView? _glView;
-    private SKCanvasView? _canvas;
-    private bool _disposing = false;
-    private bool _isDrawingLoopRunning = false;
+    private DotNetObjectReference<MotionCanvas>? _dotNetRef;
+    private DomJsInterop? _dom;
+    private IFrameTicker _ticker = null!;
 
     /// <summary>
-    /// Called when the control is initialized.
+    /// Gets the recommended rendering settings for Blazor.
     /// </summary>
-    protected override void OnInitialized() =>
-        CanvasCore.Invalidated += CanvasCore_Invalidated;
+    public static RenderingSettings RecommendedBlazorRenderingSettings { get; }
+        = new()
+        {
+            // Actually only GL view is supported in Blazor.
+            UseGPU = true,
+
+            // uses requestAnimationFrame under the hood.
+            TryUseVSync = true,
+
+            // A fallback value when VSync is not used.
+            LiveChartsRenderLoopFPS = 60,
+
+            // make this true to see the FPS in the top left corner of the chart
+            ShowFPS = false
+        };
+
+    static MotionCanvas()
+    {
+        LiveCharts.Configure(config => config.UseDefaults(RecommendedBlazorRenderingSettings));
+    }
+
+    [Inject]
+    private IJSRuntime JS { get; set; } = null!;
 
     /// <summary>
     /// Gets the <see cref="CoreMotionCanvas"/> (core).
@@ -77,6 +101,12 @@ public partial class MotionCanvas : IDisposable
     [Parameter]
     public EventCallback<PointerEventArgs> OnPointerOutCallback { get; set; }
 
+    event CoreMotionCanvas.FrameRequestHandler IRenderMode.FrameRequest
+    {
+        add => throw new NotImplementedException();
+        remove => throw new NotImplementedException();
+    }
+
     /// <summary>
     /// Called when the pointer goes down.
     /// </summary>
@@ -112,44 +142,65 @@ public partial class MotionCanvas : IDisposable
         _ = OnPointerOutCallback.InvokeAsync(e);
 
     private void OnPaintGlSurface(SKPaintGLSurfaceEventArgs e) =>
-        CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
+        CanvasCore.DrawFrame(
+            new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface.Canvas));
 
-    private void OnPaintSurface(SKPaintSurfaceEventArgs e) =>
-        CanvasCore.DrawFrame(new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
-
-    private void CanvasCore_Invalidated(CoreMotionCanvas sender) =>
-        RunDrawingLoop();
-
-    private async void RunDrawingLoop()
+    /// <inheritdoc/>
+    protected override void OnAfterRender(bool firstRender)
     {
-        if (_isDrawingLoopRunning) return;
-        _isDrawingLoopRunning = true;
+        if (!firstRender) return;
 
-        var ts = TimeSpan.FromSeconds(1 / LiveCharts.MaxFps);
+        _dom ??= new DomJsInterop(JS);
+        _dotNetRef = DotNetObjectReference.Create(this);
 
-        if (LiveCharts.UseGPU)
-        {
-            while (!CanvasCore.IsValid && !_disposing)
-            {
-#pragma warning disable CA1416 // Validate platform compatibility
-                _glView?.Invalidate();
-#pragma warning restore CA1416 // Validate platform compatibility
-                await Task.Delay(ts);
-            }
-        }
-        else
-        {
-            while (!CanvasCore.IsValid && !_disposing)
-            {
-#pragma warning disable CA1416 // Validate platform compatibility
-                _canvas?.Invalidate();
-#pragma warning restore CA1416 // Validate platform compatibility
-                await Task.Delay(ts);
-            }
-        }
+        _ticker = LiveCharts.RenderingSettings.TryUseVSync
+            ? new RequestAnimationFrameTicker(_dom, _dotNetRef)
+            : new AsyncLoopTicker();
 
-        _isDrawingLoopRunning = false;
+        _ticker.InitializeTicker(CanvasCore, this);
     }
 
-    void IDisposable.Dispose() => _disposing = true;
+    void IDisposable.Dispose()
+    {
+        _ticker?.DisposeTicker();
+        _ticker = null!;
+        _glView?.Dispose();
+        _ = (_dom?.StopFrameTicker(_dotNetRef!));
+        _dotNetRef?.Dispose();
+        _dotNetRef = null;
+        _dom = null;
+    }
+
+    /// <summary>
+    /// Called when the frame ticker ticks.
+    /// </summary>
+    [JSInvokable]
+    public void OnFrameTick()
+    {
+        if (CanvasCore.IsValid) return;
+        _glView.Invalidate();
+    }
+
+    void IRenderMode.InitializeRenderMode(CoreMotionCanvas canvas) =>
+        throw new NotImplementedException();
+
+    void IRenderMode.InvalidateRenderer() =>
+        _glView?.Invalidate();
+
+    void IRenderMode.DisposeRenderMode() =>
+        throw new NotImplementedException();
+
+    internal class RequestAnimationFrameTicker(
+        DomJsInterop jsInterop, DotNetObjectReference<MotionCanvas> dotnetRef)
+            : IFrameTicker
+    {
+        public async void InitializeTicker(CoreMotionCanvas canvas, IRenderMode renderMode)
+        {
+            await jsInterop.StartFrameTicker(dotnetRef);
+            CoreMotionCanvas.s_tickerName = $"{nameof(RequestAnimationFrameTicker)}";
+        }
+
+        public async void DisposeTicker() =>
+            await jsInterop.StopFrameTicker(dotnetRef);
+    }
 }

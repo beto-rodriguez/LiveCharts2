@@ -20,8 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// Ignore Spelling: Tooltip
-
 using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
@@ -40,6 +38,10 @@ public class LiveChartsSettings
     private object? _currentProvider;
     private readonly Dictionary<Type, object> _mappers = [];
     private object _theme = new();
+
+    internal bool HasBackedDefined => _currentProvider is not null;
+    internal bool HasThemeDefined => _theme is not null and Theme;
+    internal bool HasMappersDefined => _mappers.Count > 0;
 
     /// <summary>
     /// Gets or sets the default easing function.
@@ -386,7 +388,7 @@ public class LiveChartsSettings
     /// Removes a map from the settings.
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
-    /// <returns></returns>
+    /// <returns>The current settings.</returns>
     public LiveChartsSettings RemoveMap<TModel>()
     {
         _ = _mappers.Remove(typeof(TModel));
@@ -397,7 +399,7 @@ public class LiveChartsSettings
     /// Adds the default styles.
     /// </summary>
     /// <param name="builder">The builder.</param>
-    /// <returns></returns>
+    /// <returns>The current settings.</returns>
     public LiveChartsSettings HasTheme(Action<Theme> builder)
     {
         Theme t;
@@ -411,7 +413,6 @@ public class LiveChartsSettings
     /// <summary>
     /// Gets the styles builder.
     /// </summary>
-    /// <returns></returns>
     public Theme GetTheme() =>
         (Theme?)_theme ?? throw new Exception("A theme is required.");
 
@@ -429,11 +430,9 @@ public class LiveChartsSettings
     /// <summary>
     /// Enables LiveCharts to be able to plot short, int, long, float, double, decimal, short?, int?, long?, float?, double?, decimal?.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The current settings.</returns>
     public LiveChartsSettings AddDefaultMappers()
     {
-        LiveCharts.HasDefaultMappers = true;
-
         return
             HasMap<short>((model, index) => new(index, model))
             .HasMap<int>((model, index) => new(index, model))
@@ -447,5 +446,18 @@ public class LiveChartsSettings
             .HasMap<float?>((model, index) => new(index, model!.Value))
             .HasMap<double?>((model, index) => new(index, model!.Value))
             .HasMap<decimal?>((model, index) => new(index, (double)model!.Value));
+    }
+
+    /// <summary>
+    /// Defines the rendering settings for LiveCharts.
+    /// </summary>
+    /// <param name="settings">The rendering settings.</param>
+    /// <returns>The current settings.</returns>
+    public LiveChartsSettings RenderingSettings(
+        RenderingSettings settings)
+    {
+        LiveCharts.RenderingSettings = settings;
+
+        return this;
     }
 }

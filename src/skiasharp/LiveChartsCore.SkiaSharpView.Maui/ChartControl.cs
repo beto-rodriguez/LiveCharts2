@@ -45,8 +45,6 @@ public abstract partial class ChartControl : ChartView, IChartView
     /// </summary>
     protected ChartControl()
     {
-        LiveCharts.Configure(config => config.UseDefaults());
-
         Content = new MotionCanvas();
 
         SizeChanged += (s, e) =>
@@ -118,7 +116,7 @@ public abstract partial class ChartControl : ChartView, IChartView
         _ = CanvasView.Children.Remove(view);
     }
 
-    internal override void OnPressed(object? sender, Behaviours.Events.PressedEventArgs args)
+    internal override void OnPressed(object? sender, Native.Events.PressedEventArgs args)
     {
         // not implemented yet?
         // https://github.com/dotnet/maui/issues/16202
@@ -131,7 +129,7 @@ public abstract partial class ChartControl : ChartView, IChartView
         CoreChart.InvokePointerDown(args.Location, args.IsSecondaryPress);
     }
 
-    internal override void OnMoved(object? sender, Behaviours.Events.ScreenEventArgs args)
+    internal override void OnMoved(object? sender, Native.Events.ScreenEventArgs args)
     {
         var location = args.Location;
 
@@ -142,7 +140,7 @@ public abstract partial class ChartControl : ChartView, IChartView
         CoreChart.InvokePointerMove(location);
     }
 
-    internal override void OnReleased(object? sender, Behaviours.Events.PressedEventArgs args)
+    internal override void OnReleased(object? sender, Native.Events.PressedEventArgs args)
     {
         var cArgs = new PointerCommandArgs(this, new(args.Location.X, args.Location.Y), args);
         if (ReleasedCommand?.CanExecute(cArgs) == true)
@@ -151,7 +149,7 @@ public abstract partial class ChartControl : ChartView, IChartView
         CoreChart.InvokePointerUp(args.Location, args.IsSecondaryPress);
     }
 
-    internal override void OnExited(object? sender, Behaviours.Events.EventArgs args) =>
+    internal override void OnExited(object? sender, Native.Events.EventArgs args) =>
         CoreChart.InvokePointerLeft();
 
     void IChartView.InvokeOnUIThread(Action action) =>

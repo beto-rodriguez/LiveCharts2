@@ -55,10 +55,9 @@ public abstract class Chart
     private readonly ActionThrottler _updateThrottler;
     private readonly ActionThrottler _tooltipThrottler;
     private readonly ActionThrottler _panningThrottler;
-    private LvcPoint _pointerPanningStartPosition = new(-10, -10);
     private LvcPoint _pointerPanningPosition = new(-10, -10);
     private LvcPoint _pointerPreviousPanningPosition = new(-10, -10);
-    private bool _isPanning = false;
+    internal bool _isPanning = false;
     private readonly HashSet<ChartPoint> _activePoints = [];
     private LvcSize _previousSize = new();
     private int _nextSeriesId = 0;
@@ -347,7 +346,6 @@ public abstract class Chart
     {
         _isPanning = true;
         _pointerPreviousPanningPosition = point;
-        _pointerPanningStartPosition = point;
 
         lock (Canvas.Sync)
         {
@@ -542,7 +540,7 @@ public abstract class Chart
     /// Initializes the visuals collector.
     /// </summary>
     protected void InitializeVisualsCollector() =>
-        _toDeleteElements = new HashSet<IChartElement>(_everMeasuredElements);
+        _toDeleteElements = [.. _everMeasuredElements];
 
     /// <summary>
     /// Adds a visual element to the chart.
@@ -613,6 +611,7 @@ public abstract class Chart
     {
         var theme = View.ChartTheme ?? LiveCharts.DefaultSettings.GetTheme();
         theme.Setup(View.IsDarkMode);
+        Canvas._virtualBackgroundColor = theme.VirtualBackroundColor;
         return theme;
     }
 
@@ -702,12 +701,18 @@ public abstract class Chart
 
         foreach (var point in hovered)
         {
-            if (_activePoints.Contains(point)) continue;
+            if (_activePoints.Contains(point) &&
+                point.HoverKey.Item1 == point.Coordinate.PrimaryValue &&
+                point.HoverKey.Item2 == point.Coordinate.SecondaryValue)
+            {
+                continue;
+            }
 
             point.Context.Series.OnPointerEnter(point);
 
             _ = _activePoints.Add(point);
             _ = added.Add(point);
+            point.HoverKey = (point.Coordinate.PrimaryValue, point.Coordinate.SecondaryValue);
         }
 
         var removed = CleanHoveredPoints(hovered);
@@ -810,7 +815,7 @@ public abstract class Chart
 
 #if NET5_0_OR_GREATER
 #else
-        active = active.ToArray();
+        active = [.. active];
 #endif
 
         foreach (var point in active)

@@ -48,8 +48,6 @@ public abstract partial class ChartControl : Panel, IChartView
         Content = motionCanvas;
         BackgroundColor = Colors.White;
 
-        LiveCharts.Configure(config => config.UseDefaults());
-
         InitializeChartControl();
         InitializeObservedProperties();
 
@@ -61,6 +59,7 @@ public abstract partial class ChartControl : Panel, IChartView
         Content.MouseUp += OnMouseUp;
         Content.MouseLeave += OnMouseLeave;
     }
+
 
     /// <inheritdoc cref="IChartView.CoreCanvas"/>
     public MotionCanvas CanvasView => (MotionCanvas)Content;

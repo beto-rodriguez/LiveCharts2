@@ -79,7 +79,12 @@
     </Project>
   </Folder>
   <Folder Name="/Samples/UnoPlatform/">
-    <File Path="readme.txt" />
+    <Project Path="samples/UnoPlatformSample/UnoPlatformSample/UnoPlatformSample.csproj">
+      <BuildType Solution="Ad-Hoc|*" Project="Release" />
+      <BuildType Solution="AppStore|*" Project="Release" />
+      <Deploy Solution="Debug|Any CPU" />
+      <Deploy Solution="Release|Any CPU" />
+    </Project>
   </Folder>
   <Folder Name="/Samples/WinForms/">
     <Project Path="samples/WinFormsSample/WinFormsSample.csproj">
@@ -112,16 +117,16 @@
     <File Path="Directory.Build.props" />
     <File Path="global.json" />
   </Folder>
+  <Folder Name="/Solution Items/RenderingSettings/">
+    <File Path="build/RenderSettings.Build.props" />
+    <File Path="build/RenderSettings.Uno.Build.props" />
+  </Folder>
   <Folder Name="/Tests/">
     <Project Path="tests/LiveChartsCore.UnitTesting/LiveChartsCore.UnitTesting.csproj">
       <BuildType Solution="Ad-Hoc|*" Project="Release" />
       <BuildType Solution="AppStore|*" Project="Release" />
     </Project>
   </Folder>
-  <Project Path="src/LiveChartsCore.Behaviours/LiveChartsCore.Behaviours.csproj">
-    <BuildType Solution="Ad-Hoc|*" Project="Debug" />
-    <BuildType Solution="AppStore|*" Project="Debug" />
-  </Project>
   <Project Path="src/LiveChartsCore/LiveChartsCore.csproj">
     <BuildType Solution="Ad-Hoc|*" Project="Release" />
     <BuildType Solution="AppStore|*" Project="Release" />
@@ -165,4 +170,5 @@
   <Project Path="src/skiasharp/_Shared.WinUI/_Shared.WinUI.shproj" Id="e98bb79a-300e-4556-ac59-47a9aaf1d5f1" />
   <Project Path="src/skiasharp/_Shared.Xaml/_Shared.Xaml.shproj" />
   <Project Path="src/skiasharp/_Shared/_Shared.shproj" />
+  <Project Path="src/_Shared.Native/_Shared.Native.shproj" Id="ebf70b6d-1416-4cc6-a540-f4ebf2371819" />
 </Solution>

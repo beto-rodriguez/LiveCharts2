@@ -49,8 +49,6 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView
     public SKPolarChart(IChartView? chartView = null)
         : base(chartView)
     {
-        LiveCharts.Configure(config => config.UseDefaults());
-
         Core = new PolarChartEngine(this, config => config.UseDefaults(), CoreCanvas);
         Core.Measuring += OnCoreMeasuring;
         Core.UpdateStarted += OnCoreUpdateStarted;

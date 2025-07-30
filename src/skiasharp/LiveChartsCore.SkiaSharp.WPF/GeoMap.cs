@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -53,8 +52,6 @@ public class GeoMap : UserControl, IGeoMapView
     /// </summary>
     public GeoMap()
     {
-        LiveCharts.Configure(config => config.UseDefaults());
-
         MouseDown += OnMouseDown;
         MouseMove += OnMouseMove;
         MouseUp += OnMouseUp;

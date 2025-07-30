@@ -41,7 +41,6 @@
 
             <lvc:CartesianChart.XAxes>
                 <lvc:XamlAxis
-                    Name="PagingAxis"
                     MinLimit="{Binding MinLimit, Converter={StaticResource AsNullable}}"
                     MaxLimit="{Binding MaxLimit, Converter={StaticResource AsNullable}}"/>
             </lvc:CartesianChart.XAxes>

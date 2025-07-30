@@ -50,7 +50,6 @@ public sealed partial class GeoMap : UserControl, IGeoMapView
     public GeoMap()
     {
         InitializeComponent();
-        LiveCharts.Configure(config => config.UseDefaults());
         _core = new GeoMapChart(this);
 
         PointerPressed += OnPointerPressed;

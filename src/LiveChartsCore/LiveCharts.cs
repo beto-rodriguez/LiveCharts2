@@ -30,9 +30,6 @@ namespace LiveChartsCore;
 /// </summary>
 public static class LiveCharts
 {
-    private static bool s_useGPU = false;
-    private static bool s_gpuSetByUser = false;
-
     /// <summary>
     /// A constant that indicates that the tool tip should not add the current label.
     /// </summary>
@@ -50,39 +47,19 @@ public static class LiveCharts
     public static bool EnableLogging { get; set; } = false;
 
     /// <summary>
-    /// Gets or sets a value indicating whether LiveCharts should show the frames per second.
-    /// </summary>
-    public static bool ShowFPS { get; set; } = false;
-
-    /// <summary>
     /// Gets or sets the maximum fps requested.
     /// </summary>
-    public static double MaxFps { get; set; } = 65;
-
-    /// <summary>
-    /// Gets or sets a value indicating whether LiveCharts should use a hardware graphics API
-    /// to render the charts.
-    /// </summary>
-    public static bool UseGPU
+    [Obsolete($"Renamed to {nameof(RenderingSettings)}.{nameof(RenderingSettings.LiveChartsRenderLoopFPS)}")]
+    public static double MaxFps
     {
-        get => s_useGPU;
-        set { s_useGPU = value; s_gpuSetByUser = true; }
+        get => RenderingSettings.LiveChartsRenderLoopFPS;
+        set => RenderingSettings.LiveChartsRenderLoopFPS = value;
     }
 
     /// <summary>
-    /// Gets a value indicating whether LiveCharts has a backend registered.
+    /// Defines the rendering settins for LiveCharts.
     /// </summary>
-    public static bool HasBackend { get; internal set; } = false;
-
-    /// <summary>
-    /// Gets a value indicating whether LiveCharts has a theme registered.
-    /// </summary>
-    public static bool HasDefaultTheme { get; set; } = false;
-
-    /// <summary>
-    /// Gets a value indicating whether LiveCharts has the default mappers registered.
-    /// </summary>
-    public static bool HasDefaultMappers { get; set; } = false;
+    public static RenderingSettings RenderingSettings { get; internal set; } = null!;
 
     /// <summary>
     /// Gets the current settings.
@@ -147,11 +124,5 @@ public static class LiveCharts
     {
         if (ticks < 0) ticks = 0;
         return TimeSpan.FromTicks((long)ticks);
-    }
-
-    internal static void SetUseGPUIfNotSetByUser(bool value)
-    {
-        if (s_gpuSetByUser) return;
-        s_useGPU = value;
     }
 }
