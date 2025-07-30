@@ -30,15 +30,28 @@
       <BuildType Solution="AppStore|*" Project="Debug" />
     </Project>
   </Folder>
+  <Folder Name="/Samples/Avalonia/Config/">
+    <File Path="samples/AvaloniaSample/Directory.Build.props" />
+  </Folder>
   <Folder Name="/Samples/Avalonia/Platforms/">
     <Project Path="samples/AvaloniaSample/Platforms/AvaloniaSample.Android/AvaloniaSample.Android.csproj">
       <BuildType Solution="Ad-Hoc|*" Project="Debug" />
       <BuildType Solution="AppStore|*" Project="Debug" />
       <Deploy Solution="Debug|Any CPU" />
+      <Deploy Solution="Release|Any CPU" />
+    </Project>
+    <Project Path="samples/AvaloniaSample/Platforms/AvaloniaSample.Browser/AvaloniaSample.Browser.csproj">
+      <BuildType Solution="Ad-Hoc|*" Project="Release" />
+      <BuildType Solution="AppStore|*" Project="Release" />
     </Project>
     <Project Path="samples/AvaloniaSample/Platforms/AvaloniaSample.Desktop/AvaloniaSample.Desktop.csproj">
       <BuildType Solution="Ad-Hoc|*" Project="Debug" />
       <BuildType Solution="AppStore|*" Project="Debug" />
+    </Project>
+    <Project Path="samples/AvaloniaSample/Platforms/AvaloniaSample.iOS/AvaloniaSample.iOS.csproj">
+      <BuildType Solution="Ad-Hoc|*" Project="Release" />
+      <BuildType Solution="AppStore|*" Project="Release" />
+      <Deploy />
     </Project>
   </Folder>
   <Folder Name="/Samples/BlazorWasm/">
