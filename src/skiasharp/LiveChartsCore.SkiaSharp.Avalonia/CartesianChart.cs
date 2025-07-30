@@ -76,5 +76,12 @@ public partial class CartesianChart : ChartControl, ICartesianChartView
         _previousPinchScale = scale;
 
         c.Zoom(pivot, ZoomDirection.DefinedByScaleFactor, 1 - delta, true);
+
+        // hack:
+        // when the pinch started, the isPanning property is set to true,
+        // when the pinch is completed, the pointerUp will be called,
+        // and within that method panning will occur, lets prevent that
+        // by setting isPanning to false here.
+        c.ClearPointerDown();
     }
 }
