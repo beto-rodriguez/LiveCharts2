@@ -42,7 +42,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI;
 /// <inheritdoc cref="IChartView"/>
 public abstract partial class ChartControl : UserControl, IChartView
 {
-    private DateTime _lastPresed;
+    private DateTime _lastTouch;
     private readonly ThemeListener _themeListener;
     private readonly PointerController _pointerController;
     private static readonly bool s_isWebAssembly = RuntimeInformation.IsOSPlatform(OSPlatform.Create("BROWSER"));
@@ -125,10 +125,12 @@ public abstract partial class ChartControl : UserControl, IChartView
         if (PointerPressedCommand?.CanExecute(cArgs) == true)
             PointerPressedCommand.Execute(cArgs);
 
-        var isSecondary = (DateTime.Now - _lastPresed).TotalMilliseconds < 500;
+        var isSecondary = (DateTime.Now - _lastTouch).TotalMilliseconds < 500;
 
         CoreChart?.InvokePointerDown(args.Location, args.IsSecondaryPress || isSecondary);
-        _lastPresed = DateTime.Now;
+
+        if (NativeHelpers.IsTouchDevice())
+            _lastTouch = DateTime.Now;
     }
 
     private void OnMoved(object? sender, Native.Events.ScreenEventArgs args)

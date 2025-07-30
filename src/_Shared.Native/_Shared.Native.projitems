@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Platforms\Android\PointerController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Platforms\INativePointerController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Platforms\Mac\PointerController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Platforms\NativeHelpers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Platforms\NoUI\PointerController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Platforms\WinUI\PointerController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PointerController.cs" />
