@@ -55,6 +55,6 @@ public sealed partial class CartesianChart : ChartControl, ICartesianChartView
         // when the pinch is completed, the pointerUp will be called,
         // and within that method panning will occur, lets prevent that
         // by setting isPanning to false here.
-        c._isPanning = false;
+        c.ClearPointerDown();
     }
 }

@@ -42,6 +42,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI;
 /// <inheritdoc cref="IChartView"/>
 public abstract partial class ChartControl : UserControl, IChartView
 {
+    private DateTime _lastPresed;
     private readonly ThemeListener _themeListener;
     private readonly PointerController _pointerController;
     private static readonly bool s_isWebAssembly = RuntimeInformation.IsOSPlatform(OSPlatform.Create("BROWSER"));
@@ -120,14 +121,14 @@ public abstract partial class ChartControl : UserControl, IChartView
 
     private void OnPressed(object? sender, Native.Events.PressedEventArgs args)
     {
-        // is this working on all platforms?
-        //if (args.KeyModifiers > 0) return;
-
         var cArgs = new PointerCommandArgs(this, new(args.Location.X, args.Location.Y), args);
         if (PointerPressedCommand?.CanExecute(cArgs) == true)
             PointerPressedCommand.Execute(cArgs);
 
-        CoreChart?.InvokePointerDown(args.Location, args.IsSecondaryPress);
+        var isSecondary = (DateTime.Now - _lastPresed).TotalMilliseconds < 500;
+
+        CoreChart?.InvokePointerDown(args.Location, args.IsSecondaryPress || isSecondary);
+        _lastPresed = DateTime.Now;
     }
 
     private void OnMoved(object? sender, Native.Events.ScreenEventArgs args)
