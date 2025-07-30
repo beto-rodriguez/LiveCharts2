@@ -33,6 +33,7 @@ internal partial class PointerController : INativePointerController
 {
     private bool _isPinching;
     private DateTime _pressedTime;
+    private static bool? s_isTouchDevice;
 
     public void InitializeController(object view)
     {
@@ -121,8 +122,12 @@ internal partial class PointerController : INativePointerController
     private void OnWindowsPointerExited(object sender, PointerRoutedEventArgs e) =>
         Exited?.Invoke(sender, new(e));
 
-    private void OnPinchSarted(object sender, ManipulationStartedRoutedEventArgs e) =>
+    private void OnPinchSarted(object sender, ManipulationStartedRoutedEventArgs e)
+    {
+        if (!IsTouchDevice()) return;
+
         _isPinching = true;
+    }
 
     private void OnPinching(object sender, ManipulationDeltaRoutedEventArgs e)
     {
@@ -133,6 +138,50 @@ internal partial class PointerController : INativePointerController
 
     private void OnPinchCompleted(object sender, ManipulationCompletedRoutedEventArgs e) =>
         _isPinching = false;
+
+    private static bool IsTouchDevice()
+    {
+        if (s_isTouchDevice.HasValue)
+            return s_isTouchDevice.Value;
+
+        var isWindowsTouchEnabled = false;
+
+#if WINDOWS
+        isWindowsTouchEnabled = WindowsTouchSupportHelper.IsWindowsTouchEnabled();
+#endif
+
+        var result =
+            OperatingSystem.IsAndroid() ||
+            (OperatingSystem.IsIOS() && !OperatingSystem.IsMacCatalyst()) ||
+            //(OperatingSystem.IsBrowser() && IsTouchSupportedInJs()) || is this needed?
+            (OperatingSystem.IsWindows() && isWindowsTouchEnabled);
+
+        s_isTouchDevice = result;
+
+        return result;
+    }
+
+#if WINDOWS
+    public static class WindowsTouchSupportHelper
+    {
+        private const int SM_MAXIMUMTOUCHES = 95;
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern int GetSystemMetrics(int nIndex);
+
+        public static bool IsWindowsTouchEnabled()
+        {
+            try
+            {
+                return GetSystemMetrics(SM_MAXIMUMTOUCHES) > 0;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+    }
+#endif
 }
 
 #endif
