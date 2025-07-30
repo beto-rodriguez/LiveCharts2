@@ -2,54 +2,30 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="using:AvaloniaSample"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AvaloniaSample.MainView">
-    <Border BorderBrush="#eeeeee" BorderThickness="1">
-        <Grid Margin="25 0 0 0" >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="250"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0" Margin="0 20 0 0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="40"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Border Grid.Row="0">
-                    <Image
-                        Source="/Assets/livecharts.png"
-                        MaxWidth="200"
-                        HorizontalAlignment="Left" />
-                </Border>
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0 20">
-                    <ItemsControl Name="items" ItemsSource="{Binding Samples}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Vertical"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border
-                                    Padding="0 6"
-                                    Cursor="Hand"
-                                    PointerPressed="OnPointerPressed">
-                                    <TextBlock
-                                        Text="{Binding}"
-                                        FontSize="16"
-                                        FontFamily="Open Sans"/>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
-            </Grid>
-            <Border
+
+    <UserControl.Resources>
+        <local:SampleConverter x:Key="SampleConverter"/>
+    </UserControl.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+        <Grid ColumnDefinitions="Auto,*" Margin="8,4">
+            <Label
+                Content="Select sample:"
+                VerticalAlignment="Center"/>
+            <ComboBox
                 Grid.Column="1"
-                Margin="20 35 0 0"
-                Padding="25">
-                <ContentControl x:Name="content"/>
-            </Border>
+                SelectedItem="{Binding SelectedSample}"
+                ItemsSource="{Binding Samples}"
+                VerticalAlignment="Center"/>
         </Grid>
-    </Border>
+        <Border
+            Grid.Row="1"
+            Margin="10">
+            <ContentControl
+                Content="{Binding SelectedSample, Converter={StaticResource SampleConverter}}"/>
+        </Border>
+    </Grid>
 </UserControl>
