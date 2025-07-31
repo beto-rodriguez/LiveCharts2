@@ -6,9 +6,8 @@
 
     <GlobalLangVersion>preview</GlobalLangVersion>
 
-    <MauiVersion>8.0.82</MauiVersion>
     <MinSkiaSharpVersion>2.88.9</MinSkiaSharpVersion>
-    <LatestSkiaSharpVersion>3.119.0</LatestSkiaSharpVersion> <!-- used for views that use the SkiaSharp 3 as default -->
+    <LatestSkiaSharpVersion>3.119.0</LatestSkiaSharpVersion>
 
   </PropertyGroup>
 
