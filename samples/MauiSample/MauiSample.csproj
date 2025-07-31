@@ -60,8 +60,8 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Maui\LiveChartsCore.SkiaSharpView.Maui.csproj" />
 	  <ProjectReference Include="..\ViewModelsSamples\ViewModelsSamples.csproj" />
-    <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.90" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.90" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 	</ItemGroup>
 
