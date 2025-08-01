@@ -46,6 +46,7 @@ public abstract partial class BaseVectorGeometry<TSegment> : Animatable, IDrawnE
         _TransformOriginMotionProperty = new PointMotionProperty(new LvcPoint(0.5f, 0.5f));
         _ScaleTransformMotionProperty = new PointMotionProperty(new LvcPoint(1f, 1f));
         _SkewTransformMotionProperty = new PointMotionProperty(new LvcPoint(1f, 1f));
+        _OpacityMotionProperty = new(1f);
     }
 
     /// <inheritdoc cref="IDrawnElement.Parent"/>
