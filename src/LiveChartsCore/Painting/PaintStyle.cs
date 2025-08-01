@@ -31,6 +31,11 @@ namespace LiveChartsCore.Painting;
 public enum PaintStyle
 {
     /// <summary>
+    /// The undefined paint style.
+    /// </summary>
+    Undefined = 0,
+
+    /// <summary>
     /// The stroke.
     /// </summary>
     Stroke = 1 << 0,

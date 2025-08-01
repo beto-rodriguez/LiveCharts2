@@ -65,12 +65,6 @@ public abstract partial class Paint : Animatable, IDisposable
     /// </value>
     public double ZIndex { get; set; }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether this instance is stroke.
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if this instance is stroke; otherwise, <c>false</c>.
-    /// </value>
     internal PaintStyle PaintStyle { get; set; }
 
     /// <summary>
