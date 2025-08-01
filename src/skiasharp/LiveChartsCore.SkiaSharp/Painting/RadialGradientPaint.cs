@@ -110,6 +110,14 @@ public class RadialGradientPaint : SkiaPaint
         var skiaContext = (SkiaSharpDrawingContext)drawingContext;
         _skiaPaint ??= new SKPaint();
 
+        var clip = GetClipRectangle(skiaContext.MotionCanvas);
+        if (clip != LvcRectangle.Empty)
+        {
+            _ = skiaContext.Canvas.Save();
+            skiaContext.Canvas.ClipRect(new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height));
+            _drawingContext = skiaContext;
+        }
+
         var size = GetDrawRectangleSize(skiaContext);
         var center = new SKPoint(size.Location.X + _center.X * size.Width, size.Location.Y + _center.Y * size.Height);
         var r = size.Location.X + size.Width > size.Location.Y + size.Height
@@ -143,14 +151,6 @@ public class RadialGradientPaint : SkiaPaint
         {
             ImageFilter.CreateFilter(skiaContext);
             _skiaPaint.ImageFilter = ImageFilter.SKImageFilter;
-        }
-
-        var clip = GetClipRectangle(skiaContext.MotionCanvas);
-        if (clip != LvcRectangle.Empty)
-        {
-            _ = skiaContext.Canvas.Save();
-            skiaContext.Canvas.ClipRect(new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height));
-            _drawingContext = skiaContext;
         }
 
         skiaContext.ActiveSkiaPaint = _skiaPaint;
