@@ -180,6 +180,16 @@ public class LinearGradientPaint(
         var skiaContext = (SkiaSharpDrawingContext)drawingContext;
         _skiaPaint ??= new SKPaint();
 
+        var clip = GetClipRectangle(skiaContext.MotionCanvas);
+        if (clip != LvcRectangle.Empty)
+        {
+            _ = skiaContext.Canvas.Save();
+            skiaContext.Canvas.ClipRect(new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height));
+            _drawingContext = skiaContext;
+        }
+
+        skiaContext.ActiveSkiaPaint = _skiaPaint;
+
         var size = GetDrawRectangleSize(skiaContext);
 
         var xf = size.Location.X;
@@ -218,16 +228,6 @@ public class LinearGradientPaint(
             ImageFilter.CreateFilter(skiaContext);
             _skiaPaint.ImageFilter = ImageFilter.SKImageFilter;
         }
-
-        var clip = GetClipRectangle(skiaContext.MotionCanvas);
-        if (clip != LvcRectangle.Empty)
-        {
-            _ = skiaContext.Canvas.Save();
-            skiaContext.Canvas.ClipRect(new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height));
-            _drawingContext = skiaContext;
-        }
-
-        skiaContext.ActiveSkiaPaint = _skiaPaint;
     }
 
     /// <inheritdoc cref="Paint.Transitionate(float, Paint)"/>
@@ -299,7 +299,10 @@ public class LinearGradientPaint(
         GC.SuppressFinalize(this);
     }
 
-    private static SKRect GetDrawRectangleSize(SkiaSharpDrawingContext drawingContext) =>
-        // ideally, we should also let the user use the shape bounds.
-        new(0, 0, drawingContext.Info.Width, drawingContext.Info.Height);
+    // ideally, we should also let the user use the shape bounds.
+    private static SKRect GetDrawRectangleSize(SkiaSharpDrawingContext drawingContext)
+    {
+        var space = drawingContext.Canvas.LocalClipBounds;
+        return new(space.Left, space.Top, space.Right, space.Bottom);
+    }
 }
