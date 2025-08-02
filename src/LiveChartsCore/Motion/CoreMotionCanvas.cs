@@ -286,7 +286,7 @@ public class CoreMotionCanvas : IDisposable
     /// <param name="task">The task.</param>
     /// <param name="style">The paint style.</param>
     /// <returns></returns>
-    public void AddDrawableTask(Paint task, PaintStyle style = PaintStyle.Fill)
+    public void AddDrawableTask(Paint task, PaintStyle style = PaintStyle.Undefined)
     {
         if (task == Paint.Default) return;
 
