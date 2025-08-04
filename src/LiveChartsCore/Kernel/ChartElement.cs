@@ -125,8 +125,7 @@ public abstract class ChartElement : IChartElement, INotifyPropertyChanged
         if (reference is not null) _deletingTasks.Add(reference);
         reference = value;
 
-        if (reference is not null)
-            reference.PaintStyle = style;
+        reference?.PaintStyle = style;
 
         OnPropertyChanged(propertyName);
     }

@@ -100,8 +100,7 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
         set
         {
             SetProperty(ref _showError, value);
-            if (ErrorPaint is not null)
-                ErrorPaint.IsPaused = !value;
+            ErrorPaint?.IsPaused = !value;
         }
     }
 

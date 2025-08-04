@@ -108,8 +108,7 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
         set
         {
             SetProperty(ref _showError, value);
-            if (ErrorPaint is not null)
-                ErrorPaint.IsPaused = !value;
+            ErrorPaint?.IsPaused = !value;
         }
     }
 
@@ -164,8 +163,8 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
             // the problem of this solution is that the user needs to set z-indexes above 1000
             // if the user needs to add more series to the chart.
             actualZIndex = 1000 - stacker.Position;
-            if (Fill is not null) Fill.ZIndex = actualZIndex;
-            if (Stroke is not null) Stroke.ZIndex = actualZIndex;
+            Fill?.ZIndex = actualZIndex;
+            Stroke?.ZIndex = actualZIndex;
         }
 
         var dls = (float)DataLabelsSize;

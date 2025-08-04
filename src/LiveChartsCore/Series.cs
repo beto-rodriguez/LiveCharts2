@@ -286,8 +286,7 @@ public abstract class Series<TModel, TVisual, TLabel>
         set
         {
             SetProperty(ref _showDataLabels, value);
-            if (DataLabelsPaint is not null)
-                DataLabelsPaint.IsPaused = !value;
+            DataLabelsPaint?.IsPaused = !value;
         }
     }
 

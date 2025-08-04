@@ -197,8 +197,8 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
             // the problem of this solution is that the user needs to set z-indexes above 1000
             // if the user needs to add more series to the chart.
             actualZIndex = 1000 - stacker.Position;
-            if (Fill is not null) Fill.ZIndex = actualZIndex;
-            if (Stroke is not null) Stroke.ZIndex = actualZIndex;
+            Fill?.ZIndex = actualZIndex;
+            Stroke?.ZIndex = actualZIndex;
         }
 
         var dls = unchecked((float)DataLabelsSize);

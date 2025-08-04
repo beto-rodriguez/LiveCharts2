@@ -77,8 +77,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel>(
         set
         {
             SetProperty(ref _showError, value);
-            if (ErrorPaint is not null)
-                ErrorPaint.IsPaused = !value;
+            ErrorPaint?.IsPaused = !value;
         }
     }
 

@@ -102,7 +102,7 @@ public abstract partial class DrawnGeometry : Animatable, IDrawnElement
         get => _StrokeMotionProperty.GetMovement(this);
         set
         {
-            if (value is not null) value.PaintStyle = PaintStyle.Stroke;
+            value?.PaintStyle = PaintStyle.Stroke;
             _StrokeMotionProperty.SetMovement(value, this);
         }
     }
@@ -114,7 +114,7 @@ public abstract partial class DrawnGeometry : Animatable, IDrawnElement
         get => _FillMotionProperty.GetMovement(this);
         set
         {
-            if (value is not null) value.PaintStyle = PaintStyle.Fill;
+            value?.PaintStyle = PaintStyle.Fill;
             _FillMotionProperty.SetMovement(value, this);
         }
     }
