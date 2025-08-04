@@ -35,16 +35,6 @@ namespace LiveChartsCore;
 /// <seealso cref="ChartElement" />
 public abstract class CoreSection : ChartElement, INotifyPropertyChanged
 {
-    private Paint? _stroke = null;
-    private Paint? _fill = null;
-    private Paint? _labelPaint = null;
-    private double? _xi;
-    private double? _xj;
-    private double? _yi;
-    private double? _yj;
-    private int _scalesXAt;
-    private int _scalesYAt;
-    private int? _zIndex;
 
     /// <summary>
     /// Gets or sets the stroke.
@@ -54,9 +44,9 @@ public abstract class CoreSection : ChartElement, INotifyPropertyChanged
     /// </value>
     public Paint? Stroke
     {
-        get => _stroke;
-        set => SetPaintProperty(ref _stroke, value, PaintStyle.Stroke);
-    }
+        get;
+        set => SetPaintProperty(ref field, value, PaintStyle.Stroke);
+    } = null;
 
     /// <summary>
     /// Gets or sets the fill.
@@ -66,9 +56,9 @@ public abstract class CoreSection : ChartElement, INotifyPropertyChanged
     /// </value>
     public Paint? Fill
     {
-        get => _fill;
-        set => SetPaintProperty(ref _fill, value);
-    }
+        get;
+        set => SetPaintProperty(ref field, value);
+    } = null;
 
     /// <summary>
     /// Gets or sets the label paint.
@@ -78,9 +68,9 @@ public abstract class CoreSection : ChartElement, INotifyPropertyChanged
     /// </value>
     public Paint? LabelPaint
     {
-        get => _labelPaint;
-        set => SetPaintProperty(ref _labelPaint, value);
-    }
+        get;
+        set => SetPaintProperty(ref field, value);
+    } = null;
 
     /// <summary>
     /// Gets or sets the xi, the value where the section starts at the X axis,
@@ -89,7 +79,7 @@ public abstract class CoreSection : ChartElement, INotifyPropertyChanged
     /// <value>
     /// The xi.
     /// </value>
-    public double? Xi { get => _xi; set => SetProperty(ref _xi, value); }
+    public double? Xi { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets or sets the xj, the value where the section ends and the X axis.
@@ -98,7 +88,7 @@ public abstract class CoreSection : ChartElement, INotifyPropertyChanged
     /// <value>
     /// The xj.
     /// </value>
-    public double? Xj { get => _xj; set => SetProperty(ref _xj, value); }
+    public double? Xj { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets or sets the yi, the value where the section starts and the Y axis.
@@ -107,7 +97,7 @@ public abstract class CoreSection : ChartElement, INotifyPropertyChanged
     /// <value>
     /// The yi.
     /// </value>
-    public double? Yi { get => _yi; set => SetProperty(ref _yi, value); }
+    public double? Yi { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets or sets the yj, the value where the section ends and the Y axis.
@@ -116,7 +106,7 @@ public abstract class CoreSection : ChartElement, INotifyPropertyChanged
     /// <value>
     /// The yj.
     /// </value>
-    public double? Yj { get => _yj; set => SetProperty(ref _yj, value); }
+    public double? Yj { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets or sets the axis index where the section is scaled in the X plane, the index must exist 
@@ -125,7 +115,7 @@ public abstract class CoreSection : ChartElement, INotifyPropertyChanged
     /// <value>
     /// The index of the axis.
     /// </value>
-    public int ScalesXAt { get => _scalesXAt; set => SetProperty(ref _scalesXAt, value); }
+    public int ScalesXAt { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets or sets the axis index where the section is scaled in the Y plane, the index must exist 
@@ -134,7 +124,7 @@ public abstract class CoreSection : ChartElement, INotifyPropertyChanged
     /// <value>
     /// The index of the axis.
     /// </value>
-    public int ScalesYAt { get => _scalesYAt; set => SetProperty(ref _scalesYAt, value); }
+    public int ScalesYAt { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets or sets the index of the z axis.
@@ -142,11 +132,11 @@ public abstract class CoreSection : ChartElement, INotifyPropertyChanged
     /// <value>
     /// The index of the z.
     /// </value>
-    public int? ZIndex { get => _zIndex; set => SetProperty(ref _zIndex, value); }
+    public int? ZIndex { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
-        [_stroke, _fill, _labelPaint];
+        [Stroke, Fill, LabelPaint];
 
     /// <summary>
     /// Called when the fill changes.
@@ -169,7 +159,6 @@ public abstract class CoreSection<TSizedGeometry, TLabelGeometry> : CoreSection
     where TSizedGeometry : BoundedDrawnGeometry, new()
     where TLabelGeometry : BaseLabelGeometry, new()
 {
-    private string _label = string.Empty;
     private float _labelSize = 12;
 
     /// <summary>
@@ -190,7 +179,7 @@ public abstract class CoreSection<TSizedGeometry, TLabelGeometry> : CoreSection
     /// <summary>
     /// Gets or sets the label, a string to be displayed within the section.
     /// </summary>
-    public string Label { get => _label; set => SetProperty(ref _label, value); }
+    public string Label { get; set => SetProperty(ref field, value); } = string.Empty;
 
     /// <summary>
     /// Gets or sets the label size.
@@ -299,7 +288,7 @@ public abstract class CoreSection<TSizedGeometry, TLabelGeometry> : CoreSection
 
             _labelGeometry.X = xi;
             _labelGeometry.Y = yi;
-            _labelGeometry.Text = _label;
+            _labelGeometry.Text = Label;
             _labelGeometry.TextSize = _labelSize;
             _labelGeometry.Paint = LabelPaint;
 

@@ -53,9 +53,6 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
     private readonly Dictionary<object, List<TPathGeometry>> _fillPathHelperDictionary = [];
     private readonly Dictionary<object, List<TPathGeometry>> _strokePathHelperDictionary = [];
     private float _geometrySize = 14f;
-    private Paint? _geometryFill = Paint.Default;
-    private Paint? _geometryStroke = Paint.Default;
-    private bool _enableNullSplitting = true;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreStepLineSeries{TModel, TVisual, TLabel, TPathGeometry, TLineGeometry}"/> class.
@@ -69,7 +66,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
     }
 
     /// <inheritdoc cref="IStepLineSeries.EnableNullSplitting"/>
-    public bool EnableNullSplitting { get => _enableNullSplitting; set => SetProperty(ref _enableNullSplitting, value); }
+    public bool EnableNullSplitting { get; set => SetProperty(ref field, value); } = true;
 
     /// <inheritdoc cref="IStepLineSeries.GeometrySize"/>
     public double GeometrySize { get => _geometrySize; set => SetProperty(ref _geometrySize, (float)value); }
@@ -77,16 +74,16 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
     /// <inheritdoc cref="IStepLineSeries.GeometryFill"/>
     public Paint? GeometryFill
     {
-        get => _geometryFill;
-        set => SetPaintProperty(ref _geometryFill, value);
-    }
+        get;
+        set => SetPaintProperty(ref field, value);
+    } = Paint.Default;
 
     /// <inheritdoc cref="IStepLineSeries.GeometrySize"/>
     public Paint? GeometryStroke
     {
-        get => _geometryStroke;
-        set => SetPaintProperty(ref _geometryStroke, value, PaintStyle.Stroke);
-    }
+        get;
+        set => SetPaintProperty(ref field, value, PaintStyle.Stroke);
+    } = Paint.Default;
 
     /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
     public override void Invalidate(Chart chart)
@@ -108,7 +105,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
         var p = primaryScale.ToPixels(pivot);
 
         // see note #240222
-        var segments = _enableNullSplitting
+        var segments = EnableNullSplitting
             ? Fetch(cartesianChart).SplitByNullGaps(point => DeleteNullPoint(point, secondaryScale, primaryScale))
             : [Fetch(cartesianChart)];
 
@@ -670,7 +667,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
     /// </summary>
     /// <returns></returns>
     protected internal override Paint?[] GetPaintTasks() =>
-        [Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint];
+        [Stroke, Fill, GeometryFill, GeometryStroke, DataLabelsPaint];
 
     private void DeleteNullPoint(ChartPoint point, Scaler xScale, Scaler yScale)
     {

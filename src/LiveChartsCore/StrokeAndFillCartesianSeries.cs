@@ -45,8 +45,6 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>(
             where TVisual : DrawnGeometry, new()
             where TLabel : BaseLabelGeometry, new()
 {
-    private Paint? _stroke = Paint.Default;
-    private Paint? _fill = Paint.Default;
 
     /// <summary>
     /// Gets or sets the stroke.
@@ -56,9 +54,9 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>(
     /// </value>
     public Paint? Stroke
     {
-        get => _stroke;
-        set => SetPaintProperty(ref _stroke, value, PaintStyle.Stroke);
-    }
+        get;
+        set => SetPaintProperty(ref field, value, PaintStyle.Stroke);
+    } = Paint.Default;
 
     /// <summary>
     /// Gets or sets the fill.
@@ -68,13 +66,13 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>(
     /// </value>
     public Paint? Fill
     {
-        get => _fill;
-        set => SetPaintProperty(ref _fill, value);
-    }
+        get;
+        set => SetPaintProperty(ref field, value);
+    } = Paint.Default;
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
-        [_stroke, _fill, DataLabelsPaint];
+        [Stroke, Fill, DataLabelsPaint];
 
     /// <summary>
     /// Gets the fill paint for the miniature.

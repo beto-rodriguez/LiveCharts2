@@ -31,12 +31,6 @@ namespace LiveChartsCore.Defaults;
 /// </summary>
 public class ErrorPoint : IChartEntity, INotifyPropertyChanged
 {
-    private double? _x;
-    private double? _y;
-    private double _exi;
-    private double _exj;
-    private double _eyi;
-    private double _eyj;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ErrorValue"/> class.
@@ -74,7 +68,7 @@ public class ErrorPoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The high.
     /// </value>
-    public double? X { get => _x; set { _x = value; OnPropertyChanged(); } }
+    public double? X { get; set { field = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the Y coordinate.
@@ -82,7 +76,7 @@ public class ErrorPoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The high.
     /// </value>
-    public double? Y { get => _y; set { _y = value; OnPropertyChanged(); } }
+    public double? Y { get; set { field = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the left error in X.
@@ -90,7 +84,7 @@ public class ErrorPoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The open.
     /// </value>
-    public double XErrorI { get => _exi; set { _exi = value; OnPropertyChanged(); } }
+    public double XErrorI { get; set { field = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the right error in x.
@@ -98,7 +92,7 @@ public class ErrorPoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The close.
     /// </value>
-    public double XErrorJ { get => _exj; set { _exj = value; OnPropertyChanged(); } }
+    public double XErrorJ { get; set { field = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the top error in Y.
@@ -106,7 +100,7 @@ public class ErrorPoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The open.
     /// </value>
-    public double YErrorI { get => _eyi; set { _eyi = value; OnPropertyChanged(); } }
+    public double YErrorI { get; set { field = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the bottom error in Y.
@@ -114,7 +108,7 @@ public class ErrorPoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The close.
     /// </value>
-    public double YErrorJ { get => _eyj; set { _eyj = value; OnPropertyChanged(); } }
+    public double YErrorJ { get; set { field = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartEntity.MetaData"/>
     [System.Text.Json.Serialization.JsonIgnore]
@@ -136,9 +130,9 @@ public class ErrorPoint : IChartEntity, INotifyPropertyChanged
     /// <param name="propertyName">Name of the property.</param>
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
-        Coordinate = _y is null || _x is null
+        Coordinate = Y is null || X is null
             ? Coordinate.Empty
-            : new(_y.Value, _x.Value, 0, 0, 0, 0, new(_exi, _exj, _eyi, _eyj));
+            : new(Y.Value, X.Value, 0, 0, 0, 0, new(XErrorI, XErrorJ, YErrorI, YErrorJ));
 
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

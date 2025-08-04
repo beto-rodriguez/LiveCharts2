@@ -48,8 +48,6 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
         where TLabel : BaseLabelGeometry, new()
         where TMiniatureGeometry : BoundedDrawnGeometry, new()
 {
-    private double _pading = 5;
-    private double _maxBarWidth = 25;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreBoxSeries{TModel, TVisual, TLabel, TMiniatureGeometry}"/> class.
@@ -79,10 +77,10 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
     }
 
     /// <inheritdoc cref="IBoxSeries.MaxBarWidth"/>
-    public double MaxBarWidth { get => _maxBarWidth; set => SetProperty(ref _maxBarWidth, value); }
+    public double MaxBarWidth { get; set => SetProperty(ref field, value); } = 25;
 
     /// <inheritdoc cref="IBoxSeries.Padding"/>
-    public double Padding { get => _pading; set => SetProperty(ref _pading, value); }
+    public double Padding { get; set => SetProperty(ref field, value); } = 5;
 
     /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
     public override void Invalidate(Chart chart)

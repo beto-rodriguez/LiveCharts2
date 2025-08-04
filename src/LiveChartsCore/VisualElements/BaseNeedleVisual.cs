@@ -33,27 +33,24 @@ namespace LiveChartsCore.VisualElements;
 /// </summary>
 public abstract class BaseNeedleVisual : VisualElement
 {
-    private Paint? _fill;
-    private double _value;
-    private double _width;
 
     /// <summary>
     /// Gets or sets the value.
     /// </summary>
-    public double Value { get => _value; set => SetProperty(ref _value, value); }
+    public double Value { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets or sets the width of the needle.
     /// </summary>
-    public double Width { get => _width; set => SetProperty(ref _width, value); }
+    public double Width { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets or sets the fill paint.
     /// </summary>
     public Paint? Fill
     {
-        get => _fill;
-        set => SetPaintProperty(ref _fill, value);
+        get;
+        set => SetPaintProperty(ref field, value);
     }
 }
 

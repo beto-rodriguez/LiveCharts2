@@ -53,28 +53,22 @@ public abstract class BarSeries<TModel, TVisual, TLabel>(
             where TVisual : BoundedDrawnGeometry, new()
             where TLabel : BaseLabelGeometry, new()
 {
-    private double _pading = 2;
-    private double _maxBarWidth = 50;
-    private bool _ignoresBarPosition = false;
-    private double _rx;
-    private double _ry;
-    private Paint? _errorPaint = Paint.Default;
     private bool _showError;
 
     /// <inheritdoc cref="IBarSeries.Padding"/>
-    public double Padding { get => _pading; set => SetProperty(ref _pading, value); }
+    public double Padding { get; set => SetProperty(ref field, value); } = 2;
 
     /// <inheritdoc cref="IBarSeries.MaxBarWidth"/>
-    public double MaxBarWidth { get => _maxBarWidth; set => SetProperty(ref _maxBarWidth, value); }
+    public double MaxBarWidth { get; set => SetProperty(ref field, value); } = 50;
 
     /// <inheritdoc cref="IBarSeries.IgnoresBarPosition"/>
-    public bool IgnoresBarPosition { get => _ignoresBarPosition; set => SetProperty(ref _ignoresBarPosition, value); }
+    public bool IgnoresBarPosition { get; set => SetProperty(ref field, value); } = false;
 
     /// <inheritdoc cref="IBarSeries.Rx"/>
-    public double Rx { get => _rx; set => SetProperty(ref _rx, value); }
+    public double Rx { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="IBarSeries.Ry"/>
-    public double Ry { get => _ry; set => SetProperty(ref _ry, value); }
+    public double Ry { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="IErrorSeries.ShowError"/>
     public bool ShowError
@@ -83,21 +77,21 @@ public abstract class BarSeries<TModel, TVisual, TLabel>(
         set
         {
             SetProperty(ref _showError, value);
-            if (_errorPaint is not null)
-                _errorPaint.IsPaused = !value;
+            if (ErrorPaint is not null)
+                ErrorPaint.IsPaused = !value;
         }
     }
 
     /// <inheritdoc cref="IErrorSeries.ErrorPaint"/>
     public Paint? ErrorPaint
     {
-        get => _errorPaint;
+        get;
         set
         {
-            SetPaintProperty(ref _errorPaint, value, PaintStyle.Stroke);
+            SetPaintProperty(ref field, value, PaintStyle.Stroke);
             _showError = value is not null && value != Paint.Default;
         }
-    }
+    } = Paint.Default;
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniaturesSketch"/>
     [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
@@ -240,7 +234,7 @@ public abstract class BarSeries<TModel, TVisual, TLabel>(
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
-        [Stroke, Fill, DataLabelsPaint, _errorPaint];
+        [Stroke, Fill, DataLabelsPaint, ErrorPaint];
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.FindPointsInPosition(Chart, LvcPoint, FindingStrategy, FindPointFor)"/>
     protected override IEnumerable<ChartPoint> FindPointsInPosition(

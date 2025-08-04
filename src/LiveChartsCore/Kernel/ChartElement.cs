@@ -38,7 +38,6 @@ public abstract class ChartElement : IChartElement, INotifyPropertyChanged
     internal bool _isInternalSet = false;
     internal object _theme = new();
     internal readonly HashSet<string> _userSets = [];
-    private bool _isVisible = true;
     private readonly List<Paint> _deletingTasks = [];
 
     ChartElement IChartElement.ChartElementSource => this;
@@ -55,9 +54,9 @@ public abstract class ChartElement : IChartElement, INotifyPropertyChanged
     /// <inheritdoc cref="IChartElement.IsVisible" />
     public bool IsVisible
     {
-        get => _isVisible;
-        set => SetProperty(ref _isVisible, value);
-    }
+        get;
+        set => SetProperty(ref field, value);
+    } = true;
 
     /// <inheritdoc cref="IChartElement.Invalidate(Chart)" />
     public abstract void Invalidate(Chart chart);

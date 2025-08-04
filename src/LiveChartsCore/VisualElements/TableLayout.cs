@@ -37,14 +37,10 @@ namespace LiveChartsCore.VisualElements;
 public class TableLayout<TBackgroundGeometry> : VisualElement
     where TBackgroundGeometry : BoundedDrawnGeometry, new()
 {
-    private Paint? _backgroundPaint;
     private readonly Dictionary<int, Dictionary<int, TableCell>> _positions = [];
     private LvcSize[,] _measuredSizes = new LvcSize[0, 0];
     private int _maxRow = 0;
     private int _maxColumn = 0;
-    private Padding _padding = new();
-    private Align _horizontalAlignment = Align.Middle;
-    private Align _verticalAlignment = Align.Middle;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TableLayout{TBackgroundGeometry}"/> class.
@@ -57,25 +53,25 @@ public class TableLayout<TBackgroundGeometry> : VisualElement
     /// <summary>
     /// Gets or sets the padding.
     /// </summary>
-    public Padding Padding { get => _padding; set => SetProperty(ref _padding, value); }
+    public Padding Padding { get; set => SetProperty(ref field, value); } = new();
 
     /// <summary>
     /// Gets or sets the horizontal alignment.
     /// </summary>
-    public Align HorizontalAlignment { get => _horizontalAlignment; set => SetProperty(ref _horizontalAlignment, value); }
+    public Align HorizontalAlignment { get; set => SetProperty(ref field, value); } = Align.Middle;
 
     /// <summary>
     /// Gets or sets the horizontal alignment.
     /// </summary>
-    public Align VerticalAlignment { get => _verticalAlignment; set => SetProperty(ref _verticalAlignment, value); }
+    public Align VerticalAlignment { get; set => SetProperty(ref field, value); } = Align.Middle;
 
     /// <summary>
     /// Gets or sets the background paint.
     /// </summary>
     public Paint? BackgroundPaint
     {
-        get => _backgroundPaint;
-        set => SetPaintProperty(ref _backgroundPaint, value);
+        get;
+        set => SetPaintProperty(ref field, value);
     }
 
     /// <summary>
@@ -259,7 +255,7 @@ public class TableLayout<TBackgroundGeometry> : VisualElement
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
-        [_backgroundPaint];
+        [BackgroundPaint];
 
     /// <inheritdoc cref="VisualElement.IsHitBy(Chart, LvcPoint)"/>
     protected internal override IEnumerable<VisualElement> IsHitBy(Chart chart, LvcPoint point)

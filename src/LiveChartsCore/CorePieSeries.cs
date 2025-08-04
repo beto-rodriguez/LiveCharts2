@@ -52,21 +52,6 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
             where TLabel : BaseLabelGeometry, new()
             where TMiniatureGeometry : BoundedDrawnGeometry, new()
 {
-    private Paint? _stroke = null;
-    private Paint? _fill = null;
-    private double _pushout = 0;
-    private double _innerRadius = 0;
-    private double _outerRadiusOffset = 0;
-    private double _hoverPushout = 20;
-    private double _innerPadding = 0;
-    private double _outerPadding = 0;
-    private double _maxRadialColW = double.MaxValue;
-    private double _cornerRadius = 0;
-    private RadialAlignment _radialAlign = RadialAlignment.Outer;
-    private bool _invertedCornerRadius = false;
-    private bool _isFillSeries;
-    private bool _isRelativeToMin;
-    private PolarLabelsPosition _labelsPosition = PolarLabelsPosition.Middle;
     private Func<ChartPoint, string>? _tooltipLabelFormatter;
 
     /// <summary>
@@ -77,9 +62,9 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
     /// </value>
     public Paint? Stroke
     {
-        get => _stroke;
-        set => SetPaintProperty(ref _stroke, value, PaintStyle.Stroke);
-    }
+        get;
+        set => SetPaintProperty(ref field, value, PaintStyle.Stroke);
+    } = null;
 
     /// <summary>
     /// Gets or sets the fill.
@@ -89,48 +74,48 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
     /// </value>
     public Paint? Fill
     {
-        get => _fill;
-        set => SetPaintProperty(ref _fill, value);
-    }
+        get;
+        set => SetPaintProperty(ref field, value);
+    } = null;
 
     /// <inheritdoc cref="IPieSeries.Pushout"/>
-    public double Pushout { get => _pushout; set => SetProperty(ref _pushout, value); }
+    public double Pushout { get; set => SetProperty(ref field, value); } = 0;
 
     /// <inheritdoc cref="IPieSeries.InnerRadius"/>
-    public double InnerRadius { get => _innerRadius; set => SetProperty(ref _innerRadius, value); }
+    public double InnerRadius { get; set => SetProperty(ref field, value); } = 0;
 
     /// <inheritdoc cref="IPieSeries.OuterRadiusOffset"/>
-    public double OuterRadiusOffset { get => _outerRadiusOffset; set => SetProperty(ref _outerRadiusOffset, value); }
+    public double OuterRadiusOffset { get; set => SetProperty(ref field, value); } = 0;
 
     /// <inheritdoc cref="IPieSeries.HoverPushout"/>
-    public double HoverPushout { get => _hoverPushout; set => SetProperty(ref _hoverPushout, value); }
+    public double HoverPushout { get; set => SetProperty(ref field, value); } = 20;
 
     /// <inheritdoc cref="IPieSeries.RelativeInnerRadius"/>
-    public double RelativeInnerRadius { get => _innerPadding; set => SetProperty(ref _innerPadding, value); }
+    public double RelativeInnerRadius { get; set => SetProperty(ref field, value); } = 0;
 
     /// <inheritdoc cref="IPieSeries.RelativeOuterRadius"/>
-    public double RelativeOuterRadius { get => _outerPadding; set => SetProperty(ref _outerPadding, value); }
+    public double RelativeOuterRadius { get; set => SetProperty(ref field, value); } = 0;
 
     /// <inheritdoc cref="IPieSeries.MaxRadialColumnWidth"/>
-    public double MaxRadialColumnWidth { get => _maxRadialColW; set => SetProperty(ref _maxRadialColW, value); }
+    public double MaxRadialColumnWidth { get; set => SetProperty(ref field, value); } = double.MaxValue;
 
     /// <inheritdoc cref="IPieSeries.RadialAlign"/>
-    public RadialAlignment RadialAlign { get => _radialAlign; set => SetProperty(ref _radialAlign, value); }
+    public RadialAlignment RadialAlign { get; set => SetProperty(ref field, value); } = RadialAlignment.Outer;
 
     /// <inheritdoc cref="IPieSeries.CornerRadius"/>
-    public double CornerRadius { get => _cornerRadius; set => SetProperty(ref _cornerRadius, value); }
+    public double CornerRadius { get; set => SetProperty(ref field, value); } = 0;
 
     /// <inheritdoc cref="IPieSeries.InvertedCornerRadius"/>
-    public bool InvertedCornerRadius { get => _invertedCornerRadius; set => SetProperty(ref _invertedCornerRadius, value); }
+    public bool InvertedCornerRadius { get; set => SetProperty(ref field, value); } = false;
 
     /// <inheritdoc cref="IPieSeries.IsFillSeries"/>
-    public bool IsFillSeries { get => _isFillSeries; set => SetProperty(ref _isFillSeries, value); }
+    public bool IsFillSeries { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="IPieSeries.IsRelativeToMinValue"/>
-    public bool IsRelativeToMinValue { get => _isRelativeToMin; set => SetProperty(ref _isRelativeToMin, value); }
+    public bool IsRelativeToMinValue { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="IPieSeries.DataLabelsPosition"/>
-    public PolarLabelsPosition DataLabelsPosition { get => _labelsPosition; set => SetProperty(ref _labelsPosition, value); }
+    public PolarLabelsPosition DataLabelsPosition { get; set => SetProperty(ref field, value); } = PolarLabelsPosition.Middle;
 
     /// <summary>
     /// Gets or sets the tool tip label formatter for the Y axis, this function will build the label when a point in this series 
@@ -321,7 +306,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
             }
             else
             {
-                if (_isRelativeToMin)
+                if (IsRelativeToMinValue)
                 {
                     // when the series is relative to min value,
                     // the start value is always the PieChart.MinValue
@@ -548,7 +533,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
-        [_fill, _stroke, DataLabelsPaint];
+        [Fill, Stroke, DataLabelsPaint];
 
     /// <summary>
     /// Sets the default point transitions.

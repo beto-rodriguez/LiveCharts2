@@ -37,13 +37,6 @@ namespace LiveChartsCore.VisualElements;
 public class StackPanel<TBackgroundGeometry> : VisualElement
     where TBackgroundGeometry : BoundedDrawnGeometry, new()
 {
-    private Paint? _backgroundPaint;
-    private Align _verticalAlignment = Align.Middle;
-    private Align _horizontalAlignment = Align.Middle;
-    private Padding _padding = new();
-    private double _maxWidth = double.MaxValue;
-    private double _maxHeight = double.MaxValue;
-    private ContainerOrientation _orientation;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="StackPanel{TBackgroundGeometry}"/> class.
@@ -61,30 +54,30 @@ public class StackPanel<TBackgroundGeometry> : VisualElement
     /// <summary>
     /// Gets or sets the panel orientation.
     /// </summary>
-    public ContainerOrientation Orientation { get => _orientation; set => SetProperty(ref _orientation, value); }
+    public ContainerOrientation Orientation { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets or sets the vertical alignment.
     /// </summary>
-    public Align VerticalAlignment { get => _verticalAlignment; set => SetProperty(ref _verticalAlignment, value); }
+    public Align VerticalAlignment { get; set => SetProperty(ref field, value); } = Align.Middle;
 
     /// <summary>
     /// Gets or sets the horizontal alignment.
     /// </summary>
-    public Align HorizontalAlignment { get => _horizontalAlignment; set => SetProperty(ref _horizontalAlignment, value); }
+    public Align HorizontalAlignment { get; set => SetProperty(ref field, value); } = Align.Middle;
 
     /// <summary>
     /// Gets or sets the padding.
     /// </summary>
-    public Padding Padding { get => _padding; set => SetProperty(ref _padding, value); }
+    public Padding Padding { get; set => SetProperty(ref field, value); } = new();
 
     /// <summary>
     /// Gets or sets the background paint.
     /// </summary>
     public Paint? BackgroundPaint
     {
-        get => _backgroundPaint;
-        set => SetPaintProperty(ref _backgroundPaint, value);
+        get;
+        set => SetPaintProperty(ref field, value);
     }
 
     /// <summary>
@@ -95,16 +88,16 @@ public class StackPanel<TBackgroundGeometry> : VisualElement
     /// <summary>
     /// Gets or sets the maximum width. When the maximum with is reached, a new row is created.
     /// </summary>
-    public double MaxWidth { get => _maxWidth; set => SetProperty(ref _maxWidth, value); }
+    public double MaxWidth { get; set => SetProperty(ref field, value); } = double.MaxValue;
 
     /// <summary>
     /// Gets or sets the maximum height. When the maximum height is reached, a new column is created.
     /// </summary>
-    public double MaxHeight { get => _maxHeight; set => SetProperty(ref _maxHeight, value); }
+    public double MaxHeight { get; set => SetProperty(ref field, value); } = double.MaxValue;
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
-        [_backgroundPaint];
+        [BackgroundPaint];
 
     /// <inheritdoc cref="VisualElement.GetDrawnGeometries"/>
     protected internal override Animatable?[] GetDrawnGeometries() =>

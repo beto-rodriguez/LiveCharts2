@@ -46,15 +46,6 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
     private Paint? _paintTaks;
     private int _heatKnownLength = 0;
     private List<Tuple<double, LvcColor>> _heatStops = [];
-    private LvcColor[] _heatMap =
-    [
-        LvcColor.FromArgb(255, 87, 103, 222), // cold (min value)
-        LvcColor.FromArgb(255, 95, 207, 249) // hot (max value)
-    ];
-    private double[]? _colorStops;
-    private Padding _pointPadding = new(4);
-    private double? _minValue;
-    private double? _maxValue;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreHeatSeries{TModel, TVisual, TLabel}"/> class.
@@ -87,21 +78,24 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
     /// <inheritdoc cref="IHeatSeries.HeatMap"/>
     public LvcColor[] HeatMap
     {
-        get => _heatMap;
-        set => SetProperty(ref _heatMap, value);
-    }
+        get;
+        set => SetProperty(ref field, value);
+    } =     [
+        LvcColor.FromArgb(255, 87, 103, 222), // cold (min value)
+        LvcColor.FromArgb(255, 95, 207, 249) // hot (max value)
+    ];
 
     /// <inheritdoc cref="IHeatSeries.ColorStops"/>
-    public double[]? ColorStops { get => _colorStops; set => SetProperty(ref _colorStops, value); }
+    public double[]? ColorStops { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="IHeatSeries.PointPadding"/>
-    public Padding PointPadding { get => _pointPadding; set => SetProperty(ref _pointPadding, value); }
+    public Padding PointPadding { get; set => SetProperty(ref field, value); } = new(4);
 
     /// <inheritdoc cref="IHeatSeries.MinValue"/>
-    public double? MinValue { get => _minValue; set => SetProperty(ref _minValue, value); }
+    public double? MinValue { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="IHeatSeries.MaxValue"/>
-    public double? MaxValue { get => _maxValue; set => SetProperty(ref _maxValue, value); }
+    public double? MaxValue { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
     public override void Invalidate(Chart chart)
@@ -306,7 +300,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
     {
         var seriesBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
         var b = seriesBounds.Bounds.TertiaryBounds;
-        WeightBounds = new(_minValue ?? b.Min, _maxValue ?? b.Max);
+        WeightBounds = new(MinValue ?? b.Min, MaxValue ?? b.Max);
         return seriesBounds;
     }
 

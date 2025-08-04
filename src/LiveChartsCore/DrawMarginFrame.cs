@@ -32,8 +32,6 @@ namespace LiveChartsCore;
 /// </summary>
 public abstract class CoreDrawMarginFrame : ChartElement, INotifyPropertyChanged
 {
-    private Paint? _stroke = null;
-    private Paint? _fill = null;
 
     /// <summary>
     /// Gets or sets the stroke.
@@ -43,9 +41,9 @@ public abstract class CoreDrawMarginFrame : ChartElement, INotifyPropertyChanged
     /// </value>
     public Paint? Stroke
     {
-        get => _stroke;
-        set => SetPaintProperty(ref _stroke, value, PaintStyle.Stroke);
-    }
+        get;
+        set => SetPaintProperty(ref field, value, PaintStyle.Stroke);
+    } = null;
 
     /// <summary>
     /// Gets or sets the fill.
@@ -55,13 +53,13 @@ public abstract class CoreDrawMarginFrame : ChartElement, INotifyPropertyChanged
     /// </value>
     public Paint? Fill
     {
-        get => _fill;
-        set => SetPaintProperty(ref _fill, value);
-    }
+        get;
+        set => SetPaintProperty(ref field, value);
+    } = null;
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
-        [_stroke, _fill];
+        [Stroke, Fill];
 
     /// <summary>
     /// Called when the fill changes.

@@ -32,8 +32,6 @@ namespace LiveChartsCore.Defaults;
 /// <seealso cref="INotifyPropertyChanged" />
 public class ObservablePoint : IChartEntity, INotifyPropertyChanged
 {
-    private double? _x;
-    private double? _y;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ObservablePoint"/> class.
@@ -58,7 +56,7 @@ public class ObservablePoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The x.
     /// </value>
-    public double? X { get => _x; set { _x = value; OnPropertyChanged(); } }
+    public double? X { get; set { field = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the y coordinate.
@@ -66,7 +64,7 @@ public class ObservablePoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The y.
     /// </value>
-    public double? Y { get => _y; set { _y = value; OnPropertyChanged(); } }
+    public double? Y { get; set { field = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartEntity.MetaData"/>
     [System.Text.Json.Serialization.JsonIgnore]
@@ -88,9 +86,9 @@ public class ObservablePoint : IChartEntity, INotifyPropertyChanged
     /// <param name="propertyName">Name of the property.</param>
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
-        Coordinate = _x is null || _y is null
+        Coordinate = X is null || Y is null
             ? Coordinate.Empty
-            : new Coordinate(_x.Value, _y.Value);
+            : new Coordinate(X.Value, Y.Value);
 
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

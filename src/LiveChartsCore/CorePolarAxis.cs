@@ -57,27 +57,7 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
     private double _minStep = 0;
     private Bounds? _dataBounds = null;
     private Bounds? _visibleDataBounds = null;
-    private double _labelsRotation;
-    //private TTextGeometry? _nameGeometry;
-    private Func<double, string> _labeler = Labelers.Default;
-    private double? _minLimit = null;
-    private double? _maxLimit = null;
-    private Paint? _namePaint;
-    private double _nameTextSize = 20;
-    private Padding _namePadding = new(5);
-    private Paint? _labelsPaint;
-    private double _unitWidth = 1;
-    private double _textSize = 16;
-    private Paint? _separatorsPaint;
-    private bool _showSeparatorLines = true;
-    private bool _isInverted;
-    private bool _forceStepToMin;
-    private double _labelsAngle;
-    private Padding _labelsPadding = new(3);
-    private Align _labelsVerticalAlign = Align.Middle;
-    private Align _labelsHorizontalAlign = Align.Middle;
     private LvcColor _labelsBackground = new(255, 255, 255);
-    private IEnumerable<double>? _customSeparators;
     private AnimatableAxisBounds _animatableBounds = new();
 
     #endregion
@@ -96,84 +76,84 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
     public string? Name { get; set; } = null;
 
     /// <inheritdoc cref="IPlane.NameTextSize"/>
-    public double NameTextSize { get => _nameTextSize; set => SetProperty(ref _nameTextSize, value); }
+    public double NameTextSize { get; set => SetProperty(ref field, value); } = 20;
 
     /// <inheritdoc cref="IPlane.NamePadding"/>
-    public Padding NamePadding { get => _namePadding; set => SetProperty(ref _namePadding, value); }
+    public Padding NamePadding { get; set => SetProperty(ref field, value); } = new(5);
 
     /// <inheritdoc cref="IPolarAxis.Orientation"/>
     public PolarAxisOrientation Orientation => _orientation;
 
     /// <inheritdoc cref="IPolarAxis.LabelsAngle"/>
-    public double LabelsAngle { get => _labelsAngle; set => SetProperty(ref _labelsAngle, value); }
+    public double LabelsAngle { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="IPlane.Labeler"/>
-    public Func<double, string> Labeler { get => _labeler; set => SetProperty(ref _labeler, value); }
+    public Func<double, string> Labeler { get; set => SetProperty(ref field, value); } = Labelers.Default;
 
     /// <inheritdoc cref="IPlane.MinStep"/>
     public double MinStep { get => _minStep; set => SetProperty(ref _minStep, value); }
 
     /// <inheritdoc cref="IPlane.ForceStepToMin"/>
-    public bool ForceStepToMin { get => _forceStepToMin; set => SetProperty(ref _forceStepToMin, value); }
+    public bool ForceStepToMin { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="IPlane.MinLimit"/>
-    public double? MinLimit { get => _minLimit; set => SetProperty(ref _minLimit, value); }
+    public double? MinLimit { get; set => SetProperty(ref field, value); } = null;
 
     /// <inheritdoc cref="IPlane.MaxLimit"/>
-    public double? MaxLimit { get => _maxLimit; set => SetProperty(ref _maxLimit, value); }
+    public double? MaxLimit { get; set => SetProperty(ref field, value); } = null;
 
     /// <inheritdoc cref="IPlane.UnitWidth"/>
-    public double UnitWidth { get => _unitWidth; set => SetProperty(ref _unitWidth, value); }
+    public double UnitWidth { get; set => SetProperty(ref field, value); } = 1;
 
     /// <inheritdoc cref="IPlane.LabelsRotation"/>
-    public double LabelsRotation { get => _labelsRotation; set => SetProperty(ref _labelsRotation, value); }
+    public double LabelsRotation { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="IPlane.TextSize"/>
-    public double TextSize { get => _textSize; set => SetProperty(ref _textSize, value); }
+    public double TextSize { get; set => SetProperty(ref field, value); } = 16;
 
     /// <inheritdoc cref="IPlane.Labels"/>
     public IList<string>? Labels { get; set; }
 
     /// <inheritdoc cref="IPolarAxis.LabelsPadding"/>
-    public Padding LabelsPadding { get => _labelsPadding; set => SetProperty(ref _labelsPadding, value); }
+    public Padding LabelsPadding { get; set => SetProperty(ref field, value); } = new(3);
 
     /// <inheritdoc cref="IPolarAxis.LabelsVerticalAlignment"/>
-    public Align LabelsVerticalAlignment { get => _labelsVerticalAlign; set => SetProperty(ref _labelsVerticalAlign, value); }
+    public Align LabelsVerticalAlignment { get; set => SetProperty(ref field, value); } = Align.Middle;
 
     /// <inheritdoc cref="IPolarAxis.LabelsHorizontalAlignment"/>
-    public Align LabelsHorizontalAlignment { get => _labelsHorizontalAlign; set => SetProperty(ref _labelsHorizontalAlign, value); }
+    public Align LabelsHorizontalAlignment { get; set => SetProperty(ref field, value); } = Align.Middle;
 
     /// <inheritdoc cref="IPolarAxis.LabelsBackground"/>
     public LvcColor LabelsBackground { get => _labelsBackground; set => SetProperty(ref _labelsBackground, value); }
 
     /// <inheritdoc cref="IPlane.ShowSeparatorLines"/>
-    public bool ShowSeparatorLines { get => _showSeparatorLines; set => SetProperty(ref _showSeparatorLines, value); }
+    public bool ShowSeparatorLines { get; set => SetProperty(ref field, value); } = true;
 
     /// <inheritdoc cref="IPlane.CustomSeparators"/>
-    public IEnumerable<double>? CustomSeparators { get => _customSeparators; set => SetProperty(ref _customSeparators, value); }
+    public IEnumerable<double>? CustomSeparators { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="IPlane.IsInverted"/>
-    public bool IsInverted { get => _isInverted; set => SetProperty(ref _isInverted, value); }
+    public bool IsInverted { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="IPlane.NamePaint"/>
     public Paint? NamePaint
     {
-        get => _namePaint;
-        set => SetPaintProperty(ref _namePaint, value);
+        get;
+        set => SetPaintProperty(ref field, value);
     }
 
     /// <inheritdoc cref="IPlane.LabelsPaint"/>
     public Paint? LabelsPaint
     {
-        get => _labelsPaint;
-        set => SetPaintProperty(ref _labelsPaint, value);
+        get;
+        set => SetPaintProperty(ref field, value);
     }
 
     /// <inheritdoc cref="IPlane.SeparatorsPaint"/>
     public Paint? SeparatorsPaint
     {
-        get => _separatorsPaint;
-        set => SetPaintProperty(ref _separatorsPaint, value, PaintStyle.Stroke);
+        get;
+        set => SetPaintProperty(ref field, value, PaintStyle.Stroke);
     }
 
     /// <inheritdoc cref="IPlane.AnimationsSpeed"/>
@@ -204,7 +184,7 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
 
         var s = axisTick.Value;
         if (s < _minStep) s = _minStep;
-        if (_forceStepToMin) s = _minStep;
+        if (ForceStepToMin) s = _minStep;
 
         if (!_animatableBounds.HasPreviousState)
         {
@@ -249,7 +229,7 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
 
         var size = (float)TextSize;
 
-        var r = (float)_labelsRotation;
+        var r = (float)LabelsRotation;
         var isTangent = false;
         var isCotangent = false;
 
@@ -360,9 +340,9 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
             if (visualSeparator.Label is not null)
             {
                 visualSeparator.Label.Text = label;
-                visualSeparator.Label.Padding = _labelsPadding;
-                visualSeparator.Label.HorizontalAlign = _labelsHorizontalAlign;
-                visualSeparator.Label.VerticalAlign = _labelsVerticalAlign;
+                visualSeparator.Label.Padding = LabelsPadding;
+                visualSeparator.Label.HorizontalAlign = LabelsHorizontalAlignment;
+                visualSeparator.Label.VerticalAlign = LabelsVerticalAlignment;
 
                 var actualRotation = r + (isTangent ? scaler.GetAngle(i) - 90 : 0) + (isCotangent ? scaler.GetAngle(i) : 0);
 
@@ -433,7 +413,7 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
         {
             Text = Name ?? string.Empty,
             TextSize = (float)NameTextSize,
-            Padding = _labelsPadding,
+            Padding = LabelsPadding,
             Paint = NamePaint
         };
 
@@ -474,7 +454,7 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
         var axisTick = this.GetTick(polarChart);
         var s = axisTick.Value;
         if (s < _minStep) s = _minStep;
-        if (_forceStepToMin) s = _minStep;
+        if (ForceStepToMin) s = _minStep;
 
         var max = MaxLimit is null ? (_visibleDataBounds ?? _dataBounds).Max : MaxLimit.Value;
         var min = MinLimit is null ? (_visibleDataBounds ?? _dataBounds).Min : MinLimit.Value;
@@ -491,7 +471,7 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
                 Text = labeler(i),
                 TextSize = ts,
                 RotateTransform = r + (_orientation == PolarAxisOrientation.Angle ? scaler.GetAngle(i) - 90 : 0),
-                Padding = _labelsPadding,
+                Padding = LabelsPadding,
                 Paint = LabelsPaint
             };
             var m = textGeometry.Measure();
@@ -520,15 +500,15 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
     /// <returns></returns>
     public virtual void Delete(Chart chart)
     {
-        if (_labelsPaint is not null)
+        if (LabelsPaint is not null)
         {
-            chart.Canvas.RemovePaintTask(_labelsPaint);
-            _labelsPaint.ClearGeometriesFromPaintTask(chart.Canvas);
+            chart.Canvas.RemovePaintTask(LabelsPaint);
+            LabelsPaint.ClearGeometriesFromPaintTask(chart.Canvas);
         }
-        if (_separatorsPaint is not null)
+        if (SeparatorsPaint is not null)
         {
-            chart.Canvas.RemovePaintTask(_separatorsPaint);
-            _separatorsPaint.ClearGeometriesFromPaintTask(chart.Canvas);
+            chart.Canvas.RemovePaintTask(SeparatorsPaint);
+            SeparatorsPaint.ClearGeometriesFromPaintTask(chart.Canvas);
         }
 
         _ = activeSeparators.Remove(chart);
@@ -601,7 +581,7 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
-        [_separatorsPaint, _labelsPaint, _namePaint];
+        [SeparatorsPaint, LabelsPaint, NamePaint];
 
     private IEnumerable<double> EnumerateSeparators(double start, double s, double max)
     {

@@ -33,7 +33,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// </summary>
 public class HeatLand : IWeigthedMapLand
 {
-    private double _value;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HeatLand"/> class.
@@ -62,7 +61,7 @@ public class HeatLand : IWeigthedMapLand
     public string Name { get; set; } = string.Empty;
 
     /// <inheritdoc cref="IWeigthedMapLand.Value"/>
-    public double Value { get => _value; set { _value = value; OnPropertyChanged(); } }
+    public double Value { get; set { field = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Called when a property changes.

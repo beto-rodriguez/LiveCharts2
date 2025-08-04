@@ -53,17 +53,6 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
     private readonly Dictionary<object, List<TPathGeometry>> _strokePathHelperDictionary = [];
     private float _lineSmoothness = 0.65f;
     private float _geometrySize = 14f;
-    private bool _enableNullSplitting = true;
-    private Paint? _geometryFill = Paint.Default;
-    private Paint? _geometryStroke = Paint.Default;
-    private Paint? _stroke = Paint.Default;
-    private Paint? _fill = Paint.Default;
-    private int _scalesAngleAt;
-    private int _scalesRadiusAt;
-    private bool _isClosed = true;
-    private PolarLabelsPosition _labelsPosition;
-    private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _angleTooltipLabelFormatter;
-    private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _radiusTooltipLabelFormatter;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CorePolarLineSeries{TModel, TVisual, TLabel, TPathGeometry, TLineGeometry}"/> class.
@@ -84,9 +73,9 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
     /// </value>
     public Paint? Stroke
     {
-        get => _stroke;
-        set => SetPaintProperty(ref _stroke, value, PaintStyle.Stroke);
-    }
+        get;
+        set => SetPaintProperty(ref field, value, PaintStyle.Stroke);
+    } = Paint.Default;
 
     /// <summary>
     /// Gets or sets the fill.
@@ -96,18 +85,18 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
     /// </value>
     public Paint? Fill
     {
-        get => _fill;
-        set => SetPaintProperty(ref _fill, value);
-    }
+        get;
+        set => SetPaintProperty(ref field, value);
+    } = Paint.Default;
 
     /// <inheritdoc cref="ILineSeries.GeometrySize"/>
     public double GeometrySize { get => _geometrySize; set => SetProperty(ref _geometrySize, (float)value); }
 
     /// <inheritdoc cref="IPolarSeries.ScalesAngleAt"/>
-    public int ScalesAngleAt { get => _scalesAngleAt; set => SetProperty(ref _scalesAngleAt, value); }
+    public int ScalesAngleAt { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="IPolarSeries.ScalesRadiusAt"/>
-    public int ScalesRadiusAt { get => _scalesRadiusAt; set => SetProperty(ref _scalesRadiusAt, value); }
+    public int ScalesRadiusAt { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="ILineSeries.LineSmoothness"/>
     public double LineSmoothness
@@ -123,27 +112,27 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
     }
 
     /// <inheritdoc cref="ILineSeries.EnableNullSplitting"/>
-    public bool EnableNullSplitting { get => _enableNullSplitting; set => SetProperty(ref _enableNullSplitting, value); }
+    public bool EnableNullSplitting { get; set => SetProperty(ref field, value); } = true;
 
     /// <inheritdoc cref="ILineSeries.GeometryFill"/>
     public Paint? GeometryFill
     {
-        get => _geometryFill;
-        set => SetPaintProperty(ref _geometryFill, value);
-    }
+        get;
+        set => SetPaintProperty(ref field, value);
+    } = Paint.Default;
 
     /// <inheritdoc cref="ILineSeries.GeometryStroke"/>
     public Paint? GeometryStroke
     {
-        get => _geometryStroke;
-        set => SetPaintProperty(ref _geometryStroke, value, PaintStyle.Stroke);
-    }
+        get;
+        set => SetPaintProperty(ref field, value, PaintStyle.Stroke);
+    } = Paint.Default;
 
     /// <inheritdoc cref="IPolarLineSeries.IsClosed"/>
-    public bool IsClosed { get => _isClosed; set => SetProperty(ref _isClosed, value); }
+    public bool IsClosed { get; set => SetProperty(ref field, value); } = true;
 
     /// <inheritdoc cref="IPolarSeries.DataLabelsPosition"/>
-    public PolarLabelsPosition DataLabelsPosition { get => _labelsPosition; set => SetProperty(ref _labelsPosition, value); }
+    public PolarLabelsPosition DataLabelsPosition { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets or sets the tool tip label formatter for the X axis, this function will build the label when a point in this series 
@@ -154,8 +143,8 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
     /// </value>
     public Func<ChartPoint<TModel, TVisual, TLabel>, string>? AngleToolTipLabelFormatter
     {
-        get => _angleTooltipLabelFormatter;
-        set => SetProperty(ref _angleTooltipLabelFormatter, value);
+        get;
+        set => SetProperty(ref field, value);
     }
 
     /// <summary>
@@ -167,8 +156,8 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
     /// </value>
     public Func<ChartPoint<TModel, TVisual, TLabel>, string>? RadiusToolTipLabelFormatter
     {
-        get => _radiusTooltipLabelFormatter;
-        set => SetProperty(ref _radiusTooltipLabelFormatter, value);
+        get;
+        set => SetProperty(ref field, value);
     }
 
     /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
@@ -192,7 +181,7 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
         var fetched = Fetch(polarChart);
         if (fetched is not ChartPoint[] points) points = [.. fetched];
 
-        var segments = _enableNullSplitting
+        var segments = EnableNullSplitting
             ? SplitEachNull(points, scaler)
             : [points];
 
@@ -902,7 +891,7 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
-        [Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint];
+        [Stroke, Fill, GeometryFill, GeometryStroke, DataLabelsPaint];
 
     /// <summary>
     /// Gets the label polar position.

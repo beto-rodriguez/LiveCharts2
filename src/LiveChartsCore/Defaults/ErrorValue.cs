@@ -31,9 +31,6 @@ namespace LiveChartsCore.Defaults;
 /// </summary>
 public class ErrorValue : IChartEntity, INotifyPropertyChanged
 {
-    private double? _y;
-    private double _eyi;
-    private double _eyj;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="FinancialPoint"/> class.
@@ -72,7 +69,7 @@ public class ErrorValue : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The high.
     /// </value>
-    public double? Y { get => _y; set { _y = value; OnPropertyChanged(); } }
+    public double? Y { get; set { field = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the open.
@@ -80,7 +77,7 @@ public class ErrorValue : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The open.
     /// </value>
-    public double YErrorI { get => _eyi; set { _eyi = value; OnPropertyChanged(); } }
+    public double YErrorI { get; set { field = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the close.
@@ -88,7 +85,7 @@ public class ErrorValue : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The close.
     /// </value>
-    public double YErrorJ { get => _eyj; set { _eyj = value; OnPropertyChanged(); } }
+    public double YErrorJ { get; set { field = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartEntity.MetaData"/>
     [System.Text.Json.Serialization.JsonIgnore]
@@ -119,8 +116,8 @@ public class ErrorValue : IChartEntity, INotifyPropertyChanged
     /// </summary>
     protected virtual void OnCoordinateChanged(int index)
     {
-        Coordinate = _y is null
+        Coordinate = Y is null
             ? Coordinate.Empty
-            : new(_y.Value, index, 0, 0, 0, 0, new(0, 0, _eyi, _eyj));
+            : new(Y.Value, index, 0, 0, 0, 0, new(0, 0, YErrorI, YErrorJ));
     }
 }

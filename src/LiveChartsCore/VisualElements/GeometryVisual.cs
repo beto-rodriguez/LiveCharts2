@@ -38,15 +38,13 @@ public class GeometryVisual<TGeometry, TLabelGeometry> : BaseGeometryVisual
     where TLabelGeometry : BaseLabelGeometry, new()
 {
     internal TGeometry? _geometry;
-    private string _label = string.Empty;
     private float _labelSize = 12;
     internal TLabelGeometry? _labelGeometry;
-    private Paint? _labelPaint = null;
 
     /// <summary>
     /// Gets or sets the label, a string to be displayed within the section.
     /// </summary>
-    public string Label { get => _label; set => SetProperty(ref _label, value); }
+    public string Label { get; set => SetProperty(ref field, value); } = string.Empty;
 
     /// <summary>
     /// Gets or sets the label size.
@@ -66,9 +64,9 @@ public class GeometryVisual<TGeometry, TLabelGeometry> : BaseGeometryVisual
     /// </value>
     public Paint? LabelPaint
     {
-        get => _labelPaint;
-        set => SetPaintProperty(ref _labelPaint, value);
-    }
+        get;
+        set => SetPaintProperty(ref field, value);
+    } = null;
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Animatable?[] GetDrawnGeometries() =>
@@ -146,7 +144,7 @@ public class GeometryVisual<TGeometry, TLabelGeometry> : BaseGeometryVisual
 
             _labelGeometry.X = l.X + padding;
             _labelGeometry.Y = l.Y + padding;
-            _labelGeometry.Text = _label;
+            _labelGeometry.Text = Label;
             _labelGeometry.TextSize = _labelSize;
             _labelGeometry.RotateTransform = (float)Rotation;
             _labelGeometry.TranslateTransform = Translate;
@@ -185,5 +183,5 @@ public class GeometryVisual<TGeometry, TLabelGeometry> : BaseGeometryVisual
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
-        [Fill, Stroke, _labelPaint];
+        [Fill, Stroke, LabelPaint];
 }

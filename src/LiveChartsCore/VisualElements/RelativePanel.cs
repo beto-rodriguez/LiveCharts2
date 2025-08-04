@@ -44,8 +44,6 @@ public class RelativePanel<TBackgroundGeometry> : VisualElement
         ClippingMode = ClipMode.None;
     }
 
-    private Paint? _backgroundPaint;
-
     /// <summary>
     /// Gets or sets the size.
     /// </summary>
@@ -61,8 +59,8 @@ public class RelativePanel<TBackgroundGeometry> : VisualElement
     /// </summary>
     public Paint? BackgroundPaint
     {
-        get => _backgroundPaint;
-        set => SetPaintProperty(ref _backgroundPaint, value);
+        get;
+        set => SetPaintProperty(ref field, value);
     }
 
     /// <summary>
@@ -71,7 +69,7 @@ public class RelativePanel<TBackgroundGeometry> : VisualElement
     public TBackgroundGeometry BackgroundGeometry { get; } = new();
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
-    protected internal override Paint?[] GetPaintTasks() => [_backgroundPaint];
+    protected internal override Paint?[] GetPaintTasks() => [BackgroundPaint];
 
     /// <inheritdoc cref="VisualElement.GetDrawnGeometries"/>
     protected internal override Animatable?[] GetDrawnGeometries() =>

@@ -42,7 +42,6 @@ public class VisualElementsEventArgs(
     IEnumerable<IInteractable> visualElements,
     LvcPoint pointerLocation)
 {
-    private IInteractable? _closer;
 
     /// <summary>
     /// Gets the chart.
@@ -57,7 +56,7 @@ public class VisualElementsEventArgs(
     /// <summary>
     /// Gets the closest visual element to the pointer position.
     /// </summary>
-    public IInteractable? ClosestToPointerVisualElement => _closer ??= FindClosest();
+    public IInteractable? ClosestToPointerVisualElement { get => field ??= FindClosest(); private set; }
 
     /// <summary>
     /// Gets all the visual elements that were found.

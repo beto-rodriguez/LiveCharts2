@@ -50,22 +50,18 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel>(
             where TVisual : DrawnGeometry, new()
             where TLabel : BaseLabelGeometry, new()
 {
-    private int _scalesXAt;
-    private int _scalesYAt;
-    private DataLabelsPosition _labelsPosition;
     private LvcPoint? _labelsTranslate = null;
     private Func<ChartPoint, string>? _xTooltipLabelFormatter;
     private Func<ChartPoint, string>? _yTooltipLabelFormatter;
-    private ClipMode _clippingMode = ClipMode.XY;
 
     /// <inheritdoc cref="ICartesianSeries.ScalesXAt"/>
-    public int ScalesXAt { get => _scalesXAt; set => SetProperty(ref _scalesXAt, value); }
+    public int ScalesXAt { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="ICartesianSeries.ScalesYAt"/>
-    public int ScalesYAt { get => _scalesYAt; set => SetProperty(ref _scalesYAt, value); }
+    public int ScalesYAt { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="ICartesianSeries.DataLabelsPosition"/>
-    public DataLabelsPosition DataLabelsPosition { get => _labelsPosition; set => SetProperty(ref _labelsPosition, value); }
+    public DataLabelsPosition DataLabelsPosition { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="ICartesianSeries.DataLabelsTranslate"/>
     public LvcPoint? DataLabelsTranslate { get => _labelsTranslate; set => SetProperty(ref _labelsTranslate, value); }
@@ -111,7 +107,7 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel>(
     }
 
     /// <inheritdoc cref="ICartesianSeries.ClippingMode"/>
-    public ClipMode ClippingMode { get => _clippingMode; set => SetProperty(ref _clippingMode, value); }
+    public ClipMode ClippingMode { get; set => SetProperty(ref field, value); } = ClipMode.XY;
 
     /// <inheritdoc cref="ICartesianSeries.GetBounds(Chart, ICartesianAxis, ICartesianAxis)"/>
     public virtual SeriesBounds GetBounds(

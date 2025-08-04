@@ -31,8 +31,6 @@ namespace LiveChartsCore.Defaults;
 /// </summary>
 public class ObservablePolarPoint : IChartEntity, INotifyPropertyChanged
 {
-    private double? _angle;
-    private double? _radius;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ObservablePoint"/> class.
@@ -54,12 +52,12 @@ public class ObservablePolarPoint : IChartEntity, INotifyPropertyChanged
     /// <summary>
     /// Gets or sets the angle.
     /// </summary>
-    public double? Angle { get => _angle; set { _angle = value; OnPropertyChanged(); } }
+    public double? Angle { get; set { field = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the Radius.
     /// </summary>
-    public double? Radius { get => _radius; set { _radius = value; OnPropertyChanged(); } }
+    public double? Radius { get; set { field = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartEntity.MetaData"/>
     [System.Text.Json.Serialization.JsonIgnore]
@@ -79,9 +77,9 @@ public class ObservablePolarPoint : IChartEntity, INotifyPropertyChanged
     /// </summary>
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
-        Coordinate = _radius is null || _angle is null
+        Coordinate = Radius is null || Angle is null
             ? Coordinate.Empty
-            : new(_angle.Value, _radius.Value);
+            : new(Angle.Value, Radius.Value);
 
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

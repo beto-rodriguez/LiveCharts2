@@ -34,7 +34,6 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// </summary>
 public class VariableSVGPathGeometry : BaseSVGPathGeometry, IVariableSvgPath
 {
-    private string? _svgPath;
 
     /// <summary>
     /// Svg paths are cached in this dictionary to prevent parsing multiple times the same path,
@@ -47,12 +46,12 @@ public class VariableSVGPathGeometry : BaseSVGPathGeometry, IVariableSvgPath
     /// <inheritdoc cref="IVariableSvgPath.SVGPath"/>
     public string? SVGPath
     {
-        get => _svgPath;
+        get;
         set
         {
-            if (value == _svgPath) return;
+            if (value == field) return;
 
-            _svgPath = value;
+            field = value;
             OnPathChanged(value);
         }
     }

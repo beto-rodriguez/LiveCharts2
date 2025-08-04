@@ -41,10 +41,6 @@ public abstract class VisualElement : ChartElement, INotifyPropertyChanged, IInt
     internal double _y;
     internal LvcPoint _translate = new();
     internal double _rotation;
-    private int _scalesXAt;
-    private int _scalesYAt;
-    private MeasureUnit _locationUnit = MeasureUnit.Pixels;
-    private ClipMode _clippingMode = ClipMode.XY;
     private Chart? _chart;
 
     /// <summary>
@@ -80,7 +76,7 @@ public abstract class VisualElement : ChartElement, INotifyPropertyChanged, IInt
     /// <summary>
     /// Gets or sets the unit of the <see cref="X"/> and <see cref="Y"/> properties.
     /// </summary>
-    public MeasureUnit LocationUnit { get => _locationUnit; set => SetProperty(ref _locationUnit, value); }
+    public MeasureUnit LocationUnit { get; set => SetProperty(ref field, value); } = MeasureUnit.Pixels;
 
     /// <summary>
     /// Gets or sets the axis index where the series is scaled in the X plane, the index must exist 
@@ -89,7 +85,7 @@ public abstract class VisualElement : ChartElement, INotifyPropertyChanged, IInt
     /// <value>
     /// The index of the axis.
     /// </value>
-    public int ScalesXAt { get => _scalesXAt; set => SetProperty(ref _scalesXAt, value); }
+    public int ScalesXAt { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets or sets the axis index where the series is scaled in the Y plane, the index must exist 
@@ -98,13 +94,13 @@ public abstract class VisualElement : ChartElement, INotifyPropertyChanged, IInt
     /// <value>
     /// The index of the axis.
     /// </value>
-    public int ScalesYAt { get => _scalesYAt; set => SetProperty(ref _scalesYAt, value); }
+    public int ScalesYAt { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets or sets the clipping mode, clipping restricts the visual element for being drawn outside of the chart area (DrawMargin),
     /// default is <see cref="ClipMode.XY"/>, and means that anything outside the chart bounds will be ignored.
     /// </summary>
-    public ClipMode ClippingMode { get => _clippingMode; set => SetProperty(ref _clippingMode, value); }
+    public ClipMode ClippingMode { get; set => SetProperty(ref field, value); } = ClipMode.XY;
 
     /// <inheritdoc cref="IInteractable.PointerDown"/>
     public event VisualElementHandler? PointerDown;

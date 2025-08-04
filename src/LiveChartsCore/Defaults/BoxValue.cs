@@ -31,11 +31,6 @@ namespace LiveChartsCore.Defaults;
 /// </summary>
 public class BoxValue : IChartEntity, INotifyPropertyChanged
 {
-    private double _max;
-    private double _third;
-    private double _first;
-    private double _min;
-    private double _median;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="FinancialPoint"/> class.
@@ -70,7 +65,7 @@ public class BoxValue : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The high.
     /// </value>
-    public double Max { get => _max; set { _max = value; OnPropertyChanged(); } }
+    public double Max { get; set { field = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the max quiadrile value.
@@ -78,7 +73,7 @@ public class BoxValue : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The open.
     /// </value>
-    public double ThirdQuartile { get => _third; set { _third = value; OnPropertyChanged(); } }
+    public double ThirdQuartile { get; set { field = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the min quadrile value.
@@ -86,7 +81,7 @@ public class BoxValue : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The close.
     /// </value>
-    public double FirtQuartile { get => _first; set { _first = value; OnPropertyChanged(); } }
+    public double FirtQuartile { get; set { field = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the min value.
@@ -94,7 +89,7 @@ public class BoxValue : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The low.
     /// </value>
-    public double Min { get => _min; set { _min = value; OnPropertyChanged(); } }
+    public double Min { get; set { field = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the median value.
@@ -102,7 +97,7 @@ public class BoxValue : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The low.
     /// </value>
-    public double Median { get => _median; set { _median = value; OnPropertyChanged(); } }
+    public double Median { get; set { field = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartEntity.MetaData"/>
     [System.Text.Json.Serialization.JsonIgnore]
@@ -133,6 +128,6 @@ public class BoxValue : IChartEntity, INotifyPropertyChanged
     /// </summary>
     protected virtual void OnCoordinateChanged(int index)
     {
-        Coordinate = new(index, _max, _third, _first, _min, _median);
+        Coordinate = new(index, Max, ThirdQuartile, FirtQuartile, Min, Median);
     }
 }

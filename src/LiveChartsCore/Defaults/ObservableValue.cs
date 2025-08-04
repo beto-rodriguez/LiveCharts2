@@ -32,7 +32,6 @@ namespace LiveChartsCore.Defaults;
 /// <seealso cref="INotifyPropertyChanged" />
 public class ObservableValue : IChartEntity, INotifyPropertyChanged
 {
-    private double? _value;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ObservableValue"/> class.
@@ -58,7 +57,7 @@ public class ObservableValue : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The value.
     /// </value>
-    public double? Value { get => _value; set { _value = value; OnPropertyChanged(); } }
+    public double? Value { get; set { field = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartEntity.MetaData"/>
     [System.Text.Json.Serialization.JsonIgnore]
@@ -89,8 +88,8 @@ public class ObservableValue : IChartEntity, INotifyPropertyChanged
     /// </summary>
     protected virtual void OnCoordinateChanged(int index)
     {
-        Coordinate = _value is null
+        Coordinate = Value is null
             ? Coordinate.Empty
-            : new(index, _value.Value);
+            : new(index, Value.Value);
     }
 }

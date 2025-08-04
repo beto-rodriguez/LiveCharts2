@@ -48,11 +48,6 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
         where TLabel : BaseLabelGeometry, new()
         where TMiniatureGeometry : BoundedDrawnGeometry, new()
 {
-    private Paint? _upStroke = Paint.Default;
-    private Paint? _upFill = Paint.Default;
-    private Paint? _downStroke = Paint.Default;
-    private Paint? _downFill = Paint.Default;
-    private double _maxBarWidth = 25;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreFinancialSeries{TModel, TVisual, TLabel, TMiniatureGeometry}"/> class.
@@ -78,35 +73,35 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
     }
 
     /// <inheritdoc cref="IFinancialSeries.MaxBarWidth"/>
-    public double MaxBarWidth { get => _maxBarWidth; set => SetProperty(ref _maxBarWidth, value); }
+    public double MaxBarWidth { get; set => SetProperty(ref field, value); } = 25;
 
     /// <inheritdoc cref="IFinancialSeries.UpStroke"/>
     public Paint? UpStroke
     {
-        get => _upStroke;
-        set => SetPaintProperty(ref _upStroke, value, PaintStyle.Stroke);
-    }
+        get;
+        set => SetPaintProperty(ref field, value, PaintStyle.Stroke);
+    } = Paint.Default;
 
     /// <inheritdoc cref="IFinancialSeries.UpFill"/>
     public Paint? UpFill
     {
-        get => _upFill;
-        set => SetPaintProperty(ref _upFill, value);
-    }
+        get;
+        set => SetPaintProperty(ref field, value);
+    } = Paint.Default;
 
     /// <inheritdoc cref="IFinancialSeries.DownStroke"/>
     public Paint? DownStroke
     {
-        get => _downStroke;
-        set => SetPaintProperty(ref _downStroke, value, PaintStyle.Stroke);
-    }
+        get;
+        set => SetPaintProperty(ref field, value, PaintStyle.Stroke);
+    } = Paint.Default;
 
     /// <inheritdoc cref="IFinancialSeries.DownFill"/>
     public Paint? DownFill
     {
-        get => _downFill;
-        set => SetPaintProperty(ref _downFill, value);
-    }
+        get;
+        set => SetPaintProperty(ref field, value);
+    } = Paint.Default;
 
     /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
     public override void Invalidate(Chart chart)
@@ -449,7 +444,7 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
-        [_upFill, _upStroke, _downFill, _downStroke, DataLabelsPaint];
+        [UpFill, UpStroke, DownFill, DownStroke, DataLabelsPaint];
 
     /// <summary>
     /// Called when [paint changed].

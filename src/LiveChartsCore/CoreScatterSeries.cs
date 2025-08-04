@@ -49,10 +49,6 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
         where TErrorGeometry : BaseLineGeometry, new()
 {
     private bool _showError;
-    private Paint? _errorPaint = Paint.Default;
-    private int? _stackGroup;
-    private double _minGeometrySize = 6d;
-    private double _geometrySize = 24d;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreScatterSeries{TModel, TVisual, TLabel, TErrorGeometry}"/> class.
@@ -83,14 +79,14 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
     /// <value>
     /// The minimum size of the geometry.
     /// </value>
-    public double MinGeometrySize { get => _minGeometrySize; set => SetProperty(ref _minGeometrySize, value); }
+    public double MinGeometrySize { get; set => SetProperty(ref field, value); } = 6d;
     /// <summary>
     /// Gets or sets the size of the geometry.
     /// </summary>
     /// <value>
     /// The size of the geometry.
     /// </value>
-    public double GeometrySize { get => _geometrySize; set => SetProperty(ref _geometrySize, value); }
+    public double GeometrySize { get; set => SetProperty(ref field, value); } = 24d;
 
     /// <summary>
     /// Gets a value indicating whether the points in this series use weight.
@@ -104,24 +100,24 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
         set
         {
             SetProperty(ref _showError, value);
-            if (_errorPaint is not null)
-                _errorPaint.IsPaused = !value;
+            if (ErrorPaint is not null)
+                ErrorPaint.IsPaused = !value;
         }
     }
 
     /// <inheritdoc cref="IErrorSeries.ErrorPaint"/>
     public Paint? ErrorPaint
     {
-        get => _errorPaint;
+        get;
         set
         {
-            SetPaintProperty(ref _errorPaint, value, PaintStyle.Stroke);
+            SetPaintProperty(ref field, value, PaintStyle.Stroke);
             _showError = value is not null && value != Paint.Default;
         }
-    }
+    } = Paint.Default;
 
     /// <inheritdoc cref="IScatterSeries.StackGroup"/>
-    public int? StackGroup { get => _stackGroup; set => SetProperty(ref _stackGroup, value); }
+    public int? StackGroup { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
     public override void Invalidate(Chart chart)
@@ -417,7 +413,7 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
-        [Stroke, Fill, DataLabelsPaint, _errorPaint];
+        [Stroke, Fill, DataLabelsPaint, ErrorPaint];
 
     /// <inheritdoc cref="SetDefaultPointTransitions(ChartPoint)"/>
     protected override void SetDefaultPointTransitions(ChartPoint chartPoint)

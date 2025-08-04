@@ -35,9 +35,6 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView
 {
     private readonly GeoMapChart _core;
-    private object? _viewCommand;
-    private Paint? _stroke = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { PaintStyle = PaintStyle.Stroke };
-    private Paint? _fill = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { PaintStyle = PaintStyle.Fill };
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SKGeoMap"/> class.
@@ -85,24 +82,24 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView
     /// <inheritdoc cref="IGeoMapView.Stroke"/>
     public Paint? Stroke
     {
-        get => _stroke;
+        get;
         set
         {
             if (value is not null) value.PaintStyle = PaintStyle.Stroke;
-            _stroke = value;
+            field = value;
         }
-    }
+    } = new SolidColorPaint(new SKColor(255, 255, 255, 255)) { PaintStyle = PaintStyle.Stroke };
 
     /// <inheritdoc cref="IGeoMapView.Fill"/>
     public Paint? Fill
     {
-        get => _fill;
+        get;
         set
         {
             if (value is not null) value.PaintStyle = PaintStyle.Fill;
-            _fill = value;
+            field = value;
         }
-    }
+    } = new SolidColorPaint(new SKColor(240, 240, 240, 255)) { PaintStyle = PaintStyle.Fill };
 
     /// <inheritdoc cref="IGeoMapView.Series"/>
     public IEnumerable<IGeoSeries> Series { get; set; } = [];
@@ -110,10 +107,10 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView
     /// <inheritdoc cref="IGeoMapView.ViewCommand"/>
     public object? ViewCommand
     {
-        get => _viewCommand;
+        get;
         set
         {
-            _viewCommand = value;
+            field = value;
             if (value is not null) _core.ViewTo(value);
         }
     }

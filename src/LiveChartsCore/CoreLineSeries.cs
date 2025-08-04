@@ -53,10 +53,6 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
     internal readonly Dictionary<object, List<TPathGeometry>> _strokePathHelperDictionary = [];
     private float _lineSmoothness = 0.65f;
     private float _geometrySize = 14f;
-    private bool _enableNullSplitting = true;
-    private Paint? _geometryFill = Paint.Default;
-    private Paint? _geometryStroke = Paint.Default;
-    private Paint? _errorPaint = Paint.Default;
     private bool _showError;
 
     /// <summary>
@@ -89,21 +85,21 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
     }
 
     /// <inheritdoc cref="ILineSeries.EnableNullSplitting"/>
-    public bool EnableNullSplitting { get => _enableNullSplitting; set => SetProperty(ref _enableNullSplitting, value); }
+    public bool EnableNullSplitting { get; set => SetProperty(ref field, value); } = true;
 
     /// <inheritdoc cref="ILineSeries.GeometryFill"/>
     public Paint? GeometryFill
     {
-        get => _geometryFill;
-        set => SetPaintProperty(ref _geometryFill, value);
-    }
+        get;
+        set => SetPaintProperty(ref field, value);
+    } = Paint.Default;
 
     /// <inheritdoc cref="ILineSeries.GeometryStroke"/>
     public Paint? GeometryStroke
     {
-        get => _geometryStroke;
-        set => SetPaintProperty(ref _geometryStroke, value, PaintStyle.Stroke);
-    }
+        get;
+        set => SetPaintProperty(ref field, value, PaintStyle.Stroke);
+    } = Paint.Default;
 
     /// <inheritdoc cref="IErrorSeries.ShowError"/>
     public bool ShowError
@@ -112,21 +108,21 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
         set
         {
             SetProperty(ref _showError, value);
-            if (_errorPaint is not null)
-                _errorPaint.IsPaused = !value;
+            if (ErrorPaint is not null)
+                ErrorPaint.IsPaused = !value;
         }
     }
 
     /// <inheritdoc cref="IErrorSeries.ErrorPaint"/>
     public Paint? ErrorPaint
     {
-        get => _errorPaint;
+        get;
         set
         {
-            SetPaintProperty(ref _errorPaint, value, PaintStyle.Stroke);
+            SetPaintProperty(ref field, value, PaintStyle.Stroke);
             _showError = value is not null && value != Paint.Default;
         }
-    }
+    } = Paint.Default;
 
     /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
     public override void Invalidate(Chart chart)
@@ -151,7 +147,7 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
         // the following cases probably have a similar performance impact
         // this options were necessary at some older point when _enableNullSplitting = false could improve performance
         // ToDo: Check this out, maybe this is unnecessary now and we should just go for the first approach all the times.
-        var segments = _enableNullSplitting
+        var segments = EnableNullSplitting
             ? Fetch(cartesianChart).SplitByNullGaps(point => DeleteNullPoint(point, secondaryScale, primaryScale)) // calling this method is probably as expensive as the line bellow
             : [Fetch(cartesianChart)];
         var stacker = (SeriesProperties & SeriesProperties.Stacked) == SeriesProperties.Stacked
@@ -716,7 +712,7 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
-        [Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint, _errorPaint];
+        [Stroke, Fill, GeometryFill, GeometryStroke, DataLabelsPaint, ErrorPaint];
 
     /// <summary>
     /// Builds an spline from the given points.

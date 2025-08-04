@@ -35,21 +35,13 @@ namespace LiveChartsCore.VisualElements;
 /// </summary>
 public abstract class BaseAngularTicksVisual : VisualElement
 {
-    private Paint? _stroke;
-    private Paint? _labelsPaint;
-    private double _labelsOuterOffset;
-    private double _outerOffset;
-    private double _ticksLength;
-    private double _labelsSize = 12;
-    private Func<double, string> _labeler = Labelers.Default;
-
     /// <summary>
     /// Gets or sets the labels paint.
     /// </summary>
     public Paint? LabelsPaint
     {
-        get => _labelsPaint;
-        set => SetPaintProperty(ref _labelsPaint, value);
+        get;
+        set => SetPaintProperty(ref field, value);
     }
 
     /// <summary>
@@ -57,34 +49,34 @@ public abstract class BaseAngularTicksVisual : VisualElement
     /// </summary>
     public Paint? Stroke
     {
-        get => _stroke;
-        set => SetPaintProperty(ref _stroke, value, PaintStyle.Stroke);
+        get;
+        set => SetPaintProperty(ref field, value, PaintStyle.Stroke);
     }
 
     /// <summary>
     /// Gets or sets the outer offset, the distance between the  edge of the chart and the arc and ticks.
     /// </summary>
-    public double OuterOffset { get => _outerOffset; set => SetProperty(ref _outerOffset, value); }
+    public double OuterOffset { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets or sets the labels outer offset, the distance between the edge of the chart and the labels.
     /// </summary>
-    public double LabelsOuterOffset { get => _labelsOuterOffset; set => SetProperty(ref _labelsOuterOffset, value); }
+    public double LabelsOuterOffset { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets or sets the ticks lenght.
     /// </summary>
-    public double TicksLength { get => _ticksLength; set => SetProperty(ref _ticksLength, value); }
+    public double TicksLength { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets or sets the labels size.
     /// </summary>
-    public double LabelsSize { get => _labelsSize; set => SetProperty(ref _labelsSize, value); }
+    public double LabelsSize { get; set => SetProperty(ref field, value); } = 12;
 
     /// <summary>
     /// Gets or sets the labeler, a function that receives a number and return the label content as string.
     /// </summary>
-    public Func<double, string> Labeler { get => _labeler; set => SetProperty(ref _labeler, value); }
+    public Func<double, string> Labeler { get; set => SetProperty(ref field, value); } = Labelers.Default;
 }
 
 /// <summary>
