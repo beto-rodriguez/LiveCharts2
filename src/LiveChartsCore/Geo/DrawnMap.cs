@@ -23,17 +23,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Geo;
-
-[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
-[JsonSerializable(typeof(GeoJsonFile))]
-internal partial class GeoJsonFileSourceGenerationContext : JsonSerializerContext
-{
-}
 
 /// <summary>
 /// Defines a geographic map for LiveCharts controls.
@@ -135,7 +128,7 @@ public class DrawnMap : IDisposable
             Layers.Add(layerName, layer);
         }
 
-        var geoJson = System.Text.Json.JsonSerializer.Deserialize<GeoJsonFile>(
+        var geoJson = System.Text.Json.JsonSerializer.Deserialize(
             streamReader.ReadToEnd(),
             GeoJsonFileSourceGenerationContext.Default.GeoJsonFile) ?? throw new Exception("Map not found");
 
