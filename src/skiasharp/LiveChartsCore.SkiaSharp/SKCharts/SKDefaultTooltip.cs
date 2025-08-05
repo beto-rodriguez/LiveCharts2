@@ -68,7 +68,7 @@ public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
     {
         var theme = chart.GetTheme();
 
-        if (!_isInitialized || _themeId != theme.ThemeId)
+        if (!_isInitialized || _themeId != theme.ThemeId || chart.View.TooltipBackgroundPaint is not null)
         {
             Initialize(chart);
             _isInitialized = true;

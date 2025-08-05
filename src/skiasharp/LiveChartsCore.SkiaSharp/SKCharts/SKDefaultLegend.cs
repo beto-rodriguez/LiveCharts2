@@ -41,6 +41,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 public class SKDefaultLegend : Container, IChartLegend
 {
     private bool _isInitialized;
+    private object? _themeId;
     private DrawnTask? _drawnTask;
 
     /// <summary>
@@ -56,9 +57,12 @@ public class SKDefaultLegend : Container, IChartLegend
     /// <inheritdoc cref="IChartLegend.Draw(Chart)"/>
     public virtual void Draw(Chart chart)
     {
-        if (!_isInitialized)
+        var theme = chart.GetTheme();
+
+        if (!_isInitialized || _themeId != theme.ThemeId || chart.View.LegendBackgroundPaint is not null)
         {
             Initialize(chart);
+            _themeId = theme.ThemeId;
             _isInitialized = true;
         }
 
