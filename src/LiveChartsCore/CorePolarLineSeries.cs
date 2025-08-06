@@ -44,7 +44,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TLineGeometry">The type of the line geometry</typeparam>
 public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGeometry>
     : Series<TModel, TVisual, TLabel>, IPolarLineSeries, IPolarSeries
-        where TPathGeometry : BaseVectorGeometry<CubicBezierSegment>, new()
+        where TPathGeometry : BaseVectorGeometry, new()
         where TVisual : BoundedDrawnGeometry, new()
         where TLabel : BaseLabelGeometry, new()
         where TLineGeometry : BaseLineGeometry, new()
@@ -242,7 +242,7 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
         {
             var hasPaths = false;
             var isSegmentEmpty = true;
-            VectorManager<CubicBezierSegment>? strokeVector = null, fillVector = null;
+            VectorManager? strokeVector = null, fillVector = null;
 
             foreach (var data in GetSpline(segment, scaler, stacker))
             {
@@ -277,8 +277,8 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
                     var fillPath = fillLookup.Path;
                     var strokePath = strokeLookup.Path;
 
-                    strokeVector = new VectorManager<CubicBezierSegment>(strokePath);
-                    fillVector = new VectorManager<CubicBezierSegment>(fillPath);
+                    strokeVector = new VectorManager(strokePath.Commands);
+                    fillVector = new VectorManager(fillPath.Commands);
 
                     if (Fill is not null && Fill != Paint.Default)
                     {
@@ -441,9 +441,6 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
 
                 OnPointMeasured(data.TargetPoint);
             }
-
-            strokeVector?.End();
-            fillVector?.End();
 
             if (GeometryFill is not null && GeometryFill != Paint.Default)
             {
@@ -1027,6 +1024,8 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
         {
             path = container[index];
         }
+
+        path.IsValid = false;
 
         return new SegmentVisual(isNew, path);
     }

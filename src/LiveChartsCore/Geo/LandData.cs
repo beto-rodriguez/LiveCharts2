@@ -23,7 +23,6 @@
 using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Drawing.Segments;
 
 namespace LiveChartsCore.Geo;
 
@@ -86,5 +85,5 @@ public class LandData
     /// <summary>
     /// Gets or sets the shape.
     /// </summary>
-    public BaseVectorGeometry<Segment>? Shape { get; set; }
+    public BaseVectorGeometry? Shape { get; set; }
 }

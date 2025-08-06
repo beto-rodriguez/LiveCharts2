@@ -28,17 +28,17 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <summary>
 /// Defines an area drawin using bezier segments.
 /// </summary>
-public class LandAreaGeometry : VectorGeometry<Segment>
+public class LandAreaGeometry : VectorGeometry
 {
-    /// <inheritdoc cref="VectorGeometry{TSegment}.OnDrawSegment(SkiaSharpDrawingContext, SKPath, TSegment)"/>
+    /// <inheritdoc cref="VectorGeometry.OnDrawSegment(SkiaSharpDrawingContext, SKPath, Segment)"/>
     protected override void OnDrawSegment(SkiaSharpDrawingContext context, SKPath path, Segment segment) =>
         path.LineTo(segment.Xi, segment.Yi);
 
-    /// <inheritdoc cref="VectorGeometry{TSegment}.OnOpen(SkiaSharpDrawingContext, SKPath, TSegment)"/>
+    /// <inheritdoc cref="VectorGeometry.OnOpen(SkiaSharpDrawingContext, SKPath, Segment)"/>
     protected override void OnOpen(SkiaSharpDrawingContext context, SKPath path, Segment segment) =>
         path.MoveTo(segment.Xi, segment.Yi);
 
-    /// <inheritdoc cref="VectorGeometry{TSegment}.OnClose(SkiaSharpDrawingContext, SKPath, TSegment)"/>
+    /// <inheritdoc cref="VectorGeometry.OnClose(SkiaSharpDrawingContext, SKPath, Segment)"/>
     protected override void OnClose(SkiaSharpDrawingContext context, SKPath path, Segment segment)
     { }
 }

@@ -45,7 +45,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TLineGeometry">The type of the line geometry</typeparam>
 public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGeometry>
     : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>, IStepLineSeries
-        where TPathGeometry : BaseVectorGeometry<Segment>, new()
+        where TPathGeometry : BaseVectorGeometry, new()
         where TVisual : BoundedDrawnGeometry, new()
         where TLabel : BaseLabelGeometry, new()
         where TLineGeometry : BaseLineGeometry, new()
@@ -151,7 +151,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
         {
             var hasPaths = false;
             var isSegmentEmpty = true;
-            VectorManager<Segment>? strokeVector = null, fillVector = null;
+            VectorManager? strokeVector = null, fillVector = null;
 
             double previousPrimary = 0, previousSecondary = 0;
 
@@ -186,8 +186,8 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
                     var fillPath = fillLookup.Path;
                     var strokePath = strokeLookup.Path;
 
-                    strokeVector = new VectorManager<Segment>(strokePath);
-                    fillVector = new VectorManager<Segment>(fillPath);
+                    strokeVector = new VectorManager(strokePath.Commands);
+                    fillVector = new VectorManager(fillPath.Commands);
 
                     if (Fill is not null && Fill != Paint.Default)
                     {
@@ -391,9 +391,6 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
                 previousPrimary = coordinate.PrimaryValue + s;
                 previousSecondary = coordinate.SecondaryValue;
             }
-
-            strokeVector?.End();
-            fillVector?.End();
 
             if (GeometryFill is not null && GeometryFill != Paint.Default)
             {
@@ -700,6 +697,8 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
         {
             path = container[index];
         }
+
+        path.IsValid = false;
 
         return new SegmentVisual(isNew, path);
     }

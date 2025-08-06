@@ -44,7 +44,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
 public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TErrorGeometry>
     : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>, ILineSeries
-        where TPathGeometry : BaseVectorGeometry<CubicBezierSegment>, new()
+        where TPathGeometry : BaseVectorGeometry, new()
         where TVisual : BoundedDrawnGeometry, new()
         where TLabel : BaseLabelGeometry, new()
         where TErrorGeometry : BaseLineGeometry, new()
@@ -195,7 +195,7 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
         {
             var hasPaths = false;
             var isSegmentEmpty = true;
-            VectorManager<CubicBezierSegment>? strokeVector = null, fillVector = null;
+            VectorManager? strokeVector = null, fillVector = null;
 
             foreach (var data in GetSpline(segment, stacker))
             {
@@ -228,8 +228,8 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
                     var fillPath = fillLookup.Path;
                     var strokePath = strokeLookup.Path;
 
-                    strokeVector = new VectorManager<CubicBezierSegment>(strokePath);
-                    fillVector = new VectorManager<CubicBezierSegment>(fillPath);
+                    strokeVector = new VectorManager(strokePath.Commands);
+                    fillVector = new VectorManager(fillPath.Commands);
 
                     if (Fill is not null && Fill != Paint.Default)
                     {
@@ -471,9 +471,6 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
 
                 OnPointMeasured(data.TargetPoint);
             }
-
-            strokeVector?.End();
-            fillVector?.End();
 
             if (GeometryFill is not null && GeometryFill != Paint.Default)
             {
@@ -911,6 +908,8 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
         {
             path = container[index];
         }
+
+        path.IsValid = false;
 
         return new SegmentVisual(isNew, path);
     }

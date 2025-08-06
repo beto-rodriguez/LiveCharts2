@@ -32,14 +32,12 @@ namespace LiveChartsCore.Drawing;
 /// <summary>
 /// Defines an area geometry.
 /// </summary>
-/// <typeparam name="TSegment">The type of the segment.</typeparam>
-public abstract partial class BaseVectorGeometry<TSegment> : Animatable, IDrawnElement
-    where TSegment : Segment
+public abstract partial class BaseVectorGeometry : Animatable, IDrawnElement
 {
     private IDrawnElement? _parent;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="BaseVectorGeometry{TSegment}"/> class.
+    /// Initializes a new instance of the <see cref="BaseVectorGeometry"/> class.
     /// </summary>
     protected BaseVectorGeometry()
     {
@@ -165,7 +163,7 @@ public abstract partial class BaseVectorGeometry<TSegment> : Animatable, IDrawnE
     /// <summary>
     /// Gets the commands in the vector.
     /// </summary>
-    public LinkedList<TSegment> Commands { get; } = new();
+    public LinkedList<Segment> Commands { get; } = new();
 
     /// <summary>
     /// Gets or sets the closing method.

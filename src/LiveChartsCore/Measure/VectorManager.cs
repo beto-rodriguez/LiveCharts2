@@ -22,21 +22,18 @@
 
 using System;
 using System.Collections.Generic;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Segments;
 
 namespace LiveChartsCore.Measure;
 
-internal class VectorManager<TSegment>(BaseVectorGeometry<TSegment> areaGeometry)
-    where TSegment : Segment
+internal class VectorManager(LinkedList<Segment> list)
 {
-    private LinkedListNode<TSegment>? _currentNode = areaGeometry.Commands.First;
+    private LinkedListNode<Segment>? _currentNode = list.First;
 
-    public void AddConsecutiveSegment(TSegment segment, bool followsPrevious)
+    public void AddConsecutiveSegment(Segment segment, bool followsPrevious)
     {
-        var list = areaGeometry.Commands;
-        LinkedListNode<TSegment>? replaceCandidate = null;
-        List<LinkedListNode<TSegment>>? deleteCandidates = null;
+        LinkedListNode<Segment>? replaceCandidate = null;
+        List<LinkedListNode<Segment>>? deleteCandidates = null;
 
         // look for the segment in the list
         while (_currentNode is not null && _currentNode.Value != segment)
@@ -99,7 +96,4 @@ internal class VectorManager<TSegment>(BaseVectorGeometry<TSegment> areaGeometry
             _currentNode = _currentNode.Next;
         }
     }
-
-    public void End() =>
-        areaGeometry.IsValid = false;
 }
