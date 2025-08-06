@@ -1192,7 +1192,11 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
         visualSeparator.Label = textGeometry;
         if (hasRotation) textGeometry.RotateTransform = r;
 
-        textGeometry.Animate(EasingFunction ?? cartesianChart.ActualEasingFunction, AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed);
+        textGeometry.Animate(
+            EasingFunction ?? cartesianChart.ActualEasingFunction,
+            AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed,
+            BaseLabelGeometry.XProperty,
+            BaseLabelGeometry.YProperty);
     }
 
     private void UpdateSeparator(
