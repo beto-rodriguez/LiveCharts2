@@ -87,10 +87,10 @@ public partial class Segment : Animatable
         var yiPropertyGetter = YiProperty.GetMotion!;
         var yjPropertyGetter = YjProperty.GetMotion!;
 
-        xiPropertyGetter(this)!.CopyFrom(xiPropertyGetter(segment));
-        xjPropertyGetter(this)!.CopyFrom(xjPropertyGetter(segment));
-        yiPropertyGetter(this)!.CopyFrom(yiPropertyGetter(segment));
-        yjPropertyGetter(this)!.CopyFrom(yjPropertyGetter(segment));
+        xiPropertyGetter(this)!.CopyFrom(xiPropertyGetter(segment)!);
+        xjPropertyGetter(this)!.CopyFrom(xjPropertyGetter(segment)!);
+        yiPropertyGetter(this)!.CopyFrom(yiPropertyGetter(segment)!);
+        yjPropertyGetter(this)!.CopyFrom(yjPropertyGetter(segment)!);
     }
 
     /// <inheritdoc/>

@@ -61,7 +61,7 @@ public partial class CubicBezierSegment : Segment
         var xmPropertyGetter = XmProperty.GetMotion!;
         var ymPropertyGetter = YmProperty.GetMotion!;
 
-        xmPropertyGetter(this)!.CopyFrom(xmPropertyGetter(segment));
-        ymPropertyGetter(this)!.CopyFrom(ymPropertyGetter(segment));
+        xmPropertyGetter(this)!.CopyFrom(xmPropertyGetter(segment)!);
+        ymPropertyGetter(this)!.CopyFrom(ymPropertyGetter(segment)!);
     }
 }

@@ -26,7 +26,7 @@ namespace LiveChartsCore.Drawing.Segments;
 /// Defines a point in a segment that is part of a path.
 /// </summary>
 /// <param name="geometry">The drawn geometry for the point.</param>
-public class SegmentVisualPoint(BoundedDrawnGeometry geometry)
+public class CubicSegmentVisualPoint(BoundedDrawnGeometry geometry)
 {
     /// <summary>
     /// Gets the drawn geometry for the point.
@@ -36,7 +36,7 @@ public class SegmentVisualPoint(BoundedDrawnGeometry geometry)
     /// <summary>
     /// Gets the segment in the path that this point belongs to.
     /// </summary>
-    public Segment Segment { get; } = new Segment();
+    public CubicBezierSegment Segment { get; } = new();
 
     /// <summary>
     /// Gets the X error geometry.

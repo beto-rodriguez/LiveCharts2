@@ -227,7 +227,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
                         ? stacker.GetStack(point).Start
                         : stacker.GetStack(point).NegativeStart;
 
-                var visual = (SegmentVisualPoint<TVisual, Segment>?)point.Context.AdditionalVisuals;
+                var visual = (SegmentVisualPoint?)point.Context.AdditionalVisuals;
                 var dp = coordinate.PrimaryValue + s - previousPrimary;
                 var ds = coordinate.SecondaryValue - previousSecondary;
 
@@ -268,7 +268,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
 
                 if (visual is null)
                 {
-                    var v = new SegmentVisualPoint<TVisual, Segment>();
+                    var v = new SegmentVisualPoint(new TVisual());
                     visual = v;
 
                     if (isFirstDraw)
@@ -330,9 +330,6 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
                 visual.Geometry.Width = gs;
                 visual.Geometry.Height = gs;
                 visual.Geometry.RemoveOnCompleted = false;
-
-                visual.FillPath = fillVector!.AreaGeometry;
-                visual.StrokePath = strokeVector!.AreaGeometry;
 
                 var hags = gs < 8 ? 8 : gs;
 
@@ -595,7 +592,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
     {
         var chart = chartPoint.Context.Chart;
 
-        if (chartPoint.Context.AdditionalVisuals is not SegmentVisualPoint<TVisual, Segment> visual)
+        if (chartPoint.Context.AdditionalVisuals is not SegmentVisualPoint visual)
             throw new Exception("Unable to initialize the point instance.");
 
         visual.Geometry.Animate(EasingFunction ?? chart.CoreChart.ActualEasingFunction, AnimationsSpeed ?? chart.CoreChart.ActualAnimationsSpeed);
@@ -605,7 +602,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
     protected internal override void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
     {
-        var visual = (SegmentVisualPoint<TVisual, Segment>?)point.Context.AdditionalVisuals;
+        var visual = (SegmentVisualPoint?)point.Context.AdditionalVisuals;
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
@@ -671,7 +668,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
 
     private void DeleteNullPoint(ChartPoint point, Scaler xScale, Scaler yScale)
     {
-        if (point.Context.Visual is not SegmentVisualPoint<TVisual, Segment> visual) return;
+        if (point.Context.Visual is not SegmentVisualPoint visual) return;
 
         var coordinate = point.Coordinate;
 

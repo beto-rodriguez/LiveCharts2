@@ -32,8 +32,6 @@ internal class VectorManager<TSegment>(BaseVectorGeometry<TSegment> areaGeometry
 {
     private LinkedListNode<TSegment>? _currentNode = areaGeometry.Commands.First;
 
-    public BaseVectorGeometry<TSegment> AreaGeometry => areaGeometry;
-
     public void AddConsecutiveSegment(TSegment segment, bool followsPrevious)
     {
         var list = areaGeometry.Commands;

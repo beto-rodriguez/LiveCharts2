@@ -269,9 +269,7 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
                         ? stacker.GetStack(data.TargetPoint).Start
                         : stacker.GetStack(data.TargetPoint).NegativeStart;
 
-                var visual =
-                    (SegmentVisualPoint<TVisual, CubicBezierSegment, TErrorGeometry>?)
-                    data.TargetPoint.Context.AdditionalVisuals;
+                var visual = (CubicSegmentVisualPoint?)data.TargetPoint.Context.AdditionalVisuals;
 
                 if (!IsVisible)
                 {
@@ -312,7 +310,8 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
 
                 if (visual is null)
                 {
-                    var v = new SegmentVisualPoint<TVisual, CubicBezierSegment, TErrorGeometry>();
+                    var v = new CubicSegmentVisualPoint(new TVisual());
+
                     if (ShowError && ErrorPaint is not null && ErrorPaint != Paint.Default)
                     {
                         v.YError = new TErrorGeometry();
@@ -414,9 +413,6 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
                     visual.XError.Y1 = primaryScale.ToPixels(data.Y2);
                     visual.XError.RemoveOnCompleted = false;
                 }
-
-                visual.FillPath = fillVector!.AreaGeometry;
-                visual.StrokePath = strokeVector!.AreaGeometry;
 
                 var hags = gs < 8 ? 8 : gs;
 
@@ -828,7 +824,7 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
     {
         var chart = chartPoint.Context.Chart;
 
-        if (chartPoint.Context.AdditionalVisuals is not SegmentVisualPoint<TVisual, CubicBezierSegment, TErrorGeometry> visual)
+        if (chartPoint.Context.AdditionalVisuals is not CubicSegmentVisualPoint visual)
             throw new Exception("Unable to initialize the point instance.");
 
         var easing = EasingFunction ?? chart.CoreChart.ActualEasingFunction;
@@ -843,7 +839,7 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
     protected internal override void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
     {
-        var visual = (SegmentVisualPoint<TVisual, CubicBezierSegment, TErrorGeometry>?)point.Context.AdditionalVisuals;
+        var visual = (CubicSegmentVisualPoint?)point.Context.AdditionalVisuals;
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
@@ -883,7 +879,7 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
 
     private void DeleteNullPoint(ChartPoint point, Scaler xScale, Scaler yScale)
     {
-        if (point.Context.Visual is not SegmentVisualPoint<TVisual, CubicBezierSegment, TErrorGeometry> visual) return;
+        if (point.Context.Visual is not CubicSegmentVisualPoint visual) return;
 
         var c = point.Coordinate;
 

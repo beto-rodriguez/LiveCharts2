@@ -316,13 +316,11 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
 
                 var cp = scaler.ToPixels(coordinate.SecondaryValue, coordinate.PrimaryValue + s);
 
-                var visual =
-                    (SegmentVisualPoint<TVisual, CubicBezierSegment>?)
-                    data.TargetPoint.Context.AdditionalVisuals;
+                var visual = (CubicSegmentVisualPoint?)data.TargetPoint.Context.AdditionalVisuals;
 
                 if (visual is null)
                 {
-                    var v = new SegmentVisualPoint<TVisual, CubicBezierSegment>();
+                    var v = new CubicSegmentVisualPoint(new TVisual());
 
                     visual = v;
 
@@ -386,9 +384,6 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
                 visual.Geometry.Width = gs;
                 visual.Geometry.Height = gs;
                 visual.Geometry.RemoveOnCompleted = false;
-
-                visual.FillPath = fillVector!.AreaGeometry;
-                visual.StrokePath = strokeVector!.AreaGeometry;
 
                 var hags = gs < 16 ? 16 : gs;
                 if (data.TargetPoint.Context.HoverArea is not RectangleHoverArea ha)
@@ -807,7 +802,7 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
     {
         var chart = chartPoint.Context.Chart;
 
-        if (chartPoint.Context.AdditionalVisuals is not SegmentVisualPoint<TVisual, CubicBezierSegment> visual)
+        if (chartPoint.Context.AdditionalVisuals is not CubicSegmentVisualPoint visual)
             throw new Exception("Unable to initialize the point instance.");
 
         visual.Geometry.Animate(EasingFunction ?? chart.CoreChart.ActualEasingFunction, AnimationsSpeed ?? chart.CoreChart.ActualAnimationsSpeed);
@@ -821,7 +816,7 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
     /// <param name="scaler">The scaler.</param>
     protected virtual void SoftDeleteOrDisposePoint(ChartPoint point, PolarScaler scaler)
     {
-        var visual = (SegmentVisualPoint<TVisual, CubicBezierSegment>?)point.Context.AdditionalVisuals;
+        var visual = (CubicSegmentVisualPoint?)point.Context.AdditionalVisuals;
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
@@ -990,7 +985,7 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
         {
             if (point.IsEmpty || !IsVisible)
             {
-                if (point.Context.Visual is SegmentVisualPoint<TVisual, CubicBezierSegment> visual)
+                if (point.Context.Visual is CubicSegmentVisualPoint visual)
                 {
                     var s = scaler.ToPixels(point);
                     var x = s.X;
