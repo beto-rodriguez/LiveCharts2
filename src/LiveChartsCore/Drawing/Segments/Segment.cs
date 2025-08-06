@@ -58,11 +58,7 @@ public partial class Segment : Animatable
     [MotionProperty]
     public partial float Yj { get; set; }
 
-    /// <summary>
-    /// Follows the specified segment.
-    /// </summary>
-    /// <param name="segment"></param>
-    public virtual void Follows(Segment segment)
+    internal virtual void Follows(Segment segment)
     {
         IsValid = segment.IsValid;
         RemoveOnCompleted = segment.RemoveOnCompleted;
@@ -80,4 +76,23 @@ public partial class Segment : Animatable
         yiPropertyGetter(this)!.CopyFrom(yProp);
         yjPropertyGetter(this)!.CopyFrom(yProp);
     }
+
+    internal virtual void Copy(Segment segment)
+    {
+        IsValid = segment.IsValid;
+        RemoveOnCompleted = segment.RemoveOnCompleted;
+
+        var xiPropertyGetter = XiProperty.GetMotion!;
+        var xjPropertyGetter = XjProperty.GetMotion!;
+        var yiPropertyGetter = YiProperty.GetMotion!;
+        var yjPropertyGetter = YjProperty.GetMotion!;
+
+        xiPropertyGetter(this)!.CopyFrom(xiPropertyGetter(segment));
+        xjPropertyGetter(this)!.CopyFrom(xjPropertyGetter(segment));
+        yiPropertyGetter(this)!.CopyFrom(yiPropertyGetter(segment));
+        yjPropertyGetter(this)!.CopyFrom(yjPropertyGetter(segment));
+    }
+
+    /// <inheritdoc/>
+    public override string ToString() => $"[{Id}] ({Xi:N2} - {Xj:N2}, {Yj:N2}{Yi:N2})";
 }

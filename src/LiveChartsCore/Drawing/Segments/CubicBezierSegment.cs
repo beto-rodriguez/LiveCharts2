@@ -41,8 +41,7 @@ public partial class CubicBezierSegment : Segment
     [MotionProperty]
     public partial float Ym { get; set; }
 
-    /// <inheritdoc cref="Segment.Follows(Segment)"/>
-    public override void Follows(Segment segment)
+    internal override void Follows(Segment segment)
     {
         base.Follows(segment);
 
@@ -53,5 +52,16 @@ public partial class CubicBezierSegment : Segment
 
         xmPropertyGetter(this)!.CopyFrom(xjPropertyGetter(segment)!);
         ymPropertyGetter(this)!.CopyFrom(yjPropertyGetter(segment)!);
+    }
+
+    internal override void Copy(Segment segment)
+    {
+        base.Copy(segment);
+
+        var xmPropertyGetter = XmProperty.GetMotion!;
+        var ymPropertyGetter = YmProperty.GetMotion!;
+
+        xmPropertyGetter(this)!.CopyFrom(xmPropertyGetter(segment));
+        ymPropertyGetter(this)!.CopyFrom(ymPropertyGetter(segment));
     }
 }
