@@ -37,22 +37,41 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
     : Paint(strokeThickness, strokeMiter), IDisposable
 {
     /// <summary>
+    /// Gets or sets the font family.
+    /// </summary>
+    [Obsolete($"Use the {nameof(SKTypeface)} property and assign it to {nameof(SKTypeface)}.{nameof(SKTypeface.FromFamilyName)}(fontFamily, fontStyle)")]
+    public string? FontFamily
+    {
+        get => field;
+        set
+        {
+            field = value;
+            SKTypeface = value is null
+                ? null
+                : SKTypeface.FromFamilyName(value, SKFontStyle ?? SKTypeface.Default.FontStyle);
+        }
+    }
+
+    /// <summary>
     /// Gets or sets the font style.
     /// </summary>
-    public SKFontStyle? SKFontStyle { get; set; }
+    [Obsolete($"Use the {nameof(SKTypeface)} property and assign it to {nameof(SKTypeface)}.{nameof(SKTypeface.FromFamilyName)}(fontFamily, fontStyle)")]
+    public SKFontStyle? SKFontStyle
+    {
+        get => field;
+        set
+        {
+            field = value;
+            SKTypeface = value is null
+                ? null
+                : SKTypeface.FromFamilyName(SKTypeface.Default.FamilyName ?? "Arial", value);
+        }
+    }
 
     /// <summary>
-    /// Gets or sets the SKTypeface, if null, LiveCharts will build one based on the
-    /// <see cref="Paint.FontFamily"/> and <see cref="SKFontStyle"/> properties. Default is null.
+    /// Gets or sets the SKTypeface.
     /// </summary>
     public SKTypeface? SKTypeface { get; set; }
-
-    /// <summary>
-    /// Gets a value indication whether the paint has a custom font.
-    /// </summary>
-    public bool HasCustomFont =>
-        LiveChartsSkiaSharp.DefaultSKTypeface is not null ||
-        FontFamily is not null || SKTypeface is not null || SKFontStyle is not null;
 
     /// <summary>
     /// Gets or sets the stroke cap.
@@ -86,19 +105,9 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
     /// </value>
     public ImageFilter? ImageFilter { get; set; }
 
-    /// <summary>
-    /// Gets a <see cref="SKTypeface"/> from the <see cref="Paint.FontFamily"/> property.
-    /// </summary>
-    /// <returns></returns>
-    protected internal SKTypeface GetSKTypeface()
-    {
-        // return the defined typeface.
-        if (SKTypeface is not null) return SKTypeface;
+    internal bool IsGlobalSKTypeface =>
+        GetSKTypeface() == (LiveChartsSkiaSharp.DefaultSKTypeface ?? SKTypeface.Default);
 
-        // create one from the font family.
-        if (FontFamily is not null) return SKTypeface.FromFamilyName(FontFamily, SKFontStyle ?? new SKFontStyle());
-
-        // other wise ose the globally defined typeface.
-        return LiveChartsSkiaSharp.DefaultSKTypeface ?? SKTypeface.Default;
-    }
+    internal SKTypeface GetSKTypeface() =>
+        SKTypeface ?? LiveChartsSkiaSharp.DefaultSKTypeface ?? SKTypeface.Default;
 }

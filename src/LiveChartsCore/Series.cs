@@ -296,7 +296,7 @@ public abstract class Series<TModel, TVisual, TLabel>
         get;
         set
         {
-            SetPaintProperty(ref field, value);
+            SetPaintProperty(ref field, value, PaintStyle.Text);
             _showDataLabels = value is not null && value != Paint.Default;
         }
     } = Paint.Default;
@@ -425,7 +425,7 @@ public abstract class Series<TModel, TVisual, TLabel>
     {
         base.RemoveFromUI(chart);
         DataFactory?.Dispose(chart);
-        DataFactory = null;
+        DataFactory = null!;
         everFetched = [];
     }
 

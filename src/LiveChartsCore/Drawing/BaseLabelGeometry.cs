@@ -121,7 +121,11 @@ public abstract partial class BaseLabelGeometry : Animatable, IDrawnElement
     public partial Paint? Paint
     {
         get => _PaintMotionProperty.GetMovement(this);
-        set => _PaintMotionProperty.SetMovement(value, this);
+        set
+        {
+            _PaintMotionProperty.SetMovement(value, this);
+            value?.PaintStyle = PaintStyle.Text;
+        }
     }
 
     /// <summary>

@@ -86,8 +86,6 @@ public class SolidColorPaint : SkiaPaint
             StrokeCap = StrokeCap,
             StrokeJoin = StrokeJoin,
             StrokeMiter = StrokeMiter,
-            FontFamily = FontFamily,
-            SKFontStyle = SKFontStyle,
             SKTypeface = SKTypeface,
             PathEffect = PathEffect?.Clone(),
             ImageFilter = ImageFilter?.Clone()
@@ -109,8 +107,8 @@ public class SolidColorPaint : SkiaPaint
         _skiaPaint.StrokeMiter = StrokeMiter;
         _skiaPaint.StrokeWidth = StrokeThickness;
         _skiaPaint.Style = PaintStyle.HasFlag(PaintStyle.Stroke) ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
-
-        if (HasCustomFont) _skiaPaint.Typeface = GetSKTypeface();
+        if (PaintStyle.HasFlag(PaintStyle.Text))
+            _skiaPaint.Typeface = GetSKTypeface();
 
         if (PathEffect is not null)
         {
@@ -187,11 +185,8 @@ public class SolidColorPaint : SkiaPaint
     /// </summary>
     public override void Dispose()
     {
-        // Note #301222
-        // Disposing typefaces could cause render issues.
-        // Does this causes memory leaks?
-        // Should the user dispose typefaces manually?
-        //if (HasCustomFont && _skiaPaint != null) _skiaPaint.Typeface.Dispose();
+        if (_skiaPaint is not null && !IsGlobalSKTypeface)
+            _skiaPaint.Typeface?.Dispose();
         PathEffect?.Dispose();
         ImageFilter?.Dispose();
 

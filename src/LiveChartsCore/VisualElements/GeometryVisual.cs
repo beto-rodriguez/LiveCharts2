@@ -65,7 +65,7 @@ public class GeometryVisual<TGeometry, TLabelGeometry> : BaseGeometryVisual
     public Paint? LabelPaint
     {
         get;
-        set => SetPaintProperty(ref field, value);
+        set => SetPaintProperty(ref field, value, PaintStyle.Text);
     } = null;
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>

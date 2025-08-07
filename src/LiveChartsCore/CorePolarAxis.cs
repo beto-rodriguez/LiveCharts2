@@ -139,14 +139,14 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
     public Paint? NamePaint
     {
         get;
-        set => SetPaintProperty(ref field, value);
+        set => SetPaintProperty(ref field, value, PaintStyle.Text);
     }
 
     /// <inheritdoc cref="IPlane.LabelsPaint"/>
     public Paint? LabelsPaint
     {
         get;
-        set => SetPaintProperty(ref field, value);
+        set => SetPaintProperty(ref field, value, PaintStyle.Text);
     }
 
     /// <inheritdoc cref="IPlane.SeparatorsPaint"/>

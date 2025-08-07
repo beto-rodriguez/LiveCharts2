@@ -41,7 +41,7 @@ public abstract class BaseAngularTicksVisual : VisualElement
     public Paint? LabelsPaint
     {
         get;
-        set => SetPaintProperty(ref field, value);
+        set => SetPaintProperty(ref field, value, PaintStyle.Text);
     }
 
     /// <summary>

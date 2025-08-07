@@ -78,11 +78,6 @@ public abstract partial class Paint : Animatable, IDisposable
     }
 
     /// <summary>
-    /// Gets or sets the font family.
-    /// </summary>
-    public string? FontFamily { get; set; }
-
-    /// <summary>
     /// Gets or sets a value indicating whether this instance is antialias.
     /// </summary>
     /// <value>

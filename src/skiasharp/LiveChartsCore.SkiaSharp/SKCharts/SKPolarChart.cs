@@ -133,7 +133,7 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView
     public bool AutoUpdateEnabled { get; set; }
 
     /// <inheritdoc cref="IChartView.LegendTextPaint"/>
-    public Paint? LegendTextPaint { get; set; }
+    public Paint? LegendTextPaint { get => field; set { value?.PaintStyle = PaintStyle.Text; field = value; } }
 
     /// <inheritdoc cref="IChartView.LegendBackgroundPaint"/>
     public Paint? LegendBackgroundPaint { get; set; }
@@ -142,7 +142,7 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView
     public double LegendTextSize { get; set; } = LiveCharts.DefaultSettings.LegendTextSize;
 
     /// <inheritdoc cref="IChartView.TooltipTextPaint"/>
-    public Paint? TooltipTextPaint { get; set; }
+    public Paint? TooltipTextPaint { get => field; set { value?.PaintStyle = PaintStyle.Text; field = value; } }
 
     /// <inheritdoc cref="IChartView.TooltipBackgroundPaint"/>
     public Paint? TooltipBackgroundPaint { get; set; }

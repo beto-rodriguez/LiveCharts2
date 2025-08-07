@@ -50,7 +50,7 @@ public abstract class BaseLabelVisual : VisualElement
     public Paint? Paint
     {
         get => _paint;
-        set => SetPaintProperty(ref _paint, value);
+        set => SetPaintProperty(ref _paint, value, PaintStyle.Text);
     }
 
     /// <summary>
