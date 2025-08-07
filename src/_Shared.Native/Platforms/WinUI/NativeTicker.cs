@@ -57,7 +57,7 @@ internal partial class NativeFrameTicker : IFrameTicker
     public void DisposeTicker()
     {
         CompositionTarget.Rendering -= OnCompositonTargetRendering;
-        _canvas.Invalidated -= OnCoreInvalidated;
+        _canvas?.Invalidated -= OnCoreInvalidated;
 
         _canvas = null!;
         _renderMode = null!;
