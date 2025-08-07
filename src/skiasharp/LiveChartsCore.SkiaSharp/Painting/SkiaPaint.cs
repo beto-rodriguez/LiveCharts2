@@ -34,7 +34,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting;
 /// <param name="strokeThickness">The stroke thickness.</param>
 /// <param name="strokeMiter">The stroke miter.</param>
 public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 0f)
-    : Paint(strokeThickness, strokeMiter), IDisposable
+    : Paint(strokeThickness, strokeMiter)
 {
     /// <summary>
     /// Gets or sets the font family.
@@ -110,4 +110,10 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
 
     internal SKTypeface GetSKTypeface() =>
         SKTypeface ?? LiveChartsSkiaSharp.DefaultSKTypeface ?? SKTypeface.Default;
+
+    /// <inheritdoc cref="Paint.DisposeTask"/>
+    public override void DisposeTask()
+    {
+
+    }
 }

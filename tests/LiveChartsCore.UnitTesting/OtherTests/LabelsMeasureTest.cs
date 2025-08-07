@@ -119,7 +119,7 @@ public class LabelsMeasureTest
             canvas, SKImageInfo.Empty, SKSurface.Create(new SKImageInfo(100, 100)).Canvas);
 
         var paint = new SolidColorPaint { Color = SKColors.Red };
-        paint.InitializeTask(drawingContext);
+        paint.OnPaintStarted(drawingContext);
         paint._skiaPaint.TextSize = 15;
 
         var label = new LabelGeometry

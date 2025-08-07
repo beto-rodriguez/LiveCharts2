@@ -38,15 +38,18 @@ internal class MeasureTask : Paint
     /// <inheritdoc cref="Paint.CloneTask" />
     public override Paint CloneTask() => throw new NotImplementedException();
 
-    /// <inheritdoc cref="Paint.Dispose" />
-    public override void Dispose() { }
+    /// <inheritdoc cref="Paint.OnPaintFinished" />
+    public override void OnPaintFinished(DrawingContext context) { }
 
-    /// <inheritdoc cref="Paint.InitializeTask(DrawingContext)" />
-    public override void InitializeTask(DrawingContext drawingContext) { }
+    /// <inheritdoc cref="Paint.OnPaintStarted(DrawingContext)" />
+    public override void OnPaintStarted(DrawingContext drawingContext) { }
 
     /// <inheritdoc cref="Paint.RestoreOpacityMask(DrawingContext, float)" />
     public override void RestoreOpacityMask(DrawingContext context, float opacity) { }
 
     /// <inheritdoc cref="Paint.Transitionate(float, Paint)" />
     public override Paint Transitionate(float progress, Paint target) => this;
+
+    /// <inheritdoc cref="Paint.DisposeTask"/>
+    public override void DisposeTask() { }
 }

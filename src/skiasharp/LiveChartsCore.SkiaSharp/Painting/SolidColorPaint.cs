@@ -94,8 +94,8 @@ public class SolidColorPaint : SkiaPaint
         return clone;
     }
 
-    /// <inheritdoc cref="Paint.InitializeTask(DrawingContext)" />
-    public override void InitializeTask(DrawingContext drawingContext)
+    /// <inheritdoc cref="Paint.OnPaintStarted(DrawingContext)" />
+    public override void OnPaintStarted(DrawingContext drawingContext)
     {
         var skiaContext = (SkiaSharpDrawingContext)drawingContext;
         _skiaPaint ??= new SKPaint();
@@ -183,7 +183,7 @@ public class SolidColorPaint : SkiaPaint
     /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
     /// </summary>
-    public override void Dispose()
+    public override void OnPaintFinished(DrawingContext context)
     {
         if (_skiaPaint is not null && !IsGlobalSKTypeface)
             _skiaPaint.Typeface?.Dispose();

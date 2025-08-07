@@ -145,7 +145,7 @@ public class CoreMotionCanvas : IDisposable
                 if (DisableAnimations) task.CompleteTransition(null);
                 task.IsValid = true;
 
-                context.InitializePaintTask(task);
+                context.SelectPaint(task);
 
                 foreach (var geometry in task.GetGeometries(this))
                 {
@@ -171,7 +171,7 @@ public class CoreMotionCanvas : IDisposable
 
                 if (task.RemoveOnCompleted && task.IsValid) _ = _paintTasks.Remove(task);
 
-                context.DisposePaintTask(task);
+                context.ClearPaintSelection(task);
             }
 
             foreach (var tracker in Trackers)
@@ -359,7 +359,11 @@ public class CoreMotionCanvas : IDisposable
     public void Dispose()
     {
         foreach (var task in _paintTasks)
+        {
+            task.DisposeTask();
             task.ReleaseCanvas(this);
+        }
+
         _paintTasks.Clear();
         Trackers.Clear();
         IsValid = true;

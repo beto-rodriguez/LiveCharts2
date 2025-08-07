@@ -233,20 +233,20 @@ public class SkiaSharpDrawingContext(
         if (element.HasTransform) Canvas.Restore();
     }
 
-    /// <inheritdoc cref="DrawingContext.InitializePaintTask(Paint)"/>
-    public override void InitializePaintTask(Paint paint)
+    /// <inheritdoc cref="DrawingContext.SelectPaint(Paint)"/>
+    public override void SelectPaint(Paint paint)
     {
         ActiveLvcPaint = paint;
         //ActiveSkiaPaint = paint.SKPaint; set by paint.InitializeTask
         PaintMotionProperty.s_activePaint = paint;
 
-        paint.InitializeTask(this);
+        paint.OnPaintStarted(this);
     }
 
-    /// <inheritdoc cref="DrawingContext.DisposePaintTask(Paint)"/>
-    public override void DisposePaintTask(Paint paint)
+    /// <inheritdoc cref="DrawingContext.ClearPaintSelection(Paint)"/>
+    public override void ClearPaintSelection(Paint paint)
     {
-        paint.Dispose();
+        paint.OnPaintFinished(this);
 
         ActiveLvcPaint = null!;
         ActiveSkiaPaint = null!;
@@ -265,12 +265,12 @@ public class SkiaSharpDrawingContext(
         if (paint != MeasureTask.Instance)
         {
             ActiveLvcPaint = paint;
-            paint.InitializeTask(this);
+            paint.OnPaintStarted(this);
         }
 
         DrawElement(element, opacity);
 
-        paint.Dispose();
+        paint.OnPaintFinished(this);
 
         ActiveSkiaPaint = originalPaint;
         ActiveLvcPaint = originalTask;

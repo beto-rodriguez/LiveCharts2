@@ -36,7 +36,7 @@ namespace LiveChartsCore.Painting;
 /// <remarks>
 /// Initializes a new instance of the <see cref="Paint"/> class.
 /// </remarks>
-public abstract partial class Paint : Animatable, IDisposable
+public abstract partial class Paint : Animatable
 {
     private readonly Dictionary<object, HashSet<IDrawnElement>> _geometriesByCanvas = [];
     private readonly Dictionary<object, LvcRectangle> _clipRectangles = [];
@@ -221,10 +221,15 @@ public abstract partial class Paint : Animatable, IDisposable
     }
 
     /// <summary>
-    /// Initializes the task.
+    /// Called when the paint task is about to start painting.
     /// </summary>
     /// <param name="drawingContext">The context.</param>
-    public abstract void InitializeTask(DrawingContext drawingContext);
+    public abstract void OnPaintStarted(DrawingContext drawingContext);
+
+    /// <summary>
+    /// Called when the paint task has finished painting.
+    /// </summary>
+    public abstract void OnPaintFinished(DrawingContext drawingContext);
 
     /// <summary>
     /// Sets the opacity according to the given geometry.
@@ -247,9 +252,9 @@ public abstract partial class Paint : Animatable, IDisposable
     public abstract Paint CloneTask();
 
     /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// Disposes the task, this method is called when the paint task is no longer needed.
     /// </summary>
-    public abstract void Dispose();
+    public abstract void DisposeTask();
 
     /// <summary>
     /// Parses a hexadecimal color string.
@@ -275,9 +280,10 @@ public abstract partial class Paint : Animatable, IDisposable
     {
         public override void ApplyOpacityMask(DrawingContext context, float opacity) { }
         public override Paint CloneTask() => this;
-        public override void Dispose() { }
-        public override void InitializeTask(DrawingContext drawingContext) { }
+        public override void OnPaintFinished(DrawingContext context) { }
+        public override void OnPaintStarted(DrawingContext drawingContext) { }
         public override void RestoreOpacityMask(DrawingContext context, float opacity) { }
         public override Paint Transitionate(float progress, Paint target) => this;
+        public override void DisposeTask() { }
     }
 }
