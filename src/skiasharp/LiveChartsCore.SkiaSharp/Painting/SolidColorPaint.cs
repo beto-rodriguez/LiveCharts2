@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -34,10 +33,6 @@ namespace LiveChartsCore.SkiaSharpView.Painting;
 /// <seealso cref="Paint" />
 public class SolidColorPaint : SkiaPaint
 {
-    private SkiaSharpDrawingContext? _drawingContext;
-    // internal for testing purposes
-    internal SKPaint? _skiaPaint;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="SolidColorPaint"/> class.
     /// </summary>
@@ -94,8 +89,7 @@ public class SolidColorPaint : SkiaPaint
         return clone;
     }
 
-    /// <inheritdoc cref="Paint.OnPaintStarted(DrawingContext)" />
-    public override void OnPaintStarted(DrawingContext drawingContext)
+    internal override void OnPaintStarted(DrawingContext drawingContext)
     {
         var skiaContext = (SkiaSharpDrawingContext)drawingContext;
         _skiaPaint ??= new SKPaint();
@@ -127,14 +121,28 @@ public class SolidColorPaint : SkiaPaint
         {
             _ = skiaContext.Canvas.Save();
             skiaContext.Canvas.ClipRect(new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height));
-            _drawingContext = skiaContext;
         }
 
         skiaContext.ActiveSkiaPaint = _skiaPaint;
     }
 
-    /// <inheritdoc cref="Paint.Transitionate(float, Paint)"/>
-    public override Paint Transitionate(float progress, Paint target)
+    internal override void OnPaintFinished(DrawingContext context)
+    {
+        var skiaContext = (SkiaSharpDrawingContext)context;
+
+        if (_skiaPaint is not null && !IsGlobalSKTypeface)
+            _skiaPaint.Typeface?.Dispose();
+        PathEffect?.Dispose();
+        ImageFilter?.Dispose();
+
+        if (context is not null && GetClipRectangle(skiaContext.MotionCanvas) != LvcRectangle.Empty)
+            skiaContext.Canvas.Restore();
+
+        _skiaPaint?.Dispose();
+        _skiaPaint = null;
+    }
+
+    internal override Paint Transitionate(float progress, Paint target)
     {
         if (target._source is not SolidColorPaint paint) return target;
 
@@ -154,8 +162,7 @@ public class SolidColorPaint : SkiaPaint
         return clone;
     }
 
-    /// <inheritdoc cref="Paint.ApplyOpacityMask(DrawingContext, float)" />
-    public override void ApplyOpacityMask(DrawingContext context, float opacity)
+    internal override void ApplyOpacityMask(DrawingContext context, float opacity)
     {
         var skiaContext = (SkiaSharpDrawingContext)context;
         var baseColor = Color;
@@ -167,8 +174,7 @@ public class SolidColorPaint : SkiaPaint
                 (byte)(baseColor.Alpha * opacity));
     }
 
-    /// <inheritdoc cref="Paint.RestoreOpacityMask(DrawingContext, float)" />
-    public override void RestoreOpacityMask(DrawingContext context, float opacity)
+    internal override void RestoreOpacityMask(DrawingContext context, float opacity)
     {
         var skiaContext = (SkiaSharpDrawingContext)context;
         skiaContext.ActiveSkiaPaint.Color = Color;
@@ -178,27 +184,7 @@ public class SolidColorPaint : SkiaPaint
     /// Returns a string that represents the current object.
     /// </summary>
     /// <returns>a string.</returns>
-    public override string ToString() => $"({Color.Red}, {Color.Green}, {Color.Blue})";
+    public override string ToString() =>
+        $"({Color.Red}, {Color.Green}, {Color.Blue})";
 
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-    /// </summary>
-    public override void OnPaintFinished(DrawingContext context)
-    {
-        if (_skiaPaint is not null && !IsGlobalSKTypeface)
-            _skiaPaint.Typeface?.Dispose();
-        PathEffect?.Dispose();
-        ImageFilter?.Dispose();
-
-        if (_drawingContext is not null && GetClipRectangle(_drawingContext.MotionCanvas) != LvcRectangle.Empty)
-        {
-            _drawingContext.Canvas.Restore();
-            _drawingContext = null;
-        }
-
-        _skiaPaint?.Dispose();
-        _skiaPaint = null;
-
-        GC.SuppressFinalize(this);
-    }
 }

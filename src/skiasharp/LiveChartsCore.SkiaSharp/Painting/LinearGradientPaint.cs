@@ -59,9 +59,6 @@ public class LinearGradientPaint(
     SKShaderTileMode tileMode = SKShaderTileMode.Clamp)
         : SkiaPaint
 {
-    private SkiaSharpDrawingContext? _drawingContext;
-    private SKPaint? _skiaPaint;
-
     private SKColor[] GradientStops { get; set; } = gradientStops;
     private SKPoint StartPoint { get; set; } = startPoint;
     private SKPoint EndPoint { get; set; } = endPoint;
@@ -123,57 +120,7 @@ public class LinearGradientPaint(
         };
     }
 
-    /// <inheritdoc cref="Paint.ApplyOpacityMask(DrawingContext, float)" />
-    public override void ApplyOpacityMask(DrawingContext context, float opacity)
-    {
-        if (_skiaPaint is null) return;
-        var skiaContext = (SkiaSharpDrawingContext)context;
-
-        var size = GetDrawRectangleSize(skiaContext);
-
-        var xf = size.Location.X;
-        var xt = xf + size.Width;
-
-        var yf = size.Location.Y;
-        var yt = yf + size.Height;
-
-        var start = new SKPoint(xf + (xt - xf) * StartPoint.X, yf + (yt - yf) * StartPoint.Y);
-        var end = new SKPoint(xf + (xt - xf) * EndPoint.X, yf + (yt - yf) * EndPoint.Y);
-
-        _skiaPaint.Shader = SKShader.CreateLinearGradient(
-            start,
-            end,
-            [.. GradientStops.Select(x => new SKColor(x.Red, x.Green, x.Blue, (byte)(255 * opacity)))],
-            ColorPos,
-            tileMode);
-    }
-
-    /// <inheritdoc cref="Paint.RestoreOpacityMask(DrawingContext, float)" />
-    public override void RestoreOpacityMask(DrawingContext context, float opacity)
-    {
-        if (_skiaPaint is null) return;
-
-        var size = GetDrawRectangleSize((SkiaSharpDrawingContext)context);
-
-        var xf = size.Location.X;
-        var xt = xf + size.Width;
-
-        var yf = size.Location.Y;
-        var yt = yf + size.Height;
-
-        var start = new SKPoint(xf + (xt - xf) * StartPoint.X, yf + (yt - yf) * StartPoint.Y);
-        var end = new SKPoint(xf + (xt - xf) * EndPoint.X, yf + (yt - yf) * EndPoint.Y);
-
-        _skiaPaint.Shader = SKShader.CreateLinearGradient(
-            start,
-            end,
-            GradientStops,
-            ColorPos,
-            tileMode);
-    }
-
-    /// <inheritdoc cref="Paint.OnPaintStarted(DrawingContext)" />
-    public override void OnPaintStarted(DrawingContext drawingContext)
+    internal override void OnPaintStarted(DrawingContext drawingContext)
     {
         var skiaContext = (SkiaSharpDrawingContext)drawingContext;
         _skiaPaint ??= new SKPaint();
@@ -183,7 +130,6 @@ public class LinearGradientPaint(
         {
             _ = skiaContext.Canvas.Save();
             skiaContext.Canvas.ClipRect(new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height));
-            _drawingContext = skiaContext;
         }
 
         skiaContext.ActiveSkiaPaint = _skiaPaint;
@@ -228,8 +174,70 @@ public class LinearGradientPaint(
         }
     }
 
-    /// <inheritdoc cref="Paint.Transitionate(float, Paint)"/>
-    public override Paint Transitionate(float progress, Paint target)
+    internal override void OnPaintFinished(DrawingContext context)
+    {
+        var skiaContext = (SkiaSharpDrawingContext)context;
+
+        if (_skiaPaint is not null && !IsGlobalSKTypeface)
+            _skiaPaint.Typeface?.Dispose();
+        PathEffect?.Dispose();
+        ImageFilter?.Dispose();
+
+        if (skiaContext is not null && GetClipRectangle(skiaContext.MotionCanvas) != LvcRectangle.Empty)
+            skiaContext.Canvas.Restore();
+
+        _skiaPaint?.Dispose();
+        _skiaPaint = null;
+    }
+
+    internal override void ApplyOpacityMask(DrawingContext context, float opacity)
+    {
+        if (_skiaPaint is null) return;
+        var skiaContext = (SkiaSharpDrawingContext)context;
+
+        var size = GetDrawRectangleSize(skiaContext);
+
+        var xf = size.Location.X;
+        var xt = xf + size.Width;
+
+        var yf = size.Location.Y;
+        var yt = yf + size.Height;
+
+        var start = new SKPoint(xf + (xt - xf) * StartPoint.X, yf + (yt - yf) * StartPoint.Y);
+        var end = new SKPoint(xf + (xt - xf) * EndPoint.X, yf + (yt - yf) * EndPoint.Y);
+
+        _skiaPaint.Shader = SKShader.CreateLinearGradient(
+            start,
+            end,
+            [.. GradientStops.Select(x => new SKColor(x.Red, x.Green, x.Blue, (byte)(255 * opacity)))],
+            ColorPos,
+            tileMode);
+    }
+
+    internal override void RestoreOpacityMask(DrawingContext context, float opacity)
+    {
+        if (_skiaPaint is null) return;
+
+        var size = GetDrawRectangleSize((SkiaSharpDrawingContext)context);
+
+        var xf = size.Location.X;
+        var xt = xf + size.Width;
+
+        var yf = size.Location.Y;
+        var yt = yf + size.Height;
+
+        var start = new SKPoint(xf + (xt - xf) * StartPoint.X, yf + (yt - yf) * StartPoint.Y);
+        var end = new SKPoint(xf + (xt - xf) * EndPoint.X, yf + (yt - yf) * EndPoint.Y);
+
+        _skiaPaint.Shader = SKShader.CreateLinearGradient(
+            start,
+            end,
+            GradientStops,
+            ColorPos,
+            tileMode);
+    }
+
+    internal override Paint Transitionate(float progress, Paint target)
     {
         if (target._source is not LinearGradientPaint paint) return target;
 
@@ -270,28 +278,6 @@ public class LinearGradientPaint(
         }
 
         return clone;
-    }
-
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-    /// </summary>
-    public override void OnPaintFinished(DrawingContext context)
-    {
-        if (_skiaPaint is not null && !IsGlobalSKTypeface)
-            _skiaPaint.Typeface?.Dispose();
-        PathEffect?.Dispose();
-        ImageFilter?.Dispose();
-
-        if (_drawingContext is not null && GetClipRectangle(_drawingContext.MotionCanvas) != LvcRectangle.Empty)
-        {
-            _drawingContext.Canvas.Restore();
-            _drawingContext = null;
-        }
-
-        _skiaPaint?.Dispose();
-        _skiaPaint = null;
-
-        GC.SuppressFinalize(this);
     }
 
     // ideally, we should also let the user use the shape bounds.

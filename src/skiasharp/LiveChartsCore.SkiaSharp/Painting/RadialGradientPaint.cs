@@ -35,8 +35,6 @@ namespace LiveChartsCore.SkiaSharpView.Painting;
 /// <seealso cref="SkiaPaint" />
 public class RadialGradientPaint : SkiaPaint
 {
-    private SkiaSharpDrawingContext? _drawingContext;
-    private SKPaint? _skiaPaint;
     private readonly SKColor[] _gradientStops;
     private SKPoint _center;
     private float _radius;
@@ -102,8 +100,7 @@ public class RadialGradientPaint : SkiaPaint
         };
     }
 
-    /// <inheritdoc cref="Paint.OnPaintStarted(DrawingContext)" />
-    public override void OnPaintStarted(DrawingContext drawingContext)
+    internal override void OnPaintStarted(DrawingContext drawingContext)
     {
         var skiaContext = (SkiaSharpDrawingContext)drawingContext;
         _skiaPaint ??= new SKPaint();
@@ -113,7 +110,6 @@ public class RadialGradientPaint : SkiaPaint
         {
             _ = skiaContext.Canvas.Save();
             skiaContext.Canvas.ClipRect(new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height));
-            _drawingContext = skiaContext;
         }
 
         var size = GetDrawRectangleSize(skiaContext);
@@ -154,8 +150,7 @@ public class RadialGradientPaint : SkiaPaint
         skiaContext.ActiveSkiaPaint = _skiaPaint;
     }
 
-    /// <inheritdoc cref="Paint.Transitionate(float, Paint)" />
-    public override Paint Transitionate(float progress, Paint target)
+    internal override Paint Transitionate(float progress, Paint target)
     {
         if (target._source is not RadialGradientPaint paint) return target;
 
@@ -194,8 +189,7 @@ public class RadialGradientPaint : SkiaPaint
         return clone;
     }
 
-    /// <inheritdoc cref="Paint.ApplyOpacityMask(DrawingContext, float)" />
-    public override void ApplyOpacityMask(DrawingContext context, float opacity)
+    internal override void ApplyOpacityMask(DrawingContext context, float opacity)
     {
         var skiaContext = (SkiaSharpDrawingContext)context;
         if (_skiaPaint is null) return;
@@ -215,8 +209,7 @@ public class RadialGradientPaint : SkiaPaint
             _tileMode);
     }
 
-    /// <inheritdoc cref="Paint.RestoreOpacityMask(DrawingContext, float)" />
-    public override void RestoreOpacityMask(DrawingContext context, float opacity)
+    internal override void RestoreOpacityMask(DrawingContext context, float opacity)
     {
         var skiaContext = (SkiaSharpDrawingContext)context;
         if (_skiaPaint is null) return;
@@ -236,26 +229,20 @@ public class RadialGradientPaint : SkiaPaint
                 _tileMode);
     }
 
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-    /// </summary>
-    public override void OnPaintFinished(DrawingContext context)
+    internal override void OnPaintFinished(DrawingContext context)
     {
+        var skiaContext = (SkiaSharpDrawingContext)context;
+
         if (_skiaPaint is not null && !IsGlobalSKTypeface)
             _skiaPaint.Typeface?.Dispose();
         PathEffect?.Dispose();
         ImageFilter?.Dispose();
 
-        if (_drawingContext is not null && GetClipRectangle(_drawingContext.MotionCanvas) != LvcRectangle.Empty)
-        {
-            _drawingContext.Canvas.Restore();
-            _drawingContext = null;
-        }
+        if (skiaContext is not null && GetClipRectangle(skiaContext.MotionCanvas) != LvcRectangle.Empty)
+            skiaContext.Canvas.Restore();
 
         _skiaPaint?.Dispose();
         _skiaPaint = null;
-
-        GC.SuppressFinalize(this);
     }
 
     private static SKRect GetDrawRectangleSize(SkiaSharpDrawingContext drawingContext) =>

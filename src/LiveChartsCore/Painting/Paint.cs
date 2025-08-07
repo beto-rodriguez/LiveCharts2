@@ -117,26 +117,6 @@ public abstract partial class Paint : Animatable
     public bool IsEmpty => _geometriesByCanvas.Count == 0;
 
     /// <summary>
-    /// Transitionates the paint task to the target paint task.
-    /// </summary>
-    /// <param name="progress">The progress.</param>
-    /// <param name="target">The end target.</param>
-    public abstract Paint Transitionate(float progress, Paint target);
-
-    /// <summary>
-    /// Gets the geometries.
-    /// </summary>
-    /// <returns></returns>
-    /// <param name="canvas">The canvas.</param>
-    public IEnumerable<IDrawnElement> GetGeometries(CoreMotionCanvas canvas)
-    {
-        var geometries = GetGeometriesByCanvas(canvas) ?? [];
-
-        foreach (var geometry in geometries)
-            yield return geometry;
-    }
-
-    /// <summary>
     /// Sets the geometries for the given canvas.
     /// </summary>
     /// <param name="canvas">The canvas.</param>
@@ -195,13 +175,6 @@ public abstract partial class Paint : Animatable
     }
 
     /// <summary>
-    /// Releases the canvas resources.
-    /// </summary>
-    /// <param name="canvas">The canvas.</param>
-    public void ReleaseCanvas(CoreMotionCanvas canvas) =>
-        _ = _geometriesByCanvas.Remove(canvas);
-
-    /// <summary>
     /// Gets the clip rectangle for the given canvas.
     /// </summary>
     /// <param name="canvas">The canvas.</param>
@@ -221,40 +194,10 @@ public abstract partial class Paint : Animatable
     }
 
     /// <summary>
-    /// Called when the paint task is about to start painting.
-    /// </summary>
-    /// <param name="drawingContext">The context.</param>
-    public abstract void OnPaintStarted(DrawingContext drawingContext);
-
-    /// <summary>
-    /// Called when the paint task has finished painting.
-    /// </summary>
-    public abstract void OnPaintFinished(DrawingContext drawingContext);
-
-    /// <summary>
-    /// Sets the opacity according to the given geometry.
-    /// </summary>
-    /// <param name="context">The context.</param>
-    /// <param name="opacity">The opacity.</param>
-    public abstract void ApplyOpacityMask(DrawingContext context, float opacity);
-
-    /// <summary>
-    /// Resets the opacity.
-    /// </summary>
-    /// <param name="context">The context.</param>
-    /// <param name="opacity">The opacity.</param>
-    public abstract void RestoreOpacityMask(DrawingContext context, float opacity);
-
-    /// <summary>
     /// Clones the task.
     /// </summary>
     /// <returns>A new instance with the same properties.</returns>
     public abstract Paint CloneTask();
-
-    /// <summary>
-    /// Disposes the task, this method is called when the paint task is no longer needed.
-    /// </summary>
-    public abstract void DisposeTask();
 
     /// <summary>
     /// Parses a hexadecimal color string.
@@ -269,6 +212,29 @@ public abstract partial class Paint : Animatable
             : LiveCharts.DefaultSettings.GetProvider().GetSolidColorPaint(color);
     }
 
+    internal void ReleaseCanvas(CoreMotionCanvas canvas) =>
+        _ = _geometriesByCanvas.Remove(canvas);
+
+    internal abstract Paint Transitionate(float progress, Paint target);
+
+    internal IEnumerable<IDrawnElement> GetGeometries(CoreMotionCanvas canvas)
+    {
+        var geometries = GetGeometriesByCanvas(canvas) ?? [];
+
+        foreach (var geometry in geometries)
+            yield return geometry;
+    }
+
+    internal abstract void OnPaintStarted(DrawingContext drawingContext);
+
+    internal abstract void OnPaintFinished(DrawingContext drawingContext);
+
+    internal abstract void ApplyOpacityMask(DrawingContext context, float opacity);
+
+    internal abstract void RestoreOpacityMask(DrawingContext context, float opacity);
+
+    internal abstract void DisposeTask();
+
     private HashSet<IDrawnElement>? GetGeometriesByCanvas(object canvas)
     {
         return _geometriesByCanvas.TryGetValue(canvas, out var geometries)
@@ -278,12 +244,12 @@ public abstract partial class Paint : Animatable
 
     private class DefaultPaint : Paint
     {
-        public override void ApplyOpacityMask(DrawingContext context, float opacity) { }
         public override Paint CloneTask() => this;
-        public override void OnPaintFinished(DrawingContext context) { }
-        public override void OnPaintStarted(DrawingContext drawingContext) { }
-        public override void RestoreOpacityMask(DrawingContext context, float opacity) { }
-        public override Paint Transitionate(float progress, Paint target) => this;
-        public override void DisposeTask() { }
+        internal override void ApplyOpacityMask(DrawingContext context, float opacity) { }
+        internal override void OnPaintFinished(DrawingContext context) { }
+        internal override void OnPaintStarted(DrawingContext drawingContext) { }
+        internal override void RestoreOpacityMask(DrawingContext context, float opacity) { }
+        internal override Paint Transitionate(float progress, Paint target) => this;
+        internal override void DisposeTask() { }
     }
 }
