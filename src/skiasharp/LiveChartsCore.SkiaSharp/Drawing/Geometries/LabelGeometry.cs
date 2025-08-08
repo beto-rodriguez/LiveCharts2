@@ -27,7 +27,6 @@ using System.Text;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
-using SkiaSharp.HarfBuzz;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
@@ -35,7 +34,10 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
     internal float _maxTextHeight = 0f;
-    internal int _lines;
+    internal LabelLine[] _lines = [];
+    private string _previousText = string.Empty;
+    private double _previousTextSize = 0f;
+    private double _previousTextHeight = 0f;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LabelGeometry"/> class.
@@ -48,32 +50,30 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
     /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
     public virtual void Draw(SkiaSharpDrawingContext context)
     {
-        var paint = context.ActiveSkiaPaint;
-        paint.TextSize = TextSize;
-
         var p = Padding;
         var bg = Background;
 
+        var paint = (((SkiaPaint?)Paint)?.UpdateSkiaPaint(context, this))
+            ?? throw new Exception("A paint is required to draw a label.");
         var size = Measure();
+        var lines = GetLinesOrCached();
 
         var isFirstLine = true;
+
         var verticalPos =
-            _lines > 1
+            lines.Length > 1
                 ? VerticalAlign switch // respect alignment on multiline labels
                 {
                     Align.Start => 0,
-                    Align.Middle => -_lines * _maxTextHeight * 0.5f,
-                    Align.End => -_lines * _maxTextHeight,
+                    Align.Middle => -lines.Length * _maxTextHeight * 0.5f,
+                    Align.End => -lines.Length * _maxTextHeight,
                     _ => 0
                 }
                 : 0;
 
-        var textBounds = new SKRect();
-        var shaper = paint.Typeface is not null ? new SKShaper(paint.Typeface) : null;
-
-        foreach (var line in GetLines(context.ActiveSkiaPaint))
+        foreach (var line in lines)
         {
-            _ = paint.MeasureText(line, ref textBounds);
+            var textBounds = line.Bounds;
 
             var lhd = (textBounds.Height * LineHeight - _maxTextHeight) * 0.5f;
             var ao = GetAlignmentOffset(textBounds);
@@ -87,15 +87,7 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
                     X + ao.X, Y + ao.Y - textBounds.Height, size.Width, size.Height, bgPaint);
             }
 
-            if (paint.Typeface is not null)
-            {
-                context.Canvas.DrawShapedText(
-                    shaper, line, X + ao.X + p.Left, Y + ao.Y + p.Top + lhd + verticalPos, paint);
-            }
-            else
-            {
-                context.Canvas.DrawText(line, X + ao.X + p.Left, Y + ao.Y + p.Top + lhd + verticalPos, paint);
-            }
+            context.Canvas.DrawText(line.Blob, X + ao.X + p.Left, Y + ao.Y + p.Top + lhd + verticalPos, paint);
 
 #if DEBUG
             if (ShowDebugLines)
@@ -122,8 +114,6 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
             verticalPos += _maxTextHeight * LineHeight;
             isFirstLine = false;
         }
-
-        shaper?.Dispose();
     }
 
     /// <inheritdoc cref="DrawnGeometry.Measure()" />
@@ -134,29 +124,16 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
                 $"A paint is required to measure a label, please set the {nameof(Paint)} " +
                 $"property with the paint that is drawing the label.");
 
-        var skiaPaint = ((SkiaPaint)Paint).UpdateSkiaPaint(null, null);
-
         var w = 0f;
         _maxTextHeight = 0f;
-        _lines = 0;
 
-        foreach (var line in GetLines(skiaPaint))
+        foreach (var line in GetLinesOrCached())
         {
-            var bounds = new SKRect();
-            _ = skiaPaint.MeasureText(line, ref bounds);
-
-            if (bounds.Width > w) w = bounds.Width;
-            if (bounds.Height > _maxTextHeight) _maxTextHeight = bounds.Height;
-            _lines++;
+            if (line.Bounds.Width > w) w = line.Bounds.Width;
+            if (line.Bounds.Height > _maxTextHeight) _maxTextHeight = line.Bounds.Height;
         }
 
-        var h = _maxTextHeight * _lines * LineHeight;
-
-        // Note #301222
-        // Disposing typefaces could cause render issues (Blazor) at least on SkiaSharp (2.88.3)
-        // Could this cause memory leaks?
-        // Should the user dispose typefaces manually?
-        // typeface.Dispose();
+        var h = _maxTextHeight * _lines.Length * LineHeight;
 
         var size = new LvcSize(
             w + Padding.Left + Padding.Right,
@@ -165,7 +142,43 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
         return size.GetRotatedSize(RotateTransform);
     }
 
-    internal IEnumerable<string> GetLines(SKPaint paint)
+    internal LabelLine[] GetLinesOrCached()
+    {
+        if (_previousText != Text || _previousTextSize != TextSize || _previousTextHeight != LineHeight || _paintChanged)
+        {
+            foreach (var line in _lines)
+                line.Blob.Dispose();
+
+            var skiaPaint = (((SkiaPaint?)Paint)?.UpdateSkiaPaint(null, null))
+                ?? throw new Exception("A paint is required to measure a label.");
+
+            skiaPaint.TextSize = TextSize;
+
+            _lines = string.IsNullOrWhiteSpace(Text)
+                ? []
+                : [..
+                    GetLines(skiaPaint)
+                        .Select(line =>
+                        {
+                            var bounds = new SKRect();
+                            _ = skiaPaint.MeasureText(line, ref bounds);
+
+                            return new LabelLine(
+                                SKTextBlob.Create(line, new SKFont(skiaPaint.Typeface, TextSize)),
+                                bounds);
+                        })
+                ];
+
+            _paintChanged = false;
+            _previousText = Text;
+            _previousTextSize = TextSize;
+            _previousTextHeight = LineHeight;
+        }
+
+        return _lines;
+    }
+
+    private IEnumerable<string> GetLines(SKPaint paint)
     {
         IEnumerable<string> lines = Text.Split([Environment.NewLine], StringSplitOptions.None);
 
@@ -253,5 +266,11 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
         }
 
         return new(l, t);
+    }
+
+    internal class LabelLine(SKTextBlob textBlob, SKRect bounds)
+    {
+        public SKTextBlob Blob { get; } = textBlob;
+        public SKRect Bounds { get; } = bounds;
     }
 }
