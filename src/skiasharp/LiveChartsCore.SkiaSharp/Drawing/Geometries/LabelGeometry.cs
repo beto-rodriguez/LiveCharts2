@@ -147,36 +147,42 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
 
     internal LabelLine[] GetLinesOrCached()
     {
-        if (_previousText != Text || _previousTextSize != TextSize || _previousTextHeight != LineHeight || _paintChanged)
-        {
-            foreach (var line in _lines)
-                line.Blob.Dispose();
+        var changed =                                                           // lines changed if:
+            _previousText != Text ||                                            //   - the text changed
+            _previousTextSize != TextSize ||                                    //   - the text size changed
+            _previousTextHeight != LineHeight;                                  //   - the line height changed
+         // !GetPropertyDefinition(nameof(Paint))!.GetMotion(this).IsCompleted; //   - the paint is animating..
+                                                                                //     is it necessary to check for the paint animation?
+                                                                                //     can the paint change the size of the label?
+                                                                                //     not as far as i can see...
+        if (!changed) return _lines;
 
-            var skiaPaint = (((SkiaPaint?)Paint)?.UpdateSkiaPaint(null, null))
-                ?? throw new Exception("A paint is required to measure a label.");
+        foreach (var line in _lines)
+            line.Blob.Dispose();
 
-            skiaPaint.TextSize = TextSize;
+        var skiaPaint = (((SkiaPaint?)Paint)?.UpdateSkiaPaint(null, null))
+            ?? throw new Exception("A paint is required to measure a label.");
 
-            _lines = string.IsNullOrWhiteSpace(Text)
-                ? []
-                : [..
-                    GetLines(skiaPaint)
-                        .Select(line =>
-                        {
-                            var bounds = new SKRect();
-                            _ = skiaPaint.MeasureText(line, ref bounds);
+        skiaPaint.TextSize = TextSize;
 
-                            return new LabelLine(
-                                SKTextBlob.Create(line, new SKFont(skiaPaint.Typeface, TextSize)),
-                                bounds);
-                        })
-                ];
+        _lines = string.IsNullOrWhiteSpace(Text)
+            ? []
+            : [..
+                GetLines(skiaPaint)
+                    .Select(line =>
+                    {
+                        var bounds = new SKRect();
+                        _ = skiaPaint.MeasureText(line, ref bounds);
 
-            _paintChanged = false;
-            _previousText = Text;
-            _previousTextSize = TextSize;
-            _previousTextHeight = LineHeight;
-        }
+                        return new LabelLine(
+                            SKTextBlob.Create(line, new SKFont(skiaPaint.Typeface, TextSize)),
+                            bounds);
+                    })
+            ];
+
+        _previousText = Text;
+        _previousTextSize = TextSize;
+        _previousTextHeight = LineHeight;
 
         return _lines;
     }
