@@ -41,10 +41,11 @@ public abstract partial class BaseVectorGeometry : Animatable, IDrawnElement
     /// </summary>
     protected BaseVectorGeometry()
     {
-        _TransformOriginMotionProperty = new PointMotionProperty(new LvcPoint(0.5f, 0.5f));
-        _ScaleTransformMotionProperty = new PointMotionProperty(new LvcPoint(1f, 1f));
-        _SkewTransformMotionProperty = new PointMotionProperty(new LvcPoint(1f, 1f));
+        _TransformOriginMotionProperty = new(new(0.5f, 0.5f));
+        _ScaleTransformMotionProperty = new(new(1f, 1f));
+        _SkewTransformMotionProperty = new(new(1f, 1f));
         _OpacityMotionProperty = new(1f);
+        _StrokeThicknessMotionProperty = new(1f);
     }
 
     /// <inheritdoc cref="IDrawnElement.Parent"/>
@@ -131,13 +132,13 @@ public abstract partial class BaseVectorGeometry : Animatable, IDrawnElement
 
     /// <inheritdoc cref="IDrawnElement.StrokeThickness"/>
     [MotionProperty]
-    public partial double StrokeThickness { get; set; }
+    public partial float StrokeThickness { get; set; }
 
     /// <inheritdoc cref="IDrawnElement.DrawEffect"/>
     public DrawEffect? DrawEffect { get; set; }
 
     /// <inheritdoc cref="IDrawnElement.ClippingBounds"/>
-    public LvcRectangle ClippingBounds { get; set; }
+    public LvcRectangle ClippingBounds { get; set; } = LvcRectangle.Unset;
 
     bool IDrawnElement.HasTranslate
     {

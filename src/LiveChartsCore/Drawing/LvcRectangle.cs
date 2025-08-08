@@ -27,6 +27,9 @@ namespace LiveChartsCore.Drawing;
 /// </summary>
 public struct LvcRectangle
 {
+    private readonly bool _isEmpty;
+    private readonly bool _isUnset;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="LvcRectangle"/> struct.
     /// </summary>
@@ -36,20 +39,27 @@ public struct LvcRectangle
     {
         Location = location;
         Size = size;
-        IsEmpty = false;
+        _isEmpty = false;
+        _isUnset = false;
     }
 
-    private LvcRectangle(bool empty)
+    private LvcRectangle(bool empty, bool unset)
     {
         Location = new LvcPoint();
         Size = new LvcSize();
-        IsEmpty = empty;
+        _isEmpty = empty;
+        _isUnset = unset;
     }
 
     /// <summary>
     /// Gets an empty rectangle instance.
     /// </summary>
-    public static LvcRectangle Empty = new(true);
+    public static LvcRectangle Empty = new(true, false);
+
+    /// <summary>
+    /// Gets the unset rectangle instance.
+    /// </summary>
+    public static LvcRectangle Unset = new(false, true);
 
     /// <summary>
     /// Gets or sets the location.
@@ -82,11 +92,6 @@ public struct LvcRectangle
     public readonly float Height => Size.Height;
 
     /// <summary>
-    /// Gets or sets whether the instance is empty.
-    /// </summary>
-    private bool IsEmpty { get; set; }
-
-    /// <summary>
     /// Determines whether the given point is contained in the rectangle.
     /// </summary>
     /// <param name="point">The point.</param>
@@ -105,9 +110,10 @@ public struct LvcRectangle
     /// <returns>The comparision result.</returns>
     public override bool Equals(object? obj)
     {
-        return obj is LvcRectangle rectangle
-            && ((IsEmpty && rectangle.IsEmpty) ||
-                (Location == rectangle.Location && Size == rectangle.Size));
+        return obj is LvcRectangle rectangle &&
+            (_isEmpty == rectangle._isEmpty) &&
+            (_isUnset == rectangle._isUnset) &&
+            Location == rectangle.Location && Size == rectangle.Size;
     }
 
     /// <summary>
@@ -119,7 +125,7 @@ public struct LvcRectangle
         var hashCode = 574998336;
         hashCode = hashCode * -1521134295 + Location.GetHashCode();
         hashCode = hashCode * -1521134295 + Size.GetHashCode();
-        hashCode = hashCode * -1521134295 + IsEmpty.GetHashCode();
+        hashCode = hashCode * -1521134295 + _isEmpty.GetHashCode();
         return hashCode;
     }
 

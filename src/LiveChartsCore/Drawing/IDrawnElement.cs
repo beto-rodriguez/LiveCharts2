@@ -82,8 +82,9 @@ public interface IDrawnElement
     LvcDropShadow? DropShadow { get; set; }
 
     /// <summary>
-    /// Gets or sets the draw effect, this property is used to apply effects like gradients and...
-    /// ToDo only gradients for now.
+    /// Gets or sets the draw effect, this property is used to apply effects
+    /// (like gradients and... only gradients for now)
+    /// for this property has only on the <see cref="Fill"/>, <see cref="Stroke"/> or <see cref="Paint"/> properties.
     /// </summary>
     DrawEffect? DrawEffect { get; set; }
 
@@ -136,7 +137,7 @@ public interface IDrawnElement
     /// <summary>
     /// Gets or sets the Stroke thickness.
     /// </summary>
-    double StrokeThickness { get; set; }
+    float StrokeThickness { get; set; }
 
     /// <summary>
     /// Gets a value indicating whether the instance is valid.

@@ -473,6 +473,9 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
         {
             Fill = v?.Fill ?? Fill,
             Stroke = v?.Stroke ?? Stroke,
+            DrawEffect = DrawEffect.Local,
+            StrokeThickness = (float)MiniatureStrokeThickness,
+            ClippingBounds = LvcRectangle.Empty,
             Width = (float)MiniatureShapeSize,
             Height = (float)MiniatureShapeSize
         };

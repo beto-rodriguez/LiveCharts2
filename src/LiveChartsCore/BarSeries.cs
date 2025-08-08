@@ -98,6 +98,9 @@ public abstract class BarSeries<TModel, TVisual, TLabel>(
         {
             Fill = v?.Fill ?? Fill,
             Stroke = v?.Stroke ?? Stroke,
+            StrokeThickness = (float)MiniatureStrokeThickness,
+            DrawEffect = DrawEffect.Local,
+            ClippingBounds = LvcRectangle.Empty,
             Width = (float)MiniatureShapeSize,
             Height = (float)MiniatureShapeSize
         };

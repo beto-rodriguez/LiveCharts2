@@ -92,25 +92,25 @@ public class RadialGradientPaint : SkiaPaint
         return clone;
     }
 
-    internal override void OnPaintStarted(DrawingContext drawingContext)
+    internal override void OnPaintStarted(DrawingContext drawingContext, IDrawnElement? drawnElement)
     {
         var skiaContext = (SkiaSharpDrawingContext)drawingContext;
-        _skiaPaint = UpdateSkiaPaint(skiaContext);
-        _skiaPaint.Shader = CalculateShader(skiaContext, 1);
+        _skiaPaint = UpdateSkiaPaint(skiaContext, drawnElement);
+        _skiaPaint.Shader = CalculateShader(skiaContext, 1, drawnElement);
     }
 
-    internal override void ApplyOpacityMask(DrawingContext context, float opacity)
+    internal override void ApplyOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement)
     {
         var skiaContext = (SkiaSharpDrawingContext)context;
         if (_skiaPaint is null) return;
-        _skiaPaint.Shader = CalculateShader(skiaContext, opacity);
+        _skiaPaint.Shader = CalculateShader(skiaContext, opacity, drawnElement);
     }
 
-    internal override void RestoreOpacityMask(DrawingContext context, float opacity)
+    internal override void RestoreOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement)
     {
         var skiaContext = (SkiaSharpDrawingContext)context;
         if (_skiaPaint is null) return;
-        _skiaPaint.Shader = CalculateShader(skiaContext, opacity);
+        _skiaPaint.Shader = CalculateShader(skiaContext, opacity, drawnElement);
     }
 
     internal override Paint Transitionate(float progress, Paint target)
@@ -148,13 +148,25 @@ public class RadialGradientPaint : SkiaPaint
         return fromPaint;
     }
 
-    private static SKRect GetDrawRectangleSize(SkiaSharpDrawingContext drawingContext) =>
-        // ideally, we should also let the user use the shape bounds.
-        new(0, 0, drawingContext.Info.Width, drawingContext.Info.Height);
 
-    private SKShader CalculateShader(SkiaSharpDrawingContext skiaContext, float opacity)
+    private SKShader CalculateShader(SkiaSharpDrawingContext skiaContext, float opacity, IDrawnElement? drawnElement)
     {
-        var size = GetDrawRectangleSize(skiaContext);
+        SKRect size;
+
+        if (
+            drawnElement is not null &&
+            drawnElement.DrawEffect == DrawEffect.Local &&
+            drawnElement is BoundedDrawnGeometry bounded
+            )
+        {
+            size = new(bounded.X, bounded.Y, bounded.X + bounded.Width, bounded.Y + bounded.Height);
+        }
+        else
+        {
+            var space = skiaContext.Canvas.LocalClipBounds;
+            size = new(space.Left, space.Top, space.Right, space.Bottom);
+        }
+
         var center = new SKPoint(size.Location.X + _center.X * size.Width, size.Location.Y + _center.Y * size.Height);
         var r = size.Location.X + size.Width > size.Location.Y + size.Height
             ? size.Location.Y + size.Height

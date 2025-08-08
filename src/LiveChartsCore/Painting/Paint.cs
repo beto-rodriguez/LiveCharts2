@@ -204,13 +204,13 @@ public abstract partial class Paint : Animatable
             yield return geometry;
     }
 
-    internal abstract void OnPaintStarted(DrawingContext drawingContext);
+    internal abstract void OnPaintStarted(DrawingContext drawingContext, IDrawnElement? drawnElement);
 
-    internal abstract void OnPaintFinished(DrawingContext drawingContext);
+    internal abstract void OnPaintFinished(DrawingContext drawingContext, IDrawnElement? drawnElement);
 
-    internal abstract void ApplyOpacityMask(DrawingContext context, float opacity);
+    internal abstract void ApplyOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement);
 
-    internal abstract void RestoreOpacityMask(DrawingContext context, float opacity);
+    internal abstract void RestoreOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement);
 
     internal abstract void DisposeTask();
 
@@ -224,10 +224,10 @@ public abstract partial class Paint : Animatable
     private class DefaultPaint : Paint
     {
         public override Paint CloneTask() => this;
-        internal override void ApplyOpacityMask(DrawingContext context, float opacity) { }
-        internal override void OnPaintFinished(DrawingContext context) { }
-        internal override void OnPaintStarted(DrawingContext drawingContext) { }
-        internal override void RestoreOpacityMask(DrawingContext context, float opacity) { }
+        internal override void ApplyOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement) { }
+        internal override void OnPaintFinished(DrawingContext context, IDrawnElement? drawnElement) { }
+        internal override void OnPaintStarted(DrawingContext drawingContext, IDrawnElement? drawnElement) { }
+        internal override void RestoreOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement) { }
         internal override Paint Transitionate(float progress, Paint target) => this;
         internal override void DisposeTask() { }
     }

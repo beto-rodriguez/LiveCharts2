@@ -366,6 +366,9 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
         {
             Fill = v?.Fill ?? Fill,
             Stroke = v?.Stroke ?? Stroke,
+            DrawEffect = DrawEffect.Local,
+            StrokeThickness = (float)MiniatureStrokeThickness,
+            ClippingBounds = LvcRectangle.Empty,
             Width = (float)MiniatureShapeSize,
             Height = (float)MiniatureShapeSize,
             RotateTransform = v?.RotateTransform ?? 0,

@@ -582,6 +582,9 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
             {
                 IsRelativeToLocation = true,
                 Stroke = Stroke,
+                StrokeThickness = (float)MiniatureStrokeThickness,
+                DrawEffect = DrawEffect.Local,
+                ClippingBounds = LvcRectangle.Empty,
                 X = 0,
                 Y = 0,
                 X1 = (float)MiniatureShapeSize,
@@ -593,6 +596,9 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
         {
             Fill = v?.Fill ?? GeometryFill ?? Fill,
             Stroke = v?.Stroke ?? GeometryStroke ?? Stroke,
+            StrokeThickness = (float)MiniatureStrokeThickness,
+            DrawEffect = DrawEffect.Local,
+            ClippingBounds = LvcRectangle.Empty,
             Width = (float)MiniatureShapeSize,
             Height = (float)MiniatureShapeSize,
             RotateTransform = v?.RotateTransform ?? 0

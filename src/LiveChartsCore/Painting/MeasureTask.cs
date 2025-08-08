@@ -34,13 +34,13 @@ internal class MeasureTask : Paint
     /// <inheritdoc cref="Paint.CloneTask" />
     public override Paint CloneTask() => this;
 
-    internal override void ApplyOpacityMask(DrawingContext context, float opacity) { }
+    internal override void ApplyOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement) { }
 
-    internal override void OnPaintFinished(DrawingContext context) { }
+    internal override void OnPaintFinished(DrawingContext context, IDrawnElement? drawnElement) { }
 
-    internal override void OnPaintStarted(DrawingContext drawingContext) { }
+    internal override void OnPaintStarted(DrawingContext drawingContext, IDrawnElement? drawnElement) { }
 
-    internal override void RestoreOpacityMask(DrawingContext context, float opacity) { }
+    internal override void RestoreOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement) { }
 
     internal override Paint Transitionate(float progress, Paint target) => this;
 

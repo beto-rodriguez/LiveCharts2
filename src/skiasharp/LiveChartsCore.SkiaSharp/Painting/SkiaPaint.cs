@@ -126,7 +126,7 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
         to.ImageFilter = ImageFilter.Transitionate(from.ImageFilter, to.ImageFilter, progress);
     }
 
-    internal SKPaint UpdateSkiaPaint(SkiaSharpDrawingContext context)
+    internal SKPaint UpdateSkiaPaint(SkiaSharpDrawingContext context, IDrawnElement? drawnElement)
     {
         SKPaint paint;
 
@@ -166,6 +166,15 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
         }
 
         var clip = GetClipRectangle(context.MotionCanvas);
+
+        if (drawnElement is not null)
+        {
+            paint.StrokeWidth = drawnElement.StrokeThickness;
+
+            if (drawnElement.ClippingBounds != LvcRectangle.Unset)
+                clip = drawnElement.ClippingBounds;
+        }
+
         if (clip != LvcRectangle.Empty)
         {
             _ = context.Canvas.Save();
@@ -180,11 +189,19 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
     internal SKTypeface GetSKTypeface() =>
         SKTypeface ?? LiveChartsSkiaSharp.DefaultSKTypeface ?? SKTypeface.Default;
 
-    internal override void OnPaintFinished(DrawingContext context)
+    internal override void OnPaintFinished(DrawingContext context, IDrawnElement? drawnElement)
     {
         var skiaContext = (SkiaSharpDrawingContext)context;
 
-        if (context is not null && GetClipRectangle(skiaContext.MotionCanvas) != LvcRectangle.Empty)
+        var clip = GetClipRectangle(skiaContext.MotionCanvas);
+
+        if (drawnElement is not null)
+        {
+            if (drawnElement.ClippingBounds != LvcRectangle.Unset)
+                clip = drawnElement.ClippingBounds;
+        }
+
+        if (context is not null && clip != LvcRectangle.Empty)
             skiaContext.Canvas.Restore();
     }
 

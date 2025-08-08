@@ -240,13 +240,13 @@ public class SkiaSharpDrawingContext(
         //ActiveSkiaPaint = paint.SKPaint; set by paint.InitializeTask
         PaintMotionProperty.s_activePaint = paint;
 
-        paint.OnPaintStarted(this);
+        paint.OnPaintStarted(this, null);
     }
 
     /// <inheritdoc cref="DrawingContext.ClearPaintSelection(Paint)"/>
     public override void ClearPaintSelection(Paint paint)
     {
-        paint.OnPaintFinished(this);
+        paint.OnPaintFinished(this, null);
 
         ActiveLvcPaint = null!;
         ActiveSkiaPaint = null!;
@@ -265,12 +265,12 @@ public class SkiaSharpDrawingContext(
         if (paint != MeasureTask.Instance)
         {
             ActiveLvcPaint = paint;
-            paint.OnPaintStarted(this);
+            paint.OnPaintStarted(this, element);
         }
 
         DrawElement(element, opacity);
 
-        paint.OnPaintFinished(this);
+        paint.OnPaintFinished(this, element);
 
         ActiveSkiaPaint = originalPaint;
         ActiveLvcPaint = originalTask;
@@ -291,7 +291,7 @@ public class SkiaSharpDrawingContext(
 
         if (hasGeometryOpacity)
         {
-            ActiveLvcPaint!.ApplyOpacityMask(this, opacity);
+            ActiveLvcPaint!.ApplyOpacityMask(this, opacity, element);
         }
 
         if (hasShadow)
@@ -315,7 +315,7 @@ public class SkiaSharpDrawingContext(
 
         if (hasGeometryOpacity)
         {
-            ActiveLvcPaint!.RestoreOpacityMask(this, opacity);
+            ActiveLvcPaint!.RestoreOpacityMask(this, opacity, element);
         }
     }
 }

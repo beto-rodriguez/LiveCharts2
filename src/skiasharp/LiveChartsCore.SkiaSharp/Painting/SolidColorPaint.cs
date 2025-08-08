@@ -78,10 +78,10 @@ public class SolidColorPaint : SkiaPaint
         return clone;
     }
 
-    internal override void OnPaintStarted(DrawingContext drawingContext)
+    internal override void OnPaintStarted(DrawingContext drawingContext, IDrawnElement? drawnElement)
     {
         var skiaContext = (SkiaSharpDrawingContext)drawingContext;
-        _skiaPaint = UpdateSkiaPaint(skiaContext);
+        _skiaPaint = UpdateSkiaPaint(skiaContext, drawnElement);
         _skiaPaint.Color = Color;
     }
 
@@ -101,7 +101,7 @@ public class SolidColorPaint : SkiaPaint
         return fromPaint;
     }
 
-    internal override void ApplyOpacityMask(DrawingContext context, float opacity)
+    internal override void ApplyOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement)
     {
         var skiaContext = (SkiaSharpDrawingContext)context;
         var baseColor = Color;
@@ -113,7 +113,7 @@ public class SolidColorPaint : SkiaPaint
                 (byte)(baseColor.Alpha * opacity));
     }
 
-    internal override void RestoreOpacityMask(DrawingContext context, float opacity)
+    internal override void RestoreOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement)
     {
         var skiaContext = (SkiaSharpDrawingContext)context;
         skiaContext.ActiveSkiaPaint.Color = Color;

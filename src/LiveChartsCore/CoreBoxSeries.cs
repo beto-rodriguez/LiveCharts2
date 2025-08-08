@@ -383,6 +383,9 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
         {
             Fill = v?.Fill ?? Fill,
             Stroke = v?.Stroke ?? Stroke,
+            StrokeThickness = (float)MiniatureStrokeThickness,
+            DrawEffect = DrawEffect.Local,
+            ClippingBounds = LvcRectangle.Empty,
             Width = (float)MiniatureShapeSize,
             Height = (float)MiniatureShapeSize
         };

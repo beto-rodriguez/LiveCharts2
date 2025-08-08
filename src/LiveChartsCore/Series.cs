@@ -252,11 +252,9 @@ public abstract class Series<TModel, TVisual, TLabel>
     }
 
     /// <summary>
-    /// Gets or sets the size of the legend shape.
+    /// Gets or sets the size of the miniature, the miniature shape is used to draw the series representation in
+    /// tooltips and legends, defaults to 12.
     /// </summary>
-    /// <value>
-    /// The size of the legend shape.
-    /// </value>
     public double MiniatureShapeSize
     {
         get;
@@ -266,6 +264,20 @@ public abstract class Series<TModel, TVisual, TLabel>
             SetProperty(ref field, value);
         }
     } = 12;
+
+    /// <summary>
+    /// Gets or sets the size of the miniature stroke, the miniature shape is used to draw the series representation in
+    /// tooltips and legends, defaults to 2.
+    /// </summary>
+    public double MiniatureStrokeThickness
+    {
+        get;
+        set
+        {
+            field = value;
+            SetProperty(ref field, value);
+        }
+    } = 2;
 
     /// <inheritdoc cref="ISeries.ShowDataLabels"/>
     public bool ShowDataLabels
