@@ -134,25 +134,16 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
                 $"A paint is required to measure a label, please set the {nameof(Paint)} " +
                 $"property with the paint that is drawing the label.");
 
-        var skiaPaint = (SkiaPaint)Paint;
-        var typeface = skiaPaint.GetSKTypeface();
-
-        using var p = new SKPaint
-        {
-            IsAntialias = skiaPaint.IsAntialias,
-            StrokeWidth = skiaPaint.StrokeThickness,
-            TextSize = TextSize,
-            Typeface = typeface
-        };
+        var skiaPaint = ((SkiaPaint)Paint).UpdateSkiaPaint(null, null);
 
         var w = 0f;
         _maxTextHeight = 0f;
         _lines = 0;
 
-        foreach (var line in GetLines(p))
+        foreach (var line in GetLines(skiaPaint))
         {
             var bounds = new SKRect();
-            _ = p.MeasureText(line, ref bounds);
+            _ = skiaPaint.MeasureText(line, ref bounds);
 
             if (bounds.Width > w) w = bounds.Width;
             if (bounds.Height > _maxTextHeight) _maxTextHeight = bounds.Height;

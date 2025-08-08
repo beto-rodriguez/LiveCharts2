@@ -126,7 +126,7 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
         to.ImageFilter = ImageFilter.Transitionate(from.ImageFilter, to.ImageFilter, progress);
     }
 
-    internal SKPaint UpdateSkiaPaint(SkiaSharpDrawingContext context, IDrawnElement? drawnElement)
+    internal SKPaint UpdateSkiaPaint(SkiaSharpDrawingContext? context, IDrawnElement? drawnElement)
     {
         SKPaint paint;
 
@@ -164,6 +164,11 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
             ImageFilter.CreateFilter();
             paint.ImageFilter = ImageFilter._sKImageFilter;
         }
+
+        // special case for text paints.
+        // when  the label is mesured, we do not have a context yet.
+        if (context is null)
+            return paint;
 
         var clip = GetClipRectangle(context.MotionCanvas);
 
