@@ -494,6 +494,16 @@ public abstract class Chart
     protected bool SizeChanged() => _previousSize.Width != ControlSize.Width || _previousSize.Height != ControlSize.Height;
 
     /// <summary>
+    /// Is it being rendered
+    /// </summary>
+    public bool _isRendering = false;
+
+    /// <summary>
+    /// Indicates if it is the first render
+    /// </summary>
+    public bool _isFirstRender = true;
+
+    /// <summary>
     /// Called when the updated the throttler is unlocked.
     /// </summary>
     /// <returns></returns>
@@ -505,7 +515,14 @@ public abstract class Chart
             {
                 lock (Canvas.Sync)
                 {
-                    Measure();
+                    //1.The first rendering must be released (Chart will be added to the subscription list),
+                    //otherwise the subsequent UpdateThrottlerUnlocked cannot be triggered (you need to click on the chart to join the subscription again).
+                    //2.Allow traffic only when MotionCanvas is being rendered, so as to avoid the infinite accumulation of elements in the chart when it is not rendered.
+                    if (_isFirstRender || _isRendering)
+                    {
+                        _isFirstRender = false;
+                        Measure();
+                    }
                 }
             });
         });

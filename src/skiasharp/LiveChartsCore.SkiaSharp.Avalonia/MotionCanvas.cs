@@ -66,11 +66,17 @@ public class MotionCanvas : UserControl
     {
         if (_isDeatached) return;
 
+        var chartView = this.Parent as Kernel.Sketches.IChartView;
+        var chart = chartView.CoreChart as LiveChartsCore.Chart;
+        chart._isRendering = true;
+
         context.Custom(new ChartFrameOperation(
             CanvasCore, new Rect(0, 0, Bounds.Width, Bounds.Height)));
 
         if (CanvasCore.IsValid) return;
         _ = Dispatcher.UIThread.InvokeAsync(InvalidateVisual, DispatcherPriority.Background);
+
+        chart._isRendering = false;
     }
 
     private void OnCanvasCoreInvalidated(CoreMotionCanvas sender) =>
