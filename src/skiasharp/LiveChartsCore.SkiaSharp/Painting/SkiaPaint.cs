@@ -38,6 +38,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting;
 public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 0f)
     : Paint(strokeThickness, strokeMiter)
 {
+    internal Action<SKPaint>? _userSettings;
     internal SKPaint? _skiaPaint;
 
     /// <summary>
@@ -109,6 +110,16 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
     /// </value>
     public ImageFilter? ImageFilter { get; set; }
 
+    /// <summary>
+    /// Configures the SkiaSharp paint manually.
+    /// </summary>
+    /// <param name="skiaSettings"></param>
+    public SkiaPaint ConfigureSkiaSharpPaint(Action<SKPaint> skiaSettings)
+    {
+        _userSettings = skiaSettings;
+        return this;
+    }
+
     internal bool IsGlobalSKTypeface =>
         GetSKTypeface() == (LiveChartsSkiaSharp.DefaultSKTypeface ?? SKTypeface.Default);
 
@@ -164,6 +175,9 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
             ImageFilter.CreateFilter();
             paint.ImageFilter = ImageFilter._sKImageFilter;
         }
+
+        if (_userSettings is not null)
+            _userSettings(paint);
 
         // special case for text paints.
         // when  the label is mesured, we do not have a context yet.
