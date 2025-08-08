@@ -156,7 +156,6 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
                 ?? throw new Exception("A paint is required to measure a label.");
 
             skiaPaint.TextSize = TextSize;
-            skiaPaint.SubpixelText = true;
 
             _lines = string.IsNullOrWhiteSpace(Text)
                 ? []

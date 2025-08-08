@@ -151,7 +151,10 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
                 : SKPaintStyle.Fill;
 
             if (PaintStyle.HasFlag(PaintStyle.Text))
+            {
                 paint.Typeface = GetSKTypeface();
+                paint.SubpixelText = true;
+            }
         }
         else
         {
