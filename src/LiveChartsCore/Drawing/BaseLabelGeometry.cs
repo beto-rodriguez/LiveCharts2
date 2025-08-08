@@ -210,4 +210,11 @@ public abstract partial class BaseLabelGeometry : Animatable, IDrawnElement
 
     /// <inheritdoc cref="IDrawnElement.Measure()"/>
     public abstract LvcSize Measure();
+
+    void IDrawnElement.DisposePaints()
+    {
+        ((IDrawnElement)this).Stroke?.DisposeTask();
+        ((IDrawnElement)this).Fill?.DisposeTask();
+        Paint?.DisposeTask();
+    }
 }

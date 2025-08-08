@@ -189,4 +189,11 @@ public abstract partial class BaseVectorGeometry : Animatable, IDrawnElement
 
     /// <inheritdoc cref="IDrawnElement.Measure()" />
     public LvcSize Measure() => new();
+
+    void IDrawnElement.DisposePaints()
+    {
+        Stroke?.DisposeTask();
+        Fill?.DisposeTask();
+        ((IDrawnElement)this).Paint?.DisposeTask();
+    }
 }

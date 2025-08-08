@@ -157,6 +157,13 @@ public abstract partial class DrawnGeometry : Animatable, IDrawnElement
 
     Paint? IDrawnElement.Paint { get; set; }
 
+    void IDrawnElement.DisposePaints()
+    {
+        Stroke?.DisposeTask();
+        Fill?.DisposeTask();
+        ((IDrawnElement)this).Paint?.DisposeTask();
+    }
+
     /// <inheritdoc cref="IDrawnElement.Measure()"/>
     public abstract LvcSize Measure();
 }

@@ -332,9 +332,7 @@ public class CoreMotionCanvas : IDisposable
     /// </summary>
     public void Clear()
     {
-        foreach (var task in _paintTasks)
-            task.ReleaseCanvas(this);
-        _paintTasks.Clear();
+        Clean();
         Invalidate();
     }
 
@@ -358,15 +356,26 @@ public class CoreMotionCanvas : IDisposable
     /// </summary>
     public void Dispose()
     {
+        Clean();
+        IsValid = true;
+    }
+
+    private void Clean()
+    {
         foreach (var task in _paintTasks)
         {
+            var geometriesWithOwnPaints = task.GetGeometries(this)
+                .Where(x => (x.Fill ?? x.Stroke ?? x.Paint) is not null);
+
+            foreach (var geometry in geometriesWithOwnPaints)
+                geometry.DisposePaints();
+
             task.DisposeTask();
             task.ReleaseCanvas(this);
         }
 
         _paintTasks.Clear();
         Trackers.Clear();
-        IsValid = true;
     }
 
     private void MeasureFPS(long drawStartTime)

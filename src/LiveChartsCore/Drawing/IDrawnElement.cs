@@ -156,6 +156,11 @@ public interface IDrawnElement
     /// </summary>
     /// <returns>The size.</returns>
     LvcSize Measure();
+
+    /// <summary>
+    /// Disposes the paints holded by the instance.
+    /// </summary>
+    void DisposePaints();
 }
 
 /// <summary>

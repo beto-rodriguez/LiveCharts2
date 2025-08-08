@@ -160,4 +160,9 @@ public abstract partial class Layout<TDrawingContext> : Animatable, IDrawnElemen
 
     /// <inheritdoc cref="IDrawnElement.Measure()"/>
     public abstract LvcSize Measure();
+
+    void IDrawnElement.DisposePaints()
+    {
+
+    }
 }
