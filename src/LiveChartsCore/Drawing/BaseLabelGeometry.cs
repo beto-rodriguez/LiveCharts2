@@ -136,6 +136,14 @@ public abstract partial class BaseLabelGeometry : Animatable, IDrawnElement
     /// <inheritdoc cref="IDrawnElement.HasTransform"/>
     public bool HasTransform { get; protected set; }
 
+    double IDrawnElement.StrokeThickness { get; set; }
+
+    /// <inheritdoc cref="IDrawnElement.DrawEffect"/>
+    public DrawEffect? DrawEffect { get; set; }
+
+    /// <inheritdoc cref="IDrawnElement.ClippingBounds"/>
+    public LvcRectangle ClippingBounds { get; set; }
+
     bool IDrawnElement.HasTranslate
     {
         get

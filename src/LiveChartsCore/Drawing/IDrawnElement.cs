@@ -82,6 +82,17 @@ public interface IDrawnElement
     LvcDropShadow? DropShadow { get; set; }
 
     /// <summary>
+    /// Gets or sets the draw effect, this property is used to apply effects like gradients and...
+    /// ToDo only gradients for now.
+    /// </summary>
+    DrawEffect? DrawEffect { get; set; }
+
+    /// <summary>
+    /// Gets or sets the clipping bounds.
+    /// </summary>
+    LvcRectangle ClippingBounds { get; set; }
+
+    /// <summary>
     /// Gets a value indicating whether the instance has transform.
     /// </summary>
     bool HasTransform { get; }
@@ -121,6 +132,11 @@ public interface IDrawnElement
     /// because it does not set a <see cref="PaintStyle"/>, it is normally used to draw labels.
     /// </summary>
     Paint? Paint { get; set; }
+
+    /// <summary>
+    /// Gets or sets the Stroke thickness.
+    /// </summary>
+    double StrokeThickness { get; set; }
 
     /// <summary>
     /// Gets a value indicating whether the instance is valid.

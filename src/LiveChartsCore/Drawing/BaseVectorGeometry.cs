@@ -129,6 +129,16 @@ public abstract partial class BaseVectorGeometry : Animatable, IDrawnElement
     /// <inheritdoc cref="IDrawnElement.HasTransform"/>
     public bool HasTransform { get; protected set; }
 
+    /// <inheritdoc cref="IDrawnElement.StrokeThickness"/>
+    [MotionProperty]
+    public partial double StrokeThickness { get; set; }
+
+    /// <inheritdoc cref="IDrawnElement.DrawEffect"/>
+    public DrawEffect? DrawEffect { get; set; }
+
+    /// <inheritdoc cref="IDrawnElement.ClippingBounds"/>
+    public LvcRectangle ClippingBounds { get; set; }
+
     bool IDrawnElement.HasTranslate
     {
         get
