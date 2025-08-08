@@ -26,7 +26,6 @@ using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
-using LiveChartsCore.Generators;
 
 namespace LiveChartsCore.Painting;
 
@@ -41,15 +40,12 @@ public abstract partial class Paint : Animatable
     private readonly Dictionary<object, HashSet<IDrawnElement>> _geometriesByCanvas = [];
     private readonly Dictionary<object, LvcRectangle> _clipRectangles = [];
 
-    internal Paint _source;
-
     /// <param name="strokeThickness">The stroke thickness.</param>
     /// <param name="strokeMiter">The stroke miter.</param>
     public Paint(float strokeThickness = 1f, float strokeMiter = 0)
     {
-        _source = this;
-        _StrokeMiterMotionProperty = new(strokeMiter);
-        _StrokeThicknessMotionProperty = new(strokeThickness);
+        StrokeThickness = strokeThickness;
+        StrokeMiter = strokeMiter;
     }
 
     /// <summary>
@@ -60,9 +56,6 @@ public abstract partial class Paint : Animatable
     /// <summary>
     /// Gets or sets the index of the z.
     /// </summary>
-    /// <value>
-    /// The index of the z.
-    /// </value>
     public double ZIndex { get; set; }
 
     internal PaintStyle PaintStyle { get; set; }
@@ -80,36 +73,22 @@ public abstract partial class Paint : Animatable
     /// <summary>
     /// Gets or sets a value indicating whether this instance is antialias.
     /// </summary>
-    /// <value>
-    ///   <c>true</c> if this instance is antialias; otherwise, <c>false</c>.
-    /// </value>
     public bool IsAntialias { get; set; } = true;
 
     /// <summary>
     /// Gets or sets a value indicating whether this instance is paused.
     /// </summary>
-    /// <value>
-    /// <c>true</c> if this instance is paused; otherwise, <c>false</c>.
-    /// </value>
     public bool IsPaused { get; set; }
 
     /// <summary>
     /// Gets or sets the stroke thickness.
     /// </summary>
-    /// <value>
-    /// The stroke thickness.
-    /// </value>
-    [MotionProperty]
-    public partial float StrokeThickness { get; set; }
+    public float StrokeThickness { get; set; }
 
     /// <summary>
     /// Gets or sets the stroke miter.
     /// </summary>
-    /// <value>
-    /// The stroke miter.
-    /// </value>
-    [MotionProperty]
-    public partial float StrokeMiter { get; set; }
+    public float StrokeMiter { get; set; }
 
     /// <summary>
     /// Gets a value indicating whether this instance is empty.
