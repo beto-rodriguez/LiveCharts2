@@ -27,7 +27,6 @@ using System.ComponentModel;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Providers;
@@ -269,16 +268,6 @@ public abstract class Series<TModel, TVisual, TLabel>
         }
     } = 12;
 
-    /// <summary>
-    /// Obsolete.
-    /// </summary>
-    [Obsolete($"Replaced by ${nameof(GetMiniature)}")]
-    public Sketch CanvasSchedule
-    {
-        get;
-        protected set => SetProperty(ref field, value);
-    } = new(0, 0, null);
-
     /// <inheritdoc cref="ISeries.ShowDataLabels"/>
     public bool ShowDataLabels
     {
@@ -440,47 +429,11 @@ public abstract class Series<TModel, TVisual, TLabel>
     /// <inheritdoc cref="ISeries.SoftDeleteOrDispose"/>
     public abstract void SoftDeleteOrDispose(IChartView chart);
 
-    /// <inheritdoc cref="ISeries.GetMiniaturesSketch"/>
-    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
-    public abstract Sketch GetMiniaturesSketch();
-
-    /// <inheritdoc cref="ISeries.GetMiniature"/>
-    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
-    public abstract IChartElement GetMiniature(ChartPoint? point, int zindex);
-
     /// <inheritdoc cref="ISeries.GetMiniatureGeometry"/>
     public abstract IDrawnElement GetMiniatureGeometry(ChartPoint? point);
 
     void ISeries.OnDataPointerDown(IChartView chart, IEnumerable<ChartPoint> points, LvcPoint pointer) =>
         OnDataPointerDown(chart, points, pointer);
-
-    /// <summary>
-    /// Builds a paint schedule.
-    /// </summary>
-    /// <param name="paint"></param>
-    /// <param name="geometry"></param>
-    /// <returns></returns>
-    protected PaintSchedule BuildMiniatureSchedule(
-        Paint paint, BoundedDrawnGeometry geometry)
-    {
-        var paintClone = paint.CloneTask();
-        var st = paint.PaintStyle.HasFlag(PaintStyle.Stroke) ? paint.StrokeThickness : 0;
-
-        if (st > MAX_MINIATURE_STROKE_WIDTH)
-        {
-            st = MAX_MINIATURE_STROKE_WIDTH;
-            paintClone.StrokeThickness = MAX_MINIATURE_STROKE_WIDTH;
-        }
-
-        geometry.X = 0.5f * st;
-        geometry.Y = 0.5f * st;
-        geometry.Height = (float)MiniatureShapeSize;
-        geometry.Width = (float)MiniatureShapeSize;
-
-        if (paint.PaintStyle.HasFlag(PaintStyle.Stroke)) paintClone.ZIndex = 1;
-
-        return new PaintSchedule(paintClone, geometry);
-    }
 
     /// <summary>
     /// Called when a point was measured.

@@ -28,7 +28,6 @@ using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
-using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
 
@@ -80,7 +79,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
     {
         get;
         set => SetProperty(ref field, value);
-    } =     [
+    } = [
         LvcColor.FromArgb(255, 87, 103, 222), // cold (min value)
         LvcColor.FromArgb(255, 95, 207, 249) // hot (max value)
     ];
@@ -333,51 +332,6 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
 
         label.TextSize = 1;
         label.RemoveOnCompleted = true;
-    }
-
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniaturesSketch"/>
-    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
-    public override Sketch GetMiniaturesSketch()
-    {
-        var schedules = new List<PaintSchedule>();
-
-        var solidPaint = LiveCharts.DefaultSettings.GetProvider().GetSolidColorPaint();
-        var st = solidPaint.StrokeThickness;
-        solidPaint.PaintStyle = PaintStyle.Fill;
-
-        if (st > MAX_MINIATURE_STROKE_WIDTH)
-        {
-            st = MAX_MINIATURE_STROKE_WIDTH;
-            solidPaint.StrokeThickness = MAX_MINIATURE_STROKE_WIDTH;
-        }
-
-        var visual = new TVisual
-        {
-            X = st * 0.5f,
-            Y = st * 0.5f,
-            Height = (float)MiniatureShapeSize,
-            Width = (float)MiniatureShapeSize,
-            Color = HeatMap[0] // ToDo <- draw the gradient?
-        };
-        schedules.Add(new PaintSchedule(solidPaint, visual));
-
-        return new Sketch(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
-        {
-            PaintSchedules = schedules
-        };
-    }
-
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniature"/>
-    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
-    public override IChartElement GetMiniature(ChartPoint? point, int zindex)
-    {
-        // ToDo <- draw the gradient?
-        // what to show in the legend?
-        return new GeometryVisual<TVisual, TLabel>
-        {
-            Width = 0,
-            Height = 0,
-        };
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniatureGeometry"/>

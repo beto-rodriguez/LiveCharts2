@@ -266,21 +266,6 @@ public interface ISeries : IChartElement
     int GetStackGroup();
 
     /// <summary>
-    /// </summary>
-    /// <returns></returns>
-    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
-    Sketch GetMiniaturesSketch();
-
-    /// <summary>
-    /// Return the visual element shown in tooltips and legends, this is an old method and will be replaced by
-    /// <see cref="GetMiniatureGeometry(ChartPoint?)"/>.
-    /// </summary>
-    /// <param name="point">The point.</param>
-    /// <param name="zindex">The zindex.</param>
-    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
-    IChartElement GetMiniature(ChartPoint? point, int zindex);
-
-    /// <summary>
     /// Returns a geometry that represents the series in a tooltip or legend.
     /// </summary>
     /// <param name="point">The target point.</param>

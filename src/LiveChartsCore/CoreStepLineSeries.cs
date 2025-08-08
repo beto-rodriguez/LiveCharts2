@@ -31,7 +31,6 @@ using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
-using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
 
@@ -477,57 +476,6 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
             FindingStrategy.ExactMatchTakeClosest or
                 _ => base.FindPointsInPosition(chart, pointerPosition, strategy, findPointFor)
         };
-    }
-
-    /// <inheritdoc cref="GetRequestedGeometrySize"/>
-    protected override double GetRequestedGeometrySize() =>
-        (GeometrySize + (GeometryStroke?.StrokeThickness ?? 0)) * 0.5f;
-
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniaturesSketch"/>
-    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
-    public override Sketch GetMiniaturesSketch()
-    {
-        var schedules = new List<PaintSchedule>();
-
-        if (GeometryFill is not null) schedules.Add(BuildMiniatureSchedule(GeometryFill, new TVisual()));
-        else if (Fill is not null) schedules.Add(BuildMiniatureSchedule(Fill, new TVisual()));
-
-        if (GeometryStroke is not null) schedules.Add(BuildMiniatureSchedule(GeometryStroke, new TVisual()));
-        else if (Stroke is not null) schedules.Add(BuildMiniatureSchedule(Stroke, new TVisual()));
-
-        return new Sketch(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
-        {
-            PaintSchedules = schedules
-        };
-    }
-
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniature"/>"/>
-    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
-    public override IChartElement GetMiniature(ChartPoint? point, int zindex)
-    {
-        var noGeometryPaint = GeometryStroke is null && GeometryFill is null;
-        var usesLine = (GeometrySize < 1 || noGeometryPaint) && Stroke is not null;
-
-        var typedPoint = point is null ? null : ConvertToTypedChartPoint(point);
-
-        return usesLine
-            ? new LineVisual<TLineGeometry>
-            {
-                Stroke = GetMiniaturePaint(Stroke, zindex + 2),
-                Width = MiniatureShapeSize,
-                Height = 0,
-                ClippingMode = ClipMode.None
-            }
-            : new GeometryVisual<TVisual, TLabel>
-            {
-                Fill = GetMiniatureFill(point, zindex + 1),
-                Stroke = GetMiniatureStroke(point, zindex + 2),
-                Width = MiniatureShapeSize,
-                Height = MiniatureShapeSize,
-                Rotation = typedPoint?.Visual?.RotateTransform ?? 0,
-                Svg = GeometrySvg,
-                ClippingMode = ClipMode.None
-            };
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniatureGeometry(ChartPoint?)"/>
