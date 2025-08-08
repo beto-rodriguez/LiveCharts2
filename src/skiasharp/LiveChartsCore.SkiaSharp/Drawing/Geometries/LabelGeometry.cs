@@ -87,7 +87,10 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
                     X + ao.X, Y + ao.Y - textBounds.Height, size.Width, size.Height, bgPaint);
             }
 
-            context.Canvas.DrawText(line.Blob, X + ao.X + p.Left, Y + ao.Y + p.Top + lhd + verticalPos, paint);
+            var x = (float)Math.Round(X + ao.X + p.Left);
+            var y = (float)Math.Round(Y + ao.Y + p.Top + lhd + verticalPos);
+
+            context.Canvas.DrawText(line.Blob, x, y, paint);
 
 #if DEBUG
             if (ShowDebugLines)
@@ -153,6 +156,7 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
                 ?? throw new Exception("A paint is required to measure a label.");
 
             skiaPaint.TextSize = TextSize;
+            skiaPaint.SubpixelText = true;
 
             _lines = string.IsNullOrWhiteSpace(Text)
                 ? []
