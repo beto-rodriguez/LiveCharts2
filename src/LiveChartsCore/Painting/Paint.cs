@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 
@@ -136,6 +137,7 @@ public abstract partial class Paint : Animatable
     /// <param name="geometry">The geometry.</param>
     public void RemoveGeometryFromPaintTask(CoreMotionCanvas canvas, IDrawnElement geometry)
     {
+        geometry.DisposePaints();
         _ = GetGeometriesByCanvas(canvas)?.Remove(geometry);
         ((Animatable)geometry)._statesTracker = null;
 
@@ -148,6 +150,15 @@ public abstract partial class Paint : Animatable
     /// <param name="canvas">The canvas.</param>
     public void ClearGeometriesFromPaintTask(CoreMotionCanvas canvas)
     {
+        var geometries = GetGeometriesByCanvas(canvas);
+        if (geometries is null || geometries.Count == 0) return;
+
+        var geometriesWithOwnPaints = geometries
+                .Where(x => (x.Fill ?? x.Stroke ?? x.Paint) is not null);
+
+        foreach (var geometry in geometriesWithOwnPaints)
+            geometry.DisposePaints();
+
         GetGeometriesByCanvas(canvas)?.Clear();
 
         IsValid = false;

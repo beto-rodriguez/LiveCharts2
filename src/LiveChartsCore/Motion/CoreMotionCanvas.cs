@@ -323,6 +323,12 @@ public class CoreMotionCanvas : IDisposable
     /// <returns></returns>
     public void RemovePaintTask(Paint task)
     {
+        var geometriesWithOwnPaints = task.GetGeometries(this)
+                .Where(x => (x.Fill ?? x.Stroke ?? x.Paint) is not null);
+
+        foreach (var geometry in geometriesWithOwnPaints)
+            geometry.DisposePaints();
+
         task.ReleaseCanvas(this);
         _ = _paintTasks.Remove(task);
     }

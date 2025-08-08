@@ -276,4 +276,12 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
         public SKTextBlob Blob { get; } = textBlob;
         public SKRect Bounds { get; } = bounds;
     }
+
+    internal override void OnDisposed()
+    {
+        foreach (var line in _lines)
+            line.Blob.Dispose();
+
+        base.OnDisposed();
+    }
 }

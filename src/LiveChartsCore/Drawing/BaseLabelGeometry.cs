@@ -226,5 +226,9 @@ public abstract partial class BaseLabelGeometry : Animatable, IDrawnElement
         ((IDrawnElement)this).Stroke?.DisposeTask();
         ((IDrawnElement)this).Fill?.DisposeTask();
         Paint?.DisposeTask();
+
+        OnDisposed();
     }
+
+    internal virtual void OnDisposed() { }
 }
