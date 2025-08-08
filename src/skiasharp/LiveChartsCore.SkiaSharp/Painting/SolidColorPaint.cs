@@ -72,19 +72,8 @@ public class SolidColorPaint : SkiaPaint
     /// <inheritdoc cref="Paint.CloneTask" />
     public override Paint CloneTask()
     {
-        var clone = new SolidColorPaint
-        {
-            PaintStyle = PaintStyle,
-            Color = Color,
-            IsAntialias = IsAntialias,
-            StrokeThickness = StrokeThickness,
-            StrokeCap = StrokeCap,
-            StrokeJoin = StrokeJoin,
-            StrokeMiter = StrokeMiter,
-            SKTypeface = SKTypeface,
-            PathEffect = PathEffect?.Clone(),
-            ImageFilter = ImageFilter?.Clone()
-        };
+        var clone = new SolidColorPaint { Color = Color };
+        Map(this, clone);
 
         return clone;
     }
@@ -92,38 +81,8 @@ public class SolidColorPaint : SkiaPaint
     internal override void OnPaintStarted(DrawingContext drawingContext)
     {
         var skiaContext = (SkiaSharpDrawingContext)drawingContext;
-        _skiaPaint ??= new SKPaint();
-
+        _skiaPaint = UpdateSkiaPaint(skiaContext);
         _skiaPaint.Color = Color;
-        _skiaPaint.IsAntialias = IsAntialias;
-        _skiaPaint.StrokeCap = StrokeCap;
-        _skiaPaint.StrokeJoin = StrokeJoin;
-        _skiaPaint.StrokeMiter = StrokeMiter;
-        _skiaPaint.StrokeWidth = StrokeThickness;
-        _skiaPaint.Style = PaintStyle.HasFlag(PaintStyle.Stroke) ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
-        if (PaintStyle.HasFlag(PaintStyle.Text))
-            _skiaPaint.Typeface = GetSKTypeface();
-
-        if (PathEffect is not null)
-        {
-            PathEffect.CreateEffect(skiaContext);
-            _skiaPaint.PathEffect = PathEffect.SKPathEffect;
-        }
-
-        if (ImageFilter is not null)
-        {
-            ImageFilter.CreateFilter(skiaContext);
-            _skiaPaint.ImageFilter = ImageFilter.SKImageFilter;
-        }
-
-        var clip = GetClipRectangle(skiaContext.MotionCanvas);
-        if (clip != LvcRectangle.Empty)
-        {
-            _ = skiaContext.Canvas.Save();
-            skiaContext.Canvas.ClipRect(new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height));
-        }
-
-        skiaContext.ActiveSkiaPaint = _skiaPaint;
     }
 
     internal override Paint Transitionate(float progress, Paint target)

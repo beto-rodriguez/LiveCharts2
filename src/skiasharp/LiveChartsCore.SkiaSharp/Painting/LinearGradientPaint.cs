@@ -106,33 +106,16 @@ public class LinearGradientPaint(
     /// <inheritdoc cref="Paint.CloneTask" />
     public override Paint CloneTask()
     {
-        return new LinearGradientPaint(GradientStops, StartPoint, EndPoint, ColorPos, tileMode)
-        {
-            PaintStyle = PaintStyle,
-            IsAntialias = IsAntialias,
-            StrokeThickness = StrokeThickness,
-            StrokeCap = StrokeCap,
-            StrokeJoin = StrokeJoin,
-            StrokeMiter = StrokeMiter,
-            SKTypeface = SKTypeface,
-            PathEffect = PathEffect?.Clone(),
-            ImageFilter = ImageFilter?.Clone()
-        };
+        var clone = new LinearGradientPaint(GradientStops, StartPoint, EndPoint, ColorPos, tileMode);
+        Map(this, clone);
+
+        return clone;
     }
 
     internal override void OnPaintStarted(DrawingContext drawingContext)
     {
         var skiaContext = (SkiaSharpDrawingContext)drawingContext;
-        _skiaPaint ??= new SKPaint();
-
-        var clip = GetClipRectangle(skiaContext.MotionCanvas);
-        if (clip != LvcRectangle.Empty)
-        {
-            _ = skiaContext.Canvas.Save();
-            skiaContext.Canvas.ClipRect(new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height));
-        }
-
-        skiaContext.ActiveSkiaPaint = _skiaPaint;
+        _skiaPaint = UpdateSkiaPaint(skiaContext);
 
         var size = GetDrawRectangleSize(skiaContext);
 
@@ -151,27 +134,6 @@ public class LinearGradientPaint(
             GradientStops,
             ColorPos,
             tileMode);
-
-        _skiaPaint.IsAntialias = IsAntialias;
-        _skiaPaint.StrokeWidth = StrokeThickness;
-        _skiaPaint.StrokeCap = StrokeCap;
-        _skiaPaint.StrokeJoin = StrokeJoin;
-        _skiaPaint.StrokeMiter = StrokeMiter;
-        _skiaPaint.Style = PaintStyle.HasFlag(PaintStyle.Stroke) ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
-        if (PaintStyle.HasFlag(PaintStyle.Text))
-            _skiaPaint.Typeface = GetSKTypeface();
-
-        if (PathEffect is not null)
-        {
-            PathEffect.CreateEffect(skiaContext);
-            _skiaPaint.PathEffect = PathEffect.SKPathEffect;
-        }
-
-        if (ImageFilter is not null)
-        {
-            ImageFilter.CreateFilter(skiaContext);
-            _skiaPaint.ImageFilter = ImageFilter.SKImageFilter;
-        }
     }
 
     internal override void ApplyOpacityMask(DrawingContext context, float opacity)

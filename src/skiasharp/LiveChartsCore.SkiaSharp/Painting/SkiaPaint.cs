@@ -112,6 +112,59 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
     internal bool IsGlobalSKTypeface =>
         GetSKTypeface() == (LiveChartsSkiaSharp.DefaultSKTypeface ?? SKTypeface.Default);
 
+    internal static void Map(SkiaPaint from, SkiaPaint to)
+    {
+        to.PaintStyle = from.PaintStyle;
+        to.IsAntialias = from.IsAntialias;
+        to.StrokeThickness = from.StrokeThickness;
+        to.StrokeCap = from.StrokeCap;
+        to.StrokeJoin = from.StrokeJoin;
+        to.StrokeMiter = from.StrokeMiter;
+        to.SKTypeface = from.SKTypeface;
+        to.PathEffect = from.PathEffect?.Clone();
+        to.ImageFilter = from.ImageFilter?.Clone();
+    }
+
+    internal SKPaint UpdateSkiaPaint(SkiaSharpDrawingContext context)
+    {
+        var paint = _skiaPaint ??= new SKPaint();
+
+        paint.IsAntialias = IsAntialias;
+        paint.StrokeCap = StrokeCap;
+        paint.StrokeJoin = StrokeJoin;
+        paint.StrokeMiter = StrokeMiter;
+        paint.StrokeWidth = StrokeThickness;
+
+        paint.Style = PaintStyle.HasFlag(PaintStyle.Stroke)
+            ? SKPaintStyle.Stroke
+            : SKPaintStyle.Fill;
+        if (PaintStyle.HasFlag(PaintStyle.Text))
+            paint.Typeface = GetSKTypeface();
+
+        if (PathEffect is not null)
+        {
+            PathEffect.CreateEffect();
+            paint.PathEffect = PathEffect.SKPathEffect;
+        }
+
+        if (ImageFilter is not null)
+        {
+            ImageFilter.CreateFilter();
+            paint.ImageFilter = ImageFilter.SKImageFilter;
+        }
+
+        var clip = GetClipRectangle(context.MotionCanvas);
+        if (clip != LvcRectangle.Empty)
+        {
+            _ = context.Canvas.Save();
+            context.Canvas.ClipRect(new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height));
+        }
+
+        context.ActiveSkiaPaint = paint;
+
+        return paint;
+    }
+
     internal SKTypeface GetSKTypeface() =>
         SKTypeface ?? LiveChartsSkiaSharp.DefaultSKTypeface ?? SKTypeface.Default;
 

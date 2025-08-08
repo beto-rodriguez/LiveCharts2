@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
@@ -57,8 +56,8 @@ public class DropShadow(
     public override ImageFilter Clone() =>
         new DropShadow(Dx, Dy, SigmaX, SigmaY, Color);
 
-    /// <inheritdoc cref="ImageFilter.CreateFilter(SkiaSharpDrawingContext)"/>
-    public override void CreateFilter(SkiaSharpDrawingContext drawingContext) =>
+    /// <inheritdoc cref="ImageFilter.CreateFilter()"/>
+    public override void CreateFilter() =>
         SKImageFilter = SKImageFilter.CreateDropShadow(Dx, Dy, SigmaX, SigmaY, Color);
 
     /// <inheritdoc cref="ImageFilter.Transitionate(float, ImageFilter)"/>

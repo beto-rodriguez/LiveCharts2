@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Painting.Effects;
@@ -41,8 +40,8 @@ public class DashEffect(float[] dashArray, float phase = 0) : PathEffect
     /// <inheritdoc cref="PathEffect.Clone"/>
     public override PathEffect Clone() => new DashEffect(DashArray, Phase);
 
-    /// <inheritdoc cref="PathEffect.CreateEffect(SkiaSharpDrawingContext)"/>
-    public override void CreateEffect(SkiaSharpDrawingContext drawingContext) =>
+    /// <inheritdoc cref="PathEffect.CreateEffect()"/>
+    public override void CreateEffect() =>
         SKPathEffect = SKPathEffect.CreateDash(DashArray, Phase);
 
     /// <inheritdoc cref="PathEffect.Transitionate(float, PathEffect)"/>

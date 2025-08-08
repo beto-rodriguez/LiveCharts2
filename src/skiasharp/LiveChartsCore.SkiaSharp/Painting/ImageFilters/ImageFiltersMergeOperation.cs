@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System.Linq;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
@@ -43,15 +42,15 @@ public class ImageFiltersMergeOperation(ImageFilter[] imageFilters) : ImageFilte
     /// <inheritdoc cref="ImageFilter.Clone"/>
     public override ImageFilter Clone() => new ImageFiltersMergeOperation(Filters);
 
-    /// <inheritdoc cref="ImageFilter.CreateFilter(SkiaSharpDrawingContext)"/>
-    public override void CreateFilter(SkiaSharpDrawingContext drawingContext)
+    /// <inheritdoc cref="ImageFilter.CreateFilter()"/>
+    public override void CreateFilter()
     {
         var imageFilters = new SKImageFilter[Filters.Length];
         var i = 0;
 
         foreach (var item in Filters)
         {
-            item.CreateFilter(drawingContext);
+            item.CreateFilter();
             if (item.SKImageFilter is null) throw new System.Exception("Image filter is not valid");
             imageFilters[i++] = item.SKImageFilter;
         }

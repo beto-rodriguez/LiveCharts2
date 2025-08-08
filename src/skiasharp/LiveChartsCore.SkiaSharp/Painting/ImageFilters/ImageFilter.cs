@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
@@ -55,8 +54,7 @@ public abstract class ImageFilter(object key) : IDisposable
     /// <summary>
     /// Creates the image filter.
     /// </summary>
-    /// <param name="drawingContext">The drawing context.</param>
-    public abstract void CreateFilter(SkiaSharpDrawingContext drawingContext);
+    public abstract void CreateFilter();
 
     /// <summary>
     /// Clones this instance.

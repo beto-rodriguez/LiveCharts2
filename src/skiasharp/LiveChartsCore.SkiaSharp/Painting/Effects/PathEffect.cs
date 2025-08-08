@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Painting.Effects;
@@ -51,8 +50,7 @@ public abstract class PathEffect : IDisposable
     /// <summary>
     /// Creates the path effect.
     /// </summary>
-    /// <param name="drawingContext">The drawing context.</param>
-    public abstract void CreateEffect(SkiaSharpDrawingContext drawingContext);
+    public abstract void CreateEffect();
 
     /// <summary>
     /// Transitions the path effect to a new one.
