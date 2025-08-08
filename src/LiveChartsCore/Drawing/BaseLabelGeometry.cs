@@ -32,6 +32,7 @@ namespace LiveChartsCore.Drawing;
 public abstract partial class BaseLabelGeometry : Animatable, IDrawnElement
 {
     private IDrawnElement? _parent;
+    internal bool _paintChanged = true;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseLabelGeometry"/> class.
@@ -125,6 +126,7 @@ public abstract partial class BaseLabelGeometry : Animatable, IDrawnElement
         {
             _PaintMotionProperty.SetMovement(value, this);
             value?.PaintStyle = PaintStyle.Text;
+            _paintChanged = true;
         }
     }
 
