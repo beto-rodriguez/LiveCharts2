@@ -116,71 +116,23 @@ public class LinearGradientPaint(
     {
         var skiaContext = (SkiaSharpDrawingContext)drawingContext;
         _skiaPaint = UpdateSkiaPaint(skiaContext);
-
-        var size = GetDrawRectangleSize(skiaContext);
-
-        var xf = size.Location.X;
-        var xt = xf + size.Width;
-
-        var yf = size.Location.Y;
-        var yt = yf + size.Height;
-
-        var start = new SKPoint(xf + (xt - xf) * StartPoint.X, yf + (yt - yf) * StartPoint.Y);
-        var end = new SKPoint(xf + (xt - xf) * EndPoint.X, yf + (yt - yf) * EndPoint.Y);
-
-        _skiaPaint.Shader = SKShader.CreateLinearGradient(
-            start,
-            end,
-            GradientStops,
-            ColorPos,
-            tileMode);
+        _skiaPaint.Shader = CalculateShader(skiaContext, 1);
     }
 
     internal override void ApplyOpacityMask(DrawingContext context, float opacity)
     {
         if (_skiaPaint is null) return;
+
         var skiaContext = (SkiaSharpDrawingContext)context;
-
-        var size = GetDrawRectangleSize(skiaContext);
-
-        var xf = size.Location.X;
-        var xt = xf + size.Width;
-
-        var yf = size.Location.Y;
-        var yt = yf + size.Height;
-
-        var start = new SKPoint(xf + (xt - xf) * StartPoint.X, yf + (yt - yf) * StartPoint.Y);
-        var end = new SKPoint(xf + (xt - xf) * EndPoint.X, yf + (yt - yf) * EndPoint.Y);
-
-        _skiaPaint.Shader = SKShader.CreateLinearGradient(
-            start,
-            end,
-            [.. GradientStops.Select(x => new SKColor(x.Red, x.Green, x.Blue, (byte)(255 * opacity)))],
-            ColorPos,
-            tileMode);
+        _skiaPaint.Shader = CalculateShader(skiaContext, opacity);
     }
 
     internal override void RestoreOpacityMask(DrawingContext context, float opacity)
     {
         if (_skiaPaint is null) return;
 
-        var size = GetDrawRectangleSize((SkiaSharpDrawingContext)context);
-
-        var xf = size.Location.X;
-        var xt = xf + size.Width;
-
-        var yf = size.Location.Y;
-        var yt = yf + size.Height;
-
-        var start = new SKPoint(xf + (xt - xf) * StartPoint.X, yf + (yt - yf) * StartPoint.Y);
-        var end = new SKPoint(xf + (xt - xf) * EndPoint.X, yf + (yt - yf) * EndPoint.Y);
-
-        _skiaPaint.Shader = SKShader.CreateLinearGradient(
-            start,
-            end,
-            GradientStops,
-            ColorPos,
-            tileMode);
+        var skiaContext = (SkiaSharpDrawingContext)context;
+        _skiaPaint.Shader = CalculateShader(skiaContext, opacity);
     }
 
     internal override Paint Transitionate(float progress, Paint target)
@@ -227,5 +179,30 @@ public class LinearGradientPaint(
     {
         var space = drawingContext.Canvas.LocalClipBounds;
         return new(space.Left, space.Top, space.Right, space.Bottom);
+    }
+
+    private SKShader CalculateShader(SkiaSharpDrawingContext skiaContext, float opacity)
+    {
+        var size = GetDrawRectangleSize(skiaContext);
+
+        var xf = size.Location.X;
+        var xt = xf + size.Width;
+
+        var yf = size.Location.Y;
+        var yt = yf + size.Height;
+
+        var start = new SKPoint(xf + (xt - xf) * StartPoint.X, yf + (yt - yf) * StartPoint.Y);
+        var end = new SKPoint(xf + (xt - xf) * EndPoint.X, yf + (yt - yf) * EndPoint.Y);
+
+        var stops = opacity < 1
+            ? [.. GradientStops.Select(x => new SKColor(x.Red, x.Green, x.Blue, (byte)(255 * opacity)))]
+            : GradientStops;
+
+        return SKShader.CreateLinearGradient(
+            start,
+            end,
+            stops,
+            ColorPos,
+            tileMode);
     }
 }

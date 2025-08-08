@@ -96,20 +96,21 @@ public class RadialGradientPaint : SkiaPaint
     {
         var skiaContext = (SkiaSharpDrawingContext)drawingContext;
         _skiaPaint = UpdateSkiaPaint(skiaContext);
+        _skiaPaint.Shader = CalculateShader(skiaContext, 1);
+    }
 
-        var size = GetDrawRectangleSize(skiaContext);
-        var center = new SKPoint(size.Location.X + _center.X * size.Width, size.Location.Y + _center.Y * size.Height);
-        var r = size.Location.X + size.Width > size.Location.Y + size.Height
-            ? size.Location.Y + size.Height
-            : size.Location.X + size.Width;
-        r *= _radius;
+    internal override void ApplyOpacityMask(DrawingContext context, float opacity)
+    {
+        var skiaContext = (SkiaSharpDrawingContext)context;
+        if (_skiaPaint is null) return;
+        _skiaPaint.Shader = CalculateShader(skiaContext, opacity);
+    }
 
-        _skiaPaint.Shader = SKShader.CreateRadialGradient(
-            center,
-            r,
-            _gradientStops,
-            _colorPos,
-            _tileMode);
+    internal override void RestoreOpacityMask(DrawingContext context, float opacity)
+    {
+        var skiaContext = (SkiaSharpDrawingContext)context;
+        if (_skiaPaint is null) return;
+        _skiaPaint.Shader = CalculateShader(skiaContext, opacity);
     }
 
     internal override Paint Transitionate(float progress, Paint target)
@@ -147,47 +148,28 @@ public class RadialGradientPaint : SkiaPaint
         return fromPaint;
     }
 
-    internal override void ApplyOpacityMask(DrawingContext context, float opacity)
-    {
-        var skiaContext = (SkiaSharpDrawingContext)context;
-        if (_skiaPaint is null) return;
-
-        var size = GetDrawRectangleSize(skiaContext);
-        var center = new SKPoint(size.Location.X + _center.X * size.Width, size.Location.Y + _center.Y * size.Height);
-        var r = size.Location.X + size.Width > size.Location.Y + size.Height
-            ? size.Location.Y + size.Height
-            : size.Location.X + size.Width;
-        r *= _radius;
-
-        _skiaPaint.Shader = SKShader.CreateRadialGradient(
-            center,
-            r,
-            [.. _gradientStops.Select(x => new SKColor(x.Red, x.Green, x.Blue, (byte)(255 * opacity)))],
-            _colorPos,
-            _tileMode);
-    }
-
-    internal override void RestoreOpacityMask(DrawingContext context, float opacity)
-    {
-        var skiaContext = (SkiaSharpDrawingContext)context;
-        if (_skiaPaint is null) return;
-
-        var size = GetDrawRectangleSize(skiaContext);
-        var center = new SKPoint(size.Location.X + _center.X * size.Width, size.Location.Y + _center.Y * size.Height);
-        var r = size.Location.X + size.Width > size.Location.Y + size.Height
-            ? size.Location.Y + size.Height
-            : size.Location.X + size.Width;
-        r *= _radius;
-
-        _skiaPaint.Shader = SKShader.CreateRadialGradient(
-                center,
-                r,
-                _gradientStops,
-                _colorPos,
-                _tileMode);
-    }
-
     private static SKRect GetDrawRectangleSize(SkiaSharpDrawingContext drawingContext) =>
         // ideally, we should also let the user use the shape bounds.
         new(0, 0, drawingContext.Info.Width, drawingContext.Info.Height);
+
+    private SKShader CalculateShader(SkiaSharpDrawingContext skiaContext, float opacity)
+    {
+        var size = GetDrawRectangleSize(skiaContext);
+        var center = new SKPoint(size.Location.X + _center.X * size.Width, size.Location.Y + _center.Y * size.Height);
+        var r = size.Location.X + size.Width > size.Location.Y + size.Height
+            ? size.Location.Y + size.Height
+            : size.Location.X + size.Width;
+        r *= _radius;
+
+        var stops = opacity < 1
+            ? [.. _gradientStops.Select(x => new SKColor(x.Red, x.Green, x.Blue, (byte)(255 * opacity)))]
+            : _gradientStops;
+
+        return SKShader.CreateRadialGradient(
+            center,
+            r,
+            stops,
+            _colorPos,
+            _tileMode);
+    }
 }
