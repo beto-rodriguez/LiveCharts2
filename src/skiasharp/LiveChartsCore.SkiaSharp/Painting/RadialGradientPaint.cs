@@ -229,22 +229,6 @@ public class RadialGradientPaint : SkiaPaint
                 _tileMode);
     }
 
-    internal override void OnPaintFinished(DrawingContext context)
-    {
-        var skiaContext = (SkiaSharpDrawingContext)context;
-
-        if (_skiaPaint is not null && !IsGlobalSKTypeface)
-            _skiaPaint.Typeface?.Dispose();
-        PathEffect?.Dispose();
-        ImageFilter?.Dispose();
-
-        if (skiaContext is not null && GetClipRectangle(skiaContext.MotionCanvas) != LvcRectangle.Empty)
-            skiaContext.Canvas.Restore();
-
-        _skiaPaint?.Dispose();
-        _skiaPaint = null;
-    }
-
     private static SKRect GetDrawRectangleSize(SkiaSharpDrawingContext drawingContext) =>
         // ideally, we should also let the user use the shape bounds.
         new(0, 0, drawingContext.Info.Width, drawingContext.Info.Height);

@@ -174,22 +174,6 @@ public class LinearGradientPaint(
         }
     }
 
-    internal override void OnPaintFinished(DrawingContext context)
-    {
-        var skiaContext = (SkiaSharpDrawingContext)context;
-
-        if (_skiaPaint is not null && !IsGlobalSKTypeface)
-            _skiaPaint.Typeface?.Dispose();
-        PathEffect?.Dispose();
-        ImageFilter?.Dispose();
-
-        if (skiaContext is not null && GetClipRectangle(skiaContext.MotionCanvas) != LvcRectangle.Empty)
-            skiaContext.Canvas.Restore();
-
-        _skiaPaint?.Dispose();
-        _skiaPaint = null;
-    }
-
     internal override void ApplyOpacityMask(DrawingContext context, float opacity)
     {
         if (_skiaPaint is null) return;

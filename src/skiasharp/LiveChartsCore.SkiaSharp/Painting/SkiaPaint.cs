@@ -21,7 +21,9 @@
 // SOFTWARE.
 
 using System;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Painting;
+using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
 using LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
 using SkiaSharp;
@@ -113,8 +115,23 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
     internal SKTypeface GetSKTypeface() =>
         SKTypeface ?? LiveChartsSkiaSharp.DefaultSKTypeface ?? SKTypeface.Default;
 
+    internal override void OnPaintFinished(DrawingContext context)
+    {
+        var skiaContext = (SkiaSharpDrawingContext)context;
+
+        if (context is not null && GetClipRectangle(skiaContext.MotionCanvas) != LvcRectangle.Empty)
+            skiaContext.Canvas.Restore();
+    }
+
     internal override void DisposeTask()
     {
+        if (_skiaPaint is not null && !IsGlobalSKTypeface)
+            _skiaPaint.Typeface?.Dispose();
 
+        PathEffect?.Dispose();
+        ImageFilter?.Dispose();
+
+        _skiaPaint?.Dispose();
+        _skiaPaint = null;
     }
 }

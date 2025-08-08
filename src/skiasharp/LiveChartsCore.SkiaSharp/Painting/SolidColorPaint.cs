@@ -126,22 +126,6 @@ public class SolidColorPaint : SkiaPaint
         skiaContext.ActiveSkiaPaint = _skiaPaint;
     }
 
-    internal override void OnPaintFinished(DrawingContext context)
-    {
-        var skiaContext = (SkiaSharpDrawingContext)context;
-
-        if (_skiaPaint is not null && !IsGlobalSKTypeface)
-            _skiaPaint.Typeface?.Dispose();
-        PathEffect?.Dispose();
-        ImageFilter?.Dispose();
-
-        if (context is not null && GetClipRectangle(skiaContext.MotionCanvas) != LvcRectangle.Empty)
-            skiaContext.Canvas.Restore();
-
-        _skiaPaint?.Dispose();
-        _skiaPaint = null;
-    }
-
     internal override Paint Transitionate(float progress, Paint target)
     {
         if (target._source is not SolidColorPaint paint) return target;
