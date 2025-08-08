@@ -128,19 +128,30 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
 
     internal SKPaint UpdateSkiaPaint(SkiaSharpDrawingContext context)
     {
-        var paint = _skiaPaint ??= new SKPaint();
+        SKPaint paint;
+
+        if (_skiaPaint is null)
+        {
+            paint = new SKPaint();
+            _skiaPaint = paint;
+
+            paint.Style = PaintStyle.HasFlag(PaintStyle.Stroke)
+                ? SKPaintStyle.Stroke
+                : SKPaintStyle.Fill;
+
+            if (PaintStyle.HasFlag(PaintStyle.Text))
+                paint.Typeface = GetSKTypeface();
+        }
+        else
+        {
+            paint = _skiaPaint;
+        }
 
         paint.IsAntialias = IsAntialias;
         paint.StrokeCap = StrokeCap;
         paint.StrokeJoin = StrokeJoin;
         paint.StrokeMiter = StrokeMiter;
         paint.StrokeWidth = StrokeThickness;
-
-        paint.Style = PaintStyle.HasFlag(PaintStyle.Stroke)
-            ? SKPaintStyle.Stroke
-            : SKPaintStyle.Fill;
-        if (PaintStyle.HasFlag(PaintStyle.Text))
-            paint.Typeface = GetSKTypeface();
 
         if (PathEffect is not null)
         {

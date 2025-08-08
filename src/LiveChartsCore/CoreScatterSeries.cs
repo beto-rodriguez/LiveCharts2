@@ -360,15 +360,15 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniatureGeometry(ChartPoint)"/>
     public override IDrawnElement GetMiniatureGeometry(ChartPoint? point)
     {
-        var typedPoint = point is null ? null : ConvertToTypedChartPoint(point);
+        var v = point?.Context.Visual;
 
         var m = new TVisual
         {
-            Fill = GetMiniatureFill(point, 0),
-            Stroke = GetMiniatureStroke(point, 0),
+            Fill = v?.Fill ?? Fill,
+            Stroke = v?.Stroke ?? Stroke,
             Width = (float)MiniatureShapeSize,
             Height = (float)MiniatureShapeSize,
-            RotateTransform = typedPoint?.Visual?.RotateTransform ?? 0,
+            RotateTransform = v?.RotateTransform ?? 0,
         };
 
         if (m is IVariableSvgPath svg) svg.SVGPath = GeometrySvg;

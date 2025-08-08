@@ -467,10 +467,12 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniatureGeometry(ChartPoint?)"/>
     public override IDrawnElement GetMiniatureGeometry(ChartPoint? point)
     {
+        var v = point?.Context.Visual;
+
         var m = new TMiniatureGeometry
         {
-            Fill = GetMiniatureFill(point, 0),
-            Stroke = GetMiniatureStroke(point, 0),
+            Fill = v?.Fill ?? Fill,
+            Stroke = v?.Stroke ?? Stroke,
             Width = (float)MiniatureShapeSize,
             Height = (float)MiniatureShapeSize
         };
@@ -632,34 +634,6 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
         }
 
         foreach (var item in toDelete) _ = everFetched.Remove(item);
-    }
-
-    /// <summary>
-    /// Gets the fill paint for the miniature.
-    /// </summary>
-    /// <param name="point">the point/</param>
-    /// <param name="zIndex">the x index.</param>
-    /// <returns></returns>
-    protected virtual Paint? GetMiniatureFill(ChartPoint? point, int zIndex)
-    {
-        var p = point is null ? null : ConvertToTypedChartPoint(point);
-        var paint = p?.Visual?.Fill ?? Fill;
-
-        return GetMiniaturePaint(paint, zIndex);
-    }
-
-    /// <summary>
-    /// Gets the fill paint for the miniature.
-    /// </summary>
-    /// <param name="point">the point/</param>
-    /// <param name="zIndex">the x index.</param>
-    /// <returns></returns>
-    protected virtual Paint? GetMiniatureStroke(ChartPoint? point, int zIndex)
-    {
-        var p = point is null ? null : ConvertToTypedChartPoint(point);
-        var paint = p?.Visual?.Stroke ?? Stroke;
-
-        return GetMiniaturePaint(paint, zIndex);
     }
 
     private void AlignLabel(TLabel label, double start, double initialRotation, double sweep)

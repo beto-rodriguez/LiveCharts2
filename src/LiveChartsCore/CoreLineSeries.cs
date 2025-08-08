@@ -574,14 +574,14 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
         var noGeometryPaint = GeometryStroke is null && GeometryFill is null;
         var usesLine = (GeometrySize < 1 || noGeometryPaint) && Stroke is not null;
 
-        var typedPoint = point is null ? null : ConvertToTypedChartPoint(point);
+        var v = point?.Context.Visual;
 
         if (usesLine)
         {
             return new TErrorGeometry
             {
                 IsRelativeToLocation = true,
-                Stroke = GetMiniaturePaint(Stroke, 0),
+                Stroke = Stroke,
                 X = 0,
                 Y = 0,
                 X1 = (float)MiniatureShapeSize,
@@ -591,34 +591,16 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
 
         var m = new TVisual
         {
-            Fill = GetMiniatureFill(point, 0),
-            Stroke = GetMiniatureStroke(point, 0),
+            Fill = v?.Fill ?? GeometryFill ?? Fill,
+            Stroke = v?.Stroke ?? GeometryStroke ?? Stroke,
             Width = (float)MiniatureShapeSize,
             Height = (float)MiniatureShapeSize,
-            RotateTransform = typedPoint?.Visual?.RotateTransform ?? 0
+            RotateTransform = v?.RotateTransform ?? 0
         };
 
         if (m is IVariableSvgPath svg) svg.SVGPath = GeometrySvg;
 
         return m;
-    }
-
-    /// <inheritdoc cref="GetMiniatureFill(ChartPoint?, int)"/>
-    protected override Paint? GetMiniatureFill(ChartPoint? point, int zIndex)
-    {
-        var p = point is null ? null : ConvertToTypedChartPoint(point);
-        var paint = p?.Visual?.Fill ?? GeometryFill ?? Fill;
-
-        return GetMiniaturePaint(paint, zIndex);
-    }
-
-    /// <inheritdoc cref="GetMiniatureStroke(ChartPoint?, int)"/>
-    protected override Paint? GetMiniatureStroke(ChartPoint? point, int zIndex)
-    {
-        var p = point is null ? null : ConvertToTypedChartPoint(point);
-        var paint = p?.Visual?.Stroke ?? GeometryStroke ?? Stroke;
-
-        return GetMiniaturePaint(paint, zIndex);
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.SoftDeleteOrDispose(IChartView)"/>

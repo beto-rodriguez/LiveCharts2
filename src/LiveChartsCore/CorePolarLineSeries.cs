@@ -558,14 +558,14 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
         var noGeometryPaint = GeometryStroke is null && GeometryFill is null;
         var usesLine = (GeometrySize < 1 || noGeometryPaint) && Stroke is not null;
 
-        var typedPoint = point is null ? null : ConvertToTypedChartPoint(point);
+        var v = point?.Context.Visual;
 
         if (usesLine)
         {
             return new TLineGeometry
             {
                 IsRelativeToLocation = true,
-                Stroke = GetMiniaturePaint(Stroke, 0),
+                Stroke = Stroke,
                 X = 0,
                 Y = 0,
                 X1 = (float)MiniatureShapeSize,
@@ -575,11 +575,11 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
 
         var m = new TVisual
         {
-            Fill = GetMiniatureFill(point, 0),
-            Stroke = GetMiniatureStroke(point, 0),
+            Fill = v?.Fill ?? Fill,
+            Stroke = v?.Stroke ?? Stroke,
             Width = (float)MiniatureShapeSize,
             Height = (float)MiniatureShapeSize,
-            RotateTransform = typedPoint?.Visual?.RotateTransform ?? 0
+            RotateTransform = v?.RotateTransform ?? 0
         };
 
         if (m is IVariableSvgPath svg) svg.SVGPath = GeometrySvg;
@@ -894,34 +894,6 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
         return new LvcPoint(
              (float)(centerX + Math.Cos(actualAngle) * radius),
              (float)(centerY + Math.Sin(actualAngle) * radius));
-    }
-
-    /// <summary>
-    /// Gets the fill paint for the miniature.
-    /// </summary>
-    /// <param name="point">the point/</param>
-    /// <param name="zIndex">the x index.</param>
-    /// <returns></returns>
-    protected virtual Paint? GetMiniatureFill(ChartPoint? point, int zIndex)
-    {
-        var p = point is null ? null : ConvertToTypedChartPoint(point);
-        var paint = p?.Visual?.Fill ?? GeometryFill ?? Fill;
-
-        return GetMiniaturePaint(paint, zIndex);
-    }
-
-    /// <summary>
-    /// Gets the fill paint for the miniature.
-    /// </summary>
-    /// <param name="point">the point/</param>
-    /// <param name="zIndex">the x index.</param>
-    /// <returns></returns>
-    protected virtual Paint? GetMiniatureStroke(ChartPoint? point, int zIndex)
-    {
-        var p = point is null ? null : ConvertToTypedChartPoint(point);
-        var paint = p?.Visual?.Stroke ?? GeometryStroke ?? Stroke;
-
-        return GetMiniaturePaint(paint, zIndex);
     }
 
     private IEnumerable<ChartPoint[]> SplitEachNull(

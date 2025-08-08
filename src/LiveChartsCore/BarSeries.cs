@@ -92,10 +92,12 @@ public abstract class BarSeries<TModel, TVisual, TLabel>(
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniatureGeometry"/>
     public override IDrawnElement GetMiniatureGeometry(ChartPoint? point)
     {
+        var v = point?.Context.Visual;
+
         var m = new TVisual
         {
-            Fill = GetMiniatureFill(point, 0),
-            Stroke = GetMiniatureStroke(point, 0),
+            Fill = v?.Fill ?? Fill,
+            Stroke = v?.Stroke ?? Stroke,
             Width = (float)MiniatureShapeSize,
             Height = (float)MiniatureShapeSize
         };
