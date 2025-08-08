@@ -58,7 +58,7 @@ public class DropShadow(
 
     /// <inheritdoc cref="ImageFilter.CreateFilter()"/>
     public override void CreateFilter() =>
-        SKImageFilter = SKImageFilter.CreateDropShadow(Dx, Dy, SigmaX, SigmaY, Color);
+        _sKImageFilter = SKImageFilter.CreateDropShadow(Dx, Dy, SigmaX, SigmaY, Color);
 
     /// <inheritdoc cref="ImageFilter.Transitionate(float, ImageFilter)"/>
     protected override ImageFilter Transitionate(float progress, ImageFilter target)

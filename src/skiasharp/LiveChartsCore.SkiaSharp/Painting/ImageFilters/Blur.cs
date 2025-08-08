@@ -48,7 +48,7 @@ public class Blur(
 
     /// <inheritdoc cref="ImageFilter.CreateFilter()"/>
     public override void CreateFilter() =>
-        SKImageFilter = SKImageFilter.CreateBlur(SigmaX, SigmaY);
+        _sKImageFilter = SKImageFilter.CreateBlur(SigmaX, SigmaY);
 
     /// <inheritdoc cref="ImageFilter.Transitionate(float, ImageFilter)"/>
     protected override ImageFilter Transitionate(float progress, ImageFilter target)

@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.Collections.Generic;
 using SkiaSharp;
 
@@ -29,12 +28,11 @@ namespace LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
 /// <summary>
 /// A wrapper object for skia sharp image filters.
 /// </summary>
-/// <seealso cref="IDisposable" />
 /// <remarks>
 /// Initializes a new instance of the <see cref="ImageFilter"/> class.
 /// </remarks>
 /// <param name="key">The fiter type key.</param>
-public abstract class ImageFilter(object key) : IDisposable
+public abstract class ImageFilter(object key)
 {
     private readonly object _key = key;
     private static readonly Dictionary<object, ImageFilter> s_defaultFilters = new()
@@ -42,14 +40,7 @@ public abstract class ImageFilter(object key) : IDisposable
         { DropShadow.s_key, new DropShadow(0,0,0,0, SKColors.Transparent) },
         { Blur.s_key, new Blur(0,0) }
     };
-
-    /// <summary>
-    /// Gets or sets the sk image filter.
-    /// </summary>
-    /// <value>
-    /// The sk image filter.
-    /// </value>
-    public SKImageFilter? SKImageFilter { get; set; }
+    internal SKImageFilter? _sKImageFilter;
 
     /// <summary>
     /// Creates the image filter.
@@ -63,6 +54,14 @@ public abstract class ImageFilter(object key) : IDisposable
     public abstract ImageFilter Clone();
 
     /// <summary>
+    /// Adds a default filter.
+    /// </summary>
+    /// <param name="key">The key.</param>
+    /// <param name="filter">The filter.</param>
+    public static void AddDefaultFilter(byte key, ImageFilter filter) =>
+        s_defaultFilters[key] = filter;
+
+    /// <summary>
     /// Transitions the image filter to a new one.
     /// </summary>
     /// <param name="progress">The transition progress.</param>
@@ -70,14 +69,7 @@ public abstract class ImageFilter(object key) : IDisposable
     /// <returns>The image filter.</returns>
     protected abstract ImageFilter Transitionate(float progress, ImageFilter target);
 
-    /// <summary>
-    /// Transitions the image filter to a new one.
-    /// </summary>
-    /// <param name="progress">The progress.</param>
-    /// <param name="from">The start.</param>
-    /// <param name="to">The end.</param>
-    /// <returns></returns>
-    public static ImageFilter? Transitionate(ImageFilter? from, ImageFilter? to, float progress)
+    internal static ImageFilter? Transitionate(ImageFilter? from, ImageFilter? to, float progress)
     {
         if (from is null && to is null) return null;
 
@@ -91,21 +83,9 @@ public abstract class ImageFilter(object key) : IDisposable
         return from.Transitionate(progress, to);
     }
 
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-    /// </summary>
-    public virtual void Dispose()
+    internal virtual void Dispose()
     {
-        if (SKImageFilter is null) return;
-        SKImageFilter.Dispose();
-        SKImageFilter = null;
+        _sKImageFilter?.Dispose();
+        _sKImageFilter = null;
     }
-
-    /// <summary>
-    /// Adds a default filter.
-    /// </summary>
-    /// <param name="key">The key.</param>
-    /// <param name="filter">The filter.</param>
-    public static void AddDefaultFilter(byte key, ImageFilter filter) =>
-        s_defaultFilters[key] = filter;
 }

@@ -185,45 +185,41 @@ public class LinearGradientPaint(
 
     internal override Paint Transitionate(float progress, Paint target)
     {
-        if (target._source is not LinearGradientPaint paint) return target;
+        if (target is not LinearGradientPaint toPaint) return target;
 
-        var clone = (LinearGradientPaint)CloneTask();
+        var fromPaint = (LinearGradientPaint)CloneTask();
+        Map(fromPaint, toPaint, progress);
 
-        clone.StrokeThickness = StrokeThickness + progress * (paint.StrokeThickness - StrokeThickness);
-        clone.StrokeMiter = StrokeMiter + progress * (paint.StrokeMiter - StrokeMiter);
-        clone.PathEffect = PathEffect?.Transitionate(progress, paint.PathEffect);
-        clone.ImageFilter = ImageFilters.ImageFilter.Transitionate(ImageFilter, paint.ImageFilter, progress);
-
-        if (paint.GradientStops.Length != GradientStops.Length)
+        if (toPaint.GradientStops.Length != GradientStops.Length)
             throw new NotImplementedException(
                 $"Transitions between {nameof(GradientStops)} must be of the same length.");
 
         for (var i = 0; i < GradientStops.Length; i++)
-            clone.GradientStops[i] = new SKColor(
-                (byte)(GradientStops[i].Red + progress * (paint.GradientStops[i].Red - GradientStops[i].Red)),
-                (byte)(GradientStops[i].Green + progress * (paint.GradientStops[i].Green - GradientStops[i].Green)),
-                (byte)(GradientStops[i].Blue + progress * (paint.GradientStops[i].Blue - GradientStops[i].Blue)),
-                (byte)(GradientStops[i].Alpha + progress * (paint.GradientStops[i].Alpha - GradientStops[i].Alpha)));
+            fromPaint.GradientStops[i] = new SKColor(
+                (byte)(GradientStops[i].Red + progress * (toPaint.GradientStops[i].Red - GradientStops[i].Red)),
+                (byte)(GradientStops[i].Green + progress * (toPaint.GradientStops[i].Green - GradientStops[i].Green)),
+                (byte)(GradientStops[i].Blue + progress * (toPaint.GradientStops[i].Blue - GradientStops[i].Blue)),
+                (byte)(GradientStops[i].Alpha + progress * (toPaint.GradientStops[i].Alpha - GradientStops[i].Alpha)));
 
-        clone.StartPoint = new SKPoint(
-            StartPoint.X + progress * (paint.StartPoint.X - StartPoint.X),
-            StartPoint.Y + progress * (paint.StartPoint.Y - StartPoint.Y));
+        fromPaint.StartPoint = new SKPoint(
+            StartPoint.X + progress * (toPaint.StartPoint.X - StartPoint.X),
+            StartPoint.Y + progress * (toPaint.StartPoint.Y - StartPoint.Y));
 
-        clone.EndPoint = new SKPoint(
-            EndPoint.X + progress * (paint.EndPoint.X - EndPoint.X),
-            EndPoint.Y + progress * (paint.EndPoint.Y - EndPoint.Y));
+        fromPaint.EndPoint = new SKPoint(
+            EndPoint.X + progress * (toPaint.EndPoint.X - EndPoint.X),
+            EndPoint.Y + progress * (toPaint.EndPoint.Y - EndPoint.Y));
 
-        if (ColorPos is not null && paint.ColorPos is not null)
+        if (ColorPos is not null && toPaint.ColorPos is not null)
         {
-            if (clone.ColorPos is null || ColorPos.Length != paint.ColorPos.Length)
+            if (fromPaint.ColorPos is null || ColorPos.Length != toPaint.ColorPos.Length)
                 throw new NotImplementedException(
                     $"Transitions between {nameof(ColorPos)} must be of the same length.");
 
             for (var i = 0; i < ColorPos.Length; i++)
-                clone.ColorPos[i] = ColorPos[i] + progress * (paint.ColorPos[i] - ColorPos[i]);
+                fromPaint.ColorPos[i] = ColorPos[i] + progress * (toPaint.ColorPos[i] - ColorPos[i]);
         }
 
-        return clone;
+        return fromPaint;
     }
 
     // ideally, we should also let the user use the shape bounds.

@@ -51,11 +51,11 @@ public class ImageFiltersMergeOperation(ImageFilter[] imageFilters) : ImageFilte
         foreach (var item in Filters)
         {
             item.CreateFilter();
-            if (item.SKImageFilter is null) throw new System.Exception("Image filter is not valid");
-            imageFilters[i++] = item.SKImageFilter;
+            if (item._sKImageFilter is null) throw new System.Exception("Image filter is not valid");
+            imageFilters[i++] = item._sKImageFilter;
         }
 
-        SKImageFilter = SKImageFilter.CreateMerge(imageFilters);
+        _sKImageFilter = SKImageFilter.CreateMerge(imageFilters);
     }
 
     /// <inheritdoc cref="ImageFilter.Transitionate(float, ImageFilter)"/>
@@ -84,14 +84,9 @@ public class ImageFiltersMergeOperation(ImageFilter[] imageFilters) : ImageFilte
         return clone;
     }
 
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-    /// </summary>
-    public override void Dispose()
+    internal override void Dispose()
     {
         foreach (var item in Filters)
-        {
             item.Dispose();
-        }
     }
 }

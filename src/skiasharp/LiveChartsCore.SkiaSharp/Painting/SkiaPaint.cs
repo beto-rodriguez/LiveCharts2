@@ -112,17 +112,18 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
     internal bool IsGlobalSKTypeface =>
         GetSKTypeface() == (LiveChartsSkiaSharp.DefaultSKTypeface ?? SKTypeface.Default);
 
-    internal static void Map(SkiaPaint from, SkiaPaint to)
+    internal static void Map(SkiaPaint from, SkiaPaint to, float progress = 1)
     {
         to.PaintStyle = from.PaintStyle;
         to.IsAntialias = from.IsAntialias;
-        to.StrokeThickness = from.StrokeThickness;
         to.StrokeCap = from.StrokeCap;
         to.StrokeJoin = from.StrokeJoin;
-        to.StrokeMiter = from.StrokeMiter;
         to.SKTypeface = from.SKTypeface;
-        to.PathEffect = from.PathEffect?.Clone();
-        to.ImageFilter = from.ImageFilter?.Clone();
+
+        to.StrokeThickness = from.StrokeThickness + progress * (to.StrokeThickness - from.StrokeThickness);
+        to.StrokeMiter = from.StrokeMiter + progress * (to.StrokeMiter - from.StrokeMiter);
+        to.PathEffect = PathEffect.Transitionate(from.PathEffect, to.PathEffect, progress);
+        to.ImageFilter = ImageFilter.Transitionate(from.ImageFilter, to.ImageFilter, progress);
     }
 
     internal SKPaint UpdateSkiaPaint(SkiaSharpDrawingContext context)
@@ -144,13 +145,13 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
         if (PathEffect is not null)
         {
             PathEffect.CreateEffect();
-            paint.PathEffect = PathEffect.SKPathEffect;
+            paint.PathEffect = PathEffect._sKPathEffect;
         }
 
         if (ImageFilter is not null)
         {
             ImageFilter.CreateFilter();
-            paint.ImageFilter = ImageFilter.SKImageFilter;
+            paint.ImageFilter = ImageFilter._sKImageFilter;
         }
 
         var clip = GetClipRectangle(context.MotionCanvas);

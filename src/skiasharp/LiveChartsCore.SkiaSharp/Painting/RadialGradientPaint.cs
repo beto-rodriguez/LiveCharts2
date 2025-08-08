@@ -114,41 +114,37 @@ public class RadialGradientPaint : SkiaPaint
 
     internal override Paint Transitionate(float progress, Paint target)
     {
-        if (target._source is not RadialGradientPaint paint) return target;
+        if (target is not RadialGradientPaint toPaint) return target;
 
-        var clone = (RadialGradientPaint)CloneTask();
+        var fromPaint = (RadialGradientPaint)CloneTask();
+        Map(fromPaint, toPaint, progress);
 
-        clone.StrokeThickness = StrokeThickness + progress * (paint.StrokeThickness - StrokeThickness);
-        clone.StrokeMiter = StrokeMiter + progress * (paint.StrokeMiter - StrokeMiter);
-        clone.PathEffect = PathEffect?.Transitionate(progress, paint.PathEffect);
-        clone.ImageFilter = ImageFilters.ImageFilter.Transitionate(ImageFilter, paint.ImageFilter, progress);
-
-        if (paint._gradientStops.Length != _gradientStops.Length)
+        if (toPaint._gradientStops.Length != _gradientStops.Length)
             throw new ArgumentException("The gradient stops must be the same length.");
 
         for (var i = 0; i < _gradientStops.Length; i++)
-            clone._gradientStops[i] = new SKColor(
-                (byte)(_gradientStops[i].Red + progress * (paint._gradientStops[i].Red - _gradientStops[i].Red)),
-                (byte)(_gradientStops[i].Green + progress * (paint._gradientStops[i].Green - _gradientStops[i].Green)),
-                (byte)(_gradientStops[i].Blue + progress * (paint._gradientStops[i].Blue - _gradientStops[i].Blue)),
-                (byte)(_gradientStops[i].Alpha + progress * (paint._gradientStops[i].Alpha - _gradientStops[i].Alpha)));
+            fromPaint._gradientStops[i] = new SKColor(
+                (byte)(_gradientStops[i].Red + progress * (toPaint._gradientStops[i].Red - _gradientStops[i].Red)),
+                (byte)(_gradientStops[i].Green + progress * (toPaint._gradientStops[i].Green - _gradientStops[i].Green)),
+                (byte)(_gradientStops[i].Blue + progress * (toPaint._gradientStops[i].Blue - _gradientStops[i].Blue)),
+                (byte)(_gradientStops[i].Alpha + progress * (toPaint._gradientStops[i].Alpha - _gradientStops[i].Alpha)));
 
-        clone._center = new SKPoint(
-            _center.X + progress * (paint._center.X - _center.X),
-            _center.Y + progress * (paint._center.Y - _center.Y));
+        fromPaint._center = new SKPoint(
+            _center.X + progress * (toPaint._center.X - _center.X),
+            _center.Y + progress * (toPaint._center.Y - _center.Y));
 
-        clone._radius = _radius + progress * (paint._radius - _radius);
+        fromPaint._radius = _radius + progress * (toPaint._radius - _radius);
 
-        if (_colorPos is not null && paint._colorPos is not null)
+        if (_colorPos is not null && toPaint._colorPos is not null)
         {
-            if (clone._colorPos is null || _colorPos.Length != clone._colorPos.Length)
+            if (fromPaint._colorPos is null || _colorPos.Length != fromPaint._colorPos.Length)
                 throw new ArgumentException("The color positions must be the same length.");
 
             for (var i = 0; i < _colorPos.Length; i++)
-                clone._colorPos[i] = _colorPos[i] + progress * (clone._colorPos[i] - _colorPos[i]);
+                fromPaint._colorPos[i] = _colorPos[i] + progress * (fromPaint._colorPos[i] - _colorPos[i]);
         }
 
-        return clone;
+        return fromPaint;
     }
 
     internal override void ApplyOpacityMask(DrawingContext context, float opacity)

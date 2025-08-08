@@ -87,22 +87,18 @@ public class SolidColorPaint : SkiaPaint
 
     internal override Paint Transitionate(float progress, Paint target)
     {
-        if (target._source is not SolidColorPaint paint) return target;
+        if (target is not SolidColorPaint toPaint) return target;
 
-        var clone = (SolidColorPaint)CloneTask();
+        var fromPaint = (SolidColorPaint)CloneTask();
+        Map(fromPaint, toPaint, progress);
 
-        clone.StrokeThickness = StrokeThickness + progress * (paint.StrokeThickness - StrokeThickness);
-        clone.StrokeMiter = StrokeMiter + progress * (paint.StrokeMiter - StrokeMiter);
-        clone.PathEffect = PathEffect?.Transitionate(progress, paint.PathEffect);
-        clone.ImageFilter = ImageFilters.ImageFilter.Transitionate(ImageFilter, paint.ImageFilter, progress);
+        fromPaint.Color = new SKColor(
+            (byte)(Color.Red + progress * (toPaint.Color.Red - Color.Red)),
+            (byte)(Color.Green + progress * (toPaint.Color.Green - Color.Green)),
+            (byte)(Color.Blue + progress * (toPaint.Color.Blue - Color.Blue)),
+            (byte)(Color.Alpha + progress * (toPaint.Color.Alpha - Color.Alpha)));
 
-        clone.Color = new SKColor(
-            (byte)(Color.Red + progress * (paint.Color.Red - Color.Red)),
-            (byte)(Color.Green + progress * (paint.Color.Green - Color.Green)),
-            (byte)(Color.Blue + progress * (paint.Color.Blue - Color.Blue)),
-            (byte)(Color.Alpha + progress * (paint.Color.Alpha - Color.Alpha)));
-
-        return clone;
+        return fromPaint;
     }
 
     internal override void ApplyOpacityMask(DrawingContext context, float opacity)

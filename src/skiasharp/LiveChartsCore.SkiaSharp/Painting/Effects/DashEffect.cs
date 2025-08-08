@@ -32,8 +32,11 @@ namespace LiveChartsCore.SkiaSharpView.Painting.Effects;
 /// <remarks>
 /// Initializes a new instance of the <see cref="DashEffect"/> class.
 /// </remarks>
-public class DashEffect(float[] dashArray, float phase = 0) : PathEffect
+public class DashEffect(float[] dashArray, float phase = 0)
+    : PathEffect(s_key)
 {
+    internal static object s_key = new();
+
     private float[] DashArray { get; set; } = dashArray;
     private float Phase { get; set; } = phase;
 
@@ -42,7 +45,7 @@ public class DashEffect(float[] dashArray, float phase = 0) : PathEffect
 
     /// <inheritdoc cref="PathEffect.CreateEffect()"/>
     public override void CreateEffect() =>
-        SKPathEffect = SKPathEffect.CreateDash(DashArray, Phase);
+        _sKPathEffect = SKPathEffect.CreateDash(DashArray, Phase);
 
     /// <inheritdoc cref="PathEffect.Transitionate(float, PathEffect)"/>
     public override PathEffect? Transitionate(float progress, PathEffect? target)

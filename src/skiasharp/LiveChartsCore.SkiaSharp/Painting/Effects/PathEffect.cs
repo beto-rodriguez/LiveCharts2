@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using System.Collections.Generic;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Painting.Effects;
@@ -28,16 +28,14 @@ namespace LiveChartsCore.SkiaSharpView.Painting.Effects;
 /// <summary>
 /// A wrapper object for skia sharp path effects.
 /// </summary>
-/// <seealso cref="IDisposable" />
-public abstract class PathEffect : IDisposable
+public abstract class PathEffect(object key)
 {
-    /// <summary>
-    /// Gets or sets the sk path effect.
-    /// </summary>
-    /// <value>
-    /// The sk path effect.
-    /// </value>
-    public SKPathEffect? SKPathEffect { get; set; }
+    private readonly object _key = key;
+    private static readonly Dictionary<object, PathEffect> s_defaultEffects = new()
+    {
+        { DashEffect.s_key, new DashEffect([1, 0], 0) }
+    };
+    internal SKPathEffect? _sKPathEffect;
 
     /// <summary>
     /// Creates a new object that is a copy of the current instance.
@@ -61,13 +59,30 @@ public abstract class PathEffect : IDisposable
     public abstract PathEffect? Transitionate(float progress, PathEffect? target);
 
     /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// Adds a default filter.
     /// </summary>
-    /// <exception cref="NotImplementedException"></exception>
-    public virtual void Dispose()
+    /// <param name="key">The key.</param>
+    /// <param name="effect">The effect.</param>
+    public static void AddDefaultEffect(byte key, PathEffect effect) =>
+        s_defaultEffects[key] = effect;
+
+    internal static PathEffect? Transitionate(PathEffect? from, PathEffect? to, float progress)
     {
-        if (SKPathEffect is null) return;
-        SKPathEffect.Dispose();
-        SKPathEffect = null;
+        if (from is null && to is null) return null;
+
+        var key = (from ?? to)!._key;
+
+        // use the default filter when the transition is to a null reference
+        // for example in the case of a shadow, the default filter is a transparent shadow
+        from ??= s_defaultEffects[key];
+        to ??= s_defaultEffects[key];
+
+        return from.Transitionate(progress, to);
+    }
+
+    internal virtual void Dispose()
+    {
+        _sKPathEffect?.Dispose();
+        _sKPathEffect = null;
     }
 }
