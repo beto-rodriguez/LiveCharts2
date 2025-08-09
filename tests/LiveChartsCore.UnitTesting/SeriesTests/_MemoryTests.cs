@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LiveChartsCore.UnitTesting.SeriesTests;
 
-//[TestClass]
+[TestClass]
 public class _MemoryTests
 {
     private static readonly int s_repeatCount;
