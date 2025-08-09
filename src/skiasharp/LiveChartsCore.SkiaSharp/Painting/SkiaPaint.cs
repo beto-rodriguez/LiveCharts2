@@ -39,7 +39,7 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
     : Paint(strokeThickness, strokeMiter)
 {
     internal Action<SKPaint, bool>? _paintSettings = LiveChartsSkiaSharp.DefaultSkiaSharpPaintBuilder;
-    internal Action<SKFont>? _fontSettings = LiveChartsSkiaSharp.DefaultSkiaSharpFontBuilder;
+    internal Func<SKTypeface, float, SKFont> _fontBuilder = LiveChartsSkiaSharp.DefaultSkiaSharpFontBuilder;
     internal SKPaint? _skiaPaint;
 
     /// <summary>
@@ -125,9 +125,9 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
     /// Configures the SkiaSharp font manually.
     /// </summary>
     /// <param name="skiaSettings"></param>
-    public SkiaPaint ConfigureSkiaSharpFont(Action<SKFont> skiaSettings)
+    public SkiaPaint ConfigureSkiaSharpFont(Func<SKTypeface, float, SKFont> skiaSettings)
     {
-        _fontSettings = skiaSettings;
+        _fontBuilder = skiaSettings;
         return this;
     }
 
@@ -160,12 +160,6 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
             paint.Style = PaintStyle.HasFlag(PaintStyle.Stroke)
                 ? SKPaintStyle.Stroke
                 : SKPaintStyle.Fill;
-
-            if (PaintStyle.HasFlag(PaintStyle.Text))
-            {
-                paint.Typeface = GetSKTypeface();
-                paint.SubpixelText = true;
-            }
         }
         else
         {

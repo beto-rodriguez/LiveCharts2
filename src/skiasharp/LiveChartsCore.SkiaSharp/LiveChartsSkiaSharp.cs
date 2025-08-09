@@ -51,7 +51,15 @@ public static class LiveChartsSkiaSharp
     /// <summary>
     /// Gets or sets an action that configures the SkiaSharp font before drawing it.
     /// </summary>
-    public static Action<SKFont>? DefaultSkiaSharpFontBuilder { get; set; }
+    public static Func<SKTypeface, float, SKFont> DefaultSkiaSharpFontBuilder { get; set; }
+        = (typeFace, size) =>
+            // could this be improved?
+            // like creating font settings based on the screen dpi, etc.
+            new SKFont(typeFace, size)
+            {
+                Edging = SKFontEdging.SubpixelAntialias,
+                Hinting = SKFontHinting.Normal
+            };
 
     /// <summary>
     /// Configures LiveCharts using the default settings for SkiaSharp.
@@ -172,16 +180,16 @@ public static class LiveChartsSkiaSharp
     }
 
     /// <summary>
-    /// Registers a global action that configures the SkiaSharp SKFont before drawing text with it, if you need to
+    /// Registers a global function that builds the SkiaSharp SKFont to draw text with it, if you need to
     /// override the builder for a specific <see cref="SkiaPaint"/> instance, use the
-    /// <see cref="SkiaPaint.ConfigureSkiaSharpFont(Action{SKFont})"/> method.
+    /// <see cref="SkiaPaint.ConfigureSkiaSharpFont(Func{SKTypeface, float, SKFont})"/> method.
     /// </summary>
     /// <param name="settings">The current settings.</param>
     /// <param name="fontBuilder">
     /// The font builder, when LiveCharts is drawing text it will call this action.
     /// </param>
     /// <returns>The current settings.</returns>
-    public static LiveChartsSettings HasFontSettings(this LiveChartsSettings settings, Action<SKFont> fontBuilder)
+    public static LiveChartsSettings HasFontSettings(this LiveChartsSettings settings, Func<SKTypeface, float, SKFont> fontBuilder)
     {
         DefaultSkiaSharpFontBuilder = fontBuilder;
         return settings;

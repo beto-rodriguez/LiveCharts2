@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using HarfBuzzSharp;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
@@ -164,7 +165,9 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
         var skiaPaint = lvcSkiaPaint?.UpdateSkiaPaint(null, null)
             ?? throw new Exception("A paint is required to measure a label.");
 
-        skiaPaint.TextSize = TextSize;
+        var textSize = TextSize;
+        var typeFace = lvcSkiaPaint.GetSKTypeface();
+        var lineBounds = new SKRect();
 
         _lines = string.IsNullOrWhiteSpace(Text)
             ? []
@@ -172,16 +175,15 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
                 GetLines(skiaPaint)
                     .Select(line =>
                     {
-                        var bounds = new SKRect();
-                        _ = skiaPaint.MeasureText(line, ref bounds);
+                        var font = lvcSkiaPaint._fontBuilder(typeFace, textSize);
+                        skiaPaint.TextSize = font.Size;
+                        skiaPaint.Typeface = typeFace;
 
-                        var font = new SKFont(skiaPaint.Typeface, TextSize);
-                        if (lvcSkiaPaint._fontSettings is not null)
-                            lvcSkiaPaint._fontSettings(font);
+                        _ = skiaPaint.MeasureText(line, ref lineBounds);
 
                         return new LabelLine(
                             SKTextBlob.Create(line, font),
-                            bounds);
+                            lineBounds);
                     })
             ];
 
