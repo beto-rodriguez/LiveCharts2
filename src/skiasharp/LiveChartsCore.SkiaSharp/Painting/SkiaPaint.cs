@@ -38,7 +38,8 @@ namespace LiveChartsCore.SkiaSharpView.Painting;
 public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 0f)
     : Paint(strokeThickness, strokeMiter)
 {
-    internal Action<SKPaint>? _userSettings;
+    internal Action<SKPaint, bool>? _paintSettings = LiveChartsSkiaSharp.DefaultSkiaSharpPaintBuilder;
+    internal Action<SKFont>? _fontSettings = LiveChartsSkiaSharp.DefaultSkiaSharpFontBuilder;
     internal SKPaint? _skiaPaint;
 
     /// <summary>
@@ -114,9 +115,19 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
     /// Configures the SkiaSharp paint manually.
     /// </summary>
     /// <param name="skiaSettings"></param>
-    public SkiaPaint ConfigureSkiaSharpPaint(Action<SKPaint> skiaSettings)
+    public SkiaPaint ConfigureSkiaSharpPaint(Action<SKPaint, bool> skiaSettings)
     {
-        _userSettings = skiaSettings;
+        _paintSettings = skiaSettings;
+        return this;
+    }
+
+    /// <summary>
+    /// Configures the SkiaSharp font manually.
+    /// </summary>
+    /// <param name="skiaSettings"></param>
+    public SkiaPaint ConfigureSkiaSharpFont(Action<SKFont> skiaSettings)
+    {
+        _fontSettings = skiaSettings;
         return this;
     }
 
@@ -179,8 +190,8 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
             paint.ImageFilter = ImageFilter._sKImageFilter;
         }
 
-        if (_userSettings is not null)
-            _userSettings(paint);
+        if (_paintSettings is not null)
+            _paintSettings(paint, PaintStyle.HasFlag(PaintStyle.Text));
 
         // special case for text paints.
         // when  the label is mesured, we do not have a context yet.

@@ -160,7 +160,8 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
         foreach (var line in _lines)
             line.Blob.Dispose();
 
-        var skiaPaint = (((SkiaPaint?)Paint)?.UpdateSkiaPaint(null, null))
+        var lvcSkiaPaint = (SkiaPaint?)Paint;
+        var skiaPaint = lvcSkiaPaint?.UpdateSkiaPaint(null, null)
             ?? throw new Exception("A paint is required to measure a label.");
 
         skiaPaint.TextSize = TextSize;
@@ -174,8 +175,12 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
                         var bounds = new SKRect();
                         _ = skiaPaint.MeasureText(line, ref bounds);
 
+                        var font = new SKFont(skiaPaint.Typeface, TextSize);
+                        if (lvcSkiaPaint._fontSettings is not null)
+                            lvcSkiaPaint._fontSettings(font);
+
                         return new LabelLine(
-                            SKTextBlob.Create(line, new SKFont(skiaPaint.Typeface, TextSize)),
+                            SKTextBlob.Create(line, font),
                             bounds);
                     })
             ];
