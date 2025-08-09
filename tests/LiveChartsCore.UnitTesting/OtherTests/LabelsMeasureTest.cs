@@ -119,7 +119,7 @@ public class LabelsMeasureTest
             canvas, SKImageInfo.Empty, SKSurface.Create(new SKImageInfo(100, 100)).Canvas);
 
         var paint = new SolidColorPaint { Color = SKColors.Red };
-        paint.OnPaintStarted(drawingContext);
+        paint.OnPaintStarted(drawingContext, null);
         paint._skiaPaint.TextSize = 15;
 
         var label = new LabelGeometry
@@ -128,22 +128,21 @@ public class LabelsMeasureTest
             TextSize = 15,
             MaxWidth = maxWidth,
             Padding = new(10, 0),
+            Paint = new SolidColorPaint(SKColors.Black)
         };
 
-        var lines = label.GetLines(paint._skiaPaint).ToArray();
-        var b = new SKRect();
+        var lines = label.GetLinesOrCached().ToArray();
         var l = 0;
         foreach (var line in lines)
         {
-            _ = paint._skiaPaint.MeasureText(line, ref b);
-            Assert.IsTrue(b.Width <= maxWidth);
+            Assert.IsTrue(line.Bounds.Width <= maxWidth);
             l++;
         }
 
         label.Paint = paint;
         var size = label.Measure();
         Assert.IsTrue(size.Width <= maxWidth);
-        Assert.IsTrue(l == label._lines);
+        Assert.IsTrue(l == label._lines.Length);
 
         var label2 = new LabelGeometry
         {
@@ -160,7 +159,7 @@ public class LabelsMeasureTest
         label2.Paint = paint;
         var size2 = label2.Measure();
 
-        Assert.IsTrue(label2._lines == 5);
+        Assert.IsTrue(label2._lines.Length == 5);
         Assert.IsTrue(size2.Width > label2.MaxWidth); // the text is too long, this is allowed.
 
         var label3 = new LabelGeometry
@@ -171,8 +170,8 @@ public class LabelsMeasureTest
         };
         label3.Paint = paint;
         var size3 = label3.Measure();
-        var lines3 = label3.GetLines(paint._skiaPaint).ToArray();
+        var lines3 = label3.GetLinesOrCached().ToArray();
 
-        Assert.IsTrue(label3._lines == 6);
+        Assert.IsTrue(label3._lines.Length == 6);
     }
 }

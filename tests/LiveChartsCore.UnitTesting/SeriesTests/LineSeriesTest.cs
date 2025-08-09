@@ -57,8 +57,8 @@ public class LineSeriesTest
             // test x
             var currentDeltaX = previous.Visual.X - sutPoint.Visual.X;
 
-            var previousBezier = ((SegmentVisualPoint<CircleGeometry, CubicBezierSegment>)previous.Context.AdditionalVisuals)?.Segment;
-            var sutBezier = ((SegmentVisualPoint<CircleGeometry, CubicBezierSegment>)sutPoint.Context.AdditionalVisuals).Segment;
+            var previousBezier = ((CubicSegmentVisualPoint)previous.Context.AdditionalVisuals)?.Segment;
+            var sutBezier = ((CubicSegmentVisualPoint)sutPoint.Context.AdditionalVisuals).Segment;
 
             var currentDeltaAreaX = previousBezier.Xj - sutBezier.Xj;
 
