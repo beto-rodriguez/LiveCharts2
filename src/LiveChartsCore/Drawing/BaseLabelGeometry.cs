@@ -138,9 +138,6 @@ public abstract partial class BaseLabelGeometry : Animatable, IDrawnElement
 
     float IDrawnElement.StrokeThickness { get; set; } = 1;
 
-    /// <inheritdoc cref="IDrawnElement.DrawEffect"/>
-    public DrawEffect? DrawEffect { get; set; }
-
     /// <inheritdoc cref="IDrawnElement.ClippingBounds"/>
     public LvcRectangle ClippingBounds { get; set; } = LvcRectangle.Unset;
 

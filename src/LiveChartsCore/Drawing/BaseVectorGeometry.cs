@@ -134,9 +134,6 @@ public abstract partial class BaseVectorGeometry : Animatable, IDrawnElement
     [MotionProperty]
     public partial float StrokeThickness { get; set; }
 
-    /// <inheritdoc cref="IDrawnElement.DrawEffect"/>
-    public DrawEffect? DrawEffect { get; set; }
-
     /// <inheritdoc cref="IDrawnElement.ClippingBounds"/>
     public LvcRectangle ClippingBounds { get; set; } = LvcRectangle.Unset;
 

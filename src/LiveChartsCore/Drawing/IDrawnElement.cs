@@ -82,13 +82,6 @@ public interface IDrawnElement
     LvcDropShadow? DropShadow { get; set; }
 
     /// <summary>
-    /// Gets or sets the draw effect, this property is used to apply effects
-    /// (like gradients and... only gradients for now)
-    /// for this property has only on the <see cref="Fill"/>, <see cref="Stroke"/> or <see cref="Paint"/> properties.
-    /// </summary>
-    DrawEffect? DrawEffect { get; set; }
-
-    /// <summary>
     /// Gets or sets the clipping bounds.
     /// </summary>
     LvcRectangle ClippingBounds { get; set; }

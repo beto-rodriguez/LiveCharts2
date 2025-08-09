@@ -566,7 +566,6 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
             {
                 IsRelativeToLocation = true,
                 Stroke = Stroke,
-                DrawEffect = DrawEffect.Local,
                 StrokeThickness = (float)MiniatureStrokeThickness,
                 ClippingBounds = LvcRectangle.Empty,
                 X = 0,
@@ -581,7 +580,6 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
             Fill = v?.Fill ?? Fill,
             Stroke = v?.Stroke ?? Stroke,
             StrokeThickness = (float)MiniatureStrokeThickness,
-            DrawEffect = DrawEffect.Local,
             ClippingBounds = LvcRectangle.Empty,
             Width = (float)MiniatureShapeSize,
             Height = (float)MiniatureShapeSize,

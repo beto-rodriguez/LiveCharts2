@@ -99,9 +99,6 @@ public abstract partial class Layout<TDrawingContext> : Animatable, IDrawnElemen
     /// <inheritdoc cref="IDrawnElement.StrokeThickness"/>
     float IDrawnElement.StrokeThickness { get; set; } = 1;
 
-    /// <inheritdoc cref="IDrawnElement.DrawEffect"/>
-    DrawEffect? IDrawnElement.DrawEffect { get; set; }
-
     /// <inheritdoc cref="IDrawnElement.ClippingBounds"/>
     LvcRectangle IDrawnElement.ClippingBounds { get; set; } = LvcRectangle.Unset;
 

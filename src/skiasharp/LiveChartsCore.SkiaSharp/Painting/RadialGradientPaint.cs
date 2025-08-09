@@ -96,7 +96,7 @@ public class RadialGradientPaint : SkiaPaint
     {
         var skiaContext = (SkiaSharpDrawingContext)drawingContext;
         _skiaPaint = UpdateSkiaPaint(skiaContext, drawnElement);
-        _skiaPaint.Shader = GetShader(skiaContext, drawnElement);
+        _skiaPaint.Shader = GetShader(skiaContext);
     }
 
     internal override void ApplyOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement)
@@ -159,26 +159,13 @@ public class RadialGradientPaint : SkiaPaint
         _shader = null;
     }
 
-    private SKShader GetShader(SkiaSharpDrawingContext skiaContext, IDrawnElement? drawnElement)
+    private SKShader GetShader(SkiaSharpDrawingContext skiaContext)
     {
         if (_shader is not null)
             return _shader;
 
-        SKRect size;
-
-        if (
-            drawnElement is not null &&
-            drawnElement.DrawEffect == DrawEffect.Local &&
-            drawnElement is BoundedDrawnGeometry bounded
-            )
-        {
-            size = new(bounded.X, bounded.Y, bounded.X + bounded.Width, bounded.Y + bounded.Height);
-        }
-        else
-        {
-            var space = skiaContext.Canvas.LocalClipBounds;
-            size = new(space.Left, space.Top, space.Right, space.Bottom);
-        }
+        var space = skiaContext.Canvas.LocalClipBounds;
+        var size = new SKRect(space.Left, space.Top, space.Right, space.Bottom);
 
         var center = new SKPoint(size.Location.X + _center.X * size.Width, size.Location.Y + _center.Y * size.Height);
         var r = size.Location.X + size.Width > size.Location.Y + size.Height
