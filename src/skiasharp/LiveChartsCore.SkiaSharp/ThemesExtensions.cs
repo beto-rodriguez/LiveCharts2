@@ -126,7 +126,7 @@ public static class ThemesExtensions
                                 : new SolidColorPaint(new(45, 45, 45));
 
                         _ = series.HasState("Hover", [
-                                (nameof(DrawnGeometry.Opacity), 0.8f)
+                                (nameof(DrawnGeometry.Opacity), 0.2f)
                             ]);
                     })
                     .HasRuleForLineSeries(lineSeries =>

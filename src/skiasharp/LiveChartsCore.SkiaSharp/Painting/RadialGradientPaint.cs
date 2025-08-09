@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -35,6 +34,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting;
 /// <seealso cref="SkiaPaint" />
 public class RadialGradientPaint : SkiaPaint
 {
+    private SKShader? _shader;
     private readonly SKColor[] _gradientStops;
     private SKPoint _center;
     private float _radius;
@@ -96,21 +96,24 @@ public class RadialGradientPaint : SkiaPaint
     {
         var skiaContext = (SkiaSharpDrawingContext)drawingContext;
         _skiaPaint = UpdateSkiaPaint(skiaContext, drawnElement);
-        _skiaPaint.Shader = CalculateShader(skiaContext, 1, drawnElement);
+        _skiaPaint.Shader = GetShader(skiaContext, drawnElement);
     }
 
     internal override void ApplyOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement)
     {
-        var skiaContext = (SkiaSharpDrawingContext)context;
-        if (_skiaPaint is null) return;
-        _skiaPaint.Shader = CalculateShader(skiaContext, opacity, drawnElement);
+        if (_skiaPaint is null || opacity > 0.99) return;
+
+        _skiaPaint.ColorFilter =
+            SKColorFilter.CreateBlendMode(
+                new SKColor(255, 255, 255, (byte)(255 * opacity)),
+                SKBlendMode.DstIn);
     }
 
     internal override void RestoreOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement)
     {
-        var skiaContext = (SkiaSharpDrawingContext)context;
         if (_skiaPaint is null) return;
-        _skiaPaint.Shader = CalculateShader(skiaContext, opacity, drawnElement);
+
+        _skiaPaint.ColorFilter = null;
     }
 
     internal override Paint Transitionate(float progress, Paint target)
@@ -148,9 +151,19 @@ public class RadialGradientPaint : SkiaPaint
         return fromPaint;
     }
 
-
-    private SKShader CalculateShader(SkiaSharpDrawingContext skiaContext, float opacity, IDrawnElement? drawnElement)
+    internal override void DisposeTask()
     {
+        base.DisposeTask();
+
+        _shader?.Dispose();
+        _shader = null;
+    }
+
+    private SKShader GetShader(SkiaSharpDrawingContext skiaContext, IDrawnElement? drawnElement)
+    {
+        if (_shader is not null)
+            return _shader;
+
         SKRect size;
 
         if (
@@ -173,15 +186,7 @@ public class RadialGradientPaint : SkiaPaint
             : size.Location.X + size.Width;
         r *= _radius;
 
-        var stops = opacity < 1
-            ? [.. _gradientStops.Select(x => new SKColor(x.Red, x.Green, x.Blue, (byte)(255 * opacity)))]
-            : _gradientStops;
-
-        return SKShader.CreateRadialGradient(
-            center,
-            r,
-            stops,
-            _colorPos,
-            _tileMode);
+        return
+            _shader = SKShader.CreateRadialGradient(center, r, _gradientStops, _colorPos, _tileMode);
     }
 }

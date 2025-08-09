@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -59,6 +58,8 @@ public class LinearGradientPaint(
     SKShaderTileMode tileMode = SKShaderTileMode.Clamp)
         : SkiaPaint
 {
+    private SKShader? _shader;
+
     private SKColor[] GradientStops { get; set; } = gradientStops;
     private SKPoint StartPoint { get; set; } = startPoint;
     private SKPoint EndPoint { get; set; } = endPoint;
@@ -116,23 +117,24 @@ public class LinearGradientPaint(
     {
         var skiaContext = (SkiaSharpDrawingContext)drawingContext;
         _skiaPaint = UpdateSkiaPaint(skiaContext, drawnElement);
-        _skiaPaint.Shader = CalculateShader(skiaContext, 1, drawnElement);
+        _skiaPaint.Shader = GetShader(skiaContext, drawnElement);
     }
 
     internal override void ApplyOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement)
     {
-        if (_skiaPaint is null) return;
+        if (_skiaPaint is null || opacity > 0.99) return;
 
-        var skiaContext = (SkiaSharpDrawingContext)context;
-        _skiaPaint.Shader = CalculateShader(skiaContext, opacity, drawnElement);
+        _skiaPaint.ColorFilter =
+            SKColorFilter.CreateBlendMode(
+                new SKColor(255, 255, 255, (byte)(255 * opacity)),
+                SKBlendMode.DstIn);
     }
 
     internal override void RestoreOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement)
     {
         if (_skiaPaint is null) return;
 
-        var skiaContext = (SkiaSharpDrawingContext)context;
-        _skiaPaint.Shader = CalculateShader(skiaContext, opacity, drawnElement);
+        _skiaPaint.ColorFilter = null;
     }
 
     internal override Paint Transitionate(float progress, Paint target)
@@ -174,8 +176,19 @@ public class LinearGradientPaint(
         return fromPaint;
     }
 
-    private SKShader CalculateShader(SkiaSharpDrawingContext skiaContext, float opacity, IDrawnElement? drawnElement)
+    internal override void DisposeTask()
     {
+        base.DisposeTask();
+
+        _shader?.Dispose();
+        _shader = null;
+    }
+
+    private SKShader GetShader(SkiaSharpDrawingContext skiaContext, IDrawnElement? drawnElement)
+    {
+        if (_shader is not null)
+            return _shader;
+
         SKRect size;
 
         if (
@@ -201,15 +214,7 @@ public class LinearGradientPaint(
         var start = new SKPoint(xf + (xt - xf) * StartPoint.X, yf + (yt - yf) * StartPoint.Y);
         var end = new SKPoint(xf + (xt - xf) * EndPoint.X, yf + (yt - yf) * EndPoint.Y);
 
-        var stops = opacity < 1
-            ? [.. GradientStops.Select(x => new SKColor(x.Red, x.Green, x.Blue, (byte)(255 * opacity)))]
-            : GradientStops;
-
-        return SKShader.CreateLinearGradient(
-            start,
-            end,
-            stops,
-            ColorPos,
-            tileMode);
+        return
+            _shader = SKShader.CreateLinearGradient(start, end, GradientStops, ColorPos, tileMode);
     }
 }
