@@ -191,11 +191,6 @@ public abstract partial class BaseLabelGeometry : Animatable, IDrawnElement
     /// </summary>
     public string Text { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Gets or sets the line height [in times the text height].
-    /// </summary>
-    public float LineHeight { get; set; } = 1.45f;
-
 #if DEBUG
     /// <summary>
     /// This property is only available on debug mode, it indicates if the debug lines should be shown.

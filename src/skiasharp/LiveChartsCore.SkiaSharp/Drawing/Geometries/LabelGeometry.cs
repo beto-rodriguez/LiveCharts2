@@ -37,7 +37,6 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
     internal SKTextBlob[] _lines = [];
     private string _previousText = string.Empty;
     private double _previousTextSize = 0f;
-    private double _previousTextHeight = 0f;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LabelGeometry"/> class.
@@ -75,7 +74,7 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
         {
             var textBounds = line.Bounds;
 
-            var lhd = (textBounds.Height * LineHeight - _maxTextHeight) * 0.5f;
+            var lhd = (textBounds.Height - _maxTextHeight) * 0.5f;
             var ao = GetAlignmentOffset(textBounds);
 
             if (isFirstLine && bg != LvcColor.Empty)
@@ -102,19 +101,19 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
                     X + ao.X,
                     Y + ao.Y - textBounds.Height + verticalPos,
                     textBounds.Width + Padding.Left + Padding.Right,
-                    textBounds.Height * LineHeight + Padding.Top + Padding.Bottom,
+                    textBounds.Height + Padding.Top + Padding.Bottom,
                     r);
 
                 context.Canvas.DrawRect(
                     X + ao.X + p.Left,
                     Y + ao.Y - textBounds.Height + p.Top + verticalPos,
                     textBounds.Width,
-                    textBounds.Height * LineHeight,
+                    textBounds.Height,
                     b);
             }
 #endif
 
-            verticalPos += _maxTextHeight * LineHeight;
+            verticalPos += _maxTextHeight;
             isFirstLine = false;
         }
     }
@@ -136,7 +135,7 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
             if (line.Bounds.Height > _maxTextHeight) _maxTextHeight = line.Bounds.Height;
         }
 
-        var h = _maxTextHeight * _lines.Length * LineHeight;
+        var h = _maxTextHeight * _lines.Length;
 
         var size = new LvcSize(
             w + Padding.Left + Padding.Right,
@@ -149,12 +148,8 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
     {
         var changed =                                                           // lines changed if:
             _previousText != Text ||                                            //   - the text changed
-            _previousTextSize != TextSize ||                                    //   - the text size changed
-            _previousTextHeight != LineHeight;                                  //   - the line height changed
-         // !GetPropertyDefinition(nameof(Paint))!.GetMotion(this).IsCompleted; //   - the paint is animating..
-                                                                                //     is it necessary to check for the paint animation?
-                                                                                //     can the paint change the size of the label?
-                                                                                //     not as far as i can see...
+            _previousTextSize != TextSize;                                      //   - the text size changed
+
         if (!changed) return _lines;
 
         foreach (var line in _lines)
@@ -183,7 +178,6 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
 
         _previousText = Text;
         _previousTextSize = TextSize;
-        _previousTextHeight = LineHeight;
 
         return _lines;
     }
@@ -254,7 +248,7 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
         var p = Padding;
 
         var w = bounds.Width + p.Left + p.Right;
-        var h = bounds.Height * LineHeight + p.Top + p.Bottom;
+        var h = bounds.Height + p.Top + p.Bottom;
 
         float l = -bounds.Left, t = -bounds.Top;
 
