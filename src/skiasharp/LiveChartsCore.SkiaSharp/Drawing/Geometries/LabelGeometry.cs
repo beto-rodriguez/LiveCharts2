@@ -37,6 +37,7 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
     internal SKTextBlob[] _lines = [];
     private string _previousText = string.Empty;
     private double _previousTextSize = 0f;
+    private SKPaint? _previousPaint;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LabelGeometry"/> class.
@@ -146,18 +147,19 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
 
     internal SKTextBlob[] GetLinesOrCached()
     {
-        var changed =                                                           // lines changed if:
-            _previousText != Text ||                                            //   - the text changed
-            _previousTextSize != TextSize;                                      //   - the text size changed
+        var lvcSkiaPaint = (SkiaPaint?)Paint;
+        var skiaPaint = lvcSkiaPaint?.UpdateSkiaPaint(null, null)
+            ?? throw new Exception("A paint is required to measure a label.");
+
+        var changed =                           // lines changed if:
+            _previousText != Text ||            //   - the text changed
+            _previousTextSize != TextSize ||    //   - the text size changed
+            _previousPaint != skiaPaint;        //   - the paint changed, otherwise we will be using disposed resources
 
         if (!changed) return _lines;
 
         foreach (var line in _lines)
             line.Dispose();
-
-        var lvcSkiaPaint = (SkiaPaint?)Paint;
-        var skiaPaint = lvcSkiaPaint?.UpdateSkiaPaint(null, null)
-            ?? throw new Exception("A paint is required to measure a label.");
 
         var textSize = TextSize;
         var typeFace = lvcSkiaPaint.GetSKTypeface();
@@ -178,6 +180,7 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
 
         _previousText = Text;
         _previousTextSize = TextSize;
+        _previousPaint = skiaPaint;
 
         return _lines;
     }
@@ -276,6 +279,10 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
     {
         foreach (var line in _lines)
             line.Dispose();
+
+        // its not the job of the label geometry to dispose the paint,
+        // but lets clean the reference to the paint.
+        _previousPaint = null;
 
         base.OnDisposed();
     }
