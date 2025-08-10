@@ -20,20 +20,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices;
-using HarfBuzzSharp;
 using SkiaSharp;
+using SkiaSharp.HarfBuzz;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing;
 
 internal static class DrawingExtensions
 {
     private static readonly Dictionary<string, bool> s_knownFontShaping = [];
-    private static readonly Dictionary<string, Font> s_knownHBFonts = [];
+    private static readonly Dictionary<string, SKShaper> s_knownShapers = [];
 
-    internal static SKTextBlob AsTextBlob(this SKFont font, string text)
+    internal static SKTextBlob AsTextBlob(this SKFont font, SKPaint paint, string text)
     {
         var typeface = font.Typeface;
 
@@ -43,6 +42,13 @@ internal static class DrawingExtensions
         if (!s_knownFontShaping.TryGetValue(typeface.FamilyName, out var requiresShaping))
         {
             // Fonts that require shaping (Arabic, Devanagari, Thai, etc.) must include GSUB and/or GPOS
+
+            // Update:
+            // SkiaSharp default in windows uses Segoe UI which have these tables
+            // it means it is always shaping on windows, but things are cached a lot, so we should be fine
+            // also this will improve the developer experience because non-lating will be rendered correctly
+            // without the need to set the `HasGlobalSKTypeface` in the `LiveCharts.Configure`.
+
             const uint GSUB = 0x47535542;
             const uint GPOS = 0x47504F53;
 
@@ -57,84 +63,27 @@ internal static class DrawingExtensions
             s_knownFontShaping[typeface.FamilyName] = requiresShaping;
         }
 
-        if (!s_knownHBFonts.TryGetValue(typeface.FamilyName, out var hbFont))
+        if (!requiresShaping)
+            return SKTextBlob.Create(text, font);
+
+        if (!s_knownShapers.TryGetValue(typeface.FamilyName, out var shaper))
         {
-            hbFont = typeface.AsHarfBuzzFont();
-            s_knownHBFonts[typeface.FamilyName] = hbFont;
+            shaper = new SKShaper(typeface);
+            s_knownShapers[typeface.FamilyName] = shaper;
         }
 
-        return requiresShaping
-            ? GetShapedBlob(text, font, hbFont)
-            : SKTextBlob.Create(text, font);
-    }
-
-    internal static SKTextBlob GetShapedBlob(string text, SKFont skFont, Font hbFont)
-    {
-        var buffer = new Buffer();
-        buffer.AddUtf8(text);
-        buffer.GuessSegmentProperties(); // Detect script, direction, language
-
-        hbFont.Shape(buffer);
-
-        var glyphInfos = buffer.GlyphInfos;
-        var glyphPositions = buffer.GlyphPositions;
-
-        var count = glyphInfos.Length;
-        var glyphs = new ushort[count];
-        var positions = new SKPoint[count];
-
-        float x = 0;
-        float y = 0;
-
-        for (var i = 0; i < count; i++)
-        {
-            glyphs[i] = (ushort)glyphInfos[i].Codepoint;
-
-            var xOffset = glyphPositions[i].XOffset / 64f;
-            var yOffset = glyphPositions[i].YOffset / 64f;
-            var xAdvance = glyphPositions[i].XAdvance / 64f;
-            var yAdvance = glyphPositions[i].YAdvance / 64f;
-
-            positions[i] = new SKPoint(x + xOffset, y + yOffset);
-
-            x += xAdvance;
-            y += yAdvance;
-        }
+        var result = shaper.Shape(text, paint);
+        var glyphs = Array.ConvertAll(result.Codepoints, cp => (ushort)cp);
 
         var builder = new SKTextBlobBuilder();
-        var runBuffer = builder.AllocatePositionedRun(skFont, count);
+        var runBuffer = builder.AllocatePositionedRun(
+            new SKFont(typeface, font.Size),
+            glyphs.Length
+        );
 
         runBuffer.SetGlyphs(glyphs);
-        runBuffer.SetPositions(positions);
+        runBuffer.SetPositions(result.Points);
 
         return builder.Build();
-    }
-
-    internal static Font AsHarfBuzzFont(this SKTypeface typeface)
-    {
-        // Extract font data from SKTypeface
-        using var skStream = typeface.OpenStream();
-        using var ms = new MemoryStream();
-        var buffer = new byte[4096];
-        int bytesRead;
-
-        while ((bytesRead = skStream.Read(buffer, buffer.Length)) > 0)
-            ms.Write(buffer, 0, bytesRead);
-
-        var fontData = ms.ToArray();
-
-        // Allocate unmanaged memory
-        var unmanagedPtr = Marshal.AllocHGlobal(fontData.Length);
-        Marshal.Copy(fontData, 0, unmanagedPtr, fontData.Length);
-
-        // Create HarfBuzz blob with cleanup delegate
-        var hbBlob = new Blob(
-            unmanagedPtr, fontData.Length, MemoryMode.ReadOnly, () => Marshal.FreeHGlobal(unmanagedPtr));
-
-        // Create face and font
-        var hbFace = new Face(hbBlob, 0);
-        var hbFont = new Font(hbFace);
-
-        return hbFont;
     }
 }

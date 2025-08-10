@@ -172,7 +172,7 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
                         skiaPaint.TextSize = font.Size;
                         skiaPaint.Typeface = typeFace;
 
-                        return font.AsTextBlob(line);
+                        return font.AsTextBlob(skiaPaint, line);
                     })
             ];
 
