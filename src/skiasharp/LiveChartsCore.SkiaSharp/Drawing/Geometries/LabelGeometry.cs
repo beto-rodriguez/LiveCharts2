@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using HarfBuzzSharp;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
@@ -35,7 +34,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
     internal float _maxTextHeight = 0f;
-    internal LabelLine[] _lines = [];
+    internal SKTextBlob[] _lines = [];
     private string _previousText = string.Empty;
     private double _previousTextSize = 0f;
     private double _previousTextHeight = 0f;
@@ -91,7 +90,7 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
             var x = (float)Math.Round(X + ao.X + p.Left);
             var y = (float)Math.Round(Y + ao.Y + p.Top + lhd + verticalPos);
 
-            context.Canvas.DrawText(line.Blob, x, y, paint);
+            context.Canvas.DrawText(line, x, y, paint);
 
 #if DEBUG
             if (ShowDebugLines)
@@ -146,7 +145,7 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
         return size.GetRotatedSize(RotateTransform);
     }
 
-    internal LabelLine[] GetLinesOrCached()
+    internal SKTextBlob[] GetLinesOrCached()
     {
         var changed =                                                           // lines changed if:
             _previousText != Text ||                                            //   - the text changed
@@ -159,7 +158,7 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
         if (!changed) return _lines;
 
         foreach (var line in _lines)
-            line.Blob.Dispose();
+            line.Dispose();
 
         var lvcSkiaPaint = (SkiaPaint?)Paint;
         var skiaPaint = lvcSkiaPaint?.UpdateSkiaPaint(null, null)
@@ -167,7 +166,6 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
 
         var textSize = TextSize;
         var typeFace = lvcSkiaPaint.GetSKTypeface();
-        var lineBounds = new SKRect();
 
         _lines = string.IsNullOrWhiteSpace(Text)
             ? []
@@ -179,11 +177,7 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
                         skiaPaint.TextSize = font.Size;
                         skiaPaint.Typeface = typeFace;
 
-                        _ = skiaPaint.MeasureText(line, ref lineBounds);
-
-                        return new LabelLine(
-                            SKTextBlob.Create(line, font),
-                            lineBounds);
+                        return font.AsTextBlob(line);
                     })
             ];
 
@@ -284,16 +278,10 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
         return new(l, t);
     }
 
-    internal class LabelLine(SKTextBlob textBlob, SKRect bounds)
-    {
-        public SKTextBlob Blob { get; } = textBlob;
-        public SKRect Bounds { get; } = bounds;
-    }
-
     internal override void OnDisposed()
     {
         foreach (var line in _lines)
-            line.Blob.Dispose();
+            line.Dispose();
 
         base.OnDisposed();
     }

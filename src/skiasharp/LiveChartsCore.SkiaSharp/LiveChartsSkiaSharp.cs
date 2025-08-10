@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -38,20 +39,11 @@ namespace LiveChartsCore.SkiaSharpView;
 /// </summary>
 public static class LiveChartsSkiaSharp
 {
-    /// <summary>
-    /// Gets or sets an SKTypeface instance to use globally on any paint that does not specify any.
-    /// </summary>
-    public static SKTypeface? DefaultSKTypeface { get; set; }
+    internal static SKTypeface? DefaultSKTypeface { get; set; }
 
-    /// <summary>
-    /// Gets or sets an action that configures the SkiaSharp paint before drawing it.
-    /// </summary>
-    public static Action<SKPaint, bool>? DefaultSkiaSharpPaintBuilder { get; set; }
+    internal static Action<SKPaint, bool>? DefaultSkiaSharpPaintBuilder { get; set; }
 
-    /// <summary>
-    /// Gets or sets an action that configures the SkiaSharp font before drawing it.
-    /// </summary>
-    public static Func<SKTypeface, float, SKFont> DefaultSkiaSharpFontBuilder { get; set; }
+    internal static Func<SKTypeface, float, SKFont> DefaultSkiaSharpFontBuilder { get; set; }
         = (typeFace, size) =>
             // could this be improved?
             // like creating font settings based on the screen dpi, etc.
@@ -60,6 +52,8 @@ public static class LiveChartsSkiaSharp
                 Edging = SKFontEdging.SubpixelAntialias,
                 Hinting = SKFontHinting.Normal
             };
+
+    internal static Dictionary<string, bool> UserFontShaping { get; set; } = [];
 
     /// <summary>
     /// Configures LiveCharts using the default settings for SkiaSharp.
@@ -192,6 +186,21 @@ public static class LiveChartsSkiaSharp
     public static LiveChartsSettings HasFontSettings(this LiveChartsSettings settings, Func<SKTypeface, float, SKFont> fontBuilder)
     {
         DefaultSkiaSharpFontBuilder = fontBuilder;
+        return settings;
+    }
+
+    /// <summary>
+    /// Indicates whether font shaping should be used when drawing text, when true, LiveCharts will use HarfBuzz to
+    /// shape the text before drawing it. when this method is not called (default), the library checks the font for the presence of
+    /// GSUB and GPOS tables, if they are present, it will use font shaping.
+    /// </summary>
+    /// <param name="settings">The current settings.</param>
+    /// <param name="useShaping">Idicates whether or not use Harfbuzz shaping.</param>
+    /// /// <param name="familyName">The family name of the font to use shaping for.</param>
+    /// <returns>The current settings.</returns>
+    public static LiveChartsSettings HasFontShaping(this LiveChartsSettings settings, bool useShaping, string familyName)
+    {
+        UserFontShaping[familyName] = useShaping;
         return settings;
     }
 
