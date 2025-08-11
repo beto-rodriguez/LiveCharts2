@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
@@ -52,8 +51,6 @@ public static class LiveChartsSkiaSharp
                 Edging = SKFontEdging.SubpixelAntialias,
                 Hinting = SKFontHinting.Normal
             };
-
-    internal static Dictionary<string, bool> UserFontShaping { get; set; } = [];
 
     /// <summary>
     /// Configures LiveCharts using the default settings for SkiaSharp.
@@ -186,21 +183,6 @@ public static class LiveChartsSkiaSharp
     public static LiveChartsSettings HasFontSettings(this LiveChartsSettings settings, Func<SKTypeface, float, SKFont> fontBuilder)
     {
         DefaultSkiaSharpFontBuilder = fontBuilder;
-        return settings;
-    }
-
-    /// <summary>
-    /// Indicates whether font shaping should be used when drawing text, when true, LiveCharts will use HarfBuzz to
-    /// shape the text before drawing it. when this method is not called (default), the library checks the font for the presence of
-    /// GSUB and GPOS tables, if they are present, it will use font shaping.
-    /// </summary>
-    /// <param name="settings">The current settings.</param>
-    /// <param name="useShaping">Idicates whether or not use Harfbuzz shaping.</param>
-    /// /// <param name="familyName">The family name of the font to use shaping for.</param>
-    /// <returns>The current settings.</returns>
-    public static LiveChartsSettings HasFontShaping(this LiveChartsSettings settings, bool useShaping, string familyName)
-    {
-        UserFontShaping[familyName] = useShaping;
         return settings;
     }
 

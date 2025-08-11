@@ -22,6 +22,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using LiveChartsCore.Drawing;
 using SkiaSharp;
 using SkiaSharp.HarfBuzz;
 
@@ -29,42 +32,46 @@ namespace LiveChartsCore.SkiaSharpView.Drawing;
 
 internal static class DrawingExtensions
 {
-    private static readonly Dictionary<string, bool> s_knownFontShaping = [];
+    internal static readonly PositionedBlob s_newLine = new(SKTextBlob.Create(string.Empty, new()), -1);
     private static readonly Dictionary<string, SKShaper> s_knownShapers = [];
 
-    internal static SKTextBlob AsTextBlob(this SKFont font, SKPaint paint, string text)
+    internal static void DrawBlobArray(
+        this SKCanvas canvas, BlobArray blobArray, BlobArraySettings settings, float x, float y, SKPaint paint)
     {
-        var typeface = font.Typeface;
-
-        if (typeface is null)
-            return SKTextBlob.Create(text, font);
-
-        if (!s_knownFontShaping.TryGetValue(typeface.FamilyName, out var requiresShaping))
+        if (settings.Background != LvcColor.Empty)
         {
-            // Fonts that require shaping (Arabic, Devanagari, Thai, etc.) must include GSUB and/or GPOS
+            var bg = settings.Background;
 
-            // Update:
-            // SkiaSharp default in windows uses Segoe UI which have these tables
-            // it means it is always shaping on windows, but things are cached a lot, so we should be fine
-            // also this will improve the developer experience because non-lating will be rendered correctly
-            // without the need to set the `HasGlobalSKTypeface` in the `LiveCharts.Configure`.
+            var c = new SKColor(bg.R, bg.G, bg.B, (byte)(bg.A * settings.Opacity));
+            using var bgPaint = new SKPaint { Color = c };
 
-            const uint GSUB = 0x47535542;
-            const uint GPOS = 0x47504F53;
-
-            var hasGSUB = typeface.GetTableData(GSUB)?.Length > 0;
-            var hasGPOS = typeface.GetTableData(GPOS)?.Length > 0;
-
-            requiresShaping = hasGSUB || hasGPOS;
-
-            if (LiveChartsSkiaSharp.UserFontShaping.TryGetValue(typeface.FamilyName, out var userShaping))
-                requiresShaping = userShaping;
-
-            s_knownFontShaping[typeface.FamilyName] = requiresShaping;
+            // ToDo draw background rectangle
         }
 
-        if (!requiresShaping)
-            return SKTextBlob.Create(text, font);
+        foreach (var pb in blobArray.Blobs)
+        {
+            if (pb == s_newLine)
+                continue;
+
+            // ToDo Align text.
+            var p = pb.Position;
+            canvas.DrawText(pb.Blob, x + p.X, y + p.Y + blobArray.LineHeight, paint);
+        }
+    }
+
+    internal static BlobArray AsBlobArray(this string text, SKFont font, SKPaint paint, float maxWidth) =>
+        new(
+            font.Metrics.Descent - font.Metrics.Ascent + font.Metrics.Leading,
+            maxWidth,
+            [.. Tokenize(text).Select(token => AsPositionedBlob(token, font, paint))]);
+
+    private static PositionedBlob AsPositionedBlob(string text, SKFont font, SKPaint paint)
+    {
+        if (text == "\n")
+            return s_newLine;
+
+        var typeface = font.Typeface ??
+            throw new Exception("A Typeface is required at this point.");
 
         if (!s_knownShapers.TryGetValue(typeface.FamilyName, out var shaper))
         {
@@ -84,6 +91,100 @@ internal static class DrawingExtensions
         runBuffer.SetGlyphs(glyphs);
         runBuffer.SetPositions(result.Points);
 
-        return builder.Build();
+        return new(builder.Build(), result.Width)
+        {
+#if DEBUG
+            Text = text
+#endif
+        };
+    }
+
+    private static IEnumerable<string> Tokenize(string text)
+    {
+        var sb = new StringBuilder();
+
+        foreach (var @char in text)
+        {
+            if (@char is '\t' or '\r')
+                continue;
+
+            _ = sb.Append(@char);
+
+            if (char.IsWhiteSpace(@char) && sb.Length > 0)
+            {
+                yield return sb.ToString();
+                _ = sb.Clear();
+            }
+        }
+
+        if (sb.Length > 0)
+            yield return sb.ToString();
+    }
+
+    internal class BlobArray(
+        float lineHeight, float maxWidth, PositionedBlob[] blobs)
+    {
+        private bool _hasSize;
+        public float LineHeight { get; } = lineHeight;
+        public PositionedBlob[] Blobs { get; set; } = blobs;
+        public float MaxWidth { get; } = maxWidth;
+        public LvcSize Size
+        {
+            get
+            {
+                if (_hasSize)
+                    return field;
+
+                var x = 0f;
+                var y = 0f;
+                var knownWidth = 0f;
+                var knownHeight = 0f;
+
+                foreach (var pb in Blobs)
+                {
+                    var b = pb.Blob;
+                    var w = pb.Width;
+
+                    if (x + w > MaxWidth || pb == s_newLine)
+                    {
+                        x = 0;
+                        y += LineHeight;
+                        knownHeight = y;
+                    }
+
+                    pb.Position = new SKPoint(x, y);
+                    x += w;
+
+                    if (x > knownWidth)
+                        knownWidth = x;
+                }
+
+                knownHeight += LineHeight;
+
+                _hasSize = true;
+                return field = new(knownWidth, knownHeight);
+            }
+        } = new();
+    }
+
+    internal class PositionedBlob(SKTextBlob blob, float width)
+    {
+        public SKPoint Position { get; set; }
+        public float Width { get; } = width;
+        public SKTextBlob Blob { get; } = blob;
+#if DEBUG
+        public string Text { get; set; } = string.Empty;
+#endif
+    }
+
+    internal struct BlobArraySettings(
+        Align horizontal, Align vertical, LvcColor background, Padding padding, LvcSize size, float opacity)
+    {
+        public Align Horizontal { get; set; } = horizontal;
+        public Align Vertical { get; set; } = vertical;
+        public LvcColor Background { get; set; } = background;
+        public Padding Padding { get; set; } = padding;
+        public LvcSize Size { get; set; } = size;
+        public float Opacity { get; set; } = opacity;
     }
 }
