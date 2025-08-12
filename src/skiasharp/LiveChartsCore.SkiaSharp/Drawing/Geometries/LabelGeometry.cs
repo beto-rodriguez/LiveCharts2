@@ -24,7 +24,7 @@ using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
-using static LiveChartsCore.SkiaSharpView.Drawing.DrawingExtensions;
+using static LiveChartsCore.SkiaSharpView.Drawing.DrawingTextExtensions;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 

@@ -31,7 +31,7 @@ using SkiaSharp.HarfBuzz;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing;
 
-internal static class DrawingExtensions
+internal static class DrawingTextExtensions
 {
     internal static readonly PositionedBlob s_newLine = new(SKTextBlob.Create(string.Empty, new()), -1);
     private static readonly Dictionary<string, SKShaper> s_knownShapers = [];
