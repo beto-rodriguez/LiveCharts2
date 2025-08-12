@@ -34,7 +34,7 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
     private string _previousText = string.Empty;
     private double _previousTextSize = 0f;
     private SKPaint? _previousPaint;
-    private BlobArray _activeBlobs = new(new(), 0f, new(), []);
+    private BlobArray _activeBlobs = new(new(), 0f, new(), false, []);
 
     internal BlobArray BlobArray
     {
