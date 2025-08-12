@@ -75,7 +75,7 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
         float x = (int)X;
         float y = (int)Y;
         var settings = new BlobArraySettings(
-            HorizontalAlign, VerticalAlign, Background, Padding, Measure(), Opacity * context.ActiveOpacity);
+            HorizontalAlign, VerticalAlign, Background, Opacity * context.ActiveOpacity);
 
         context.Canvas.DrawBlobArray(
             BlobArray, settings, x, y, paint);

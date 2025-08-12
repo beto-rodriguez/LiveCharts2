@@ -331,7 +331,7 @@ internal static class DrawingTextExtensions
     }
 
     internal readonly struct BlobArraySettings(
-        Align horizontal, Align vertical, LvcColor background, Padding padding, LvcSize size, float opacity)
+        Align horizontal, Align vertical, LvcColor background, float opacity)
     {
         public Align Horizontal { get; } = horizontal;
         public Align Vertical { get; } = vertical;
