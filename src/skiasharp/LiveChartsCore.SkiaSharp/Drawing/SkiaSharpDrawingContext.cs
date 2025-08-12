@@ -23,6 +23,7 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
+using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing;
@@ -113,11 +114,12 @@ public class SkiaSharpDrawingContext(
     /// <inheritdoc cref="DrawingContext.LogOnCanvas(string)"/>
     public override void LogOnCanvas(string log)
     {
-        using var p = new SKPaint
+        using var textPaint = new SKPaint
         {
             Color = SKColors.White,
             TextSize = 14,
-            IsAntialias = true
+            IsAntialias = true,
+            Typeface = SkiaPaint.FallbackTypeface
         };
 
         using var backgroundPaint = new SKPaint
@@ -128,7 +130,7 @@ public class SkiaSharpDrawingContext(
 
         var lines = log.Split('`');
 
-        Canvas.DrawRect(new(10, 0, 400, (p.TextSize + 4f) * lines.Length), backgroundPaint);
+        Canvas.DrawRect(new(10, 0, 400, (textPaint.TextSize + 4f) * lines.Length), backgroundPaint);
 
         for (var i = 0; i < lines.Length; i++)
         {
@@ -136,8 +138,8 @@ public class SkiaSharpDrawingContext(
             if (string.IsNullOrWhiteSpace(line)) continue;
             Canvas.DrawText(
                 line,
-                new SKPoint(10, 10 + 2 + (p.TextSize + 4f) * i),
-                p);
+                new SKPoint(10, 10 + 2 + (textPaint.TextSize + 4f) * i),
+                textPaint);
         }
     }
 

@@ -131,8 +131,16 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
         return this;
     }
 
+    internal static SKTypeface FallbackTypeface =>
+        field ??= (
+            LiveChartsSkiaSharp.DefaultSKTypeface
+            ?? SKTypeface.Default
+            ?? SKTypeface.FromFamilyName("Arial")
+            ?? SKTypeface.FromFamilyName("DejaVu Sans")
+        );
+
     internal bool IsGlobalSKTypeface =>
-        GetSKTypeface() == (LiveChartsSkiaSharp.DefaultSKTypeface ?? SKTypeface.Default);
+        GetSKTypeface() == FallbackTypeface;
 
     internal static void Map(SkiaPaint from, SkiaPaint to, float progress = 1)
     {
@@ -213,8 +221,7 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
         return paint;
     }
 
-    internal SKTypeface GetSKTypeface() =>
-        SKTypeface ?? LiveChartsSkiaSharp.DefaultSKTypeface ?? SKTypeface.Default;
+    internal SKTypeface GetSKTypeface() => SKTypeface ?? FallbackTypeface;
 
     internal override void OnPaintFinished(DrawingContext context, IDrawnElement? drawnElement)
     {
