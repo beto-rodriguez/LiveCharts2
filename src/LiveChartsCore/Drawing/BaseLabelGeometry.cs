@@ -44,7 +44,6 @@ public abstract partial class BaseLabelGeometry : Animatable, IDrawnElement
         _TextSizeMotionProperty = new(11f);
         _BackgroundMotionProperty = new(LvcColor.Empty);
         _PaddingMotionProperty = new(new(0f));
-        HasTransform = true;
     }
 
     /// <inheritdoc cref="IDrawnElement.Parent"/>
@@ -81,18 +80,22 @@ public abstract partial class BaseLabelGeometry : Animatable, IDrawnElement
     /// <inheritdoc cref="IDrawnElement.TranslateTransform"/>
     [MotionProperty]
     public partial LvcPoint TranslateTransform { get; set; }
+    partial void OnTransformOriginChanged(LvcPoint value) => HasTransform = true;
 
     /// <inheritdoc cref="IDrawnElement.RotateTransform"/>
     [MotionProperty]
     public partial float RotateTransform { get; set; }
+    partial void OnRotateTransformChanged(float value) => HasTransform = true;
 
     /// <inheritdoc cref="IDrawnElement.ScaleTransform"/>
     [MotionProperty]
     public partial LvcPoint ScaleTransform { get; set; }
+    partial void OnScaleTransformChanged(LvcPoint value) => HasTransform = true;
 
     /// <inheritdoc cref="IDrawnElement.SkewTransform"/>
     [MotionProperty]
     public partial LvcPoint SkewTransform { get; set; }
+    partial void OnSkewTransformChanged(LvcPoint value) => HasTransform = true;
 
     /// <inheritdoc cref="IDrawnElement.DropShadow"/>
     [MotionProperty]
@@ -195,7 +198,7 @@ public abstract partial class BaseLabelGeometry : Animatable, IDrawnElement
     /// <summary>
     /// This property is only available on debug mode, it indicates if the debug lines should be shown.
     /// </summary>
-    public static bool ShowDebugLines { get; set; }
+    public static bool ShowDebugLines { get; set; } = true;
 #endif
 
     Paint? IDrawnElement.Stroke { get; set; }

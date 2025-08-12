@@ -34,15 +34,7 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
     private string _previousText = string.Empty;
     private double _previousTextSize = 0f;
     private SKPaint? _previousPaint;
-    private BlobArray _activeBlobs = new(0f, 0f, []);
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="LabelGeometry"/> class.
-    /// </summary>
-    public LabelGeometry()
-    {
-        TransformOrigin = new LvcPoint(0f, 0f);
-    }
+    private BlobArray _activeBlobs = new(new(), 0f, new(), []);
 
     internal BlobArray BlobArray
     {
@@ -70,7 +62,7 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
             _previousTextSize = TextSize;
             _previousPaint = skiaPaint;
 
-            return _activeBlobs = Text.AsBlobArray(font, skiaPaint, MaxWidth);
+            return _activeBlobs = Text.AsBlobArray(font, skiaPaint, MaxWidth, Padding);
         }
     }
 
@@ -92,18 +84,11 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
     /// <inheritdoc cref="DrawnGeometry.Measure()" />
     public override LvcSize Measure()
     {
-        if (Paint is null)
-            throw new Exception(
+        return Paint is null
+            ? throw new Exception(
                 $"A paint is required to measure a label, please set the {nameof(Paint)} " +
-                $"property with the paint that is drawing the label.");
-
-        var blobSize = BlobArray.Size;
-
-        var size = new LvcSize(
-            blobSize.Width + Padding.Left + Padding.Right,
-            blobSize.Height + Padding.Top + Padding.Bottom);
-
-        return size.GetRotatedSize(RotateTransform);
+                $"property with the paint that is drawing the label.")
+            : BlobArray.Size.GetRotatedSize(RotateTransform);
     }
 
     private void DisposeActiveBlobs()

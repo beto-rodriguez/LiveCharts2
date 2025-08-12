@@ -38,6 +38,47 @@ internal static class DrawingExtensions
     internal static void DrawBlobArray(
         this SKCanvas canvas, BlobArray blobArray, BlobArraySettings settings, float x, float y, SKPaint paint)
     {
+        var size = blobArray.Size;
+
+        var horizontalAlign = settings.Horizontal switch
+        {
+            Align.Start => 0f,
+            Align.Middle => -size.Width / 2f,
+            Align.End => -size.Width,
+            _ => throw new ArgumentOutOfRangeException(nameof(settings.Horizontal), settings.Horizontal, null)
+        };
+
+        var verticalAlign = settings.Vertical switch
+        {
+            Align.Start => 0f,
+            Align.Middle => -size.Height / 2f,
+            Align.End => -size.Height,
+            _ => throw new ArgumentOutOfRangeException(nameof(settings.Vertical), settings.Vertical, null)
+        };
+
+        var alignedX = x + horizontalAlign;
+        var alignedY = y + verticalAlign;
+
+#if DEBUG
+        if (BaseLabelGeometry.ShowDebugLines)
+        {
+            using var debugPaint = new SKPaint
+            {
+                Color = SKColors.Gray.WithAlpha(50),
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 3
+            };
+            using var debugPaint2 = new SKPaint
+            {
+                Color = SKColors.Red.WithAlpha(100),
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 3
+            };
+            canvas.DrawRect(alignedX, alignedY, size.Width, size.Height, debugPaint);
+            canvas.DrawRect(x - 4f, y - 4f, 8, 8, debugPaint2);
+        }
+#endif
+
         if (settings.Background != LvcColor.Empty)
         {
             var bg = settings.Background;
@@ -54,15 +95,20 @@ internal static class DrawingExtensions
                 continue;
 
             // ToDo Align text.
-            var p = pb.Position;
-            canvas.DrawText(pb.Blob, x + p.X, y + p.Y + blobArray.LineHeight, paint);
+            var blobPosition = pb.Position;
+
+            canvas.DrawText(
+                pb.Blob,
+                alignedX + blobPosition.X,
+                alignedY + blobPosition.Y, paint);
         }
     }
 
-    internal static BlobArray AsBlobArray(this string text, SKFont font, SKPaint paint, float maxWidth) =>
+    internal static BlobArray AsBlobArray(this string text, SKFont font, SKPaint paint, float maxWidth, Padding padding) =>
         new(
-            font.Metrics.Descent - font.Metrics.Ascent + font.Metrics.Leading,
+            font.Metrics,
             maxWidth,
+            padding,
             [.. Tokenize(text).Select(token => AsPositionedBlob(token, font, paint))]);
 
     private static PositionedBlob AsPositionedBlob(string text, SKFont font, SKPaint paint)
@@ -122,12 +168,14 @@ internal static class DrawingExtensions
     }
 
     internal class BlobArray(
-        float lineHeight, float maxWidth, PositionedBlob[] blobs)
+        SKFontMetrics metrics, float maxWidth, Padding padding, PositionedBlob[] blobs)
     {
         private bool _hasSize;
-        public float LineHeight { get; } = lineHeight;
+        public SKFontMetrics Metrics { get; } = metrics;
         public PositionedBlob[] Blobs { get; set; } = blobs;
         public float MaxWidth { get; } = maxWidth;
+        public Padding Padding { get; } = padding;
+
         public LvcSize Size
         {
             get
@@ -139,6 +187,7 @@ internal static class DrawingExtensions
                 var y = 0f;
                 var knownWidth = 0f;
                 var knownHeight = 0f;
+                var lineHeight = Metrics.Descent - Metrics.Ascent + Metrics.Leading;
 
                 foreach (var pb in Blobs)
                 {
@@ -148,21 +197,26 @@ internal static class DrawingExtensions
                     if (x + w > MaxWidth || pb == s_newLine)
                     {
                         x = 0;
-                        y += LineHeight;
+                        y += lineHeight;
                         knownHeight = y;
                     }
 
-                    pb.Position = new SKPoint(x, y);
+                    pb.Position = new SKPoint(x + Padding.Left, y + Padding.Top - Metrics.Ascent);
                     x += w;
 
                     if (x > knownWidth)
                         knownWidth = x;
                 }
 
-                knownHeight += LineHeight;
+                knownHeight += lineHeight;
 
                 _hasSize = true;
-                return field = new(knownWidth, knownHeight);
+
+                field = new LvcSize(
+                    width: knownWidth + Padding.Left + Padding.Right,
+                    height: knownHeight + Padding.Top + Padding.Bottom);
+
+                return field;
             }
         } = new();
     }
