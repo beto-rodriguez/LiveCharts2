@@ -119,10 +119,12 @@ public class SKDefaultLegend : Container, IChartLegend
             theme.LegendTextPaint ??
             new SolidColorPaint(new SKColor(30, 30, 30, 255));
 
+        var rtl = LiveChartsSkiaSharp.DefaultTextSettings.IsRTL;
+
         var stackLayout = new StackLayout
         {
             Padding = new Padding(15, 4),
-            HorizontalAlignment = Align.Start,
+            HorizontalAlignment = rtl ? Align.End : Align.Start,
             VerticalAlignment = Align.Middle,
             Orientation = chart.LegendPosition is LegendPosition.Left or LegendPosition.Right
                 ? ContainerOrientation.Vertical
@@ -142,25 +144,26 @@ public class SKDefaultLegend : Container, IChartLegend
 
         foreach (var series in chart.Series.Where(x => x.IsVisibleAtLegend))
         {
+            var miniature = (IDrawnElement<SkiaSharpDrawingContext>)series.GetMiniatureGeometry(null);
+            var label = new LabelGeometry
+            {
+                Text = series.Name ?? string.Empty,
+                Paint = fontPaint,
+                TextSize = textSize,
+                Padding = new Padding(8, 2, 0, 2),
+                MaxWidth = (float)LiveCharts.DefaultSettings.MaxTooltipsAndLegendsLabelsWidth,
+                VerticalAlign = Align.Start,
+                HorizontalAlign = Align.Start
+            };
+
             stackLayout.Children.Add(new StackLayout
             {
                 Padding = new Padding(12, 6),
                 VerticalAlignment = Align.Middle,
                 HorizontalAlignment = Align.Middle,
-                Children =
-                {
-                    (IDrawnElement<SkiaSharpDrawingContext>)series.GetMiniatureGeometry(null),
-                    new LabelGeometry
-                    {
-                        Text = series.Name ?? string.Empty,
-                        Paint = fontPaint,
-                        TextSize = textSize,
-                        Padding = new Padding(8, 2, 0, 2),
-                        MaxWidth = (float)LiveCharts.DefaultSettings.MaxTooltipsAndLegendsLabelsWidth,
-                        VerticalAlign = Align.Start,
-                        HorizontalAlign = Align.Start
-                    }
-                }
+                Children = rtl
+                    ? [label, miniature]
+                    : [miniature, label]
             });
         }
 

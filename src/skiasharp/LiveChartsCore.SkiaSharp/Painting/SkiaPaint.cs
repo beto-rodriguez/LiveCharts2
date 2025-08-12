@@ -38,8 +38,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting;
 public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 0f)
     : Paint(strokeThickness, strokeMiter)
 {
-    internal Action<SKPaint, bool>? _paintSettings = LiveChartsSkiaSharp.DefaultSkiaSharpPaintBuilder;
-    internal Func<SKTypeface, float, SKFont> _fontBuilder = LiveChartsSkiaSharp.DefaultSkiaSharpFontBuilder;
+    internal Func<SKTypeface, float, SKFont> _fontBuilder = LiveChartsSkiaSharp.DefaultTextSettings.FontBuilder;
     internal SKPaint? _skiaPaint;
 
     /// <summary>
@@ -112,16 +111,6 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
     public ImageFilter? ImageFilter { get; set; }
 
     /// <summary>
-    /// Configures the SkiaSharp paint manually.
-    /// </summary>
-    /// <param name="skiaSettings"></param>
-    public SkiaPaint ConfigureSkiaSharpPaint(Action<SKPaint, bool> skiaSettings)
-    {
-        _paintSettings = skiaSettings;
-        return this;
-    }
-
-    /// <summary>
     /// Configures the SkiaSharp font manually.
     /// </summary>
     /// <param name="skiaSettings"></param>
@@ -133,7 +122,7 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
 
     internal static SKTypeface FallbackTypeface =>
         field ??= (
-            LiveChartsSkiaSharp.DefaultSKTypeface
+            LiveChartsSkiaSharp.DefaultTextSettings.Typeface
             ?? SKTypeface.Default
             ?? SKTypeface.FromFamilyName("Arial")
             ?? SKTypeface.FromFamilyName("DejaVu Sans")
@@ -191,9 +180,6 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
             ImageFilter.CreateFilter();
             paint.ImageFilter = ImageFilter._sKImageFilter;
         }
-
-        if (_paintSettings is not null)
-            _paintSettings(paint, PaintStyle.HasFlag(PaintStyle.Text));
 
         // special case for text paints.
         // when  the label is mesured, we do not have a context yet.
