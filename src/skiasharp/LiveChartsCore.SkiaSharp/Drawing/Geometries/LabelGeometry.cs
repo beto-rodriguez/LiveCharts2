@@ -40,45 +40,35 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
     {
         get
         {
-            var lvcSkiaPaint = (SkiaPaint?)Paint;
-            var skiaPaint = lvcSkiaPaint?.UpdateSkiaPaint(null, null)
-                ?? throw new Exception("A paint is required to measure a label.");
+            var info = GetPaintInfo();
 
             var changed =                           // changed if:
                 _previousText != Text ||            //   - the text changed
                 _previousTextSize != TextSize ||    //   - the text size changed
-                _previousPaint != skiaPaint;        //   - the paint changed, otherwise we will be using disposed resources
+                _previousPaint != info.Paint;       //   - the paint changed, otherwise we will be using disposed resources
 
             if (!changed || string.IsNullOrEmpty(Text))
                 return _activeBlobs;
 
             DisposeActiveBlobs();
 
-            var font = lvcSkiaPaint._fontBuilder(lvcSkiaPaint.GetSKTypeface(), TextSize);
-            skiaPaint.TextSize = font.Size;
-            skiaPaint.Typeface = font.Typeface;
-
             _previousText = Text;
             _previousTextSize = TextSize;
-            _previousPaint = skiaPaint;
+            _previousPaint = info.Paint;
 
-            return _activeBlobs = Text.AsBlobArray(font, skiaPaint, MaxWidth, Padding);
+            return _activeBlobs = Text.AsBlobArray(info.Font, info.Paint, MaxWidth, Padding);
         }
     }
 
     /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
     public virtual void Draw(SkiaSharpDrawingContext context)
     {
-        var paint = (((SkiaPaint?)Paint)?.UpdateSkiaPaint(context, this))
-            ?? throw new Exception("A paint is required to draw a label.");
+        var info = GetPaintInfo();
 
-        float x = (int)X;
-        float y = (int)Y;
         var settings = new BlobArraySettings(
             HorizontalAlign, VerticalAlign, Background, Opacity * context.ActiveOpacity);
 
-        context.Canvas.DrawBlobArray(
-            BlobArray, settings, x, y, paint);
+        context.Canvas.DrawBlobArray(BlobArray, settings, X, Y, info.Paint);
     }
 
     /// <inheritdoc cref="DrawnGeometry.Measure()" />
@@ -100,6 +90,28 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
 
             positionedBlob.Blob.Dispose();
         }
+    }
+
+    private PaintInfo GetPaintInfo()
+    {
+        var lvcSkiaPaint = (SkiaPaint?)Paint;
+        var skiaPaint = lvcSkiaPaint?.UpdateSkiaPaint(null, null)
+            ?? throw new Exception("A paint is required to measure a label.");
+
+        var font = lvcSkiaPaint._fontBuilder(lvcSkiaPaint.GetSKTypeface(), TextSize);
+
+        skiaPaint.TextSize = font.Size;
+        skiaPaint.Typeface = font.Typeface;
+        skiaPaint.IsAntialias = true;
+        skiaPaint.LcdRenderText = true;
+
+        return new PaintInfo(skiaPaint, font);
+    }
+
+    private class PaintInfo(SKPaint paint, SKFont font)
+    {
+        public SKPaint Paint { get; set; } = paint;
+        public SKFont Font { get; set; } = font;
     }
 
     internal override void OnDisposed()

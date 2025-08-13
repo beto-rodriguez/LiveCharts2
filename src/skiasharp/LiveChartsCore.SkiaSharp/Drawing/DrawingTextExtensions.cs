@@ -100,9 +100,10 @@ internal static class DrawingTextExtensions
                 lao = size.Width - horizontalPadding - blobArray.LineWidths[pb.Line];
 
             canvas.DrawText(
-            pb.Blob,
-            rax + blobPosition.X + lao,
-            ray + blobPosition.Y, paint);
+                pb.Blob,
+                (int)(rax + blobPosition.X + lao), // truncate to avoid subpixel rendering issues
+                (int)(ray + blobPosition.Y),
+                paint);
         }
     }
 
@@ -336,8 +337,6 @@ internal static class DrawingTextExtensions
         public Align Horizontal { get; } = horizontal;
         public Align Vertical { get; } = vertical;
         public LvcColor Background { get; } = background;
-        public Padding Padding { get; } = padding;
-        public LvcSize Size { get; } = size;
         public float Opacity { get; } = opacity;
 
         public float GetHorizontalAlign(LvcSize size)
