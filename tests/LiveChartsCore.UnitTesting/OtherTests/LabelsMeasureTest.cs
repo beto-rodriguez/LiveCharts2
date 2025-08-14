@@ -85,8 +85,7 @@ public class LabelsMeasureTest
                 TextSize = 25,
                 Text = t,
                 Paint = new SolidColorPaint(SKColors.Black),
-                BackgroundColor = new Drawing.LvcColor(0, 0, 0, 50),
-                LineHeight = lineHeight
+                BackgroundColor = new Drawing.LvcColor(0, 0, 0, 50)
             });
 
             y += th * lineHeight + 10;
@@ -131,18 +130,18 @@ public class LabelsMeasureTest
             Paint = new SolidColorPaint(SKColors.Black)
         };
 
-        var lines = label.GetLinesOrCached().ToArray();
+        var lines = label.BlobArray.LineWidths;
         var l = 0;
         foreach (var line in lines)
         {
-            Assert.IsTrue(line.Bounds.Width <= maxWidth);
+            Assert.IsTrue(line <= maxWidth);
             l++;
         }
 
         label.Paint = paint;
         var size = label.Measure();
         Assert.IsTrue(size.Width <= maxWidth);
-        Assert.IsTrue(l == label._lines.Length);
+        Assert.IsTrue(l == label.BlobArray.LineWidths.Count);
 
         var label2 = new LabelGeometry
         {
@@ -159,7 +158,7 @@ public class LabelsMeasureTest
         label2.Paint = paint;
         var size2 = label2.Measure();
 
-        Assert.IsTrue(label2._lines.Length == 5);
+        Assert.IsTrue(label2.BlobArray.LineWidths.Count == 5);
         Assert.IsTrue(size2.Width > label2.MaxWidth); // the text is too long, this is allowed.
 
         var label3 = new LabelGeometry
@@ -170,8 +169,8 @@ public class LabelsMeasureTest
         };
         label3.Paint = paint;
         var size3 = label3.Measure();
-        var lines3 = label3.GetLinesOrCached().ToArray();
+        var lines3 = label3.BlobArray.LineWidths;
 
-        Assert.IsTrue(label3._lines.Length == 6);
+        Assert.IsTrue(label3.BlobArray.LineWidths.Count == 6);
     }
 }
