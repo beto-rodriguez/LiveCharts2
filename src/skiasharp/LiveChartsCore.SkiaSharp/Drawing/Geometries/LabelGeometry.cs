@@ -78,12 +78,8 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
         skPaint = lvcSkiaPaint?.UpdateSkiaPaint(null, null)
             ?? throw new Exception("A paint is required to measure a label.");
 
-        font = lvcSkiaPaint._fontBuilder(lvcSkiaPaint.GetSKTypeface(), TextSize);
-
-        skPaint.TextSize = font.Size;
-        skPaint.Typeface = font.Typeface;
-        skPaint.IsAntialias = true;
-        skPaint.LcdRenderText = true;
+        font = lvcSkiaPaint._fontBuilder(
+            skPaint, lvcSkiaPaint.GetSKTypeface(), TextSize);
     }
 
     private (string Text, float Size, Padding Padding, float MaxWidth) BuildBlobKey() =>

@@ -135,13 +135,13 @@ public static class LiveChartsSkiaSharp
     /// <param name="typeface">The typeface to load for text paints.</param>
     /// <returns>The current settings.</returns>
     [Obsolete(
-        $"Use {nameof(HasTextSettings)} and set the {nameof(TextSettings.Typeface)} instead, " +
-        $"LiveCharts now automatically uses the {nameof(SKFontManager)} to determine a font for the text to render, " +
-        $"so this could not be necessary anymore, but explicitly using a desired font could improve text quality," +
-        $"e.g. SKTypeface.FromFamilyName(\"my-font\")")]
+        $"Use {nameof(HasTextSettings)} and set the {nameof(TextSettings.DefaultTypeface)} instead, " +
+        $"LiveCharts now uses the {nameof(SKFontManager)} to look for a valid font when necessesary, " +
+        $"Configuring a typeface could not be necessary anymore, but explicitly loading a typeface " +
+        $"could improve text quality, e.g. SKTypeface.FromFamilyName(\"my-font\")")]
     public static LiveChartsSettings HasGlobalSKTypeface(this LiveChartsSettings settings, SKTypeface typeface)
     {
-        DefaultTextSettings.Typeface = typeface;
+        DefaultTextSettings.DefaultTypeface = typeface;
         return settings;
     }
 

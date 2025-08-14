@@ -124,7 +124,7 @@ internal static class DrawingTextExtensions
             // as the global typeface in the library, the user can override this
             // by defining its own typeface globally or per paint instance.
 
-            LiveChartsSkiaSharp.DefaultTextSettings.Typeface ??= tokenResult.SuggestedTypeface;
+            LiveChartsSkiaSharp.DefaultTextSettings.DefaultTypeface ??= tokenResult.SuggestedTypeface;
             skFont.Typeface = tokenResult.SuggestedTypeface;
             skPaint.Typeface = tokenResult.SuggestedTypeface;
         }

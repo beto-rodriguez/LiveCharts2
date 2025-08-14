@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
@@ -35,22 +34,29 @@ public class TextSettings
     /// Defines a global typeface to use for text paints, this typeface will be used
     /// when the <see cref="SkiaPaint.SKTypeface"/> property is null (default is null).
     /// </summary>
-    public SKTypeface? Typeface { get; set; }
+    public SKTypeface? DefaultTypeface { get; set; }
 
     /// <summary>
     /// Defines a global action that configures a font before drawing with it, this action will be used
     /// to configure the font to draw with, by default edging is set to <see cref="SKFontEdging.SubpixelAntialias"/>
     /// and hinting is set to <see cref="SKFontHinting.Normal"/>.
     /// </summary>
-    public Func<SKTypeface, float, SKFont> FontBuilder { get; set; }
-        = (typeFace, size) =>
+    public SkiaPaint.FontBuilderDelegate FontBuilder { get; set; }
+        = (paint, typeface, size) =>
+        {
+            paint.TextSize = size;
+            paint.Typeface = typeface;
+            paint.IsAntialias = true;
+            paint.LcdRenderText = true;
+
             // could this be improved?
             // like creating font settings based on the screen dpi, etc.
-            new SKFont(typeFace, size)
+            return new SKFont(typeface, size)
             {
                 Edging = SKFontEdging.SubpixelAntialias,
                 Hinting = SKFontHinting.Normal
             };
+        };
 
     /// <summary>
     /// Determines whether the text is rendered in right-to-left mode.

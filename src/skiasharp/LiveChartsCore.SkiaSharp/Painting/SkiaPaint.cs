@@ -38,7 +38,18 @@ namespace LiveChartsCore.SkiaSharpView.Painting;
 public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 0f)
     : Paint(strokeThickness, strokeMiter)
 {
-    internal Func<SKTypeface, float, SKFont> _fontBuilder = LiveChartsSkiaSharp.DefaultTextSettings.FontBuilder;
+    /// <summary>
+    /// Represents a method that builds a <see cref="SKFont"/> from a <see cref="SKPaint"/>,
+    /// a <see cref="SKTypeface"/>, and a size.
+    /// </summary>
+    /// <param name="paint">The paint instance that skia will use to draw the text.</param>
+    /// <param name="typeface">The typefaced requested by the <see cref="SkiaPaint"/> instance or the
+    /// <see cref="Drawing.Geometries.LabelGeometry"/>.</param>
+    /// <param name="size">The text size requested by the <see cref="Drawing.Geometries.LabelGeometry"/>.</param>
+    /// <returns>A <see cref="SKFont"/> instance that will be used to draw and shape the label.</returns>
+    public delegate SKFont FontBuilderDelegate(SKPaint paint, SKTypeface typeface, float size);
+
+    internal FontBuilderDelegate _fontBuilder = LiveChartsSkiaSharp.DefaultTextSettings.FontBuilder;
     internal SKPaint? _skiaPaint;
 
     /// <summary>
@@ -113,19 +124,24 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
     /// <summary>
     /// Configures the SkiaSharp font manually.
     /// </summary>
-    /// <param name="skiaSettings"></param>
-    public SkiaPaint ConfigureSkiaSharpFont(Func<SKTypeface, float, SKFont> skiaSettings)
+    /// <param name="fontBuilder"></param>
+    public SkiaPaint ConfigureSkiaSharpFont(FontBuilderDelegate fontBuilder)
     {
-        _fontBuilder = skiaSettings;
+        _fontBuilder = fontBuilder;
         return this;
     }
 
     internal static SKTypeface FallbackTypeface =>
         field ??= (
-            LiveChartsSkiaSharp.DefaultTextSettings.Typeface
-            ?? SKTypeface.Default
-            ?? SKTypeface.FromFamilyName("Arial")
-            ?? SKTypeface.FromFamilyName("DejaVu Sans")
+               LiveChartsSkiaSharp.DefaultTextSettings.DefaultTypeface
+            ?? SKTypeface.Default           // let SkiaSharp decide
+            ?? TryCreateFont("Arial")       // common fallback
+            ?? TryCreateFont("Helvetica")   // macOS/iOS
+            ?? TryCreateFont("Roboto")      // Android
+            ?? TryCreateFont("DejaVu Sans") // Linux
+            ?? throw new InvalidOperationException(
+                "LiveCharts could not find a default typeface, please set the DefaultTypeface property in the TextSettings. " +
+                "You can do this by calling LiveCharts.Configure(config => config.HasTextSettings(new TextSettings { DefaultTypeface = SKTypeface.FromFamilyName(\"Arial\") }));")
         );
 
     internal bool IsGlobalSKTypeface =>
@@ -236,4 +252,11 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
         _skiaPaint?.Dispose();
         _skiaPaint = null;
     }
+
+    private static SKTypeface? TryCreateFont(string family)
+    {
+        var tf = SKTypeface.FromFamilyName(family);
+        return tf?.FamilyName == family ? tf : null;
+    }
+
 }
