@@ -9,7 +9,7 @@ public class TestsInitializer
     [AssemblyInitialize()]
     public static void MyTestInitialize(TestContext testContext)
     {
-        // The test framework will call this method once -BEFORE- each test run.\
+        // The test framework will call this method once -BEFORE- each test run.
 
         LiveCharts.Configure(config => config.UseDefaults());
     }
