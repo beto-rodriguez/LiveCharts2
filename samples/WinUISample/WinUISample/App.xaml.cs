@@ -1,6 +1,7 @@
-﻿using Microsoft.UI.Xaml;
+﻿using System;
 using LiveChartsCore; // mark
-using System;
+using ViewModelsSamples;
+using Microsoft.UI.Xaml;
 
 namespace WinUISample;
 
@@ -16,14 +17,12 @@ public partial class App : Application
 
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
-        m_window = new MainWindow();
-        m_window.Activate();
-
         // this is the recommended place to configure LiveCharts // mark
         LiveCharts.Configure(config => // mark
-        { // mark
-            // configure LiveCharts here... // mark
-        }); // mark
+            config.AddLiveChartsAppSettings()); // mark
+
+        m_window = new MainWindow();
+        m_window.Activate();
     }
 
     private Window m_window;

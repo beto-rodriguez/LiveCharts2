@@ -66,8 +66,8 @@ public class StackedAreaSeriesTest
 
         foreach (var sutPoint in toCompareGuys)
         {
-            var previousBezier = ((SegmentVisualPoint<CircleGeometry, CubicBezierSegment>)previous.Context.AdditionalVisuals)?.Segment;
-            var sutBezier = ((SegmentVisualPoint<CircleGeometry, CubicBezierSegment>)sutPoint.Context.AdditionalVisuals).Segment;
+            var previousBezier = ((CubicSegmentVisualPoint)previous.Context.AdditionalVisuals)?.Segment;
+            var sutBezier = ((CubicSegmentVisualPoint)sutPoint.Context.AdditionalVisuals).Segment;
 
             // test x
             var currentDeltaX = previous.Visual.X - sutPoint.Visual.X;
@@ -98,8 +98,8 @@ public class StackedAreaSeriesTest
         previousXArea = null;
         foreach (var sutPoint in toCompareGuys2)
         {
-            var previousBezier = ((SegmentVisualPoint<CircleGeometry, CubicBezierSegment>)previous.Context.AdditionalVisuals).Segment;
-            var sutBezier = ((SegmentVisualPoint<CircleGeometry, CubicBezierSegment>)sutPoint.Context.AdditionalVisuals).Segment;
+            var previousBezier = ((CubicSegmentVisualPoint)previous.Context.AdditionalVisuals).Segment;
+            var sutBezier = ((CubicSegmentVisualPoint)sutPoint.Context.AdditionalVisuals).Segment;
 
             // test x
             var currentDeltaX = previous.Visual.X - sutPoint.Visual.X;

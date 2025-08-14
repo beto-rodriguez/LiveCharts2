@@ -23,6 +23,7 @@
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
+using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing;
@@ -113,11 +114,12 @@ public class SkiaSharpDrawingContext(
     /// <inheritdoc cref="DrawingContext.LogOnCanvas(string)"/>
     public override void LogOnCanvas(string log)
     {
-        using var p = new SKPaint
+        using var textPaint = new SKPaint
         {
             Color = SKColors.White,
             TextSize = 14,
-            IsAntialias = true
+            IsAntialias = true,
+            Typeface = SkiaPaint.FallbackTypeface
         };
 
         using var backgroundPaint = new SKPaint
@@ -128,7 +130,7 @@ public class SkiaSharpDrawingContext(
 
         var lines = log.Split('`');
 
-        Canvas.DrawRect(new(10, 0, 400, (p.TextSize + 4f) * lines.Length), backgroundPaint);
+        Canvas.DrawRect(new(10, 0, 400, (textPaint.TextSize + 4f) * lines.Length), backgroundPaint);
 
         for (var i = 0; i < lines.Length; i++)
         {
@@ -136,8 +138,8 @@ public class SkiaSharpDrawingContext(
             if (string.IsNullOrWhiteSpace(line)) continue;
             Canvas.DrawText(
                 line,
-                new SKPoint(10, 10 + 2 + (p.TextSize + 4f) * i),
-                p);
+                new SKPoint(10, 10 + 2 + (textPaint.TextSize + 4f) * i),
+                textPaint);
         }
     }
 
@@ -233,20 +235,20 @@ public class SkiaSharpDrawingContext(
         if (element.HasTransform) Canvas.Restore();
     }
 
-    /// <inheritdoc cref="DrawingContext.InitializePaintTask(Paint)"/>
-    public override void InitializePaintTask(Paint paint)
+    /// <inheritdoc cref="DrawingContext.SelectPaint(Paint)"/>
+    public override void SelectPaint(Paint paint)
     {
         ActiveLvcPaint = paint;
         //ActiveSkiaPaint = paint.SKPaint; set by paint.InitializeTask
         PaintMotionProperty.s_activePaint = paint;
 
-        paint.InitializeTask(this);
+        paint.OnPaintStarted(this, null);
     }
 
-    /// <inheritdoc cref="DrawingContext.DisposePaintTask(Paint)"/>
-    public override void DisposePaintTask(Paint paint)
+    /// <inheritdoc cref="DrawingContext.ClearPaintSelection(Paint)"/>
+    public override void ClearPaintSelection(Paint paint)
     {
-        paint.Dispose();
+        paint.OnPaintFinished(this, null);
 
         ActiveLvcPaint = null!;
         ActiveSkiaPaint = null!;
@@ -265,12 +267,12 @@ public class SkiaSharpDrawingContext(
         if (paint != MeasureTask.Instance)
         {
             ActiveLvcPaint = paint;
-            paint.InitializeTask(this);
+            paint.OnPaintStarted(this, element);
         }
 
         DrawElement(element, opacity);
 
-        paint.Dispose();
+        paint.OnPaintFinished(this, element);
 
         ActiveSkiaPaint = originalPaint;
         ActiveLvcPaint = originalTask;
@@ -291,7 +293,7 @@ public class SkiaSharpDrawingContext(
 
         if (hasGeometryOpacity)
         {
-            ActiveLvcPaint!.ApplyOpacityMask(this, opacity);
+            ActiveLvcPaint!.ApplyOpacityMask(this, opacity, element);
         }
 
         if (hasShadow)
@@ -315,7 +317,7 @@ public class SkiaSharpDrawingContext(
 
         if (hasGeometryOpacity)
         {
-            ActiveLvcPaint!.RestoreOpacityMask(this, opacity);
+            ActiveLvcPaint!.RestoreOpacityMask(this, opacity, element);
         }
     }
 }

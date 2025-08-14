@@ -24,9 +24,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
-using LiveChartsCore.Generators;
 
 namespace LiveChartsCore.Painting;
 
@@ -36,20 +36,17 @@ namespace LiveChartsCore.Painting;
 /// <remarks>
 /// Initializes a new instance of the <see cref="Paint"/> class.
 /// </remarks>
-public abstract partial class Paint : Animatable, IDisposable
+public abstract partial class Paint : Animatable
 {
     private readonly Dictionary<object, HashSet<IDrawnElement>> _geometriesByCanvas = [];
     private readonly Dictionary<object, LvcRectangle> _clipRectangles = [];
-
-    internal Paint _source;
 
     /// <param name="strokeThickness">The stroke thickness.</param>
     /// <param name="strokeMiter">The stroke miter.</param>
     public Paint(float strokeThickness = 1f, float strokeMiter = 0)
     {
-        _source = this;
-        _StrokeMiterMotionProperty = new(strokeMiter);
-        _StrokeThicknessMotionProperty = new(strokeThickness);
+        StrokeThickness = strokeThickness;
+        StrokeMiter = strokeMiter;
     }
 
     /// <summary>
@@ -60,9 +57,6 @@ public abstract partial class Paint : Animatable, IDisposable
     /// <summary>
     /// Gets or sets the index of the z.
     /// </summary>
-    /// <value>
-    /// The index of the z.
-    /// </value>
     public double ZIndex { get; set; }
 
     internal PaintStyle PaintStyle { get; set; }
@@ -78,68 +72,29 @@ public abstract partial class Paint : Animatable, IDisposable
     }
 
     /// <summary>
-    /// Gets or sets the font family.
-    /// </summary>
-    public string? FontFamily { get; set; }
-
-    /// <summary>
     /// Gets or sets a value indicating whether this instance is antialias.
     /// </summary>
-    /// <value>
-    ///   <c>true</c> if this instance is antialias; otherwise, <c>false</c>.
-    /// </value>
     public bool IsAntialias { get; set; } = true;
 
     /// <summary>
     /// Gets or sets a value indicating whether this instance is paused.
     /// </summary>
-    /// <value>
-    /// <c>true</c> if this instance is paused; otherwise, <c>false</c>.
-    /// </value>
     public bool IsPaused { get; set; }
 
     /// <summary>
     /// Gets or sets the stroke thickness.
     /// </summary>
-    /// <value>
-    /// The stroke thickness.
-    /// </value>
-    [MotionProperty]
-    public partial float StrokeThickness { get; set; }
+    public float StrokeThickness { get; set; }
 
     /// <summary>
     /// Gets or sets the stroke miter.
     /// </summary>
-    /// <value>
-    /// The stroke miter.
-    /// </value>
-    [MotionProperty]
-    public partial float StrokeMiter { get; set; }
+    public float StrokeMiter { get; set; }
 
     /// <summary>
     /// Gets a value indicating whether this instance is empty.
     /// </summary>
     public bool IsEmpty => _geometriesByCanvas.Count == 0;
-
-    /// <summary>
-    /// Transitionates the paint task to the target paint task.
-    /// </summary>
-    /// <param name="progress">The progress.</param>
-    /// <param name="target">The end target.</param>
-    public abstract Paint Transitionate(float progress, Paint target);
-
-    /// <summary>
-    /// Gets the geometries.
-    /// </summary>
-    /// <returns></returns>
-    /// <param name="canvas">The canvas.</param>
-    public IEnumerable<IDrawnElement> GetGeometries(CoreMotionCanvas canvas)
-    {
-        var geometries = GetGeometriesByCanvas(canvas) ?? [];
-
-        foreach (var geometry in geometries)
-            yield return geometry;
-    }
 
     /// <summary>
     /// Sets the geometries for the given canvas.
@@ -182,6 +137,7 @@ public abstract partial class Paint : Animatable, IDisposable
     /// <param name="geometry">The geometry.</param>
     public void RemoveGeometryFromPaintTask(CoreMotionCanvas canvas, IDrawnElement geometry)
     {
+        geometry.DisposePaints();
         _ = GetGeometriesByCanvas(canvas)?.Remove(geometry);
         ((Animatable)geometry)._statesTracker = null;
 
@@ -194,17 +150,19 @@ public abstract partial class Paint : Animatable, IDisposable
     /// <param name="canvas">The canvas.</param>
     public void ClearGeometriesFromPaintTask(CoreMotionCanvas canvas)
     {
+        var geometries = GetGeometriesByCanvas(canvas);
+        if (geometries is null || geometries.Count == 0) return;
+
+        var geometriesWithOwnPaints = geometries
+                .Where(x => (x.Fill ?? x.Stroke ?? x.Paint) is not null);
+
+        foreach (var geometry in geometriesWithOwnPaints)
+            geometry.DisposePaints();
+
         GetGeometriesByCanvas(canvas)?.Clear();
 
         IsValid = false;
     }
-
-    /// <summary>
-    /// Releases the canvas resources.
-    /// </summary>
-    /// <param name="canvas">The canvas.</param>
-    public void ReleaseCanvas(CoreMotionCanvas canvas) =>
-        _ = _geometriesByCanvas.Remove(canvas);
 
     /// <summary>
     /// Gets the clip rectangle for the given canvas.
@@ -226,35 +184,10 @@ public abstract partial class Paint : Animatable, IDisposable
     }
 
     /// <summary>
-    /// Initializes the task.
-    /// </summary>
-    /// <param name="drawingContext">The context.</param>
-    public abstract void InitializeTask(DrawingContext drawingContext);
-
-    /// <summary>
-    /// Sets the opacity according to the given geometry.
-    /// </summary>
-    /// <param name="context">The context.</param>
-    /// <param name="opacity">The opacity.</param>
-    public abstract void ApplyOpacityMask(DrawingContext context, float opacity);
-
-    /// <summary>
-    /// Resets the opacity.
-    /// </summary>
-    /// <param name="context">The context.</param>
-    /// <param name="opacity">The opacity.</param>
-    public abstract void RestoreOpacityMask(DrawingContext context, float opacity);
-
-    /// <summary>
     /// Clones the task.
     /// </summary>
     /// <returns>A new instance with the same properties.</returns>
     public abstract Paint CloneTask();
-
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-    /// </summary>
-    public abstract void Dispose();
 
     /// <summary>
     /// Parses a hexadecimal color string.
@@ -269,6 +202,29 @@ public abstract partial class Paint : Animatable, IDisposable
             : LiveCharts.DefaultSettings.GetProvider().GetSolidColorPaint(color);
     }
 
+    internal void ReleaseCanvas(CoreMotionCanvas canvas) =>
+        _ = _geometriesByCanvas.Remove(canvas);
+
+    internal abstract Paint Transitionate(float progress, Paint target);
+
+    internal IEnumerable<IDrawnElement> GetGeometries(CoreMotionCanvas canvas)
+    {
+        var geometries = GetGeometriesByCanvas(canvas) ?? [];
+
+        foreach (var geometry in geometries)
+            yield return geometry;
+    }
+
+    internal abstract void OnPaintStarted(DrawingContext drawingContext, IDrawnElement? drawnElement);
+
+    internal abstract void OnPaintFinished(DrawingContext drawingContext, IDrawnElement? drawnElement);
+
+    internal abstract void ApplyOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement);
+
+    internal abstract void RestoreOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement);
+
+    internal abstract void DisposeTask();
+
     private HashSet<IDrawnElement>? GetGeometriesByCanvas(object canvas)
     {
         return _geometriesByCanvas.TryGetValue(canvas, out var geometries)
@@ -278,11 +234,12 @@ public abstract partial class Paint : Animatable, IDisposable
 
     private class DefaultPaint : Paint
     {
-        public override void ApplyOpacityMask(DrawingContext context, float opacity) { }
         public override Paint CloneTask() => this;
-        public override void Dispose() { }
-        public override void InitializeTask(DrawingContext drawingContext) { }
-        public override void RestoreOpacityMask(DrawingContext context, float opacity) { }
-        public override Paint Transitionate(float progress, Paint target) => this;
+        internal override void ApplyOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement) { }
+        internal override void OnPaintFinished(DrawingContext context, IDrawnElement? drawnElement) { }
+        internal override void OnPaintStarted(DrawingContext drawingContext, IDrawnElement? drawnElement) { }
+        internal override void RestoreOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement) { }
+        internal override Paint Transitionate(float progress, Paint target) => this;
+        internal override void DisposeTask() { }
     }
 }

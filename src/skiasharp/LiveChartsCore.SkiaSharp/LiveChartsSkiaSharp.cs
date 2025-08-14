@@ -38,10 +38,7 @@ namespace LiveChartsCore.SkiaSharpView;
 /// </summary>
 public static class LiveChartsSkiaSharp
 {
-    /// <summary>
-    /// Gets or sets an SKTypeface instance to use globally on any paint that does not specify any.
-    /// </summary>
-    public static SKTypeface? DefaultSKTypeface { get; set; }
+    internal static TextSettings DefaultTextSettings { get; set; } = new();
 
     /// <summary>
     /// Configures LiveCharts using the default settings for SkiaSharp.
@@ -118,7 +115,7 @@ public static class LiveChartsSkiaSharp
     /// Adds SkiaSharp as the library backend.
     /// </summary>
     /// <param name="settings">The settings.</param>
-    /// <returns></returns>
+    /// <returns>The current settings.</returns>
     public static LiveChartsSettings AddSkiaSharp(this LiveChartsSettings settings)
     {
         PropertyDefinition.Parsers[typeof(Paint)] = HexToPaintTypeConverter.Parse;
@@ -134,12 +131,30 @@ public static class LiveChartsSkiaSharp
     /// <summary>
     /// Registers a global SKTypeface instance to use on any <see cref="SkiaPaint"/> that does not specify a typeface.
     /// </summary>
-    /// <param name="settings"></param>
-    /// <param name="typeface"></param>
-    /// <returns></returns>
+    /// <param name="settings">The current settings.</param>
+    /// <param name="typeface">The typeface to load for text paints.</param>
+    /// <returns>The current settings.</returns>
+    [Obsolete(
+        $"Use {nameof(HasTextSettings)} and set the {nameof(TextSettings.DefaultTypeface)} instead, " +
+        $"LiveCharts now uses the {nameof(SKFontManager)} to look for a valid font when necessesary, " +
+        $"Configuring a typeface could not be necessary anymore, but explicitly loading a typeface " +
+        $"could improve text quality, e.g. SKTypeface.FromFamilyName(\"my-font\")")]
     public static LiveChartsSettings HasGlobalSKTypeface(this LiveChartsSettings settings, SKTypeface typeface)
     {
-        DefaultSKTypeface = typeface;
+        DefaultTextSettings.DefaultTypeface = typeface;
+        return settings;
+    }
+
+    /// <summary>
+    /// Registers the text settings to use for SkiaSharp.
+    /// </summary>
+    /// <param name="settings">The current settings.</param>
+    /// <param name="textSettings">The text settings to use for SkiaSharp text rendering.</param>
+    /// <returns>The current settings.</returns>
+    public static LiveChartsSettings HasTextSettings(
+        this LiveChartsSettings settings, TextSettings textSettings)
+    {
+        DefaultTextSettings = textSettings;
         return settings;
     }
 

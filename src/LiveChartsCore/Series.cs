@@ -27,7 +27,6 @@ using System.ComponentModel;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Providers;
@@ -97,7 +96,6 @@ public abstract class Series<TModel, TVisual, TLabel>
     private IEnumerable? _values;
     private Func<ChartPoint, string> _dataLabelsFormatter = x => x.Coordinate.PrimaryValue.ToString();
     private LvcPoint _dataPadding = new(0.5f, 0.5f);
-    private TimeSpan? _animationsSpeed;
     private bool _showDataLabels;
 
     /// <summary>
@@ -229,7 +227,7 @@ public abstract class Series<TModel, TVisual, TLabel>
     public LvcPoint DataPadding { get => _dataPadding; set => SetProperty(ref _dataPadding, value); }
 
     /// <inheritdoc cref="ISeries.AnimationsSpeed" />
-    public TimeSpan? AnimationsSpeed { get => _animationsSpeed; set => SetProperty(ref _animationsSpeed, value); }
+    public TimeSpan? AnimationsSpeed { get => field; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="ISeries.EasingFunction" />
     public Func<float, float>? EasingFunction { get; set => SetProperty(ref field, value); }
@@ -254,11 +252,9 @@ public abstract class Series<TModel, TVisual, TLabel>
     }
 
     /// <summary>
-    /// Gets or sets the size of the legend shape.
+    /// Gets or sets the size of the miniature, the miniature shape is used to draw the series representation in
+    /// tooltips and legends, defaults to 12.
     /// </summary>
-    /// <value>
-    /// The size of the legend shape.
-    /// </value>
     public double MiniatureShapeSize
     {
         get;
@@ -270,14 +266,18 @@ public abstract class Series<TModel, TVisual, TLabel>
     } = 12;
 
     /// <summary>
-    /// Obsolete.
+    /// Gets or sets the size of the miniature stroke, the miniature shape is used to draw the series representation in
+    /// tooltips and legends, defaults to 2.
     /// </summary>
-    [Obsolete($"Replaced by ${nameof(GetMiniature)}")]
-    public Sketch CanvasSchedule
+    public double MiniatureStrokeThickness
     {
         get;
-        protected set => SetProperty(ref field, value);
-    } = new(0, 0, null);
+        set
+        {
+            field = value;
+            SetProperty(ref field, value);
+        }
+    } = 2;
 
     /// <inheritdoc cref="ISeries.ShowDataLabels"/>
     public bool ShowDataLabels
@@ -296,7 +296,7 @@ public abstract class Series<TModel, TVisual, TLabel>
         get;
         set
         {
-            SetPaintProperty(ref field, value);
+            SetPaintProperty(ref field, value, PaintStyle.Text);
             _showDataLabels = value is not null && value != Paint.Default;
         }
     } = Paint.Default;
@@ -425,7 +425,7 @@ public abstract class Series<TModel, TVisual, TLabel>
     {
         base.RemoveFromUI(chart);
         DataFactory?.Dispose(chart);
-        DataFactory = null;
+        DataFactory = null!;
         everFetched = [];
     }
 
@@ -440,47 +440,11 @@ public abstract class Series<TModel, TVisual, TLabel>
     /// <inheritdoc cref="ISeries.SoftDeleteOrDispose"/>
     public abstract void SoftDeleteOrDispose(IChartView chart);
 
-    /// <inheritdoc cref="ISeries.GetMiniaturesSketch"/>
-    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
-    public abstract Sketch GetMiniaturesSketch();
-
-    /// <inheritdoc cref="ISeries.GetMiniature"/>
-    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
-    public abstract IChartElement GetMiniature(ChartPoint? point, int zindex);
-
     /// <inheritdoc cref="ISeries.GetMiniatureGeometry"/>
     public abstract IDrawnElement GetMiniatureGeometry(ChartPoint? point);
 
     void ISeries.OnDataPointerDown(IChartView chart, IEnumerable<ChartPoint> points, LvcPoint pointer) =>
         OnDataPointerDown(chart, points, pointer);
-
-    /// <summary>
-    /// Builds a paint schedule.
-    /// </summary>
-    /// <param name="paint"></param>
-    /// <param name="geometry"></param>
-    /// <returns></returns>
-    protected PaintSchedule BuildMiniatureSchedule(
-        Paint paint, BoundedDrawnGeometry geometry)
-    {
-        var paintClone = paint.CloneTask();
-        var st = paint.PaintStyle.HasFlag(PaintStyle.Stroke) ? paint.StrokeThickness : 0;
-
-        if (st > MAX_MINIATURE_STROKE_WIDTH)
-        {
-            st = MAX_MINIATURE_STROKE_WIDTH;
-            paintClone.StrokeThickness = MAX_MINIATURE_STROKE_WIDTH;
-        }
-
-        geometry.X = 0.5f * st;
-        geometry.Y = 0.5f * st;
-        geometry.Height = (float)MiniatureShapeSize;
-        geometry.Width = (float)MiniatureShapeSize;
-
-        if (paint.PaintStyle.HasFlag(PaintStyle.Stroke)) paintClone.ZIndex = 1;
-
-        return new PaintSchedule(paintClone, geometry);
-    }
 
     /// <summary>
     /// Called when a point was measured.
@@ -534,26 +498,6 @@ public abstract class Series<TModel, TVisual, TLabel>
 
     /// <inheritdoc cref="ChartElement.OnPaintChanged(string?)"/>
     protected override void OnPaintChanged(string? propertyName) => base.OnPaintChanged(propertyName);
-
-    /// <summary>
-    /// Gets the miniature paint.
-    /// </summary>
-    /// <param name="paint">the base paint.</param>
-    /// <param name="zIndex">the z index.</param>
-    /// <returns></returns>
-    protected virtual Paint? GetMiniaturePaint(Paint? paint, int zIndex = 0)
-    {
-        if (paint is null) return null;
-
-        var clone = paint.CloneTask();
-        clone.ZIndex = zIndex;
-
-        const float MAX_MINIATURE_STROKE_WIDTH = 3.5f;
-        if (clone.StrokeThickness > MAX_MINIATURE_STROKE_WIDTH)
-            clone.StrokeThickness = MAX_MINIATURE_STROKE_WIDTH;
-
-        return clone;
-    }
 
     private void NotifySubscribers()
     {

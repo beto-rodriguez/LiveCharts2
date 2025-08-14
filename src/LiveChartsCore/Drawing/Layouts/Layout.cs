@@ -96,6 +96,12 @@ public abstract partial class Layout<TDrawingContext> : Animatable, IDrawnElemen
     /// <inheritdoc cref="IDrawnElement.HasTransform"/>
     public bool HasTransform { get; protected set; }
 
+    /// <inheritdoc cref="IDrawnElement.StrokeThickness"/>
+    float IDrawnElement.StrokeThickness { get; set; } = 1;
+
+    /// <inheritdoc cref="IDrawnElement.ClippingBounds"/>
+    LvcRectangle IDrawnElement.ClippingBounds { get; set; } = LvcRectangle.Unset;
+
     /// <inheritdoc cref="IDrawnElement.HasTranslate"/>
     public bool HasTranslate
     {
@@ -160,4 +166,9 @@ public abstract partial class Layout<TDrawingContext> : Animatable, IDrawnElemen
 
     /// <inheritdoc cref="IDrawnElement.Measure()"/>
     public abstract LvcSize Measure();
+
+    void IDrawnElement.DisposePaints()
+    {
+
+    }
 }

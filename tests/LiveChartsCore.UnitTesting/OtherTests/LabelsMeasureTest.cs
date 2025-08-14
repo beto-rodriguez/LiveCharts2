@@ -85,8 +85,7 @@ public class LabelsMeasureTest
                 TextSize = 25,
                 Text = t,
                 Paint = new SolidColorPaint(SKColors.Black),
-                BackgroundColor = new Drawing.LvcColor(0, 0, 0, 50),
-                LineHeight = lineHeight
+                BackgroundColor = new Drawing.LvcColor(0, 0, 0, 50)
             });
 
             y += th * lineHeight + 10;
@@ -119,7 +118,7 @@ public class LabelsMeasureTest
             canvas, SKImageInfo.Empty, SKSurface.Create(new SKImageInfo(100, 100)).Canvas);
 
         var paint = new SolidColorPaint { Color = SKColors.Red };
-        paint.InitializeTask(drawingContext);
+        paint.OnPaintStarted(drawingContext, null);
         paint._skiaPaint.TextSize = 15;
 
         var label = new LabelGeometry
@@ -128,22 +127,21 @@ public class LabelsMeasureTest
             TextSize = 15,
             MaxWidth = maxWidth,
             Padding = new(10, 0),
+            Paint = new SolidColorPaint(SKColors.Black)
         };
 
-        var lines = label.GetLines(paint._skiaPaint).ToArray();
-        var b = new SKRect();
+        var lines = label.BlobArray.LineWidths;
         var l = 0;
         foreach (var line in lines)
         {
-            _ = paint._skiaPaint.MeasureText(line, ref b);
-            Assert.IsTrue(b.Width <= maxWidth);
+            Assert.IsTrue(line <= maxWidth);
             l++;
         }
 
         label.Paint = paint;
         var size = label.Measure();
         Assert.IsTrue(size.Width <= maxWidth);
-        Assert.IsTrue(l == label._lines);
+        Assert.IsTrue(l == label.BlobArray.LineWidths.Count);
 
         var label2 = new LabelGeometry
         {
@@ -160,7 +158,7 @@ public class LabelsMeasureTest
         label2.Paint = paint;
         var size2 = label2.Measure();
 
-        Assert.IsTrue(label2._lines == 5);
+        Assert.IsTrue(label2.BlobArray.LineWidths.Count == 5);
         Assert.IsTrue(size2.Width > label2.MaxWidth); // the text is too long, this is allowed.
 
         var label3 = new LabelGeometry
@@ -171,8 +169,8 @@ public class LabelsMeasureTest
         };
         label3.Paint = paint;
         var size3 = label3.Measure();
-        var lines3 = label3.GetLines(paint._skiaPaint).ToArray();
+        var lines3 = label3.BlobArray.LineWidths;
 
-        Assert.IsTrue(label3._lines == 6);
+        Assert.IsTrue(label3.BlobArray.LineWidths.Count == 6);
     }
 }

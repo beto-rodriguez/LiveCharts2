@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
+using ViewModelsSamples;
 using LiveChartsCore; // mark
 
 namespace WPFSample;
@@ -14,10 +16,6 @@ public partial class App : Application
 
         // this is the recommended place to configure LiveCharts // mark
         LiveCharts.Configure(config => // mark
-        { // mark
-            // configure LiveCharts here... // mark
-        }); // mark
+            config.AddLiveChartsAppSettings()); // mark
     }
-
-    public record City(string Name, double Population);
 }

@@ -45,6 +45,17 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>(
             where TVisual : DrawnGeometry, new()
             where TLabel : BaseLabelGeometry, new()
 {
+    internal Paint? MiniatureStroke
+    {
+        get;
+        set => SetPaintProperty(ref field, value, PaintStyle.Stroke);
+    } = Paint.Default;
+
+    internal Paint? MiniatureFill
+    {
+        get;
+        set => SetPaintProperty(ref field, value);
+    } = Paint.Default;
 
     /// <summary>
     /// Gets or sets the stroke.
@@ -73,32 +84,4 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>(
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
         [Stroke, Fill, DataLabelsPaint];
-
-    /// <summary>
-    /// Gets the fill paint for the miniature.
-    /// </summary>
-    /// <param name="point">the point/</param>
-    /// <param name="zIndex">the x index.</param>
-    /// <returns></returns>
-    protected virtual Paint? GetMiniatureFill(ChartPoint? point, int zIndex)
-    {
-        var p = point is null ? null : ConvertToTypedChartPoint(point);
-        var paint = p?.Visual?.Fill ?? Fill;
-
-        return GetMiniaturePaint(paint, zIndex);
-    }
-
-    /// <summary>
-    /// Gets the fill paint for the miniature.
-    /// </summary>
-    /// <param name="point">the point/</param>
-    /// <param name="zIndex">the x index.</param>
-    /// <returns></returns>
-    protected virtual Paint? GetMiniatureStroke(ChartPoint? point, int zIndex)
-    {
-        var p = point is null ? null : ConvertToTypedChartPoint(point);
-        var paint = p?.Visual?.Stroke ?? Stroke;
-
-        return GetMiniaturePaint(paint, zIndex);
-    }
 }

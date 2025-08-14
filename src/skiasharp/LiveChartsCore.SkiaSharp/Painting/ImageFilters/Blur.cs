@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
@@ -47,9 +46,9 @@ public class Blur(
     /// <inheritdoc cref="ImageFilter.Clone"/>
     public override ImageFilter Clone() => new Blur(SigmaX, SigmaY);
 
-    /// <inheritdoc cref="ImageFilter.CreateFilter(SkiaSharpDrawingContext)"/>
-    public override void CreateFilter(SkiaSharpDrawingContext drawingContext) =>
-        SKImageFilter = SKImageFilter.CreateBlur(SigmaX, SigmaY);
+    /// <inheritdoc cref="ImageFilter.CreateFilter()"/>
+    public override void CreateFilter() =>
+        _sKImageFilter = SKImageFilter.CreateBlur(SigmaX, SigmaY);
 
     /// <inheritdoc cref="ImageFilter.Transitionate(float, ImageFilter)"/>
     protected override ImageFilter Transitionate(float progress, ImageFilter target)

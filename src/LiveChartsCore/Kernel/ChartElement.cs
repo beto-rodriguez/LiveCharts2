@@ -66,10 +66,10 @@ public abstract class ChartElement : IChartElement, INotifyPropertyChanged
     {
         if (_deletingTasks.Count == 0) return;
 
-        foreach (var item in _deletingTasks)
+        foreach (var paintTask in _deletingTasks)
         {
-            chart.CoreCanvas.RemovePaintTask(item);
-            item.Dispose();
+            chart.CoreCanvas.RemovePaintTask(paintTask);
+            paintTask.DisposeTask();
         }
 
         _deletingTasks.Clear();

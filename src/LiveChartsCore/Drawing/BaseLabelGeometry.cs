@@ -44,7 +44,6 @@ public abstract partial class BaseLabelGeometry : Animatable, IDrawnElement
         _TextSizeMotionProperty = new(11f);
         _BackgroundMotionProperty = new(LvcColor.Empty);
         _PaddingMotionProperty = new(new(0f));
-        HasTransform = true;
     }
 
     /// <inheritdoc cref="IDrawnElement.Parent"/>
@@ -81,18 +80,22 @@ public abstract partial class BaseLabelGeometry : Animatable, IDrawnElement
     /// <inheritdoc cref="IDrawnElement.TranslateTransform"/>
     [MotionProperty]
     public partial LvcPoint TranslateTransform { get; set; }
+    partial void OnTranslateTransformChanged(LvcPoint value) => HasTransform = true;
 
     /// <inheritdoc cref="IDrawnElement.RotateTransform"/>
     [MotionProperty]
     public partial float RotateTransform { get; set; }
+    partial void OnRotateTransformChanged(float value) => HasTransform = true;
 
     /// <inheritdoc cref="IDrawnElement.ScaleTransform"/>
     [MotionProperty]
     public partial LvcPoint ScaleTransform { get; set; }
+    partial void OnScaleTransformChanged(LvcPoint value) => HasTransform = true;
 
     /// <inheritdoc cref="IDrawnElement.SkewTransform"/>
     [MotionProperty]
     public partial LvcPoint SkewTransform { get; set; }
+    partial void OnSkewTransformChanged(LvcPoint value) => HasTransform = true;
 
     /// <inheritdoc cref="IDrawnElement.DropShadow"/>
     [MotionProperty]
@@ -121,7 +124,11 @@ public abstract partial class BaseLabelGeometry : Animatable, IDrawnElement
     public partial Paint? Paint
     {
         get => _PaintMotionProperty.GetMovement(this);
-        set => _PaintMotionProperty.SetMovement(value, this);
+        set
+        {
+            _PaintMotionProperty.SetMovement(value, this);
+            value?.PaintStyle = PaintStyle.Text;
+        }
     }
 
     /// <summary>
@@ -131,6 +138,11 @@ public abstract partial class BaseLabelGeometry : Animatable, IDrawnElement
 
     /// <inheritdoc cref="IDrawnElement.HasTransform"/>
     public bool HasTransform { get; protected set; }
+
+    float IDrawnElement.StrokeThickness { get; set; } = 1;
+
+    /// <inheritdoc cref="IDrawnElement.ClippingBounds"/>
+    public LvcRectangle ClippingBounds { get; set; } = LvcRectangle.Unset;
 
     bool IDrawnElement.HasTranslate
     {
@@ -182,11 +194,6 @@ public abstract partial class BaseLabelGeometry : Animatable, IDrawnElement
     /// </summary>
     public string Text { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Gets or sets the line height [in times the text height].
-    /// </summary>
-    public float LineHeight { get; set; } = 1.45f;
-
 #if DEBUG
     /// <summary>
     /// This property is only available on debug mode, it indicates if the debug lines should be shown.
@@ -206,4 +213,15 @@ public abstract partial class BaseLabelGeometry : Animatable, IDrawnElement
 
     /// <inheritdoc cref="IDrawnElement.Measure()"/>
     public abstract LvcSize Measure();
+
+    void IDrawnElement.DisposePaints()
+    {
+        ((IDrawnElement)this).Stroke?.DisposeTask();
+        ((IDrawnElement)this).Fill?.DisposeTask();
+        Paint?.DisposeTask();
+
+        OnDisposed();
+    }
+
+    internal virtual void OnDisposed() { }
 }

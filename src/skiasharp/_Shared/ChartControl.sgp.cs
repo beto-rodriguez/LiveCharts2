@@ -135,13 +135,13 @@ public partial class ChartControl
     /// <inheritdoc cref="IChartView.TooltipPosition"/>
     static UIProperty<TooltipPosition>            tooltipPosition         = new(d.TooltipPosition,        OnChartPropertyChanged);
     /// <inheritdoc cref="IChartView.LegendTextPaint"/>
-    static UIProperty<Paint?>                     legendTextPaint         = new(d.LegendTextPaint,        OnChartPropertyChanged);
+    static UIProperty<Paint?>                     legendTextPaint         = new(d.LegendTextPaint,        OnTextPaintPropertyChanged);
     /// <inheritdoc cref="IChartView.LegendBackgroundPaint"/>
     static UIProperty<Paint?>                     legendBackgroundPaint   = new(d.LegendBackgroundPaint,  OnChartPropertyChanged);
     /// <inheritdoc cref="IChartView.LegendTextSize"/>
     static UIProperty<double>                     legendTextSize          = new(d.LegendTextSize,         OnChartPropertyChanged);
     /// <inheritdoc cref="IChartView.TooltipTextPaint"/>
-    static UIProperty<Paint?>                     tooltipTextPaint        = new(d.TooltipTextPaint,       OnChartPropertyChanged);
+    static UIProperty<Paint?>                     tooltipTextPaint        = new(d.TooltipTextPaint,       OnTextPaintPropertyChanged);
     /// <inheritdoc cref="IChartView.TooltipBackgroundPaint"/>
     static UIProperty<Paint?>                     tooltipBackgroundPaint  = new(d.TooltipBackgroundPaint, OnChartPropertyChanged);
     /// <inheritdoc cref="IChartView.TooltipTextSize"/>
@@ -186,6 +186,17 @@ public partial class ChartControl
         // a reference to the canvas in the UI, CoreChart is null until then.
         if (chart.CoreChart is null) return;
 #endif
+        chart.CoreChart.Update();
+    }
+
+    static void OnTextPaintPropertyChanged(ChartControl chart, object oldValue, object newValue)
+    {
+#if BLAZOR_LVC
+        // hack for blazor, we need to wait for the OnAfterRender to have
+        // a reference to the canvas in the UI, CoreChart is null until then.
+        if (chart.CoreChart is null) return;
+#endif
+        ((Paint)newValue).PaintStyle = PaintStyle.Text;
         chart.CoreChart.Update();
     }
 

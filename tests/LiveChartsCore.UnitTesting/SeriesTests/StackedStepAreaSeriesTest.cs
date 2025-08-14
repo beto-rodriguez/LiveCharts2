@@ -66,8 +66,8 @@ public class StackedStepAreaSeriesTest
 
         foreach (var sutPoint in toCompareGuys)
         {
-            var previousSegment = ((SegmentVisualPoint<CircleGeometry, Segment>)previous.Context.AdditionalVisuals)?.Segment;
-            var sutSegment = ((SegmentVisualPoint<CircleGeometry, Segment>)sutPoint.Context.AdditionalVisuals).Segment;
+            var previousSegment = ((SegmentVisualPoint)previous.Context.AdditionalVisuals)?.Segment;
+            var sutSegment = ((SegmentVisualPoint)sutPoint.Context.AdditionalVisuals).Segment;
 
             // test x
             var currentDeltaX = previousSegment.Xj - sutSegment.Xj;
@@ -97,8 +97,8 @@ public class StackedStepAreaSeriesTest
         previousXArea = null;
         foreach (var sutPoint in toCompareGuys2)
         {
-            var previousSegment = ((SegmentVisualPoint<CircleGeometry, Segment>)previous.Context.AdditionalVisuals).Segment;
-            var sutSegment = ((SegmentVisualPoint<CircleGeometry, Segment>)sutPoint.Context.AdditionalVisuals).Segment;
+            var previousSegment = ((SegmentVisualPoint)previous.Context.AdditionalVisuals).Segment;
+            var sutSegment = ((SegmentVisualPoint)sutPoint.Context.AdditionalVisuals).Segment;
 
             // test x
             var currentDeltaX = previous.Visual.X - sutPoint.Visual.X;

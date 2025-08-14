@@ -82,6 +82,11 @@ public interface IDrawnElement
     LvcDropShadow? DropShadow { get; set; }
 
     /// <summary>
+    /// Gets or sets the clipping bounds.
+    /// </summary>
+    LvcRectangle ClippingBounds { get; set; }
+
+    /// <summary>
     /// Gets a value indicating whether the instance has transform.
     /// </summary>
     bool HasTransform { get; }
@@ -123,6 +128,11 @@ public interface IDrawnElement
     Paint? Paint { get; set; }
 
     /// <summary>
+    /// Gets or sets the Stroke thickness.
+    /// </summary>
+    float StrokeThickness { get; set; }
+
+    /// <summary>
     /// Gets a value indicating whether the instance is valid.
     /// </summary>
     bool IsValid { get; set; }
@@ -156,6 +166,11 @@ public interface IDrawnElement
     /// </summary>
     /// <returns>The size.</returns>
     LvcSize Measure();
+
+    /// <summary>
+    /// Disposes the paints holded by the instance.
+    /// </summary>
+    void DisposePaints();
 }
 
 /// <summary>

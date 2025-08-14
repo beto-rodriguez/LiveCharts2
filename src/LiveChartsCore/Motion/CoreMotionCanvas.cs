@@ -145,7 +145,7 @@ public class CoreMotionCanvas : IDisposable
                 if (DisableAnimations) task.CompleteTransition(null);
                 task.IsValid = true;
 
-                context.InitializePaintTask(task);
+                context.SelectPaint(task);
 
                 foreach (var geometry in task.GetGeometries(this))
                 {
@@ -171,7 +171,7 @@ public class CoreMotionCanvas : IDisposable
 
                 if (task.RemoveOnCompleted && task.IsValid) _ = _paintTasks.Remove(task);
 
-                context.DisposePaintTask(task);
+                context.ClearPaintSelection(task);
             }
 
             foreach (var tracker in Trackers)
@@ -323,6 +323,12 @@ public class CoreMotionCanvas : IDisposable
     /// <returns></returns>
     public void RemovePaintTask(Paint task)
     {
+        var geometriesWithOwnPaints = task.GetGeometries(this)
+                .Where(x => (x.Fill ?? x.Stroke ?? x.Paint) is not null);
+
+        foreach (var geometry in geometriesWithOwnPaints)
+            geometry.DisposePaints();
+
         task.ReleaseCanvas(this);
         _ = _paintTasks.Remove(task);
     }
@@ -332,9 +338,7 @@ public class CoreMotionCanvas : IDisposable
     /// </summary>
     public void Clear()
     {
-        foreach (var task in _paintTasks)
-            task.ReleaseCanvas(this);
-        _paintTasks.Clear();
+        Clean();
         Invalidate();
     }
 
@@ -358,11 +362,26 @@ public class CoreMotionCanvas : IDisposable
     /// </summary>
     public void Dispose()
     {
+        Clean();
+        IsValid = true;
+    }
+
+    private void Clean()
+    {
         foreach (var task in _paintTasks)
+        {
+            var geometriesWithOwnPaints = task.GetGeometries(this)
+                .Where(x => (x.Fill ?? x.Stroke ?? x.Paint) is not null);
+
+            foreach (var geometry in geometriesWithOwnPaints)
+                geometry.DisposePaints();
+
+            task.DisposeTask();
             task.ReleaseCanvas(this);
+        }
+
         _paintTasks.Clear();
         Trackers.Clear();
-        IsValid = true;
     }
 
     private void MeasureFPS(long drawStartTime)

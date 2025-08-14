@@ -69,7 +69,7 @@ public abstract class CoreSection : ChartElement, INotifyPropertyChanged
     public Paint? LabelPaint
     {
         get;
-        set => SetPaintProperty(ref field, value);
+        set => SetPaintProperty(ref field, value, PaintStyle.Text);
     } = null;
 
     /// <summary>

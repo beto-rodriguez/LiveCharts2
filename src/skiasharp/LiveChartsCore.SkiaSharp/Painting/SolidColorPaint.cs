@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -34,10 +33,6 @@ namespace LiveChartsCore.SkiaSharpView.Painting;
 /// <seealso cref="Paint" />
 public class SolidColorPaint : SkiaPaint
 {
-    private SkiaSharpDrawingContext? _drawingContext;
-    // internal for testing purposes
-    internal SKPaint? _skiaPaint;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="SolidColorPaint"/> class.
     /// </summary>
@@ -77,87 +72,36 @@ public class SolidColorPaint : SkiaPaint
     /// <inheritdoc cref="Paint.CloneTask" />
     public override Paint CloneTask()
     {
-        var clone = new SolidColorPaint
-        {
-            PaintStyle = PaintStyle,
-            Color = Color,
-            IsAntialias = IsAntialias,
-            StrokeThickness = StrokeThickness,
-            StrokeCap = StrokeCap,
-            StrokeJoin = StrokeJoin,
-            StrokeMiter = StrokeMiter,
-            FontFamily = FontFamily,
-            SKFontStyle = SKFontStyle,
-            SKTypeface = SKTypeface,
-            PathEffect = PathEffect?.Clone(),
-            ImageFilter = ImageFilter?.Clone()
-        };
+        var clone = new SolidColorPaint { Color = Color };
+        Map(this, clone);
 
         return clone;
     }
 
-    /// <inheritdoc cref="Paint.InitializeTask(DrawingContext)" />
-    public override void InitializeTask(DrawingContext drawingContext)
+    internal override void OnPaintStarted(DrawingContext drawingContext, IDrawnElement? drawnElement)
     {
         var skiaContext = (SkiaSharpDrawingContext)drawingContext;
-        _skiaPaint ??= new SKPaint();
-
+        _skiaPaint = UpdateSkiaPaint(skiaContext, drawnElement);
         _skiaPaint.Color = Color;
-        _skiaPaint.IsAntialias = IsAntialias;
-        _skiaPaint.StrokeCap = StrokeCap;
-        _skiaPaint.StrokeJoin = StrokeJoin;
-        _skiaPaint.StrokeMiter = StrokeMiter;
-        _skiaPaint.StrokeWidth = StrokeThickness;
-        _skiaPaint.Style = PaintStyle.HasFlag(PaintStyle.Stroke) ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
-
-        if (HasCustomFont) _skiaPaint.Typeface = GetSKTypeface();
-
-        if (PathEffect is not null)
-        {
-            PathEffect.CreateEffect(skiaContext);
-            _skiaPaint.PathEffect = PathEffect.SKPathEffect;
-        }
-
-        if (ImageFilter is not null)
-        {
-            ImageFilter.CreateFilter(skiaContext);
-            _skiaPaint.ImageFilter = ImageFilter.SKImageFilter;
-        }
-
-        var clip = GetClipRectangle(skiaContext.MotionCanvas);
-        if (clip != LvcRectangle.Empty)
-        {
-            _ = skiaContext.Canvas.Save();
-            skiaContext.Canvas.ClipRect(new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height));
-            _drawingContext = skiaContext;
-        }
-
-        skiaContext.ActiveSkiaPaint = _skiaPaint;
     }
 
-    /// <inheritdoc cref="Paint.Transitionate(float, Paint)"/>
-    public override Paint Transitionate(float progress, Paint target)
+    internal override Paint Transitionate(float progress, Paint target)
     {
-        if (target._source is not SolidColorPaint paint) return target;
+        if (target is not SolidColorPaint toPaint) return target;
 
-        var clone = (SolidColorPaint)CloneTask();
+        var fromPaint = (SolidColorPaint)CloneTask();
+        Map(fromPaint, toPaint, progress);
 
-        clone.StrokeThickness = StrokeThickness + progress * (paint.StrokeThickness - StrokeThickness);
-        clone.StrokeMiter = StrokeMiter + progress * (paint.StrokeMiter - StrokeMiter);
-        clone.PathEffect = PathEffect?.Transitionate(progress, paint.PathEffect);
-        clone.ImageFilter = ImageFilters.ImageFilter.Transitionate(ImageFilter, paint.ImageFilter, progress);
+        fromPaint.Color = new SKColor(
+            (byte)(Color.Red + progress * (toPaint.Color.Red - Color.Red)),
+            (byte)(Color.Green + progress * (toPaint.Color.Green - Color.Green)),
+            (byte)(Color.Blue + progress * (toPaint.Color.Blue - Color.Blue)),
+            (byte)(Color.Alpha + progress * (toPaint.Color.Alpha - Color.Alpha)));
 
-        clone.Color = new SKColor(
-            (byte)(Color.Red + progress * (paint.Color.Red - Color.Red)),
-            (byte)(Color.Green + progress * (paint.Color.Green - Color.Green)),
-            (byte)(Color.Blue + progress * (paint.Color.Blue - Color.Blue)),
-            (byte)(Color.Alpha + progress * (paint.Color.Alpha - Color.Alpha)));
-
-        return clone;
+        return fromPaint;
     }
 
-    /// <inheritdoc cref="Paint.ApplyOpacityMask(DrawingContext, float)" />
-    public override void ApplyOpacityMask(DrawingContext context, float opacity)
+    internal override void ApplyOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement)
     {
         var skiaContext = (SkiaSharpDrawingContext)context;
         var baseColor = Color;
@@ -169,8 +113,7 @@ public class SolidColorPaint : SkiaPaint
                 (byte)(baseColor.Alpha * opacity));
     }
 
-    /// <inheritdoc cref="Paint.RestoreOpacityMask(DrawingContext, float)" />
-    public override void RestoreOpacityMask(DrawingContext context, float opacity)
+    internal override void RestoreOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement)
     {
         var skiaContext = (SkiaSharpDrawingContext)context;
         skiaContext.ActiveSkiaPaint.Color = Color;
@@ -180,30 +123,7 @@ public class SolidColorPaint : SkiaPaint
     /// Returns a string that represents the current object.
     /// </summary>
     /// <returns>a string.</returns>
-    public override string ToString() => $"({Color.Red}, {Color.Green}, {Color.Blue})";
+    public override string ToString() =>
+        $"({Color.Red}, {Color.Green}, {Color.Blue})";
 
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-    /// </summary>
-    public override void Dispose()
-    {
-        // Note #301222
-        // Disposing typefaces could cause render issues.
-        // Does this causes memory leaks?
-        // Should the user dispose typefaces manually?
-        //if (HasCustomFont && _skiaPaint != null) _skiaPaint.Typeface.Dispose();
-        PathEffect?.Dispose();
-        ImageFilter?.Dispose();
-
-        if (_drawingContext is not null && GetClipRectangle(_drawingContext.MotionCanvas) != LvcRectangle.Empty)
-        {
-            _drawingContext.Canvas.Restore();
-            _drawingContext = null;
-        }
-
-        _skiaPaint?.Dispose();
-        _skiaPaint = null;
-
-        GC.SuppressFinalize(this);
-    }
 }

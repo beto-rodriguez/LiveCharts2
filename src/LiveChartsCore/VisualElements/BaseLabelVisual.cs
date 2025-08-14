@@ -50,7 +50,7 @@ public abstract class BaseLabelVisual : VisualElement
     public Paint? Paint
     {
         get => _paint;
-        set => SetPaintProperty(ref _paint, value);
+        set => SetPaintProperty(ref _paint, value, PaintStyle.Text);
     }
 
     /// <summary>
@@ -82,11 +82,6 @@ public abstract class BaseLabelVisual : VisualElement
     /// Gets or sets the padding.
     /// </summary>
     public Padding Padding { get => _padding; set => SetProperty(ref _padding, value); }
-
-    /// <summary>
-    /// Gets or sets the line height [times the text measured height].
-    /// </summary>
-    public float LineHeight { get => _lineHeight; set => SetProperty(ref _lineHeight, value); }
 
     /// <summary>
     /// Gets or sets the maximum width.
@@ -146,7 +141,6 @@ public abstract class BaseLabelVisual<TLabelGeometry> : BaseLabelVisual
         _labelGeometry.HorizontalAlign = HorizontalAlignment;
         _labelGeometry.Background = BackgroundColor;
         _labelGeometry.Padding = Padding;
-        _labelGeometry.LineHeight = LineHeight;
         _labelGeometry.MaxWidth = MaxWidth;
 
         if (Paint is not null)
@@ -179,7 +173,6 @@ public abstract class BaseLabelVisual<TLabelGeometry> : BaseLabelVisual
         _labelGeometry.HorizontalAlign = HorizontalAlignment;
         _labelGeometry.Background = BackgroundColor;
         _labelGeometry.Padding = Padding;
-        _labelGeometry.LineHeight = LineHeight;
         _labelGeometry.MaxWidth = MaxWidth;
         _labelGeometry.Paint = _paint;
 

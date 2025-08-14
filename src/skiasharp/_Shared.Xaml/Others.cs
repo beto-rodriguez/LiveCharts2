@@ -46,7 +46,11 @@ namespace LiveChartsCore.SkiaSharpView.WPF;
 [XamlClass(typeof(DrawnLabelVisual), Map = typeof(LabelGeometry), MapPath = "DrawnLabel")]
 public partial class XamlDrawnLabelVisual : BaseControl, IChartElement, IInternalInteractable
 {
-    private static readonly LabelGeometry _defaultDrawnLabel = new();
+    private static readonly LabelGeometry _defaultDrawnLabel = new()
+    {
+        HorizontalAlign = LiveChartsCore.Drawing.Align.Start,
+        VerticalAlign = LiveChartsCore.Drawing.Align.Start
+    };
     private LabelGeometry DrawnLabel => (LabelGeometry?)_baseType.DrawnElement
         ?? throw new Exception("Drawn element not found");
 }

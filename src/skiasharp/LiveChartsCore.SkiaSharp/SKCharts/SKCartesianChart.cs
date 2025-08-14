@@ -143,7 +143,7 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView
     public IChartElement? Title { get; set; }
 
     /// <inheritdoc cref="IChartView.LegendTextPaint"/>
-    public Paint? LegendTextPaint { get; set; }
+    public Paint? LegendTextPaint { get => field; set { value?.PaintStyle = PaintStyle.Text; field = value; } }
 
     /// <inheritdoc cref="IChartView.LegendBackgroundPaint"/>
     public Paint? LegendBackgroundPaint { get; set; }
@@ -152,7 +152,7 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView
     public double LegendTextSize { get; set; } = LiveCharts.DefaultSettings.LegendTextSize;
 
     /// <inheritdoc cref="IChartView.TooltipTextPaint"/>
-    public Paint? TooltipTextPaint { get; set; }
+    public Paint? TooltipTextPaint { get => field; set { value?.PaintStyle = PaintStyle.Text; field = value; } }
 
     /// <inheritdoc cref="IChartView.TooltipBackgroundPaint"/>
     public Paint? TooltipBackgroundPaint { get; set; }

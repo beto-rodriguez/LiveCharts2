@@ -70,11 +70,11 @@ public abstract class DrawingContext
     /// Initializes the task.
     /// </summary>
     /// <param name="paint"></param>
-    public abstract void InitializePaintTask(Paint paint);
+    public abstract void SelectPaint(Paint paint);
 
     /// <summary>
     /// Disposes the task.
     /// </summary>
     /// <param name="paint"></param>
-    public abstract void DisposePaintTask(Paint paint);
+    public abstract void ClearPaintSelection(Paint paint);
 }

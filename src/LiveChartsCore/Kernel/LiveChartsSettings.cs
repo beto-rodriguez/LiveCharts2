@@ -35,6 +35,7 @@ namespace LiveChartsCore.Kernel;
 /// </summary>
 public class LiveChartsSettings
 {
+    private bool _isRightToLeftDefined;
     private object? _currentProvider;
     private readonly Dictionary<Type, object> _mappers = [];
     private object _theme = new();
@@ -42,6 +43,26 @@ public class LiveChartsSettings
     internal bool HasBackedDefined => _currentProvider is not null;
     internal bool HasThemeDefined => _theme is not null and Theme;
     internal bool HasMappersDefined => _mappers.Count > 0;
+    internal bool IsRightToLeft
+    {
+        get
+        {
+            if (_isRightToLeftDefined)
+                return field;
+
+            // if the user has not defined the right to left mode, we will use the system culture.
+            var culture = System.Globalization.CultureInfo.CurrentCulture;
+            field = culture.TextInfo.IsRightToLeft;
+            _isRightToLeftDefined = true;
+
+            return field;
+        }
+        set
+        {
+            _isRightToLeftDefined = true;
+            field = value;
+        }
+    }
 
     /// <summary>
     /// Gets or sets the default easing function.
@@ -151,11 +172,6 @@ public class LiveChartsSettings
     public TimeSpan UpdateThrottlingTimeout { get; set; } = TimeSpan.FromMilliseconds(50);
 
     /// <summary>
-    /// Gets or sets a value indicating whether the text is right to left.
-    /// </summary>
-    public bool IsRightToLeft { get; set; }
-
-    /// <summary>
     /// Gets or sets a value indicating whether the pie slices are clockwise.
     /// </summary>
     public bool PieIsClockwise { get; set; } = true;
@@ -210,10 +226,10 @@ public class LiveChartsSettings
     }
 
     /// <summary>
-    /// Indicates that the library should render tooltips in a right to left mode, you also need to load
-    /// a right to left font.
+    /// Indicates that the library should render tooltips and legends in the right to left mode, if not defined,
+    /// the library will use the system culture to determine if it should render in right to left mode or not.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The current settings.</returns>
     public LiveChartsSettings UseRightToLeftSettings()
     {
         IsRightToLeft = true;

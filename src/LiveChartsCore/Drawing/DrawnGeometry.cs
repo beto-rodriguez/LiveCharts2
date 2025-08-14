@@ -39,10 +39,11 @@ public abstract partial class DrawnGeometry : Animatable, IDrawnElement
     /// </summary>
     protected DrawnGeometry()
     {
-        _TransformOriginMotionProperty = new(new LvcPoint(0.5f, 0.5f));
-        _ScaleTransformMotionProperty = new(new LvcPoint(1f, 1f));
-        _SkewTransformMotionProperty = new(new LvcPoint(1f, 1f));
+        _TransformOriginMotionProperty = new(new(0.5f, 0.5f));
+        _ScaleTransformMotionProperty = new(new(1f, 1f));
+        _SkewTransformMotionProperty = new(new(1f, 1f));
         _OpacityMotionProperty = new(1f);
+        _StrokeThicknessMotionProperty = new(1f);
     }
 
     IDrawnElement? IDrawnElement.Parent { get => _parent; set => _parent = value; }
@@ -126,6 +127,13 @@ public abstract partial class DrawnGeometry : Animatable, IDrawnElement
     /// <inheritdoc cref="IDrawnElement.HasTransform"/>
     public bool HasTransform { get; protected set; }
 
+    /// <inheritdoc cref="IDrawnElement.StrokeThickness"/>
+    [MotionProperty]
+    public partial float StrokeThickness { get; set; }
+
+    /// <inheritdoc cref="IDrawnElement.ClippingBounds"/>
+    public LvcRectangle ClippingBounds { get; set; } = LvcRectangle.Unset;
+
     bool IDrawnElement.HasTranslate
     {
         get
@@ -156,6 +164,13 @@ public abstract partial class DrawnGeometry : Animatable, IDrawnElement
     bool IDrawnElement.HasRotation => Math.Abs(RotateTransform) > 0;
 
     Paint? IDrawnElement.Paint { get; set; }
+
+    void IDrawnElement.DisposePaints()
+    {
+        Stroke?.DisposeTask();
+        Fill?.DisposeTask();
+        ((IDrawnElement)this).Paint?.DisposeTask();
+    }
 
     /// <inheritdoc cref="IDrawnElement.Measure()"/>
     public abstract LvcSize Measure();

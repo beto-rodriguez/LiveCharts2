@@ -94,6 +94,11 @@ public interface ISeries : IChartElement
     double MiniatureShapeSize { get; set; }
 
     /// <summary>
+    /// Gets or sets the miniature stroke thickness.
+    /// </summary>
+    double MiniatureStrokeThickness { get; set; }
+
+    /// <summary>
     /// Gets or sets the data padding, the distance from the edge of the chart to where the series is drawn,
     /// both coordinates (X and Y) from 0 to 1, where 0 is nothing and 1 is the axis tick (the separation between every label).
     /// </summary>
@@ -264,21 +269,6 @@ public interface ISeries : IChartElement
     /// </summary>
     /// <returns></returns>
     int GetStackGroup();
-
-    /// <summary>
-    /// </summary>
-    /// <returns></returns>
-    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
-    Sketch GetMiniaturesSketch();
-
-    /// <summary>
-    /// Return the visual element shown in tooltips and legends, this is an old method and will be replaced by
-    /// <see cref="GetMiniatureGeometry(ChartPoint?)"/>.
-    /// </summary>
-    /// <param name="point">The point.</param>
-    /// <param name="zindex">The zindex.</param>
-    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
-    IChartElement GetMiniature(ChartPoint? point, int zindex);
 
     /// <summary>
     /// Returns a geometry that represents the series in a tooltip or legend.

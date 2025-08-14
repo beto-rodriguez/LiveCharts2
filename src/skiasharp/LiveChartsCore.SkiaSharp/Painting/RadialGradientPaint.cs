@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -35,8 +34,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting;
 /// <seealso cref="SkiaPaint" />
 public class RadialGradientPaint : SkiaPaint
 {
-    private SkiaSharpDrawingContext? _drawingContext;
-    private SKPaint? _skiaPaint;
+    private SKShader? _shader;
     private readonly SKColor[] _gradientStops;
     private SKPoint _center;
     private float _radius;
@@ -88,182 +86,94 @@ public class RadialGradientPaint : SkiaPaint
     /// <inheritdoc cref="Paint.CloneTask" />
     public override Paint CloneTask()
     {
-        return new RadialGradientPaint(_gradientStops, _center, _radius, _colorPos, _tileMode)
-        {
-            PaintStyle = PaintStyle,
-            IsAntialias = IsAntialias,
-            StrokeThickness = StrokeThickness,
-            StrokeCap = StrokeCap,
-            StrokeJoin = StrokeJoin,
-            StrokeMiter = StrokeMiter,
-            FontFamily = FontFamily,
-            SKFontStyle = SKFontStyle,
-            SKTypeface = SKTypeface,
-            PathEffect = PathEffect?.Clone(),
-            ImageFilter = ImageFilter?.Clone()
-        };
-    }
-
-    /// <inheritdoc cref="Paint.InitializeTask(DrawingContext)" />
-    public override void InitializeTask(DrawingContext drawingContext)
-    {
-        var skiaContext = (SkiaSharpDrawingContext)drawingContext;
-        _skiaPaint ??= new SKPaint();
-
-        var clip = GetClipRectangle(skiaContext.MotionCanvas);
-        if (clip != LvcRectangle.Empty)
-        {
-            _ = skiaContext.Canvas.Save();
-            skiaContext.Canvas.ClipRect(new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height));
-            _drawingContext = skiaContext;
-        }
-
-        var size = GetDrawRectangleSize(skiaContext);
-        var center = new SKPoint(size.Location.X + _center.X * size.Width, size.Location.Y + _center.Y * size.Height);
-        var r = size.Location.X + size.Width > size.Location.Y + size.Height
-            ? size.Location.Y + size.Height
-            : size.Location.X + size.Width;
-        r *= _radius;
-
-        _skiaPaint.Shader = SKShader.CreateRadialGradient(
-            center,
-            r,
-            _gradientStops,
-            _colorPos,
-            _tileMode);
-
-        _skiaPaint.IsAntialias = IsAntialias;
-        _skiaPaint.StrokeWidth = StrokeThickness;
-        _skiaPaint.StrokeCap = StrokeCap;
-        _skiaPaint.StrokeJoin = StrokeJoin;
-        _skiaPaint.StrokeMiter = StrokeMiter;
-        _skiaPaint.Style = PaintStyle.HasFlag(PaintStyle.Stroke) ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
-
-        if (HasCustomFont) _skiaPaint.Typeface = GetSKTypeface();
-
-        if (PathEffect is not null)
-        {
-            PathEffect.CreateEffect(skiaContext);
-            _skiaPaint.PathEffect = PathEffect.SKPathEffect;
-        }
-
-        if (ImageFilter is not null)
-        {
-            ImageFilter.CreateFilter(skiaContext);
-            _skiaPaint.ImageFilter = ImageFilter.SKImageFilter;
-        }
-
-        skiaContext.ActiveSkiaPaint = _skiaPaint;
-    }
-
-    /// <inheritdoc cref="Paint.Transitionate(float, Paint)" />
-    public override Paint Transitionate(float progress, Paint target)
-    {
-        if (target._source is not RadialGradientPaint paint) return target;
-
-        var clone = (RadialGradientPaint)CloneTask();
-
-        clone.StrokeThickness = StrokeThickness + progress * (paint.StrokeThickness - StrokeThickness);
-        clone.StrokeMiter = StrokeMiter + progress * (paint.StrokeMiter - StrokeMiter);
-        clone.PathEffect = PathEffect?.Transitionate(progress, paint.PathEffect);
-        clone.ImageFilter = ImageFilters.ImageFilter.Transitionate(ImageFilter, paint.ImageFilter, progress);
-
-        if (paint._gradientStops.Length != _gradientStops.Length)
-            throw new ArgumentException("The gradient stops must be the same length.");
-
-        for (var i = 0; i < _gradientStops.Length; i++)
-            clone._gradientStops[i] = new SKColor(
-                (byte)(_gradientStops[i].Red + progress * (paint._gradientStops[i].Red - _gradientStops[i].Red)),
-                (byte)(_gradientStops[i].Green + progress * (paint._gradientStops[i].Green - _gradientStops[i].Green)),
-                (byte)(_gradientStops[i].Blue + progress * (paint._gradientStops[i].Blue - _gradientStops[i].Blue)),
-                (byte)(_gradientStops[i].Alpha + progress * (paint._gradientStops[i].Alpha - _gradientStops[i].Alpha)));
-
-        clone._center = new SKPoint(
-            _center.X + progress * (paint._center.X - _center.X),
-            _center.Y + progress * (paint._center.Y - _center.Y));
-
-        clone._radius = _radius + progress * (paint._radius - _radius);
-
-        if (_colorPos is not null && paint._colorPos is not null)
-        {
-            if (clone._colorPos is null || _colorPos.Length != clone._colorPos.Length)
-                throw new ArgumentException("The color positions must be the same length.");
-
-            for (var i = 0; i < _colorPos.Length; i++)
-                clone._colorPos[i] = _colorPos[i] + progress * (clone._colorPos[i] - _colorPos[i]);
-        }
+        var clone = new RadialGradientPaint(_gradientStops, _center, _radius, _colorPos, _tileMode);
+        Map(this, clone);
 
         return clone;
     }
 
-    /// <inheritdoc cref="Paint.ApplyOpacityMask(DrawingContext, float)" />
-    public override void ApplyOpacityMask(DrawingContext context, float opacity)
+    internal override void OnPaintStarted(DrawingContext drawingContext, IDrawnElement? drawnElement)
     {
-        var skiaContext = (SkiaSharpDrawingContext)context;
-        if (_skiaPaint is null) return;
-
-        var size = GetDrawRectangleSize(skiaContext);
-        var center = new SKPoint(size.Location.X + _center.X * size.Width, size.Location.Y + _center.Y * size.Height);
-        var r = size.Location.X + size.Width > size.Location.Y + size.Height
-            ? size.Location.Y + size.Height
-            : size.Location.X + size.Width;
-        r *= _radius;
-
-        _skiaPaint.Shader = SKShader.CreateRadialGradient(
-            center,
-            r,
-            [.. _gradientStops.Select(x => new SKColor(x.Red, x.Green, x.Blue, (byte)(255 * opacity)))],
-            _colorPos,
-            _tileMode);
+        var skiaContext = (SkiaSharpDrawingContext)drawingContext;
+        _skiaPaint = UpdateSkiaPaint(skiaContext, drawnElement);
+        _skiaPaint.Shader = GetShader(skiaContext);
     }
 
-    /// <inheritdoc cref="Paint.RestoreOpacityMask(DrawingContext, float)" />
-    public override void RestoreOpacityMask(DrawingContext context, float opacity)
+    internal override void ApplyOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement)
     {
-        var skiaContext = (SkiaSharpDrawingContext)context;
-        if (_skiaPaint is null) return;
+        if (_skiaPaint is null || opacity > 0.99) return;
 
-        var size = GetDrawRectangleSize(skiaContext);
-        var center = new SKPoint(size.Location.X + _center.X * size.Width, size.Location.Y + _center.Y * size.Height);
-        var r = size.Location.X + size.Width > size.Location.Y + size.Height
-            ? size.Location.Y + size.Height
-            : size.Location.X + size.Width;
-        r *= _radius;
-
-        _skiaPaint.Shader = SKShader.CreateRadialGradient(
-                center,
-                r,
-                _gradientStops,
-                _colorPos,
-                _tileMode);
+        _skiaPaint.ColorFilter =
+            SKColorFilter.CreateBlendMode(
+                new SKColor(255, 255, 255, (byte)(255 * opacity)),
+                SKBlendMode.DstIn);
     }
 
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-    /// </summary>
-    public override void Dispose()
+    internal override void RestoreOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement)
     {
-        // Note #301222
-        // Disposing typefaces could cause render issues.
-        // Does this causes memory leaks?
-        // Should the user dispose typefaces manually?
-        //if (HasCustomFont && _skiaPaint != null) _skiaPaint.Typeface.Dispose();
-        PathEffect?.Dispose();
-        ImageFilter?.Dispose();
+        if (_skiaPaint is null) return;
 
-        if (_drawingContext is not null && GetClipRectangle(_drawingContext.MotionCanvas) != LvcRectangle.Empty)
+        _skiaPaint.ColorFilter = null;
+    }
+
+    internal override Paint Transitionate(float progress, Paint target)
+    {
+        if (target is not RadialGradientPaint toPaint) return target;
+
+        var fromPaint = (RadialGradientPaint)CloneTask();
+        Map(fromPaint, toPaint, progress);
+
+        if (toPaint._gradientStops.Length != _gradientStops.Length)
+            throw new ArgumentException("The gradient stops must be the same length.");
+
+        for (var i = 0; i < _gradientStops.Length; i++)
+            fromPaint._gradientStops[i] = new SKColor(
+                (byte)(_gradientStops[i].Red + progress * (toPaint._gradientStops[i].Red - _gradientStops[i].Red)),
+                (byte)(_gradientStops[i].Green + progress * (toPaint._gradientStops[i].Green - _gradientStops[i].Green)),
+                (byte)(_gradientStops[i].Blue + progress * (toPaint._gradientStops[i].Blue - _gradientStops[i].Blue)),
+                (byte)(_gradientStops[i].Alpha + progress * (toPaint._gradientStops[i].Alpha - _gradientStops[i].Alpha)));
+
+        fromPaint._center = new SKPoint(
+            _center.X + progress * (toPaint._center.X - _center.X),
+            _center.Y + progress * (toPaint._center.Y - _center.Y));
+
+        fromPaint._radius = _radius + progress * (toPaint._radius - _radius);
+
+        if (_colorPos is not null && toPaint._colorPos is not null)
         {
-            _drawingContext.Canvas.Restore();
-            _drawingContext = null;
+            if (fromPaint._colorPos is null || _colorPos.Length != fromPaint._colorPos.Length)
+                throw new ArgumentException("The color positions must be the same length.");
+
+            for (var i = 0; i < _colorPos.Length; i++)
+                fromPaint._colorPos[i] = _colorPos[i] + progress * (fromPaint._colorPos[i] - _colorPos[i]);
         }
 
-        _skiaPaint?.Dispose();
-        _skiaPaint = null;
-
-        GC.SuppressFinalize(this);
+        return fromPaint;
     }
 
-    private static SKRect GetDrawRectangleSize(SkiaSharpDrawingContext drawingContext) =>
-        // ideally, we should also let the user use the shape bounds.
-        new(0, 0, drawingContext.Info.Width, drawingContext.Info.Height);
+    internal override void DisposeTask()
+    {
+        base.DisposeTask();
+
+        _shader?.Dispose();
+        _shader = null;
+    }
+
+    private SKShader GetShader(SkiaSharpDrawingContext skiaContext)
+    {
+        if (_shader is not null)
+            return _shader;
+
+        var space = skiaContext.Canvas.LocalClipBounds;
+        var size = new SKRect(space.Left, space.Top, space.Right, space.Bottom);
+
+        var center = new SKPoint(size.Location.X + _center.X * size.Width, size.Location.Y + _center.Y * size.Height);
+        var r = size.Location.X + size.Width > size.Location.Y + size.Height
+            ? size.Location.Y + size.Height
+            : size.Location.X + size.Width;
+        r *= _radius;
+
+        return
+            _shader = SKShader.CreateRadialGradient(center, r, _gradientStops, _colorPos, _tileMode);
+    }
 }
