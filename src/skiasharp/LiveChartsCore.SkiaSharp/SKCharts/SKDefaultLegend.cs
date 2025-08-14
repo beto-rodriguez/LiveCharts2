@@ -150,7 +150,7 @@ public class SKDefaultLegend : Container, IChartLegend
                 Text = series.Name ?? string.Empty,
                 Paint = fontPaint,
                 TextSize = textSize,
-                Padding = new Padding(8, 2, 0, 2),
+                Padding = new Padding(8, 2, 8, 2),
                 MaxWidth = (float)LiveCharts.DefaultSettings.MaxTooltipsAndLegendsLabelsWidth,
                 VerticalAlign = Align.Start,
                 HorizontalAlign = Align.Start

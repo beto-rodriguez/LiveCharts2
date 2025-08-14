@@ -196,7 +196,7 @@ public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
                         Text = point.Context.Series.Name ?? string.Empty,
                         Paint = fontPaint,
                         TextSize = textSize,
-                        Padding = new Padding(10, 0, 10, 0),
+                        Padding = new Padding(10, 0),
                         MaxWidth = lw,
                         VerticalAlign = Align.Start,
                         HorizontalAlign = Align.Start
@@ -207,7 +207,7 @@ public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
                     Text = content,
                     Paint = fontPaint,
                     TextSize = textSize,
-                    Padding = new Padding(10, 2, 0, 2),
+                    Padding = new Padding(8, 2),
                     MaxWidth = lw,
                     VerticalAlign = Align.Start,
                     HorizontalAlign = Align.Start
