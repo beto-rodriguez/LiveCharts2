@@ -149,7 +149,7 @@ public static class LiveChartsSkiaSharp
     /// Registers the text settings to use for SkiaSharp.
     /// </summary>
     /// <param name="settings">The current settings.</param>
-    /// <param name="textSettings"></param>
+    /// <param name="textSettings">The text settings to use for SkiaSharp text rendering.</param>
     /// <returns>The current settings.</returns>
     public static LiveChartsSettings HasTextSettings(
         this LiveChartsSettings settings, TextSettings textSettings)
