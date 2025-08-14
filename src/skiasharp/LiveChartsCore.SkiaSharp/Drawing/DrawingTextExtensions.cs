@@ -129,7 +129,8 @@ internal static class DrawingTextExtensions
             skPaint.Typeface = tokenResult.SuggestedTypeface;
         }
 
-        return BlobArray.Create(tokenResult, skPaint, skFont, label.MaxWidth, label.Padding);
+        var horizontalPadding = label.Padding.Left + label.Padding.Right;
+        return BlobArray.Create(tokenResult, skPaint, skFont, label.MaxWidth - horizontalPadding, label.Padding);
     }
 
     private static TokenResult Tokenize(string text, SKFont currentFont)
