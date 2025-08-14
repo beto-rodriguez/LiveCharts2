@@ -1,6 +1,7 @@
-﻿using Eto.Forms;
-using System;
+﻿using System;
+using Eto.Forms;
 using LiveChartsCore; // mark
+using ViewModelsSamples;
 
 namespace EtoFormsSample;
 
@@ -11,12 +12,8 @@ static class Program
     {
         // this is the recommended place to configure LiveCharts // mark
         LiveCharts.Configure(config => // mark
-        { // mark
-            // configure LiveCharts here... // mark
-        }); // mark
+            config.AddLiveChartsAppSettings()); // mark
 
         new Application(Eto.Platform.Detect).Run(new Form1());
     }
-
-    public record City(string Name, double Population);
 }

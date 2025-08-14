@@ -2,6 +2,7 @@
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using LiveChartsCore; // mark
+using ViewModelsSamples;
 
 namespace AvaloniaSample;
 
@@ -13,9 +14,7 @@ public partial class App : Application
 
         // this is the recommended place to configure LiveCharts // mark
         LiveCharts.Configure(config => // mark
-        { // mark
-            // configure LiveCharts here... // mark
-        }); // mark
+            config.AddLiveChartsAppSettings()); // mark
     }
 
     public override void OnFrameworkInitializationCompleted()
@@ -31,6 +30,4 @@ public partial class App : Application
 
         base.OnFrameworkInitializationCompleted();
     }
-
-    public record City(string Name, double Population);
 }
