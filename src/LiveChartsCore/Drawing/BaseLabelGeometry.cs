@@ -80,7 +80,7 @@ public abstract partial class BaseLabelGeometry : Animatable, IDrawnElement
     /// <inheritdoc cref="IDrawnElement.TranslateTransform"/>
     [MotionProperty]
     public partial LvcPoint TranslateTransform { get; set; }
-    partial void OnTransformOriginChanged(LvcPoint value) => HasTransform = true;
+    partial void OnTranslateTransformChanged(LvcPoint value) => HasTransform = true;
 
     /// <inheritdoc cref="IDrawnElement.RotateTransform"/>
     [MotionProperty]
@@ -198,7 +198,7 @@ public abstract partial class BaseLabelGeometry : Animatable, IDrawnElement
     /// <summary>
     /// This property is only available on debug mode, it indicates if the debug lines should be shown.
     /// </summary>
-    public static bool ShowDebugLines { get; set; }
+    public static bool ShowDebugLines { get; set; } = true;
 #endif
 
     Paint? IDrawnElement.Stroke { get; set; }
