@@ -145,10 +145,7 @@ internal static class DrawingTextExtensions
         var glyphs = Array.ConvertAll(result.Codepoints, cp => (ushort)cp);
 
         var builder = new SKTextBlobBuilder();
-        var runBuffer = builder.AllocatePositionedRun(
-            new SKFont(typeface, font.Size),
-            glyphs.Length
-        );
+        var runBuffer = builder.AllocatePositionedRun(font, glyphs.Length);
 
         runBuffer.SetGlyphs(glyphs);
         runBuffer.SetPositions(result.Points);
