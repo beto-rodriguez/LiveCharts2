@@ -112,61 +112,29 @@ internal static class DrawingTextExtensions
     {
         label.PeekPaintInfo(out var skPaint, out var skFont);
 
-        var tokens = Tokenize(label.Text, skFont, out var isRLT, out var suggestedTypeface);
+        var tokenResult = Tokenize(label.Text, skFont);
 
-        if (suggestedTypeface is not null)
+        if (tokenResult.SuggestedTypeface is not null)
         {
             // a suggested typeface is found when the current typeface does not support
             // the characters in the text, as a default we will use this typeface
             // as the global typeface in the library, the user can override this
             // by defining its own typeface globally or per paint instance.
 
-            LiveChartsSkiaSharp.DefaultTextSettings.Typeface ??= suggestedTypeface;
-            skFont.Typeface = suggestedTypeface;
-            skPaint.Typeface = suggestedTypeface;
+            LiveChartsSkiaSharp.DefaultTextSettings.Typeface ??= tokenResult.SuggestedTypeface;
+            skFont.Typeface = tokenResult.SuggestedTypeface;
+            skPaint.Typeface = tokenResult.SuggestedTypeface;
         }
 
-        return new BlobArray(
-            skFont, label.MaxWidth, label.Padding, isRLT, [.. tokens.Select(token => AsPositionedBlob(token, skFont, skPaint))]);
+        return BlobArray.Create(tokenResult, skPaint, skFont, label.MaxWidth, label.Padding);
     }
 
-    private static PositionedBlob AsPositionedBlob(string text, SKFont font, SKPaint paint)
-    {
-        if (text == "\n")
-            return s_newLine;
-
-        var typeface = font.Typeface ??
-            throw new Exception("A Typeface is required at this point.");
-
-        if (!s_knownShapers.TryGetValue(typeface.FamilyName, out var shaper))
-        {
-            shaper = new SKShaper(typeface);
-            s_knownShapers[typeface.FamilyName] = shaper;
-        }
-
-        var result = shaper.Shape(text, paint);
-        var glyphs = Array.ConvertAll(result.Codepoints, cp => (ushort)cp);
-
-        var builder = new SKTextBlobBuilder();
-        var runBuffer = builder.AllocatePositionedRun(font, glyphs.Length);
-
-        runBuffer.SetGlyphs(glyphs);
-        runBuffer.SetPositions(result.Points);
-
-        return new(builder.Build(), result.Width)
-        {
-#if DEBUG
-            Text = text
-#endif
-        };
-    }
-
-    private static string[] Tokenize(string text, SKFont currentFont, out bool isRLT, out SKTypeface? suggestedTypeface)
+    private static TokenResult Tokenize(string text, SKFont currentFont)
     {
         var tokens = new List<string>(text.Length);
         var sb = new StringBuilder();
-        isRLT = false;
-        suggestedTypeface = null;
+        var isRLT = false;
+        SKTypeface? suggestedTypeface = null;
 
         for (var i = 0; i < text.Length; i++)
         {
@@ -217,7 +185,7 @@ internal static class DrawingTextExtensions
         if (sb.Length > 0)
             tokens.Add(sb.ToString());
 
-        return [.. tokens];
+        return new([.. tokens], isRLT, suggestedTypeface);
     }
 
     private static bool IsTokenBoundary(int codepoint)
@@ -257,78 +225,120 @@ internal static class DrawingTextExtensions
             (>= 0x10E60 and <= 0x10E7F);
     }
 
-    internal class BlobArray(
-        SKFont font, float maxWidth, Padding padding, bool isRTL, PositionedBlob[] blobs)
+    internal class BlobArray
     {
-        private bool _hasSize;
-        public PositionedBlob[] Blobs = blobs;
-        public bool IsRTL = isRTL;
-        public SKTypeface? FallbackTypeface;
-        public List<float> LineWidths = [];
-        public SKFont Font { get; } = font;
-        public float MaxWidth { get; } = maxWidth;
-        public Padding Padding { get; } = padding;
+        private BlobArray() { }
 
-        public LvcSize Size
+        public PositionedBlob[] Blobs { get; private set; } = [];
+        public bool IsRTL { get; private set; }
+        public List<float> LineWidths { get; private set; } = [];
+        public LvcSize Size { get; private set; }
+
+        public static BlobArray Create(
+            TokenResult tokenResult, SKPaint paint, SKFont font, float maxWidth, Padding padding)
         {
-            get
+            var blobs = tokenResult.Tokens
+                .Select(token => ShapeAndPlace(token, font, paint))
+                .ToArray();
+
+            var (size, lineWidths) = Measure(blobs, font, maxWidth, padding);
+
+            return new BlobArray
             {
-                if (_hasSize)
-                    return field;
+                Blobs = blobs,
+                IsRTL = tokenResult.IsRTL,
+                LineWidths = lineWidths,
+                Size = size
+            };
+        }
 
-                var lineCount = 0;
-                var x = 0f;
-                var y = 0f;
-                var knownWidth = 0f;
-                var knownHeight = 0f;
-                var metrics = Font.Metrics;
-                var lineHeight = metrics.Descent - metrics.Ascent + metrics.Leading;
+        private static PositionedBlob ShapeAndPlace(string text, SKFont font, SKPaint paint)
+        {
+            if (text == "\n")
+                return s_newLine;
 
-                foreach (var pb in Blobs)
+            var typeface = font.Typeface ??
+                throw new Exception("A Typeface is required at this point.");
+
+            if (!s_knownShapers.TryGetValue(typeface.FamilyName, out var shaper))
+            {
+                shaper = new SKShaper(typeface);
+                s_knownShapers[typeface.FamilyName] = shaper;
+            }
+
+            var result = shaper.Shape(text, paint);
+            var glyphs = Array.ConvertAll(result.Codepoints, cp => (ushort)cp);
+
+            var builder = new SKTextBlobBuilder();
+            var runBuffer = builder.AllocatePositionedRun(font, glyphs.Length);
+
+            runBuffer.SetGlyphs(glyphs);
+            runBuffer.SetPositions(result.Points);
+
+            return new(builder.Build(), result.Width);
+        }
+
+        private static (LvcSize Size, List<float> LineWidths) Measure(
+            PositionedBlob[] blobs, SKFont font, float maxWidth, Padding padding)
+        {
+            var lineCount = 0;
+            var x = 0f;
+            var y = 0f;
+            var knownWidth = 0f;
+            var knownHeight = 0f;
+            var metrics = font.Metrics;
+            var lineHeight = metrics.Descent - metrics.Ascent + metrics.Leading;
+            var widths = new List<float>();
+
+            foreach (var pb in blobs)
+            {
+                pb.Line = lineCount;
+                var b = pb.Blob;
+                var w = pb.Width;
+
+                if (x + w > maxWidth || pb == s_newLine)
                 {
-                    pb.Line = lineCount;
-                    var b = pb.Blob;
-                    var w = pb.Width;
-
-                    if (x + w > MaxWidth || pb == s_newLine)
-                    {
-                        lineCount++;
-                        LineWidths.Add(x); // Store the width of the line, so we can use it later for alignment.
-                        x = 0;
-                        y += lineHeight;
-                        knownHeight = y;
-                    }
-
-                    pb.Position = new SKPoint(x + Padding.Left, y + Padding.Top - metrics.Ascent);
-                    x += w;
-
-                    if (x > knownWidth)
-                        knownWidth = x;
+                    lineCount++;
+                    widths.Add(x); // Store the width of the line, so we can use it later for alignment.
+                    x = 0;
+                    y += lineHeight;
+                    knownHeight = y;
                 }
 
-                LineWidths.Add(x);
-                knownHeight += lineHeight;
+                pb.Position = new SKPoint(x + padding.Left, y + padding.Top - metrics.Ascent);
+                x += w;
 
-                _hasSize = true;
-
-                field = new LvcSize(
-                    width: knownWidth + Padding.Left + Padding.Right,
-                    height: knownHeight + Padding.Top + Padding.Bottom);
-
-                return field;
+                if (x > knownWidth)
+                    knownWidth = x;
             }
-        } = new();
+
+            widths.Add(x);
+            knownHeight += lineHeight;
+
+            var size = new LvcSize(
+                width: knownWidth + padding.Left + padding.Right,
+                height: knownHeight + padding.Top + padding.Bottom);
+
+            return (size, widths);
+        }
     }
 
     internal class PositionedBlob(SKTextBlob blob, float width)
     {
-        public int Line;
-        public SKPoint Position;
+        public int Line { get; set; }
+        public SKPoint Position { get; set; }
         public float Width { get; } = width;
         public SKTextBlob Blob { get; } = blob;
 #if DEBUG
         public string Text = string.Empty;
 #endif
+    }
+
+    internal class TokenResult(string[] tokens, bool isRTL, SKTypeface? suggestedTypeface)
+    {
+        public string[] Tokens { get; } = tokens;
+        public bool IsRTL { get; } = isRTL;
+        public SKTypeface? SuggestedTypeface { get; } = suggestedTypeface;
     }
 
     internal readonly struct BlobArraySettings(
