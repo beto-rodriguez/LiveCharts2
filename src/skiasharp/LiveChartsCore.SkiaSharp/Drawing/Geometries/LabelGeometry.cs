@@ -31,8 +31,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <inheritdoc cref="BaseLabelGeometry" />
 public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
-    private string _previousText = string.Empty;
-    private double _previousTextSize = 0f;
+    private (string Text, float Size, Padding Padding, float MaxWidth) _previousKey = (string.Empty, 0, new(), 0);
     private SKPaint? _previousPaint;
     private BlobArray _activeBlobs = new(new(), 0f, new(), false, []);
 
@@ -42,21 +41,20 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
         {
             PeekPaintInfo(out var skPaint, out _);
 
-            var changed =                           // changed if:
-                _previousText != Text ||            //   - the text changed
-                _previousTextSize != TextSize ||    //   - the text size changed
-                _previousPaint != skPaint;       //   - the paint changed, otherwise we will be using disposed resources
+            var changed =                         // changed if:
+                _previousKey != BuildBlobKey() || //   - the key changed, structural equality between previous and current
+                _previousPaint != skPaint;        //   - the paint changed, otherwise we will be using disposed resources
 
             if (!changed || string.IsNullOrEmpty(Text))
                 return _activeBlobs;
 
             DisposeActiveBlobs();
 
-            _previousText = Text;
-            _previousTextSize = TextSize;
+            _activeBlobs = this.AsBlobArray();
+            _previousKey = BuildBlobKey();
             _previousPaint = skPaint;
 
-            return _activeBlobs = this.AsBlobArray();
+            return _activeBlobs;
         }
     }
 
@@ -94,6 +92,9 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
         skPaint.IsAntialias = true;
         skPaint.LcdRenderText = true;
     }
+
+    private (string Text, float Size, Padding Padding, float MaxWidth) BuildBlobKey() =>
+        (Text, TextSize, Padding, MaxWidth);
 
     private void DisposeActiveBlobs()
     {
