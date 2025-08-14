@@ -141,7 +141,8 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
             ?? TryCreateFont("DejaVu Sans") // Linux
             ?? throw new InvalidOperationException(
                 "LiveCharts could not find a default typeface, please set the DefaultTypeface property in the TextSettings. " +
-                "You can do this by calling LiveCharts.Configure(config => config.HasTextSettings(new TextSettings { DefaultTypeface = SKTypeface.FromFamilyName(\"Arial\") }));")
+                "LiveCharts could not find a default typeface. Please set the DefaultTypeface property using HasTextSettings, e.g.: " +
+                "LiveCharts.Configure(config => config.HasTextSettings(new TextSettings { DefaultTypeface = SKTypeface.FromFamilyName(\"Arial\") }));")
         );
 
     internal bool IsGlobalSKTypeface =>
