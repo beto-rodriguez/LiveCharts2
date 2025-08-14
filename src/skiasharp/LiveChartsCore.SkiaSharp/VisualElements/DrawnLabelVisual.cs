@@ -31,7 +31,11 @@ namespace LiveChartsCore.SkiaSharpView.VisualElements;
 /// </summary>
 public class DrawnLabelVisual : Visual
 {
-    private readonly LabelGeometry _drawnElement = new();
+    private readonly LabelGeometry _drawnElement = new()
+    {
+        HorizontalAlign = Align.Start,
+        VerticalAlign = Align.Start
+    };
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DrawnLabelVisual"/> class.

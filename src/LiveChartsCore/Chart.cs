@@ -788,7 +788,6 @@ public abstract class Chart
             var size = v.GetHitBox().Size;
             v.DrawnElement.X = ControlSize.Width * 0.5f - size.Width * 0.5f;
             v.DrawnElement.Y = 0;
-            v.DrawnElement.TranslateTransform = new(size.Width * 0.5f, size.Height * 0.5f);
             AddVisual(((IChartElement)v).ChartElementSource);
             return;
         }
