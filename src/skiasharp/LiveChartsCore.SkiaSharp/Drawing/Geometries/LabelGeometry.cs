@@ -33,7 +33,7 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
 {
     private (string Text, float Size, Padding Padding, float MaxWidth) _previousKey = (string.Empty, 0, new(), 0);
     private SKPaint? _previousPaint;
-    private BlobArray _activeBlobs = new(new(), 0f, new(), false, []);
+    private BlobArray _activeBlobs = BlobArray.Empty();
 
     internal BlobArray BlobArray
     {
@@ -59,15 +59,8 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
     }
 
     /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
-    public virtual void Draw(SkiaSharpDrawingContext context)
-    {
-        PeekPaintInfo(out var skPaint, out _);
-
-        var settings = new BlobArraySettings(
-            HorizontalAlign, VerticalAlign, Background, Opacity * context.ActiveOpacity);
-
-        context.Canvas.DrawBlobArray(BlobArray, settings, X, Y, skPaint);
-    }
+    public virtual void Draw(SkiaSharpDrawingContext context) =>
+        context.Canvas.DrawLabel(this, Opacity * context.ActiveOpacity);
 
     /// <inheritdoc cref="DrawnGeometry.Measure()" />
     public override LvcSize Measure()

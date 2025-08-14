@@ -37,16 +37,19 @@ internal static class DrawingTextExtensions
     internal static readonly PositionedBlob s_newLine = new(SKTextBlob.Create(string.Empty, new()), -1);
     private static readonly Dictionary<string, SKShaper> s_knownShapers = [];
 
-    internal static void DrawBlobArray(
-        this SKCanvas canvas, BlobArray blobArray, BlobArraySettings settings, float x, float y, SKPaint paint)
+    internal static void DrawLabel(this SKCanvas canvas, LabelGeometry label, float opacity = 1)
     {
+        label.PeekPaintInfo(out var paint, out _);
+
+        var blobArray = label.BlobArray;
         var size = blobArray.Size;
 
-        // relative horizontal alignment, the alignment is relative to the x and y coordinates
-        var rha = settings.GetHorizontalAlign(size);
+        var x = label.X;
+        var y = label.Y;
 
-        // relative vertical alignment, the alignment is relative to the x and y coordinates
-        var rva = settings.GetVerticalAlign(size);
+        // relative horizontal/vertical alignment, the alignment is relative to the x and y coordinates
+        var rha = GetRelativeX(label.HorizontalAlign, size);
+        var rva = GetRelativeY(label.VerticalAlign, size);
 
         // relative aligned x and y coordinates
         var rax = x + rha;
@@ -76,17 +79,17 @@ internal static class DrawingTextExtensions
         }
 #endif
 
-        if (settings.Background != LvcColor.Empty)
+        if (label.Background != LvcColor.Empty)
         {
-            var bg = settings.Background;
+            var bg = label.Background;
 
-            var c = new SKColor(bg.R, bg.G, bg.B, (byte)(bg.A * settings.Opacity));
+            var c = new SKColor(bg.R, bg.G, bg.B, (byte)(bg.A * opacity));
             using var bgPaint = new SKPaint { Color = c };
 
             canvas.DrawRect(rax, ray, size.Width, size.Height, bgPaint);
         }
 
-        var horizontalPadding = blobArray.Padding.Left + blobArray.Padding.Right;
+        var horizontalPadding = label.Padding.Left + label.Padding.Right;
         var lao = 0f;
 
         foreach (var pb in blobArray.Blobs)
@@ -225,6 +228,28 @@ internal static class DrawingTextExtensions
             (>= 0x10E60 and <= 0x10E7F);
     }
 
+    private static float GetRelativeX(Align align, LvcSize size)
+    {
+        return align switch
+        {
+            Align.Start => 0f,
+            Align.Middle => -size.Width / 2f,
+            Align.End => -size.Width,
+            _ => throw new ArgumentOutOfRangeException(nameof(align), align, null)
+        };
+    }
+
+    private static float GetRelativeY(Align align, LvcSize size)
+    {
+        return align switch
+        {
+            Align.Start => 0f,
+            Align.Middle => -size.Height / 2f,
+            Align.End => -size.Height,
+            _ => throw new ArgumentOutOfRangeException(nameof(align), align, null)
+        };
+    }
+
     internal class BlobArray
     {
         private BlobArray() { }
@@ -233,6 +258,8 @@ internal static class DrawingTextExtensions
         public bool IsRTL { get; private set; }
         public List<float> LineWidths { get; private set; } = [];
         public LvcSize Size { get; private set; }
+
+        public static BlobArray Empty() => new();
 
         public static BlobArray Create(
             TokenResult tokenResult, SKPaint paint, SKFont font, float maxWidth, Padding padding)
@@ -339,36 +366,5 @@ internal static class DrawingTextExtensions
         public string[] Tokens { get; } = tokens;
         public bool IsRTL { get; } = isRTL;
         public SKTypeface? SuggestedTypeface { get; } = suggestedTypeface;
-    }
-
-    internal readonly struct BlobArraySettings(
-        Align horizontal, Align vertical, LvcColor background, float opacity)
-    {
-        public Align Horizontal { get; } = horizontal;
-        public Align Vertical { get; } = vertical;
-        public LvcColor Background { get; } = background;
-        public float Opacity { get; } = opacity;
-
-        public float GetHorizontalAlign(LvcSize size)
-        {
-            return Horizontal switch
-            {
-                Align.Start => 0f,
-                Align.Middle => -size.Width / 2f,
-                Align.End => -size.Width,
-                _ => throw new ArgumentOutOfRangeException(nameof(Align), Horizontal, null)
-            };
-        }
-
-        public float GetVerticalAlign(LvcSize size)
-        {
-            return Vertical switch
-            {
-                Align.Start => 0f,
-                Align.Middle => -size.Height / 2f,
-                Align.End => -size.Height,
-                _ => throw new ArgumentOutOfRangeException(nameof(Vertical), Vertical, null)
-            };
-        }
     }
 }
