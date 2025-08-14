@@ -40,12 +40,12 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
     {
         get
         {
-            var info = GetPaintInfo();
+            PeekPaintInfo(out var skPaint, out _);
 
             var changed =                           // changed if:
                 _previousText != Text ||            //   - the text changed
                 _previousTextSize != TextSize ||    //   - the text size changed
-                _previousPaint != info.Paint;       //   - the paint changed, otherwise we will be using disposed resources
+                _previousPaint != skPaint;       //   - the paint changed, otherwise we will be using disposed resources
 
             if (!changed || string.IsNullOrEmpty(Text))
                 return _activeBlobs;
@@ -54,21 +54,21 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
 
             _previousText = Text;
             _previousTextSize = TextSize;
-            _previousPaint = info.Paint;
+            _previousPaint = skPaint;
 
-            return _activeBlobs = Text.AsBlobArray(info.Font, info.Paint, MaxWidth, Padding);
+            return _activeBlobs = this.AsBlobArray();
         }
     }
 
     /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
     public virtual void Draw(SkiaSharpDrawingContext context)
     {
-        var info = GetPaintInfo();
+        PeekPaintInfo(out var skPaint, out _);
 
         var settings = new BlobArraySettings(
             HorizontalAlign, VerticalAlign, Background, Opacity * context.ActiveOpacity);
 
-        context.Canvas.DrawBlobArray(BlobArray, settings, X, Y, info.Paint);
+        context.Canvas.DrawBlobArray(BlobArray, settings, X, Y, skPaint);
     }
 
     /// <inheritdoc cref="DrawnGeometry.Measure()" />
@@ -81,6 +81,20 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
             : BlobArray.Size.GetRotatedSize(RotateTransform);
     }
 
+    internal void PeekPaintInfo(out SKPaint skPaint, out SKFont font)
+    {
+        var lvcSkiaPaint = (SkiaPaint?)Paint;
+        skPaint = lvcSkiaPaint?.UpdateSkiaPaint(null, null)
+            ?? throw new Exception("A paint is required to measure a label.");
+
+        font = lvcSkiaPaint._fontBuilder(lvcSkiaPaint.GetSKTypeface(), TextSize);
+
+        skPaint.TextSize = font.Size;
+        skPaint.Typeface = font.Typeface;
+        skPaint.IsAntialias = true;
+        skPaint.LcdRenderText = true;
+    }
+
     private void DisposeActiveBlobs()
     {
         foreach (var positionedBlob in _activeBlobs.Blobs)
@@ -90,28 +104,6 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<SkiaSharpDrawingCo
 
             positionedBlob.Blob.Dispose();
         }
-    }
-
-    private PaintInfo GetPaintInfo()
-    {
-        var lvcSkiaPaint = (SkiaPaint?)Paint;
-        var skiaPaint = lvcSkiaPaint?.UpdateSkiaPaint(null, null)
-            ?? throw new Exception("A paint is required to measure a label.");
-
-        var font = lvcSkiaPaint._fontBuilder(lvcSkiaPaint.GetSKTypeface(), TextSize);
-
-        skiaPaint.TextSize = font.Size;
-        skiaPaint.Typeface = font.Typeface;
-        skiaPaint.IsAntialias = true;
-        skiaPaint.LcdRenderText = true;
-
-        return new PaintInfo(skiaPaint, font);
-    }
-
-    private class PaintInfo(SKPaint paint, SKFont font)
-    {
-        public SKPaint Paint { get; set; } = paint;
-        public SKFont Font { get; set; } = font;
     }
 
     internal override void OnDisposed()

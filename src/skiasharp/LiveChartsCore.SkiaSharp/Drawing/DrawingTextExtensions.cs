@@ -26,6 +26,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using LiveChartsCore.Drawing;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using SkiaSharp;
 using SkiaSharp.HarfBuzz;
 
@@ -107,9 +108,11 @@ internal static class DrawingTextExtensions
         }
     }
 
-    internal static BlobArray AsBlobArray(this string text, SKFont font, SKPaint paint, float maxWidth, Padding padding)
+    internal static BlobArray AsBlobArray(this LabelGeometry label)
     {
-        var tokens = Tokenize(text, font, out var isRLT, out var suggestedTypeface);
+        label.PeekPaintInfo(out var skPaint, out var skFont);
+
+        var tokens = Tokenize(label.Text, skFont, out var isRLT, out var suggestedTypeface);
 
         if (suggestedTypeface is not null)
         {
@@ -119,12 +122,12 @@ internal static class DrawingTextExtensions
             // by defining its own typeface globally or per paint instance.
 
             LiveChartsSkiaSharp.DefaultTextSettings.Typeface ??= suggestedTypeface;
-            font.Typeface = suggestedTypeface;
-            paint.Typeface = suggestedTypeface;
+            skFont.Typeface = suggestedTypeface;
+            skPaint.Typeface = suggestedTypeface;
         }
 
         return new BlobArray(
-            font, maxWidth, padding, isRLT, [.. tokens.Select(token => AsPositionedBlob(token, font, paint))]);
+            skFont, label.MaxWidth, label.Padding, isRLT, [.. tokens.Select(token => AsPositionedBlob(token, skFont, skPaint))]);
     }
 
     private static PositionedBlob AsPositionedBlob(string text, SKFont font, SKPaint paint)
