@@ -207,13 +207,8 @@ public abstract partial class Paint : Animatable
 
     internal abstract Paint Transitionate(float progress, Paint target);
 
-    internal IEnumerable<IDrawnElement> GetGeometries(CoreMotionCanvas canvas)
-    {
-        var geometries = GetGeometriesByCanvas(canvas) ?? [];
-
-        foreach (var geometry in geometries)
-            yield return geometry;
-    }
+    internal HashSet<IDrawnElement> GetGeometries(CoreMotionCanvas canvas) =>
+        GetGeometriesByCanvas(canvas) ?? [];
 
     internal abstract void OnPaintStarted(DrawingContext drawingContext, IDrawnElement? drawnElement);
 
