@@ -31,6 +31,7 @@ using System;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Rendering;
@@ -45,6 +46,7 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia;
 /// <inheritdoc cref="ICartesianChartView" />
 public abstract partial class ChartControl : UserControl, IChartView, ICustomHitTest
 {
+    private bool _isInViewport;
     private DateTime _lastPresed;
     private readonly int _tolearance = 50;
 
@@ -57,6 +59,7 @@ public abstract partial class ChartControl : UserControl, IChartView, ICustomHit
 
         AttachedToVisualTree += OnAttachedToVisualTree;
         DetachedFromVisualTree += OnDetachedFromVisualTree;
+        EffectiveViewportChanged += OnEffectiveViewportChanged;
 
         PointerPressed += OnPointerPressed;
         PointerMoved += OnPointerMoved;
@@ -73,6 +76,7 @@ public abstract partial class ChartControl : UserControl, IChartView, ICustomHit
     /// <inheritdoc cref="IChartView.CoreCanvas"/>
     public MotionCanvas CanvasView => (MotionCanvas)Content!;
 
+    bool IChartView.IsInViewport => _isInViewport;
     bool IChartView.DesignerMode => Design.IsDesignMode;
     bool IChartView.IsDarkMode => Application.Current?.ActualThemeVariant == ThemeVariant.Dark;
     LvcColor IChartView.BackColor
@@ -94,6 +98,15 @@ public abstract partial class ChartControl : UserControl, IChartView, ICustomHit
     {
         StopObserving();
         CoreChart?.Unload();
+    }
+
+    private void OnEffectiveViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)
+    {
+        var newValue = e.EffectiveViewport.Intersects(Bounds);
+        var changed = newValue != _isInViewport;
+        _isInViewport = newValue;
+        if (changed && _isInViewport)
+            CoreChart.Update();
     }
 
     void IChartView.InvokeOnUIThread(Action action) =>
