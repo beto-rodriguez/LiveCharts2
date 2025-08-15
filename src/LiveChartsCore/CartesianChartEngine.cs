@@ -352,6 +352,7 @@ public class CartesianChartEngine(
         {
             Trace.WriteLine(
                 $"[Cartesian chart measured]".PadRight(60) +
+                $"geometries: {Canvas.CountGeometries()}    " +
                 $"thread: {Environment.CurrentManagedThreadId}");
         }
 #endif

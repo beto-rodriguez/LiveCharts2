@@ -112,7 +112,8 @@ public class PieChartEngine(
         if (LiveCharts.EnableLogging)
         {
             Trace.WriteLine(
-                $"[Cartesian chart measured]".PadRight(60) +
+                $"[Pie chart measured]".PadRight(60) +
+                $"geometries: {Canvas.CountGeometries()}    " +
                 $"thread: {Environment.CurrentManagedThreadId}");
         }
 #endif
