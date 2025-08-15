@@ -1,4 +1,5 @@
-﻿using LiveChartsCore.SkiaSharpView;
+﻿using LiveChartsCore.Motion;
+using LiveChartsCore.SkiaSharpView;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LiveChartsCore.UnitTesting;
@@ -12,6 +13,7 @@ public class TestsInitializer
         // The test framework will call this method once -BEFORE- each test run.
 
         LiveCharts.Configure(config => config.UseDefaults());
+        CoreMotionCanvas.IsTesting = true;
     }
 
     [AssemblyCleanup]

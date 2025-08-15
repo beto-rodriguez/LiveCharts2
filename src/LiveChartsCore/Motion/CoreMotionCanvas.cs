@@ -80,6 +80,7 @@ public class CoreMotionCanvas : IDisposable
 
 #if DEBUG
     internal static long DebugElapsedMilliseconds { get; set; } = -1;
+    internal static bool IsTesting { get; set; }
 #endif
 
     internal bool DisableAnimations { get; set; }
