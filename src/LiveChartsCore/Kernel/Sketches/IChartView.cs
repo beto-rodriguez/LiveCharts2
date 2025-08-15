@@ -51,6 +51,11 @@ public interface IChartView
     Chart CoreChart { get; }
 
     /// <summary>
+    /// Gets whether the control is currently in the viewport.
+    /// </summary>
+    bool IsInViewport { get; }
+
+    /// <summary>
     /// Gets whether the control is in designer mode.
     /// </summary>
     bool DesignerMode { get; }
