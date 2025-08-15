@@ -808,7 +808,7 @@ public abstract class Chart
     }
 
     /// <summary>
-    /// Determines whether this instance is rendering the previous mesure request.
+    /// Determines whether this instance is rendering the previous measure request.
     /// </summary>
     protected bool IsRendering()
     {
