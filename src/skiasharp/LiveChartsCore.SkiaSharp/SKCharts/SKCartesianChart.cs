@@ -57,6 +57,7 @@ public class SKCartesianChart : InMemorySkiaSharpChart, ICartesianChartView
         CoreChart = Core;
     }
 
+    bool IChartView.IsInViewport => true;
     bool IChartView.DesignerMode => false;
     bool IChartView.IsDarkMode => false;
 
