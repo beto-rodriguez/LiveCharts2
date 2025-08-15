@@ -46,6 +46,7 @@ public class CoreMotionCanvas : IDisposable
     private double _averageRenderTime = 0;
     private double _totalFrames = double.Epsilon;
     private double _totalSeconds = 0;
+    internal long _lastFrameTimestamp;
     internal TimeSpan _nextFrameDelay = s_baseFrameDelay;
     private static readonly double s_ticksPerMillisecond = Stopwatch.Frequency / 1000d;
     private static readonly TimeSpan s_baseFrameDelay = TimeSpan.FromMilliseconds(1000d / LiveCharts.RenderingSettings.LiveChartsRenderLoopFPS);
@@ -131,6 +132,7 @@ public class CoreMotionCanvas : IDisposable
 
         var showFps = LiveCharts.RenderingSettings.ShowFPS;
         var drawStartTime = s_clock.ElapsedTicks;
+        _lastFrameTimestamp = drawStartTime;
 
         lock (Sync)
         {

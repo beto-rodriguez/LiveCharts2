@@ -61,6 +61,7 @@ public abstract class Chart
     private readonly HashSet<ChartPoint> _activePoints = [];
     private LvcSize _previousSize = new();
     private int _nextSeriesId = 0;
+    private long _lastMeasureTimeStamp = 0;
 
 #if NET5_0_OR_GREATER
     private readonly bool _isMobile;
@@ -804,6 +805,35 @@ public abstract class Chart
         }
 
         throw new Exception("The title must be a Visual or a VisualElement.");
+    }
+
+    /// <summary>
+    /// Determines whether this instance is rendering the previous mesure request.
+    /// </summary>
+    protected bool IsRendering()
+    {
+        // Why is this method needed?
+        // It is a fix for https://github.com/beto-rodriguez/LiveCharts2/issues/1944
+        // it ensures that the chart is not measured while the canvas is not rendering frames.
+        // there could be multiple reasons for this including:
+        // - the chart is not visible
+        // - the chart is virtualized by the UI framework
+
+        // after trying https://github.com/beto-rodriguez/LiveCharts2/pull/1945 I realized
+        // that it will be messy to handle this in the UI framework side, I tested and
+        // there are multiple reasons where the UI framework fails to notify whether the
+        // control is the viewport, and also there are even framework that do not provide an API for this.
+
+        // so lets handle this on our side. we will save the time the chart was measured and the time the canvas
+        // rendered the last frame, if both timestamps are different it means the canvas is rendering
+        // and we are safe to keep measuring, otherwise we skip measuring until the canvas renders a new frame.
+
+        var canMeasure = Canvas._lastFrameTimestamp != _lastMeasureTimeStamp;
+
+        if (canMeasure)
+            _lastMeasureTimeStamp = Canvas._lastFrameTimestamp;
+
+        return canMeasure;
     }
 
     private List<ChartPoint> CleanHoveredPoints(HashSet<ChartPoint> hovered)
