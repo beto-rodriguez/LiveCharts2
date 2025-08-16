@@ -51,7 +51,7 @@ public class CartesianChartEngine(
     private readonly ICartesianChartView _chartView = view;
     private BoundedDrawnGeometry? _zoomingSection;
     private double _zoomingSpeed = 0;
-    private ZoomAndPanMode _zoomMode;
+    private ZoomAndPanMode _zoomAndPanMode;
     private ChartElement? _previousDrawMarginFrame;
     private const double MaxAxisBound = 0.05;
     private const double MaxAxisActiveBound = 0.15;
@@ -164,6 +164,8 @@ public class CartesianChartEngine(
     {
         if (YAxes is null || XAxes is null) return;
 
+        var fitToBounts = _zoomAndPanMode.Supports(InteractiveOptions.FitToBounds);
+
         var speed = _zoomingSpeed < 0.1 ? 0.1 : (_zoomingSpeed > 0.95 ? 0.95 : _zoomingSpeed);
         speed = 1 - speed;
 
@@ -174,7 +176,7 @@ public class CartesianChartEngine(
 
         var m = direction == ZoomDirection.ZoomIn ? speed : 1 / speed;
 
-        if (_zoomMode.Supports(InteractiveOptions.ZoomX))
+        if (_zoomAndPanMode.Supports(InteractiveOptions.ZoomX))
         {
             for (var index = 0; index < XAxes.Length; index++)
             {
@@ -222,19 +224,20 @@ public class CartesianChartEngine(
 
                 if (direction == ZoomDirection.ZoomIn && maxt - mint < limits.MinDelta) continue;
 
-                var xm = (max - min) * (isActive ? MaxAxisActiveBound : MaxAxisBound);
-                if (maxt > limits.DataMax && direction == ZoomDirection.ZoomOut) maxt = limits.DataMax + xm;
-                if (mint < limits.DataMin && direction == ZoomDirection.ZoomOut) mint = limits.DataMin - xm;
+                if (fitToBounts)
+                {
+                    var xm = (max - min) * (isActive ? MaxAxisActiveBound : MaxAxisBound);
+                    if (maxt > limits.DataMax && direction == ZoomDirection.ZoomOut) maxt = limits.DataMax + xm;
+                    if (mint < limits.DataMin && direction == ZoomDirection.ZoomOut) mint = limits.DataMin - xm;
+                }
 
-                // even on inverted axes, this is not supported,
-                // inverted axes handles this just with the magic of math..
-                if (maxt < mint) (maxt, mint) = (mint, maxt);
+                if (maxt < mint) (maxt, mint) = (mint, maxt); // is this needed?
 
                 xi.SetLimits(mint, maxt);
             }
         }
 
-        if (_zoomMode.Supports(InteractiveOptions.ZoomY))
+        if (_zoomAndPanMode.Supports(InteractiveOptions.ZoomY))
         {
             for (var index = 0; index < YAxes.Length; index++)
             {
@@ -281,13 +284,14 @@ public class CartesianChartEngine(
 
                 if (direction == ZoomDirection.ZoomIn && maxt - mint < limits.MinDelta) continue;
 
-                var ym = (max - min) * (isActive ? MaxAxisActiveBound : MaxAxisBound);
-                if (maxt > limits.DataMax && direction == ZoomDirection.ZoomOut) maxt = limits.DataMax + ym;
-                if (mint < limits.DataMin && direction == ZoomDirection.ZoomOut) mint = limits.DataMin - ym;
+                if (fitToBounts)
+                {
+                    var ym = (max - min) * (isActive ? MaxAxisActiveBound : MaxAxisBound);
+                    if (maxt > limits.DataMax && direction == ZoomDirection.ZoomOut) maxt = limits.DataMax + ym;
+                    if (mint < limits.DataMin && direction == ZoomDirection.ZoomOut) mint = limits.DataMin - ym;
+                }
 
-                // even on inverted axes, this is not supported,
-                // inverted axes handles this just with the magic of math..
-                if (maxt < mint) (maxt, mint) = (mint, maxt);
+                if (maxt < mint) (maxt, mint) = (mint, maxt); // is this needed?
 
                 yi.SetLimits(mint, maxt);
             }
@@ -304,7 +308,7 @@ public class CartesianChartEngine(
     /// <returns></returns>
     public void Pan(LvcPoint delta, bool isActive)
     {
-        if (_zoomMode.Supports(InteractiveOptions.PanX))
+        if (_zoomAndPanMode.Supports(InteractiveOptions.PanX))
         {
             for (var index = 0; index < XAxes.Length; index++)
             {
@@ -321,7 +325,7 @@ public class CartesianChartEngine(
             }
         }
 
-        if (_zoomMode.Supports(InteractiveOptions.PanY))
+        if (_zoomAndPanMode.Supports(InteractiveOptions.PanY))
         {
             for (var index = 0; index < YAxes.Length; index++)
             {
@@ -380,7 +384,7 @@ public class CartesianChartEngine(
         YAxes = [.. y.Select(x => x.ChartElementSource).Cast<ICartesianAxis>()];
 
         _zoomingSpeed = _chartView.ZoomingSpeed;
-        _zoomMode = _chartView.ZoomMode;
+        _zoomAndPanMode = _chartView.ZoomMode;
 
         var theme = GetTheme();
 
@@ -922,7 +926,7 @@ public class CartesianChartEngine(
         if (caretesianView.ZoomMode.Supports(InteractiveOptions.InvertPanningPointerTrigger))
             isSecondaryAction = !isSecondaryAction;
 
-        if (isSecondaryAction && _zoomMode != ZoomAndPanMode.None)
+        if (isSecondaryAction && _zoomAndPanMode != ZoomAndPanMode.None)
         {
             if (_zoomingSection is null) InitializeZoomingSection();
             if (_zoomingSection is null)
@@ -943,8 +947,8 @@ public class CartesianChartEngine(
             _zoomingSection.X = x;
             _zoomingSection.Y = y;
 
-            var xMode = (_zoomMode & ZoomAndPanMode.X) == ZoomAndPanMode.X;
-            var yMode = (_zoomMode & ZoomAndPanMode.Y) == ZoomAndPanMode.Y;
+            var xMode = (_zoomAndPanMode & ZoomAndPanMode.X) == ZoomAndPanMode.X;
+            var yMode = (_zoomAndPanMode & ZoomAndPanMode.Y) == ZoomAndPanMode.Y;
 
             if (!xMode)
             {
@@ -976,8 +980,8 @@ public class CartesianChartEngine(
         {
             if (_zoomingSection is null) return;
 
-            var xMode = (_zoomMode & ZoomAndPanMode.X) == ZoomAndPanMode.X;
-            var yMode = (_zoomMode & ZoomAndPanMode.Y) == ZoomAndPanMode.Y;
+            var xMode = (_zoomAndPanMode & ZoomAndPanMode.X) == ZoomAndPanMode.X;
+            var yMode = (_zoomAndPanMode & ZoomAndPanMode.Y) == ZoomAndPanMode.Y;
 
             var x = point.X;
             var y = point.Y;
@@ -1020,7 +1024,7 @@ public class CartesianChartEngine(
                 return;
             }
 
-            if ((_zoomMode & ZoomAndPanMode.X) == ZoomAndPanMode.X)
+            if ((_zoomAndPanMode & ZoomAndPanMode.X) == ZoomAndPanMode.X)
             {
                 for (var i = 0; i < XAxes.Length; i++)
                 {
@@ -1065,7 +1069,7 @@ public class CartesianChartEngine(
                 }
             }
 
-            if ((_zoomMode & ZoomAndPanMode.Y) == ZoomAndPanMode.Y)
+            if ((_zoomAndPanMode & ZoomAndPanMode.Y) == ZoomAndPanMode.Y)
             {
                 for (var i = 0; i < YAxes.Length; i++)
                 {
@@ -1154,9 +1158,11 @@ public class CartesianChartEngine(
 
     private void BouncePanningBack()
     {
+        if (!_zoomAndPanMode.Supports(InteractiveOptions.FitToBounds)) return;
+
         // this method ensures that the current panning is inside the data bounds.
 
-        if (_zoomMode.Supports(InteractiveOptions.PanX))
+        if (_zoomAndPanMode.Supports(InteractiveOptions.PanX))
         {
             for (var index = 0; index < XAxes.Length; index++)
             {
@@ -1177,7 +1183,7 @@ public class CartesianChartEngine(
             }
         }
 
-        if (_zoomMode.Supports(InteractiveOptions.PanY))
+        if (_zoomAndPanMode.Supports(InteractiveOptions.PanY))
         {
             for (var index = 0; index < YAxes.Length; index++)
             {
