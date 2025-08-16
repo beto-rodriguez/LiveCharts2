@@ -72,7 +72,7 @@ internal partial class PointerController : INativePointerController
         var p = e.GetCurrentPoint(element);
         if (p is null) return;
 
-#if DESKTOP
+#if WINDOWS || DESKTOP
         _ = element.CapturePointer(e.Pointer);
 #endif
 
@@ -103,7 +103,7 @@ internal partial class PointerController : INativePointerController
         var p = e.GetCurrentPoint(element);
         if (p is null) return;
 
-#if DESKTOP
+#if WINDOWS || DESKTOP
         element.ReleasePointerCapture(element.PointerCaptures[0]);
 #endif
 
