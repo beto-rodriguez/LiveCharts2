@@ -1148,7 +1148,9 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
     }
 
     private void InitializeLine(BaseLineGeometry lineGeometry, CartesianChartEngine cartesianChart) =>
-        lineGeometry.Animate(EasingFunction ?? cartesianChart.ActualEasingFunction, AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed);
+        lineGeometry.Animate(
+            EasingFunction ?? cartesianChart.ActualEasingFunction,
+            AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed);
 
     private void InitializeTick(
         AxisVisualSeprator visualSeparator, CartesianChartEngine cartesianChart, TLineGeometry? subTickGeometry = null)
@@ -1165,7 +1167,9 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
             visualSeparator.Tick = tickGeometry;
         }
 
-        tickGeometry.Animate(EasingFunction ?? cartesianChart.ActualEasingFunction, AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed);
+        tickGeometry.Animate(
+            EasingFunction ?? cartesianChart.ActualEasingFunction,
+            AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed);
     }
 
     private void InitializeSubticks(
@@ -1196,7 +1200,8 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
             EasingFunction ?? cartesianChart.ActualEasingFunction,
             AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed,
             BaseLabelGeometry.XProperty,
-            BaseLabelGeometry.YProperty);
+            BaseLabelGeometry.YProperty,
+            BaseLabelGeometry.OpacityProperty);
     }
 
     private void UpdateSeparator(
