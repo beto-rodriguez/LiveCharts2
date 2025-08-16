@@ -112,14 +112,14 @@ public class PieChartEngine(
         if (LiveCharts.EnableLogging)
         {
             Trace.WriteLine(
-                $"[Cartesian chart measured]".PadRight(60) +
+                $"[Pie chart measured]".PadRight(60) +
+                $"geometries: {Canvas.CountGeometries()}    " +
                 $"thread: {Environment.CurrentManagedThreadId}");
         }
 #endif
 
-        if (!IsLoaded) return; // <- prevents a visual glitch where the visual call the measure method
-                               // while they are not visible, the problem is when the control is visible again
-                               // the animations are not as expected because previously it ran in an invalid case.
+        if (!IsLoaded || !IsRendering())
+            return;
 
         InvokeOnMeasuring();
 
