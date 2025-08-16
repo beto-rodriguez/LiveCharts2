@@ -564,18 +564,6 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Determines whether the specified zoom and pan mode supports the given interactive option.
-    /// </summary>
-    /// <param name="mode"></param>
-    /// <param name="option"></param>
-    /// <returns></returns>
-    public static bool Supports(this ZoomAndPanMode mode, InteractiveOptions option)
-    {
-        var intOption = (int)option;
-        return ((int)mode & intOption) == intOption;
-    }
-
-    /// <summary>
     /// Builds a enumerator with the necessary data to build an Spline.
     /// </summary>
     /// <param name="source"></param>

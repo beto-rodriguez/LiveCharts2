@@ -36,32 +36,36 @@ public enum ZoomAndPanMode
     None = 0,
 
     /// <summary>
-    /// Enables zooming and panning on the X axis, but does not enable fitting to bounds.
-    /// </summary>
-    XFree = InteractiveOptions.PanX | InteractiveOptions.ZoomX,
-
-    /// <summary>
-    /// Enables zooming and panning on the Y axis, but does not enable fitting to bounds.
-    /// </summary>
-    YFree = InteractiveOptions.PanY | InteractiveOptions.ZoomY,
-
-    /// <summary>
-    /// Enables zooming and panning on both axes, but does not enable fitting to bounds.
-    /// </summary>
-    BothFree = XFree | YFree,
-
-    /// <summary>
     /// Enables zooming and panning on the X axis and enables fitting to bounds.
     /// </summary>
-    X = XFree | InteractiveOptions.FitToBounds,
+    X = 1 << 0,
 
     /// <summary>
     /// Enables zooming and panning on the Y axis and enables fitting to bounds.
     /// </summary>
-    Y = YFree | InteractiveOptions.FitToBounds,
+    Y = 1 << 1,
+
+    /// <summary>
+    /// Disables data bounds fitting when zooming or panning, this flag must be used in conjunction with
+    /// <see cref="X"/>, <see cref="Y"/>, or <see cref="Both"/> to have an effect.
+    /// </summary>
+    NoFit = 1 << 2,
+
+    /// <summary>
+    /// Disables the "Zoom by section" feature, which allows zooming in on a specific section of the chart.
+    /// </summary>
+    NoZoomBySection = 1 << 3,
+
+    /// <summary>
+    /// When this flag is present the panning will be triggered using the right click on desktop devices and the touch-and-hold gesture on touch devices.
+    /// The "Zoom by section" feature will be triggered to the left click on desktop devices and the touch-and-hold gesture on touch devices,
+    /// this flag must be used in conjunction with
+    /// <see cref="X"/>, <see cref="Y"/>, or <see cref="Both"/> to have an effect.
+    /// </summary>
+    InvertPanningPointerTrigger = 1 << 4,
 
     /// <summary>
     /// Enables zooming and panning on both axes and enables fitting to bounds.
     /// </summary>
-    Both = BothFree | InteractiveOptions.FitToBounds
+    Both = X | Y
 }

@@ -40,7 +40,7 @@ public sealed partial class CartesianChart : ChartControl, ICartesianChartView
     internal override void OnScrolled(object? sender, ScrollEventArgs args)
     {
         var c = (CartesianChartEngine)CoreChart;
-        c.Zoom(args.Location, args.ScrollDelta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+        c.Zoom(ZoomMode, args.Location, args.ScrollDelta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
     }
 
     internal override void OnPinched(object? sender, PinchEventArgs args)
@@ -48,7 +48,7 @@ public sealed partial class CartesianChart : ChartControl, ICartesianChartView
         var c = (CartesianChartEngine)CoreChart;
         var p = args.PinchStart;
         var pivot = new LvcPoint(p.X, p.Y);
-        c.Zoom(pivot, ZoomDirection.DefinedByScaleFactor, args.Scale, true);
+        c.Zoom(ZoomMode, pivot, ZoomDirection.DefinedByScaleFactor, args.Scale);
 
         // hack:
         // when the pinch started, the isPanning property is set to true,

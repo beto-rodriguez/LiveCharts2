@@ -876,7 +876,7 @@ public abstract class Chart
                     var dx = _pointerPanningPosition.X - _pointerPreviousPanningPosition.X;
                     var dy = _pointerPanningPosition.Y - _pointerPreviousPanningPosition.Y;
 
-                    cartesianChart.Pan(new LvcPoint(dx, dy), _isPanning);
+                    cartesianChart.Pan(((ICartesianChartView)cartesianChart.View).ZoomMode, new LvcPoint(dx, dy));
                     _pointerPreviousPanningPosition = new LvcPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
                 }
             }));

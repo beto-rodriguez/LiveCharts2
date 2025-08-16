@@ -41,7 +41,7 @@ public partial class CartesianChart : ChartControl, ICartesianChartView
     internal override void OnScrolled(object? sender, Native.Events.ScrollEventArgs args)
     {
         var c = (CartesianChartEngine)CoreChart;
-        c.Zoom(args.Location, args.ScrollDelta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+        c.Zoom(ZoomMode, args.Location, args.ScrollDelta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
     }
 
     internal override void OnPinched(object? sender, Native.Events.PinchEventArgs args)
@@ -50,6 +50,6 @@ public partial class CartesianChart : ChartControl, ICartesianChartView
         var p = args.PinchStart;
         var s = c.ControlSize;
         var pivot = new LvcPoint((float)(p.X * s.Width), (float)(p.Y * s.Height));
-        c.Zoom(pivot, ZoomDirection.DefinedByScaleFactor, args.Scale, true);
+        c.Zoom(ZoomMode, pivot, ZoomDirection.DefinedByScaleFactor, args.Scale);
     }
 }

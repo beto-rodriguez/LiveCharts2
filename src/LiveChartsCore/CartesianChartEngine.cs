@@ -51,10 +51,8 @@ public class CartesianChartEngine(
     private readonly ICartesianChartView _chartView = view;
     private BoundedDrawnGeometry? _zoomingSection;
     private double _zoomingSpeed = 0;
-    private ZoomAndPanMode _zoomAndPanMode;
     private ChartElement? _previousDrawMarginFrame;
     private const double MaxAxisBound = 0.05;
-    private const double MaxAxisActiveBound = 0.15;
     private HashSet<CartesianChartEngine>? _sharedEvents;
     private HashSet<ICartesianAxis> _crosshair = [];
     private ICartesianAxis[]? _virtualX;
@@ -153,18 +151,24 @@ public class CartesianChartEngine(
     }
 
     /// <summary>
-    /// Zooms to the specified pivot.
+    /// Zooms at the specified pivot.
     /// </summary>
-    /// <param name="pivot">The pivot.</param>
-    /// <param name="direction">The direction.</param>
-    /// <param name="scaleFactor">The scale factor.</param>
-    /// <param name="isActive"></param>
-    /// <returns></returns>
-    public void Zoom(LvcPoint pivot, ZoomDirection direction, double? scaleFactor = null, bool isActive = false)
+    /// <param name="flags">
+    /// The flags, for example ZoomAndPanMode.X | ZoomAndPanMode.NoFit, will zoom only in the x axis
+    /// and will ignore the fit to bounds feature.
+    /// </param>
+    /// <param name="pivot">The pivot, is the reference point, the center where the zoom operation is calculated.</param>
+    /// <param name="direction">The direction in or out.</param>
+    /// <param name="scaleFactor">
+    /// The scale factor, requires direction param to be <see cref="ZoomDirection.DefinedByScaleFactor"/>, then
+    /// we can define the scale factor, for example 0.8 means to decrease the viewport 20%, and 1.2 means to increase
+    /// the viewport 20%, this is method normally used in touch devices when pinching.
+    /// </param>
+    public void Zoom(ZoomAndPanMode flags, LvcPoint pivot, ZoomDirection direction, double? scaleFactor = null)
     {
         if (YAxes is null || XAxes is null) return;
 
-        var fitToBounts = _zoomAndPanMode.Supports(InteractiveOptions.FitToBounds);
+        var fitToBounts = !flags.HasFlag(ZoomAndPanMode.NoFit);
 
         var speed = _zoomingSpeed < 0.1 ? 0.1 : (_zoomingSpeed > 0.95 ? 0.95 : _zoomingSpeed);
         speed = 1 - speed;
@@ -176,7 +180,7 @@ public class CartesianChartEngine(
 
         var m = direction == ZoomDirection.ZoomIn ? speed : 1 / speed;
 
-        if (_zoomAndPanMode.Supports(InteractiveOptions.ZoomX))
+        if (flags.HasFlag(ZoomAndPanMode.X))
         {
             for (var index = 0; index < XAxes.Length; index++)
             {
@@ -226,7 +230,7 @@ public class CartesianChartEngine(
 
                 if (fitToBounts)
                 {
-                    var xm = (max - min) * (isActive ? MaxAxisActiveBound : MaxAxisBound);
+                    var xm = (max - min) * MaxAxisBound;
                     if (maxt > limits.DataMax) maxt = limits.DataMax + xm;
                     if (mint < limits.DataMin) mint = limits.DataMin - xm;
                 }
@@ -237,7 +241,7 @@ public class CartesianChartEngine(
             }
         }
 
-        if (_zoomAndPanMode.Supports(InteractiveOptions.ZoomY))
+        if (flags.HasFlag(ZoomAndPanMode.Y))
         {
             for (var index = 0; index < YAxes.Length; index++)
             {
@@ -286,7 +290,7 @@ public class CartesianChartEngine(
 
                 if (fitToBounts)
                 {
-                    var ym = (max - min) * (isActive ? MaxAxisActiveBound : MaxAxisBound);
+                    var ym = (max - min) * MaxAxisBound;
                     if (maxt > limits.DataMax) maxt = limits.DataMax + ym;
                     if (mint < limits.DataMin) mint = limits.DataMin - ym;
                 }
@@ -303,12 +307,14 @@ public class CartesianChartEngine(
     /// <summary>
     /// Pans with the specified delta.
     /// </summary>
+    /// <param name="flags">
+    /// The flags, for example ZoomAndPanMode.X | ZoomAndPanMode.NoFit, will pan only in the x axis
+    /// and will ignore the fit to bounds feature.
+    /// </param>
     /// <param name="delta">The delta.</param>
-    /// <param name="isActive">Indicates whether the pointer is down.</param>
-    /// <returns></returns>
-    public void Pan(LvcPoint delta, bool isActive)
+    public void Pan(ZoomAndPanMode flags, LvcPoint delta)
     {
-        if (_zoomAndPanMode.Supports(InteractiveOptions.PanX))
+        if (flags.HasFlag(ZoomAndPanMode.X))
         {
             for (var index = 0; index < XAxes.Length; index++)
             {
@@ -325,7 +331,7 @@ public class CartesianChartEngine(
             }
         }
 
-        if (_zoomAndPanMode.Supports(InteractiveOptions.PanY))
+        if (flags.HasFlag(ZoomAndPanMode.Y))
         {
             for (var index = 0; index < YAxes.Length; index++)
             {
@@ -343,6 +349,206 @@ public class CartesianChartEngine(
         }
 
         IsZoomingOrPanning = true;
+    }
+
+    /// <summary>
+    /// Starts a zooming section operation at the specified point.
+    /// </summary>
+    /// <param name="flags">
+    /// The flags, for example ZoomAndPanMode.X | ZoomAndPanMode.NoFit, will zoom only in the x axis
+    /// and will ignore the fit to bounds feature.
+    /// </param>
+    /// <param name="point">The point to start the panning operation.</param>
+    public void StartZoomingSection(ZoomAndPanMode flags, LvcPoint point)
+    {
+        if (flags.HasFlag(ZoomAndPanMode.NoZoomBySection))
+            return;
+        if (_zoomingSection is null)
+            InitializeZoomingSection();
+        if (_zoomingSection is null)
+            throw new Exception("Something went wrong when initializing the zoomming section.");
+
+        _sectionZoomingStart = point;
+
+        var x = point.X;
+        var y = point.Y;
+
+        if (x < DrawMarginLocation.X || x > DrawMarginLocation.X + DrawMarginSize.Width ||
+            y < DrawMarginLocation.Y || y > DrawMarginLocation.Y + DrawMarginSize.Height)
+        {
+            _sectionZoomingStart = null;
+            return;
+        }
+
+        _zoomingSection.X = x;
+        _zoomingSection.Y = y;
+
+        var xMode = (flags & ZoomAndPanMode.X) == ZoomAndPanMode.X;
+        var yMode = (flags & ZoomAndPanMode.Y) == ZoomAndPanMode.Y;
+
+        if (!xMode)
+        {
+            _zoomingSection.X = DrawMarginLocation.X;
+            _zoomingSection.Width = DrawMarginSize.Width;
+        }
+
+        if (!yMode)
+        {
+            _zoomingSection.Y = DrawMarginLocation.Y;
+            _zoomingSection.Height = DrawMarginSize.Height;
+        }
+    }
+
+    /// <summary>
+    /// Grows the zooming section to the specified point.
+    /// </summary>
+    /// <param name="flags">
+    /// The flags, for example ZoomAndPanMode.X | ZoomAndPanMode.NoFit, will zoom only in the x axis
+    /// and will ignore the fit to bounds feature.
+    /// </param>
+    /// <param name="point">The point.</param>
+    public void GrowZoomingSection(ZoomAndPanMode flags, LvcPoint point)
+    {
+        if (_zoomingSection is null || _sectionZoomingStart is null) return;
+
+        var xMode = (flags & ZoomAndPanMode.X) == ZoomAndPanMode.X;
+        var yMode = (flags & ZoomAndPanMode.Y) == ZoomAndPanMode.Y;
+
+        var x = point.X;
+        var y = point.Y;
+
+        if (x < DrawMarginLocation.X) x = DrawMarginLocation.X;
+        if (x > DrawMarginLocation.X + DrawMarginSize.Width) x = DrawMarginLocation.X + DrawMarginSize.Width;
+        if (y < DrawMarginLocation.Y) y = DrawMarginLocation.Y;
+        if (y > DrawMarginLocation.Y + DrawMarginSize.Height) y = DrawMarginLocation.Y + DrawMarginSize.Height;
+
+        if (xMode) _zoomingSection.Width = x - _sectionZoomingStart.Value.X;
+        if (yMode) _zoomingSection.Height = y - _sectionZoomingStart.Value.Y;
+
+        Canvas.Invalidate();
+    }
+
+    /// <summary>
+    /// End the zooming section operation at the specified point, and applies the zoom.
+    /// </summary>
+    /// <param name="flags">
+    /// The flags, for example ZoomAndPanMode.X | ZoomAndPanMode.NoFit, will zoom only in the x axis
+    /// and will ignore the fit to bounds feature.
+    /// </param>
+    /// <param name="point">The point.</param>
+    public void EndZoomingSection(ZoomAndPanMode flags, LvcPoint point)
+    {
+        if (_zoomingSection is null || _sectionZoomingStart is null) return;
+
+        var xy = Math.Sqrt(
+            Math.Pow(point.X - _sectionZoomingStart.Value.X, 2) + Math.Pow(point.Y - _sectionZoomingStart.Value.Y, 2));
+
+        if (xy < 15)
+        {
+            _zoomingSection.X = -1;
+            _zoomingSection.Y = -1;
+            _zoomingSection.Width = 0;
+            _zoomingSection.Height = 0;
+            Update();
+            _sectionZoomingStart = null;
+            return;
+        }
+
+        if ((flags & ZoomAndPanMode.X) == ZoomAndPanMode.X)
+        {
+            for (var i = 0; i < XAxes.Length; i++)
+            {
+                var x = XAxes[i];
+
+                var xi = ScaleUIPoint(_sectionZoomingStart.Value, i, 0)[0];
+                var xj = ScaleUIPoint(point, i, 0)[0];
+
+                double xMax, xMin;
+
+                if (xi > xj)
+                {
+                    xMax = xi;
+                    xMin = xj;
+                }
+                else
+                {
+                    xMax = xj;
+                    xMin = xi;
+                }
+
+                if (xMax > (x.MaxLimit ?? double.MaxValue)) xMax = x.MaxLimit ?? double.MaxValue;
+                if (xMin < (x.MinLimit ?? double.MinValue)) xMin = x.MinLimit ?? double.MinValue;
+
+                var min = x.MinZoomDelta ?? x.DataBounds.MinDelta * 3;
+
+                if (xMax - xMin > min)
+                {
+                    x.SetLimits(xMin, xMax);
+                }
+                else
+                {
+                    if (x.MaxLimit is not null && x.MinLimit is not null)
+                    {
+                        var d = xMax - xMin;
+                        var ad = x.MaxLimit.Value - x.MinLimit.Value;
+                        var c = (ad - d) * 0.5;
+
+                        x.SetLimits(xMin - c, xMax + c);
+                    }
+                }
+            }
+        }
+
+        if ((flags & ZoomAndPanMode.Y) == ZoomAndPanMode.Y)
+        {
+            for (var i = 0; i < YAxes.Length; i++)
+            {
+                var y = YAxes[i];
+
+                var yi = ScaleUIPoint(_sectionZoomingStart.Value, 0, i)[1];
+                var yj = ScaleUIPoint(point, 0, i)[1];
+
+                double yMax, yMin;
+
+                if (yi > yj)
+                {
+                    yMax = yi;
+                    yMin = yj;
+                }
+                else
+                {
+                    yMax = yj;
+                    yMin = yi;
+                }
+
+                if (yMax > (y.MaxLimit ?? double.MaxValue)) yMax = y.MaxLimit ?? double.MaxValue;
+                if (yMin < (y.MinLimit ?? double.MinValue)) yMin = y.MinLimit ?? double.MinValue;
+
+                var min = y.MinZoomDelta ?? y.DataBounds.MinDelta * 3;
+
+                if (yMax - yMin > min)
+                {
+                    y.SetLimits(yMin, yMax);
+                }
+                else
+                {
+                    if (y.MaxLimit is not null && y.MinLimit is not null)
+                    {
+                        var d = yMax - yMin;
+                        var ad = y.MaxLimit.Value - y.MinLimit.Value;
+                        var c = (ad - d) * 0.5;
+
+                        y.SetLimits(yMin - c, yMax + c);
+                    }
+                }
+            }
+        }
+
+        _zoomingSection.X = -1;
+        _zoomingSection.Y = -1;
+        _zoomingSection.Width = 0;
+        _zoomingSection.Height = 0;
+        _sectionZoomingStart = null;
     }
 
     /// <summary>
@@ -384,7 +590,6 @@ public class CartesianChartEngine(
         YAxes = [.. y.Select(x => x.ChartElementSource).Cast<ICartesianAxis>()];
 
         _zoomingSpeed = _chartView.ZoomingSpeed;
-        _zoomAndPanMode = _chartView.ZoomMode;
 
         var theme = GetTheme();
 
@@ -919,45 +1124,12 @@ public class CartesianChartEngine(
     protected internal override void InvokePointerDown(LvcPoint point, bool isSecondaryAction)
     {
         var caretesianView = (ICartesianChartView)View;
-        if (caretesianView.ZoomMode.Supports(InteractiveOptions.InvertPanningPointerTrigger))
+        if (caretesianView.ZoomMode.HasFlag(ZoomAndPanMode.InvertPanningPointerTrigger))
             isSecondaryAction = !isSecondaryAction;
 
-        if (isSecondaryAction && _zoomAndPanMode != ZoomAndPanMode.None)
+        if (isSecondaryAction)
         {
-            if (_zoomingSection is null) InitializeZoomingSection();
-            if (_zoomingSection is null)
-                throw new Exception("Something went wrong when initializing the zoomming section.");
-
-            _sectionZoomingStart = point;
-
-            var x = point.X;
-            var y = point.Y;
-
-            if (x < DrawMarginLocation.X || x > DrawMarginLocation.X + DrawMarginSize.Width ||
-                y < DrawMarginLocation.Y || y > DrawMarginLocation.Y + DrawMarginSize.Height)
-            {
-                _sectionZoomingStart = null;
-                return;
-            }
-
-            _zoomingSection.X = x;
-            _zoomingSection.Y = y;
-
-            var xMode = (_zoomAndPanMode & ZoomAndPanMode.X) == ZoomAndPanMode.X;
-            var yMode = (_zoomAndPanMode & ZoomAndPanMode.Y) == ZoomAndPanMode.Y;
-
-            if (!xMode)
-            {
-                _zoomingSection.X = DrawMarginLocation.X;
-                _zoomingSection.Width = DrawMarginSize.Width;
-            }
-
-            if (!yMode)
-            {
-                _zoomingSection.Y = DrawMarginLocation.Y;
-                _zoomingSection.Height = DrawMarginSize.Height;
-            }
-
+            StartZoomingSection(_chartView.ZoomMode, point);
             return;
         }
 
@@ -974,23 +1146,7 @@ public class CartesianChartEngine(
 
         if (_sectionZoomingStart is not null)
         {
-            if (_zoomingSection is null) return;
-
-            var xMode = (_zoomAndPanMode & ZoomAndPanMode.X) == ZoomAndPanMode.X;
-            var yMode = (_zoomAndPanMode & ZoomAndPanMode.Y) == ZoomAndPanMode.Y;
-
-            var x = point.X;
-            var y = point.Y;
-
-            if (x < DrawMarginLocation.X) x = DrawMarginLocation.X;
-            if (x > DrawMarginLocation.X + DrawMarginSize.Width) x = DrawMarginLocation.X + DrawMarginSize.Width;
-            if (y < DrawMarginLocation.Y) y = DrawMarginLocation.Y;
-            if (y > DrawMarginLocation.Y + DrawMarginSize.Height) y = DrawMarginLocation.Y + DrawMarginSize.Height;
-
-            if (xMode) _zoomingSection.Width = x - _sectionZoomingStart.Value.X;
-            if (yMode) _zoomingSection.Height = y - _sectionZoomingStart.Value.Y;
-
-            Canvas.Invalidate();
+            GrowZoomingSection(_chartView.ZoomMode, point);
             return;
         }
 
@@ -1006,120 +1162,11 @@ public class CartesianChartEngine(
     {
         if (_sectionZoomingStart is not null)
         {
-            if (_zoomingSection is null) return;
-
-            var xy = Math.Sqrt(Math.Pow(point.X - _sectionZoomingStart.Value.X, 2) + Math.Pow(point.Y - _sectionZoomingStart.Value.Y, 2));
-            if (xy < 15)
-            {
-                _zoomingSection.X = -1;
-                _zoomingSection.Y = -1;
-                _zoomingSection.Width = 0;
-                _zoomingSection.Height = 0;
-                Update();
-                _sectionZoomingStart = null;
-                return;
-            }
-
-            if ((_zoomAndPanMode & ZoomAndPanMode.X) == ZoomAndPanMode.X)
-            {
-                for (var i = 0; i < XAxes.Length; i++)
-                {
-                    var x = XAxes[i];
-
-                    var xi = ScaleUIPoint(_sectionZoomingStart.Value, i, 0)[0];
-                    var xj = ScaleUIPoint(point, i, 0)[0];
-
-                    double xMax, xMin;
-
-                    if (xi > xj)
-                    {
-                        xMax = xi;
-                        xMin = xj;
-                    }
-                    else
-                    {
-                        xMax = xj;
-                        xMin = xi;
-                    }
-
-                    if (xMax > (x.MaxLimit ?? double.MaxValue)) xMax = x.MaxLimit ?? double.MaxValue;
-                    if (xMin < (x.MinLimit ?? double.MinValue)) xMin = x.MinLimit ?? double.MinValue;
-
-                    var min = x.MinZoomDelta ?? x.DataBounds.MinDelta * 3;
-
-                    if (xMax - xMin > min)
-                    {
-                        x.SetLimits(xMin, xMax);
-                    }
-                    else
-                    {
-                        if (x.MaxLimit is not null && x.MinLimit is not null)
-                        {
-                            var d = xMax - xMin;
-                            var ad = x.MaxLimit.Value - x.MinLimit.Value;
-                            var c = (ad - d) * 0.5;
-
-                            x.SetLimits(xMin - c, xMax + c);
-                        }
-                    }
-                }
-            }
-
-            if ((_zoomAndPanMode & ZoomAndPanMode.Y) == ZoomAndPanMode.Y)
-            {
-                for (var i = 0; i < YAxes.Length; i++)
-                {
-                    var y = YAxes[i];
-
-                    var yi = ScaleUIPoint(_sectionZoomingStart.Value, 0, i)[1];
-                    var yj = ScaleUIPoint(point, 0, i)[1];
-
-                    double yMax, yMin;
-
-                    if (yi > yj)
-                    {
-                        yMax = yi;
-                        yMin = yj;
-                    }
-                    else
-                    {
-                        yMax = yj;
-                        yMin = yi;
-                    }
-
-                    if (yMax > (y.MaxLimit ?? double.MaxValue)) yMax = y.MaxLimit ?? double.MaxValue;
-                    if (yMin < (y.MinLimit ?? double.MinValue)) yMin = y.MinLimit ?? double.MinValue;
-
-                    var min = y.MinZoomDelta ?? y.DataBounds.MinDelta * 3;
-
-                    if (yMax - yMin > min)
-                    {
-                        y.SetLimits(yMin, yMax);
-                    }
-                    else
-                    {
-                        if (y.MaxLimit is not null && y.MinLimit is not null)
-                        {
-                            var d = yMax - yMin;
-                            var ad = y.MaxLimit.Value - y.MinLimit.Value;
-                            var c = (ad - d) * 0.5;
-
-                            y.SetLimits(yMin - c, yMax + c);
-                        }
-                    }
-                }
-            }
-
-            _zoomingSection.X = -1;
-            _zoomingSection.Y = -1;
-            _zoomingSection.Width = 0;
-            _zoomingSection.Height = 0;
-            _sectionZoomingStart = null;
-
+            EndZoomingSection(_chartView.ZoomMode, point);
             return;
         }
 
-        BouncePanningBack();
+        BouncePanningBack(_chartView.ZoomMode);
         base.InvokePointerUp(point, isSecondaryAction);
     }
 
@@ -1152,13 +1199,14 @@ public class CartesianChartEngine(
         _ = _sharedEvents.Add(this);
     }
 
-    private void BouncePanningBack()
+    private void BouncePanningBack(ZoomAndPanMode flags)
     {
-        if (!_zoomAndPanMode.Supports(InteractiveOptions.FitToBounds)) return;
+        if (_chartView.ZoomMode.HasFlag(ZoomAndPanMode.NoFit))
+            return;
 
         // this method ensures that the current panning is inside the data bounds.
 
-        if (_zoomAndPanMode.Supports(InteractiveOptions.PanX))
+        if (flags.HasFlag(ZoomAndPanMode.X))
         {
             for (var index = 0; index < XAxes.Length; index++)
             {
@@ -1181,7 +1229,7 @@ public class CartesianChartEngine(
             }
         }
 
-        if (_zoomAndPanMode.Supports(InteractiveOptions.PanY))
+        if (flags.HasFlag(ZoomAndPanMode.Y))
         {
             for (var index = 0; index < YAxes.Length; index++)
             {

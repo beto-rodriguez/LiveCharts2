@@ -43,6 +43,6 @@ public partial class CartesianChart : ChartControl, ICartesianChartView
         var c = (CartesianChartEngine)CoreChart;
         var p = new LvcPoint((float)e.OffsetX, (float)e.OffsetY);
 
-        c.Zoom(p, e.DeltaY < 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+        c.Zoom(ZoomMode, p, e.DeltaY < 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
     }
 }
