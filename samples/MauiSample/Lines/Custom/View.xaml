@@ -48,7 +48,7 @@
             -->
             <lvc:XamlLineSeries
                 x:TypeArguments="x:Double, vms:MyGeometry"
-                Values="{Binding Values3}"
+                Values="{Binding Values4}"
                 Fill="{x:Null}"
                 GeometrySize="20"/>
 
