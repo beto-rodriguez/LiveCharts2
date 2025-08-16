@@ -121,11 +121,6 @@ public abstract class Chart
     public ToolTipMetaData AutoToolTipsInfo { get; internal set; } = new();
 
     /// <summary>
-    /// Gets the bounds of the chart.
-    /// </summary>
-    public AnimatableContainer ActualBounds { get; } = new();
-
-    /// <summary>
     /// Gets the kind of the chart.
     /// </summary>
     public ChartKind Kind { get; protected set; }
@@ -520,21 +515,6 @@ public abstract class Chart
                 }
             });
         });
-    }
-
-    /// <summary>
-    /// Updates the bounds tracker.
-    /// </summary>
-    protected void UpdateBounds()
-    {
-        ActualBounds.Location = DrawMarginLocation;
-        ActualBounds.Size = DrawMarginSize;
-
-        if (_isFirstDraw)
-        {
-            ActualBounds.Animate(ActualEasingFunction, ActualAnimationsSpeed);
-            _ = Canvas.Trackers.Add(ActualBounds);
-        }
     }
 
     /// <summary>

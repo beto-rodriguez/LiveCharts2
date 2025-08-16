@@ -29,7 +29,6 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Helpers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
-using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore;
@@ -58,7 +57,6 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
     private Bounds? _dataBounds = null;
     private Bounds? _visibleDataBounds = null;
     private LvcColor _labelsBackground = new(255, 255, 255);
-    private AnimatableAxisBounds _animatableBounds = new();
 
     #endregion
 
@@ -69,8 +67,8 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
     Bounds IPlane.DataBounds => _dataBounds ?? throw new Exception("bounds not found");
 
     Bounds IPlane.VisibleDataBounds => _visibleDataBounds ?? throw new Exception("bounds not found");
-
-    AnimatableAxisBounds IPlane.ActualBounds => _animatableBounds;
+    double IPlane.MotionMinLimit => 0;
+    double IPlane.MotionMaxLimit => 0;
 
     /// <inheritdoc cref="IPlane.Name"/>
     public string? Name { get; set; } = null;
@@ -185,13 +183,6 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
         var s = axisTick.Value;
         if (s < _minStep) s = _minStep;
         if (ForceStepToMin) s = _minStep;
-
-        if (!_animatableBounds.HasPreviousState)
-        {
-            _animatableBounds
-                .Animate(EasingFunction ?? chart.ActualEasingFunction, AnimationsSpeed ?? chart.ActualAnimationsSpeed);
-            _ = polarChart.Canvas.Trackers.Add(_animatableBounds);
-        }
 
         if (NamePaint is not null && NamePaint != Paint.Default)
         {
@@ -360,7 +351,7 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
                 visualSeparator.Label.X = location.X;
                 visualSeparator.Label.Y = location.Y;
 
-                if (!_animatableBounds.HasPreviousState) visualSeparator.Label.CompleteTransition(null);
+                visualSeparator.Label.CompleteTransition(null);
             }
 
             if (visualSeparator.Geometry is not null)
@@ -374,7 +365,7 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
                     lineSeparator.Separator.Y = innerPos.Y;
                     lineSeparator.Separator.Y1 = location.Y;
 
-                    if (!_animatableBounds.HasPreviousState) lineSeparator.Separator.CompleteTransition(null);
+                    lineSeparator.Separator.CompleteTransition(null);
                 }
 
                 if (visualSeparator is RadialAxisVisualSeparator polarSeparator && polarSeparator.Circle is not null)
@@ -386,7 +377,7 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
                     polarSeparator.Circle.Width = radius * 2;
                     polarSeparator.Circle.Height = radius * 2;
 
-                    if (!_animatableBounds.HasPreviousState) polarSeparator.Circle.CompleteTransition(null);
+                    polarSeparator.Circle.CompleteTransition(null);
                 }
 
                 visualSeparator.Geometry.Opacity = 1;
@@ -487,7 +478,6 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
     void IPolarAxis.Initialize(PolarAxisOrientation orientation)
     {
         _orientation = orientation;
-        _animatableBounds = new();
         _dataBounds = new Bounds();
         _visibleDataBounds = new Bounds();
         Initialized?.Invoke(this);
@@ -518,7 +508,6 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
     public override void RemoveFromUI(Chart chart)
     {
         base.RemoveFromUI(chart);
-        _animatableBounds = null!;
         _ = activeSeparators.Remove(chart);
     }
 

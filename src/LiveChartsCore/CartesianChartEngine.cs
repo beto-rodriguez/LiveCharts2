@@ -725,7 +725,6 @@ public class CartesianChartEngine(
         // or it is initializing in the UI and has no dimensions yet
         if (DrawMarginSize.Width <= 0 || DrawMarginSize.Height <= 0) return;
 
-        UpdateBounds();
         DrawMarginDefined?.Invoke(this);
 
         if (View.Title is not null) AddTitleToChart();
@@ -838,11 +837,8 @@ public class CartesianChartEngine(
 
             var ce = axis.ChartElementSource;
             ce._isInternalSet = true;
-            axis.ActualBounds.HasPreviousState = true;
             ce._isInternalSet = false;
         }
-
-        ActualBounds.HasPreviousState = true;
 
         IsZoomingOrPanning = false;
         InvokeOnUpdateStarted();

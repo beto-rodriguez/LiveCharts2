@@ -507,17 +507,21 @@ public static class Extensions
     /// <returns></returns>
     public static Scaler? GetActualScaler(this ICartesianAxis axis, CartesianChartEngine chart)
     {
-        return !axis.ActualBounds.HasPreviousState
-            ? null
-            : new Scaler(
-                chart.ActualBounds.Location,
-                chart.ActualBounds.Size,
-                axis,
-                new Bounds
-                {
-                    Max = axis.ActualBounds.MaxVisibleBound,
-                    Min = axis.ActualBounds.MinVisibleBound
-                });
+        // returns an scaler with the "Motion bounds", which means the bounds but tracked by the motion canvas
+        // clock, so this returns the bounds that are being animated at the moment this method is called.
+        // DrawMarginLocation and DrawMarginSize are the actual chart size, so they are not completely accurate
+        // but this should not be a big issue, since this normally has no big changes during the animations,
+        // if necessary, implement motion properties to track the DrawMarginLocation and DrawMarginSize.
+
+        return new Scaler(
+            chart.DrawMarginLocation,
+            chart.DrawMarginSize,
+            axis,
+            new Bounds
+            {
+                Max = axis.MotionMaxLimit,
+                Min = axis.MotionMinLimit
+            });
     }
 
     /// <summary>

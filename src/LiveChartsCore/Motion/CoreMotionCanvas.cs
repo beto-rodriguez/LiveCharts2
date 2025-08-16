@@ -112,11 +112,6 @@ public class CoreMotionCanvas : IDisposable
     public object Sync { get; internal set => field = value ?? new object(); } = new();
 
     /// <summary>
-    /// Gets the animatables collection.
-    /// </summary>
-    public HashSet<Animatable> Trackers { get; } = [];
-
-    /// <summary>
     /// Draws the frame.
     /// </summary>
     /// <param name="context">The context.</param>
@@ -175,12 +170,6 @@ public class CoreMotionCanvas : IDisposable
                 if (task.RemoveOnCompleted && task.IsValid) _ = _paintTasks.Remove(task);
 
                 context.ClearPaintSelection(task);
-            }
-
-            foreach (var tracker in Trackers)
-            {
-                tracker.IsValid = true;
-                isValid = isValid && tracker.IsValid;
             }
 
             foreach (var tuple in toRemoveGeometries)
@@ -384,7 +373,6 @@ public class CoreMotionCanvas : IDisposable
         }
 
         _paintTasks.Clear();
-        Trackers.Clear();
     }
 
     private void MeasureFPS(long drawStartTime)
