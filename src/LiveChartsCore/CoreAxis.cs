@@ -1447,7 +1447,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
         switch (mode)
         {
             case UpdateMode.UpdateAndComplete:
-                if (_animatableMin?.IsCompleted == true) geometry.Opacity = 0;
+                geometry.Opacity = 0;
                 geometry.CompleteTransition(null);
                 break;
             case UpdateMode.UpdateAndRemove:
