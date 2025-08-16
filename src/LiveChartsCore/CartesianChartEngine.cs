@@ -227,8 +227,8 @@ public class CartesianChartEngine(
                 if (fitToBounts)
                 {
                     var xm = (max - min) * (isActive ? MaxAxisActiveBound : MaxAxisBound);
-                    if (maxt > limits.DataMax && direction == ZoomDirection.ZoomOut) maxt = limits.DataMax + xm;
-                    if (mint < limits.DataMin && direction == ZoomDirection.ZoomOut) mint = limits.DataMin - xm;
+                    if (maxt > limits.DataMax) maxt = limits.DataMax + xm;
+                    if (mint < limits.DataMin) mint = limits.DataMin - xm;
                 }
 
                 if (maxt < mint) (maxt, mint) = (mint, maxt); // is this needed?
@@ -287,8 +287,8 @@ public class CartesianChartEngine(
                 if (fitToBounts)
                 {
                     var ym = (max - min) * (isActive ? MaxAxisActiveBound : MaxAxisBound);
-                    if (maxt > limits.DataMax && direction == ZoomDirection.ZoomOut) maxt = limits.DataMax + ym;
-                    if (mint < limits.DataMin && direction == ZoomDirection.ZoomOut) mint = limits.DataMin - ym;
+                    if (maxt > limits.DataMax) maxt = limits.DataMax + ym;
+                    if (mint < limits.DataMin) mint = limits.DataMin - ym;
                 }
 
                 if (maxt < mint) (maxt, mint) = (mint, maxt); // is this needed?
@@ -1174,12 +1174,14 @@ public class CartesianChartEngine(
                 var min = limits.Min;
 
                 var xm = max - min;
+                var o = 0.5f * (xm - (limits.DataMax - limits.DataMin));
+                if (o < 0) o = 0;
 
                 if (xi.MinLimit < limits.DataMin)
-                    xi.SetLimits(limits.DataMin, limits.DataMin + xm);
+                    xi.SetLimits(limits.DataMin + o, limits.DataMin + xm + o);
 
                 if (xi.MaxLimit > limits.DataMax)
-                    xi.SetLimits(limits.DataMax - xm, limits.DataMax);
+                    xi.SetLimits(limits.DataMax - xm + o, limits.DataMax + o);
             }
         }
 
@@ -1195,12 +1197,14 @@ public class CartesianChartEngine(
                 var min = limits.Min;
 
                 var ym = max - min;
+                var o = 0.5f * (ym - (limits.DataMax - limits.DataMin));
+                if (o < 0) o = 0;
 
                 if (yi.MinLimit < limits.DataMin)
-                    yi.SetLimits(limits.DataMin, limits.DataMin + ym);
+                    yi.SetLimits(limits.DataMin + o, limits.DataMin + ym + o);
 
                 if (yi.MaxLimit > limits.DataMax)
-                    yi.SetLimits(limits.DataMax - ym, limits.DataMax);
+                    yi.SetLimits(limits.DataMax - ym + o, limits.DataMax + o);
             }
         }
     }
