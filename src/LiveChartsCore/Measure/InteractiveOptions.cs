@@ -25,43 +25,39 @@ using System;
 namespace LiveChartsCore.Measure;
 
 /// <summary>
-/// Defines the zooming and panning mode.
+/// Defines the interactive options for a chart, such as panning and zooming capabilities.
 /// </summary>
 [Flags]
-public enum ZoomAndPanMode
+public enum InteractiveOptions
 {
     /// <summary>
-    /// Disables zooming and panning.
+    /// Enables panning on the X axis.
     /// </summary>
-    None = 0,
+    PanX = 1 << 0,
 
     /// <summary>
-    /// Enables zooming and panning on the X axis, but does not enable fitting to bounds.
+    /// Enables panning on the Y axis.
     /// </summary>
-    XFree = InteractiveOptions.PanX | InteractiveOptions.ZoomX,
+    PanY = 1 << 1,
 
     /// <summary>
-    /// Enables zooming and panning on the Y axis, but does not enable fitting to bounds.
+    /// Enables zooming on the X axis.
     /// </summary>
-    YFree = InteractiveOptions.PanY | InteractiveOptions.ZoomY,
+    ZoomX = 1 << 2,
 
     /// <summary>
-    /// Enables zooming and panning on both axes, but does not enable fitting to bounds.
+    /// Enables zooming on the Y axis.
     /// </summary>
-    BothFree = XFree | YFree,
+    ZoomY = 1 << 3,
 
     /// <summary>
-    /// Enables zooming and panning on the X axis and enables fitting to bounds.
+    /// When this flag is present the panning will be triggered using the right click on desktop devices and the touch-and-hold gesture on touch devices.
+    /// The "Zoom by section" feature will be triggered to the left click on desktop devices and the touch-and-hold gesture on touch devices.
     /// </summary>
-    X = XFree | InteractiveOptions.FitToBounds,
+    InvertPanningPointerTrigger = 1 << 4,
 
     /// <summary>
-    /// Enables zooming and panning on the Y axis and enables fitting to bounds.
+    /// Fits the zooming and panning to the data bounds.
     /// </summary>
-    Y = YFree | InteractiveOptions.FitToBounds,
-
-    /// <summary>
-    /// Enables zooming and panning on both axes and enables fitting to bounds.
-    /// </summary>
-    Both = BothFree | InteractiveOptions.FitToBounds
+    FitToBounds = 1 << 5
 }

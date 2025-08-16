@@ -174,7 +174,7 @@ public class CartesianChartEngine(
 
         var m = direction == ZoomDirection.ZoomIn ? speed : 1 / speed;
 
-        if ((_zoomMode & ZoomAndPanMode.ZoomX) == ZoomAndPanMode.ZoomX)
+        if (_zoomMode.Supports(InteractiveOptions.ZoomX))
         {
             for (var index = 0; index < XAxes.Length; index++)
             {
@@ -234,7 +234,7 @@ public class CartesianChartEngine(
             }
         }
 
-        if ((_zoomMode & ZoomAndPanMode.ZoomY) == ZoomAndPanMode.ZoomY)
+        if (_zoomMode.Supports(InteractiveOptions.ZoomY))
         {
             for (var index = 0; index < YAxes.Length; index++)
             {
@@ -304,7 +304,7 @@ public class CartesianChartEngine(
     /// <returns></returns>
     public void Pan(LvcPoint delta, bool isActive)
     {
-        if ((_zoomMode & ZoomAndPanMode.PanX) == ZoomAndPanMode.PanX)
+        if (_zoomMode.Supports(InteractiveOptions.PanX))
         {
             for (var index = 0; index < XAxes.Length; index++)
             {
@@ -321,7 +321,7 @@ public class CartesianChartEngine(
             }
         }
 
-        if ((_zoomMode & ZoomAndPanMode.PanY) == ZoomAndPanMode.PanY)
+        if (_zoomMode.Supports(InteractiveOptions.PanY))
         {
             for (var index = 0; index < YAxes.Length; index++)
             {
@@ -919,7 +919,7 @@ public class CartesianChartEngine(
     protected internal override void InvokePointerDown(LvcPoint point, bool isSecondaryAction)
     {
         var caretesianView = (ICartesianChartView)View;
-        if ((caretesianView.ZoomMode & ZoomAndPanMode.InvertPanningPointerTrigger) != 0)
+        if (caretesianView.ZoomMode.Supports(InteractiveOptions.InvertPanningPointerTrigger))
             isSecondaryAction = !isSecondaryAction;
 
         if (isSecondaryAction && _zoomMode != ZoomAndPanMode.None)
@@ -1156,7 +1156,7 @@ public class CartesianChartEngine(
     {
         // this method ensures that the current panning is inside the data bounds.
 
-        if ((_zoomMode & ZoomAndPanMode.PanX) == ZoomAndPanMode.PanX)
+        if (_zoomMode.Supports(InteractiveOptions.PanX))
         {
             for (var index = 0; index < XAxes.Length; index++)
             {
@@ -1177,7 +1177,7 @@ public class CartesianChartEngine(
             }
         }
 
-        if ((_zoomMode & ZoomAndPanMode.PanY) == ZoomAndPanMode.PanY)
+        if (_zoomMode.Supports(InteractiveOptions.PanY))
         {
             for (var index = 0; index < YAxes.Length; index++)
             {
