@@ -94,14 +94,6 @@ public class CartesianChartEngine(
         Series.Where(static x => x.IsVisible);
 
     /// <summary>
-    /// Gets or sets a value indicating whether this instance is zooming or panning.
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if this instance is zooming or panning; otherwise, <c>false</c>.
-    /// </value>
-    public bool IsZoomingOrPanning { get; private set; }
-
-    /// <summary>
     /// Gets the view.
     /// </summary>
     /// <value>
@@ -181,8 +173,6 @@ public class CartesianChartEngine(
         if (flags.HasFlag(ZoomAndPanMode.Y))
             foreach (var axis in YAxes)
                 ZoomAxis(axis, flags, pivot.Y, direction, scaleFactor);
-
-        IsZoomingOrPanning = true;
     }
 
     /// <summary>
@@ -202,8 +192,6 @@ public class CartesianChartEngine(
         if (flags.HasFlag(ZoomAndPanMode.Y))
             foreach (var axis in YAxes)
                 PanAxis(axis, delta.Y);
-
-        IsZoomingOrPanning = true;
     }
 
     /// <summary>
@@ -819,7 +807,6 @@ public class CartesianChartEngine(
             ce._isInternalSet = false;
         }
 
-        IsZoomingOrPanning = false;
         InvokeOnUpdateStarted();
 
         if (_isToolTipOpen) _ = DrawToolTip();

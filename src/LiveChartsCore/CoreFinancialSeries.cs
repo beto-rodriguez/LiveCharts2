@@ -215,7 +215,6 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
             {
                 var xi = secondary - uwm;
                 var uwi = uw;
-                var hi = 0f;
 
                 if (previousSecondaryScale is not null && previousPrimaryScale is not null)
                 {
@@ -226,7 +225,6 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
 
                     xi = previousSecondaryScale.ToPixels(coordinate.SecondaryValue) - uwm;
                     uwi = puw;
-                    hi = cartesianChart.IsZoomingOrPanning ? bp : 0;
                 }
 
                 var r = new TVisual
