@@ -1219,10 +1219,10 @@ public class CartesianChartEngine(
 
                 var xm = max - min;
 
-                if (xi.MinLimit < limits.DataMin)
+                if (limits.DataMin < xi.MinLimit)
                     xi.SetLimits(limits.DataMin, limits.DataMin + xm);
 
-                if (xi.MaxLimit > limits.DataMax)
+                if (limits.DataMax > xi.MaxLimit)
                     xi.SetLimits(limits.DataMax - xm, limits.DataMax);
             }
         }
