@@ -52,11 +52,11 @@ public class CartesianChartEngine(
     private BoundedDrawnGeometry? _zoomingSection;
     private double _zoomingSpeed = 0;
     private ChartElement? _previousDrawMarginFrame;
-    private const double MaxAxisBound = 0.05;
     private HashSet<CartesianChartEngine>? _sharedEvents;
     private HashSet<ICartesianAxis> _crosshair = [];
     private ICartesianAxis[]? _virtualX;
     private ICartesianAxis[]? _virtualY;
+    private readonly ActionDebouncer _zoommingDebouncer = new(TimeSpan.FromMilliseconds(500));
 
     /// <summary>
     /// Gets the x axes.
@@ -168,11 +168,13 @@ public class CartesianChartEngine(
 
         if (flags.HasFlag(ZoomAndPanMode.X))
             foreach (var axis in XAxes)
-                ZoomAxis(axis, flags, pivot.X, direction, scaleFactor);
+                ZoomAxis(axis, pivot.X, direction, scaleFactor);
 
         if (flags.HasFlag(ZoomAndPanMode.Y))
             foreach (var axis in YAxes)
-                ZoomAxis(axis, flags, pivot.Y, direction, scaleFactor);
+                ZoomAxis(axis, pivot.Y, direction, scaleFactor);
+
+        _ = _zoommingDebouncer.Debounce(() => FitOnZoom(flags));
     }
 
     /// <summary>
@@ -927,7 +929,7 @@ public class CartesianChartEngine(
             return;
         }
 
-        BouncePanningBack(_chartView.ZoomMode);
+        FitOnPan(_chartView.ZoomMode);
         base.InvokePointerUp(point, isSecondaryAction);
     }
 
@@ -960,27 +962,63 @@ public class CartesianChartEngine(
         _ = _sharedEvents.Add(this);
     }
 
-    private void BouncePanningBack(ZoomAndPanMode flags)
+    private void FitOnPan(ZoomAndPanMode flags)
     {
-        // this method ensures that the current panning is inside the data bounds.
-
         if (_chartView.ZoomMode.HasFlag(ZoomAndPanMode.NoFit))
             return;
 
+        static void Bounce(ICartesianAxis axis)
+        {
+            var limits = axis.GetLimits();
+            var xm = limits.Max - limits.Min;
+
+            var min = axis.MinLimit ?? limits.DataMin;
+            var max = axis.MaxLimit ?? limits.DataMax;
+
+            if (min < limits.DataMin)
+                axis.SetLimits(limits.DataMin, limits.DataMin + xm);
+
+            if (max > limits.DataMax)
+                axis.SetLimits(limits.DataMax - xm, limits.DataMax);
+        }
+
         if (flags.HasFlag(ZoomAndPanMode.X))
             foreach (var axis in XAxes)
-                BounceAxis(axis);
+                Bounce(axis);
 
         if (flags.HasFlag(ZoomAndPanMode.Y))
             foreach (var axis in YAxes)
-                BounceAxis(axis);
+                Bounce(axis);
     }
 
-    private void ZoomAxis(
-        ICartesianAxis axis, ZoomAndPanMode flags, float pivot,
-        ZoomDirection direction, double? scaleFactor = null)
+    private void FitOnZoom(ZoomAndPanMode flags)
     {
-        var fitToBounts = !flags.HasFlag(ZoomAndPanMode.NoFit);
+        if (_chartView.ZoomMode.HasFlag(ZoomAndPanMode.NoFit))
+            return;
+
+        static void Bounce(ICartesianAxis axis)
+        {
+            var limits = axis.GetLimits();
+
+            var min = axis.MinLimit ?? limits.DataMin;
+            var max = axis.MaxLimit ?? limits.DataMax;
+
+            axis.SetLimits(
+                min < limits.DataMin ? limits.DataMin : min,
+                max > limits.DataMax ? limits.DataMax : max);
+        }
+
+        if (flags.HasFlag(ZoomAndPanMode.X))
+            foreach (var axis in XAxes)
+                Bounce(axis);
+
+        if (flags.HasFlag(ZoomAndPanMode.Y))
+            foreach (var axis in YAxes)
+                Bounce(axis);
+    }
+
+    private void ZoomAxis(ICartesianAxis axis, float pivot, ZoomDirection direction, double? scaleFactor = null)
+    {
         var speed = _zoomingSpeed < 0.1 ? 0.1 : (_zoomingSpeed > 0.95 ? 0.95 : _zoomingSpeed);
         speed = 1 - speed;
         var m = direction == ZoomDirection.ZoomIn ? speed : 1 / speed;
@@ -1028,14 +1066,8 @@ public class CartesianChartEngine(
         if (direction == ZoomDirection.ZoomIn && maxt - mint < limits.MinDelta)
             return;
 
-        if (fitToBounts)
-        {
-            var xm = (max - min) * MaxAxisBound;
-            if (maxt > limits.DataMax) maxt = limits.DataMax + xm;
-            if (mint < limits.DataMin) mint = limits.DataMin - xm;
-        }
-
-        if (maxt < mint) (maxt, mint) = (mint, maxt); // is this needed?
+        if (maxt < mint)
+            (maxt, mint) = (mint, maxt); // is this needed?
 
         axis.SetLimits(mint, maxt);
     }
@@ -1099,22 +1131,6 @@ public class CartesianChartEngine(
         var min = limits.Min;
 
         axis.SetLimits(min + deltapixels, max + deltapixels);
-    }
-
-    private static void BounceAxis(ICartesianAxis axis)
-    {
-        var limits = axis.GetLimits();
-
-        var max = limits.Max;
-        var min = limits.Min;
-
-        var xm = max - min;
-
-        if (limits.DataMin < axis.MinLimit)
-            axis.SetLimits(limits.DataMin, limits.DataMin + xm);
-
-        if (limits.DataMax > axis.MaxLimit)
-            axis.SetLimits(limits.DataMax - xm, limits.DataMax);
     }
 
     private ICollection<ICartesianAxis> GetAxesCollection(
