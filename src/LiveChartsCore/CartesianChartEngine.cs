@@ -166,140 +166,21 @@ public class CartesianChartEngine(
     /// </param>
     public void Zoom(ZoomAndPanMode flags, LvcPoint pivot, ZoomDirection direction, double? scaleFactor = null)
     {
-        if (YAxes is null || XAxes is null) return;
-
-        var fitToBounts = !flags.HasFlag(ZoomAndPanMode.NoFit);
-
-        var speed = _zoomingSpeed < 0.1 ? 0.1 : (_zoomingSpeed > 0.95 ? 0.95 : _zoomingSpeed);
-        speed = 1 - speed;
+        if (YAxes is null || XAxes is null)
+            return;
 
         if (scaleFactor is not null && direction != ZoomDirection.DefinedByScaleFactor)
             throw new InvalidOperationException(
                 $"When the scale factor is defined, the zoom direction must be {nameof(ZoomDirection.DefinedByScaleFactor)}... " +
                 $"it just makes sense.");
 
-        var m = direction == ZoomDirection.ZoomIn ? speed : 1 / speed;
-
         if (flags.HasFlag(ZoomAndPanMode.X))
-        {
-            for (var index = 0; index < XAxes.Length; index++)
-            {
-                var xi = XAxes[index];
-                var px = new Scaler(DrawMarginLocation, DrawMarginSize, xi).ToChartValues(pivot.X);
-
-                var limits = xi.GetLimits();
-
-                var max = limits.Max;
-                var min = limits.Min;
-
-                double mint, maxt;
-                var l = max - min;
-
-                if (scaleFactor is null)
-                {
-                    var rMin = (px - min) / l;
-                    var rMax = 1 - rMin;
-
-                    var target = l * m;
-
-                    mint = px - target * rMin;
-                    maxt = px + target * rMax;
-                }
-                else
-                {
-                    var delta = 1 - scaleFactor.Value;
-                    int dir;
-
-                    if (delta < 0)
-                    {
-                        dir = -1;
-                        direction = ZoomDirection.ZoomIn;
-                    }
-                    else
-                    {
-                        dir = 1;
-                        direction = ZoomDirection.ZoomOut;
-                    }
-
-                    var ld = l * Math.Abs(delta);
-                    mint = min - ld * 0.5 * dir;
-                    maxt = max + ld * 0.5 * dir;
-                }
-
-                if (direction == ZoomDirection.ZoomIn && maxt - mint < limits.MinDelta) continue;
-
-                if (fitToBounts)
-                {
-                    var xm = (max - min) * MaxAxisBound;
-                    if (maxt > limits.DataMax) maxt = limits.DataMax + xm;
-                    if (mint < limits.DataMin) mint = limits.DataMin - xm;
-                }
-
-                if (maxt < mint) (maxt, mint) = (mint, maxt); // is this needed?
-
-                xi.SetLimits(mint, maxt);
-            }
-        }
+            foreach (var axis in XAxes)
+                ZoomAxis(axis, flags, pivot.X, direction, scaleFactor);
 
         if (flags.HasFlag(ZoomAndPanMode.Y))
-        {
-            for (var index = 0; index < YAxes.Length; index++)
-            {
-                var yi = YAxes[index];
-                var px = new Scaler(DrawMarginLocation, DrawMarginSize, yi).ToChartValues(pivot.Y);
-
-                var limits = yi.GetLimits();
-
-                var max = limits.Max;
-                var min = limits.Min;
-
-                double mint, maxt;
-                var l = max - min;
-
-                if (scaleFactor is null)
-                {
-                    var rMin = (px - min) / l;
-                    var rMax = 1 - rMin;
-
-                    var target = l * m;
-                    mint = px - target * rMin;
-                    maxt = px + target * rMax;
-                }
-                else
-                {
-                    var delta = 1 - scaleFactor.Value;
-                    int dir;
-
-                    if (delta < 0)
-                    {
-                        dir = -1;
-                        direction = ZoomDirection.ZoomIn;
-                    }
-                    else
-                    {
-                        dir = 1;
-                        direction = ZoomDirection.ZoomOut;
-                    }
-
-                    var ld = l * Math.Abs(delta);
-                    mint = min - ld * 0.5 * dir;
-                    maxt = max + ld * 0.5 * dir;
-                }
-
-                if (direction == ZoomDirection.ZoomIn && maxt - mint < limits.MinDelta) continue;
-
-                if (fitToBounts)
-                {
-                    var ym = (max - min) * MaxAxisBound;
-                    if (maxt > limits.DataMax) maxt = limits.DataMax + ym;
-                    if (mint < limits.DataMin) mint = limits.DataMin - ym;
-                }
-
-                if (maxt < mint) (maxt, mint) = (mint, maxt); // is this needed?
-
-                yi.SetLimits(mint, maxt);
-            }
-        }
+            foreach (var axis in YAxes)
+                ZoomAxis(axis, flags, pivot.Y, direction, scaleFactor);
 
         IsZoomingOrPanning = true;
     }
@@ -315,38 +196,12 @@ public class CartesianChartEngine(
     public void Pan(ZoomAndPanMode flags, LvcPoint delta)
     {
         if (flags.HasFlag(ZoomAndPanMode.X))
-        {
-            for (var index = 0; index < XAxes.Length; index++)
-            {
-                var xi = XAxes[index];
-                var scale = new Scaler(DrawMarginLocation, DrawMarginSize, xi);
-                var dx = scale.ToChartValues(-delta.X) - scale.ToChartValues(0);
-
-                var limits = xi.GetLimits();
-
-                var max = limits.Max;
-                var min = limits.Min;
-
-                xi.SetLimits(min + dx, max + dx);
-            }
-        }
+            foreach (var axis in XAxes)
+                PanAxis(axis, delta.X);
 
         if (flags.HasFlag(ZoomAndPanMode.Y))
-        {
-            for (var index = 0; index < YAxes.Length; index++)
-            {
-                var yi = YAxes[index];
-                var scale = new Scaler(DrawMarginLocation, DrawMarginSize, yi);
-                var dy = -(scale.ToChartValues(delta.Y) - scale.ToChartValues(0));
-
-                var limits = yi.GetLimits();
-
-                var max = limits.Max;
-                var min = limits.Min;
-
-                yi.SetLimits(min + dy, max + dy);
-            }
-        }
+            foreach (var axis in YAxes)
+                PanAxis(axis, delta.Y);
 
         IsZoomingOrPanning = true;
     }
@@ -400,7 +255,8 @@ public class CartesianChartEngine(
     }
 
     /// <summary>
-    /// Grows the zooming section to the specified point.
+    /// Grows the zooming section to the specified point, this updates the zooming section rectangle
+    /// in the UI, it does not apply the zoom yet.
     /// </summary>
     /// <param name="flags">
     /// The flags, for example ZoomAndPanMode.X | ZoomAndPanMode.NoFit, will zoom only in the x axis
@@ -455,94 +311,12 @@ public class CartesianChartEngine(
         }
 
         if ((flags & ZoomAndPanMode.X) == ZoomAndPanMode.X)
-        {
-            for (var i = 0; i < XAxes.Length; i++)
-            {
-                var x = XAxes[i];
-
-                var xi = ScaleUIPoint(_sectionZoomingStart.Value, i, 0)[0];
-                var xj = ScaleUIPoint(point, i, 0)[0];
-
-                double xMax, xMin;
-
-                if (xi > xj)
-                {
-                    xMax = xi;
-                    xMin = xj;
-                }
-                else
-                {
-                    xMax = xj;
-                    xMin = xi;
-                }
-
-                if (xMax > (x.MaxLimit ?? double.MaxValue)) xMax = x.MaxLimit ?? double.MaxValue;
-                if (xMin < (x.MinLimit ?? double.MinValue)) xMin = x.MinLimit ?? double.MinValue;
-
-                var min = x.MinZoomDelta ?? x.DataBounds.MinDelta * 3;
-
-                if (xMax - xMin > min)
-                {
-                    x.SetLimits(xMin, xMax);
-                }
-                else
-                {
-                    if (x.MaxLimit is not null && x.MinLimit is not null)
-                    {
-                        var d = xMax - xMin;
-                        var ad = x.MaxLimit.Value - x.MinLimit.Value;
-                        var c = (ad - d) * 0.5;
-
-                        x.SetLimits(xMin - c, xMax + c);
-                    }
-                }
-            }
-        }
+            foreach (var axis in XAxes)
+                ZoomAxisBySection(axis, point.X);
 
         if ((flags & ZoomAndPanMode.Y) == ZoomAndPanMode.Y)
-        {
-            for (var i = 0; i < YAxes.Length; i++)
-            {
-                var y = YAxes[i];
-
-                var yi = ScaleUIPoint(_sectionZoomingStart.Value, 0, i)[1];
-                var yj = ScaleUIPoint(point, 0, i)[1];
-
-                double yMax, yMin;
-
-                if (yi > yj)
-                {
-                    yMax = yi;
-                    yMin = yj;
-                }
-                else
-                {
-                    yMax = yj;
-                    yMin = yi;
-                }
-
-                if (yMax > (y.MaxLimit ?? double.MaxValue)) yMax = y.MaxLimit ?? double.MaxValue;
-                if (yMin < (y.MinLimit ?? double.MinValue)) yMin = y.MinLimit ?? double.MinValue;
-
-                var min = y.MinZoomDelta ?? y.DataBounds.MinDelta * 3;
-
-                if (yMax - yMin > min)
-                {
-                    y.SetLimits(yMin, yMax);
-                }
-                else
-                {
-                    if (y.MaxLimit is not null && y.MinLimit is not null)
-                    {
-                        var d = yMax - yMin;
-                        var ad = y.MaxLimit.Value - y.MinLimit.Value;
-                        var c = (ad - d) * 0.5;
-
-                        y.SetLimits(yMin - c, yMax + c);
-                    }
-                }
-            }
-        }
+            foreach (var axis in YAxes)
+                ZoomAxisBySection(axis, point.Y);
 
         _zoomingSection.X = -1;
         _zoomingSection.Y = -1;
@@ -1201,52 +975,159 @@ public class CartesianChartEngine(
 
     private void BouncePanningBack(ZoomAndPanMode flags)
     {
+        // this method ensures that the current panning is inside the data bounds.
+
         if (_chartView.ZoomMode.HasFlag(ZoomAndPanMode.NoFit))
             return;
 
-        // this method ensures that the current panning is inside the data bounds.
-
         if (flags.HasFlag(ZoomAndPanMode.X))
-        {
-            for (var index = 0; index < XAxes.Length; index++)
-            {
-                var xi = XAxes[index];
-
-                var limits = xi.GetLimits();
-
-                var max = limits.Max;
-                var min = limits.Min;
-
-                var xm = max - min;
-
-                if (limits.DataMin < xi.MinLimit)
-                    xi.SetLimits(limits.DataMin, limits.DataMin + xm);
-
-                if (limits.DataMax > xi.MaxLimit)
-                    xi.SetLimits(limits.DataMax - xm, limits.DataMax);
-            }
-        }
+            foreach (var axis in XAxes)
+                BounceAxis(axis);
 
         if (flags.HasFlag(ZoomAndPanMode.Y))
+            foreach (var axis in YAxes)
+                BounceAxis(axis);
+    }
+
+    private void ZoomAxis(
+        ICartesianAxis axis, ZoomAndPanMode flags, float pivot,
+        ZoomDirection direction, double? scaleFactor = null)
+    {
+        var fitToBounts = !flags.HasFlag(ZoomAndPanMode.NoFit);
+        var speed = _zoomingSpeed < 0.1 ? 0.1 : (_zoomingSpeed > 0.95 ? 0.95 : _zoomingSpeed);
+        speed = 1 - speed;
+        var m = direction == ZoomDirection.ZoomIn ? speed : 1 / speed;
+        var pivotPixels = new Scaler(DrawMarginLocation, DrawMarginSize, axis).ToChartValues(pivot);
+
+        var limits = axis.GetLimits();
+
+        var max = limits.Max;
+        var min = limits.Min;
+
+        double mint, maxt;
+        var l = max - min;
+
+        if (scaleFactor is null)
         {
-            for (var index = 0; index < YAxes.Length; index++)
+            var rMin = (pivotPixels - min) / l;
+            var rMax = 1 - rMin;
+
+            var target = l * m;
+
+            mint = pivotPixels - target * rMin;
+            maxt = pivotPixels + target * rMax;
+        }
+        else
+        {
+            var delta = 1 - scaleFactor.Value;
+            int dir;
+
+            if (delta < 0)
             {
-                var yi = YAxes[index];
+                dir = -1;
+                direction = ZoomDirection.ZoomIn;
+            }
+            else
+            {
+                dir = 1;
+                direction = ZoomDirection.ZoomOut;
+            }
 
-                var limits = yi.GetLimits();
+            var ld = l * Math.Abs(delta);
+            mint = min - ld * 0.5 * dir;
+            maxt = max + ld * 0.5 * dir;
+        }
 
-                var max = limits.Max;
-                var min = limits.Min;
+        if (direction == ZoomDirection.ZoomIn && maxt - mint < limits.MinDelta)
+            return;
 
-                var ym = max - min;
+        if (fitToBounts)
+        {
+            var xm = (max - min) * MaxAxisBound;
+            if (maxt > limits.DataMax) maxt = limits.DataMax + xm;
+            if (mint < limits.DataMin) mint = limits.DataMin - xm;
+        }
 
-                if (limits.DataMin < yi.MinLimit)
-                    yi.SetLimits(limits.DataMin, limits.DataMin + ym);
+        if (maxt < mint) (maxt, mint) = (mint, maxt); // is this needed?
 
-                if (limits.DataMax > yi.MaxLimit)
-                    yi.SetLimits(limits.DataMax - ym, limits.DataMax);
+        axis.SetLimits(mint, maxt);
+    }
+
+    private void ZoomAxisBySection(ICartesianAxis axis, float delta)
+    {
+        if (_sectionZoomingStart is null) return;
+
+        var scaler = new Scaler(DrawMarginLocation, DrawMarginSize, axis);
+
+        var value = axis.Orientation == AxisOrientation.X
+            ? _sectionZoomingStart.Value.X
+            : _sectionZoomingStart.Value.Y;
+
+        var i = scaler.ToChartValues(value);
+        var j = scaler.ToChartValues(delta);
+
+        double max, min;
+
+        if (i > j)
+        {
+            max = i;
+            min = j;
+        }
+        else
+        {
+            max = j;
+            min = i;
+        }
+
+        if (max > (axis.MaxLimit ?? double.MaxValue)) max = axis.MaxLimit ?? double.MaxValue;
+        if (min < (axis.MinLimit ?? double.MinValue)) min = axis.MinLimit ?? double.MinValue;
+
+        var minDelta = axis.MinZoomDelta ?? axis.DataBounds.MinDelta * 3;
+
+        if (max - min > minDelta)
+        {
+            axis.SetLimits(min, max);
+        }
+        else
+        {
+            if (axis.MaxLimit is not null && axis.MinLimit is not null)
+            {
+                var d = max - min;
+                var ad = axis.MaxLimit.Value - axis.MinLimit.Value;
+                var c = (ad - d) * 0.5;
+
+                axis.SetLimits(min - c, max + c);
             }
         }
+    }
+
+    private void PanAxis(ICartesianAxis axis, float delta)
+    {
+        var scale = new Scaler(DrawMarginLocation, DrawMarginSize, axis);
+        var deltapixels = scale.ToChartValues(0) - scale.ToChartValues(delta);
+
+        var limits = axis.GetLimits();
+
+        var max = limits.Max;
+        var min = limits.Min;
+
+        axis.SetLimits(min + deltapixels, max + deltapixels);
+    }
+
+    private static void BounceAxis(ICartesianAxis axis)
+    {
+        var limits = axis.GetLimits();
+
+        var max = limits.Max;
+        var min = limits.Min;
+
+        var xm = max - min;
+
+        if (limits.DataMin < axis.MinLimit)
+            axis.SetLimits(limits.DataMin, limits.DataMin + xm);
+
+        if (limits.DataMax > axis.MaxLimit)
+            axis.SetLimits(limits.DataMax - xm, limits.DataMax);
     }
 
     private ICollection<ICartesianAxis> GetAxesCollection(
