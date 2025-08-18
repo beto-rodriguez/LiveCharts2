@@ -976,16 +976,25 @@ public class CartesianChartEngine(
         if (_chartView.ZoomMode.HasFlag(ZoomAndPanMode.NoFit))
             return;
 
-        static void Fit(ICartesianAxis axis)
+        void Fit(ICartesianAxis axis)
         {
+            var scale = new Scaler(DrawMarginLocation, DrawMarginSize, axis);
+
+            var geometryOffset =
+                scale.ToChartValues(axis.DataBounds.RequestedGeometrySize) - scale.ToChartValues(0);
+
             var limits = axis.GetLimits();
 
             var min = axis.MinLimit ?? limits.DataMin;
             var max = axis.MaxLimit ?? limits.DataMax;
 
-            axis.SetLimits(
-                min < limits.DataMin ? limits.DataMin : min,
-                max > limits.DataMax ? limits.DataMax : max);
+            if (min < limits.DataMin)
+                min = limits.DataMin - geometryOffset;
+
+            if (max > limits.DataMax)
+                max = limits.DataMax + geometryOffset;
+
+            axis.SetLimits(min, max);
         }
 
         if (flags.HasFlag(ZoomAndPanMode.X))
@@ -1134,8 +1143,11 @@ public class CartesianChartEngine(
                 ? limits.DataMin - threshold
                 : min;
 
-            min = thresholdedMin;
-            max = thresholdedMin + length;
+            var geometryOffset =
+                scale.ToChartValues(axis.DataBounds.RequestedGeometrySize) - scale.ToChartValues(0);
+
+            min = thresholdedMin - geometryOffset;
+            max = thresholdedMin - geometryOffset + length;
         }
 
         if (max > limits.DataMax)
@@ -1144,8 +1156,11 @@ public class CartesianChartEngine(
                 ? limits.DataMax + threshold
                 : max;
 
-            max = thresholdedMax;
-            min = thresholdedMax - length;
+            var geometryOffset =
+                scale.ToChartValues(axis.DataBounds.RequestedGeometrySize) - scale.ToChartValues(0);
+
+            max = thresholdedMax + geometryOffset;
+            min = thresholdedMax + geometryOffset - length;
         }
 
         axis.SetLimits(min, max);
