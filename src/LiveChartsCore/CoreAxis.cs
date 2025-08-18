@@ -257,7 +257,10 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
     /// <inheritdoc cref="ICartesianAxis.MinZoomDelta"/>
     public double? MinZoomDelta { get; set; }
 
-    /// <inheritdoc cref="ICartesianAxis.MinZoomDelta"/>
+    /// <inheritdoc cref="ICartesianAxis.BouncingDistance"/>
+    public double BouncingDistance { get; set; } = 0.25;
+
+    /// <inheritdoc cref="ICartesianAxis.InLineNamePlacement"/>
     public bool InLineNamePlacement { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="ICartesianAxis.SharedWith"/>
