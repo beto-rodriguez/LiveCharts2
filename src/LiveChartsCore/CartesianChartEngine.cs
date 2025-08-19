@@ -168,11 +168,11 @@ public class CartesianChartEngine(
 
         if (flags.HasFlag(ZoomAndPanMode.X))
             foreach (var axis in XAxes)
-                ZoomAxis(axis, pivot.X, direction, scaleFactor);
+                ZoomAxis(axis, flags, pivot.X, direction, scaleFactor);
 
         if (flags.HasFlag(ZoomAndPanMode.Y))
             foreach (var axis in YAxes)
-                ZoomAxis(axis, pivot.Y, direction, scaleFactor);
+                ZoomAxis(axis, flags, pivot.Y, direction, scaleFactor);
 
         _ = _zoommingDebouncer.Debounce(() => FitAllOnZoom(flags));
     }
@@ -189,11 +189,11 @@ public class CartesianChartEngine(
     {
         if (flags.HasFlag(ZoomAndPanMode.X))
             foreach (var axis in XAxes)
-                PanAxis(axis, delta.X, true);
+                PanAxis(axis, flags, delta.X, true);
 
         if (flags.HasFlag(ZoomAndPanMode.Y))
             foreach (var axis in YAxes)
-                PanAxis(axis, delta.Y, true);
+                PanAxis(axis, flags, delta.Y, true);
     }
 
     /// <summary>
@@ -932,12 +932,16 @@ public class CartesianChartEngine(
         }
 
         // bounce back on pointer up
-        if (flags.HasFlag(ZoomAndPanMode.X))
-            foreach (var axis in XAxes)
-                PanAxis(axis, 0, false);
-        if (flags.HasFlag(ZoomAndPanMode.Y))
-            foreach (var axis in YAxes)
-                PanAxis(axis, 0, false);
+        var fits = !flags.HasFlag(ZoomAndPanMode.NoFit);
+        if (fits)
+        {
+            if (flags.HasFlag(ZoomAndPanMode.X))
+                foreach (var axis in XAxes)
+                    PanAxis(axis, flags, 0, false);
+            if (flags.HasFlag(ZoomAndPanMode.Y))
+                foreach (var axis in YAxes)
+                    PanAxis(axis, flags, 0, false);
+        }
 
         base.InvokePointerUp(point, isSecondaryAction);
     }
@@ -980,8 +984,7 @@ public class CartesianChartEngine(
         {
             var scale = new Scaler(DrawMarginLocation, DrawMarginSize, axis);
 
-            var geometryOffset =
-                scale.ToChartValues(axis.DataBounds.RequestedGeometrySize) - scale.ToChartValues(0);
+            var geometryOffset = GetGeometryOffset(axis, scale);
 
             var limits = axis.GetLimits();
 
@@ -1006,8 +1009,10 @@ public class CartesianChartEngine(
                 Fit(axis);
     }
 
-    private void ZoomAxis(ICartesianAxis axis, float pivot, ZoomDirection direction, double? scaleFactor = null)
+    private void ZoomAxis(
+        ICartesianAxis axis, ZoomAndPanMode flags, float pivot, ZoomDirection direction, double? scaleFactor = null)
     {
+        var fits = !flags.HasFlag(ZoomAndPanMode.NoFit);
         var speed = _zoomingSpeed < 0.1 ? 0.1 : (_zoomingSpeed > 0.95 ? 0.95 : _zoomingSpeed);
         speed = 1 - speed;
         var m = direction == ZoomDirection.ZoomIn ? speed : 1 / speed;
@@ -1062,10 +1067,10 @@ public class CartesianChartEngine(
         {
             var threshold = GetThreshold(axis, scale);
 
-            if (mint < limits.DataMin - threshold)
+            if (fits && mint < limits.DataMin - threshold)
                 mint = limits.DataMin - threshold;
 
-            if (maxt > limits.DataMax + threshold)
+            if (fits && maxt > limits.DataMax + threshold)
                 maxt = limits.DataMax + threshold;
         }
 
@@ -1123,9 +1128,11 @@ public class CartesianChartEngine(
         }
     }
 
-    private void PanAxis(ICartesianAxis axis, float delta, bool thresholded)
+    private void PanAxis(ICartesianAxis axis, ZoomAndPanMode flags, float delta, bool thresholded)
     {
         var scale = new Scaler(DrawMarginLocation, DrawMarginSize, axis);
+        var fits = !flags.HasFlag(ZoomAndPanMode.NoFit);
+
         var deltapixels = scale.ToChartValues(0) - scale.ToChartValues(delta);
 
         var limits = axis.GetLimits();
@@ -1137,27 +1144,25 @@ public class CartesianChartEngine(
 
         var threshold = thresholded ? GetThreshold(axis, scale) : 0;
 
-        if (min < limits.DataMin)
+        if (fits && min < limits.DataMin)
         {
             var thresholdedMin = min < limits.DataMin - threshold
                 ? limits.DataMin - threshold
                 : min;
 
-            var geometryOffset =
-                scale.ToChartValues(axis.DataBounds.RequestedGeometrySize) - scale.ToChartValues(0);
+            var geometryOffset = GetGeometryOffset(axis, scale);
 
             min = thresholdedMin - geometryOffset;
             max = thresholdedMin - geometryOffset + length;
         }
 
-        if (max > limits.DataMax)
+        if (fits && max > limits.DataMax)
         {
             var thresholdedMax = max > limits.DataMax + threshold
                 ? limits.DataMax + threshold
                 : max;
 
-            var geometryOffset =
-                scale.ToChartValues(axis.DataBounds.RequestedGeometrySize) - scale.ToChartValues(0);
+            var geometryOffset = GetGeometryOffset(axis, scale);
 
             max = thresholdedMax + geometryOffset;
             min = thresholdedMax + geometryOffset - length;
@@ -1172,8 +1177,11 @@ public class CartesianChartEngine(
             ? DrawMarginSize.Width * axis.BouncingDistance
             : DrawMarginSize.Height * axis.BouncingDistance;
 
-        return scale.ToChartValues(bouncingDistancePixels) - scale.ToChartValues(0);
+        return Math.Abs(scale.ToChartValues(bouncingDistancePixels) - scale.ToChartValues(0));
     }
+
+    private double GetGeometryOffset(ICartesianAxis axis, Scaler scale) =>
+        Math.Abs(scale.ToChartValues(axis.DataBounds.RequestedGeometrySize) - scale.ToChartValues(0));
 
     private ICollection<ICartesianAxis> GetAxesCollection(
         ICollection<ICartesianAxis>? viewAxes,
