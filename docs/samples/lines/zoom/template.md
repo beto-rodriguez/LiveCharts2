@@ -5,7 +5,6 @@ Zooming and panning is disabled by default, you can enable it by setting the `Zo
 it means that you can combine the options as you need, you can learn more about zooming and panning
 [here](https://lvcharts.com/docs/{{ platform }}/{{ version }}/CartesianChart.Axes%20properties#zooming-and-panning).
 
-
 {{~ if wpf || winforms || winui || blazor || eto ~}}
 
 :::tip
@@ -62,13 +61,13 @@ You can enable zooming and panning by setting the `ZoomMode` property, this prop
 - `InvertPanningPointerTrigger`: Inverts the panning and zoom by section pointer triggers, when the flag is present, panning is triggered by right clicking the chart, and zoom by section by left clicking (or inverts single/double taps on mobile).
 
 The [ZoomAndPanMode](https://lvcharts.com/api/{{ version }}/LiveChartsCore.Measure.ZoomAndPanMode) type is a flag enum,
-so you can combine the options, for example, if you want to enable zooming on the `X` axis and disable "Fit top Bounds"
-and "Zoom by Section" you can set the `ZoomMode` property to:
+so you can combine the options, for example, if you want to enable zooming on the `Both` axes and disable "Fit top Bounds"
+you could set the `ZoomMode` property to:
 
 {{~ if blazor || winforms || eto ~}}
 
 ```c#
-var flags = ZoomAndPanMode.X | ZoomAndPanMode.NoFit | ZoomAndPanMode.NoZoomBySection;
+var flags = ZoomAndPanMode.Both | ZoomAndPanMode.NoFit;
 myChart.ZoomMode = flags;
 ```
 
@@ -77,11 +76,26 @@ myChart.ZoomMode = flags;
 {{~ if avalonia || uno || maui || winui || wpf ~}}
 
 ```xml
-&lt;lvc:CartesianChart ZoomMode="X,NoFit,NoZoomBySection">
+&lt;lvc:CartesianChart ZoomMode="Both,NoFit">
 &lt;/lvc:CartesianChart>
 ```
 
 {{~ endif ~}}
+
+<div class="text-center">
+    <img src="{{ assets_url }}/docs/{{ unique_name }}/zoom-both-nofit.gif" alt="sample image" />
+</div>
+
+# Bouncing distance
+
+While "Fit to bounds" is enabled, (enabled by default, to disable see `NoFit` in the [options section](#options)), 
+when the user zooms or pans, the chart will allow to scroll the data 25% beyond the limits, this is controlled by the 
+Axis `BouncingDistance` property, for example setting  `Axis.BouncingDistance` to `0` will disable scrolling beyond data limits.
+
+# Min zoom level
+
+The axis `MinZoomDelta` property is useful to control how deep the user can zoom, this property defines the minimum difference between 
+the max and min visible limits of the axis, default is `null` and `null` means that the library will calculate this value based on the current data.
 
 # Clearing zooming and panning
 
@@ -159,9 +173,68 @@ On **Mobile** double tap the chart, hold the last tap and drag to select an area
 
 {{~ end ~}}
 
-# Override defaults
+# Listen for zooming or panning user changes
 
-You can manually trigger the functions in the chart that trigger Zooming or panning, for example you could set the
+You can subscribe to the axis `PropertyChanged` event and read the `MinLimit` and `MaxLimit` properties, both are updated as the
+user zooms or pans.
+
+```c#
+// where myChart is a reference to the chart in the UI
+myChart.XAxes.First().PropertyChanged += OnPropertyChanged;
+
+// ....
+
+private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+{
+    var axis = (ICartesianAxis)sender;
+
+    if (e.PropertyName == nameof(Axis.MinLimit))
+    {
+        Trace.WriteLine($"{axis.Orientation} Min Limit {axis.MinLimit}");
+    }
+
+    if (e.PropertyName == nameof(Axis.MaxLimit))
+    {
+        Trace.WriteLine($"{axis.Orientation} Max Limit {axis.MaxLimit}");
+    }
+}
+```
+
+# Axis bounds control
+
+You can listen to the axis range changes and override the limits to your needs:
+
+
+```c#
+// where myChart is a reference to the chart in the UI
+myChart.XAxes.First().PropertyChanged += OnPropertyChanged;
+
+// ....
+
+private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+{
+    var axis = (ICartesianAxis)sender;
+
+    var max = axis.MaxLimit;
+    var min = axis.MinLimit;
+
+    if (max is null || min is null)
+        return;
+
+    // forces the axis range to 0-100 always
+
+    if (min < 0)
+        min = 0;
+
+    if (max > 100)
+        max = 100;
+
+    axis.SetLimits(min.Value, max.Value);
+}
+
+# Manually fire zooming or panning
+
+You can manually trigger the functions in the chart that trigger zooming or panning, for example you could set the
 `ZoomMode` property to `None`, this will prevent LiveCharts to fire zooming or panning, and then we could fire these features
 when we want, for example zooming on double tap or panning on mouse move.
 
@@ -179,7 +252,8 @@ engine.Pan(ZoomAndPanMode.Both, new(10, 10));
 // for example start the section on double tap.
 engine.StartZoomingSection(ZoomAndPanMode.Both, new(100, 100));
 
-// grows the zooming section by 10 pixels on both axes
+// grows the zooming section by 10 pixels on both axes, it just grows the
+// drawn rectangle in the UI, it does not apply zoom yet.
 // for example when the pointer moves after the previous double tap.
 engine.GrowZoomingSection(ZoomAndPanMode.Both, new(10, 10));
 
