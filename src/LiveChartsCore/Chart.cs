@@ -121,11 +121,6 @@ public abstract class Chart
     public ToolTipMetaData AutoToolTipsInfo { get; internal set; } = new();
 
     /// <summary>
-    /// Gets the bounds of the chart.
-    /// </summary>
-    public AnimatableContainer ActualBounds { get; } = new();
-
-    /// <summary>
     /// Gets the kind of the chart.
     /// </summary>
     public ChartKind Kind { get; protected set; }
@@ -523,21 +518,6 @@ public abstract class Chart
     }
 
     /// <summary>
-    /// Updates the bounds tracker.
-    /// </summary>
-    protected void UpdateBounds()
-    {
-        ActualBounds.Location = DrawMarginLocation;
-        ActualBounds.Size = DrawMarginSize;
-
-        if (_isFirstDraw)
-        {
-            ActualBounds.Animate(ActualEasingFunction, ActualAnimationsSpeed);
-            _ = Canvas.Trackers.Add(ActualBounds);
-        }
-    }
-
-    /// <summary>
     /// Initializes the visuals collector.
     /// </summary>
     protected void InitializeVisualsCollector() =>
@@ -896,7 +876,7 @@ public abstract class Chart
                     var dx = _pointerPanningPosition.X - _pointerPreviousPanningPosition.X;
                     var dy = _pointerPanningPosition.Y - _pointerPreviousPanningPosition.Y;
 
-                    cartesianChart.Pan(new LvcPoint(dx, dy), _isPanning);
+                    cartesianChart.Pan(((ICartesianChartView)cartesianChart.View).ZoomMode, new LvcPoint(dx, dy));
                     _pointerPreviousPanningPosition = new LvcPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
                 }
             }));

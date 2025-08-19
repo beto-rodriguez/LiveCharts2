@@ -20,33 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#pragma warning disable IDE1006 // Naming Styles
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Generators;
+namespace LiveChartsCore.Kernel;
 
-namespace LiveChartsCore.Motion;
-
-/// <summary>
-/// Defines the animatable container class.
-/// </summary>
-public partial class AnimatableContainer : Animatable
+internal class ActionDebouncer(TimeSpan delay)
 {
-    /// <summary>
-    /// Gets or sets the location.
-    /// </summary>
-    [MotionProperty]
-    public partial LvcPoint Location { get; set; }
+    private readonly TimeSpan _delay = delay;
+    private CancellationTokenSource? _cts;
 
-    /// <summary>
-    /// Gets or sets the size.
-    /// </summary>
-    [MotionProperty]
-    public partial LvcSize Size { get; set; }
+    public async Task Debounce(Action action)
+    {
+        _cts?.Cancel(false);
+        _cts = new CancellationTokenSource();
+        var token = _cts.Token;
 
-    /// <summary>
-    /// Gets a valuea indicating whewhter the container have a previous state.
-    /// </summary>
-    public bool HasPreviousState { get; internal set; }
+        try
+        {
+            await Task.Delay(_delay, token);
+            if (!token.IsCancellationRequested)
+                action();
+        }
+        catch (TaskCanceledException) { }
+    }
 }
+

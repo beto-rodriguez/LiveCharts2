@@ -53,9 +53,14 @@ public interface IPlane : IChartElement
     Padding NamePadding { get; set; }
 
     /// <summary>
-    /// Get or sets the actual bounds.
+    /// Gets the motion min limit, it is the min limit at the moment of getting the property.
     /// </summary>
-    AnimatableAxisBounds ActualBounds { get; }
+    double MotionMinLimit { get; }
+
+    /// <summary>
+    /// Gets the motion max limit, it is the max limit at the moment of getting the property.
+    /// </summary>
+    double MotionMaxLimit { get; }
 
     /// <summary>
     /// Gets the data bounds, the min and max values in the axis.

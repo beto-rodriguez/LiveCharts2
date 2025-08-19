@@ -168,7 +168,6 @@ public abstract class CoreRowSeries<TModel, TVisual, TLabel, TErrorGeometry>
                 var yi = secondary - helper.uwm + helper.cp;
                 var pi = helper.p;
                 var uwi = helper.uw;
-                var hi = 0f;
 
                 if (previousSecondaryScale is not null && previousPrimaryScale is not null && pHelper is not null)
                 {
@@ -177,16 +176,15 @@ public abstract class CoreRowSeries<TModel, TVisual, TLabel, TErrorGeometry>
                     var cyp = coordinate.PrimaryValue > pivot ? previousPrimary : previousPrimary - bp;
 
                     yi = previousSecondaryScale.ToPixels(coordinate.SecondaryValue) - pHelper.uwm + pHelper.cp;
-                    pi = cartesianChart.IsZoomingOrPanning ? cyp : pHelper.p;
+                    pi = pHelper.p;
                     uwi = pHelper.uw;
-                    hi = cartesianChart.IsZoomingOrPanning ? bp : 0;
                 }
 
                 var r = new TVisual
                 {
                     X = pi,
                     Y = yi,
-                    Width = hi,
+                    Width = 0f,
                     Height = uwi
                 };
 

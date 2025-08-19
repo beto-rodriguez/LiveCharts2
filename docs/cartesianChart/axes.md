@@ -24,22 +24,22 @@ moves and then goes up or when the pan gesture occurs.
 Zooming and panning is disabled by default, you can enable it by setting the `ZoomMode` property, this property is of type
 [ZoomAndPanMode](https://lvcharts.com/api/{{ version }}/LiveChartsCore.Measure.ZoomAndPanMode) and the options are:
 
+- `None`: Disables zooming and panning.
 - `X`: Enables zooming and panning on the X axis.
 - `Y`: Enables zooming and panning on the Y axis.
 - `Both`: Enables zooming and panning on both axes.
-- `None`: Disables zooming and panning.
-- `PanX`: Enables panning on the X axis.
-- `PanY`: Enables panning on the Y axis.
-- `ZoomX`: Enables zooming on the X axis.
-- `ZoomY`: Enables zooming on the Y axis.
+- `NoFit`: Disables the "Fit to Bounds" feature that forces the the chart to bounce back to the data bounds when zooming and panning finishes.
+- `NoZoomBySection`: Disables the "Zoom by Section" feature, this feature selects an area and zooms to this area, normally by right clicking or double tapping and then dragging to the end of the section.
+- `InvertPanningPointerTrigger`: Inverts the panning and zoom by section pointer triggers, when the flag is present, panning is triggered by right clicking the chart, and zoom by section by left clicking (or inverts single/double taps on mobile).
 
 The [ZoomAndPanMode](https://lvcharts.com/api/{{ version }}/LiveChartsCore.Measure.ZoomAndPanMode) type is a flag enum,
-so you can combine the options, for example, if you want to enable zooming on the X axis and panning on the Y axis you can
-set the `ZoomMode` property to `ZoomAndPanMode.ZoomX | ZoomAndPanMode.PanY`.
+so you can combine the options, for example, if you want to enable zooming on the `X` axis and disable "Fit top Bounds"
+and "Zoom by Section" you can set the `ZoomMode` property to:
 
-There is also the `InvertPanningPointerTrigger` flag, when this flag is present the panning will be triggered using
-the right click on desktop devices and the touch-and-hold gesture on touch devices, the `zoom by section` feature will be
-triggered to the left click on desktop devices and the touch-and-hold gesture on touch devices.
+```c#
+var flags = ZoomAndPanMode.X | ZoomAndPanMode.NoFit | ZoomAndPanMode.NoZoomBySection;
+myChart.ZoomMode = flags;
+```
 
 Here are a few examples of the different zoom modes:
 

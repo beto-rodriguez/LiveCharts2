@@ -473,8 +473,6 @@ public class PolarChartEngine(
         // or it is initializing in the UI and has no dimensions yet
         if (DrawMarginSize.Width <= 0 || DrawMarginSize.Height <= 0) return;
 
-        UpdateBounds();
-
         if (View.Title is not null) AddTitleToChart();
 
         var totalAxes = RadiusAxes.Concat(AngleAxes).ToArray();
@@ -538,7 +536,6 @@ public class PolarChartEngine(
 
             var ce = axis.ChartElementSource;
             ce._isInternalSet = true;
-            axis.ActualBounds.HasPreviousState = true;
             ce._isInternalSet = false;
         }
 

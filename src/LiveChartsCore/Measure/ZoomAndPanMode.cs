@@ -36,43 +36,36 @@ public enum ZoomAndPanMode
     None = 0,
 
     /// <summary>
-    /// Enables panning on the X axis.
+    /// Enables zooming and panning on the X axis and enables fitting to bounds.
     /// </summary>
-    PanX = 1 << 0,
+    X = 1 << 0,
 
     /// <summary>
-    /// Enables panning on the Y axis.
+    /// Enables zooming and panning on the Y axis and enables fitting to bounds.
     /// </summary>
-    PanY = 1 << 1,
+    Y = 1 << 1,
 
     /// <summary>
-    /// Enables zooming on the X axis.
+    /// Disables data bounds fitting when zooming or panning, this flag must be used in conjunction with
+    /// <see cref="X"/>, <see cref="Y"/>, or <see cref="Both"/> to have an effect.
     /// </summary>
-    ZoomX = 1 << 2,
+    NoFit = 1 << 2,
 
     /// <summary>
-    /// Enables zooming on the Y axis.
+    /// Disables the "Zoom by section" feature, which allows zooming in on a specific section of the chart.
     /// </summary>
-    ZoomY = 1 << 3,
+    NoZoomBySection = 1 << 3,
 
     /// <summary>
     /// When this flag is present the panning will be triggered using the right click on desktop devices and the touch-and-hold gesture on touch devices.
-    /// The "Zoom by section" feature will be triggered to the left click on desktop devices and the touch-and-hold gesture on touch devices.
+    /// The "Zoom by section" feature will be triggered to the left click on desktop devices and the touch-and-hold gesture on touch devices,
+    /// this flag must be used in conjunction with
+    /// <see cref="X"/>, <see cref="Y"/>, or <see cref="Both"/> to have an effect.
     /// </summary>
     InvertPanningPointerTrigger = 1 << 4,
 
     /// <summary>
-    /// Enables zooming and panning on the X axis.
-    /// </summary>
-    X = PanX | ZoomX,
-
-    /// <summary>
-    /// Enables zooming and panning on the Y axis.
-    /// </summary>
-    Y = PanY | ZoomY,
-
-    /// <summary>
-    /// Enables zooming and panning on both axes.
+    /// Enables zooming and panning on both axes and enables fitting to bounds.
     /// </summary>
     Both = X | Y
 }

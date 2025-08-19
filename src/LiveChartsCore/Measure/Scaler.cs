@@ -53,10 +53,8 @@ public class Scaler
 
         _orientation = axis.Orientation;
 
-        var actualBounds = bounds ?? axis.VisibleDataBounds;
-
-        var max = axis.MaxLimit ?? actualBounds.Max;
-        var min = axis.MinLimit ?? actualBounds.Min;
+        var max = bounds?.Max ?? axis.MaxLimit ?? axis.VisibleDataBounds.Max;
+        var min = bounds?.Min ?? axis.MinLimit ?? axis.VisibleDataBounds.Min;
 
         if (axis.Orientation == AxisOrientation.X)
         {

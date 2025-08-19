@@ -54,7 +54,6 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
     internal float _xo = 0f, _yo = 0f;
     internal LvcSize _size;
     internal AxisOrientation _orientation;
-    internal AnimatableAxisBounds _animatableBounds = new();
     internal Bounds _dataBounds = new();
     internal Bounds _visibleDataBounds = new();
 
@@ -72,6 +71,8 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
     private bool _forceStepToMin;
     private readonly float _tickLength = 6f;
     internal double? _logBase;
+    internal DoubleMotionProperty? _animatableMin;
+    internal DoubleMotionProperty? _animatableMax;
 
     #endregion
 
@@ -89,8 +90,8 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
 
     /// <inheritdoc cref="IPlane.VisibleDataBounds"/>
     public Bounds VisibleDataBounds => _visibleDataBounds;
-
-    AnimatableAxisBounds IPlane.ActualBounds => _animatableBounds;
+    double IPlane.MotionMinLimit => _animatableMin?.GetMovement(Animatable.Empty) ?? 0;
+    double IPlane.MotionMaxLimit => _animatableMax?.GetMovement(Animatable.Empty) ?? 0;
 
     /// <inheritdoc cref="IPlane.Name"/>
     public string? Name { get; set => SetProperty(ref field, value); } = null;
@@ -256,7 +257,10 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
     /// <inheritdoc cref="ICartesianAxis.MinZoomDelta"/>
     public double? MinZoomDelta { get; set; }
 
-    /// <inheritdoc cref="ICartesianAxis.MinZoomDelta"/>
+    /// <inheritdoc cref="ICartesianAxis.BouncingDistance"/>
+    public double BouncingDistance { get; set; } = 0.25;
+
+    /// <inheritdoc cref="ICartesianAxis.InLineNamePlacement"/>
     public bool InLineNamePlacement { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="ICartesianAxis.SharedWith"/>
@@ -281,14 +285,24 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
 
         AxisLimit.ValidateLimits(ref min, ref max, MinStep);
 
-        _animatableBounds.MaxVisibleBound = max;
-        _animatableBounds.MinVisibleBound = min;
-
-        if (!_animatableBounds.HasPreviousState)
+        if (_animatableMin is null || _animatableMax is null)
         {
-            _animatableBounds.Animate(EasingFunction ?? cartesianChart.ActualEasingFunction, AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed);
-            _ = cartesianChart.Canvas.Trackers.Add(_animatableBounds);
+            _animatableMin = new DoubleMotionProperty(min)
+            {
+                Animation = new Animation(
+                    EasingFunction ?? cartesianChart.ActualEasingFunction,
+                    AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed)
+            };
+            _animatableMax = new DoubleMotionProperty(max)
+            {
+                Animation = new Animation(
+                    EasingFunction ?? cartesianChart.ActualEasingFunction,
+                    AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed)
+            };
         }
+
+        _animatableMin.SetMovement(min, Animatable.Empty);
+        _animatableMax.SetMovement(max, Animatable.Empty);
 
         var scale = this.GetNextScaler(cartesianChart);
         var actualScale = this.GetActualScaler(cartesianChart) ?? scale;
@@ -438,7 +452,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
                 _ticksPath.Y1 = lyj;
             }
 
-            if (!_animatableBounds.HasPreviousState) _ticksPath.CompleteTransition(null);
+            _ticksPath.CompleteTransition(null);
         }
         if (TicksPaint is not null && TicksPaint != Paint.Default && _ticksPath is not null && !DrawTicksPath)
             TicksPaint.RemoveGeometryFromPaintTask(cartesianChart.Canvas, _ticksPath);
@@ -948,7 +962,6 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
         _orientation = orientation;
         _dataBounds = new Bounds();
         _visibleDataBounds = new Bounds();
-        _animatableBounds ??= new();
         _possibleMaxLabelsSize = null;
         MeasureStarted?.Invoke(chart, this);
     }
@@ -982,7 +995,6 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
     public override void RemoveFromUI(Chart chart)
     {
         base.RemoveFromUI(chart);
-        _animatableBounds = new();
         _ = activeSeparators.Remove(chart);
     }
 
@@ -1148,7 +1160,9 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
     }
 
     private void InitializeLine(BaseLineGeometry lineGeometry, CartesianChartEngine cartesianChart) =>
-        lineGeometry.Animate(EasingFunction ?? cartesianChart.ActualEasingFunction, AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed);
+        lineGeometry.Animate(
+            EasingFunction ?? cartesianChart.ActualEasingFunction,
+            AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed);
 
     private void InitializeTick(
         AxisVisualSeprator visualSeparator, CartesianChartEngine cartesianChart, TLineGeometry? subTickGeometry = null)
@@ -1165,7 +1179,9 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
             visualSeparator.Tick = tickGeometry;
         }
 
-        tickGeometry.Animate(EasingFunction ?? cartesianChart.ActualEasingFunction, AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed);
+        tickGeometry.Animate(
+            EasingFunction ?? cartesianChart.ActualEasingFunction,
+            AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed);
     }
 
     private void InitializeSubticks(
@@ -1196,7 +1212,8 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
             EasingFunction ?? cartesianChart.ActualEasingFunction,
             AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed,
             BaseLabelGeometry.XProperty,
-            BaseLabelGeometry.YProperty);
+            BaseLabelGeometry.YProperty,
+            BaseLabelGeometry.OpacityProperty);
     }
 
     private void UpdateSeparator(
@@ -1433,7 +1450,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
         switch (mode)
         {
             case UpdateMode.UpdateAndComplete:
-                if (_animatableBounds.HasPreviousState) geometry.Opacity = 0;
+                geometry.Opacity = 0;
                 geometry.CompleteTransition(null);
                 break;
             case UpdateMode.UpdateAndRemove:

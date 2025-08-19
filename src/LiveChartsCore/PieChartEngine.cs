@@ -212,8 +212,6 @@ public class PieChartEngine(
         // or it is initializing in the UI and has no dimensions yet
         if (DrawMarginSize.Width <= 0 || DrawMarginSize.Height <= 0) return;
 
-        UpdateBounds();
-
         if (View.Title is not null) AddTitleToChart();
 
         // we draw all the series even invisible because it animates the series when hidden.

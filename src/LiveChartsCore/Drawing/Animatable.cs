@@ -30,6 +30,7 @@ namespace LiveChartsCore.Drawing;
 public abstract class Animatable
 {
     internal VisualStatesDictionary.StatesTracker? _statesTracker;
+    internal static EmptyAnimatable Empty { get; } = new();
 
     /// <summary>
     /// Gets the <see cref="PropertyDefinition"/> collection in the <see cref="Animatable"/> type.
@@ -142,4 +143,6 @@ public abstract class Animatable
     /// </summary>
     /// <returns>The propertt definitions.</returns>
     protected virtual Dictionary<string, PropertyDefinition> GetPropertyDefinitions() => PropertyDefinitions;
+
+    internal class EmptyAnimatable : Animatable { }
 }

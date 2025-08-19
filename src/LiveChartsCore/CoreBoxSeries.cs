@@ -185,7 +185,6 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
             {
                 var xi = secondary - helper.uwm + helper.cp;
                 var uwi = helper.uw;
-                var hi = 0f;
 
                 if (previousSecondaryScale is not null && previousPrimaryScale is not null)
                 {
@@ -196,7 +195,6 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
 
                     xi = previousSecondaryScale.ToPixels(coordinate.SecondaryValue) - uwm;
                     uwi = helper.uw;
-                    hi = cartesianChart.IsZoomingOrPanning ? bp : 0;
                 }
 
                 var r = new TVisual
