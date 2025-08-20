@@ -1,6 +1,6 @@
 # Coding style
 
-Please ensure that any code you add to this repository satifies the coding style, the root of this repo contains a 
+Please ensure that any code you add to this repository satisfies the coding style, the root of this repo contains a 
 [editor config](https://github.com/beto-rodriguez/LiveCharts2/blob/master/.editorconfig) file that will warn you in 
 visual studio if you are violating the coding style.
 
@@ -33,7 +33,7 @@ Early `return`, `continue` and `break` should be used when possible.
 
 # Naming files
 
-The documentation is generated autmatically, it is important that all the files are named the same as the object name.
+The documentation is generated automatically, it is important that all the files are named the same as the object name.
 
 for the following class, the file must be named `Hello.cs`
 

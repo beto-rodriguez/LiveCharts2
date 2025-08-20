@@ -85,7 +85,7 @@ cover the most common scenarios.
 ## Series
 
 There are ~multiple~ series available in the library, you can add one or mix them all in the same chart, every series has unique properties,
-any image bellow is a link to an article explaining more about them.
+any image below is a link to an article explaining more about them.
 
 <a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Polar%20Line%20Series">
 <div class="series-miniature">
@@ -96,7 +96,7 @@ any image bellow is a link to an article explaining more about them.
 
 ## InitialRotation property
 
-Defines an offset to stablish where the 0 angle is.
+Defines an offset to establish where the 0 angle is.
 
 {{~ if xaml ~}}
 <pre><code>&lt;lvc:PolarChart
