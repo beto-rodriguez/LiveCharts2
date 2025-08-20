@@ -148,7 +148,7 @@ Settings the `EasingFunction` to `null` disables animations.
 :::info
 **Disabling animations will not improve performance drastically**: if you come from `LiveCharts 0.x` version then
 maybe you are thinking that disabling animations will improve the performance of the library, in most of the cases
-that is not true, animations are not the bottle neck in performance in `LiveCharts 2.x`, normally you must need to 
+that is not true, animations are not the bottleneck in performance in `LiveCharts 2.x`, normally you need to 
 clean your code somewhere else, not here, plus we put a lot of effort building the animations of the library, please
 just do not disable them 😭, instead try to make them run faster, animating data visualization normally brings
 an excellent user experience.
