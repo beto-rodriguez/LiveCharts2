@@ -96,7 +96,7 @@ any image bellow is a link to an article explaining more about them.
 
 ## InitialRotation property
 
-Defines an offset to stablish where the 0 angle is.
+Defines an offset to establish where the 0 angle is.
 
 {{~ if xaml ~}}
 <pre><code>&lt;lvc:PolarChart

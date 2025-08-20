@@ -1,5 +1,5 @@
 :::info
-This article do not include all the properties of the {{ name | to_title_case }} class, it only highlights some features, to
+This article does not include all the properties of the {{ name | to_title_case }} class, it only highlights some features, to
 explore the full object checkout the [API explorer]({{ website_url }}/api/{{ version }}/LiveChartsCore.SkiaSharpView.{{ name  | to_title_case_no_spaces }}-3)
 :::
 
