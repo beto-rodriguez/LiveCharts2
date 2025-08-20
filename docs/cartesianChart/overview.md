@@ -94,7 +94,7 @@ cover the most common scenarios.
 ## Series
 
 There are multiple series available in the library, you can add one or mix them all in the same chart, every series has unique properties,
-any image bellow is a link to an article explaining more about them.
+any image below is a link to an article explaining more about them.
 
 <a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Line%20Series%20properties">
 <div class="series-miniature">
@@ -183,7 +183,7 @@ any image bellow is a link to an article explaining more about them.
 ## Axes
 
 A `CartesianChart` has 2 axes, the `YAxis` and the `XAxis` properties, an [IAxis]({{ website_url }}/api/{{ version}}/LiveChartsCore.Kernel.Sketches.ICartesianAxis) 
-besides de visual customization such as labels format and separators paints it also controls multiple important features such as 
+besides the visual customization such as labels format and separators paints it also controls multiple important features such as 
 the **Zooming**, the **Panning**, the **Scale** (log) and the **Paging**.
 
 This is a brief sample about how to use the main features of the `Axis` class, you can find a more detailed article at the button below or at the 

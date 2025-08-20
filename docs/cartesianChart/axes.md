@@ -458,7 +458,7 @@ Series = new ObservableCollection&lt;ISeries>
         Stroke = new SolidColorPaint(blue, 2),
         GeometryStroke = new SolidColorPaint(blue, 2),
         Fill = null,
-        // it will be scaled at the Axis[0] instance (see YAxes property bellow)
+        // it will be scaled at the Axis[0] instance (see YAxes property below)
         ScalesYAt = 0 // mark
     },
     new LineSeries&lt;double>
@@ -468,7 +468,7 @@ Series = new ObservableCollection&lt;ISeries>
         Stroke = new SolidColorPaint(blue, 2),
         GeometryStroke = new SolidColorPaint(blue, 2),
         Fill = null,
-        // it will be scaled at the Axis[0] instance (see YAxes property bellow)
+        // it will be scaled at the Axis[0] instance (see YAxes property below)
         ScalesYAt = 0 // mark
     },
     new LineSeries&lt;double>
@@ -478,7 +478,7 @@ Series = new ObservableCollection&lt;ISeries>
         Stroke = new SolidColorPaint(red, 2),
         GeometryStroke = new SolidColorPaint(red, 2),
         Fill = null,
-        // it will be scaled at the YAxes[1] instance (see YAxes property bellow)
+        // it will be scaled at the YAxes[1] instance (see YAxes property below)
         ScalesYAt = 1 // mark
     },
     new LineSeries&lt;double>
@@ -488,7 +488,7 @@ Series = new ObservableCollection&lt;ISeries>
         Stroke = new SolidColorPaint(yellow, 2),
         GeometryStroke = new SolidColorPaint(yellow, 2),
         Fill = null,
-         // it will be scaled at the YAxes[2] instance (see YAxes property bellow)
+         // it will be scaled at the YAxes[2] instance (see YAxes property below)
         ScalesYAt = 2 // mark
     }
 };
