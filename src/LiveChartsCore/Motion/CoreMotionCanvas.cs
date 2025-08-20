@@ -354,8 +354,11 @@ public class CoreMotionCanvas : IDisposable
     /// </summary>
     public void Dispose()
     {
-        Clean();
-        IsValid = true;
+        lock (Sync)
+        {
+            Clean();
+            IsValid = true;
+        }
     }
 
     private void Clean()
