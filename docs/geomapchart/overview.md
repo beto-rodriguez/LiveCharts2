@@ -103,7 +103,7 @@ namespace ViewModelsSamples.Maps.World
 ## Series
 
 There are ~multiple~ series available in the library, you can add one or mix them all in the same chart, every series has unique properties,
-any image bellow is a link to an article explaining more about them.
+any image below is a link to an article explaining more about them.
 
 <a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/GeoMap.Heat%20land%20series">
 <div class="series-miniature">

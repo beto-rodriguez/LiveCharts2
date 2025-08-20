@@ -331,9 +331,9 @@ public partial class ViewModel
 
 ## Custom tooltip control
 
-You can also create your own tooltip, the recommended way is to use the LiveCharts API (example bellow) but you can
+You can also create your own tooltip, the recommended way is to use the LiveCharts API (example below) but you can
 use anything as tooltip as soon as it implements the `IChartTooltip<T>` interface. In the following example we build
-a custom control to render tooltips in out charts using the LiveCharts API.
+a custom control to render tooltips in our charts using the LiveCharts API.
 
 :::tip
 The next tooltip is drawn by the library, LiveCharts can only draw inside the control bounds, in some cases it could 

@@ -108,7 +108,7 @@ public partial class ViewModel
 
 ## Tooltip control from scratch
 
-You can also create your own legend, the recommended way is to use the LiveCharts API (example bellow) but you can
+You can also create your own legend, the recommended way is to use the LiveCharts API (example below) but you can
 use anything as tooltip as soon as it implements the `IChartLegend<T>` interface. At the following example we build
 a custom control to render legends in our charts using the LiveCharts API.
 
