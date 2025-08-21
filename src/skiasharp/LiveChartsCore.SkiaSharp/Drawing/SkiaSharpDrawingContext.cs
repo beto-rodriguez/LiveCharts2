@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
@@ -117,52 +118,12 @@ public class SkiaSharpDrawingContext(
 
         var element = (IDrawnElement<SkiaSharpDrawingContext>)drawable;
 
+        var canvasState = 0;
         if (element.HasTransform)
         {
-            _ = Canvas.Save();
-
-            var m = element.Measure();
-            var o = element.TransformOrigin;
-            var p = new SKPoint(element.X, element.Y);
-
-            var xo = m.Width * o.X;
-            var yo = m.Height * o.Y;
-
-            if (element.HasRotation)
-            {
-                Canvas.Translate(p.X + xo, p.Y + yo);
-                Canvas.RotateDegrees(element.RotateTransform);
-                Canvas.Translate(-p.X - xo, -p.Y - yo);
-            }
-
-            if (element.HasTranslate)
-            {
-                var translate = element.TranslateTransform;
-                Canvas.Translate(translate.X, translate.Y);
-            }
-
-            if (element.HasScale)
-            {
-                var scale = element.ScaleTransform;
-                Canvas.Translate(p.X + xo, p.Y + yo);
-                Canvas.Scale(scale.X, scale.Y);
-                Canvas.Translate(-p.X - xo, -p.Y - yo);
-            }
-
-            if (element.HasSkew)
-            {
-                var skew = element.SkewTransform;
-                Canvas.Translate(p.X + xo, p.Y + yo);
-                Canvas.Skew(skew.X, skew.Y);
-                Canvas.Translate(-p.X - xo, -p.Y - yo);
-            }
-
-            // DISABLED FOR NOW.
-            //if (_hasTransform)
-            //{
-            //    var transform = Transform;
-            //    context.Canvas.Concat(ref transform);
-            //}
+            canvasState = Canvas.Save();
+            var transform = BuildTransform(element);
+            Canvas.Concat(ref transform);
         }
 
         if (ActiveLvcPaint is null)
@@ -199,7 +160,10 @@ public class SkiaSharpDrawingContext(
             }
         }
 
-        if (element.HasTransform) Canvas.Restore();
+        if (element.HasTransform)
+        {
+            Canvas.RestoreToCount(canvasState);
+        }
     }
 
     /// <inheritdoc cref="DrawingContext.SelectPaint(Paint)"/>
@@ -287,4 +251,59 @@ public class SkiaSharpDrawingContext(
             ActiveLvcPaint!.RestoreOpacityMask(this, opacity, element);
         }
     }
+
+    private static SKMatrix BuildTransform(IDrawnElement<SkiaSharpDrawingContext> element)
+    {
+        var m = element.Measure();
+        var o = element.TransformOrigin;
+        var p = new SKPoint(element.X, element.Y);
+        var xo = m.Width * o.X;
+        var yo = m.Height * o.Y;
+
+        var origin = new SKPoint(p.X + xo, p.Y + yo);
+        var matrix = SKMatrix.CreateIdentity();
+
+        if (element.HasTranslate)
+        {
+            var t = element.TranslateTransform;
+            matrix = SKMatrix.Concat(matrix, SKMatrix.CreateTranslation(t.X, t.Y));
+        }
+
+        if (element.HasRotation)
+        {
+            matrix = SKMatrix.Concat(matrix, SKMatrix.CreateRotationDegrees(
+                element.RotateTransform, origin.X, origin.Y));
+        }
+
+        if (element.HasScale)
+        {
+            var s = element.ScaleTransform;
+            matrix = SKMatrix.Concat(matrix, SKMatrix.CreateScale(s.X, s.Y, origin.X, origin.Y));
+        }
+
+        if (element.HasSkew)
+        {
+            var skew = element.SkewTransform;
+            var skewMatrix = new SKMatrix
+            {
+                ScaleX = 1,
+                SkewX = (float)Math.Tan(skew.X * Math.PI / 180),
+                TransX = 0,
+                SkewY = (float)Math.Tan(skew.Y * Math.PI / 180),
+                ScaleY = 1,
+                TransY = 0,
+                Persp0 = 0,
+                Persp1 = 0,
+                Persp2 = 1
+            };
+            var translateToOrigin = SKMatrix.CreateTranslation(origin.X, origin.Y);
+            var translateBack = SKMatrix.CreateTranslation(-origin.X, -origin.Y);
+            matrix = SKMatrix.Concat(matrix, translateToOrigin);
+            matrix = SKMatrix.Concat(matrix, skewMatrix);
+            matrix = SKMatrix.Concat(matrix, translateBack);
+        }
+
+        return matrix;
+    }
+
 }
