@@ -81,11 +81,7 @@ public abstract partial class ChartControl : UserControl, IChartView
     bool IChartView.IsDarkMode => false;
 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    LvcColor IChartView.BackColor
-    {
-        get => new(BackColor.R, BackColor.G, BackColor.B, BackColor.A);
-        set => BackColor = Color.FromArgb(value.A, value.R, value.G, value.B);
-    }
+    LvcColor IChartView.BackColor => new(BackColor.R, BackColor.G, BackColor.B, BackColor.A);
 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     LvcSize IChartView.ControlSize => new() { Width = Width, Height = Height };

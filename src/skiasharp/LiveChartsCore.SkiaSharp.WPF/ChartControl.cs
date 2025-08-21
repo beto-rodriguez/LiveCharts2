@@ -72,13 +72,10 @@ public abstract partial class ChartControl : UserControl, IChartView
 
     bool IChartView.DesignerMode => DesignerProperties.GetIsInDesignMode(this);
     bool IChartView.IsDarkMode => false;
-    LvcColor IChartView.BackColor
-    {
-        get => Background is not SolidColorBrush b
-            ? new LvcColor()
+    LvcColor IChartView.BackColor =>
+        Background is not SolidColorBrush b
+            ? CoreCanvas._virtualBackgroundColor
             : LvcColor.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
-        set => SetValue(BackgroundProperty, new SolidColorBrush(Color.FromArgb(value.A, value.R, value.G, value.B)));
-    }
     LvcSize IChartView.ControlSize => new() { Width = (float)CanvasView.ActualWidth, Height = (float)CanvasView.ActualHeight };
 
     private void OnLoaded(object sender, RoutedEventArgs e)

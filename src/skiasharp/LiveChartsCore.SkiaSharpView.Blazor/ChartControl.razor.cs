@@ -85,7 +85,7 @@ public abstract partial class ChartControl : IBlazorChart, IDisposable, IChartVi
 
     bool IChartView.DesignerMode => false;
     bool IChartView.IsDarkMode => false; // Is this possible in Blazor?
-    LvcColor IChartView.BackColor { get; set; } // is this even used in livecharts? isnt this obsolete?
+    LvcColor IChartView.BackColor { get; }
 
     LvcSize IChartView.ControlSize => new() { Width = (float)_jsFlexibleContainer.Width, Height = (float)_jsFlexibleContainer.Height };
 

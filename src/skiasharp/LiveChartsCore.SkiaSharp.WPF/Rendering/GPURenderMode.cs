@@ -21,11 +21,10 @@
 // SOFTWARE.
 
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using SkiaSharp.Views.WPF;
 
@@ -62,7 +61,7 @@ internal class GPURenderMode : SKGLElement, IRenderMode
             args.Surface.Canvas.Scale(density.dpix, density.dpiy);
 
         FrameRequest?.Invoke(
-            new SkiaSharpDrawingContext(_canvas, args.Info, args.Surface.Canvas, GetBackground().AsSKColor()));
+            new SkiaSharpDrawingContext(_canvas, args.Surface.Canvas, GetBackground()));
     }
 
     private ResolutionHelper GetPixelDensity()
@@ -76,14 +75,6 @@ internal class GPURenderMode : SKGLElement, IRenderMode
         return new((float)matrix.M11, (float)matrix.M22);
     }
 
-    private LvcColor GetBackground()
-    {
-        var parentBg = Parent is Control control && control.Background is SolidColorBrush bg
-            ? new LvcColor(bg.Color.R, bg.Color.G, bg.Color.B, bg.Color.A)
-            : LvcColor.Empty;
-
-        return parentBg != LvcColor.Empty
-            ? parentBg
-            : _canvas._virtualBackgroundColor;
-    }
+    private SKColor GetBackground() =>
+        ((Parent as FrameworkElement)?.Parent as IChartView)?.BackColor.AsSKColor() ?? SKColor.Empty;
 }

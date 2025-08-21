@@ -35,35 +35,12 @@ namespace LiveChartsCore.SkiaSharpView.Drawing;
 /// Initializes a new instance of the <see cref="SkiaSharpDrawingContext"/> class.
 /// </remarks>
 /// <param name="motionCanvas">The motion canvas.</param>
-/// <param name="info">The information.</param>
 /// <param name="canvas">The canvas.</param>
-/// <param name="clearOnBeginDraw">Indicates whether the canvas is cleared on frame draw.</param>
+/// <param name="background">The background color.</param>
 public class SkiaSharpDrawingContext(
-    CoreMotionCanvas motionCanvas,
-    SKImageInfo info,
-    SKCanvas canvas,
-    bool clearOnBeginDraw = true)
+    CoreMotionCanvas motionCanvas, SKCanvas canvas, SKColor background)
         : DrawingContext
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SkiaSharpDrawingContext"/> class.
-    /// </summary>
-    /// <param name="motionCanvas">The motion canvas.</param>
-    /// <param name="info">The information.</param>
-    /// <param name="canvas">The canvas.</param>
-    /// <param name="background">The background.</param>
-    /// <param name="clearOnBeginDraw">Indicates whether the canvas is cleared on frame draw.</param>
-    public SkiaSharpDrawingContext(
-        CoreMotionCanvas motionCanvas,
-        SKImageInfo info,
-        SKCanvas canvas,
-        SKColor background,
-        bool clearOnBeginDraw = true)
-        : this(motionCanvas, info, canvas, clearOnBeginDraw)
-    {
-        Background = background;
-    }
-
     /// <summary>
     /// Gets or sets the motion canvas.
     /// </summary>
@@ -71,14 +48,6 @@ public class SkiaSharpDrawingContext(
     /// The motion canvas.
     /// </value>
     public CoreMotionCanvas MotionCanvas { get; set; } = motionCanvas;
-
-    /// <summary>
-    /// Gets or sets the information.
-    /// </summary>
-    /// <value>
-    /// The information.
-    /// </value>
-    public SKImageInfo Info { get; set; } = info;
 
     /// <summary>
     /// Gets or sets the canvas.
@@ -99,16 +68,14 @@ public class SkiaSharpDrawingContext(
     /// <summary>
     /// Gets or sets the background.
     /// </summary>
-    public SKColor Background { get; set; } = SKColor.Empty;
+    public SKColor Background { get; set; } = background;
 
     /// <inheritdoc cref="DrawingContext.OnBeginDraw"/>
     public override void OnBeginDraw()
     {
-        if (clearOnBeginDraw) Canvas.Clear();
-        if (Background != SKColor.Empty)
-        {
-            Canvas.DrawRect(Info.Rect, new SKPaint { Color = Background });
-        }
+        if (Background == SKColor.Empty) return;
+
+        Canvas.Clear(Background);
     }
 
     /// <inheritdoc cref="DrawingContext.LogOnCanvas(string)"/>

@@ -3,8 +3,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-    xmlns:vms="using:ViewModelsSamples.Axes.Style"
-    Background="#333333">
+    xmlns:vms="using:ViewModelsSamples.Axes.Style">
 
     <UserControl.DataContext>
         <vms:ViewModel/>
@@ -18,6 +17,7 @@
     </UserControl.Resources>
 
     <lvc:CartesianChart
+        Background="#333333"
         Margin="20"
         DrawMarginFrame="{lvc:Frame Stroke={lvc:SolidColorPaint Color={StaticResource gray}, StrokeWidth=2}}"
         ZoomMode="Both"

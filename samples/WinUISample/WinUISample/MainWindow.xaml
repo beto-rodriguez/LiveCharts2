@@ -46,7 +46,7 @@
             </ScrollViewer>
         </Grid>
 
-        <Border Name="contentBorder" Grid.Column="1" Padding="5" Background="{StaticResource SystemAccentColor}">
+        <Border Name="contentBorder" Grid.Column="1" Padding="5">
             <ContentControl
                 x:Name="content"
                 HorizontalContentAlignment="Stretch"

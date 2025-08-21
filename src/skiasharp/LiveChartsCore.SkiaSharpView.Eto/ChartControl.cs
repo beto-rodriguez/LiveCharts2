@@ -68,11 +68,8 @@ public abstract partial class ChartControl : Panel, IChartView
 
     bool IChartView.IsDarkMode => false;
 
-    LvcColor IChartView.BackColor
-    {
-        get => new((byte)BackgroundColor.Rb, (byte)BackgroundColor.Gb, (byte)BackgroundColor.Bb, (byte)BackgroundColor.Ab);
-        set => BackgroundColor = Color.FromArgb(value.R, value.G, value.B, value.A);
-    }
+    LvcColor IChartView.BackColor =>
+        new((byte)BackgroundColor.Rb, (byte)BackgroundColor.Gb, (byte)BackgroundColor.Bb, (byte)BackgroundColor.Ab);
 
     LvcSize IChartView.ControlSize => new() { Width = Content.Width, Height = Content.Height };
 

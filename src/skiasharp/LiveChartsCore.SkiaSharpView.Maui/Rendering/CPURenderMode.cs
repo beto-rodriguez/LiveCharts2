@@ -21,11 +21,11 @@
 // SOFTWARE.
 
 using System;
-using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
-using Microsoft.Maui.Controls;
 using Microsoft.Maui.Devices;
+using SkiaSharp;
 using SkiaSharp.Views.Maui;
 using SkiaSharp.Views.Maui.Controls;
 
@@ -65,20 +65,12 @@ internal class CPURenderMode : SKCanvasView, IRenderMode
             args.Surface.Canvas.Scale(_pixelDensity, _pixelDensity);
 
         FrameRequest?.Invoke(
-            new SkiaSharpDrawingContext(_canvas, args.Info, args.Surface.Canvas, GetBackground().AsSKColor()));
+            new SkiaSharpDrawingContext(_canvas, args.Surface.Canvas, GetBackground()));
     }
 
     private void MainDisplayInfoChanged(object? sender, EventArgs e) =>
         _pixelDensity = (float)DeviceDisplay.MainDisplayInfo.Density;
 
-    private LvcColor GetBackground()
-    {
-        var parentBg = Parent is VisualElement control && control.Background is SolidColorBrush bg && bg.Color is not null
-            ? new LvcColor((byte)(bg.Color.Red * 255), (byte)(bg.Color.Green * 255), (byte)(bg.Color.Blue * 255), (byte)(bg.Color.Alpha * 255))
-            : LvcColor.Empty;
-
-        return parentBg != LvcColor.Empty
-            ? parentBg
-            : _canvas._virtualBackgroundColor;
-    }
+    private SKColor GetBackground() =>
+        (Parent?.Parent as IChartView)?.BackColor.AsSKColor() ?? SKColor.Empty;
 }

@@ -96,15 +96,7 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView
     /// <inheritdoc cref="IChartView.Tooltip"/>
     public IChartTooltip? Tooltip { get; set; }
 
-    LvcColor IChartView.BackColor
-    {
-        get => _backColor;
-        set
-        {
-            _backColor = value;
-            Background = new SKColor(_backColor.R, _backColor.G, _backColor.B, _backColor.A);
-        }
-    }
+    LvcColor IChartView.BackColor => _backColor;
 
     LvcSize IChartView.ControlSize => GetControlSize();
 

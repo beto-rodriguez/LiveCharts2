@@ -75,13 +75,10 @@ public abstract partial class ChartControl : UserControl, IChartView, ICustomHit
 
     bool IChartView.DesignerMode => Design.IsDesignMode;
     bool IChartView.IsDarkMode => Application.Current?.ActualThemeVariant == ThemeVariant.Dark;
-    LvcColor IChartView.BackColor
-    {
-        get => Background is not ISolidColorBrush b
-                ? new LvcColor()
-                : LvcColor.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
-        set => Background = new SolidColorBrush(new Color(value.R, value.G, value.B, value.A));
-    }
+    LvcColor IChartView.BackColor =>
+        Background is not ISolidColorBrush b
+            ? CoreCanvas._virtualBackgroundColor
+            : LvcColor.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
     LvcSize IChartView.ControlSize => new() { Width = (float)CanvasView.Bounds.Width, Height = (float)CanvasView.Bounds.Height };
 
     private void OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)

@@ -23,10 +23,11 @@
 using System;
 using System.ComponentModel;
 using System.Windows.Forms;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms;
@@ -90,6 +91,8 @@ public partial class MotionCanvas : UserControl, IRenderMode
         base.CreateHandle();
         _ticker = new AsyncLoopTicker();
         _ticker.InitializeTicker(CanvasCore, this);
+        _skControl?.Invalidate();
+        _skglControl?.Invalidate();
     }
 
     /// <inheritdoc cref="Control.OnHandleDestroyed(EventArgs)"/>
@@ -102,16 +105,14 @@ public partial class MotionCanvas : UserControl, IRenderMode
 
     private void SkControl_PaintSurface(object sender, SKPaintSurfaceEventArgs e) =>
         CanvasCore.DrawFrame(
-            new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface.Canvas, GetBackground().AsSKColor()));
+            new SkiaSharpDrawingContext(CanvasCore, e.Surface.Canvas, GetBackground()));
 
     private void SkglControl_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e) =>
         CanvasCore.DrawFrame(
-            new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface.Canvas, GetBackground().AsSKColor()));
+            new SkiaSharpDrawingContext(CanvasCore, e.Surface.Canvas, GetBackground()));
 
-    private LvcColor GetBackground() =>
-        true
-            ? new LvcColor(Parent!.BackColor.R, Parent.BackColor.G, Parent.BackColor.B)
-            : CanvasCore._virtualBackgroundColor; // are themes relevant in  Win Forms?
+    private SKColor GetBackground() =>
+        ((IChartView)Parent!)?.BackColor.AsSKColor() ?? SKColor.Empty;
 
     void IRenderMode.InitializeRenderMode(CoreMotionCanvas canvas) =>
         throw new NotImplementedException();

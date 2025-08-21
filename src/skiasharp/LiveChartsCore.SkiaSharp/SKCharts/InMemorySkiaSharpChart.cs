@@ -129,31 +129,25 @@ public abstract class InMemorySkiaSharpChart(IChartView? chartView = null)
     /// Draws the image to the specified canvas.
     /// </summary>
     /// <param name="canvas">The canvas.</param>
-    /// <param name="clearCanvasOnBeginDraw">Indicates whether the canvas should be cleared when the draw starts, default is false.</param>
-    public virtual void SaveImage(SKCanvas canvas, bool clearCanvasOnBeginDraw = false) =>
-        DrawOnCanvas(canvas, clearCanvasOnBeginDraw);
+    public virtual void SaveImage(SKCanvas canvas) =>
+        DrawOnCanvas(canvas);
 
     /// <summary>
     /// Draws the chart to the specified canvas.
     /// </summary>
     /// <param name="canvas">The canvas.</param>
-    /// <param name="clearCanvasOnBeginDraw">[probably an obsolete param] Indicates whether the canvas should be cleared when the draw starts, default is false.</param>
-    /// <exception cref="Exception"></exception>
-    public virtual void DrawOnCanvas(SKCanvas canvas, bool clearCanvasOnBeginDraw = false)
+    public virtual void DrawOnCanvas(SKCanvas canvas)
     {
         if (CoreChart is null || CoreChart is not Chart skiaChart)
             throw new Exception("Something is missing :(");
 
+        var bg = CoreChart.GetTheme().VirtualBackroundColor.AsSKColor();
+
+
         if (_chartView is not null)
         {
             _chartView.CoreCanvas.DrawFrame(
-                new SkiaSharpDrawingContext(
-                    CoreCanvas,
-                    new SKImageInfo(Width, Height),
-                    canvas,
-                    Background,
-                    clearCanvasOnBeginDraw));
-
+                new SkiaSharpDrawingContext(CoreCanvas, canvas, bg));
             return;
         }
 
@@ -166,14 +160,10 @@ public abstract class InMemorySkiaSharpChart(IChartView? chartView = null)
         skiaChart.Measure();
 
         skiaChart.Canvas.DrawFrame(
-            new SkiaSharpDrawingContext(
-                CoreCanvas,
-                new SKImageInfo(Width, Height),
-                canvas,
-                Background,
-                clearCanvasOnBeginDraw));
+            new SkiaSharpDrawingContext(CoreCanvas, canvas, bg));
 
-        if (!ExplicitDisposing) skiaChart.Unload();
+        if (!ExplicitDisposing)
+            skiaChart.Unload();
     }
 
     private void WarnSize()

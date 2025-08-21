@@ -20,7 +20,6 @@ public partial class View : UserControl
     {
         InitializeComponent();
         Size = new Size(100, 100);
-        BackColor = Color.FromArgb(255, 48, 48, 48); // #303030
 
         var values = new ObservablePoint[1001];
         var fx = EasingFunctions.BounceInOut;
@@ -86,6 +85,7 @@ public partial class View : UserControl
 
         cartesianChart = new CartesianChart
         {
+            BackColor = Color.FromArgb(255, 48, 48, 48),
             Series = series,
             XAxes = [xAxis],
             YAxes = [yAxis],

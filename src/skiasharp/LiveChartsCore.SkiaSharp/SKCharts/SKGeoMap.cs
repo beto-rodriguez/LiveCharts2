@@ -115,20 +115,17 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView
         }
     }
 
-    /// <inheritdoc cref="InMemorySkiaSharpChart.DrawOnCanvas(SKCanvas, bool)"/>
-    public override void DrawOnCanvas(SKCanvas canvas, bool clearCanvasOnBeginDraw = false)
+    /// <inheritdoc cref="InMemorySkiaSharpChart.DrawOnCanvas(SKCanvas)"/>
+    public override void DrawOnCanvas(SKCanvas canvas)
     {
         Canvas.DisableAnimations = true;
 
         _core.Measure();
 
+        var bg = CoreChart.GetTheme().VirtualBackroundColor.AsSKColor();
+
         Canvas.DrawFrame(
-            new SkiaSharpDrawingContext(
-                Canvas,
-                new SKImageInfo(Width, Height),
-                canvas,
-                Background,
-                clearCanvasOnBeginDraw));
+            new SkiaSharpDrawingContext(Canvas, canvas, bg));
 
         _core.Unload();
     }

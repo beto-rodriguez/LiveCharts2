@@ -15,8 +15,6 @@ public class View : Panel
 
     public View()
     {
-        BackgroundColor = new Eto.Drawing.Color(48, 48, 48); // #303030
-
         var values = new ObservablePoint[1001];
         var fx = LiveChartsCore.EasingFunctions.BounceInOut;
         for (var i = 0; i < 1001; i++)
@@ -81,6 +79,7 @@ public class View : Panel
 
         cartesianChart = new CartesianChart
         {
+            BackgroundColor = new Eto.Drawing.Color(48 / 255f, 48 / 255f, 48 / 255f),
             Series = series,
             XAxes = new[] { xAxis },
             YAxes = new[] { yAxis },

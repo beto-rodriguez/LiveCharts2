@@ -33,7 +33,6 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls;
-using Microsoft.Maui.Graphics;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
 
@@ -69,12 +68,13 @@ public abstract partial class ChartControl : ChartView, IChartView
     bool IChartView.IsDarkMode => Application.Current?.RequestedTheme == AppTheme.Dark;
     LvcColor IChartView.BackColor
     {
-        get => Background is not SolidColorBrush b
-            ? new LvcColor()
-            : LvcColor.FromArgb(
-                (byte)(b.Color.Alpha * 255), (byte)(b.Color.Red * 255),
-                (byte)(b.Color.Green * 255), (byte)(b.Color.Blue * 255));
-        set => Background = new SolidColorBrush(Color.FromRgba(value.R / 255, value.G / 255, value.B / 255, value.A / 255));
+        get
+        {
+            var c = (Background as SolidColorBrush)?.Color ?? BackgroundColor;
+            return c is not null
+                ? LvcColor.FromArgb((byte)(c.Alpha * 255), (byte)(c.Red * 255), (byte)(c.Green * 255), (byte)(c.Blue * 255))
+                : CoreCanvas._virtualBackgroundColor;
+        }
     }
     LvcSize IChartView.ControlSize => new() { Width = (float)CanvasView.Width, Height = (float)CanvasView.Height };
 

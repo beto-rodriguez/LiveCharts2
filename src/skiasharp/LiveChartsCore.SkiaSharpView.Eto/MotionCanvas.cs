@@ -26,6 +26,8 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 using Eto.SkiaDraw;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Kernel;
+using SkiaSharp;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.SkiaSharpView.Eto;
 
@@ -102,8 +104,7 @@ public class MotionCanvas : SkiaDrawable, IRenderMode
 
     private void SkControl_PaintSurface(object sender, SKPaintEventArgs e) =>
         CanvasCore.DrawFrame(
-            new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface.Canvas));
-
+            new SkiaSharpDrawingContext(CanvasCore, e.Surface.Canvas, GetBackground()));
 
     void IRenderMode.InitializeRenderMode(CoreMotionCanvas canvas) =>
         throw new NotImplementedException();
@@ -113,4 +114,7 @@ public class MotionCanvas : SkiaDrawable, IRenderMode
 
     void IRenderMode.DisposeRenderMode() =>
         throw new NotImplementedException();
+
+    private SKColor GetBackground() =>
+        (Parent as IChartView)?.BackColor.AsSKColor() ?? SKColor.Empty;
 }

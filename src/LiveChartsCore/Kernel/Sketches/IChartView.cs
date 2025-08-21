@@ -71,7 +71,7 @@ public interface IChartView
     /// <value>
     /// The color of the back.
     /// </value>
-    LvcColor BackColor { get; set; }
+    LvcColor BackColor { get; }
 
     /// <summary>
     /// Gets the size of the control.
