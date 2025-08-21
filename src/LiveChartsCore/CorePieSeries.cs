@@ -28,6 +28,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore;
@@ -167,14 +168,12 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
         if (Fill is not null && Fill != Paint.Default)
         {
             Fill.ZIndex = actualZIndex + 0.1;
-            Fill.SetClipRectangle(pieChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
-            pieChart.Canvas.AddDrawableTask(Fill);
+            pieChart.Canvas.AddDrawableTask(Fill, zone: CanvasZone.DrawMargin);
         }
         if (Stroke is not null && Stroke != Paint.Default)
         {
             Stroke.ZIndex = actualZIndex + 0.2;
-            Stroke.SetClipRectangle(pieChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
-            pieChart.Canvas.AddDrawableTask(Stroke);
+            pieChart.Canvas.AddDrawableTask(Stroke, zone: CanvasZone.DrawMargin);
         }
         if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
         {

@@ -29,11 +29,12 @@ namespace LiveChartsCore.Motion;
 
 internal class CanvasZone
 {
-    public static int DrawMargin = 0;
-    public static int XAxis = 1;
-    public static int YAxis = 2;
-    public static int Geometries = 3;
+    public const int NoClip = -1;
+    public const int DrawMargin = 0;
+    public const int XCrosshair = 1;
+    public const int YCrosshair = 2;
 
+    public int StateId { get; set; } = -1;
     public LvcRectangle Clip { get; set; }
     private HashSet<Paint> PaintTasks { get; set; } = [];
 

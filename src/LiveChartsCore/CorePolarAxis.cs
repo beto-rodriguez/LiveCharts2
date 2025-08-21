@@ -29,6 +29,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Helpers;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore;
@@ -197,8 +198,7 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
         if (SeparatorsPaint is not null && SeparatorsPaint != Paint.Default)
         {
             if (SeparatorsPaint.ZIndex == 0) SeparatorsPaint.ZIndex = -1;
-            SeparatorsPaint.SetClipRectangle(polarChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
-            polarChart.Canvas.AddDrawableTask(SeparatorsPaint);
+            polarChart.Canvas.AddDrawableTask(SeparatorsPaint, zone: CanvasZone.NoClip);
         }
 
         IPolarAxis a, b;

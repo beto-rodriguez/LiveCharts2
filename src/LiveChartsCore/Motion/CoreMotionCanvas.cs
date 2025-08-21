@@ -139,6 +139,8 @@ public class CoreMotionCanvas : IDisposable
 
             foreach (var zone in Zones.Values)
             {
+                context.OnBeginZone(zone);
+
                 foreach (var task in zone.EnumerateTasks())
                 {
                     if (DisableAnimations) task.CompleteTransition(null);
@@ -173,6 +175,8 @@ public class CoreMotionCanvas : IDisposable
 
                     context.ClearPaintSelection(task);
                 }
+
+                context.OnEndZone(zone);
             }
 
             foreach (var tuple in toRemoveGeometries)
@@ -303,10 +307,10 @@ public class CoreMotionCanvas : IDisposable
     {
         var task = new DrawnTask(this, geometries);
 
-        if (!Zones.TryGetValue(CanvasZone.Geometries, out var geometriesZone))
+        if (!Zones.TryGetValue(CanvasZone.NoClip, out var geometriesZone))
         {
             geometriesZone = new CanvasZone { Clip = LvcRectangle.Empty };
-            Zones.Add(CanvasZone.Geometries, geometriesZone);
+            Zones.Add(CanvasZone.NoClip, geometriesZone);
         }
 
         geometriesZone.AddTask(task);

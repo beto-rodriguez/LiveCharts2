@@ -29,6 +29,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore;
@@ -443,14 +444,12 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
 
             if (GeometryFill is not null && GeometryFill != Paint.Default)
             {
-                polarChart.Canvas.AddDrawableTask(GeometryFill);
-                GeometryFill.SetClipRectangle(polarChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+                polarChart.Canvas.AddDrawableTask(GeometryFill, zone: CanvasZone.DrawMargin);
                 GeometryFill.ZIndex = actualZIndex + 0.3;
             }
             if (GeometryStroke is not null && GeometryStroke != Paint.Default)
             {
-                polarChart.Canvas.AddDrawableTask(GeometryStroke);
-                GeometryStroke.SetClipRectangle(polarChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+                polarChart.Canvas.AddDrawableTask(GeometryStroke, zone: CanvasZone.DrawMargin);
                 GeometryStroke.ZIndex = actualZIndex + 0.4;
             }
 
@@ -482,8 +481,7 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
 
         if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
         {
-            polarChart.Canvas.AddDrawableTask(DataLabelsPaint);
-            DataLabelsPaint.SetClipRectangle(polarChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
+            polarChart.Canvas.AddDrawableTask(DataLabelsPaint, zone: CanvasZone.DrawMargin);
             DataLabelsPaint.ZIndex = actualZIndex + 0.5;
         }
 

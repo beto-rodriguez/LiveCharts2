@@ -71,14 +71,6 @@ public class SkiaSharpDrawingContext(
     /// </summary>
     public SKColor Background { get; set; } = background;
 
-    /// <inheritdoc cref="DrawingContext.OnBeginDraw"/>
-    public override void OnBeginDraw()
-    {
-        if (Background == SKColor.Empty) return;
-
-        Canvas.Clear(Background);
-    }
-
     /// <inheritdoc cref="DrawingContext.LogOnCanvas(string)"/>
     public override void LogOnCanvas(string log)
     {
@@ -111,8 +103,34 @@ public class SkiaSharpDrawingContext(
         }
     }
 
-    /// <inheritdoc cref="DrawingContext.Draw(IDrawnElement)"/>
-    public override void Draw(IDrawnElement drawable)
+    internal override void OnBeginDraw()
+    {
+        if (Background == SKColor.Empty) return;
+
+        Canvas.Clear(Background);
+    }
+
+    internal override void OnEndDraw()
+    {
+
+    }
+
+    internal override void OnBeginZone(CanvasZone zone)
+    {
+        if (zone.Clip == LvcRectangle.Empty) return;
+
+        zone.StateId = Canvas.Save();
+        Canvas.ClipRect(new(zone.Clip.X, zone.Clip.Y, zone.Clip.Width, zone.Clip.Height));
+    }
+
+    internal override void OnEndZone(CanvasZone zone)
+    {
+        if (zone.Clip == LvcRectangle.Empty) return;
+
+        Canvas.RestoreToCount(zone.StateId);
+    }
+
+    internal override void Draw(IDrawnElement drawable)
     {
         var opacity = ActiveOpacity;
 
@@ -166,8 +184,7 @@ public class SkiaSharpDrawingContext(
         }
     }
 
-    /// <inheritdoc cref="DrawingContext.SelectPaint(Paint)"/>
-    public override void SelectPaint(Paint paint)
+    internal override void SelectPaint(Paint paint)
     {
         ActiveLvcPaint = paint;
         //ActiveSkiaPaint = paint.SKPaint; set by paint.InitializeTask
@@ -176,8 +193,7 @@ public class SkiaSharpDrawingContext(
         paint.OnPaintStarted(this, null);
     }
 
-    /// <inheritdoc cref="DrawingContext.ClearPaintSelection(Paint)"/>
-    public override void ClearPaintSelection(Paint paint)
+    internal override void ClearPaintSelection(Paint paint)
     {
         paint.OnPaintFinished(this, null);
 

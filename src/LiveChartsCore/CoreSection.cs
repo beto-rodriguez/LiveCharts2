@@ -25,6 +25,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore;
@@ -35,7 +36,6 @@ namespace LiveChartsCore;
 /// <seealso cref="ChartElement" />
 public abstract class CoreSection : ChartElement, INotifyPropertyChanged
 {
-
     /// <summary>
     /// Gets or sets the stroke.
     /// </summary>
@@ -230,9 +230,8 @@ public abstract class CoreSection<TSizedGeometry, TLabelGeometry> : CoreSection
             _fillSizedGeometry.Width = xj - xi;
             _fillSizedGeometry.Height = yj - yi;
 
-            Fill.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             Fill.AddGeometryToPaintTask(chart.Canvas, _fillSizedGeometry);
-            chart.Canvas.AddDrawableTask(Fill);
+            chart.Canvas.AddDrawableTask(Fill, zone: CanvasZone.DrawMargin);
         }
 
         if (Stroke is not null)
@@ -257,9 +256,8 @@ public abstract class CoreSection<TSizedGeometry, TLabelGeometry> : CoreSection
             _strokeSizedGeometry.Width = xj - xi;
             _strokeSizedGeometry.Height = yj - yi;
 
-            Stroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             Stroke.AddGeometryToPaintTask(chart.Canvas, _strokeSizedGeometry);
-            chart.Canvas.AddDrawableTask(Stroke);
+            chart.Canvas.AddDrawableTask(Stroke, zone: CanvasZone.DrawMargin);
         }
 
         if (LabelPaint is not null)
@@ -292,9 +290,8 @@ public abstract class CoreSection<TSizedGeometry, TLabelGeometry> : CoreSection
             _labelGeometry.TextSize = _labelSize;
             _labelGeometry.Paint = LabelPaint;
 
-            LabelPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             LabelPaint.AddGeometryToPaintTask(chart.Canvas, _labelGeometry);
-            chart.Canvas.AddDrawableTask(LabelPaint);
+            chart.Canvas.AddDrawableTask(LabelPaint, zone: CanvasZone.DrawMargin);
         }
     }
 }

@@ -218,14 +218,6 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel>(
     }
 
     /// <summary>
-    /// Gets the clip rectangle for the series.
-    /// </summary>
-    /// <param name="cartesianChart">The cartesian chart.</param>
-    /// <returns></returns>
-    protected virtual LvcRectangle GetClipRectangle(CartesianChartEngine cartesianChart) =>
-        Clipping.GetClipRectangle(ClippingMode, cartesianChart);
-
-    /// <summary>
     /// Gets the geometry size to calculate the series bounds.
     /// </summary>
     /// <returns>The geometry requested size.</returns>

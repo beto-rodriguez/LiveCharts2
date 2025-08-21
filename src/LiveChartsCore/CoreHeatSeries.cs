@@ -27,6 +27,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore;
@@ -120,19 +121,16 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
         var uwp = primaryScale.MeasureInPixels(primaryAxis.UnitWidth);
 
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
-        var clipping = GetClipRectangle(cartesianChart);
 
         if (_paintTaks is not null)
         {
             _paintTaks.ZIndex = actualZIndex + 0.2;
-            _paintTaks.SetClipRectangle(cartesianChart.Canvas, clipping);
-            cartesianChart.Canvas.AddDrawableTask(_paintTaks);
+            cartesianChart.Canvas.AddDrawableTask(_paintTaks, zone: CanvasZone.DrawMargin);
         }
         if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
         {
             DataLabelsPaint.ZIndex = actualZIndex + 0.3;
-            DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
-            cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
+            cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint, zone: CanvasZone.DrawMargin);
         }
 
         var dls = (float)DataLabelsSize;

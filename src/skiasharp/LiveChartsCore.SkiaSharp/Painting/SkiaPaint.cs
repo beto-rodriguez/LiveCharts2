@@ -198,26 +198,13 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
             paint.ImageFilter = ImageFilter._sKImageFilter;
         }
 
+        if (drawnElement is not null)
+            paint.StrokeWidth = drawnElement.StrokeThickness;
+
         // special case for text paints.
         // when  the label is mesured, we do not have a context yet.
         if (context is null)
             return paint;
-
-        var clip = GetClipRectangle(context.MotionCanvas);
-
-        if (drawnElement is not null)
-        {
-            paint.StrokeWidth = drawnElement.StrokeThickness;
-
-            if (drawnElement.ClippingBounds != LvcRectangle.Unset)
-                clip = drawnElement.ClippingBounds;
-        }
-
-        if (clip != LvcRectangle.Empty)
-        {
-            _ = context.Canvas.Save();
-            context.Canvas.ClipRect(new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height));
-        }
 
         context.ActiveSkiaPaint = paint;
 
@@ -228,18 +215,7 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
 
     internal override void OnPaintFinished(DrawingContext context, IDrawnElement? drawnElement)
     {
-        var skiaContext = (SkiaSharpDrawingContext)context;
-
-        var clip = GetClipRectangle(skiaContext.MotionCanvas);
-
-        if (drawnElement is not null)
-        {
-            if (drawnElement.ClippingBounds != LvcRectangle.Unset)
-                clip = drawnElement.ClippingBounds;
-        }
-
-        if (context is not null && clip != LvcRectangle.Empty)
-            skiaContext.Canvas.Restore();
+        // nothing to do here now?
     }
 
     internal override void DisposeTask()

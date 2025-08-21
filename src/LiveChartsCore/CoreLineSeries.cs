@@ -29,6 +29,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore;
@@ -153,7 +154,6 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
             : null;
 
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
-        var clipping = GetClipRectangle(cartesianChart);
 
         if (stacker is not null)
         {
@@ -233,9 +233,8 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
                     if (Fill is not null && Fill != Paint.Default)
                     {
                         Fill.AddGeometryToPaintTask(cartesianChart.Canvas, fillPath);
-                        cartesianChart.Canvas.AddDrawableTask(Fill);
+                        cartesianChart.Canvas.AddDrawableTask(Fill, zone: CanvasZone.DrawMargin);
                         Fill.ZIndex = actualZIndex + 0.1;
-                        Fill.SetClipRectangle(cartesianChart.Canvas, clipping);
                         fillPath.Pivot = p;
                         if (isNew)
                         {
@@ -245,9 +244,8 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
                     if (Stroke is not null && Stroke != Paint.Default)
                     {
                         Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, strokePath);
-                        cartesianChart.Canvas.AddDrawableTask(Stroke);
+                        cartesianChart.Canvas.AddDrawableTask(Stroke, zone: CanvasZone.DrawMargin);
                         Stroke.ZIndex = actualZIndex + 0.2;
-                        Stroke.SetClipRectangle(cartesianChart.Canvas, clipping);
                         strokePath.Pivot = p;
                         if (isNew)
                         {
@@ -473,14 +471,12 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
 
             if (GeometryFill is not null && GeometryFill != Paint.Default)
             {
-                cartesianChart.Canvas.AddDrawableTask(GeometryFill);
-                GeometryFill.SetClipRectangle(cartesianChart.Canvas, clipping);
+                cartesianChart.Canvas.AddDrawableTask(GeometryFill, zone: CanvasZone.DrawMargin);
                 GeometryFill.ZIndex = actualZIndex + 0.4;
             }
             if (GeometryStroke is not null && GeometryStroke != Paint.Default)
             {
-                cartesianChart.Canvas.AddDrawableTask(GeometryStroke);
-                GeometryStroke.SetClipRectangle(cartesianChart.Canvas, clipping);
+                cartesianChart.Canvas.AddDrawableTask(GeometryStroke, zone: CanvasZone.DrawMargin);
                 GeometryStroke.ZIndex = actualZIndex + 0.5;
             }
 
@@ -512,15 +508,13 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
 
         if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
         {
-            cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
-            DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
+            cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint, zone: CanvasZone.DrawMargin);
             DataLabelsPaint.ZIndex = actualZIndex + 0.5;
         }
         if (ShowError && ErrorPaint is not null && ErrorPaint != Paint.Default)
         {
-            cartesianChart.Canvas.AddDrawableTask(ErrorPaint);
+            cartesianChart.Canvas.AddDrawableTask(ErrorPaint, zone: CanvasZone.DrawMargin);
             ErrorPaint.ZIndex = actualZIndex + 0.3;
-            ErrorPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
         }
 
         pointsCleanup.CollectPoints(

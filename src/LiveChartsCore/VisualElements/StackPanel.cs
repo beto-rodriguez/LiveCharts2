@@ -24,7 +24,7 @@ using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.VisualElements;
@@ -37,15 +37,6 @@ namespace LiveChartsCore.VisualElements;
 public class StackPanel<TBackgroundGeometry> : VisualElement
     where TBackgroundGeometry : BoundedDrawnGeometry, new()
 {
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="StackPanel{TBackgroundGeometry}"/> class.
-    /// </summary>
-    public StackPanel()
-    {
-        ClippingMode = ClipMode.None;
-    }
-
     /// <summary>
     /// Gets the children collection.
     /// </summary>
@@ -144,9 +135,7 @@ public class StackPanel<TBackgroundGeometry> : VisualElement
                 .GetProvider()
                 .GetSolidColorPaint(new LvcColor(0, 0, 0, 0));
 
-        var clipping = Clipping.GetClipRectangle(ClippingMode, chart);
-
-        chart.Canvas.AddDrawableTask(BackgroundPaint);
+        chart.Canvas.AddDrawableTask(BackgroundPaint, zone: CanvasZone.NoClip);
         BackgroundGeometry.X = (float)X;
         BackgroundGeometry.Y = (float)Y;
         BackgroundGeometry.Width = controlSize.Width;
@@ -154,7 +143,6 @@ public class StackPanel<TBackgroundGeometry> : VisualElement
         BackgroundGeometry.RotateTransform = (float)Rotation;
         BackgroundGeometry.TranslateTransform = Translate;
         BackgroundPaint.AddGeometryToPaintTask(chart.Canvas, BackgroundGeometry);
-        BackgroundPaint.SetClipRectangle(chart.Canvas, clipping);
     }
 
     /// <inheritdoc cref="VisualElement.SetParent(DrawnGeometry)"/>
@@ -190,7 +178,7 @@ public class StackPanel<TBackgroundGeometry> : VisualElement
                         Align.Start => yl,
                         Align.Middle => yl + (rowHeight - child.Size.Height) / 2f,
                         Align.End => yl + rowHeight - child.Size.Height,
-                        _ => throw new System.NotImplementedException()
+                        _ => throw new NotImplementedException()
                     };
                 }
                 else
@@ -200,7 +188,7 @@ public class StackPanel<TBackgroundGeometry> : VisualElement
                         Align.Start => xl,
                         Align.Middle => xl + (columnWidth - child.Size.Width) / 2f,
                         Align.End => xl + columnWidth - child.Size.Width,
-                        _ => throw new System.NotImplementedException()
+                        _ => throw new NotImplementedException()
                     };
                 }
 

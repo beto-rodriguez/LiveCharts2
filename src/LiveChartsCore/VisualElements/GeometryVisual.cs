@@ -24,6 +24,7 @@ using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.VisualElements;
@@ -77,7 +78,6 @@ public class GeometryVisual<TGeometry, TLabelGeometry> : BaseGeometryVisual
     {
         var l = GetActualCoordinate();
         var size = Measure(chart);
-        var clipping = Clipping.GetClipRectangle(ClippingMode, chart);
 
         if (_geometry is null)
         {
@@ -110,16 +110,14 @@ public class GeometryVisual<TGeometry, TLabelGeometry> : BaseGeometryVisual
 
         if (Fill is not null)
         {
-            chart.Canvas.AddDrawableTask(Fill);
+            chart.Canvas.AddDrawableTask(Fill, zone: CanvasZone.DrawMargin);
             Fill.AddGeometryToPaintTask(chart.Canvas, _geometry);
-            Fill.SetClipRectangle(chart.Canvas, clipping);
         }
 
         if (Stroke is not null)
         {
-            chart.Canvas.AddDrawableTask(Stroke);
+            chart.Canvas.AddDrawableTask(Stroke, zone: CanvasZone.DrawMargin);
             Stroke.AddGeometryToPaintTask(chart.Canvas, _geometry);
-            Stroke.SetClipRectangle(chart.Canvas, clipping);
         }
 
         if (LabelPaint is not null)
@@ -150,9 +148,8 @@ public class GeometryVisual<TGeometry, TLabelGeometry> : BaseGeometryVisual
             _labelGeometry.TranslateTransform = Translate;
             _labelGeometry.Paint = LabelPaint;
 
-            chart.Canvas.AddDrawableTask(LabelPaint);
+            chart.Canvas.AddDrawableTask(LabelPaint, zone: CanvasZone.DrawMargin);
             LabelPaint.AddGeometryToPaintTask(chart.Canvas, _labelGeometry);
-            LabelPaint.SetClipRectangle(chart.Canvas, clipping);
         }
     }
 
