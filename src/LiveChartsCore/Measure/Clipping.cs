@@ -40,27 +40,20 @@ public static class Clipping
     public static LvcRectangle GetClipRectangle(
         ClipMode mode, Chart chart)
     {
-        var x = chart.DrawMarginLocation.X;
-        var y = chart.DrawMarginLocation.Y;
-        var w = x + chart.DrawMarginSize.Width;
-        var h = y + chart.DrawMarginSize.Height;
-
         return mode switch
         {
             ClipMode.None =>
-                new(new(), chart.ControlSize),
+                new LvcRectangle(new LvcPoint(), chart.ControlSize),
             ClipMode.X =>
-                new(
-                    new(x, 0),
-                    new(w, h)),
+                new LvcRectangle(
+                    new LvcPoint(chart.DrawMarginLocation.X, 0),
+                    new LvcSize(chart.DrawMarginSize.Width, chart.ControlSize.Height)),
             ClipMode.Y =>
-                new(
-                    new(0, y),
-                    new(w, h)),
+                new LvcRectangle(
+                    new LvcPoint(0, chart.DrawMarginLocation.Y),
+                    new LvcSize(chart.ControlSize.Width, chart.DrawMarginSize.Height)),
             ClipMode.XY =>
-                new(
-                    new(x, y),
-                    new(w, h)),
+                new LvcRectangle(chart.DrawMarginLocation, chart.DrawMarginSize),
 
             _ => throw new NotImplementedException(),
         };
