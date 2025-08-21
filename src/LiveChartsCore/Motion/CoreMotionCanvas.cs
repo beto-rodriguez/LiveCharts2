@@ -36,7 +36,7 @@ namespace LiveChartsCore.Motion;
 public class CoreMotionCanvas : IDisposable
 {
     private static readonly Stopwatch s_clock = new();
-    internal HashSet<Paint> _paintTasks = [];
+    internal Dictionary<int, CanvasZone> Zones { get; set; } = [];
     private int _frames = 0;
     private Stopwatch? _fspSw;
     private int _jitteredDrawCount;
@@ -115,7 +115,6 @@ public class CoreMotionCanvas : IDisposable
     /// Draws the frame.
     /// </summary>
     /// <param name="context">The context.</param>
-    /// <returns></returns>
     public void DrawFrame<TDrawingContext>(TDrawingContext context)
         where TDrawingContext : DrawingContext
     {
@@ -138,38 +137,42 @@ public class CoreMotionCanvas : IDisposable
 
             var toRemoveGeometries = new List<Tuple<Paint, IDrawnElement>>();
 
-            foreach (var task in _paintTasks.Where(x => x is not null && x != Paint.Default).OrderBy(x => x.ZIndex))
+            foreach (var zone in Zones.Values)
             {
-                if (DisableAnimations) task.CompleteTransition(null);
-                task.IsValid = true;
-
-                context.SelectPaint(task);
-
-                foreach (var geometry in task.GetGeometries(this))
+                foreach (var task in zone.EnumerateTasks())
                 {
-                    if (geometry is null) continue;
-                    if (DisableAnimations) geometry.CompleteTransition(null);
+                    if (DisableAnimations) task.CompleteTransition(null);
+                    task.IsValid = true;
 
-                    geometry.IsValid = true;
+                    context.SelectPaint(task);
 
-                    if (!task.IsPaused)
+                    foreach (var geometry in task.GetGeometries(this))
                     {
-                        context.ActiveOpacity = geometry.Opacity;
-                        context.Draw(geometry);
+                        if (geometry is null) continue;
+                        if (DisableAnimations) geometry.CompleteTransition(null);
+
+                        geometry.IsValid = true;
+
+                        if (!task.IsPaused)
+                        {
+                            context.ActiveOpacity = geometry.Opacity;
+                            context.Draw(geometry);
+                        }
+
+                        isValid = isValid && geometry.IsValid;
+
+                        if (geometry.IsValid && geometry.RemoveOnCompleted)
+                            toRemoveGeometries.Add(
+                                new Tuple<Paint, IDrawnElement>(task, geometry));
                     }
 
-                    isValid = isValid && geometry.IsValid;
+                    isValid = isValid && task.IsValid;
 
-                    if (geometry.IsValid && geometry.RemoveOnCompleted)
-                        toRemoveGeometries.Add(
-                            new Tuple<Paint, IDrawnElement>(task, geometry));
+                    if (task.RemoveOnCompleted && task.IsValid)
+                        zone.RemoveTask(task);
+
+                    context.ClearPaintSelection(task);
                 }
-
-                isValid = isValid && task.IsValid;
-
-                if (task.RemoveOnCompleted && task.IsValid) _ = _paintTasks.Remove(task);
-
-                context.ClearPaintSelection(task);
             }
 
             foreach (var tuple in toRemoveGeometries)
@@ -257,15 +260,11 @@ public class CoreMotionCanvas : IDisposable
     /// <summary>
     /// Gets the drawables count.
     /// </summary>
-    /// <value>
-    /// The drawables count.
-    /// </value>
-    public int DrawablesCount => _paintTasks.Count;
+    public int DrawablesCount => Zones.Values.Sum(x => x.CountTasks());
 
     /// <summary>
     /// Invalidates this instance.
     /// </summary>
-    /// <returns></returns>
     public void Invalidate()
     {
         IsValid = false;
@@ -277,15 +276,21 @@ public class CoreMotionCanvas : IDisposable
     /// </summary>
     /// <param name="task">The task.</param>
     /// <param name="style">The paint style.</param>
-    /// <returns></returns>
-    public void AddDrawableTask(Paint task, PaintStyle style = PaintStyle.Undefined)
+    /// <param name="zone">The zone.</param>
+    public void AddDrawableTask(Paint task, PaintStyle style = PaintStyle.Undefined, int zone = 0)
     {
         if (task == Paint.Default) return;
 
         if (style != PaintStyle.Undefined)
             task.PaintStyle = style;
 
-        _ = _paintTasks.Add(task);
+        if (!Zones.TryGetValue(zone, out var canvasZone))
+        {
+            canvasZone = new CanvasZone { Clip = LvcRectangle.Empty };
+            Zones.Add(zone, canvasZone);
+        }
+
+        canvasZone.AddTask(task);
     }
 
     /// <summary>
@@ -297,22 +302,22 @@ public class CoreMotionCanvas : IDisposable
     public DrawnTask AddGeometry(params IDrawnElement[] geometries)
     {
         var task = new DrawnTask(this, geometries);
-        _ = _paintTasks.Add(task);
+
+        if (!Zones.TryGetValue(CanvasZone.Geometries, out var geometriesZone))
+        {
+            geometriesZone = new CanvasZone { Clip = LvcRectangle.Empty };
+            Zones.Add(CanvasZone.Geometries, geometriesZone);
+        }
+
+        geometriesZone.AddTask(task);
+
         return task;
     }
-
-    /// <summary>
-    /// Sets the paint tasks.
-    /// </summary>
-    /// <param name="tasks">The tasks.</param>
-    /// <returns></returns>
-    public void SetPaintTasks(HashSet<Paint> tasks) => _paintTasks = tasks;
 
     /// <summary>
     /// Removes the paint task.
     /// </summary>
     /// <param name="task">The task.</param>
-    /// <returns></returns>
     public void RemovePaintTask(Paint task)
     {
         var geometriesWithOwnPaints = task.GetGeometries(this)
@@ -322,7 +327,10 @@ public class CoreMotionCanvas : IDisposable
             geometry.DisposePaints();
 
         task.ReleaseCanvas(this);
-        _ = _paintTasks.Remove(task);
+
+        foreach (var zone in Zones.Values)
+            if (zone.RemoveTask(task))
+                break;
     }
 
     /// <summary>
@@ -342,7 +350,7 @@ public class CoreMotionCanvas : IDisposable
     {
         var count = 0;
 
-        foreach (var task in _paintTasks)
+        foreach (var task in Zones.Values.SelectMany(x => x.EnumerateTasks()))
             foreach (var geometry in task.GetGeometries(this))
                 count++;
 
@@ -363,19 +371,24 @@ public class CoreMotionCanvas : IDisposable
 
     private void Clean()
     {
-        foreach (var task in _paintTasks)
+        foreach (var zone in Zones.Values)
         {
-            var geometriesWithOwnPaints = task.GetGeometries(this)
-                .Where(x => (x.Fill ?? x.Stroke ?? x.Paint) is not null);
+            foreach (var task in zone.EnumerateTasks())
+            {
+                var geometriesWithOwnPaints = task.GetGeometries(this)
+                    .Where(x => (x.Fill ?? x.Stroke ?? x.Paint) is not null);
 
-            foreach (var geometry in geometriesWithOwnPaints)
-                geometry.DisposePaints();
+                foreach (var geometry in geometriesWithOwnPaints)
+                    geometry.DisposePaints();
 
-            task.DisposeTask();
-            task.ReleaseCanvas(this);
+                task.DisposeTask();
+                task.ReleaseCanvas(this);
+            }
+
+            zone.ClearTasks();
         }
 
-        _paintTasks.Clear();
+        Zones = [];
     }
 
     private void MeasureFPS(long drawStartTime)
