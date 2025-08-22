@@ -463,6 +463,10 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
 
         foreach (var i in EnumerateSeparators(start, max, s))
         {
+            // is outside the visible data bounds, is use full because we normally render
+            // from min - s to max + s, this is usefull to correctly render subseparators and subticks
+            // but labels out we use this to avoid rendering labels outside the visible data bounds.
+            var isOutside = i < min || i > max;
             var separatorKey = Labelers.SixRepresentativeDigits(i - 1d + 1d);
             var labelContent = i < min || i > max ? string.Empty : TryGetLabelOrLogError(labeler, i - 1d + 1d);
 
@@ -569,7 +573,10 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
             if (visualSeparator.Subticks is not null)
                 UpdateSubticks(visualSeparator.Subticks, scale, s, x + txco, y + tyco, UpdateMode.Update);
             if (visualSeparator.Label is not null)
+            {
                 UpdateLabel(visualSeparator.Label, x, y + tyco, labelContent, hasRotation, r, UpdateMode.Update);
+                visualSeparator.Label.Opacity = isOutside ? 0f : 1f;
+            }
 
             if (hasActivePaint) _ = measured.Add(visualSeparator);
         }
