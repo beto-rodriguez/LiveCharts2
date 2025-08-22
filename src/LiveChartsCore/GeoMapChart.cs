@@ -200,7 +200,7 @@ public class GeoMapChart
 
             if (View.Stroke is not null)
             {
-                if (View.Stroke.ZIndex == 0) View.Stroke.ZIndex = Paint.GeoMapStrokeZIndex;
+                if (View.Stroke.ZIndex == 0) View.Stroke.ZIndex = PaintConstants.GeoMapStrokeZIndex;
                 View.Stroke.PaintStyle = PaintStyle.Stroke;
                 View.Canvas.AddDrawableTask(View.Stroke);
             }

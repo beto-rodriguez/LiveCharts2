@@ -89,22 +89,22 @@ public abstract class CoreRowSeries<TModel, TVisual, TLabel, TErrorGeometry>
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
         if (Fill is not null && Fill != Paint.Default)
         {
-            Fill.ZIndex = actualZIndex + Paint.SeriesFillZIndexOffset;
+            Fill.ZIndex = actualZIndex + PaintConstants.SeriesFillZIndexOffset;
             cartesianChart.Canvas.AddDrawableTask(Fill, zone: CanvasZone.DrawMargin);
         }
         if (Stroke is not null && Stroke != Paint.Default)
         {
-            Stroke.ZIndex = actualZIndex + Paint.SeriesStrokeZIndexOffset;
+            Stroke.ZIndex = actualZIndex + PaintConstants.SeriesStrokeZIndexOffset;
             cartesianChart.Canvas.AddDrawableTask(Stroke, zone: CanvasZone.DrawMargin);
         }
         if (ShowError && ErrorPaint is not null && ErrorPaint != Paint.Default)
         {
-            ErrorPaint.ZIndex = actualZIndex + Paint.SeriesGeometryFillZIndexOffset;
+            ErrorPaint.ZIndex = actualZIndex + PaintConstants.SeriesGeometryFillZIndexOffset;
             cartesianChart.Canvas.AddDrawableTask(ErrorPaint, zone: CanvasZone.DrawMargin);
         }
         if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
         {
-            DataLabelsPaint.ZIndex = actualZIndex + Paint.SeriesGeometryStrokeZIndexOffset;
+            DataLabelsPaint.ZIndex = actualZIndex + PaintConstants.SeriesGeometryStrokeZIndexOffset;
             cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint, zone: CanvasZone.DrawMargin);
         }
 

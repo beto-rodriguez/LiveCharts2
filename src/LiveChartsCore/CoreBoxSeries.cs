@@ -116,17 +116,17 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
 
         if (Stroke is not null && Stroke != Paint.Default)
         {
-            Stroke.ZIndex = actualZIndex + Paint.SeriesStrokeZIndexOffset;
+            Stroke.ZIndex = actualZIndex + PaintConstants.SeriesStrokeZIndexOffset;
             cartesianChart.Canvas.AddDrawableTask(Stroke, zone: CanvasZone.DrawMargin);
         }
         if (Fill is not null && Fill != Paint.Default)
         {
-            Fill.ZIndex = actualZIndex + Paint.SeriesFillZIndexOffset;
+            Fill.ZIndex = actualZIndex + PaintConstants.SeriesFillZIndexOffset;
             cartesianChart.Canvas.AddDrawableTask(Fill, zone: CanvasZone.DrawMargin);
         }
         if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
         {
-            DataLabelsPaint.ZIndex = actualZIndex + Paint.SeriesGeometryFillZIndexOffset;
+            DataLabelsPaint.ZIndex = actualZIndex + PaintConstants.SeriesGeometryFillZIndexOffset;
             cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint, zone: CanvasZone.DrawMargin);
         }
 

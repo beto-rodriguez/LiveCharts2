@@ -124,12 +124,12 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
 
         if (_paintTaks is not null)
         {
-            _paintTaks.ZIndex = actualZIndex + Paint.SeriesStrokeZIndexOffset;
+            _paintTaks.ZIndex = actualZIndex + PaintConstants.SeriesStrokeZIndexOffset;
             cartesianChart.Canvas.AddDrawableTask(_paintTaks, zone: CanvasZone.DrawMargin);
         }
         if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
         {
-            DataLabelsPaint.ZIndex = actualZIndex + Paint.SeriesGeometryFillZIndexOffset;
+            DataLabelsPaint.ZIndex = actualZIndex + PaintConstants.SeriesGeometryFillZIndexOffset;
             cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint, zone: CanvasZone.DrawMargin);
         }
 

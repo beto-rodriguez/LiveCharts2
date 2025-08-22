@@ -196,7 +196,7 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
             // easy workaround to set an automatic and valid z-index for stacked area series
             // the problem of this solution is that the user needs to set z-indexes above 1000
             // if the user needs to add more series to the chart.
-            actualZIndex = Paint.StackedSeriesBaseZIndex - stacker.Position;
+            actualZIndex = PaintConstants.StackedSeriesBaseZIndex - stacker.Position;
             Fill?.ZIndex = actualZIndex;
             Stroke?.ZIndex = actualZIndex;
         }
@@ -284,7 +284,7 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
                     {
                         Fill.AddGeometryToPaintTask(polarChart.Canvas, fillPath);
                         polarChart.Canvas.AddDrawableTask(Fill);
-                        Fill.ZIndex = actualZIndex + Paint.SeriesFillZIndexOffset;
+                        Fill.ZIndex = actualZIndex + PaintConstants.SeriesFillZIndexOffset;
                         if (isNew)
                         {
                             fillPath.Animate(EasingFunction ?? polarChart.ActualEasingFunction, AnimationsSpeed ?? polarChart.ActualAnimationsSpeed);
@@ -294,7 +294,7 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
                     {
                         Stroke.AddGeometryToPaintTask(polarChart.Canvas, strokePath);
                         polarChart.Canvas.AddDrawableTask(Stroke);
-                        Stroke.ZIndex = actualZIndex + Paint.SeriesStrokeZIndexOffset;
+                        Stroke.ZIndex = actualZIndex + PaintConstants.SeriesStrokeZIndexOffset;
                         if (isNew)
                         {
                             strokePath.Animate(EasingFunction ?? polarChart.ActualEasingFunction, AnimationsSpeed ?? polarChart.ActualAnimationsSpeed);
@@ -445,12 +445,12 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
             if (GeometryFill is not null && GeometryFill != Paint.Default)
             {
                 polarChart.Canvas.AddDrawableTask(GeometryFill, zone: CanvasZone.DrawMargin);
-                GeometryFill.ZIndex = actualZIndex + Paint.SeriesGeometryFillZIndexOffset;
+                GeometryFill.ZIndex = actualZIndex + PaintConstants.SeriesGeometryFillZIndexOffset;
             }
             if (GeometryStroke is not null && GeometryStroke != Paint.Default)
             {
                 polarChart.Canvas.AddDrawableTask(GeometryStroke, zone: CanvasZone.DrawMargin);
-                GeometryStroke.ZIndex = actualZIndex + Paint.SeriesGeometryStrokeZIndexOffset;
+                GeometryStroke.ZIndex = actualZIndex + PaintConstants.SeriesGeometryStrokeZIndexOffset;
             }
 
             if (!isSegmentEmpty) segmentI++;
@@ -482,7 +482,7 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
         if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
         {
             polarChart.Canvas.AddDrawableTask(DataLabelsPaint, zone: CanvasZone.DrawMargin);
-            DataLabelsPaint.ZIndex = actualZIndex + Paint.SeriesDataLabelsZIndexOffset;
+            DataLabelsPaint.ZIndex = actualZIndex + PaintConstants.SeriesDataLabelsZIndexOffset;
         }
 
         pointsCleanup.CollectPoints(

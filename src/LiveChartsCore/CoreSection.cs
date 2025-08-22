@@ -210,7 +210,7 @@ public abstract class CoreSection<TSizedGeometry, TLabelGeometry> : CoreSection
 
         if (Fill is not null)
         {
-            Fill.ZIndex = ZIndex ?? Paint.SectionFillZIndex;
+            Fill.ZIndex = ZIndex ?? PaintConstants.SectionFillZIndex;
 
             if (_fillSizedGeometry is null)
             {
@@ -236,7 +236,7 @@ public abstract class CoreSection<TSizedGeometry, TLabelGeometry> : CoreSection
 
         if (Stroke is not null)
         {
-            Stroke.ZIndex = ZIndex ?? Paint.SectionStrokeZIndex;
+            Stroke.ZIndex = ZIndex ?? PaintConstants.SectionStrokeZIndex;
 
             if (_strokeSizedGeometry is null)
             {
@@ -262,7 +262,7 @@ public abstract class CoreSection<TSizedGeometry, TLabelGeometry> : CoreSection
 
         if (LabelPaint is not null)
         {
-            LabelPaint.ZIndex = ZIndex ?? Paint.SectionLabelsZIndex;
+            LabelPaint.ZIndex = ZIndex ?? PaintConstants.SectionLabelsZIndex;
 
             var xil = Xi is null ? drawLocation.X : secondaryScale.ToPixels(Xi.Value);
             var yil = Yi is null ? drawLocation.Y : primaryScale.ToPixels(Yi.Value);

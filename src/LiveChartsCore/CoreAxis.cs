@@ -310,12 +310,12 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
 
         if (NamePaint is not null && NamePaint != Paint.Default)
         {
-            if (NamePaint.ZIndex == 0) NamePaint.ZIndex = Paint.AxisNamePaintZIndex;
+            if (NamePaint.ZIndex == 0) NamePaint.ZIndex = PaintConstants.AxisNamePaintZIndex;
             cartesianChart.Canvas.AddDrawableTask(NamePaint, zone: CanvasZone.NoClip);
         }
         if (LabelsPaint is not null && LabelsPaint != Paint.Default)
         {
-            if (LabelsPaint.ZIndex == 0) LabelsPaint.ZIndex = Paint.AxisLabelsPaintZIndex;
+            if (LabelsPaint.ZIndex == 0) LabelsPaint.ZIndex = PaintConstants.AxisLabelsPaintZIndex;
             cartesianChart.Canvas.AddDrawableTask(LabelsPaint, zone: CanvasZone.NoClip);
         }
 
@@ -323,23 +323,23 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
 
         if (SubseparatorsPaint is not null && SubseparatorsPaint != Paint.Default)
         {
-            if (SubseparatorsPaint.ZIndex == 0) SubseparatorsPaint.ZIndex = Paint.AxisSubseparatorsPaintZIndex;
+            if (SubseparatorsPaint.ZIndex == 0) SubseparatorsPaint.ZIndex = PaintConstants.AxisSubseparatorsPaintZIndex;
             cartesianChart.Canvas.AddDrawableTask(SubseparatorsPaint, zone: CanvasZone.DrawMargin);
         }
         if (SeparatorsPaint is not null && SeparatorsPaint != Paint.Default)
         {
-            if (SeparatorsPaint.ZIndex == 0) SeparatorsPaint.ZIndex = Paint.AxisSeparatorsPaintZIndex;
+            if (SeparatorsPaint.ZIndex == 0) SeparatorsPaint.ZIndex = PaintConstants.AxisSeparatorsPaintZIndex;
             cartesianChart.Canvas.AddDrawableTask(SeparatorsPaint, zone: CanvasZone.DrawMargin);
         }
 
         if (TicksPaint is not null && TicksPaint != Paint.Default)
         {
-            if (TicksPaint.ZIndex == 0) TicksPaint.ZIndex = Paint.AxisTicksPaintZIndex;
+            if (TicksPaint.ZIndex == 0) TicksPaint.ZIndex = PaintConstants.AxisTicksPaintZIndex;
             cartesianChart.Canvas.AddDrawableTask(TicksPaint, zone: CanvasZone.NoClip);
         }
         if (SubticksPaint is not null && SubticksPaint != Paint.Default)
         {
-            if (SubticksPaint.ZIndex == 0) SubticksPaint.ZIndex = Paint.AxisSubticksPaintZIndex;
+            if (SubticksPaint.ZIndex == 0) SubticksPaint.ZIndex = PaintConstants.AxisSubticksPaintZIndex;
             cartesianChart.Canvas.AddDrawableTask(SubticksPaint, zone: CanvasZone.NoClip);
         }
 
@@ -400,7 +400,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
                 y = scale.ToPixels(0);
             }
 
-            if (ZeroPaint.ZIndex == 0) ZeroPaint.ZIndex = Paint.AxisZeroPaintZIndex;
+            if (ZeroPaint.ZIndex == 0) ZeroPaint.ZIndex = PaintConstants.AxisZeroPaintZIndex;
             cartesianChart.Canvas.AddDrawableTask(ZeroPaint, zone: CanvasZone.DrawMargin);
 
             if (_zeroLine is null)
@@ -702,7 +702,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
             y = crosshairY;
         }
 
-        if (CrosshairPaint.ZIndex == 0) CrosshairPaint.ZIndex = Paint.CrosshairPaintZIndex;
+        if (CrosshairPaint.ZIndex == 0) CrosshairPaint.ZIndex = PaintConstants.CrosshairPaintZIndex;
         cartesianChart.Canvas.AddDrawableTask(CrosshairPaint, zone: CanvasZone.DrawMargin);
 
         if (_crosshairLine is null)
@@ -714,7 +714,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
 
         if (CrosshairLabelsPaint is not null && CrosshairLabelsPaint != Paint.Default)
         {
-            if (CrosshairLabelsPaint.ZIndex == 0) CrosshairLabelsPaint.ZIndex = Paint.CrosshairLabelsPaintZIndex;
+            if (CrosshairLabelsPaint.ZIndex == 0) CrosshairLabelsPaint.ZIndex = PaintConstants.CrosshairLabelsPaintZIndex;
             var zone = Orientation == AxisOrientation.X ? CanvasZone.XCrosshair : CanvasZone.YCrosshair;
             cartesianChart.Canvas.AddDrawableTask(CrosshairLabelsPaint, zone: zone);
 

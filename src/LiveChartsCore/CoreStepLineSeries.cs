@@ -118,7 +118,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
         if (stacker is not null)
         {
             // see note #010621
-            actualZIndex = Paint.StackedSeriesBaseZIndex - stacker.Position;
+            actualZIndex = PaintConstants.StackedSeriesBaseZIndex - stacker.Position;
             Fill?.ZIndex = actualZIndex;
             Stroke?.ZIndex = actualZIndex;
         }
@@ -192,7 +192,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
                     {
                         Fill.AddGeometryToPaintTask(cartesianChart.Canvas, fillPath);
                         cartesianChart.Canvas.AddDrawableTask(Fill, zone: CanvasZone.DrawMargin);
-                        Fill.ZIndex = actualZIndex + Paint.SeriesFillZIndexOffset;
+                        Fill.ZIndex = actualZIndex + PaintConstants.SeriesFillZIndexOffset;
                         fillPath.Pivot = p;
                         if (isNew)
                         {
@@ -203,7 +203,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
                     {
                         Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, strokePath);
                         cartesianChart.Canvas.AddDrawableTask(Stroke, zone: CanvasZone.DrawMargin);
-                        Stroke.ZIndex = actualZIndex + Paint.SeriesStrokeZIndexOffset;
+                        Stroke.ZIndex = actualZIndex + PaintConstants.SeriesStrokeZIndexOffset;
                         strokePath.Pivot = p;
                         if (isNew)
                         {
@@ -392,12 +392,12 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
             if (GeometryFill is not null && GeometryFill != Paint.Default)
             {
                 cartesianChart.Canvas.AddDrawableTask(GeometryFill, zone: CanvasZone.DrawMargin);
-                GeometryFill.ZIndex = actualZIndex + Paint.SeriesGeometryFillZIndexOffset;
+                GeometryFill.ZIndex = actualZIndex + PaintConstants.SeriesGeometryFillZIndexOffset;
             }
             if (GeometryStroke is not null && GeometryStroke != Paint.Default)
             {
                 cartesianChart.Canvas.AddDrawableTask(GeometryStroke, zone: CanvasZone.DrawMargin);
-                GeometryStroke.ZIndex = actualZIndex + Paint.SeriesGeometryStrokeZIndexOffset;
+                GeometryStroke.ZIndex = actualZIndex + PaintConstants.SeriesGeometryStrokeZIndexOffset;
             }
 
             if (!isSegmentEmpty) segmentI++;
@@ -429,7 +429,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
         if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
         {
             cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint, zone: CanvasZone.DrawMargin);
-            DataLabelsPaint.ZIndex = actualZIndex + Paint.SeriesDataLabelsZIndexOffset;
+            DataLabelsPaint.ZIndex = actualZIndex + PaintConstants.SeriesDataLabelsZIndexOffset;
         }
 
         pointsCleanup.CollectPoints(
