@@ -25,7 +25,7 @@ namespace LiveChartsCore.Painting;
 /// <summary>
 /// Contains centralized z-index constants for LiveCharts2 components.
 /// </summary>
-public static class PaintConstants
+internal static class PaintConstants
 {
     // Axis-related z-index constants
     /// <summary>
