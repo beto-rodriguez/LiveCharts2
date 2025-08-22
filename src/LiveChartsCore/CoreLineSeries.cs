@@ -161,7 +161,7 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
             // easy workaround to set an automatic and valid z-index for stacked area series
             // the problem of this solution is that the user needs to set z-indexes above 1000
             // if the user needs to add more series to the chart.
-            actualZIndex = PaintConstants.StackedSeriesBaseZIndex - stacker.Position;
+            actualZIndex = (int)PaintConstants.StackedSeriesBaseZIndex - stacker.Position;
             Fill?.ZIndex = actualZIndex;
             Stroke?.ZIndex = actualZIndex;
         }

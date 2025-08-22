@@ -118,7 +118,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
         if (stacker is not null)
         {
             // see note #010621
-            actualZIndex = PaintConstants.StackedSeriesBaseZIndex - stacker.Position;
+            actualZIndex = (int)PaintConstants.StackedSeriesBaseZIndex - stacker.Position;
             Fill?.ZIndex = actualZIndex;
             Stroke?.ZIndex = actualZIndex;
         }
