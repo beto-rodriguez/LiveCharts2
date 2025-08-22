@@ -172,6 +172,22 @@ public abstract partial class Paint : Animatable
     /// </summary>
     internal const double DrawMarginFrameStrokeZIndex = -0.9;
 
+    // Section-related z-index constants
+    /// <summary>
+    /// Default z-index for section fill.
+    /// </summary>
+    internal const double SectionFillZIndex = -2.5;
+
+    /// <summary>
+    /// Default z-index for section stroke.
+    /// </summary>
+    internal const double SectionStrokeZIndex = 0;
+
+    /// <summary>
+    /// Default z-index for section labels.
+    /// </summary>
+    internal const double SectionLabelsZIndex = 0.01;
+
     #endregion
 
     /// <summary>
