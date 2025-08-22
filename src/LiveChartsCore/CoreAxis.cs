@@ -332,15 +332,16 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
             cartesianChart.Canvas.AddDrawableTask(SeparatorsPaint, zone: CanvasZone.DrawMargin);
         }
 
+        var axisZone = Orientation == AxisOrientation.X ? CanvasZone.XCrosshair : CanvasZone.YCrosshair;
         if (TicksPaint is not null && TicksPaint != Paint.Default)
         {
             if (TicksPaint.ZIndex == 0) TicksPaint.ZIndex = PaintConstants.AxisTicksPaintZIndex;
-            cartesianChart.Canvas.AddDrawableTask(TicksPaint, zone: CanvasZone.NoClip);
+            cartesianChart.Canvas.AddDrawableTask(TicksPaint, zone: axisZone);
         }
         if (SubticksPaint is not null && SubticksPaint != Paint.Default)
         {
             if (SubticksPaint.ZIndex == 0) SubticksPaint.ZIndex = PaintConstants.AxisSubticksPaintZIndex;
-            cartesianChart.Canvas.AddDrawableTask(SubticksPaint, zone: CanvasZone.NoClip);
+            cartesianChart.Canvas.AddDrawableTask(SubticksPaint, zone: axisZone);
         }
 
         var lyi = drawLocation.Y;
@@ -715,8 +716,8 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
         if (CrosshairLabelsPaint is not null && CrosshairLabelsPaint != Paint.Default)
         {
             if (CrosshairLabelsPaint.ZIndex == 0) CrosshairLabelsPaint.ZIndex = PaintConstants.CrosshairLabelsPaintZIndex;
-            var zone = Orientation == AxisOrientation.X ? CanvasZone.XCrosshair : CanvasZone.YCrosshair;
-            cartesianChart.Canvas.AddDrawableTask(CrosshairLabelsPaint, zone: zone);
+            var axisZone = Orientation == AxisOrientation.X ? CanvasZone.XCrosshair : CanvasZone.YCrosshair;
+            cartesianChart.Canvas.AddDrawableTask(CrosshairLabelsPaint, zone: axisZone);
 
             _crosshairLabel ??= new TTextGeometry();
             var labeler = GetActualLabeler();
