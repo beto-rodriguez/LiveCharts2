@@ -187,17 +187,17 @@ public abstract class CorePolarAxis<TTextGeometry, TLineGeometry, TCircleGeometr
 
         if (NamePaint is not null && NamePaint != Paint.Default)
         {
-            if (NamePaint.ZIndex == 0) NamePaint.ZIndex = -1;
+            if (NamePaint.ZIndex == 0) NamePaint.ZIndex = PaintConstants.AxisNamePaintZIndex;
             polarChart.Canvas.AddDrawableTask(NamePaint);
         }
         if (LabelsPaint is not null && LabelsPaint != Paint.Default)
         {
-            if (LabelsPaint.ZIndex == 0) LabelsPaint.ZIndex = -0.9;
+            if (LabelsPaint.ZIndex == 0) LabelsPaint.ZIndex = PaintConstants.AxisLabelsPaintZIndex;
             polarChart.Canvas.AddDrawableTask(LabelsPaint);
         }
         if (SeparatorsPaint is not null && SeparatorsPaint != Paint.Default)
         {
-            if (SeparatorsPaint.ZIndex == 0) SeparatorsPaint.ZIndex = -1;
+            if (SeparatorsPaint.ZIndex == 0) SeparatorsPaint.ZIndex = PaintConstants.AxisSeparatorsPaintZIndex;
             polarChart.Canvas.AddDrawableTask(SeparatorsPaint, zone: CanvasZone.NoClip);
         }
 

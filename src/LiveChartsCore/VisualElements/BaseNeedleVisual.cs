@@ -116,7 +116,7 @@ public abstract class BaseNeedleVisual<TGeometry, TLabelGeometry> : BaseNeedleVi
 
         if (Fill is not null)
         {
-            Fill.ZIndex = Fill.ZIndex == 0 ? 999 : Fill.ZIndex;
+            Fill.ZIndex = Fill.ZIndex == 0 ? PaintConstants.NeedleFillZIndex : Fill.ZIndex;
             Fill.AddGeometryToPaintTask(chart.Canvas, _geometry);
             pieChart.Canvas.AddDrawableTask(Fill);
         }

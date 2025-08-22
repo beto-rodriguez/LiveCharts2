@@ -54,6 +54,8 @@ public abstract partial class Paint : Animatable
     /// </summary>
     public static Paint Default { get; } = new DefaultPaint();
 
+
+
     /// <summary>
     /// Gets or sets the index of the z.
     /// </summary>

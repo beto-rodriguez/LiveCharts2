@@ -134,27 +134,27 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
 
         if (UpFill is not null && UpFill != Paint.Default)
         {
-            UpFill.ZIndex = actualZIndex + 0.1;
+            UpFill.ZIndex = actualZIndex + PaintConstants.SeriesFillZIndexOffset;
             cartesianChart.Canvas.AddDrawableTask(UpFill, zone: CanvasZone.DrawMargin);
         }
         if (DownFill is not null && DownFill != Paint.Default)
         {
-            DownFill.ZIndex = actualZIndex + 0.1;
+            DownFill.ZIndex = actualZIndex + PaintConstants.SeriesFillZIndexOffset;
             cartesianChart.Canvas.AddDrawableTask(DownFill, zone: CanvasZone.DrawMargin);
         }
         if (UpStroke is not null && UpStroke != Paint.Default)
         {
-            UpStroke.ZIndex = actualZIndex + 0.2;
+            UpStroke.ZIndex = actualZIndex + PaintConstants.SeriesStrokeZIndexOffset;
             cartesianChart.Canvas.AddDrawableTask(UpStroke, zone: CanvasZone.DrawMargin);
         }
         if (DownStroke is not null && DownStroke != Paint.Default)
         {
-            DownStroke.ZIndex = actualZIndex + 0.2;
+            DownStroke.ZIndex = actualZIndex + PaintConstants.SeriesStrokeZIndexOffset;
             cartesianChart.Canvas.AddDrawableTask(DownStroke, zone: CanvasZone.DrawMargin);
         }
         if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
         {
-            DataLabelsPaint.ZIndex = actualZIndex + 0.3;
+            DataLabelsPaint.ZIndex = actualZIndex + PaintConstants.SeriesGeometryFillZIndexOffset;
             cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint, zone: CanvasZone.DrawMargin);
         }
 

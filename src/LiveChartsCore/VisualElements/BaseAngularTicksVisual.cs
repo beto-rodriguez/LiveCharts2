@@ -224,14 +224,14 @@ public abstract class BaseAngularTicksVisual<TArcGeometry, TLineGeometry, TLabel
 
         if (Stroke is not null)
         {
-            Stroke.ZIndex = Stroke.ZIndex == 0 ? 998 : Stroke.ZIndex;
+            Stroke.ZIndex = Stroke.ZIndex == 0 ? PaintConstants.AngularTicksStrokeZIndex : Stroke.ZIndex;
             Stroke.AddGeometryToPaintTask(chart.Canvas, _arc);
             pieChart.Canvas.AddDrawableTask(Stroke);
         }
 
         if (LabelsPaint is not null)
         {
-            LabelsPaint.ZIndex = LabelsPaint.ZIndex == 0 ? 999 : LabelsPaint.ZIndex;
+            LabelsPaint.ZIndex = LabelsPaint.ZIndex == 0 ? PaintConstants.AngularTicksLabelsZIndex : LabelsPaint.ZIndex;
             pieChart.Canvas.AddDrawableTask(LabelsPaint);
         }
 
