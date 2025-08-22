@@ -1183,9 +1183,9 @@ public class CartesianChartEngine(
         var h = DrawMarginSize.Height;
 
         Canvas.Zones[CanvasZone.NoClip].Clip = LvcRectangle.Empty;
-        Canvas.Zones[CanvasZone.DrawMargin].Clip = new(new(x, y), new(x + w, y + h));
-        Canvas.Zones[CanvasZone.XCrosshair].Clip = new(new(x, 0), new(x + w, size.Height));
-        Canvas.Zones[CanvasZone.YCrosshair].Clip = new(new(0, y), new(size.Width, y + h));
+        Canvas.Zones[CanvasZone.DrawMargin].Clip = new(new(x, y), new(w, h));
+        Canvas.Zones[CanvasZone.XCrosshair].Clip = new(new(x, 0), new(w, size.Height));
+        Canvas.Zones[CanvasZone.YCrosshair].Clip = new(new(0, y), new(size.Width, h));
     }
 
     private double GetThreshold(ICartesianAxis axis, Scaler scale)

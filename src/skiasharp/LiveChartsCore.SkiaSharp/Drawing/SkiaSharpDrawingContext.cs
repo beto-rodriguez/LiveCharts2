@@ -120,7 +120,7 @@ public class SkiaSharpDrawingContext(
         if (zone.Clip == LvcRectangle.Empty) return;
 
         zone.StateId = Canvas.Save();
-        Canvas.ClipRect(new(zone.Clip.X, zone.Clip.Y, zone.Clip.Width, zone.Clip.Height));
+        Canvas.ClipRect(new(zone.Clip.X, zone.Clip.Y, zone.Clip.X + zone.Clip.Width, zone.Clip.Y + zone.Clip.Height));
     }
 
     internal override void OnEndZone(CanvasZone zone)
