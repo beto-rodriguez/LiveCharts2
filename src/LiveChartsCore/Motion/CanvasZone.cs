@@ -89,6 +89,9 @@ internal class CanvasZone
         return removed;
     }
 
+    public bool ContainsTask(Paint task) =>
+        PaintTasks.Contains(task);
+
     public void ClearTasks()
     {
         foreach (var task in PaintTasks)

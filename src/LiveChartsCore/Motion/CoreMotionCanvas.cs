@@ -350,6 +350,33 @@ public class CoreMotionCanvas : IDisposable
     }
 
     /// <summary>
+    /// Counts the paint tasks in the canvas.
+    /// </summary>
+    /// <returns>the paints count in all zones.</returns>
+    public int CountPaintTasks()
+    {
+        var count = 0;
+        foreach (var zone in Zones)
+            count += zone.CountTasks();
+        return count;
+    }
+
+    /// <summary>
+    /// Checks if the canvas contains a paint task.
+    /// </summary>
+    /// <param name="task">The task.</param>
+    /// <returns>A value indicating if the task is contained.</returns>
+    public bool ContainsPaintTask(Paint task)
+    {
+        foreach (var zone in Zones)
+            if (zone.ContainsTask(task))
+                return true;
+
+        return false;
+    }
+
+
+    /// <summary>
     /// Releases the resources.
     /// </summary>
     public void Dispose()
