@@ -334,12 +334,12 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
 
         if (TicksPaint is not null && TicksPaint != Paint.Default)
         {
-            if (TicksPaint.ZIndex == 0) TicksPaint.ZIndex = -1;
+            if (TicksPaint.ZIndex == 0) TicksPaint.ZIndex = -0.8;
             cartesianChart.Canvas.AddDrawableTask(TicksPaint, zone: CanvasZone.NoClip);
         }
         if (SubticksPaint is not null && SubticksPaint != Paint.Default)
         {
-            if (SubticksPaint.ZIndex == 0) SubticksPaint.ZIndex = -1;
+            if (SubticksPaint.ZIndex == 0) SubticksPaint.ZIndex = -0.85;
             cartesianChart.Canvas.AddDrawableTask(SubticksPaint, zone: CanvasZone.NoClip);
         }
 
