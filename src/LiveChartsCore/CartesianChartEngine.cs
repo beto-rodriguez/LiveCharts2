@@ -1177,10 +1177,15 @@ public class CartesianChartEngine(
     {
         var size = ControlSize;
 
+        var x = DrawMarginLocation.X;
+        var y = DrawMarginLocation.Y;
+        var w = DrawMarginSize.Width;
+        var h = DrawMarginSize.Height;
+
         GetZone(CanvasZone.NoClip).Clip = new(new(0, 0), size);
-        GetZone(CanvasZone.DrawMargin).Clip = new(DrawMarginLocation, DrawMarginSize);
-        GetZone(CanvasZone.XCrosshair).Clip = new(new(DrawMarginLocation.X, 0), new(DrawMarginSize.Width, size.Height));
-        GetZone(CanvasZone.YCrosshair).Clip = new(new(0, DrawMarginLocation.Y), new(size.Width, DrawMarginSize.Height));
+        GetZone(CanvasZone.DrawMargin).Clip = new(new(x, y), new(x + w, y + h));
+        GetZone(CanvasZone.XCrosshair).Clip = new(new(x, 0), new(x + w, size.Height));
+        GetZone(CanvasZone.YCrosshair).Clip = new(new(0, y), new(size.Width, y + h));
     }
 
     private CanvasZone GetZone(int id)
