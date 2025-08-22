@@ -115,7 +115,8 @@ public class LabelsMeasureTest
 
         var canvas = new CoreMotionCanvas();
         var drawingContext = new SkiaSharpDrawingContext(
-            canvas, SKImageInfo.Empty, SKSurface.Create(new SKImageInfo(100, 100)).Canvas);
+            canvas, SKSurface.Create(new SKImageInfo(100, 100)).Canvas,
+            SKColor.Empty);
 
         var paint = new SolidColorPaint { Color = SKColors.Red };
         paint.OnPaintStarted(drawingContext, null);

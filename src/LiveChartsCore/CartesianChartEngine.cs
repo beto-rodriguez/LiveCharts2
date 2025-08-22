@@ -760,6 +760,8 @@ public class CartesianChartEngine(
             // the probable issue is the "IsVisible" property
         }
 
+        RegisterClipZones();
+
         // we draw all the series even invisible because it animates the series when hidden.
         // Sections and Visuals are not animated when hidden, thus we just skip them.
         // it means that invisible series have a performance impact, it should not be a big deal
@@ -1169,6 +1171,21 @@ public class CartesianChartEngine(
         }
 
         axis.SetLimits(min, max);
+    }
+
+    private void RegisterClipZones()
+    {
+        var size = ControlSize;
+
+        var x = DrawMarginLocation.X;
+        var y = DrawMarginLocation.Y;
+        var w = DrawMarginSize.Width;
+        var h = DrawMarginSize.Height;
+
+        Canvas.Zones[CanvasZone.NoClip].Clip = LvcRectangle.Empty;
+        Canvas.Zones[CanvasZone.DrawMargin].Clip = new(new(x, y), new(w, h));
+        Canvas.Zones[CanvasZone.XCrosshair].Clip = new(new(x, 0), new(w, size.Height));
+        Canvas.Zones[CanvasZone.YCrosshair].Clip = new(new(0, y), new(size.Width, h));
     }
 
     private double GetThreshold(ICartesianAxis axis, Scaler scale)

@@ -23,10 +23,11 @@
 #if __UNO_SKIA__ || DESKTOP
 
 using System.Diagnostics;
-using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using Microsoft.UI;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using SkiaSharp;
@@ -88,20 +89,12 @@ internal partial class SkiaRenderMode : Grid, IRenderMode
 
         protected override void RenderOverride(SKCanvas canvas, Size area)
         {
-            FrameRequest?.Invoke(new SkiaSharpDrawingContext(
-                _canvas, new SKImageInfo((int)area.Width, (int)area.Height), canvas, GetBackground().AsSKColor()));
+            FrameRequest?.Invoke(
+                new SkiaSharpDrawingContext(_canvas, canvas, GetBackground()));
         }
 
-        private LvcColor GetBackground()
-        {
-            var parentBg = Parent is Control control && control.Background is SolidColorBrush bg
-                ? new LvcColor(bg.Color.R, bg.Color.G, bg.Color.B, bg.Color.A)
-                : LvcColor.Empty;
-
-            return parentBg != LvcColor.Empty
-                ? parentBg
-                : _canvas._virtualBackgroundColor;
-        }
+        private SKColor GetBackground() =>
+            ((Parent as FrameworkElement)?.Parent as IChartView)?.BackColor.AsSKColor() ?? SKColor.Empty;
     }
 }
 

@@ -57,30 +57,28 @@ public class VisualElementsTests
             chart.CoreCanvas.DrawFrame(
                 new SkiaSharpDrawingContext(
                     chart.CoreCanvas,
-                    new SKImageInfo(chart.Width, chart.Height),
                     canvas,
-                    SKColors.White,
-                    true));
+                    SKColors.White));
         }
 
         Draw();
 
         // get the count of geometries and paint tasks without the visuals
         var g = chart.CoreCanvas.CountGeometries();
-        var p = chart.CoreCanvas._paintTasks.Count;
+        var p = chart.CoreCanvas.CountPaintTasks();
 
         // add trhe visuals and ensure that the visuals were drawn
         chart.VisualElements = suts;
         Draw();
         Assert.IsTrue(
             chart.CoreCanvas.CountGeometries() > g &&
-            chart.CoreCanvas._paintTasks.Count > p);
+            chart.CoreCanvas.CountPaintTasks() > p);
 
         // clear the visuals and ensure that all the geometries and paints were removed
         chart.VisualElements = new List<IChartElement>();
         Draw();
         Assert.IsTrue(
             chart.CoreCanvas.CountGeometries() == g &&
-            chart.CoreCanvas._paintTasks.Count == p);
+            chart.CoreCanvas.CountPaintTasks() == p);
     }
 }

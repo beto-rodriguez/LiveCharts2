@@ -96,12 +96,6 @@ public abstract class VisualElement : ChartElement, INotifyPropertyChanged, IInt
     /// </value>
     public int ScalesYAt { get; set => SetProperty(ref field, value); }
 
-    /// <summary>
-    /// Gets or sets the clipping mode, clipping restricts the visual element for being drawn outside of the chart area (DrawMargin),
-    /// default is <see cref="ClipMode.XY"/>, and means that anything outside the chart bounds will be ignored.
-    /// </summary>
-    public ClipMode ClippingMode { get; set => SetProperty(ref field, value); } = ClipMode.XY;
-
     /// <inheritdoc cref="IInteractable.PointerDown"/>
     public event VisualElementHandler? PointerDown;
 

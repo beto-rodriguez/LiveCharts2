@@ -428,6 +428,6 @@ public class HeatSeriesTest
         sutSeries.DataLabelsPaint = null;
         _ = chart.GetImage();
 
-        Assert.IsTrue(!chart.CoreCanvas._paintTasks.Contains(previousPaint));
+        Assert.IsTrue(!chart.CoreCanvas.ContainsPaintTask(previousPaint));
     }
 }

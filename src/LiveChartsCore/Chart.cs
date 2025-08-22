@@ -748,10 +748,7 @@ public abstract class Chart
 
         // VisualElement is an older type for the title, this is kept for compatibility.
         if (View.Title?.ChartElementSource is VisualElement ve)
-        {
-            ve.ClippingMode = ClipMode.None;
             return ve.Measure(this);
-        }
 
         throw new Exception("The title must be a Visual or a VisualElement.");
     }

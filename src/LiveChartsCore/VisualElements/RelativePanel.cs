@@ -24,7 +24,7 @@ using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.VisualElements;
@@ -36,14 +36,6 @@ namespace LiveChartsCore.VisualElements;
 public class RelativePanel<TBackgroundGeometry> : VisualElement
     where TBackgroundGeometry : BoundedDrawnGeometry, new()
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="RelativePanel{TBackgroundGeometry}"/> class.
-    /// </summary>
-    public RelativePanel()
-    {
-        ClippingMode = ClipMode.None;
-    }
-
     /// <summary>
     /// Gets or sets the size.
     /// </summary>
@@ -86,9 +78,7 @@ public class RelativePanel<TBackgroundGeometry> : VisualElement
                 .GetProvider()
                 .GetSolidColorPaint(new LvcColor(0, 0, 0, 0));
 
-        var clipping = Clipping.GetClipRectangle(ClippingMode, chart);
-
-        chart.Canvas.AddDrawableTask(BackgroundPaint);
+        chart.Canvas.AddDrawableTask(BackgroundPaint, zone: CanvasZone.NoClip);
         BackgroundGeometry.X = (float)X;
         BackgroundGeometry.Y = (float)Y;
         BackgroundGeometry.Width = Size.Width;
@@ -96,7 +86,6 @@ public class RelativePanel<TBackgroundGeometry> : VisualElement
         BackgroundGeometry.RotateTransform = (float)Rotation;
         BackgroundGeometry.TranslateTransform = Translate;
         BackgroundPaint.AddGeometryToPaintTask(chart.Canvas, BackgroundGeometry);
-        BackgroundPaint.SetClipRectangle(chart.Canvas, clipping);
 
         foreach (var child in Children)
         {

@@ -28,6 +28,7 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore;
@@ -112,25 +113,21 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
         }
 
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
-        var clipping = GetClipRectangle(cartesianChart);
 
         if (Stroke is not null && Stroke != Paint.Default)
         {
             Stroke.ZIndex = actualZIndex + 0.2;
-            Stroke.SetClipRectangle(cartesianChart.Canvas, clipping);
-            cartesianChart.Canvas.AddDrawableTask(Stroke);
+            cartesianChart.Canvas.AddDrawableTask(Stroke, zone: CanvasZone.DrawMargin);
         }
         if (Fill is not null && Fill != Paint.Default)
         {
             Fill.ZIndex = actualZIndex + 0.1;
-            Fill.SetClipRectangle(cartesianChart.Canvas, clipping);
-            cartesianChart.Canvas.AddDrawableTask(Fill);
+            cartesianChart.Canvas.AddDrawableTask(Fill, zone: CanvasZone.DrawMargin);
         }
         if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
         {
             DataLabelsPaint.ZIndex = actualZIndex + 0.3;
-            DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
-            cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
+            cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint, zone: CanvasZone.DrawMargin);
         }
 
         var dls = (float)DataLabelsSize;

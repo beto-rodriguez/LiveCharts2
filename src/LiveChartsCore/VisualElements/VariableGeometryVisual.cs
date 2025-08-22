@@ -24,6 +24,7 @@ using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 
 namespace LiveChartsCore.VisualElements;
 
@@ -68,7 +69,6 @@ public class VariableGeometryVisual(BoundedDrawnGeometry geometry) : BaseGeometr
     {
         var x = (float)X;
         var y = (float)Y;
-        var clipping = Clipping.GetClipRectangle(ClippingMode, chart);
 
         if (LocationUnit == MeasureUnit.ChartValues)
         {
@@ -103,16 +103,14 @@ public class VariableGeometryVisual(BoundedDrawnGeometry geometry) : BaseGeometr
 
         if (Fill is not null)
         {
-            chart.Canvas.AddDrawableTask(Fill);
+            chart.Canvas.AddDrawableTask(Fill, zone: CanvasZone.DrawMargin);
             Fill.AddGeometryToPaintTask(chart.Canvas, Geometry);
-            Fill.SetClipRectangle(chart.Canvas, clipping);
         }
 
         if (Stroke is not null)
         {
-            chart.Canvas.AddDrawableTask(Stroke);
+            chart.Canvas.AddDrawableTask(Stroke, zone: CanvasZone.DrawMargin);
             Stroke.AddGeometryToPaintTask(chart.Canvas, Geometry);
-            Stroke.SetClipRectangle(chart.Canvas, clipping);
         }
     }
 

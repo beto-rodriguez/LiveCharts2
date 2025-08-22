@@ -45,7 +45,6 @@
                 AxisName="X Axis"
                 NamePaint="{lvc:SolidColorPaint Color={StaticResource gray1}}"
                 TextSize="18"
-                Padding="{lvc:Padding Value='5,15,5,5'}"
                 LabelsPaint="{lvc:SolidColorPaint Color={StaticResource gray}}"
                     
                 SubseparatorsPaint="{lvc:SolidColorPaint Color={StaticResource gray2}, StrokeWidth=0.5}"
@@ -66,7 +65,6 @@
                 AxisName="Y Axis"
                 NamePaint="{lvc:SolidColorPaint Color={StaticResource gray1}}"
                 TextSize="18"
-                Padding="{lvc:Padding Value='5,15,5,5'}"
                 LabelsPaint="{lvc:SolidColorPaint Color={StaticResource gray}}"
                     
                 SubseparatorsPaint="{lvc:SolidColorPaint Color={StaticResource gray2}, StrokeWidth=0.5}"

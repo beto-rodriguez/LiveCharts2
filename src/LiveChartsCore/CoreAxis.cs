@@ -311,47 +311,36 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
         if (NamePaint is not null && NamePaint != Paint.Default)
         {
             if (NamePaint.ZIndex == 0) NamePaint.ZIndex = -1;
-            cartesianChart.Canvas.AddDrawableTask(NamePaint);
+            cartesianChart.Canvas.AddDrawableTask(NamePaint, zone: CanvasZone.NoClip);
         }
         if (LabelsPaint is not null && LabelsPaint != Paint.Default)
         {
             if (LabelsPaint.ZIndex == 0) LabelsPaint.ZIndex = -0.9;
-            cartesianChart.Canvas.AddDrawableTask(LabelsPaint);
+            cartesianChart.Canvas.AddDrawableTask(LabelsPaint, zone: CanvasZone.NoClip);
         }
 
         var o = SeparatorsPaint?.StrokeThickness ?? 0;
-        var clipping = new LvcRectangle(
-            new LvcPoint(drawLocation.X - o, drawLocation.Y - o),
-            new LvcSize(drawMarginSize.Width + o * 2, drawMarginSize.Height + o * 2));
 
         if (SubseparatorsPaint is not null && SubseparatorsPaint != Paint.Default)
         {
             if (SubseparatorsPaint.ZIndex == 0) SubseparatorsPaint.ZIndex = -1;
-            SubseparatorsPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
-            cartesianChart.Canvas.AddDrawableTask(SubseparatorsPaint);
+            cartesianChart.Canvas.AddDrawableTask(SubseparatorsPaint, zone: CanvasZone.DrawMargin);
         }
         if (SeparatorsPaint is not null && SeparatorsPaint != Paint.Default)
         {
             if (SeparatorsPaint.ZIndex == 0) SeparatorsPaint.ZIndex = -1;
-            SeparatorsPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
-            cartesianChart.Canvas.AddDrawableTask(SeparatorsPaint);
+            cartesianChart.Canvas.AddDrawableTask(SeparatorsPaint, zone: CanvasZone.DrawMargin);
         }
-
-        var ticksClipRectangle = _orientation == AxisOrientation.X
-                ? new LvcRectangle(new LvcPoint(drawLocation.X, 0), new LvcSize(drawMarginSize.Width, controlSize.Height))
-                : new LvcRectangle(new LvcPoint(0, drawLocation.Y), new LvcSize(controlSize.Width, drawMarginSize.Height));
 
         if (TicksPaint is not null && TicksPaint != Paint.Default)
         {
             if (TicksPaint.ZIndex == 0) TicksPaint.ZIndex = -1;
-            TicksPaint.SetClipRectangle(cartesianChart.Canvas, ticksClipRectangle);
-            cartesianChart.Canvas.AddDrawableTask(TicksPaint);
+            cartesianChart.Canvas.AddDrawableTask(TicksPaint, zone: CanvasZone.NoClip);
         }
         if (SubticksPaint is not null && SubticksPaint != Paint.Default)
         {
             if (SubticksPaint.ZIndex == 0) SubticksPaint.ZIndex = -1;
-            SubticksPaint.SetClipRectangle(cartesianChart.Canvas, ticksClipRectangle);
-            cartesianChart.Canvas.AddDrawableTask(SubticksPaint);
+            cartesianChart.Canvas.AddDrawableTask(SubticksPaint, zone: CanvasZone.NoClip);
         }
 
         var lyi = drawLocation.Y;
@@ -412,8 +401,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
             }
 
             if (ZeroPaint.ZIndex == 0) ZeroPaint.ZIndex = -1;
-            ZeroPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
-            cartesianChart.Canvas.AddDrawableTask(ZeroPaint);
+            cartesianChart.Canvas.AddDrawableTask(ZeroPaint, zone: CanvasZone.DrawMargin);
 
             if (_zeroLine is null)
             {
@@ -715,8 +703,7 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
         }
 
         if (CrosshairPaint.ZIndex == 0) CrosshairPaint.ZIndex = 1050;
-        CrosshairPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
-        cartesianChart.Canvas.AddDrawableTask(CrosshairPaint);
+        cartesianChart.Canvas.AddDrawableTask(CrosshairPaint, zone: CanvasZone.DrawMargin);
 
         if (_crosshairLine is null)
         {
@@ -728,21 +715,8 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
         if (CrosshairLabelsPaint is not null && CrosshairLabelsPaint != Paint.Default)
         {
             if (CrosshairLabelsPaint.ZIndex == 0) CrosshairLabelsPaint.ZIndex = 1050;
-            if (Orientation == AxisOrientation.X)
-            {
-                CrosshairLabelsPaint.SetClipRectangle(
-                    cartesianChart.Canvas,
-                    new LvcRectangle(new LvcPoint(drawLocation.X, 0),
-                    new LvcSize(drawMarginSize.Width, controlSize.Height)));
-            }
-            else
-            {
-                CrosshairLabelsPaint.SetClipRectangle(
-                    cartesianChart.Canvas,
-                    new LvcRectangle(new LvcPoint(0, drawLocation.Y),
-                    new LvcSize(controlSize.Width, drawMarginSize.Height)));
-            }
-            cartesianChart.Canvas.AddDrawableTask(CrosshairLabelsPaint);
+            var zone = Orientation == AxisOrientation.X ? CanvasZone.XCrosshair : CanvasZone.YCrosshair;
+            cartesianChart.Canvas.AddDrawableTask(CrosshairLabelsPaint, zone: zone);
 
             _crosshairLabel ??= new TTextGeometry();
             var labeler = GetActualLabeler();

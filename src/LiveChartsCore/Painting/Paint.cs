@@ -39,7 +39,7 @@ namespace LiveChartsCore.Painting;
 public abstract partial class Paint : Animatable
 {
     private readonly Dictionary<object, HashSet<IDrawnElement>> _geometriesByCanvas = [];
-    private readonly Dictionary<object, LvcRectangle> _clipRectangles = [];
+    internal event Action? ZIndexChanged;
 
     /// <param name="strokeThickness">The stroke thickness.</param>
     /// <param name="strokeMiter">The stroke miter.</param>
@@ -57,7 +57,16 @@ public abstract partial class Paint : Animatable
     /// <summary>
     /// Gets or sets the index of the z.
     /// </summary>
-    public double ZIndex { get; set; }
+    public double ZIndex
+    {
+        get => field;
+        set
+        {
+            if (field == value) return;
+            field = value;
+            ZIndexChanged?.Invoke();
+        }
+    }
 
     internal PaintStyle PaintStyle { get; set; }
 
@@ -162,25 +171,6 @@ public abstract partial class Paint : Animatable
         GetGeometriesByCanvas(canvas)?.Clear();
 
         IsValid = false;
-    }
-
-    /// <summary>
-    /// Gets the clip rectangle for the given canvas.
-    /// </summary>
-    /// <param name="canvas">The canvas.</param>
-    /// <returns>The clip rectangle.</returns>
-    public LvcRectangle GetClipRectangle(CoreMotionCanvas canvas) =>
-        _clipRectangles.TryGetValue(canvas, out var clip) ? clip : LvcRectangle.Empty;
-
-    /// <summary>
-    /// Sets the clip rectangle for the given canvas.
-    /// </summary>
-    /// <param name="canvas">The canvas.</param>
-    /// <param name="value">The rectangle.</param>
-    public void SetClipRectangle(CoreMotionCanvas canvas, LvcRectangle value)
-    {
-        if (this == Default) return;
-        _clipRectangles[canvas] = value;
     }
 
     /// <summary>

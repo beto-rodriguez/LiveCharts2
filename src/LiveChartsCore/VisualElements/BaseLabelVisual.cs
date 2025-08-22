@@ -24,6 +24,7 @@ using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.VisualElements;
@@ -117,7 +118,6 @@ public abstract class BaseLabelVisual<TLabelGeometry> : BaseLabelVisual
     {
         var x = (float)X;
         var y = (float)Y;
-        var clipping = Clipping.GetClipRectangle(ClippingMode, chart);
 
         if (LocationUnit == MeasureUnit.ChartValues)
         {
@@ -145,8 +145,7 @@ public abstract class BaseLabelVisual<TLabelGeometry> : BaseLabelVisual
 
         if (Paint is not null)
         {
-            chart.Canvas.AddDrawableTask(Paint);
-            Paint.SetClipRectangle(chart.Canvas, clipping);
+            chart.Canvas.AddDrawableTask(Paint, zone: CanvasZone.DrawMargin);
             Paint.AddGeometryToPaintTask(chart.Canvas, _labelGeometry);
         }
     }

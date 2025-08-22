@@ -24,7 +24,7 @@ using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.VisualElements;
@@ -41,14 +41,6 @@ public class TableLayout<TBackgroundGeometry> : VisualElement
     private LvcSize[,] _measuredSizes = new LvcSize[0, 0];
     private int _maxRow = 0;
     private int _maxColumn = 0;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="TableLayout{TBackgroundGeometry}"/> class.
-    /// </summary>
-    public TableLayout()
-    {
-        ClippingMode = ClipMode.None;
-    }
 
     /// <summary>
     /// Gets or sets the padding.
@@ -179,7 +171,6 @@ public class TableLayout<TBackgroundGeometry> : VisualElement
     protected internal override void OnInvalidated(Chart chart)
     {
         var controlSize = Measure(chart);
-        var clipping = Clipping.GetClipRectangle(ClippingMode, chart);
 
         float w, h = Padding.Top;
 
@@ -204,14 +195,14 @@ public class TableLayout<TBackgroundGeometry> : VisualElement
                     Align.Start => w,
                     Align.Middle => w + (columnWidth - _measuredSizes[r, c].Width) * 0.5f,
                     Align.End => w + columnWidth - _measuredSizes[r, c].Width,
-                    _ => throw new System.NotImplementedException(),
+                    _ => throw new NotImplementedException(),
                 };
                 cell.VisualElement._y = (cell.VerticalAlign ?? VerticalAlignment) switch
                 {
                     Align.Start => h,
                     Align.Middle => h + (rowHeight - _measuredSizes[r, c].Height) * 0.5f,
                     Align.End => h + rowHeight - _measuredSizes[r, c].Height,
-                    _ => throw new System.NotImplementedException(),
+                    _ => throw new NotImplementedException(),
                 };
 
                 cell.VisualElement.OnInvalidated(chart);
@@ -230,7 +221,7 @@ public class TableLayout<TBackgroundGeometry> : VisualElement
             .GetProvider()
             .GetSolidColorPaint(new LvcColor(0, 0, 0, 0));
 
-        chart.Canvas.AddDrawableTask(BackgroundPaint);
+        chart.Canvas.AddDrawableTask(BackgroundPaint, zone: CanvasZone.NoClip);
         BackgroundGeometry.X = (float)X;
         BackgroundGeometry.Y = (float)Y;
         BackgroundGeometry.Width = controlSize.Width;
@@ -239,7 +230,6 @@ public class TableLayout<TBackgroundGeometry> : VisualElement
         BackgroundGeometry.TranslateTransform = Translate;
 
         BackgroundPaint.AddGeometryToPaintTask(chart.Canvas, BackgroundGeometry);
-        BackgroundPaint.SetClipRectangle(chart.Canvas, clipping);
     }
 
     /// <inheritdoc cref="VisualElement.SetParent(DrawnGeometry)"/>

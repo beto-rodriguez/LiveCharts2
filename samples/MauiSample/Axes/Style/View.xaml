@@ -39,7 +39,6 @@
                 NamePaint="{lvc:SolidColorPaint
                     Color={StaticResource gray1}}"
                 TextSize="18"
-                Padding="5,15,5,5"
                 LabelsPaint="{lvc:SolidColorPaint
                     Color={StaticResource gray}}"
                 SeparatorsPaint="{lvc:SolidColorPaint
@@ -67,7 +66,6 @@
                 NamePaint="{lvc:SolidColorPaint
                     Color={StaticResource gray1}}"
                 TextSize="18"
-                Padding="5,15,5,5"
                 LabelsPaint="{lvc:SolidColorPaint
                     Color={StaticResource gray}}"
                 SeparatorsPaint="{lvc:SolidColorPaint
