@@ -30,9 +30,9 @@ namespace LiveChartsCore.Motion;
 internal class CanvasZone
 {
     public const int DrawMargin = 0;
-    public const int XCrosshair = 1;
-    public const int YCrosshair = 2;
-    public const int NoClip = 3;
+    public const int NoClip = 1;
+    public const int XCrosshair = 2;
+    public const int YCrosshair = 3;
 
     public int StateId { get; set; } = -1;
     public LvcRectangle Clip { get; set; } = LvcRectangle.Empty;
