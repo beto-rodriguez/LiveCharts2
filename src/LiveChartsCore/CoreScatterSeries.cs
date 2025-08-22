@@ -137,22 +137,22 @@ public abstract class CoreScatterSeries<TModel, TVisual, TLabel, TErrorGeometry>
 
         if (Fill is not null && Fill != Paint.Default)
         {
-            Fill.ZIndex = actualZIndex + 0.1;
+            Fill.ZIndex = actualZIndex + Paint.SeriesFillZIndexOffset;
             cartesianChart.Canvas.AddDrawableTask(Fill, zone: CanvasZone.DrawMargin);
         }
         if (Stroke is not null && Stroke != Paint.Default)
         {
-            Stroke.ZIndex = actualZIndex + 0.2;
+            Stroke.ZIndex = actualZIndex + Paint.SeriesStrokeZIndexOffset;
             cartesianChart.Canvas.AddDrawableTask(Stroke, zone: CanvasZone.DrawMargin);
         }
         if (ShowError && ErrorPaint is not null && ErrorPaint != Paint.Default)
         {
-            ErrorPaint.ZIndex = actualZIndex + 0.3;
+            ErrorPaint.ZIndex = actualZIndex + Paint.SeriesGeometryFillZIndexOffset;
             cartesianChart.Canvas.AddDrawableTask(ErrorPaint, zone: CanvasZone.DrawMargin);
         }
         if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
         {
-            DataLabelsPaint.ZIndex = actualZIndex + 0.4;
+            DataLabelsPaint.ZIndex = actualZIndex + Paint.SeriesGeometryStrokeZIndexOffset;
             cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint, zone: CanvasZone.DrawMargin);
         }
 

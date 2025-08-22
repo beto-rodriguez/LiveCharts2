@@ -95,7 +95,7 @@ public abstract class CoreDrawMarginFrame<TSizedGeometry> : CoreDrawMarginFrame
 
         if (Fill is not null)
         {
-            if (Fill.ZIndex == 0) Fill.ZIndex = -3;
+            if (Fill.ZIndex == 0) Fill.ZIndex = Paint.DrawMarginFrameFillZIndex;
 
             _fillSizedGeometry ??= new TSizedGeometry();
 
@@ -110,7 +110,7 @@ public abstract class CoreDrawMarginFrame<TSizedGeometry> : CoreDrawMarginFrame
 
         if (Stroke is not null)
         {
-            if (Stroke.ZIndex == 0) Stroke.ZIndex = -0.9;
+            if (Stroke.ZIndex == 0) Stroke.ZIndex = Paint.DrawMarginFrameStrokeZIndex;
 
             _strokeSizedGeometry ??= new TSizedGeometry();
 

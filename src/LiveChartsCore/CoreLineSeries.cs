@@ -161,7 +161,7 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
             // easy workaround to set an automatic and valid z-index for stacked area series
             // the problem of this solution is that the user needs to set z-indexes above 1000
             // if the user needs to add more series to the chart.
-            actualZIndex = 1000 - stacker.Position;
+            actualZIndex = Paint.StackedSeriesBaseZIndex - stacker.Position;
             Fill?.ZIndex = actualZIndex;
             Stroke?.ZIndex = actualZIndex;
         }
@@ -234,7 +234,7 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
                     {
                         Fill.AddGeometryToPaintTask(cartesianChart.Canvas, fillPath);
                         cartesianChart.Canvas.AddDrawableTask(Fill, zone: CanvasZone.DrawMargin);
-                        Fill.ZIndex = actualZIndex + 0.1;
+                        Fill.ZIndex = actualZIndex + Paint.SeriesFillZIndexOffset;
                         fillPath.Pivot = p;
                         if (isNew)
                         {
@@ -245,7 +245,7 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
                     {
                         Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, strokePath);
                         cartesianChart.Canvas.AddDrawableTask(Stroke, zone: CanvasZone.DrawMargin);
-                        Stroke.ZIndex = actualZIndex + 0.2;
+                        Stroke.ZIndex = actualZIndex + Paint.SeriesStrokeZIndexOffset;
                         strokePath.Pivot = p;
                         if (isNew)
                         {
@@ -472,12 +472,12 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
             if (GeometryFill is not null && GeometryFill != Paint.Default)
             {
                 cartesianChart.Canvas.AddDrawableTask(GeometryFill, zone: CanvasZone.DrawMargin);
-                GeometryFill.ZIndex = actualZIndex + 0.4;
+                GeometryFill.ZIndex = actualZIndex + Paint.SeriesGeometryStrokeZIndexOffset;
             }
             if (GeometryStroke is not null && GeometryStroke != Paint.Default)
             {
                 cartesianChart.Canvas.AddDrawableTask(GeometryStroke, zone: CanvasZone.DrawMargin);
-                GeometryStroke.ZIndex = actualZIndex + 0.5;
+                GeometryStroke.ZIndex = actualZIndex + Paint.SeriesDataLabelsZIndexOffset;
             }
 
             if (!isSegmentEmpty) segmentI++;
@@ -509,12 +509,12 @@ public abstract class CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TEr
         if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
         {
             cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint, zone: CanvasZone.DrawMargin);
-            DataLabelsPaint.ZIndex = actualZIndex + 0.5;
+            DataLabelsPaint.ZIndex = actualZIndex + Paint.SeriesDataLabelsZIndexOffset;
         }
         if (ShowError && ErrorPaint is not null && ErrorPaint != Paint.Default)
         {
             cartesianChart.Canvas.AddDrawableTask(ErrorPaint, zone: CanvasZone.DrawMargin);
-            ErrorPaint.ZIndex = actualZIndex + 0.3;
+            ErrorPaint.ZIndex = actualZIndex + Paint.SeriesGeometryFillZIndexOffset;
         }
 
         pointsCleanup.CollectPoints(
