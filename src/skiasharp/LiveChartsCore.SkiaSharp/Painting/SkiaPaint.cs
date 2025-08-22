@@ -215,7 +215,8 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
 
     internal override void OnPaintFinished(DrawingContext context, IDrawnElement? drawnElement)
     {
-        // nothing to do here now?
+        // This method is intentionally left empty.
+        // No additional actions are required after painting is finished in this derived class.
     }
 
     internal override void DisposeTask()
