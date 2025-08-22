@@ -39,6 +39,7 @@ namespace LiveChartsCore.Painting;
 public abstract partial class Paint : Animatable
 {
     private readonly Dictionary<object, HashSet<IDrawnElement>> _geometriesByCanvas = [];
+    internal event Action? ZIndexChanged;
 
     /// <param name="strokeThickness">The stroke thickness.</param>
     /// <param name="strokeMiter">The stroke miter.</param>
@@ -56,7 +57,16 @@ public abstract partial class Paint : Animatable
     /// <summary>
     /// Gets or sets the index of the z.
     /// </summary>
-    public double ZIndex { get; set; }
+    public double ZIndex
+    {
+        get => field;
+        set
+        {
+            if (field == value) return;
+            field = value;
+            ZIndexChanged?.Invoke();
+        }
+    }
 
     internal PaintStyle PaintStyle { get; set; }
 

@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Painting;
@@ -33,6 +34,8 @@ internal class CanvasZone
     public const int NoClip = 1;
     public const int XCrosshair = 2;
     public const int YCrosshair = 3;
+    private Paint[] _sortedPaints = [];
+    private bool _isDirty = true;
 
     public int StateId { get; set; } = -1;
     public LvcRectangle Clip { get; set; } = LvcRectangle.Empty;
@@ -42,22 +45,64 @@ internal class CanvasZone
     public static CanvasZone[] CreateZones() =>
         [new CanvasZone(), new CanvasZone(), new CanvasZone(), new CanvasZone()];
 
-    // ToDo: do not sort on every call.
-    public IEnumerable<Paint> EnumerateTasks() =>
-        PaintTasks.Where(x => x is not null && x != Paint.Default).OrderBy(x => x.ZIndex);
+    public Paint[] EnumerateTasks()
+    {
+        if (!_isDirty)
+            return _sortedPaints;
+
+#if DEBUG
+        if (LiveCharts.EnableLogging)
+            Debug.WriteLine($"[LiveCharts] Zone sorted");
+#endif
+
+        _sortedPaints = [..
+                PaintTasks
+                    .Where(x => x is not null && x != Paint.Default)
+                    .OrderBy(x => x.ZIndex)
+            ];
+
+        _isDirty = false;
+        return _sortedPaints;
+    }
 
     public void AddTask(Paint task)
     {
         if (task is null || task == Paint.Default) return;
-        _ = PaintTasks.Add(task);
+
+        if (PaintTasks.Add(task))
+        {
+            task.ZIndexChanged += OnZIndexChanged;
+            _isDirty = true;
+        }
     }
 
-    public bool RemoveTask(Paint task) =>
-        PaintTasks.Remove(task);
+    public bool RemoveTask(Paint task)
+    {
+        var removed = PaintTasks.Remove(task);
 
-    public void ClearTasks() =>
-        PaintTasks = [];
+        if (removed)
+        {
+            task.ZIndexChanged -= OnZIndexChanged;
+            _isDirty = true;
+        }
+
+        return removed;
+    }
+
+    public void ClearTasks()
+    {
+        foreach (var task in PaintTasks)
+        {
+            task.ZIndexChanged -= OnZIndexChanged;
+        }
+
+        PaintTasks.Clear();
+        _isDirty = true;
+    }
 
     public int CountTasks() =>
         PaintTasks.Count;
+
+    private void OnZIndexChanged() =>
+        _isDirty = true;
 }
