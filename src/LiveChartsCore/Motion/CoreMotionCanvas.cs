@@ -36,7 +36,6 @@ namespace LiveChartsCore.Motion;
 public class CoreMotionCanvas : IDisposable
 {
     private static readonly Stopwatch s_clock = new();
-    internal CanvasZone[] Zones { get; set; } = CanvasZone.CreateZones();
     private int _frames = 0;
     private Stopwatch? _fspSw;
     private int _jitteredDrawCount;
@@ -62,6 +61,21 @@ public class CoreMotionCanvas : IDisposable
     }
 
     internal delegate void FrameRequestHandler(DrawingContext context);
+
+    internal CanvasZone[] Zones
+    {
+        get
+        {
+            if (field.Length > 0)
+                return field;
+
+            // if the zones are not initialized, we create them
+            field = CanvasZone.CreateZones();
+
+            return field;
+        }
+        set => field = value;
+    } = [];
 
     /// <summary>
     /// Gets the clock elapsed time in milliseconds.
