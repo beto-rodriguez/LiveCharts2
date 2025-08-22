@@ -52,7 +52,7 @@ internal class CanvasZone
 
 #if DEBUG
         if (LiveCharts.EnableLogging)
-            Debug.WriteLine($"[LiveCharts] Zone sorted");
+            Debug.WriteLine($"[LiveCharts] CanvasZone paint tasks sorted by ZIndex");
 #endif
 
         _sortedPaints = [..
