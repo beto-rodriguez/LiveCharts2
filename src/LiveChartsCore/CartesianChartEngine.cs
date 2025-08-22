@@ -1182,21 +1182,10 @@ public class CartesianChartEngine(
         var w = DrawMarginSize.Width;
         var h = DrawMarginSize.Height;
 
-        GetZone(CanvasZone.NoClip).Clip = new(new(0, 0), size);
-        GetZone(CanvasZone.DrawMargin).Clip = new(new(x, y), new(x + w, y + h));
-        GetZone(CanvasZone.XCrosshair).Clip = new(new(x, 0), new(x + w, size.Height));
-        GetZone(CanvasZone.YCrosshair).Clip = new(new(0, y), new(size.Width, y + h));
-    }
-
-    private CanvasZone GetZone(int id)
-    {
-        if (!Canvas.Zones.TryGetValue(id, out var zone))
-        {
-            zone = new CanvasZone();
-            Canvas.Zones.Add(id, zone);
-        }
-
-        return zone;
+        Canvas.Zones[CanvasZone.NoClip].Clip = LvcRectangle.Empty;
+        Canvas.Zones[CanvasZone.DrawMargin].Clip = new(new(x, y), new(x + w, y + h));
+        Canvas.Zones[CanvasZone.XCrosshair].Clip = new(new(x, 0), new(x + w, size.Height));
+        Canvas.Zones[CanvasZone.YCrosshair].Clip = new(new(0, y), new(size.Width, y + h));
     }
 
     private double GetThreshold(ICartesianAxis axis, Scaler scale)

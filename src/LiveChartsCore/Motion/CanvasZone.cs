@@ -29,14 +29,18 @@ namespace LiveChartsCore.Motion;
 
 internal class CanvasZone
 {
-    public const int NoClip = -1;
     public const int DrawMargin = 0;
     public const int XCrosshair = 1;
     public const int YCrosshair = 2;
+    public const int NoClip = 3;
 
     public int StateId { get; set; } = -1;
-    public LvcRectangle Clip { get; set; }
+    public LvcRectangle Clip { get; set; } = LvcRectangle.Empty;
     private HashSet<Paint> PaintTasks { get; set; } = [];
+
+    // one instance per zone
+    public static CanvasZone[] CreateZones() =>
+        [new CanvasZone(), new CanvasZone(), new CanvasZone(), new CanvasZone()];
 
     // ToDo: do not sort on every call.
     public IEnumerable<Paint> EnumerateTasks() =>

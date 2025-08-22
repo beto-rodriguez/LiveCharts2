@@ -23,6 +23,7 @@
 using System.ComponentModel;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore;
@@ -104,7 +105,7 @@ public abstract class CoreDrawMarginFrame<TSizedGeometry> : CoreDrawMarginFrame
             _fillSizedGeometry.Height = drawMarginSize.Height;
 
             Fill.AddGeometryToPaintTask(chart.Canvas, _fillSizedGeometry);
-            chart.Canvas.AddDrawableTask(Fill);
+            chart.Canvas.AddDrawableTask(Fill, zone: CanvasZone.NoClip);
         }
 
         if (Stroke is not null)
@@ -119,7 +120,7 @@ public abstract class CoreDrawMarginFrame<TSizedGeometry> : CoreDrawMarginFrame
             _strokeSizedGeometry.Height = drawMarginSize.Height;
 
             Stroke.AddGeometryToPaintTask(chart.Canvas, _strokeSizedGeometry);
-            chart.Canvas.AddDrawableTask(Stroke);
+            chart.Canvas.AddDrawableTask(Stroke, zone: CanvasZone.NoClip);
         }
 
         if (!_isInitialized)

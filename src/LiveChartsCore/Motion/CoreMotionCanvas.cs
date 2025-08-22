@@ -36,7 +36,7 @@ namespace LiveChartsCore.Motion;
 public class CoreMotionCanvas : IDisposable
 {
     private static readonly Stopwatch s_clock = new();
-    internal Dictionary<int, CanvasZone> Zones { get; set; } = [];
+    internal CanvasZone[] Zones { get; set; } = CanvasZone.CreateZones();
     private int _frames = 0;
     private Stopwatch? _fspSw;
     private int _jitteredDrawCount;
@@ -137,7 +137,7 @@ public class CoreMotionCanvas : IDisposable
 
             var toRemoveGeometries = new List<Tuple<Paint, IDrawnElement>>();
 
-            foreach (var zone in Zones.Values)
+            foreach (var zone in Zones)
             {
                 context.OnBeginZone(zone);
 
@@ -264,7 +264,7 @@ public class CoreMotionCanvas : IDisposable
     /// <summary>
     /// Gets the drawables count.
     /// </summary>
-    public int DrawablesCount => Zones.Values.Sum(x => x.CountTasks());
+    public int DrawablesCount => Zones.Sum(x => x.CountTasks());
 
     /// <summary>
     /// Invalidates this instance.
@@ -281,20 +281,14 @@ public class CoreMotionCanvas : IDisposable
     /// <param name="task">The task.</param>
     /// <param name="style">The paint style.</param>
     /// <param name="zone">The zone.</param>
-    public void AddDrawableTask(Paint task, PaintStyle style = PaintStyle.Undefined, int zone = 0)
+    public void AddDrawableTask(Paint task, PaintStyle style = PaintStyle.Undefined, int zone = CanvasZone.NoClip)
     {
         if (task == Paint.Default) return;
 
         if (style != PaintStyle.Undefined)
             task.PaintStyle = style;
 
-        if (!Zones.TryGetValue(zone, out var canvasZone))
-        {
-            canvasZone = new CanvasZone { Clip = LvcRectangle.Empty };
-            Zones.Add(zone, canvasZone);
-        }
-
-        canvasZone.AddTask(task);
+        Zones[zone].AddTask(task);
     }
 
     /// <summary>
@@ -307,13 +301,7 @@ public class CoreMotionCanvas : IDisposable
     {
         var task = new DrawnTask(this, geometries);
 
-        if (!Zones.TryGetValue(CanvasZone.NoClip, out var geometriesZone))
-        {
-            geometriesZone = new CanvasZone { Clip = LvcRectangle.Empty };
-            Zones.Add(CanvasZone.NoClip, geometriesZone);
-        }
-
-        geometriesZone.AddTask(task);
+        Zones[CanvasZone.NoClip].AddTask(task);
 
         return task;
     }
@@ -332,7 +320,7 @@ public class CoreMotionCanvas : IDisposable
 
         task.ReleaseCanvas(this);
 
-        foreach (var zone in Zones.Values)
+        foreach (var zone in Zones)
             if (zone.RemoveTask(task))
                 break;
     }
@@ -354,7 +342,7 @@ public class CoreMotionCanvas : IDisposable
     {
         var count = 0;
 
-        foreach (var task in Zones.Values.SelectMany(x => x.EnumerateTasks()))
+        foreach (var task in Zones.SelectMany(x => x.EnumerateTasks()))
             foreach (var geometry in task.GetGeometries(this))
                 count++;
 
@@ -375,7 +363,7 @@ public class CoreMotionCanvas : IDisposable
 
     private void Clean()
     {
-        foreach (var zone in Zones.Values)
+        foreach (var zone in Zones)
         {
             foreach (var task in zone.EnumerateTasks())
             {
