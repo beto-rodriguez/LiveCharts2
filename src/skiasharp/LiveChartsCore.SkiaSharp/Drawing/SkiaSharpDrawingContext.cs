@@ -112,7 +112,8 @@ public class SkiaSharpDrawingContext(
 
     internal override void OnEndDraw()
     {
-
+        // No cleanup is needed at the end of the draw operation.
+        // This method is intentionally left empty, following the pattern in SkiaPaint.OnPaintFinished.
     }
 
     internal override void OnBeginZone(CanvasZone zone)
