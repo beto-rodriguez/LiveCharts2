@@ -31,7 +31,6 @@ using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
 using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
-using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.SKCharts;
 

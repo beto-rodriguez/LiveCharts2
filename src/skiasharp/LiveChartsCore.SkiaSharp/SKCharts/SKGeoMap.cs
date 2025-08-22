@@ -122,10 +122,10 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView
 
         _core.Measure();
 
-        var bg = CoreChart.GetTheme().VirtualBackroundColor.AsSKColor();
+        var bg = CoreChart?.GetTheme().VirtualBackroundColor.AsSKColor();
 
         Canvas.DrawFrame(
-            new SkiaSharpDrawingContext(Canvas, canvas, bg));
+            new SkiaSharpDrawingContext(Canvas, canvas, bg ?? SKColor.Empty));
 
         _core.Unload();
     }
