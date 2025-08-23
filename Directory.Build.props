@@ -6,8 +6,25 @@
 
     <GlobalLangVersion>preview</GlobalLangVersion>
 
+    <!--
+    This version is the minimum supported version by LiveCharts,
+    currently only used by Avalonia, if you need to downgrade any view package,
+    you could but manually downgrading and compile your own version of LiveCharts.
+    -->
     <MinSkiaSharpVersion>2.88.9</MinSkiaSharpVersion>
+
+    <!--
+    The latest version used normally by the view packages.
+    Because GPU has better support on the latest versions of SkiaSharp,
+    and now LiveCharts defaults to GPU when possible.
+    -->
     <LatestSkiaSharpVersion>3.119.0</LatestSkiaSharpVersion>
+
+    <!--
+    Must be compatible with the SkiaSharp version, on WASM the
+    "LatestSkiaSharpVersion" is used.
+    -->
+    <HarfBuzzWASMVersion>8.3.1.1</HarfBuzzWASMVersion>
 
   </PropertyGroup>
 
