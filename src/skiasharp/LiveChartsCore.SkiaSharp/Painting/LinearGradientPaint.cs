@@ -59,6 +59,7 @@ public class LinearGradientPaint(
         : SkiaPaint
 {
     private SKShader? _shader;
+    private SKRect _activeClip = new();
 
     private SKColor[] GradientStops { get; set; } = gradientStops;
     private SKPoint StartPoint { get; set; } = startPoint;
@@ -117,7 +118,11 @@ public class LinearGradientPaint(
     {
         var skiaContext = (SkiaSharpDrawingContext)drawingContext;
         _skiaPaint = UpdateSkiaPaint(skiaContext, drawnElement);
-        _skiaPaint.Shader = GetShader(skiaContext);
+
+        var bounds = skiaContext.Canvas.LocalClipBounds;
+        _activeClip = new SKRect(bounds.Left, bounds.Top, bounds.Right, bounds.Bottom);
+
+        _skiaPaint.Shader = GetShader();
     }
 
     internal override void ApplyOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement)
@@ -141,39 +146,41 @@ public class LinearGradientPaint(
     {
         if (target is not LinearGradientPaint toPaint) return target;
 
-        var fromPaint = (LinearGradientPaint)CloneTask();
-        Map(fromPaint, toPaint, progress);
-
         if (toPaint.GradientStops.Length != GradientStops.Length)
             throw new NotImplementedException(
                 $"Transitions between {nameof(GradientStops)} must be of the same length.");
 
         for (var i = 0; i < GradientStops.Length; i++)
-            fromPaint.GradientStops[i] = new SKColor(
+            GradientStops[i] = new SKColor(
                 (byte)(GradientStops[i].Red + progress * (toPaint.GradientStops[i].Red - GradientStops[i].Red)),
                 (byte)(GradientStops[i].Green + progress * (toPaint.GradientStops[i].Green - GradientStops[i].Green)),
                 (byte)(GradientStops[i].Blue + progress * (toPaint.GradientStops[i].Blue - GradientStops[i].Blue)),
                 (byte)(GradientStops[i].Alpha + progress * (toPaint.GradientStops[i].Alpha - GradientStops[i].Alpha)));
 
-        fromPaint.StartPoint = new SKPoint(
+        StartPoint = new SKPoint(
             StartPoint.X + progress * (toPaint.StartPoint.X - StartPoint.X),
             StartPoint.Y + progress * (toPaint.StartPoint.Y - StartPoint.Y));
 
-        fromPaint.EndPoint = new SKPoint(
+        EndPoint = new SKPoint(
             EndPoint.X + progress * (toPaint.EndPoint.X - EndPoint.X),
             EndPoint.Y + progress * (toPaint.EndPoint.Y - EndPoint.Y));
 
         if (ColorPos is not null && toPaint.ColorPos is not null)
         {
-            if (fromPaint.ColorPos is null || ColorPos.Length != toPaint.ColorPos.Length)
+            if (ColorPos is null || ColorPos.Length != toPaint.ColorPos.Length)
                 throw new NotImplementedException(
                     $"Transitions between {nameof(ColorPos)} must be of the same length.");
 
             for (var i = 0; i < ColorPos.Length; i++)
-                fromPaint.ColorPos[i] = ColorPos[i] + progress * (toPaint.ColorPos[i] - ColorPos[i]);
+                ColorPos[i] = ColorPos[i] + progress * (toPaint.ColorPos[i] - ColorPos[i]);
         }
 
-        return fromPaint;
+        _shader?.Dispose();
+        _shader = null;
+
+        _skiaPaint?.Shader = GetShader();
+
+        return this;
     }
 
     internal override void DisposeTask()
@@ -184,19 +191,16 @@ public class LinearGradientPaint(
         _shader = null;
     }
 
-    private SKShader GetShader(SkiaSharpDrawingContext skiaContext)
+    private SKShader GetShader()
     {
         if (_shader is not null)
             return _shader;
 
-        var space = skiaContext.Canvas.LocalClipBounds;
-        var size = new SKRect(space.Left, space.Top, space.Right, space.Bottom);
+        var xf = _activeClip.Location.X;
+        var xt = xf + _activeClip.Width;
 
-        var xf = size.Location.X;
-        var xt = xf + size.Width;
-
-        var yf = size.Location.Y;
-        var yt = yf + size.Height;
+        var yf = _activeClip.Location.Y;
+        var yt = yf + _activeClip.Height;
 
         var start = new SKPoint(xf + (xt - xf) * StartPoint.X, yf + (yt - yf) * StartPoint.Y);
         var end = new SKPoint(xf + (xt - xf) * EndPoint.X, yf + (yt - yf) * EndPoint.Y);

@@ -35,6 +35,7 @@ namespace LiveChartsCore.SkiaSharpView.Painting;
 public class RadialGradientPaint : SkiaPaint
 {
     private SKShader? _shader;
+    private SKRect _activeClip = new();
     private readonly SKColor[] _gradientStops;
     private SKPoint _center;
     private float _radius;
@@ -96,7 +97,11 @@ public class RadialGradientPaint : SkiaPaint
     {
         var skiaContext = (SkiaSharpDrawingContext)drawingContext;
         _skiaPaint = UpdateSkiaPaint(skiaContext, drawnElement);
-        _skiaPaint.Shader = GetShader(skiaContext);
+
+        var bounds = skiaContext.Canvas.LocalClipBounds;
+        _activeClip = new SKRect(bounds.Left, bounds.Top, bounds.Right, bounds.Bottom);
+
+        _skiaPaint.Shader = GetShader();
     }
 
     internal override void ApplyOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement)
@@ -120,35 +125,37 @@ public class RadialGradientPaint : SkiaPaint
     {
         if (target is not RadialGradientPaint toPaint) return target;
 
-        var fromPaint = (RadialGradientPaint)CloneTask();
-        Map(fromPaint, toPaint, progress);
-
         if (toPaint._gradientStops.Length != _gradientStops.Length)
             throw new ArgumentException("The gradient stops must be the same length.");
 
         for (var i = 0; i < _gradientStops.Length; i++)
-            fromPaint._gradientStops[i] = new SKColor(
+            _gradientStops[i] = new SKColor(
                 (byte)(_gradientStops[i].Red + progress * (toPaint._gradientStops[i].Red - _gradientStops[i].Red)),
                 (byte)(_gradientStops[i].Green + progress * (toPaint._gradientStops[i].Green - _gradientStops[i].Green)),
                 (byte)(_gradientStops[i].Blue + progress * (toPaint._gradientStops[i].Blue - _gradientStops[i].Blue)),
                 (byte)(_gradientStops[i].Alpha + progress * (toPaint._gradientStops[i].Alpha - _gradientStops[i].Alpha)));
 
-        fromPaint._center = new SKPoint(
+        _center = new SKPoint(
             _center.X + progress * (toPaint._center.X - _center.X),
             _center.Y + progress * (toPaint._center.Y - _center.Y));
 
-        fromPaint._radius = _radius + progress * (toPaint._radius - _radius);
+        _radius = _radius + progress * (toPaint._radius - _radius);
 
         if (_colorPos is not null && toPaint._colorPos is not null)
         {
-            if (fromPaint._colorPos is null || _colorPos.Length != fromPaint._colorPos.Length)
+            if (_colorPos is null || _colorPos.Length != _colorPos.Length)
                 throw new ArgumentException("The color positions must be the same length.");
 
             for (var i = 0; i < _colorPos.Length; i++)
-                fromPaint._colorPos[i] = _colorPos[i] + progress * (fromPaint._colorPos[i] - _colorPos[i]);
+                _colorPos[i] = _colorPos[i] + progress * (_colorPos[i] - _colorPos[i]);
         }
 
-        return fromPaint;
+        _shader?.Dispose();
+        _shader = null;
+
+        _skiaPaint?.Shader = GetShader();
+
+        return this;
     }
 
     internal override void DisposeTask()
@@ -159,18 +166,15 @@ public class RadialGradientPaint : SkiaPaint
         _shader = null;
     }
 
-    private SKShader GetShader(SkiaSharpDrawingContext skiaContext)
+    private SKShader GetShader()
     {
         if (_shader is not null)
             return _shader;
 
-        var space = skiaContext.Canvas.LocalClipBounds;
-        var size = new SKRect(space.Left, space.Top, space.Right, space.Bottom);
-
-        var center = new SKPoint(size.Location.X + _center.X * size.Width, size.Location.Y + _center.Y * size.Height);
-        var r = size.Location.X + size.Width > size.Location.Y + size.Height
-            ? size.Location.Y + size.Height
-            : size.Location.X + size.Width;
+        var center = new SKPoint(_activeClip.Location.X + _center.X * _activeClip.Width, _activeClip.Location.Y + _center.Y * _activeClip.Height);
+        var r = _activeClip.Location.X + _activeClip.Width > _activeClip.Location.Y + _activeClip.Height
+            ? _activeClip.Location.Y + _activeClip.Height
+            : _activeClip.Location.X + _activeClip.Width;
         r *= _radius;
 
         return

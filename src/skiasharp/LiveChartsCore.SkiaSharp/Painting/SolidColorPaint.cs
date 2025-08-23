@@ -89,16 +89,15 @@ public class SolidColorPaint : SkiaPaint
     {
         if (target is not SolidColorPaint toPaint) return target;
 
-        var fromPaint = (SolidColorPaint)CloneTask();
-        Map(fromPaint, toPaint, progress);
-
-        fromPaint.Color = new SKColor(
+        Color = new SKColor(
             (byte)(Color.Red + progress * (toPaint.Color.Red - Color.Red)),
             (byte)(Color.Green + progress * (toPaint.Color.Green - Color.Green)),
             (byte)(Color.Blue + progress * (toPaint.Color.Blue - Color.Blue)),
             (byte)(Color.Alpha + progress * (toPaint.Color.Alpha - Color.Alpha)));
 
-        return fromPaint;
+        _skiaPaint?.Color = Color;
+
+        return this;
     }
 
     internal override void ApplyOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement)
