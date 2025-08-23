@@ -149,14 +149,18 @@ public class SkiaSharpDrawingContext(
         {
             // if the active paint is null, we need to draw by the element paint
 
-            if (element.Fill is not null)
-                DrawByPaint(element.Fill, element, opacity);
+            var elementFill = element.Fill;
+            var elementStroke = element.Stroke;
+            var elementPaint = element.Paint;
 
-            if (element.Stroke is not null)
-                DrawByPaint(element.Stroke, element, opacity);
+            if (elementFill is not null)
+                DrawByPaint(elementFill, element, opacity);
 
-            if (element.Paint is not null)
-                DrawByPaint(element.Paint, element, opacity);
+            if (elementStroke is not null)
+                DrawByPaint(elementStroke, element, opacity);
+
+            if (elementPaint is not null)
+                DrawByPaint(elementPaint, element, opacity);
         }
         else
         {
@@ -164,18 +168,22 @@ public class SkiaSharpDrawingContext(
 
             if (ActiveLvcPaint.PaintStyle.HasFlag(PaintStyle.Fill))
             {
-                if (element.Fill is null)
+                var elementFill = element.Fill;
+
+                if (elementFill is null)
                     DrawElement(element, opacity);
                 else
-                    DrawByPaint(element.Fill, element, opacity);
+                    DrawByPaint(elementFill, element, opacity);
             }
 
             if (ActiveLvcPaint.PaintStyle.HasFlag(PaintStyle.Stroke))
             {
-                if (element.Stroke is null)
+                var elementStroke = element.Stroke;
+
+                if (elementStroke is null)
                     DrawElement(element, opacity);
                 else
-                    DrawByPaint(element.Stroke, element, opacity);
+                    DrawByPaint(elementStroke, element, opacity);
             }
         }
 
