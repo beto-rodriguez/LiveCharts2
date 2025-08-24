@@ -61,7 +61,7 @@ public abstract class Chart
     private readonly HashSet<ChartPoint> _activePoints = [];
     private LvcSize _previousSize = new();
     private int _nextSeriesId = 0;
-    private long _lastMeasureTimeStamp = 0;
+    private long _lastMeasureTimeStamp = -1;
 
 #if NET5_0_OR_GREATER
     private readonly bool _isMobile;
