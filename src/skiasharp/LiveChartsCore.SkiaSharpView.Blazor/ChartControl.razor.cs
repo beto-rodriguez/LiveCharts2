@@ -57,11 +57,6 @@ public abstract partial class ChartControl : IBlazorChart, IDisposable, IChartVi
     /// <inheritdoc cref="IChartView.CoreCanvas"/>
     public MotionCanvas CanvasView => _motionCanvas;
 
-    /// <summary>
-    /// Gets the actual class.
-    /// </summary>
-    public string ContainerActualClass => $"lvc-chart-container {ContainerClass}";
-
     /// <inheritdoc cref="IBlazorChart.CanvasContainerElement"/>
     public ElementReference CanvasContainerElement { get; private set; }
 
@@ -77,10 +72,13 @@ public abstract partial class ChartControl : IBlazorChart, IDisposable, IChartVi
         StartObserving();
 
         _jsFlexibleContainer.Resized +=
-            container => CoreChart?.Update();
+            container =>
+                CoreChart?.Update();
 
         CoreChart.Canvas.Sync = SyncContext;
         CoreChart.Load();
+
+        var size = ((IChartView)this).ControlSize;
     }
 
     bool IChartView.DesignerMode => false;

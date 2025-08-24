@@ -66,12 +66,6 @@ public partial class JsFlexibleContainer : IDisposable
     public RenderFragment? Content { get; set; }
 
     /// <summary>
-    /// Gets or sets the container class.
-    /// </summary>
-    [Parameter]
-    public string Class { get; set; } = string.Empty;
-
-    /// <summary>
     /// Called when the control is resized.
     /// </summary>
     public event Action<JsFlexibleContainer>? Resized;

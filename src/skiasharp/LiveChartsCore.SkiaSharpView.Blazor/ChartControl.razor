@@ -22,8 +22,13 @@
 	SOFTWARE.
 *@
 
+<!--
+    the first wrapper <div/> is required so blazor is able to the isolate the css, do not remove!
+    blazor bug?
+-->
+
 <div class="lvc-content">
-    <JsFlexibleContainer @ref="_jsFlexibleContainer" Class="@ContainerActualClass">
+    <JsFlexibleContainer @ref="_jsFlexibleContainer">
         <Content>
             <div class="lvc-canvas-container" @ref="CanvasContainerElement">
                 <MotionCanvas
