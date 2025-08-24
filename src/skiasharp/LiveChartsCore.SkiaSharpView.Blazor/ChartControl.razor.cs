@@ -37,7 +37,6 @@ namespace LiveChartsCore.SkiaSharpView.Blazor;
 /// <inheritdoc cref="IChartView" />
 public abstract partial class ChartControl : IBlazorChart, IDisposable, IChartView
 {
-    private JsFlexibleContainer _jsFlexibleContainer = null!;
 #pragma warning disable IDE0032 // Use auto property, blazor ref
     private MotionCanvas _motionCanvas = null!;
 #pragma warning restore IDE0032 // Use auto property
@@ -71,21 +70,23 @@ public abstract partial class ChartControl : IBlazorChart, IDisposable, IChartVi
         InitializeChartControl();
         StartObserving();
 
-        _jsFlexibleContainer.Resized +=
-            container =>
-                CoreChart?.Update();
+        _motionCanvas.SizeChanged +=
+            () =>
+                CoreChart.Update();
 
         CoreChart.Canvas.Sync = SyncContext;
         CoreChart.Load();
-
-        var size = ((IChartView)this).ControlSize;
     }
 
     bool IChartView.DesignerMode => false;
     bool IChartView.IsDarkMode => false; // Is this possible in Blazor?
     LvcColor IChartView.BackColor { get; }
 
-    LvcSize IChartView.ControlSize => new() { Width = (float)_jsFlexibleContainer.Width, Height = (float)_jsFlexibleContainer.Height };
+    LvcSize IChartView.ControlSize => new()
+    {
+        Width = _motionCanvas.Width,
+        Height = _motionCanvas.Height
+    };
 
     /// <summary>
     /// Gets or sets the pointer down callback.

@@ -24,10 +24,8 @@ using LiveChartsCore.Geo;
 using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
-using LiveChartsCore.SkiaSharpView.Blazor.JsInterop;
 using LiveChartsCore.SkiaSharpView.Painting;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Blazor;
@@ -35,15 +33,9 @@ namespace LiveChartsCore.SkiaSharpView.Blazor;
 /// <inheritdoc cref="IGeoMapView"/>
 public partial class GeoMap : IGeoMapView, IDisposable
 {
-    [Inject]
-    private IJSRuntime JS { get; set; } = null!;
-
-    private DomJsInterop? _dom;
-    private JsFlexibleContainer _jsFlexibleContainer = null!;
-    private ElementReference _canvasContainer;
-    private MotionCanvas? _motionCanvas;
-    private double _canvasWidth;
-    private double _canvasHeight;
+#pragma warning disable IDE0032 // Use auto property, blazor ref
+    private MotionCanvas _motionCanvas = null!;
+#pragma warning restore IDE0032 // Use auto property
     private CollectionDeepObserver? _seriesObserver;
     private GeoMapChart? _core;
     private DrawnMap? _activeMap;
@@ -64,23 +56,20 @@ public partial class GeoMap : IGeoMapView, IDisposable
     /// <param name="firstRender"></param>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override void OnAfterRender(bool firstRender)
     {
         if (!firstRender) return;
 
         _core = new GeoMapChart(this);
 
+        _motionCanvas.SizeChanged +=
+            () =>
+                _core.Update();
+
         _seriesObserver = new CollectionDeepObserver(() => _core?.Update());
-
-        _dom ??= new DomJsInterop(JS);
-        var canvasBounds = await _dom.GetBoundingClientRect(_canvasContainer);
-        _canvasWidth = canvasBounds.Width;
-        _canvasHeight = canvasBounds.Height;
-
         _core.Update();
 
         if (_motionCanvas is null) throw new Exception("MotionCanvas not found");
-        _jsFlexibleContainer.Resized += OnResized;
     }
 
     /// <inheritdoc cref="IGeoMapView.Canvas"/>
@@ -108,6 +97,7 @@ public partial class GeoMap : IGeoMapView, IDisposable
             if (value is not null) _core?.ViewTo(value);
         }
     } = null;
+
     /// <inheritdoc cref="IGeoMapView.ActiveMap"/>
     [Parameter]
     public DrawnMap ActiveMap
@@ -121,10 +111,10 @@ public partial class GeoMap : IGeoMapView, IDisposable
     }
 
     /// <inheritdoc cref="IGeoMapView.Width"/>
-    float IGeoMapView.Width => (float)_canvasWidth;
+    float IGeoMapView.Width => _motionCanvas.Width;
 
     /// <inheritdoc cref="IGeoMapView.Height"/>
-    float IGeoMapView.Height => (float)_canvasHeight;
+    float IGeoMapView.Height => _motionCanvas.Height;
 
     /// <inheritdoc cref="IGeoMapView.MapProjection"/>
     [Parameter]
@@ -171,7 +161,7 @@ public partial class GeoMap : IGeoMapView, IDisposable
     } = [];
 
     void IGeoMapView.InvokeOnUIThread(Action action) =>
-        _ = InvokeAsync(action); //.Wait();
+        _ = InvokeAsync(action);
 
     /// <summary>
     /// Called when a property changes.
@@ -179,18 +169,7 @@ public partial class GeoMap : IGeoMapView, IDisposable
     protected void OnPropertyChanged() =>
         _core?.Update();
 
-    private async void OnResized(JsFlexibleContainer motionCanvas)
-    {
-        if (_dom is null) return;
-
-        var canvasBounds = await _dom.GetBoundingClientRect(_canvasContainer);
-        _canvasWidth = canvasBounds.Width;
-        _canvasHeight = canvasBounds.Height;
-
-        _core?.Update();
-    }
-
-    async void IDisposable.Dispose()
+    void IDisposable.Dispose()
     {
         Series = [];
         _seriesObserver = null!;
@@ -198,6 +177,5 @@ public partial class GeoMap : IGeoMapView, IDisposable
         Canvas.Dispose();
 
         _core?.Unload();
-        if (_dom is not null) await ((IAsyncDisposable)_dom).DisposeAsync();
     }
 }

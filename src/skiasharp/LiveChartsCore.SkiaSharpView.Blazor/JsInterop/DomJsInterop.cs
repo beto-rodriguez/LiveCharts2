@@ -20,8 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.SkiaSharpView.Blazor.JsInterop.Models;
-using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
 namespace LiveChartsCore.SkiaSharpView.Blazor.JsInterop;
@@ -35,12 +33,11 @@ namespace LiveChartsCore.SkiaSharpView.Blazor.JsInterop;
 /// <param name="jsRuntime"></param>
 public class DomJsInterop(IJSRuntime jsRuntime) : IAsyncDisposable
 {
-    private static readonly Dictionary<string, List<Action<DOMRect>>> s_resizeEvent = [];
     private readonly Lazy<Task<IJSObjectReference>> _moduleTask = new(() =>
-            jsRuntime.InvokeAsync<IJSObjectReference>(
-                "import",
-                "./_content/LiveChartsCore.SkiaSharpView.Blazor/domInterop.js")
-            .AsTask());
+        jsRuntime.InvokeAsync<IJSObjectReference>(
+            "import",
+            "./_content/LiveChartsCore.SkiaSharpView.Blazor/domInterop.js")
+        .AsTask());
 
     /// <summary>
     /// Starts the frame ticker, this will call the OnFrameTick method in the DotNetObjectReference.
@@ -62,102 +59,6 @@ public class DomJsInterop(IJSRuntime jsRuntime) : IAsyncDisposable
         var module = await _moduleTask.Value;
 
         await module.InvokeVoidAsync("DOMInterop.stopFrameTicker", motionCanvasRef);
-    }
-
-    /// <summary>
-    /// Gets the bounding client rectangle of the given element.
-    /// </summary>
-    /// <param name="elementReference">The HTMl element reference.</param>
-    /// <returns>The dom rectangle.</returns>
-    public async ValueTask<DOMRect> GetBoundingClientRect(ElementReference elementReference)
-    {
-        var module = await _moduleTask.Value;
-
-        return await module.InvokeAsync<DOMRect>("DOMInterop.getBoundingClientRect", elementReference);
-    }
-
-    /// <summary>
-    /// Sets the css top and left properties of he given element to the specified coordinates.
-    /// </summary>
-    /// <param name="elementReference">The HTML element.</param>
-    /// <param name="x">The x coordinate (left property in css).</param>
-    /// <param name="y">The y coordinate (top property in css).</param>
-    /// <param name="relativeTo">Indicates whether the function should add the given element postion to each coordinate.</param>
-    public async ValueTask SetPosition(
-        ElementReference elementReference, double x, double y, ElementReference? relativeTo = null)
-    {
-        var module = await _moduleTask.Value;
-
-        await module.InvokeVoidAsync("DOMInterop.setPosition", elementReference, x, y, relativeTo);
-    }
-
-    /// <summary>
-    /// Registers a handler for the resize observer for the given HTML element.
-    /// </summary>
-    /// <param name="element">The HTML element.</param>
-    /// <param name="elementId">The elemnt id.</param>
-    /// <param name="handler">The handler.</param>
-    public async ValueTask OnResize(ElementReference element, string elementId, Action<DOMRect> handler)
-    {
-        if (!s_resizeEvent.TryGetValue(elementId, out var actions))
-        {
-            actions = [];
-            s_resizeEvent.Add(elementId, actions);
-            var module = await _moduleTask.Value;
-            await module.InvokeVoidAsync("DOMInterop.registerResizeListener", element, elementId);
-        }
-
-        actions.Add(handler);
-    }
-
-    /// <summary>
-    /// Removes the handler from the specified element id.
-    /// </summary>
-    /// <param name="elementId">The element id.</param>
-    public void RemoveOnResizeListener(string elementId) =>
-        _ = s_resizeEvent.Remove(elementId);
-
-    /// <summary>
-    /// Removes the given resize handler.
-    /// </summary>
-    /// <param name="handler">The handler.</param>
-    public void RemoveOnResizeListener(Action<DOMRect> handler)
-    {
-        foreach (var elementId in s_resizeEvent.Keys.ToArray())
-        {
-            var actions = s_resizeEvent[elementId];
-
-            foreach (var action in actions)
-            {
-                if (action != handler) continue;
-
-                _ = actions.Remove(handler);
-                if (actions.Count == 0) _ = s_resizeEvent.Remove(elementId);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Called when a HTML element was resized.
-    /// </summary>
-    /// <param name="elementId"></param>
-    /// <param name="newSize"></param>
-    /// <returns></returns>
-    [JSInvokable("InvokeResize")]
-    public static Task InvokeResize(string elementId, DOMRect newSize)
-    {
-        if (!s_resizeEvent.TryGetValue(elementId, out var actions))
-        {
-            // it was probably already disposed.
-            return Task.CompletedTask;
-        }
-
-        foreach (var handler in actions)
-        {
-            handler.Invoke(newSize);
-        }
-
-        return Task.CompletedTask;
     }
 
     async ValueTask IAsyncDisposable.DisposeAsync()

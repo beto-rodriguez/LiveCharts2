@@ -31,13 +31,20 @@
 
 @implements IDisposable
 
-<SKGLView
-	@ref="_glView"
-	OnPaintSurface="OnPaintGlSurface"
-	IgnorePixelScaling="true"
-	@onpointerdown="OnPointerDown"
-	@onpointermove="OnPointerMove"
-	@onpointerup="OnPointerUp"
-	@onpointerout="OnPointerOut"
-	@onmousewheel="OnWheel">
-</SKGLView>
+<!--
+    the first wrapper <div/> is required so blazor is able to the isolate the css, do not remove!
+    blazor bug?
+-->
+
+<div>
+    <SKGLView
+	    @ref="_glView"
+	    OnPaintSurface="OnPaintGlSurface"
+	    IgnorePixelScaling="true"
+	    @onpointerdown="OnPointerDown"
+	    @onpointermove="OnPointerMove"
+	    @onpointerup="OnPointerUp"
+	    @onpointerout="OnPointerOut"
+	    @onmousewheel="OnWheel">
+    </SKGLView>
+</div>

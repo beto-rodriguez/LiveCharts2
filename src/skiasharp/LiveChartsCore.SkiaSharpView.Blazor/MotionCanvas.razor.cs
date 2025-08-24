@@ -63,6 +63,11 @@ public partial class MotionCanvas : IDisposable, IRenderMode
         LiveCharts.Configure(config => config.UseDefaults(RecommendedBlazorRenderingSettings));
     }
 
+    /// <summary>
+    /// Called when the size of the canvas changes.
+    /// </summary>
+    public event Action? SizeChanged;
+
     [Inject]
     private IJSRuntime JS { get; set; } = null!;
 
@@ -70,6 +75,16 @@ public partial class MotionCanvas : IDisposable, IRenderMode
     /// Gets the <see cref="CoreMotionCanvas"/> (core).
     /// </summary>
     public CoreMotionCanvas CanvasCore { get; } = new();
+
+    /// <summary>
+    /// Gets the width of the canvas.
+    /// </summary>
+    public int Width { get; private set; } = 0;
+
+    /// <summary>
+    /// Gets the height of the canvas.
+    /// </summary>
+    public int Height { get; private set; } = 0;
 
     /// <summary>
     /// Gets or sets the pointer down callback.
@@ -141,9 +156,19 @@ public partial class MotionCanvas : IDisposable, IRenderMode
     protected virtual void OnPointerOut(PointerEventArgs e) =>
         _ = OnPointerOutCallback.InvokeAsync(e);
 
-    private void OnPaintGlSurface(SKPaintGLSurfaceEventArgs e) =>
+    private void OnPaintGlSurface(SKPaintGLSurfaceEventArgs e)
+    {
+        var sizeChanged = Width != e.Info.Width || Height != e.Info.Height;
+        if (sizeChanged)
+        {
+            Width = e.Info.Width;
+            Height = e.Info.Height;
+            SizeChanged?.Invoke();
+        }
+
         CanvasCore.DrawFrame(
             new SkiaSharpDrawingContext(CanvasCore, e.Surface.Canvas, SkiaSharp.SKColor.Empty));
+    }
 
     /// <inheritdoc/>
     protected override void OnAfterRender(bool firstRender)
