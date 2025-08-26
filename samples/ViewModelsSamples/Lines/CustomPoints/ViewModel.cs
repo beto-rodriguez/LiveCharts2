@@ -41,8 +41,6 @@ public partial class ViewModel : ObservableObject
     public void OnPointMeasured(ChartPoint point)
     {
         var dataPoint = (DataPoint)point.Context.DataSource;
-
-        point.Context.Visual.TransformOrigin = new(0f, 0f);
         point.Context.Visual.RotateTransform = dataPoint.Rotation;
     }
 
