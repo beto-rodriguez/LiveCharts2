@@ -88,17 +88,27 @@ public static class SharedAxes
                 $"Why is this required? please open an issue at github explaining the need of this feature.");
         }
 
-        if (drawMarginSize.Height < drawMarginSize.Width)
+        var x = chart.XAxes[0];
+        var y = chart.YAxes[0];
+
+        var isFirstScale =
+            x.MinLimit is null && x.MaxLimit is null && y.MinLimit is null && y.MaxLimit is null;
+        var isXSource =
+            isFirstScale
+                ? drawMarginSize.Width < drawMarginSize.Height
+                : x.DataBounds.Delta > y.DataBounds.Delta;
+
+        if (isXSource)
         {
-            source = chart.XAxes[0];
-            target = chart.YAxes[0];
+            source = x;
+            target = y;
             sourceDimension = drawMarginSize.Width;
             targetDimension = drawMarginSize.Height;
         }
         else
         {
-            source = chart.YAxes[0];
-            target = chart.XAxes[0];
+            source = y;
+            target = x;
             sourceDimension = drawMarginSize.Height;
             targetDimension = drawMarginSize.Width;
         }
