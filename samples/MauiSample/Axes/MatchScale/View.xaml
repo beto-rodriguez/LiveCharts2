@@ -13,7 +13,7 @@
     <lvc:CartesianChart
         MatchAxesScreenDataRatio="True"
         DrawMarginFrame="{lvc:Frame Stroke={lvc:SolidColorPaint Color='#64b4b4b4', StrokeWidth=2}}"
-        ZoomMode="Both"
+        ZoomMode="Both,NoFit"
         TooltipPosition="Hidden">
 
         <lvc:CartesianChart.Series>
@@ -27,7 +27,8 @@
 
         <!--
             we are forcing the step to 0.1 to highlight that
-            both axes use the same scale
+            both axes take the same amount of pixels per unit of data,
+            but in a real scenario the MinStep is not necessary
         -->
 
         <lvc:CartesianChart.XAxes>

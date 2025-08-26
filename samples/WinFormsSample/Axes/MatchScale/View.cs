@@ -7,6 +7,7 @@ using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.WinForms;
 
 using SkiaSharp;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 #pragma warning disable IDE1006 // Naming Styles
 
@@ -43,6 +44,10 @@ public partial class View : UserControl
         };
 
         var separatorColor = new SKColor(119, 148, 180, 100); // #64b4b4b4 with alpha 100
+
+        // we are forcing the step to 0.1 to highlight that
+        // both axes take the same amount of pixels per unit of data,
+        // but in a real scenario the MinStep is not necessary
 
         var xAxis = new Axis
         {
