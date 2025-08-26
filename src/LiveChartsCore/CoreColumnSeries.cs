@@ -74,9 +74,7 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>
             secondaryScale, cartesianChart, this, secondaryAxis, primaryScale.ToPixels(pivot),
             cartesianChart.DrawMarginLocation.Y,
             cartesianChart.DrawMarginLocation.Y + cartesianChart.DrawMarginSize.Height, isStacked, false);
-        var pHelper = previousSecondaryScale == null || previousPrimaryScale == null
-            ? null
-            : new MeasureHelper(
+        var pHelper = new MeasureHelper(
                 previousSecondaryScale, cartesianChart, this, secondaryAxis, previousPrimaryScale.ToPixels(pivot),
                 cartesianChart.DrawMarginLocation.Y,
                 cartesianChart.DrawMarginLocation.Y + cartesianChart.DrawMarginSize.Height, isStacked, false);
@@ -161,7 +159,7 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>
                 var pi = helper.p;
                 var uwi = helper.uw;
 
-                if (previousSecondaryScale is not null && previousPrimaryScale is not null && pHelper is not null)
+                if (!isFirstDraw)
                 {
                     var previousPrimary = previousPrimaryScale.ToPixels(coordinate.PrimaryValue);
                     var bp = Math.Abs(previousPrimary - pHelper.p);

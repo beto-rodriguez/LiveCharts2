@@ -505,7 +505,7 @@ public static class Extensions
     /// <param name="axis"></param>
     /// <param name="chart"></param>
     /// <returns></returns>
-    public static Scaler? GetActualScaler(this ICartesianAxis axis, CartesianChartEngine chart)
+    public static Scaler GetActualScaler(this ICartesianAxis axis, CartesianChartEngine chart)
     {
         // returns an scaler with the "Motion bounds", which means the bounds but tracked by the motion canvas
         // clock, so this returns the bounds that are being animated at the moment this method is called.
