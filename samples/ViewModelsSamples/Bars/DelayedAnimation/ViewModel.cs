@@ -19,27 +19,27 @@ public partial class ViewModel
     [RelayCommand]
     private void OnPointMeasured(ChartPoint point)
     {
-        var baseAnimationsSpeed = 800f; // in milliseconds
-        var perPointDelay = 100f; // in milliseconds
-        var delay = point.Context.Entity.MetaData!.EntityIndex * perPointDelay;
-        var speed = baseAnimationsSpeed + delay;
-        var baseEasingFunction = EasingFunctions.BuildCustomElasticOut(1.5f, 0.60f);
+        // each point will have a different delay depending on its index
+        var index = point.Context.Entity.MetaData!.EntityIndex; // the index of the point in the data source
+        var delay = index / (float)Values1.Length;
 
-        // the animation takes a function, that represents the progress of the animation
-        // the parameter is the progress of the animation, it goes from 0 to 1
+        // the animation takes a function, that represents the normalized progress of the animation
+        // the parameter is the normalized time of the animation, it goes from 0 to 1
         // the function must return a value from 0 to 1, where 0 is the initial state
-        // and 1 is the end state
+        // and 1 is the final state
+        var duration = TimeSpan.FromSeconds(3);
+        var animation = new Animation(t => DelayedEase(t, delay), duration);
 
-        point.Context.Visual?.SetTransition(
-            new Animation(progress =>
-            {
-                var d = delay / speed;
+        point.Context.Visual?.SetTransition(animation);
+    }
 
-                return progress <= d
-                    ? 0
-                    : baseEasingFunction((progress - d) / (1 - d));
-            },
-            TimeSpan.FromMilliseconds(speed)));
+    private static float DelayedEase(float t, float delay)
+    {
+        if (t <= delay) return 0f;
+
+        var remappedT = (t - delay) / (1f - delay);
+        var baseEasing = EasingFunctions.BuildCustomElasticOut(1.5f, 0.60f);
+        return baseEasing(Math.Clamp(remappedT, 0f, 1f));
     }
 
     private static float[] FetchVales(float offset)
