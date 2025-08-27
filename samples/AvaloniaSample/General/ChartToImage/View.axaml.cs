@@ -11,10 +11,13 @@ public partial class View : UserControl
     {
         InitializeComponent();
 
-        // in this case in the constructor of this view // mark
-        // we render our chart controls as images // mark
-        CreateImageFromCartesianControl();
-        CreateImageFromPieControl();
+        Loaded += (_, _) =>
+        {
+            // in this case in the constructor of this view // mark
+            // we render our chart controls as images // mark
+            CreateImageFromCartesianControl();
+            CreateImageFromPieControl();
+        };
     }
 
     private void CreateImageFromCartesianControl()
