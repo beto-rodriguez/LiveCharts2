@@ -283,7 +283,7 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
                     if (Fill is not null && Fill != Paint.Default)
                     {
                         Fill.AddGeometryToPaintTask(polarChart.Canvas, fillPath);
-                        polarChart.Canvas.AddDrawableTask(Fill);
+                        polarChart.Canvas.AddDrawableTask(Fill, zone: CanvasZone.DrawMargin);
                         Fill.ZIndex = actualZIndex + PaintConstants.SeriesFillZIndexOffset;
                         if (isNew)
                         {
@@ -293,7 +293,7 @@ public abstract class CorePolarLineSeries<TModel, TVisual, TLabel, TPathGeometry
                     if (Stroke is not null && Stroke != Paint.Default)
                     {
                         Stroke.AddGeometryToPaintTask(polarChart.Canvas, strokePath);
-                        polarChart.Canvas.AddDrawableTask(Stroke);
+                        polarChart.Canvas.AddDrawableTask(Stroke, zone: CanvasZone.DrawMargin);
                         Stroke.ZIndex = actualZIndex + PaintConstants.SeriesStrokeZIndexOffset;
                         if (isNew)
                         {
