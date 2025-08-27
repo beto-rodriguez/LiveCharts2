@@ -206,10 +206,15 @@ public class CartesianChartEngine(
     /// <param name="point">The point to start the panning operation.</param>
     public void StartZoomingSection(ZoomAndPanMode flags, LvcPoint point)
     {
-        if (flags.HasFlag(ZoomAndPanMode.NoZoomBySection))
+        var xMode = (flags & ZoomAndPanMode.X) == ZoomAndPanMode.X;
+        var yMode = (flags & ZoomAndPanMode.Y) == ZoomAndPanMode.Y;
+
+        if (flags.HasFlag(ZoomAndPanMode.NoZoomBySection) || (!xMode && !yMode))
             return;
+
         if (_zoomingSection is null)
             InitializeZoomingSection();
+
         if (_zoomingSection is null)
             throw new Exception("Something went wrong when initializing the zoomming section.");
 
@@ -227,9 +232,6 @@ public class CartesianChartEngine(
 
         _zoomingSection.X = x;
         _zoomingSection.Y = y;
-
-        var xMode = (flags & ZoomAndPanMode.X) == ZoomAndPanMode.X;
-        var yMode = (flags & ZoomAndPanMode.Y) == ZoomAndPanMode.Y;
 
         if (!xMode)
         {
