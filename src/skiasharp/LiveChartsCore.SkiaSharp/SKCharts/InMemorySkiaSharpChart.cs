@@ -90,7 +90,12 @@ public abstract class InMemorySkiaSharpChart(IChartView? chartView = null)
     /// <returns></returns>
     public virtual SKImage GetImage()
     {
-        using var surface = SKSurface.Create(new SKImageInfo(Width, Height));
+        using var surface = SKSurface.Create(new SKImageInfo(Width, Height)) ??
+            throw new Exception(
+                $"Could not create a valid {nameof(SKSurface)}. This is probably because the image you are " +
+                $"building does not have a valid size, if you are building a chart image from a control in the UI," +
+                $"ensure the control is loaded before requesting an image from it.");
+
         using var canvas = surface.Canvas;
 
         DrawOnCanvas(canvas);
