@@ -544,7 +544,9 @@ public class PolarChartEngine(
         if (_isToolTipOpen) DrawToolTip();
         _isFirstDraw = false;
 
-        Canvas.Invalidate();
+        if (IsLoaded)
+            Canvas.Invalidate();
+
         _isFirstDraw = false;
     }
 

@@ -232,7 +232,9 @@ public class PieChartEngine(
         InvokeOnUpdateStarted();
         _isFirstDraw = false;
 
-        Canvas.Invalidate();
+        if (IsLoaded)
+            Canvas.Invalidate();
+
         _isFirstDraw = false;
     }
 

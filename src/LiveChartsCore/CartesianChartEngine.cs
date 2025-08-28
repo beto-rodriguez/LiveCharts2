@@ -273,7 +273,8 @@ public class CartesianChartEngine(
         if (xMode) _zoomingSection.Width = x - _sectionZoomingStart.Value.X;
         if (yMode) _zoomingSection.Height = y - _sectionZoomingStart.Value.Y;
 
-        Canvas.Invalidate();
+        if (IsLoaded)
+            Canvas.Invalidate();
     }
 
     /// <summary>
@@ -817,7 +818,9 @@ public class CartesianChartEngine(
 
         if (_isToolTipOpen) _ = DrawToolTip();
 
-        Canvas.Invalidate();
+        if (IsLoaded)
+            Canvas.Invalidate();
+
         _isFirstDraw = false;
     }
 
