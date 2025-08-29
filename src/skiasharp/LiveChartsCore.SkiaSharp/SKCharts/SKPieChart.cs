@@ -31,7 +31,6 @@ using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
 using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
-using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.SKCharts;
 
@@ -49,7 +48,7 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView
     public SKPieChart(IPieChartView? chartView = null)
         : base(chartView)
     {
-        Core = new PieChartEngine(this, config => config.UseDefaults(), CoreCanvas);
+        Core = new PieChartEngine(this, CoreCanvas);
         Core.Measuring += OnCoreMeasuring;
         Core.UpdateStarted += OnCoreUpdateStarted;
         Core.UpdateFinished += OnCoreUpdateFinished;

@@ -70,7 +70,7 @@ public partial class CartesianChart : ChartControl, ICartesianChartView
 
     /// <inheritdoc cref="ChartControl.CreateCoreChart"/>
     protected override Chart CreateCoreChart() =>
-        new CartesianChartEngine(this, config => config.UseDefaults(), CanvasView.CanvasCore);
+        new CartesianChartEngine(this, CanvasView.CanvasCore);
 
     /// <inheritdoc cref="ChartControl.ConfigureObserver(ChartObserver)"/>
     protected override ChartObserver ConfigureObserver(ChartObserver observe)

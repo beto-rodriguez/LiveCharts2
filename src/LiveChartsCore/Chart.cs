@@ -74,20 +74,16 @@ public abstract class Chart
     /// Initializes a new instance of the <see cref="Chart"/> class.
     /// </summary>
     /// <param name="canvas">The canvas.</param>
-    /// <param name="defaultPlatformConfig">The default platform configuration.</param>
     /// <param name="view">The chart view.</param>
     /// <param name="kind">The chart kind.</param>
     protected Chart(
         CoreMotionCanvas canvas,
-        Action<LiveChartsSettings> defaultPlatformConfig,
         IChartView view,
         ChartKind kind)
     {
         Kind = kind;
         Canvas = canvas;
         canvas.Validated += OnCanvasValidated;
-        ActualEasingFunction = EasingFunctions.QuadraticOut;
-        LiveCharts.Configure(defaultPlatformConfig);
 
         _updateThrottler = view.DesignerMode
                 ? new ActionThrottler(() => Task.CompletedTask, TimeSpan.FromMilliseconds(100))
@@ -245,7 +241,7 @@ public abstract class Chart
     /// <value>
     /// The easing function.
     /// </value>
-    public Func<float, float>? ActualEasingFunction { get; protected set; }
+    public Func<float, float>? ActualEasingFunction { get; protected set; } = EasingFunctions.QuadraticOut;
 
     /// <summary>
     /// Gets the visual elements.

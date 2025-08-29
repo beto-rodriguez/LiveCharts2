@@ -57,7 +57,7 @@ public partial class PolarChart
 
     /// <inheritdoc cref="ChartControl.CreateCoreChart"/>
     protected override Chart CreateCoreChart() =>
-        new PolarChartEngine(this, config => config.UseDefaults(), CanvasView.CanvasCore);
+        new PolarChartEngine(this, CanvasView.CanvasCore);
 
     /// <inheritdoc cref="ChartControl.ConfigureObserver(ChartObserver)"/>
     protected override ChartObserver ConfigureObserver(ChartObserver observe)
