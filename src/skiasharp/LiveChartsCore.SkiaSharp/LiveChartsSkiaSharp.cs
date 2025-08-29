@@ -40,17 +40,59 @@ public static class LiveChartsSkiaSharp
 {
     internal static TextSettings DefaultTextSettings { get; set; } = new();
 
-    internal static void EnsureInitialized() =>
+    internal static void EnsureInitialized()
+    {
         LiveCharts.Configure(settings => settings.UseDefaults());
+
+        var defaultRenderSettings = LiveCharts.RenderingSettings;
+
+#if __GPU_TRUE__
+        defaultRenderSettings.UseGPU = true;
+#endif
+#if __GPU_FALSE__
+        defaultRenderSettings.UseGPU = false;
+#endif
+#if __VSYNC_TRUE__
+        defaultRenderSettings.TryUseVSync = true;
+#endif
+#if __VSYNC_FALSE__
+        defaultRenderSettings.TryUseVSync = false;
+#endif
+#if __FPS_10__
+        defaultRenderSettings.LiveChartsRenderLoopFPS = 10;
+#endif
+#if __FPS_20__
+        defaultRenderSettings.LiveChartsRenderLoopFPS = 20;
+#endif
+#if __FPS_30__
+        defaultRenderSettings.LiveChartsRenderLoopFPS = 30;
+#endif
+#if __FPS_45__
+        defaultRenderSettings.LiveChartsRenderLoopFPS = 45;
+#endif
+#if __FPS_60__
+        defaultRenderSettings.LiveChartsRenderLoopFPS = 60;
+#endif
+#if __FPS_75__
+        defaultRenderSettings.LiveChartsRenderLoopFPS = 75;
+#endif
+#if __FPS_90__
+        defaultRenderSettings.LiveChartsRenderLoopFPS = 90;
+#endif
+#if __FPS_120__
+        defaultRenderSettings.LiveChartsRenderLoopFPS = 120;
+#endif
+#if __DIAGNOSE__
+        defaultRenderSettings.ShowFPS = true;
+#endif
+    }
 
     /// <summary>
     /// Configures LiveCharts using the default settings for SkiaSharp.
     /// </summary>
     /// <param name="settings">The settings.</param>
-    /// <param name="renderingSettings">The optional rendering settings.</param>
     /// <returns>The settings.</returns>
-    public static LiveChartsSettings UseDefaults(
-        this LiveChartsSettings settings, RenderingSettings? renderingSettings = null)
+    public static LiveChartsSettings UseDefaults(this LiveChartsSettings settings)
     {
         if (!LiveCharts.DefaultSettings.HasBackedDefined)
             _ = settings.AddSkiaSharp();
@@ -60,56 +102,6 @@ public static class LiveChartsSkiaSharp
 
         if (!LiveCharts.DefaultSettings.HasMappersDefined)
             _ = settings.AddDefaultMappers();
-
-        if (LiveCharts.RenderingSettings is null)
-        {
-            var targetRenderSettings = renderingSettings ?? RenderingSettings.Default;
-
-            // the next conditions are used to test the rendering settings across
-            // multiple os/frameworks via cli flags.
-
-#if __GPU_TRUE__
-            targetRenderSettings.UseGPU = true;
-#endif
-#if __GPU_FALSE__
-            targetRenderSettings.UseGPU = false;
-#endif
-#if __VSYNC_TRUE__
-            targetRenderSettings.TryUseVSync = true;
-#endif
-#if __VSYNC_FALSE__
-            targetRenderSettings.TryUseVSync = false;
-#endif
-#if __FPS_10__
-            targetRenderSettings.LiveChartsRenderLoopFPS = 10;
-#endif
-#if __FPS_20__
-            targetRenderSettings.LiveChartsRenderLoopFPS = 20;
-#endif
-#if __FPS_30__
-            targetRenderSettings.LiveChartsRenderLoopFPS = 30;
-#endif
-#if __FPS_45__
-            targetRenderSettings.LiveChartsRenderLoopFPS = 45;
-#endif
-#if __FPS_60__
-            targetRenderSettings.LiveChartsRenderLoopFPS = 60;
-#endif
-#if __FPS_75__
-            targetRenderSettings.LiveChartsRenderLoopFPS = 75;
-#endif
-#if __FPS_90__
-            targetRenderSettings.LiveChartsRenderLoopFPS = 90;
-#endif
-#if __FPS_120__
-            targetRenderSettings.LiveChartsRenderLoopFPS = 120;
-#endif
-#if __DIAGNOSE__
-            targetRenderSettings.ShowFPS = true;
-#endif
-
-            _ = settings.RenderingSettings(targetRenderSettings);
-        }
 
         return settings;
     }

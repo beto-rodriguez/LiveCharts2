@@ -23,7 +23,6 @@
 using System;
 using System.ComponentModel;
 using System.Windows.Forms;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;

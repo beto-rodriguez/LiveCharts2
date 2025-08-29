@@ -25,7 +25,6 @@ using Eto.Forms;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using Eto.SkiaDraw;
 using LiveChartsCore.Motion;
-using LiveChartsCore.Kernel;
 using SkiaSharp;
 using LiveChartsCore.Kernel.Sketches;
 

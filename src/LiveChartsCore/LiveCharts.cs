@@ -59,7 +59,7 @@ public static class LiveCharts
     /// <summary>
     /// Defines the rendering settins for LiveCharts.
     /// </summary>
-    public static RenderingSettings RenderingSettings { get; internal set; } = null!;
+    public static RenderingSettings RenderingSettings { get; } = new();
 
     /// <summary>
     /// Gets the current settings.

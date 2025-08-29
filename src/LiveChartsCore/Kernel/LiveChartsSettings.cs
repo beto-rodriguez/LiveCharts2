@@ -465,14 +465,13 @@ public class LiveChartsSettings
     }
 
     /// <summary>
-    /// Defines the rendering settings for LiveCharts.
+    /// Configures the rendering settings for LiveCharts.
     /// </summary>
-    /// <param name="settings">The rendering settings.</param>
+    /// <param name="builder">The rendering settings builder.</param>
     /// <returns>The current settings.</returns>
-    public LiveChartsSettings RenderingSettings(
-        RenderingSettings settings)
+    public LiveChartsSettings RenderingSettings(Action<RenderingSettings> builder)
     {
-        LiveCharts.RenderingSettings = settings;
+        builder(LiveCharts.RenderingSettings);
 
         return this;
     }

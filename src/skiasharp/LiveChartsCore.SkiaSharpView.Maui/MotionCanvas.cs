@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Native;
 using LiveChartsCore.SkiaSharpView.Maui.Rendering;
