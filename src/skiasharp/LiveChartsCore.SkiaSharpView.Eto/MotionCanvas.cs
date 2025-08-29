@@ -38,30 +38,9 @@ public class MotionCanvas : SkiaDrawable, IRenderMode
 {
     private IFrameTicker _ticker = null!;
 
-    /// <summary>
-    /// Gets the recommended rendering settings for ETO.
-    /// </summary>
-    public static RenderingSettings RecommendedETORenderingSettings { get; } =
-        new()
-        {
-            // Not sure if this is supported in Eto, maybe it is already using GPU?
-            UseGPU = false,
-
-            // this is disconnected from the OS refresh rate
-            // if interested in VSync, please open an issue in the LiveCharts repository
-            // with info about the how we can implement it in Eto.
-            TryUseVSync = true,
-
-            // Because GPU is false, this is the target FPS:
-            LiveChartsRenderLoopFPS = 60,
-
-            // make this true to see the FPS in the top left corner of the chart
-            ShowFPS = false
-        };
-
     static MotionCanvas()
     {
-        LiveCharts.Configure(config => config.UseDefaults(RecommendedETORenderingSettings));
+        LiveChartsSkiaSharp.EnsureInitialized();
     }
 
     /// <summary>

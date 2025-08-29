@@ -39,28 +39,9 @@ public partial class MotionCanvas : IDisposable, IRenderMode
     private DomJsInterop? _dom;
     private IFrameTicker _ticker = null!;
 
-    /// <summary>
-    /// Gets the recommended rendering settings for Blazor.
-    /// </summary>
-    public static RenderingSettings RecommendedBlazorRenderingSettings { get; }
-        = new()
-        {
-            // Actually only GL view is supported in Blazor.
-            UseGPU = true,
-
-            // uses requestAnimationFrame under the hood.
-            TryUseVSync = true,
-
-            // A fallback value when VSync is not used.
-            LiveChartsRenderLoopFPS = 60,
-
-            // make this true to see the FPS in the top left corner of the chart
-            ShowFPS = false
-        };
-
     static MotionCanvas()
     {
-        LiveCharts.Configure(config => config.UseDefaults(RecommendedBlazorRenderingSettings));
+        LiveChartsSkiaSharp.EnsureInitialized();
     }
 
     /// <summary>

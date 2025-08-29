@@ -11,7 +11,6 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CartesianChart.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ChartControl.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MotionCanvas.settings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MotionCanvas.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PieChart.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PolarChart.cs" />
