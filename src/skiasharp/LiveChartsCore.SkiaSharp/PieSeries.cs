@@ -144,6 +144,11 @@ public class PieSeries<TModel, TVisual, TLabel>
         where TVisual : BaseDoughnutGeometry, new()
         where TLabel : BaseLabelGeometry, new()
 {
+    static PieSeries()
+    {
+        LiveChartsSkiaSharp.EnsureInitialized();
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="PieSeries{TModel, TVisual, TLabel}"/> class.
     /// </summary>

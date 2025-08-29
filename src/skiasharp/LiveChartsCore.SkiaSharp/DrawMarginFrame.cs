@@ -28,4 +28,9 @@ namespace LiveChartsCore.SkiaSharpView;
 /// Defines a visual frame in the draw margin of the chart.
 /// </summary>
 public class DrawMarginFrame : CoreDrawMarginFrame<RectangleGeometry>
-{ }
+{
+    static DrawMarginFrame()
+    {
+        LiveChartsSkiaSharp.EnsureInitialized();
+    }
+}

@@ -83,6 +83,11 @@ public class ColumnSeries<TModel, TVisual>
     : ColumnSeries<TModel, TVisual, LabelGeometry>
         where TVisual : BoundedDrawnGeometry, new()
 {
+    static ColumnSeries()
+    {
+        LiveChartsSkiaSharp.EnsureInitialized();
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ColumnSeries{TModel, TVisual, TLabel}"/> class.
     /// </summary>

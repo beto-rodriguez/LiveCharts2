@@ -27,4 +27,9 @@ namespace LiveChartsCore.SkiaSharpView;
 
 /// <inheritdoc cref="ICartesianAxis" />
 public class Axis : CoreAxis<LabelGeometry, LineGeometry>
-{ }
+{
+    static Axis()
+    {
+        LiveChartsSkiaSharp.EnsureInitialized();
+    }
+}

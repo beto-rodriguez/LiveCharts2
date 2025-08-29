@@ -130,6 +130,11 @@ public class BoxSeries<TModel, TVisual, TLabel>
         where TVisual : BaseBoxGeometry, new()
         where TLabel : BaseLabelGeometry, new()
 {
+    static BoxSeries()
+    {
+        LiveChartsSkiaSharp.EnsureInitialized();
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="BoxSeries{TModel, TVisual, TLabel}"/> class.
     /// </summary>

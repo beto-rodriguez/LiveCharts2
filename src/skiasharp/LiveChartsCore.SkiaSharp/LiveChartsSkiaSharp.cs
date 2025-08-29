@@ -40,6 +40,9 @@ public static class LiveChartsSkiaSharp
 {
     internal static TextSettings DefaultTextSettings { get; set; } = new();
 
+    internal static void EnsureInitialized() =>
+        LiveCharts.Configure(settings => settings.UseDefaults());
+
     /// <summary>
     /// Configures LiveCharts using the default settings for SkiaSharp.
     /// </summary>

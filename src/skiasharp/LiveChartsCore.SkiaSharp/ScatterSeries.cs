@@ -130,6 +130,11 @@ public class ScatterSeries<TModel, TVisual, TLabel>
         where TVisual : BoundedDrawnGeometry, new()
         where TLabel : BaseLabelGeometry, new()
 {
+    static ScatterSeries()
+    {
+        LiveChartsSkiaSharp.EnsureInitialized();
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ScatterSeries{TModel, TVisual, TLabel}"/> class.
     /// </summary>
