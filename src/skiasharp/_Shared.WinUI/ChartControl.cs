@@ -52,7 +52,7 @@ public abstract partial class ChartControl : UserControl, IChartView
     /// </summary>
     public ChartControl()
     {
-        Content = new MotionCanvas();
+        Content = new MotionCanvas(ForceGPU);
 
         SizeChanged += (s, e) =>
             CoreChart.Update();

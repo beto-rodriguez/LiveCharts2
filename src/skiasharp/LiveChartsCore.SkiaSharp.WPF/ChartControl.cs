@@ -48,7 +48,7 @@ public abstract partial class ChartControl : UserControl, IChartView
     /// <exception cref="Exception">Default colors are not valid</exception>
     protected ChartControl()
     {
-        Content = new MotionCanvas();
+        Content = new MotionCanvas(ForceGPU);
 
         SizeChanged += (s, e) =>
             CoreChart.Update();

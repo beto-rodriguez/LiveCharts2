@@ -39,7 +39,7 @@ public class MotionCanvas : SkiaDrawable, IRenderMode
 
     static MotionCanvas()
     {
-        LiveChartsSkiaSharp.EnsureInitialized();
+        _ = LiveChartsSkiaSharp.EnsureInitialized();
     }
 
     /// <summary>

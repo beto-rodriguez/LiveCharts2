@@ -32,21 +32,35 @@ namespace LiveChartsCore.SkiaSharpView.WPF;
 /// <seealso cref="Control" />
 public class MotionCanvas : UserControl
 {
-    private readonly CanvasRenderSettings<CPURenderMode, GPURenderMode, CompositionTargetTicker> _settings;
+    private readonly MotionCanvasComposer _composer;
 
     static MotionCanvas()
     {
-        LiveChartsSkiaSharp.EnsureInitialized();
+        _ = LiveChartsSkiaSharp
+            .EnsureInitialized()
+            .HasRenderingFactory(
+                (settings, forceGPU) =>
+                {
+                    IRenderMode renderMode = forceGPU || settings.UseGPU
+                        ? new GPURenderMode()
+                        : new CPURenderMode();
+
+                    IFrameTicker ticker = settings.TryUseVSync
+                        ? new CompositionTargetTicker()
+                        : new AsyncLoopTicker();
+
+                    return new MotionCanvasComposer(renderMode, ticker);
+                });
     }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
     /// </summary>
-    public MotionCanvas()
+    public MotionCanvas(bool forceGPU)
     {
-        _settings = new();
+        _composer = LiveChartsSkiaSharp.MotionCanvasRenderingFactory(LiveCharts.RenderingSettings, forceGPU);
 
-        Content = _settings.RenderMode;
+        Content = _composer.RenderMode;
 
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
@@ -62,8 +76,8 @@ public class MotionCanvas : UserControl
         base.RemoveLogicalChild(child);
 
     private void OnLoaded(object sender, RoutedEventArgs e) =>
-        _settings.Initialize(CanvasCore);
+        _composer.Initialize(CanvasCore);
 
     private void OnUnloaded(object sender, RoutedEventArgs e) =>
-        _settings.Dispose(CanvasCore);
+        _composer.Dispose(CanvasCore);
 }

@@ -41,7 +41,7 @@ public partial class MotionCanvas : UserControl, IRenderMode
 
     static MotionCanvas()
     {
-        LiveChartsSkiaSharp.EnsureInitialized();
+        _ = LiveChartsSkiaSharp.EnsureInitialized();
     }
 
     /// <summary>

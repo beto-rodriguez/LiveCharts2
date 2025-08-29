@@ -40,7 +40,7 @@ public partial class MotionCanvas : IDisposable, IRenderMode
 
     static MotionCanvas()
     {
-        LiveChartsSkiaSharp.EnsureInitialized();
+        _ = LiveChartsSkiaSharp.EnsureInitialized();
     }
 
     /// <summary>

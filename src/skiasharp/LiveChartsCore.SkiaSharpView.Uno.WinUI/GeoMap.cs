@@ -49,7 +49,7 @@ public sealed partial class GeoMap : UserControl, IGeoMapView
     /// </summary>
     public GeoMap()
     {
-        Content = new MotionCanvas();
+        Content = new MotionCanvas(false);
 
         _core = new GeoMapChart(this);
 

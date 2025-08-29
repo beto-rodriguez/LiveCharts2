@@ -49,7 +49,7 @@ public sealed partial class GeoMap : UserControl, IGeoMapView
     /// </summary>
     public GeoMap()
     {
-        InitializeComponent();
+        Content = new MotionCanvas(false);
         _core = new GeoMapChart(this);
 
         PointerPressed += OnPointerPressed;
@@ -159,7 +159,7 @@ public sealed partial class GeoMap : UserControl, IGeoMapView
     }
 
     /// <inheritdoc cref="IGeoMapView.Canvas"/>
-    public CoreMotionCanvas Canvas => canvas.CanvasCore;
+    public CoreMotionCanvas Canvas => ((MotionCanvas)Content).CanvasCore;
 
     /// <inheritdoc cref="IGeoMapView.ActiveMap"/>
     public DrawnMap ActiveMap

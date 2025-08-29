@@ -51,7 +51,7 @@ public partial class GeoMap : UserControl, IGeoMapView
     /// </summary>
     public GeoMap()
     {
-        InitializeComponent();
+        Content = new MotionCanvas();
         _core = new GeoMapChart(this);
         _seriesObserver = new CollectionDeepObserver(() => _core?.Update());
 

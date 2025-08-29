@@ -51,7 +51,7 @@ public partial class GeoMap : ContentView, IGeoMapView
     /// </summary>
     public GeoMap()
     {
-        InitializeComponent();
+        Content = new MotionCanvas(false);
         _core = new GeoMapChart(this);
 
         SizeChanged += GeoMap_SizeChanged;
@@ -158,7 +158,7 @@ public partial class GeoMap : ContentView, IGeoMapView
     }
 
     /// <inheritdoc cref="IGeoMapView.Canvas"/>
-    public CoreMotionCanvas Canvas => canvas.CanvasCore;
+    public CoreMotionCanvas Canvas => ((MotionCanvas)Content).CanvasCore;
 
     /// <inheritdoc cref="IGeoMapView.ActiveMap"/>
     public DrawnMap ActiveMap
@@ -168,10 +168,10 @@ public partial class GeoMap : ContentView, IGeoMapView
     }
 
     /// <inheritdoc cref="IGeoMapView.Width"/>
-    float IGeoMapView.Width => (float)canvas.Width;
+    float IGeoMapView.Width => (float)Content.Width;
 
     /// <inheritdoc cref="IGeoMapView.Height"/>
-    float IGeoMapView.Height => (float)canvas.Height;
+    float IGeoMapView.Height => (float)Content.Height;
 
     /// <inheritdoc cref="IGeoMapView.MapProjection"/>
     public MapProjection MapProjection

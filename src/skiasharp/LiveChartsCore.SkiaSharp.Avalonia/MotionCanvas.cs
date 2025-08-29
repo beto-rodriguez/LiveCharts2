@@ -46,7 +46,7 @@ public class MotionCanvas : UserControl
 
     static MotionCanvas()
     {
-        LiveChartsSkiaSharp.EnsureInitialized();
+        _ = LiveChartsSkiaSharp.EnsureInitialized();
     }
 
     /// <summary>
