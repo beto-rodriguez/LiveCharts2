@@ -469,7 +469,7 @@ public class LiveChartsSettings
     /// </summary>
     /// <param name="builder">The rendering settings builder.</param>
     /// <returns>The current settings.</returns>
-    public LiveChartsSettings RenderingSettings(Action<RenderingSettings> builder)
+    public LiveChartsSettings HasRenderingSettings(Action<RenderingSettings> builder)
     {
         builder(LiveCharts.RenderingSettings);
 
