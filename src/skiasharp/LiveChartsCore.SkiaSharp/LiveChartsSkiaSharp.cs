@@ -38,9 +38,13 @@ namespace LiveChartsCore.SkiaSharpView;
 /// </summary>
 public static class LiveChartsSkiaSharp
 {
+    internal static MotionCanvasComposer.MotionCanvasRenderingFactoryDelegate MotionCanvasRenderingFactory { get; set; } =
+        (settings, chart) => throw new NotImplementedException(
+            "No motion canvas rendering factory has been set, please use the method 'HasMotionCanvasRenderingFactory' to set one.");
+
     internal static TextSettings DefaultTextSettings { get; set; } = new();
 
-    internal static void EnsureInitialized()
+    internal static LiveChartsSettings EnsureInitialized()
     {
         LiveCharts.Configure(settings => settings.UseDefaults());
 
@@ -85,6 +89,8 @@ public static class LiveChartsSkiaSharp
 #if __DIAGNOSE__
         defaultRenderSettings.ShowFPS = true;
 #endif
+
+        return LiveCharts.DefaultSettings;
     }
 
     /// <summary>
@@ -150,6 +156,19 @@ public static class LiveChartsSkiaSharp
         this LiveChartsSettings settings, TextSettings textSettings)
     {
         DefaultTextSettings = textSettings;
+        return settings;
+    }
+
+    /// <summary>
+    /// Adds a render mode to the available render modes.
+    /// </summary>
+    /// <param name="settings">The current settings.</param>
+    /// <param name="factory">The rendering factory.</param>
+    /// <returns>The current settings.</returns>
+    public static LiveChartsSettings HasRenderingFactory(
+        this LiveChartsSettings settings, MotionCanvasComposer.MotionCanvasRenderingFactoryDelegate factory)
+    {
+        MotionCanvasRenderingFactory = factory;
         return settings;
     }
 

@@ -60,7 +60,11 @@ public class CoreMotionCanvas : IDisposable
         s_clock.Start();
     }
 
-    internal delegate void FrameRequestHandler(DrawingContext context);
+    /// <summary>
+    /// The frame request handler delegate.
+    /// </summary>
+    /// <param name="context"></param>
+    public delegate void FrameRequestHandler(DrawingContext context);
 
     internal CanvasZone[] Zones
     {

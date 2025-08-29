@@ -20,31 +20,53 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Kernel;
+
 namespace LiveChartsCore.Motion;
 
 /// <summary>
-/// Defines a render mode interface.
+/// Defines a motion canvas copmposer, a pair of render mode and frame ticker.
 /// </summary>
-public interface IRenderMode
+public class MotionCanvasComposer(IRenderMode renderMode, IFrameTicker ticker)
 {
     /// <summary>
-    /// Occurs when a frame is requested to be drawn.
+    /// Defines the motion canvas rendering factory delegate.
     /// </summary>
-    event CoreMotionCanvas.FrameRequestHandler FrameRequest;
+    /// <param name="settings">The global rendering settings.</param>
+    /// <param name="forceGPU">Indicates whether GPU mode is forced.</param>
+    /// <returns>A MotionCanvasComposer instance.</returns>
+    public delegate MotionCanvasComposer MotionCanvasRenderingFactoryDelegate(RenderingSettings settings, bool forceGPU);
 
     /// <summary>
-    /// Initializes the render mode.
+    /// Gets the render mode.
+    /// </summary>
+    public IRenderMode RenderMode { get; } = renderMode;
+
+    /// <summary>
+    /// Gets the ticker.
+    /// </summary>
+    public IFrameTicker Ticker { get; } = ticker;
+
+    /// <summary>
+    /// Initializes the composer.
     /// </summary>
     /// <param name="canvas"></param>
-    void InitializeRenderMode(CoreMotionCanvas canvas);
+    public void Initialize(CoreMotionCanvas canvas)
+    {
+        RenderMode.InitializeRenderMode(canvas);
+        Ticker.InitializeTicker(canvas, RenderMode);
+        RenderMode.FrameRequest += canvas.DrawFrame;
+    }
 
     /// <summary>
-    /// Invalidates the render mode.
+    /// Disposes the composer.
     /// </summary>
-    void InvalidateRenderer();
-
-    /// <summary>
-    /// Disposes the render mode.
-    /// </summary>
-    void DisposeRenderMode();
+    /// <param name="canvas"></param>
+    public void Dispose(CoreMotionCanvas canvas)
+    {
+        RenderMode.DisposeRenderMode();
+        Ticker.DisposeTicker();
+        RenderMode.FrameRequest -= canvas.DrawFrame;
+        canvas.Dispose();
+    }
 }

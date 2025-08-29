@@ -22,9 +22,20 @@
 
 namespace LiveChartsCore.Motion;
 
-internal interface IFrameTicker
+/// <summary>
+/// Defines a frame ticker interface.
+/// </summary>
+public interface IFrameTicker
 {
+    /// <summary>
+    /// Initializes the ticker.
+    /// </summary>
+    /// <param name="canvas">The canvas.</param>
+    /// <param name="renderMode">The render mode.</param>
     void InitializeTicker(CoreMotionCanvas canvas, IRenderMode renderMode);
 
+    /// <summary>
+    /// Disposes the ticker.
+    /// </summary>
     void DisposeTicker();
 }

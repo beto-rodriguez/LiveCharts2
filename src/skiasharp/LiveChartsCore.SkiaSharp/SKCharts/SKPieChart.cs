@@ -59,6 +59,9 @@ public class SKPieChart : InMemorySkiaSharpChart, IPieChartView
     bool IChartView.DesignerMode => false;
     bool IChartView.IsDarkMode => false;
 
+    /// <inheritdoc cref="IChartView.ForceGPU" />
+    public bool ForceGPU { get; set; }
+
     /// <inheritdoc cref="IChartView.ChartTheme" />
     public Theme? ChartTheme { get; set; }
 
