@@ -99,6 +99,16 @@
       <Deploy Solution="Release|Any CPU" />
     </Project>
   </Folder>
+  <Folder Name="/Samples/Vortice/">
+    <Project Path="samples/VorticeSample/Vortice.SampleFramework/Vortice.SampleFramework.csproj">
+      <BuildType Solution="Ad-Hoc|*" Project="Release" />
+      <BuildType Solution="AppStore|*" Project="Release" />
+    </Project>
+    <Project Path="samples/VorticeSample/VorticeSample/VorticeSample.csproj" Id="e2407f57-51d0-49fb-8b90-6498ac17730c">
+      <BuildType Solution="Ad-Hoc|*" Project="Release" />
+      <BuildType Solution="AppStore|*" Project="Release" />
+    </Project>
+  </Folder>
   <Folder Name="/Samples/WinForms/">
     <Project Path="samples/WinFormsSample/WinFormsSample.csproj">
       <BuildType Solution="Ad-Hoc|*" Project="Release" />
