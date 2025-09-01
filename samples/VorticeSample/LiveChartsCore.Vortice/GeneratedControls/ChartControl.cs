@@ -65,7 +65,8 @@ public abstract partial class ChartControl : IMyUIFrameworkControl
         Height = Application.Current.MainWindow.Bounds.Height
     };
 
-    public void InvokeOnUIThread(Action action) { }
+    public void InvokeOnUIThread(Action action) =>
+        action();
 
     public void DrawFrame(ID2D1HwndRenderTarget renderTarget)
     {
