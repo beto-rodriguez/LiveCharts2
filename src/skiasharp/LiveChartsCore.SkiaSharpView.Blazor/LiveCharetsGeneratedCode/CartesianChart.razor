@@ -22,12 +22,10 @@
 	SOFTWARE.
 *@
 
+@namespace LiveChartsGeneratedCode
 
-<MotionCanvas
-    @ref="_motionCanvas"
-    OnPointerDownCallback="OnPointerDown"
-    OnPointerMoveCallback="OnPointerMove"
-    OnPointerUpCallback="OnPointerUp"
-    OnPointerOutCallback="OnPointerOut"
-    OnWheelCallback="OnWheel">
-</MotionCanvas>
+@inherits ChartControl
+
+@{
+	base.BuildRenderTree(__builder);
+}

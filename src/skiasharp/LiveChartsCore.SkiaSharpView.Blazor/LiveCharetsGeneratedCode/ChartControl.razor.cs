@@ -20,19 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Motion;
+using LiveChartsCore.SkiaSharpView.Blazor;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+
+namespace LiveChartsGeneratedCode;
+
 // ==============================================================================
 // 
 // this file contains the Blazor specific code for the ChartControl class,
 // the rest of the code can be found in the _Shared project.
 // 
 // ==============================================================================
-
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel.Sketches;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-
-namespace LiveChartsCore.SkiaSharpView.Blazor;
 
 /// <inheritdoc cref="IChartView" />
 public abstract partial class ChartControl : IBlazorChart, IDisposable, IChartView
@@ -54,7 +56,7 @@ public abstract partial class ChartControl : IBlazorChart, IDisposable, IChartVi
     }
 
     /// <inheritdoc cref="IChartView.CoreCanvas"/>
-    public MotionCanvas CanvasView => _motionCanvas;
+    public CoreMotionCanvas CoreCanvas => _motionCanvas.CanvasCore;
 
     /// <inheritdoc cref="IBlazorChart.CanvasContainerElement"/>
     public ElementReference CanvasContainerElement { get; private set; }

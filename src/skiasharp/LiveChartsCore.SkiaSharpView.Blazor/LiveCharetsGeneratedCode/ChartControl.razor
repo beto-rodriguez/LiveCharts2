@@ -22,17 +22,15 @@
 	SOFTWARE.
 *@
 
-@inherits LiveChartsGeneratedCode.PieChart
+@using LiveChartsCore.SkiaSharpView.Blazor
 
-@*
-==============================================================================
+@namespace LiveChartsGeneratedCode
 
-use the LiveChartsGeneratedCode.PieChart class to add blazor specific
-code, this class is just to expose the PieChart class in this namespace.
-
-==============================================================================
-*@
-
-@{
-	base.BuildRenderTree(__builder);
-}
+<MotionCanvas
+    @ref="_motionCanvas"
+    OnPointerDownCallback="OnPointerDown"
+    OnPointerMoveCallback="OnPointerMove"
+    OnPointerUpCallback="OnPointerUp"
+    OnPointerOutCallback="OnPointerOut"
+    OnWheelCallback="OnWheel">
+</MotionCanvas>

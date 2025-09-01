@@ -20,19 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore;
+using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Measure;
+using Microsoft.AspNetCore.Components.Web;
+
+namespace LiveChartsGeneratedCode;
+
 // ==============================================================================
 // 
 // this file contains the Blazor specific code for the CartesianChart class,
 // the rest of the code can be found in the _Shared project.
 // 
 // ==============================================================================
-
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.Measure;
-using Microsoft.AspNetCore.Components.Web;
-
-namespace LiveChartsCore.SkiaSharpView.Blazor;
 
 /// <inheritdoc cref="ICartesianChartView"/>
 public partial class CartesianChart : ChartControl, ICartesianChartView

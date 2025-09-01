@@ -20,17 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Kernel.Sketches;
+
+namespace LiveChartsGeneratedCode;
+
 // ==============================================================================
 // 
-// this file contains the Blazor specific code for the PieChart class,
+// this file contains the Blazor specific code for the PolarChart class,
 // the rest of the code can be found in the _Shared project.
 // 
 // ==============================================================================
 
-using LiveChartsCore.Kernel.Sketches;
-
-namespace LiveChartsCore.SkiaSharpView.Blazor;
-
-/// <inheritdoc cref="IPieChartView"/>
-public partial class PieChart : ChartControl, IPieChartView
+/// <inheritdoc cref="IPolarChartView"/>
+public partial class PolarChart : ChartControl, IPolarChartView
 { }
