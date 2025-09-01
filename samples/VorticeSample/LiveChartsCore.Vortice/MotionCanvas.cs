@@ -40,6 +40,12 @@ namespace LiveChartsCore.Vortice;
 /// </summary>
 public partial class MotionCanvas : IRenderMode, IMyUIFrameworkControl
 {
+    public MotionCanvas()
+    {
+        CoreMotionCanvas.s_externalRenderer = "Direct2D via Vortice";
+        CoreMotionCanvas.s_tickerName = $"PresentOptions {Application.Current!.PresentOptions}";
+    }
+
     /// <inheritdoc cref="CoreMotionCanvas"/>
     public CoreMotionCanvas CanvasCore { get; } = new();
 

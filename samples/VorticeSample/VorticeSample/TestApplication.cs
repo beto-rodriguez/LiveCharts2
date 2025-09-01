@@ -24,8 +24,6 @@ public class TestApplication : Application
         CreateResources();
     }
 
-    public PresentOptions PresentOptions { get; set; } = PresentOptions.Immediately;
-
     private List<IMyUIFrameworkControl> Controls { get; } = [];
 
     public void AddControl(IMyUIFrameworkControl control) =>

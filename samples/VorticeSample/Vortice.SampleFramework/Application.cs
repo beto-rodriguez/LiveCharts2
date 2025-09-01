@@ -3,6 +3,7 @@
 // https://github.com/amerkoleci/Vortice.Windows
 
 using System;
+using Vortice.Direct2D1;
 using Vortice.DirectWrite;
 
 namespace Vortice;
@@ -26,6 +27,7 @@ public abstract partial class Application : IDisposable
     public IGraphicsDevice? GraphicsDevice => _graphicsDevice;
     public IDWriteFactory1 WriteFactory { get; protected set; } = null!;
     public AppTextRenderer TextRenderer { get; protected set; } = null!;
+    public PresentOptions PresentOptions { get; set; } = PresentOptions.Immediately;
 
     public virtual void Dispose() =>
         _graphicsDevice?.Dispose();
