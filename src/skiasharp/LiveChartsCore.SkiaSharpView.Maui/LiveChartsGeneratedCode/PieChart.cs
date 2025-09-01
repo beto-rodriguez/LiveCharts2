@@ -20,44 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Microsoft.Maui;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui.Graphics;
+using LiveChartsCore.Kernel.Sketches;
 
-namespace LiveChartsCore.SkiaSharpView.Maui;
+namespace LiveChartsGeneratedCode;
 
-/// <summary>
-/// Just a view that does nothing, but helps to make the XAML work.
-/// </summary>
-public class EmptyContentView : View, IContentView
-{
-    /// <summary>
-    /// Gets the content.
-    /// </summary>
-    public object? Content => null;
+// ==============================================================================
+// 
+// this file contains the MAUI specific code for the PieChart class,
+// the rest of the code can be found in the _Shared project.
+// 
+// ==============================================================================
 
-    /// <summary>
-    /// Gets the presented content.
-    /// </summary>
-    public IView? PresentedContent => null;
-
-    /// <summary>
-    /// Gets the padding.
-    /// </summary>
-    Thickness IPadding.Padding => new();
-
-    /// <summary>
-    /// Gets the size.
-    /// </summary>
-    /// <param name="bounds"></param>
-    /// <returns></returns>
-    public Size CrossPlatformArrange(Rect bounds) => new();
-
-    /// <summary>
-    /// Measures the specified width constraint.
-    /// </summary>
-    /// <param name="widthConstraint"></param>
-    /// <param name="heightConstraint"></param>
-    /// <returns></returns>
-    public Size CrossPlatformMeasure(double widthConstraint, double heightConstraint) => new();
-}
+/// <inheritdoc cref="IPieChartView"/>
+public partial class PieChart : ChartControl, IPieChartView
+{ }

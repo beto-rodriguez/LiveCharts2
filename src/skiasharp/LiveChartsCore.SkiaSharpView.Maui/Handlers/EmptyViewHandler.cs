@@ -1,4 +1,4 @@
-﻿// The MIT License(MIT)
+// The MIT License(MIT)
 //
 // Copyright(c) 2021 Alberto Rodriguez Orozco & LiveCharts Contributors
 //
@@ -20,17 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Kernel.Sketches;
+using Microsoft.Maui.Handlers;
 
-namespace LiveChartsCore.SkiaSharpView.Maui;
+namespace LiveChartsCore.SkiaSharpView.Maui.Handlers;
 
-// ==============================================================================
-// 
-// use the LiveChartsGeneratedCode.PieChart class to add maui specific
-// code, this class is just to expose the PieChart class in this namespace.
-// 
-// ==============================================================================
-
-/// <inheritdoc cref="IPieChartView"/>
-public partial class PieChart : LiveChartsGeneratedCode.PieChart
+/// <summary>
+/// An empty <see cref="ContentViewHandler"/> that does nothing.
+/// </summary>
+public class EmptyViewHandler : ContentViewHandler
 { }

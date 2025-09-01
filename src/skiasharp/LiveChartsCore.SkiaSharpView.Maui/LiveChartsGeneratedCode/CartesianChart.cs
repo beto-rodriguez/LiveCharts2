@@ -20,17 +20,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Measure;
 
-namespace LiveChartsCore.SkiaSharpView.Maui;
+namespace LiveChartsGeneratedCode;
 
 // ==============================================================================
 // 
-// use the LiveChartsGeneratedCode.PieChart class to add maui specific
-// code, this class is just to expose the PieChart class in this namespace.
+// this file contains the MAUI specific code for the CartesianChart class,
+// the rest of the code can be found in the _Shared project.
 // 
 // ==============================================================================
 
-/// <inheritdoc cref="IPieChartView"/>
-public partial class PieChart : LiveChartsGeneratedCode.PieChart
-{ }
+/// <inheritdoc cref="ICartesianChartView"/>
+public partial class CartesianChart : ChartControl, ICartesianChartView
+{
+    internal override void OnScrolled(object? sender, LiveChartsCore.Native.Events.ScrollEventArgs args)
+    {
+        var c = (CartesianChartEngine)CoreChart;
+        c.Zoom(ZoomMode, args.Location, args.ScrollDelta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+    }
+
+    internal override void OnPinched(object? sender, LiveChartsCore.Native.Events.PinchEventArgs args)
+    {
+        var c = (CartesianChartEngine)CoreChart;
+        var p = args.PinchStart;
+        var s = c.ControlSize;
+        var pivot = new LvcPoint((float)(p.X * s.Width), (float)(p.Y * s.Height));
+        c.Zoom(ZoomMode, pivot, ZoomDirection.DefinedByScaleFactor, args.Scale);
+    }
+}

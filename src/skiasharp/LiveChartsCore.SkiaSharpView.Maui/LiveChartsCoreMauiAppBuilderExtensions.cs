@@ -22,6 +22,7 @@
 
 using System;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.SkiaSharpView.Maui.Handlers;
 using Microsoft.Maui.Hosting;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;

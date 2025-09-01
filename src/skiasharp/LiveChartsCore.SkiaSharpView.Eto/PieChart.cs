@@ -20,13 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// ==============================================================================
-// 
-// this file contains the Eto specific code for the PieChart class,
-// the rest of the code can be found in the _Shared project.
-// 
-// ==============================================================================
-
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.SkiaSharpView.Eto;

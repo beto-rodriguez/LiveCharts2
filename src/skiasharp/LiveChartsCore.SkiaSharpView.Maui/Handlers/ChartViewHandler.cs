@@ -34,7 +34,7 @@ using LiveChartsCore.Native;
 using LiveChartsCore.Native.Events;
 using Microsoft.Maui.Handlers;
 
-namespace LiveChartsCore.SkiaSharpView.Maui;
+namespace LiveChartsCore.SkiaSharpView.Maui.Handlers;
 
 /// <summary>
 /// A <see cref="ContentViewHandler"/> specific to the <see cref="ChartView"/> control.

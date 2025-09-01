@@ -20,21 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+using LiveChartsCore;
+using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Events;
+using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Motion;
+using LiveChartsCore.SkiaSharpView.Maui;
+using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.Controls;
+
+namespace LiveChartsGeneratedCode;
+
 // ==============================================================================
 // 
 // this file contains the MAUI specific code for the ChartControl class,
 // the rest of the code can be found in the _Shared project.
 // 
 // ==============================================================================
-
-using System;
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel.Events;
-using LiveChartsCore.Kernel.Sketches;
-using Microsoft.Maui.ApplicationModel;
-using Microsoft.Maui.Controls;
-
-namespace LiveChartsCore.SkiaSharpView.Maui;
 
 /// <inheritdoc cref="IChartView"/>
 public abstract partial class ChartControl : ChartView, IChartView
@@ -59,10 +62,10 @@ public abstract partial class ChartControl : ChartView, IChartView
             Application.Current.RequestedThemeChanged += (sender, args) => CoreChart?.ApplyTheme();
     }
 
-    /// <summary>
-    /// Gets the canvas view.
-    /// </summary>
-    public MotionCanvas CanvasView => (MotionCanvas)Content;
+    private MotionCanvas CanvasView => (MotionCanvas)Content;
+
+    /// <inheritdoc cref="IChartView.CoreCanvas"/>
+    public CoreMotionCanvas CoreCanvas => CanvasView.CanvasCore;
 
     bool IChartView.DesignerMode => false;
     bool IChartView.IsDarkMode => Application.Current?.RequestedTheme == AppTheme.Dark;
@@ -76,7 +79,7 @@ public abstract partial class ChartControl : ChartView, IChartView
                 : CoreCanvas._virtualBackgroundColor;
         }
     }
-    LvcSize IChartView.ControlSize => new() { Width = (float)CanvasView.Width, Height = (float)CanvasView.Height };
+    LvcSize IChartView.ControlSize => new() { Width = (float)Width, Height = (float)Height };
 
     private void OnLoaded(object? sender, EventArgs e)
     {
@@ -116,7 +119,7 @@ public abstract partial class ChartControl : ChartView, IChartView
         _ = CanvasView.Children.Remove(view);
     }
 
-    internal override void OnPressed(object? sender, Native.Events.PressedEventArgs args)
+    internal override void OnPressed(object? sender, LiveChartsCore.Native.Events.PressedEventArgs args)
     {
         // not implemented yet?
         // https://github.com/dotnet/maui/issues/16202
@@ -129,7 +132,7 @@ public abstract partial class ChartControl : ChartView, IChartView
         CoreChart.InvokePointerDown(args.Location, args.IsSecondaryPress);
     }
 
-    internal override void OnMoved(object? sender, Native.Events.ScreenEventArgs args)
+    internal override void OnMoved(object? sender, LiveChartsCore.Native.Events.ScreenEventArgs args)
     {
         var location = args.Location;
 
@@ -140,7 +143,7 @@ public abstract partial class ChartControl : ChartView, IChartView
         CoreChart.InvokePointerMove(location);
     }
 
-    internal override void OnReleased(object? sender, Native.Events.PressedEventArgs args)
+    internal override void OnReleased(object? sender, LiveChartsCore.Native.Events.PressedEventArgs args)
     {
         var cArgs = new PointerCommandArgs(this, new(args.Location.X, args.Location.Y), args);
         if (ReleasedCommand?.CanExecute(cArgs) == true)
@@ -149,7 +152,7 @@ public abstract partial class ChartControl : ChartView, IChartView
         CoreChart.InvokePointerUp(args.Location, args.IsSecondaryPress);
     }
 
-    internal override void OnExited(object? sender, Native.Events.EventArgs args) =>
+    internal override void OnExited(object? sender, LiveChartsCore.Native.Events.EventArgs args) =>
         CoreChart.InvokePointerLeft();
 
     void IChartView.InvokeOnUIThread(Action action) =>
