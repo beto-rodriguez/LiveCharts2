@@ -24,6 +24,8 @@ public class TestApplication : Application
         CreateResources();
     }
 
+    public PresentOptions PresentOptions { get; set; } = PresentOptions.Immediately;
+
     private List<IMyUIFrameworkControl> Controls { get; } = [];
 
     public void AddControl(IMyUIFrameworkControl control) =>
@@ -46,7 +48,7 @@ public class TestApplication : Application
         {
             Hwnd = MainWindow!.Handle,
             PixelSize = new(MainWindow!.Bounds.Width, MainWindow!.Bounds.Height),
-            PresentOptions = PresentOptions.Immediately
+            PresentOptions = PresentOptions
         };
 
         _renderTarget = _d2dFactory.CreateHwndRenderTarget(new RenderTargetProperties(), wtp);

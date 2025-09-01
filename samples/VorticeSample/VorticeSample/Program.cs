@@ -12,7 +12,7 @@ LiveCharts.Configure(config => config
         renderSettings.ShowFPS = true;
     }));
 
-using TestApplication app = new();
+using TestApplication app = new() { PresentOptions = Vortice.Direct2D1.PresentOptions.None };
 
 var data = new ObservableCollection<double> { 3, 2, 5, 3 };
 

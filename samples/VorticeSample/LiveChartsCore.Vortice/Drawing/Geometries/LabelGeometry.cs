@@ -13,11 +13,15 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<VorticeDrawingCont
     public virtual void Draw(VorticeDrawingContext context)
     {
         Validate();
+        var size = _textLayout.Metrics;
 
         var app = Application.Current!;
 
         app.TextRenderer.ActiveBrush = context.ActiveBrush;
-        _textLayout.Draw(app.TextRenderer, X, Y);
+        _textLayout.Draw(
+            app.TextRenderer,
+            X + GetRelativeX(HorizontalAlign, _textLayout.Metrics),
+            Y + GetRelativeY(VerticalAlign, _textLayout.Metrics));
     }
 
     /// <inheritdoc cref="DrawnGeometry.Measure()" />
@@ -32,6 +36,28 @@ public class LabelGeometry : BaseLabelGeometry, IDrawnElement<VorticeDrawingCont
 
         return new LvcSize(textSize.Width + x, textSize.Height + y)
             .GetRotatedSize(RotateTransform);
+    }
+
+    private float GetRelativeX(Align align, TextMetrics size)
+    {
+        return align switch
+        {
+            Align.Start => Padding.Left,
+            Align.Middle => -size.Width / 2f - Padding.Left,
+            Align.End => -size.Width - Padding.Left,
+            _ => throw new ArgumentOutOfRangeException(nameof(align), align, null)
+        };
+    }
+
+    private static float GetRelativeY(Align align, TextMetrics size)
+    {
+        return align switch
+        {
+            Align.Start => 0f,
+            Align.Middle => -size.Height / 2f,
+            Align.End => -size.Height,
+            _ => throw new ArgumentOutOfRangeException(nameof(align), align, null)
+        };
     }
 
     internal override void OnDisposed()
