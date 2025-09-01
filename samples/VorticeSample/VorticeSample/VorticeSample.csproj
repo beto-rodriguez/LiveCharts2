@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\LiveChartsCore.Vortice\LiveChartsCore.Vortice.csproj" />
     <ProjectReference Include="..\Vortice.SampleFramework\Vortice.SampleFramework.csproj" />
   </ItemGroup>
 
