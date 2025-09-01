@@ -20,17 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// ==============================================================================
-// 
-// this file contains the WinUI/UNO specific code for the PieChart class,
-// the rest of the code can be found in the _Shared project.
-// 
-// ==============================================================================
-
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.SkiaSharpView.WinUI;
 
+// ==============================================================================
+// 
+// use the LiveChartsGeneratedCode.PieChart class to add winui/uno specific
+// code, this class is just to expose the PieChart class in this namespace.
+// 
+// ==============================================================================
+
 /// <inheritdoc cref="IChartView" />
-public sealed partial class PieChart : ChartControl, IPieChartView
+public sealed partial class PieChart : LiveChartsGeneratedCode.PieChart
 { }

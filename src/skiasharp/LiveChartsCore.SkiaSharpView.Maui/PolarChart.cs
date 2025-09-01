@@ -20,19 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// ==============================================================================
-// 
-// this file contains the MAUI specific code for the PolarChart class,
-// the rest of the code can be found in the _Shared project.
-// 
-// ==============================================================================
-
 using LiveChartsCore.Kernel.Sketches;
-using Microsoft.Maui.Controls.Xaml;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
 
+// ==============================================================================
+// 
+// use the LiveChartsGeneratedCode.PolarChart class to add maui specific
+// code, this class is just to expose the PolarChart class in this namespace.
+// 
+// ==============================================================================
+
 /// <inheritdoc cref="IPolarChartView"/>
-[XamlCompilation(XamlCompilationOptions.Compile)]
-public partial class PolarChart : ChartControl, IPolarChartView
+public partial class PolarChart : LiveChartsGeneratedCode.PolarChart
 { }

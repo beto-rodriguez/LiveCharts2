@@ -29,11 +29,12 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.VisualElements;
 using System;
 
+
 #if AVALONIA_LVC
 using BaseControl = Avalonia.Controls.Control;
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 #elif MAUI_LVC
-using BaseControl = LiveChartsCore.SkiaSharpView.Maui.EmptyContentView;
+using BaseControl = LiveChartsCore.SkiaSharpView.Maui.Handlers.EmptyContentView;
 namespace LiveChartsCore.SkiaSharpView.Maui;
 #elif WINUI_LVC
 using BaseControl = Microsoft.UI.Xaml.FrameworkElement;

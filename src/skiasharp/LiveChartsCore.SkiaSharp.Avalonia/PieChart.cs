@@ -20,17 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// ==============================================================================
-// 
-// this file contains the Avalonia specific code for the PieChart class,
-// the rest of the code can be found in the _Shared project.
-// 
-// ==============================================================================
-
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
+// ==============================================================================
+// 
+// use the LiveChartsGeneratedCode.PieChart class to add avalonia specific
+// code, this class is just to expose the PieChart class in this namespace.
+// 
+// ==============================================================================
+
 /// <inheritdoc cref="IPieChartView" />
-public partial class PieChart : ChartControl, IPieChartView
+public class PieChart : LiveChartsGeneratedCode.PieChart
 { }

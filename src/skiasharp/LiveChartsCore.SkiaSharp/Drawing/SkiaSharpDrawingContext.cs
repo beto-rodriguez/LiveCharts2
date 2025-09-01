@@ -196,7 +196,7 @@ public class SkiaSharpDrawingContext(
     internal override void SelectPaint(Paint paint)
     {
         ActiveLvcPaint = paint;
-        //ActiveSkiaPaint = paint.SKPaint; set by paint.InitializeTask
+        //ActiveSkiaPaint = paint.SKPaint; set by paint.OnPaintStarted
         PaintMotionProperty.s_activePaint = paint;
 
         paint.OnPaintStarted(this, null);
