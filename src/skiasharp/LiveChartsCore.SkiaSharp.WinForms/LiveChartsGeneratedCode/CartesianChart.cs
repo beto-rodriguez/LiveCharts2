@@ -20,17 +20,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Windows.Forms;
+using LiveChartsCore;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Measure;
 
-namespace LiveChartsCore.SkiaSharpView.WinUI;
+namespace LiveChartsGeneratedCode;
 
 // ==============================================================================
 // 
-// use the LiveChartsGeneratedCode.PieChart class to add winui/uno specific
-// code, this class is just to expose the PieChart class in this namespace.
+// this file contains the WinForms specific code for the CartesianChart class,
+// the rest of the code can be found in the _Shared project.
 // 
 // ==============================================================================
 
-/// <inheritdoc cref="IChartView" />
-public sealed partial class PieChart : LiveChartsGeneratedCode.PieChart
-{ }
+/// <inheritdoc cref="ICartesianChartView" />
+public partial class CartesianChart : ChartControl, ICartesianChartView
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CartesianChart"/> class.
+    /// </summary>
+    public CartesianChart()
+    {
+        GetDrawnControl().MouseWheel += OnMouseWheel;
+    }
+
+    private void OnMouseWheel(object? sender, MouseEventArgs e)
+    {
+        var c = (CartesianChartEngine)CoreChart;
+        var p = e.Location;
+        c.Zoom(ZoomMode, new LvcPoint(p.X, p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+    }
+}

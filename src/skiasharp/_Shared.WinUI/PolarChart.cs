@@ -26,7 +26,7 @@ namespace LiveChartsCore.SkiaSharpView.WinUI;
 
 // ==============================================================================
 // 
-// use the LiveChartsGeneratedCode.PolarChart class to add avalonia specific
+// use the LiveChartsGeneratedCode.PolarChart class to add winui/uno specific
 // code, this class is just to expose the PolarChart class in this namespace.
 // 
 // ==============================================================================

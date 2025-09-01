@@ -20,6 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.Windows.Forms;
+using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Motion;
+using LiveChartsCore.SkiaSharpView.WinForms;
+
+namespace LiveChartsGeneratedCode;
+
 // ==============================================================================
 // 
 // this file contains the WinForms specific code for the ChartControl class,
@@ -27,23 +38,12 @@
 // 
 // ==============================================================================
 
-using System;
-using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Sketches;
-
-namespace LiveChartsCore.SkiaSharpView.WinForms;
-
 /// <inheritdoc cref="IChartView" />
 public abstract partial class ChartControl : UserControl, IChartView
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ChartControl"/> class.
     /// </summary>
-    /// <exception cref="MotionCanvas"></exception>
     protected ChartControl()
     {
         var motionCanvas = new MotionCanvas();
@@ -71,10 +71,8 @@ public abstract partial class ChartControl : UserControl, IChartView
         c.MouseLeave += OnMouseLeave;
     }
 
-    /// <summary>
-    /// Gets the canvas view.
-    /// </summary>
-    public MotionCanvas CanvasView => (MotionCanvas)Controls[0];
+    /// <inheritdoc cref="IChartView.CoreCanvas"/>"/>
+    public CoreMotionCanvas CoreCanvas => ((MotionCanvas)Controls[0]).CanvasCore;
 
     bool IChartView.DesignerMode => LicenseManager.UsageMode == LicenseUsageMode.Designtime;
 
