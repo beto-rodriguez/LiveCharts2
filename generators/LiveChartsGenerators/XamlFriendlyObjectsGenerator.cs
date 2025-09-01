@@ -432,10 +432,10 @@ public class XamlFriendlyObjectsGenerator : IIncrementalGenerator
             "LiveChartsCore.SkiaSharpView.Uno.WinUI" => "WinUI",
             "LiveChartsCore.SkiaSharpView.Avalonia" => "Avalonia",
             "LiveChartsCore.SkiaSharpView.WPF" => "WPF",
+            "LiveChartsCore.SkiaSharpView.Blazor" => "Blazor",
             "LiveChartsCore.SkiaSharpView.WinForms" => "WinForms",
             "LiveChartsCore.SkiaSharpView.Eto" => "WinForms",
-            "LiveChartsCore.SkiaSharpView.Blazor" => "Blazor",
-            _ => null
+            _ => "WinForms" // as a default, use winforms which is just classic style properties
         };
     }
 
