@@ -39,9 +39,10 @@ public class VorticeDrawingContext(
     public Color4 Background { get; } = background;
     public ID2D1Brush ActiveBrush { get; set; } = null!;
 
-    private ID2D1SolidColorBrush? _logTextBrush;
-    private ID2D1SolidColorBrush? _logBackgroundBrush;
-    private IDWriteTextFormat? _logTextFormat;
+    private ID2D1HwndRenderTarget _previousRenderTarget = null!;
+    private static ID2D1SolidColorBrush? s_logTextBrush;
+    private static ID2D1SolidColorBrush? s_logBackgroundBrush;
+    private static IDWriteTextFormat? s_logTextFormat;
 
     public override void LogOnCanvas(string log)
     {
@@ -49,16 +50,25 @@ public class VorticeDrawingContext(
         var writeFactory = app.WriteFactory;
         var textRenderer = app.TextRenderer;
 
-        _logTextBrush ??= RenderTarget.CreateSolidColorBrush(new Color4(255, 255, 255, 255));
-        _logBackgroundBrush ??= RenderTarget.CreateSolidColorBrush(new Color4(0, 0, 0, 180));
-        _logTextFormat ??= writeFactory.CreateTextFormat("Consolas", FontWeight.Regular, FontStyle.Normal, 16);
+        if (_previousRenderTarget != RenderTarget)
+        {
+            s_logTextBrush?.Dispose();
+            s_logTextBrush = null;
+            s_logBackgroundBrush?.Dispose();
+            s_logBackgroundBrush = null;
+            _previousRenderTarget = RenderTarget;
+        }
 
-        textRenderer.ActiveBrush = _logTextBrush;
+        s_logTextBrush ??= RenderTarget.CreateSolidColorBrush(new Color4(255, 255, 255, 255));
+        s_logBackgroundBrush ??= RenderTarget.CreateSolidColorBrush(new Color4(0, 0, 0, 0.4f));
+        s_logTextFormat ??= writeFactory.CreateTextFormat("Consolas", FontWeight.Regular, FontStyle.Normal, 16);
+
+        textRenderer.ActiveBrush = s_logTextBrush;
 
         var lines = log.Replace("`", Environment.NewLine);
-        RenderTarget.FillRectangle(new(10, 0, 400, (16 + 4f) * lines.Length), _logBackgroundBrush);
+        RenderTarget.FillRectangle(new(10, 0, 400, 150), s_logBackgroundBrush);
 
-        using var textLayout = writeFactory.CreateTextLayout(lines, _logTextFormat, 400, float.MaxValue);
+        using var textLayout = writeFactory.CreateTextLayout(lines, s_logTextFormat, 400, float.MaxValue);
 
         textLayout.Draw(textRenderer, 10, 10 + 2 + (16 + 4f));
     }
