@@ -20,24 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// ==============================================================================
-// 
-// this file contains the WPF specific code for the ChartControl class,
-// the rest of the code can be found in the _Shared project.
-// 
-// ==============================================================================
-
 using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using LiveChartsCore;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Motion;
+using LiveChartsCore.SkiaSharpView.WPF;
 
-namespace LiveChartsCore.SkiaSharpView.WPF;
+namespace LiveChartsGeneratedCode;
+
+// ==============================================================================
+// 
+// this file contains the WPF specific code for the ChartControl class,
+// the rest of the code can be found in the _Shared project.
+// 
+// ==============================================================================
 
 /// <inheritdoc cref="IChartView" />
 public abstract partial class ChartControl : UserControl, IChartView
@@ -65,10 +68,10 @@ public abstract partial class ChartControl : UserControl, IChartView
         Unloaded += OnUnloaded;
     }
 
-    /// <summary>
-    /// Gets the canvas view.
-    /// </summary>
-    public MotionCanvas CanvasView => (MotionCanvas)Content;
+    private MotionCanvas MotionCanvas => (MotionCanvas)Content;
+
+    /// <inheritdoc cref="IChartView.CoreCanvas" />
+    public CoreMotionCanvas CoreCanvas => MotionCanvas.CanvasCore;
 
     bool IChartView.DesignerMode => DesignerProperties.GetIsInDesignMode(this);
     bool IChartView.IsDarkMode => false;
@@ -76,7 +79,7 @@ public abstract partial class ChartControl : UserControl, IChartView
         Background is not SolidColorBrush b
             ? CoreCanvas._virtualBackgroundColor
             : LvcColor.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
-    LvcSize IChartView.ControlSize => new() { Width = (float)CanvasView.ActualWidth, Height = (float)CanvasView.ActualHeight };
+    LvcSize IChartView.ControlSize => new() { Width = (float)ActualWidth, Height = (float)ActualHeight };
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
@@ -92,14 +95,14 @@ public abstract partial class ChartControl : UserControl, IChartView
 
     private void AddUIElement(object item)
     {
-        if (CanvasView is null || item is not FrameworkElement view) return;
-        CanvasView.AddLogicalChild(view);
+        if (MotionCanvas is null || item is not FrameworkElement view) return;
+        MotionCanvas.AddLogicalChild(view);
     }
 
     private void RemoveUIElement(object item)
     {
-        if (CanvasView is null || item is not FrameworkElement view) return;
-        CanvasView.RemoveLogicalChild(view);
+        if (MotionCanvas is null || item is not FrameworkElement view) return;
+        MotionCanvas.RemoveLogicalChild(view);
     }
 
     private void Chart_MouseDown(object sender, MouseButtonEventArgs e)

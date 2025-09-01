@@ -20,17 +20,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Windows.Input;
+using LiveChartsCore;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Measure;
 
-namespace LiveChartsCore.SkiaSharpView.WPF;
+namespace LiveChartsGeneratedCode;
 
 // ==============================================================================
 // 
-// use the LiveChartsGeneratedCode.CartesianChart class to add wpf specific
-// code, this class is just to expose the CartesianChart class in this namespace.
+// this file contains the WPF specific code for the CartesianChart class,
+// the rest of the code can be found in the _Shared project.
 // 
 // ==============================================================================
 
 /// <inheritdoc cref="ICartesianChartView" />
-public partial class CartesianChart : LiveChartsGeneratedCode.CartesianChart
-{ }
+public partial class CartesianChart : ChartControl, ICartesianChartView
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CartesianChart"/> class.
+    /// </summary>
+    public CartesianChart()
+    {
+        MouseWheel += OnMouseWheel;
+    }
+
+    private void OnMouseWheel(object? sender, MouseWheelEventArgs e)
+    {
+        var c = (CartesianChartEngine)CoreChart;
+        var p = e.GetPosition(this);
+        c.Zoom(ZoomMode, new LvcPoint((float)p.X, (float)p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+    }
+}

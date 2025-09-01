@@ -22,15 +22,15 @@
 
 using LiveChartsCore.Kernel.Sketches;
 
-namespace LiveChartsCore.SkiaSharpView.WPF;
+namespace LiveChartsGeneratedCode;
 
 // ==============================================================================
 // 
-// use the LiveChartsGeneratedCode.CartesianChart class to add wpf specific
-// code, this class is just to expose the CartesianChart class in this namespace.
+// this file contains the WPF specific code for the PieChart class,
+// the rest of the code can be found in the _Shared project.
 // 
 // ==============================================================================
 
-/// <inheritdoc cref="ICartesianChartView" />
-public partial class CartesianChart : LiveChartsGeneratedCode.CartesianChart
+/// <inheritdoc cref="IPieChartView" />
+public partial class PieChart : ChartControl, IPieChartView
 { }

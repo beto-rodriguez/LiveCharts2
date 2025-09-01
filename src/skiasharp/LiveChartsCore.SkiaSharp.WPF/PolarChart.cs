@@ -20,17 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// ==============================================================================
-// 
-// this file contains the WPF specific code for the PolarChart class,
-// the rest of the code can be found in the _Shared project.
-// 
-// ==============================================================================
-
 using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.SkiaSharpView.WPF;
 
+// ==============================================================================
+// 
+// use the LiveChartsGeneratedCode.PolarChart class to add wpf specific
+// code, this class is just to expose the PolarChart class in this namespace.
+// 
+// ==============================================================================
+
 /// <inheritdoc cref="IPolarChartView" />
-public partial class PolarChart : ChartControl, IPolarChartView
+public partial class PolarChart : LiveChartsGeneratedCode.PolarChart
 { }
