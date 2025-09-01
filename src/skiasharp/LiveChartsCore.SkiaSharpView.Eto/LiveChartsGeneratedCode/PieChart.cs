@@ -22,15 +22,15 @@
 
 using LiveChartsCore.Kernel.Sketches;
 
-namespace LiveChartsCore.SkiaSharpView.Eto;
+namespace LiveChartsGeneratedCode;
 
 // ==============================================================================
 // 
-// use the LiveChartsGeneratedCode.PolarChart class to add eto specific
-// code, this class is just to expose the PolarChart class in this namespace.
+// this file contains the Eto specific code for the PieChart class,
+// the rest of the code can be found in the _Shared project.
 // 
 // ==============================================================================
 
-/// <inheritdoc cref="IPolarChartView" />
-public partial class PolarChart : LiveChartsGeneratedCode.PolarChart
+/// <inheritdoc cref="IPieChartView" />
+public partial class PieChart : ChartControl, IPieChartView
 { }

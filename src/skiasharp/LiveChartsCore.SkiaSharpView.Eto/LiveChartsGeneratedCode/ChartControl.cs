@@ -20,20 +20,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+using Eto.Drawing;
+using Eto.Forms;
+using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Motion;
+using LiveChartsCore.SkiaSharpView.Eto;
+
+namespace LiveChartsGeneratedCode;
+
 // ==============================================================================
 // 
 // this file contains the Eto specific code for the ChartControl class,
 // the rest of the code can be found in the _Shared project.
 // 
 // ==============================================================================
-
-using System;
-using Eto.Drawing;
-using Eto.Forms;
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel.Sketches;
-
-namespace LiveChartsCore.SkiaSharpView.Eto;
 
 /// <inheritdoc cref="IChartView" />
 public abstract partial class ChartControl : Panel, IChartView
@@ -60,9 +62,8 @@ public abstract partial class ChartControl : Panel, IChartView
         Content.MouseLeave += OnMouseLeave;
     }
 
-
     /// <inheritdoc cref="IChartView.CoreCanvas"/>
-    public MotionCanvas CanvasView => (MotionCanvas)Content;
+    public CoreMotionCanvas CoreCanvas => ((MotionCanvas)Content).CanvasCore;
 
     bool IChartView.DesignerMode => false;
 

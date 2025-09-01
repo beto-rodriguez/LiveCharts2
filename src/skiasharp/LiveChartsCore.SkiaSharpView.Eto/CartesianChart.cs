@@ -20,36 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// ==============================================================================
-// 
-// this file contains the ETO specific code for the CartesianChart class,
-// the rest of the code can be found in the _Shared project.
-// 
-// ==============================================================================
-
-using Eto.Forms;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.SkiaSharpView.Eto;
 
-/// <inheritdoc cref="ICartesianChartView" />
-public partial class CartesianChart : ChartControl, ICartesianChartView
-{
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CartesianChart"/> class.
-    /// </summary>
-    public CartesianChart()
-    {
-        Content.MouseWheel += OnMouseWheel;
-    }
+// ==============================================================================
+// 
+// use the LiveChartsGeneratedCode.CartesianChart class to add eto specific
+// code, this class is just to expose the CartesianChart class in this namespace.
+// 
+// ==============================================================================
 
-    private void OnMouseWheel(object? sender, MouseEventArgs e)
-    {
-        var c = (CartesianChartEngine)CoreChart;
-        var p = e.Location;
-        c.Zoom(ZoomMode, new LvcPoint(p.X, p.Y), e.Delta.Height > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
-        e.Handled = true;
-    }
-}
+/// <inheritdoc cref="ICartesianChartView" />
+public partial class CartesianChart : LiveChartsGeneratedCode.CartesianChart
+{ }
