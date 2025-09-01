@@ -2,7 +2,6 @@
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 // https://github.com/amerkoleci/Vortice.Windows
 
-using LiveChartsCore.Kernel;
 using Vortice;
 using Vortice.Direct2D1;
 using Vortice.DirectWrite;
@@ -66,7 +65,8 @@ public class TestApplication : Application
     {
         if (_lastSize.w != width || _lastSize.h != height)
         {
-            CreateResources();
+            if (width > 0 && height > 0)
+                CreateResources();
             MeasureLayout();
             _lastSize = (width, height);
             Console.WriteLine($"New size: {width}x{height}");

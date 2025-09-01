@@ -30,6 +30,7 @@ public abstract class VorticePaint(float strokeThickness = 1f, float strokeMiter
     : Paint(strokeThickness, strokeMiter)
 {
     internal ID2D1Brush? _brush;
+    internal ID2D1HwndRenderTarget? _lastTarget;
 
     internal override void OnPaintFinished(DrawingContext context, IDrawnElement? drawnElement)
     {
@@ -41,5 +42,6 @@ public abstract class VorticePaint(float strokeThickness = 1f, float strokeMiter
     {
         _brush?.Dispose();
         _brush = null;
+        _lastTarget = null;
     }
 }

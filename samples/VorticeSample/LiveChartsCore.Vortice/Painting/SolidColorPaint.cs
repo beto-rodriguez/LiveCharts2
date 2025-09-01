@@ -58,6 +58,13 @@ public class SolidColorPaint : VorticePaint
     internal override void OnPaintStarted(DrawingContext drawingContext, IDrawnElement? drawnElement)
     {
         var vorticeContext = (VorticeDrawingContext)drawingContext;
+
+        if (_lastTarget != vorticeContext.RenderTarget)
+        {
+            DisposeTask();
+            _lastTarget = vorticeContext.RenderTarget;
+        }
+
         _brush ??= vorticeContext.RenderTarget.CreateSolidColorBrush(Color);
         vorticeContext.ActiveBrush = _brush;
     }
@@ -79,11 +86,11 @@ public class SolidColorPaint : VorticePaint
 
     internal override void ApplyOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement)
     {
-
+        _brush.Opacity = opacity;
     }
 
     internal override void RestoreOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement)
     {
-
+        _brush.Opacity = 1;
     }
 }
