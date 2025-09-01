@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LiveChartsCore;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Events;
@@ -35,24 +36,10 @@ using LiveChartsCore.Motion;
 using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
 
-#if AVALONIA_LVC
-namespace LiveChartsCore.SkiaSharpView.Avalonia;
-#elif BLAZOR_LVC
-namespace LiveChartsCore.SkiaSharpView.Blazor;
-#elif ETO_LVC
-namespace LiveChartsCore.SkiaSharpView.Eto;
-#elif MAUI_LVC
-namespace LiveChartsCore.SkiaSharpView.Maui;
-#elif WINUI_LVC
-namespace LiveChartsCore.SkiaSharpView.WinUI;
-#elif WINFORMS_LVC
-namespace LiveChartsCore.SkiaSharpView.WinForms;
-#elif WPF_LVC
-namespace LiveChartsCore.SkiaSharpView.WPF;
-#endif
+namespace LiveChartsGeneratedCode;
 
 /// <inheritdoc cref="ICartesianChartView" />
-public abstract partial class ChartControl
+public abstract partial class ChartControl : IChartView
 {
     private ChartObserver? _observer;
 
@@ -72,9 +59,6 @@ public abstract partial class ChartControl
 
     /// <inheritdoc cref="IChartView.ChartTheme" />
     public Theme? ChartTheme { get; set { field = value; CoreChart.Update(); } }
-
-    /// <inheritdoc cref="IChartView.CoreCanvas" />
-    public CoreMotionCanvas CoreCanvas => CanvasView.CanvasCore;
 
     /// <inheritdoc cref="IChartView.UpdaterThrottler" />
     public TimeSpan UpdaterThrottler { get; set; } = LiveCharts.DefaultSettings.UpdateThrottlingTimeout;
