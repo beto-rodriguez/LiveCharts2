@@ -22,15 +22,15 @@
 
 using LiveChartsCore.Kernel.Sketches;
 
-namespace LiveChartsCore.SkiaSharpView.WinUI;
+namespace LiveChartsGeneratedCode;
 
 // ==============================================================================
 // 
-// use the LiveChartsGeneratedCode.PieChart class to add avalonia specific
-// code, this class is just to expose the PieChart class in this namespace.
+// this file contains the WinUI/UNO specific code for the PolarChart class,
+// the rest of the code can be found in the _Shared project.
 // 
 // ==============================================================================
 
-/// <inheritdoc cref="IChartView" />
-public sealed partial class PieChart : LiveChartsGeneratedCode.PieChart
+/// <inheritdoc cref="IPolarChartView" />
+public partial class PolarChart : ChartControl, IPolarChartView
 { }

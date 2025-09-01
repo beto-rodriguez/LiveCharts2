@@ -27,6 +27,7 @@
 using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
+
 namespace LiveChartsCore.Native;
 
 internal partial class PointerController : INativePointerController

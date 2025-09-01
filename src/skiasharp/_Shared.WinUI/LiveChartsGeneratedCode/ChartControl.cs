@@ -20,24 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+using System.Runtime.InteropServices;
+using LiveChartsCore.Drawing;
+using LiveChartsCore.Kernel.Events;
+using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.SkiaSharpView.WinUI;
+using LiveChartsCore.Native;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using LiveChartsCore;
+using LiveChartsCore.Motion;
+
+namespace LiveChartsGeneratedCode;
+
 // ==============================================================================
 // 
 // this file contains the WinUI/UNO specific code for the ChartControl class,
 // the rest of the code can be found in the _Shared project.
 // 
 // ==============================================================================
-
-using System;
-using System.Runtime.InteropServices;
-using LiveChartsCore.Drawing;
-using LiveChartsCore.Kernel.Events;
-using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.Native;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
-
-namespace LiveChartsCore.SkiaSharpView.WinUI;
 
 /// <inheritdoc cref="IChartView"/>
 public abstract partial class ChartControl : UserControl, IChartView
@@ -75,10 +78,10 @@ public abstract partial class ChartControl : UserControl, IChartView
         _pointerController.Exited += OnExited;
     }
 
-    /// <summary>
-    /// Gets the canvas view.
-    /// </summary>
-    public MotionCanvas CanvasView => (MotionCanvas)Content;
+    private MotionCanvas MotionCanvas => (MotionCanvas)Content;
+
+    /// <inheritdoc cref="IChartView.CoreCanvas"/>
+    public CoreMotionCanvas CoreCanvas => MotionCanvas.CanvasCore;
 
     bool IChartView.DesignerMode => false;
     bool IChartView.IsDarkMode => Application.Current?.RequestedTheme == ApplicationTheme.Dark;
@@ -86,7 +89,7 @@ public abstract partial class ChartControl : UserControl, IChartView
         Background is not SolidColorBrush b
             ? CoreCanvas._virtualBackgroundColor
             : LvcColor.FromArgb(b.Color.A, b.Color.R, b.Color.G, b.Color.B);
-    LvcSize IChartView.ControlSize => new() { Width = (float)CanvasView.ActualWidth, Height = (float)CanvasView.ActualHeight };
+    LvcSize IChartView.ControlSize => new() { Width = (float)ActualWidth, Height = (float)ActualHeight };
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
@@ -106,17 +109,17 @@ public abstract partial class ChartControl : UserControl, IChartView
 
     private void AddUIElement(object item)
     {
-        if (CanvasView is null || item is not UIElement uiElement) return;
-        CanvasView.Children.Add(uiElement);
+        if (MotionCanvas is null || item is not UIElement uiElement) return;
+        MotionCanvas.Children.Add(uiElement);
     }
 
     private void RemoveUIElement(object item)
     {
-        if (CanvasView is null || item is not UIElement uiElement) return;
-        _ = CanvasView.Children.Remove(uiElement);
+        if (MotionCanvas is null || item is not UIElement uiElement) return;
+        _ = MotionCanvas.Children.Remove(uiElement);
     }
 
-    private void OnPressed(object? sender, Native.Events.PressedEventArgs args)
+    private void OnPressed(object? sender, LiveChartsCore.Native.Events.PressedEventArgs args)
     {
         var cArgs = new PointerCommandArgs(this, new(args.Location.X, args.Location.Y), args);
         if (PointerPressedCommand?.CanExecute(cArgs) == true)
@@ -130,7 +133,7 @@ public abstract partial class ChartControl : UserControl, IChartView
             _lastTouch = DateTime.Now;
     }
 
-    private void OnMoved(object? sender, Native.Events.ScreenEventArgs args)
+    private void OnMoved(object? sender, LiveChartsCore.Native.Events.ScreenEventArgs args)
     {
         var location = args.Location;
 
@@ -141,7 +144,7 @@ public abstract partial class ChartControl : UserControl, IChartView
         CoreChart?.InvokePointerMove(location);
     }
 
-    private void OnReleased(object? sender, Native.Events.PressedEventArgs args)
+    private void OnReleased(object? sender, LiveChartsCore.Native.Events.PressedEventArgs args)
     {
         var cArgs = new PointerCommandArgs(this, new(args.Location.X, args.Location.Y), args);
         if (PointerReleasedCommand?.CanExecute(cArgs) == true)
@@ -150,12 +153,12 @@ public abstract partial class ChartControl : UserControl, IChartView
         CoreChart?.InvokePointerUp(args.Location, args.IsSecondaryPress);
     }
 
-    private void OnExited(object? sender, Native.Events.EventArgs args) =>
+    private void OnExited(object? sender, LiveChartsCore.Native.Events.EventArgs args) =>
         CoreChart?.InvokePointerLeft();
 
-    internal virtual void OnScrolled(object? sender, Native.Events.ScrollEventArgs args) { }
+    internal virtual void OnScrolled(object? sender, LiveChartsCore.Native.Events.ScrollEventArgs args) { }
 
-    internal virtual void OnPinched(object? sender, Native.Events.PinchEventArgs args) { }
+    internal virtual void OnPinched(object? sender, LiveChartsCore.Native.Events.PinchEventArgs args) { }
 
     private ISeries InflateSeriesTemplate(object item)
     {

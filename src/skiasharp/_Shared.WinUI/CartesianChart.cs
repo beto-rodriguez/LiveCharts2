@@ -20,41 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// ==============================================================================
-// 
-// this file contains the WinUI/UNO specific code for the CartesianChart class,
-// the rest of the code can be found in the _Shared project.
-// 
-// ==============================================================================
-
-using LiveChartsCore.Native.Events;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.SkiaSharpView.WinUI;
 
+// ==============================================================================
+// 
+// use the LiveChartsGeneratedCode.CartesianChart class to add winui/uno specific
+// code, this class is just to expose the CartesianChart class in this namespace.
+// 
+// ==============================================================================
+
 /// <inheritdoc cref="IChartView" />
-public sealed partial class CartesianChart : ChartControl, ICartesianChartView
-{
-    internal override void OnScrolled(object? sender, ScrollEventArgs args)
-    {
-        var c = (CartesianChartEngine)CoreChart;
-        c.Zoom(ZoomMode, args.Location, args.ScrollDelta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
-    }
-
-    internal override void OnPinched(object? sender, PinchEventArgs args)
-    {
-        var c = (CartesianChartEngine)CoreChart;
-        var p = args.PinchStart;
-        var pivot = new LvcPoint(p.X, p.Y);
-        c.Zoom(ZoomMode, pivot, ZoomDirection.DefinedByScaleFactor, args.Scale);
-
-        // hack:
-        // when the pinch started, the isPanning property is set to true,
-        // when the pinch is completed, the pointerUp will be called,
-        // and within that method panning will occur, lets prevent that
-        // by setting isPanning to false here.
-        c.ClearPointerDown();
-    }
-}
+public sealed partial class CartesianChart : LiveChartsGeneratedCode.CartesianChart
+{ }
