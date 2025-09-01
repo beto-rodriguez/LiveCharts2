@@ -37,7 +37,7 @@ namespace LiveChartsGeneratedCode;
 // ==============================================================================
 
 /// <inheritdoc cref="IChartView" />
-public abstract partial class ChartControl : IBlazorChart, IDisposable, IChartView
+public abstract partial class ChartControl : IDisposable, IChartView
 {
 #pragma warning disable IDE0032 // Use auto property, blazor ref
     private MotionCanvas _motionCanvas = null!;
@@ -57,12 +57,6 @@ public abstract partial class ChartControl : IBlazorChart, IDisposable, IChartVi
 
     /// <inheritdoc cref="IChartView.CoreCanvas"/>
     public CoreMotionCanvas CoreCanvas => _motionCanvas.CanvasCore;
-
-    /// <inheritdoc cref="IBlazorChart.CanvasContainerElement"/>
-    public ElementReference CanvasContainerElement { get; private set; }
-
-    /// <inheritdoc cref="IBlazorChart.ContainerClass"/>
-    public string ContainerClass { get; set; } = string.Empty;
 
     /// <inheritdoc />
     protected override void OnAfterRender(bool firstRender)
