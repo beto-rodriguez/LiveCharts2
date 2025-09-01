@@ -20,68 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// ==============================================================================
-// 
-// this file contains the Avalonia specific code for the CartesianChart class,
-// the rest of the code can be found in the _Shared project.
-// 
-// ==============================================================================
-
-using System;
-using Avalonia.Input;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
+// ==============================================================================
+// 
+// use the LiveChartsGeneratedCode.CartesianChart class to add avalonia specific
+// code, this class is just to expose the CartesianChart class in this namespace.
+// 
+// ==============================================================================
+
 /// <inheritdoc cref="ICartesianChartView" />
-public partial class CartesianChart : ChartControl, ICartesianChartView
-{
-    private float _previousPinchScale = 1;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CartesianChart"/> class.
-    /// </summary>
-    /// <exception cref="Exception">Default colors are not valid</exception>
-    public CartesianChart()
-    {
-        var pinchGesture = new PinchGestureRecognizer();
-        GestureRecognizers.Add(pinchGesture);
-        AddHandler(Gestures.PinchEvent, OnPinched);
-
-        PointerWheelChanged += OnPointerWheelChanged;
-    }
-
-    private void OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
-    {
-        e.Handled = true;
-
-        var c = (CartesianChartEngine)CoreChart;
-        var p = e.GetPosition(this);
-
-        c.Zoom(ZoomMode, new((float)p.X, (float)p.Y), e.Delta.Y > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
-    }
-
-    private void OnPinched(object? sender, PinchEventArgs e)
-    {
-        var c = (CartesianChartEngine)CoreChart;
-        var p = e.ScaleOrigin;
-        var s = c.ControlSize;
-        var pivot = new LvcPoint((float)(p.X * s.Width), (float)(p.Y * s.Height));
-
-        var scale = (float)e.Scale;
-        var delta = _previousPinchScale - scale;
-        if (Math.Abs(delta) > 0.05) delta = 0; // ignore the first call.
-        _previousPinchScale = scale;
-
-        c.Zoom(ZoomMode, pivot, ZoomDirection.DefinedByScaleFactor, 1 - delta);
-
-        // hack:
-        // when the pinch started, the isPanning property is set to true,
-        // when the pinch is completed, the pointerUp will be called,
-        // and within that method panning will occur, lets prevent that
-        // by setting isPanning to false here.
-        c.ClearPointerDown();
-    }
-}
+public class CartesianChart : LiveChartsGeneratedCode.CartesianChart
+{ }

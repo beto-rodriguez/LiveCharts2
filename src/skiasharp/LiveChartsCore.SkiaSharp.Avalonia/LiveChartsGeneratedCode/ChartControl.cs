@@ -20,13 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// ==============================================================================
-// 
-// this file contains the Avalonia specific code for the ChartControl class,
-// the rest of the code can be found in the _Shared project.
-// 
-// ==============================================================================
-
 using System;
 using Avalonia;
 using Avalonia.Controls;
@@ -36,11 +29,21 @@ using Avalonia.Media;
 using Avalonia.Rendering;
 using Avalonia.Styling;
 using Avalonia.Threading;
+using LiveChartsCore;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Motion;
+using LiveChartsCore.SkiaSharpView.Avalonia;
 
-namespace LiveChartsCore.SkiaSharpView.Avalonia;
+namespace LiveChartsGeneratedCode;
+
+// ==============================================================================
+// 
+// this file contains the Avalonia specific code for the ChartControl class,
+// the rest of the code can be found in the _Shared project.
+// 
+// ==============================================================================
 
 /// <inheritdoc cref="ICartesianChartView" />
 public abstract partial class ChartControl : UserControl, IChartView, ICustomHitTest
@@ -70,8 +73,10 @@ public abstract partial class ChartControl : UserControl, IChartView, ICustomHit
         InitializeObservedProperties();
     }
 
+    private MotionCanvas CanvasView => (MotionCanvas)Content!;
+
     /// <inheritdoc cref="IChartView.CoreCanvas"/>
-    public MotionCanvas CanvasView => (MotionCanvas)Content!;
+    public CoreMotionCanvas CoreCanvas => CanvasView.CanvasCore;
 
     bool IChartView.DesignerMode => Design.IsDesignMode;
     bool IChartView.IsDarkMode => Application.Current?.ActualThemeVariant == ThemeVariant.Dark;
@@ -119,7 +124,7 @@ public abstract partial class ChartControl : UserControl, IChartView, ICustomHit
     private void OnPointerMoved(object? sender, PointerEventArgs e)
     {
         if ((DateTime.Now - _lastPresed).TotalMilliseconds < _tolearance) return;
-        var p = e.GetPosition(CanvasView);
+        var p = e.GetPosition(this);
 
         if (PointerMoveCommand is not null)
         {

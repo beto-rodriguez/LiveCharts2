@@ -22,15 +22,15 @@
 
 using LiveChartsCore.Kernel.Sketches;
 
-namespace LiveChartsCore.SkiaSharpView.Avalonia;
+namespace LiveChartsGeneratedCode;
 
 // ==============================================================================
 // 
-// use the LiveChartsGeneratedCode.PieChart class to add avalonia specific
-// code, this class is just to expose the PieChart class in this namespace.
+// this file contains the Avalonia specific code for the PieChart class,
+// the rest of the code can be found in the _Shared project.
 // 
 // ==============================================================================
 
 /// <inheritdoc cref="IPieChartView" />
-public class PieChart : LiveChartsGeneratedCode.PieChart
+public partial class PieChart : ChartControl, IPieChartView
 { }
