@@ -23,7 +23,6 @@ public class TestApplication : Application
         WriteFactory = DWriteCreateFactory<IDWriteFactory1>();
 
         CreateResources();
-        TextRenderer = new AppTextRenderer(_renderTarget!);
     }
 
     private List<IMyUIFrameworkControl> Controls { get; } = [];
@@ -47,11 +46,12 @@ public class TestApplication : Application
         HwndRenderTargetProperties wtp = new()
         {
             Hwnd = MainWindow!.Handle,
-            PixelSize = MainWindow!.ClientSize,
+            PixelSize = new(MainWindow!.Bounds.Width, MainWindow!.Bounds.Height),
             PresentOptions = PresentOptions.Immediately
         };
 
         _renderTarget = _d2dFactory.CreateHwndRenderTarget(new RenderTargetProperties(), wtp);
+        TextRenderer = new AppTextRenderer(_renderTarget!);
     }
 
     protected override void InitializeBeforeRun()
@@ -66,8 +66,10 @@ public class TestApplication : Application
     {
         if (_lastSize.w != width || _lastSize.h != height)
         {
+            CreateResources();
             MeasureLayout();
             _lastSize = (width, height);
+            Console.WriteLine($"New size: {width}x{height}");
         }
 
         _renderTarget.BeginDraw();
