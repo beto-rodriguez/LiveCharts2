@@ -25,7 +25,7 @@ using LiveChartsCore.Kernel;
 namespace LiveChartsCore.Motion;
 
 /// <summary>
-/// Defines a motion canvas copmposer, a pair of render mode and frame ticker.
+/// Defines a motion canvas composer, a pair of render mode and frame ticker.
 /// </summary>
 public class MotionCanvasComposer(IRenderMode renderMode, IFrameTicker ticker)
 {
