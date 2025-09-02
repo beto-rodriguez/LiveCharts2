@@ -42,7 +42,13 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
 
-  <Import Project="./../../../build/RenderSettings.Build.props"/>
+  <Import Project="..\_Shared\_Shared.projitems" Label="Shared" />
+
+  <Import Project="./../../../build/RenderSettings.Build.props" />
+
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);SKIA_IMAGE_LVC;</DefineConstants>
+  </PropertyGroup>
 
   <PropertyGroup>
     <CheckEolTargetFramework>false</CheckEolTargetFramework>

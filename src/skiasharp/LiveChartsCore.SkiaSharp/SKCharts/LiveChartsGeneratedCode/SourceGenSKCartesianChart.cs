@@ -22,30 +22,16 @@
 
 using LiveChartsCore.Kernel.Sketches;
 
-namespace LiveChartsCore.SkiaSharpView.SKCharts;
+namespace LiveChartsGeneratedCode;
 
 // ==============================================================================
 // 
-// use the LiveChartsGeneratedCode.SourceGenSKCartesianChart class to add Skia (image generation) specific
-// code, this class is just to expose the CartesianChart class in this namespace.
+// this file contains the Skia (image generation) specific code for the CartesianChart class,
+// the rest of the code can be found in the _Shared project.
 // 
 // ==============================================================================
 
 /// <inheritdoc cref="ICartesianChartView" />
-public class SKCartesianChart : LiveChartsGeneratedCode.SourceGenSKCartesianChart
-{
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SKCartesianChart"/> class.
-    /// </summary>
-    public SKCartesianChart()
-        : base(null)
-    { }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SKCartesianChart"/> class.
-    /// </summary>
-    /// <param name="chartView">The control to create the image from.</param>
-    public SKCartesianChart(IChartView chartView)
-        : base(chartView)
-    { }
-}
+public partial class SourceGenSKCartesianChart(IChartView? chartView)
+    : SourceGenSKChart(chartView), ICartesianChartView
+{ }
