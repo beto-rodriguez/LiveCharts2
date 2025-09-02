@@ -44,7 +44,7 @@ public class StackedStepAreaSeriesTest
         //chart.SaveImage("test.png"); // use this method to see the actual tested image
 
         var datafactory = sutSeries.DataFactory;
-        var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
+        var points = datafactory.Fetch(sutSeries, chart.CoreChart).ToArray();
 
         var unit = points.First(x => x.Coordinate.PrimaryValue == 1);
         var typedUnit = sutSeries.ConvertToTypedChartPoint(unit);
@@ -52,7 +52,7 @@ public class StackedStepAreaSeriesTest
         var toCompareGuys = points.Where(x => x != unit).Select(sutSeries.ConvertToTypedChartPoint);
 
         var datafactory2 = sutSeries2.DataFactory;
-        var points2 = datafactory2.Fetch(sutSeries2, chart.Core).ToArray();
+        var points2 = datafactory2.Fetch(sutSeries2, chart.CoreChart).ToArray();
         var unit2 = points2.First(x => x.Coordinate.PrimaryValue == 1);
         var typedUnit2 = sutSeries.ConvertToTypedChartPoint(unit2);
         var toCompareGuys2 = points2.Where(x => x != unit2).Select(sutSeries2.ConvertToTypedChartPoint);
@@ -83,9 +83,9 @@ public class StackedStepAreaSeriesTest
             // test y
             var p = 1f - (sutPoint.Coordinate.PrimaryValue + sutPoint.StackedValue.Start) / 512f;
             Assert.IsTrue(
-                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Y + chart.Core.DrawMarginLocation.Y) < 0.001);
+                Math.Abs(p * chart.CoreChart.DrawMarginSize.Height - sutPoint.Visual.Y + chart.CoreChart.DrawMarginLocation.Y) < 0.001);
             Assert.IsTrue(
-                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutSegment.Yj + chart.Core.DrawMarginLocation.Y) < 0.001);
+                Math.Abs(p * chart.CoreChart.DrawMarginSize.Height - sutSegment.Yj + chart.CoreChart.DrawMarginLocation.Y) < 0.001);
 
             previousX = previous.Visual.X - sutPoint.Visual.X;
             previousXArea = previousSegment.Xj - sutSegment.Xj;
@@ -115,9 +115,9 @@ public class StackedStepAreaSeriesTest
             // test y
             var p = 1f - (sutPoint.Coordinate.PrimaryValue + sutPoint.StackedValue.Start) / 512f;
             Assert.IsTrue(
-                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Y + chart.Core.DrawMarginLocation.Y) < 0.001);
+                Math.Abs(p * chart.CoreChart.DrawMarginSize.Height - sutPoint.Visual.Y + chart.CoreChart.DrawMarginLocation.Y) < 0.001);
             Assert.IsTrue(
-                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutSegment.Yj + chart.Core.DrawMarginLocation.Y) < 0.001);
+                Math.Abs(p * chart.CoreChart.DrawMarginSize.Height - sutSegment.Yj + chart.CoreChart.DrawMarginLocation.Y) < 0.001);
 
             previousX = previous.Visual.X - sutPoint.Visual.X;
             previousXArea = previousSegment.Xj - sutSegment.Xj;
@@ -154,7 +154,7 @@ public class StackedStepAreaSeriesTest
         _ = chart.GetImage();
 
         var points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         Assert.IsTrue(sutSeries.DataLabelsPosition == DataLabelsPosition.End);
@@ -171,7 +171,7 @@ public class StackedStepAreaSeriesTest
         _ = chart.GetImage();
 
         points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         foreach (var p in points)
@@ -193,7 +193,7 @@ public class StackedStepAreaSeriesTest
         _ = chart.GetImage();
 
         points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         foreach (var p in points)
@@ -215,7 +215,7 @@ public class StackedStepAreaSeriesTest
         _ = chart.GetImage();
 
         points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         foreach (var p in points)
@@ -237,7 +237,7 @@ public class StackedStepAreaSeriesTest
         _ = chart.GetImage();
 
         points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         foreach (var p in points)
@@ -259,7 +259,7 @@ public class StackedStepAreaSeriesTest
         _ = chart.GetImage();
 
         points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         foreach (var p in points)
@@ -281,7 +281,7 @@ public class StackedStepAreaSeriesTest
         _ = chart.GetImage();
 
         points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         foreach (var p in points)
@@ -314,7 +314,7 @@ public class StackedStepAreaSeriesTest
         _ = chart.GetImage();
 
         points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         foreach (var p in points)

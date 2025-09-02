@@ -44,7 +44,7 @@ public class VisualElementsTests
 
         void Draw()
         {
-            var coreChart = chart.Core;
+            var coreChart = chart.CoreChart;
 
             chart.CoreCanvas.DisableAnimations = true;
             coreChart.IsLoaded = true;

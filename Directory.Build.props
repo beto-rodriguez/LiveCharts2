@@ -2,6 +2,7 @@
   <PropertyGroup>
 
     <LiveChartsVersion>2.0.0-rc5.4</LiveChartsVersion>
+    <LiveChartsCodeGenVersion>1.0.1</LiveChartsCodeGenVersion>
     <LiveChartsAuthors>BetoRodriguez</LiveChartsAuthors>
 
     <GlobalLangVersion>preview</GlobalLangVersion>

@@ -26,11 +26,11 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 
 // ==============================================================================
 // 
-// use the LiveChartsGeneratedCode.PolarChart class to add maui specific
+// use the LiveChartsGeneratedCode.SourceGenPolarChart class to add maui specific
 // code, this class is just to expose the PolarChart class in this namespace.
 // 
 // ==============================================================================
 
 /// <inheritdoc cref="IPolarChartView"/>
-public partial class PolarChart : LiveChartsGeneratedCode.PolarChart
+public partial class PolarChart : LiveChartsGeneratedCode.SourceGenPolarChart
 { }

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <LangVersion>$(GlobalLangVersion)</LangVersion>
     <Nullable>enable</Nullable>
@@ -71,7 +71,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="LiveChartsGenerators" Version="1.0.0">
+    <PackageReference Include="LiveChartsGenerators" Version="$(LiveChartsCodeGenVersion)">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>analyzers</IncludeAssets>
     </PackageReference>

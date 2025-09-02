@@ -1,10 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
     <Nullable>enable</Nullable>
     <LangVersion>$(GlobalLangVersion)</LangVersion>
 
-    <UseMaui>true</UseMaui>
     <SingleProject>true</SingleProject>
 
     <TargetFrameworks>
@@ -63,7 +62,7 @@
 	</ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="LiveChartsGenerators" Version="1.0.0">
+    <PackageReference Include="LiveChartsGenerators" Version="$(LiveChartsCodeGenVersion)">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>analyzers</IncludeAssets>
     </PackageReference>

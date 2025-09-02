@@ -26,11 +26,11 @@ namespace LiveChartsCore.SkiaSharpView.WinForms;
 
 // ==============================================================================
 // 
-// use the LiveChartsGeneratedCode.PieChart class to add winforms specific
+// use the LiveChartsGeneratedCode.SourceGenPieChart class to add winforms specific
 // code, this class is just to expose the PieChart class in this namespace.
 // 
 // ==============================================================================
 
 /// <inheritdoc cref="IPieChartView" />
-public partial class PieChart : LiveChartsGeneratedCode.PieChart
+public partial class PieChart : LiveChartsGeneratedCode.SourceGenPieChart
 { }

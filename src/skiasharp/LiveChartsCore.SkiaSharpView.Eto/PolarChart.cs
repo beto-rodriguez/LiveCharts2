@@ -26,11 +26,11 @@ namespace LiveChartsCore.SkiaSharpView.Eto;
 
 // ==============================================================================
 // 
-// use the LiveChartsGeneratedCode.PolarChart class to add eto specific
+// use the LiveChartsGeneratedCode.SourceGenPolarChart class to add eto specific
 // code, this class is just to expose the PolarChart class in this namespace.
 // 
 // ==============================================================================
 
 /// <inheritdoc cref="IPolarChartView" />
-public partial class PolarChart : LiveChartsGeneratedCode.PolarChart
+public partial class PolarChart : LiveChartsGeneratedCode.SourceGenPolarChart
 { }

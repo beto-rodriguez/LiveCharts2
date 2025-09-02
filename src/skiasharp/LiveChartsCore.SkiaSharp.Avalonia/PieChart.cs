@@ -26,11 +26,11 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
 // ==============================================================================
 // 
-// use the LiveChartsGeneratedCode.PieChart class to add avalonia specific
+// use the LiveChartsGeneratedCode.SourceGenPieChart class to add avalonia specific
 // code, this class is just to expose the PieChart class in this namespace.
 // 
 // ==============================================================================
 
 /// <inheritdoc cref="IPieChartView" />
-public class PieChart : LiveChartsGeneratedCode.PieChart
+public class PieChart : LiveChartsGeneratedCode.SourceGenPieChart
 { }

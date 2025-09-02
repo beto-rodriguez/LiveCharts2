@@ -26,11 +26,11 @@ namespace LiveChartsCore.SkiaSharpView.WinUI;
 
 // ==============================================================================
 // 
-// use the LiveChartsGeneratedCode.PieChart class to add winui/uno specific
+// use the LiveChartsGeneratedCode.SourceGenPieChart class to add winui/uno specific
 // code, this class is just to expose the PieChart class in this namespace.
 // 
 // ==============================================================================
 
 /// <inheritdoc cref="IChartView" />
-public sealed partial class PieChart : LiveChartsGeneratedCode.PieChart
+public sealed partial class PieChart : LiveChartsGeneratedCode.SourceGenPieChart
 { }

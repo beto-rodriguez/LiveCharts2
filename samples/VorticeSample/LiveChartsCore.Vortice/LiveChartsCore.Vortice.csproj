@@ -15,11 +15,6 @@
     <PackageReference Include="Vortice.Mathematics" Version="1.9.3" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <!--a hack, os the source generator help us to use the winforms syntax to generate the views.-->
-    <DefineConstants>$(DefineConstants);WINFORMS_LVC</DefineConstants>
-  </PropertyGroup>
-
   <Import Project="..\..\..\src\skiasharp\_Shared\_Shared.projitems" Label="Shared" />
 
 </Project>

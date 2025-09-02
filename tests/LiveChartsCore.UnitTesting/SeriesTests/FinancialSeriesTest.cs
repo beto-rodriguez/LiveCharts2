@@ -49,7 +49,7 @@ public class FinancialSeriesTest
         // chart.SaveImage("test.png"); // use this method to see the actual tested image
 
         var datafactory = sutSeries.DataFactory;
-        var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
+        var points = datafactory.Fetch(sutSeries, chart.CoreChart).ToArray();
 
         var unit = points.First(x => x.Coordinate.PrimaryValue == 1);
         var typedUnit = sutSeries.ConvertToTypedChartPoint(unit);
@@ -100,7 +100,7 @@ public class FinancialSeriesTest
             // test y
             var p = 1f - sutPoint.Coordinate.PrimaryValue / 512f;
             Assert.IsTrue(
-                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Y + chart.Core.DrawMarginLocation.Y) < 0.001);
+                Math.Abs(p * chart.CoreChart.DrawMarginSize.Height - sutPoint.Visual.Y + chart.CoreChart.DrawMarginLocation.Y) < 0.001);
 
             previousX = previous.Visual.X - sutPoint.Visual.X;
             previous = sutPoint;
@@ -140,9 +140,9 @@ public class FinancialSeriesTest
             ExplicitDisposing = true
         };
 
-        chart.Core._isPointerIn = true;
-        chart.Core._isToolTipOpen = true;
-        chart.Core._pointerPosition = new(150, 150);
+        chart.CoreChart._isPointerIn = true;
+        chart.CoreChart._isToolTipOpen = true;
+        chart.CoreChart._pointerPosition = new(150, 150);
 
         chart.TooltipPosition = TooltipPosition.Top;
         _ = chart.GetImage();
@@ -198,34 +198,34 @@ public class FinancialSeriesTest
         Assert.IsTrue(
             Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
             Math.Abs(tp.Y - (150 - tp.Height - 1 / 5d * 300 * 0.5d)) < 0.1 &&
-            chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Top,
+            chart.CoreChart.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Top,
             "Tool tip on top failed [AUTO]");
 
-        chart.Core._pointerPosition = new(300 * 4 / 5d - 10, 300 * 1 / 5d + 10);
+        chart.CoreChart._pointerPosition = new(300 * 4 / 5d - 10, 300 * 1 / 5d + 10);
         _ = chart.GetImage();
         UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X + tp.Width * 0.5f - 1 / 5d * 300 - 150) < 0.1 &&
             Math.Abs(tp.Y - 300 * 1 / 5d) < 0.1 &&
-            chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Bottom,
+            chart.CoreChart.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Bottom,
             "Tool tip on bottom failed [AUTO]");
 
-        chart.Core._pointerPosition = new(299, 150);
+        chart.CoreChart._pointerPosition = new(299, 150);
         _ = chart.GetImage();
         UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X - (300 - 300 * (1 / 5d) * 0.5 - tp.Width)) < 0.0001 &&
             //Math.Abs(tp.Y - -tp.Height * 0.5f) < 0.1 &&
-            chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Left,
+            chart.CoreChart.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Left,
             "Tool tip on left failed [AUTO]");
 
-        chart.Core._pointerPosition = new(1, 150);
+        chart.CoreChart._pointerPosition = new(1, 150);
         _ = chart.GetImage();
         UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X - 300 * (1 / 5d) * 0.5) < 0.0001 &&
             //Math.Abs(tp.Y - (300 - tp.Height * 0.5f - 300 * (1 / 5d))) < 0.1 &&
-            chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Right,
+            chart.CoreChart.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Right,
             "Tool tip on left failed [AUTO]");
     }
 
@@ -261,7 +261,7 @@ public class FinancialSeriesTest
         _ = chart.GetImage();
 
         var points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         Assert.IsTrue(sutSeries.DataLabelsPosition == DataLabelsPosition.End);
@@ -278,7 +278,7 @@ public class FinancialSeriesTest
         _ = chart.GetImage();
 
         points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         foreach (var p in points)
@@ -300,7 +300,7 @@ public class FinancialSeriesTest
         _ = chart.GetImage();
 
         points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         foreach (var p in points)
@@ -323,7 +323,7 @@ public class FinancialSeriesTest
         _ = chart.GetImage();
 
         points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         foreach (var p in points)
@@ -346,7 +346,7 @@ public class FinancialSeriesTest
         _ = chart.GetImage();
 
         points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         foreach (var p in points)
@@ -369,7 +369,7 @@ public class FinancialSeriesTest
         _ = chart.GetImage();
 
         points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         foreach (var p in points)
@@ -392,7 +392,7 @@ public class FinancialSeriesTest
         _ = chart.GetImage();
 
         points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         foreach (var p in points)
@@ -426,7 +426,7 @@ public class FinancialSeriesTest
         _ = chart.GetImage();
 
         points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         foreach (var p in points)

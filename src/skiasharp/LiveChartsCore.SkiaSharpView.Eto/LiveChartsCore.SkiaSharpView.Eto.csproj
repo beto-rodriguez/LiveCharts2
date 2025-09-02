@@ -27,10 +27,6 @@
   <Import Project="..\_Shared\_Shared.projitems" Label="Shared" />
 
   <PropertyGroup>
-    <DefineConstants>$(DefineConstants);ETO_LVC</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
@@ -50,7 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="LiveChartsGenerators" Version="1.0.0">
+    <PackageReference Include="LiveChartsGenerators" Version="$(LiveChartsCodeGenVersion)">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>analyzers</IncludeAssets>
     </PackageReference>

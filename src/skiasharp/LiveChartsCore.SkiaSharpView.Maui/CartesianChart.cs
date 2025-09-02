@@ -26,11 +26,11 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 
 // ==============================================================================
 // 
-// use the LiveChartsGeneratedCode.CartesianChart class to add maui specific
+// use the LiveChartsGeneratedCode.SourceGenCartesianChart class to add maui specific
 // code, this class is just to expose the CartesianChart class in this namespace.
 // 
 // ==============================================================================
 
 /// <inheritdoc cref="ICartesianChartView"/>
-public partial class CartesianChart : LiveChartsGeneratedCode.CartesianChart
+public partial class CartesianChart : LiveChartsGeneratedCode.SourceGenCartesianChart
 { }

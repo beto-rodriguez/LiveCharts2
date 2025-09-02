@@ -41,14 +41,11 @@ public abstract class InMemorySkiaSharpChart(IChartView? chartView = null)
 
     static InMemorySkiaSharpChart()
     {
-        LiveChartsSkiaSharp.EnsureInitialized();
+        _ = LiveChartsSkiaSharp.EnsureInitialized();
     }
 
     /// <inheritdoc cref="IChartView.CoreCanvas"/>
     public CoreMotionCanvas CoreCanvas { get; } = new();
-
-    /// <inheritdoc cref="IChartView.CoreChart"/>
-    public Chart CoreChart { get; protected set; } = null!;
 
     internal bool ExplicitDisposing { get; set; }
 
@@ -83,6 +80,12 @@ public abstract class InMemorySkiaSharpChart(IChartView? chartView = null)
         get => _chartView is null ? field : (int)_chartView.ControlSize.Width;
         set { field = value; WarnSize(); }
     } = 900;
+
+    /// <summary>
+    /// Gets the core chart.
+    /// </summary>
+    /// <returns>The chart.</returns>
+    protected abstract Chart GetCoreChart();
 
     /// <summary>
     /// Gets the current <see cref="SKSurface"/>.
@@ -143,11 +146,12 @@ public abstract class InMemorySkiaSharpChart(IChartView? chartView = null)
     /// <param name="canvas">The canvas.</param>
     public virtual void DrawOnCanvas(SKCanvas canvas)
     {
-        if (CoreChart is null || CoreChart is not Chart skiaChart)
+        var coreChart = GetCoreChart();
+
+        if (coreChart is null || coreChart is not Chart skiaChart)
             throw new Exception("Something is missing :(");
 
-        var bg = CoreChart.GetTheme().VirtualBackroundColor.AsSKColor();
-
+        var bg = coreChart.GetTheme().VirtualBackroundColor.AsSKColor();
 
         if (_chartView is not null)
         {

@@ -48,7 +48,7 @@ public class PolarLineSeriesTest
         //chart.SaveImage("test.png"); // use this method to see the actual tested image
 
         var datafactory = sutSeries.DataFactory;
-        var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
+        var points = datafactory.Fetch(sutSeries, chart.CoreChart).ToArray();
 
         var unit = points.First();
         var typedUnit = sutSeries.ConvertToTypedChartPoint(unit);
@@ -89,9 +89,9 @@ public class PolarLineSeriesTest
             ExplicitDisposing = true
         };
 
-        chart.Core._isPointerIn = true;
-        chart.Core._isToolTipOpen = true;
-        chart.Core._pointerPosition = new(150, 150);
+        chart.CoreChart._isPointerIn = true;
+        chart.CoreChart._isToolTipOpen = true;
+        chart.CoreChart._pointerPosition = new(150, 150);
 
         chart.TooltipPosition = TooltipPosition.Top;
         _ = chart.GetImage();
@@ -148,7 +148,7 @@ public class PolarLineSeriesTest
         //Assert.IsTrue(
         //    Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
         //    Math.Abs(tp.Y - (150 - tp.Height)) < 0.1 &&
-        //    chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Top,
+        //    chart.CoreChart.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Top,
         //    "Tool tip on top failed [AUTO]");
 
         //sutSeries.Values = new double[] { -1, -2, -3, -4, -5 };
@@ -156,25 +156,25 @@ public class PolarLineSeriesTest
         //Assert.IsTrue(
         //    Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
         //    Math.Abs(tp.Y - 150) < 0.1 &&
-        //    chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Bottom,
+        //    chart.CoreChart.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Bottom,
         //    "Tool tip on bottom failed [AUTO]");
 
         //sutSeries.Values = new double[] { 1, 2, 3, 4, 5 };
-        //chart.Core._pointerPosition = new(299, 150);
+        //chart.CoreChart._pointerPosition = new(299, 150);
         //_ = chart.GetImage();
         //Assert.IsTrue(
         //    // that 2... it seems that the lineseries.DataPadding takes more space than expected
         //    Math.Abs(tp.X - (300 - tp.Width)) < 2 &&
         //    Math.Abs(tp.Y - -tp.Height * 0.5f) < 2 &&
-        //    chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Left,
+        //    chart.CoreChart.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Left,
         //    "Tool tip on left failed [AUTO]");
 
-        //chart.Core._pointerPosition = new(1, 150);
+        //chart.CoreChart._pointerPosition = new(1, 150);
         //_ = chart.GetImage();
         //Assert.IsTrue(
         //    Math.Abs(tp.X) < 2 &&
         //    Math.Abs(tp.Y - (300 - tp.Height * 0.5f)) < 2 &&
-        //    chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Right,
+        //    chart.CoreChart.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Right,
         //    "Tool tip on left failed [AUTO]");
     }
 }

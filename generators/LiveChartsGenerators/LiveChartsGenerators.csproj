@@ -14,7 +14,7 @@
     <PackageType>Analyzer</PackageType>
     <IncludeBuildOutput>true</IncludeBuildOutput>
     <IncludeAnalyzer>true</IncludeAnalyzer>
-    <Version>1.0.0</Version>
+    <Version>$(LiveChartsCodeGenVersion)</Version>
     <Description>LiveCharts code generation.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>$(LiveChartsAuthors)</Authors>

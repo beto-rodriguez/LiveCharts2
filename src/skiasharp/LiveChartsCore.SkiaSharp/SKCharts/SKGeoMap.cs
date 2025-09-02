@@ -122,14 +122,16 @@ public class SKGeoMap : InMemorySkiaSharpChart, IGeoMapView
 
         _core.Measure();
 
-        var bg = CoreChart?.GetTheme().VirtualBackroundColor.AsSKColor();
-
         Canvas.DrawFrame(
-            new SkiaSharpDrawingContext(Canvas, canvas, bg ?? SKColor.Empty));
+            new SkiaSharpDrawingContext(Canvas, canvas, Background));
 
         _core.Unload();
     }
 
     void IGeoMapView.InvokeOnUIThread(Action action) =>
         action();
+
+    /// <inheritdoc cref="InMemorySkiaSharpChart.GetCoreChart"/>
+    protected override Chart GetCoreChart() =>
+        throw new NotImplementedException();
 }
