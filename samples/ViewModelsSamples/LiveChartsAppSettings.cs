@@ -1,10 +1,9 @@
 ﻿using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView;
-using SkiaSharp;
 
 namespace ViewModelsSamples;
 
-public static class CustomLiveChartsExtensions
+public static partial class CustomLiveChartsExtensions
 {
     public static LiveChartsSettings AddLiveChartsAppSettings(this LiveChartsSettings settings) =>
         settings
@@ -16,6 +15,9 @@ public static class CustomLiveChartsExtensions
 
             // adds a theme that is light or dark depending on the OS theme;
             // OS theme awareness is not supported in WPF, WinForms and ETO.
+            // themes registered here are handled by livecharts and can be used
+            // across all the supported UI frameworks, but you could also
+            // use XAML based themes if your platform supports them.
             .AddDefaultTheme(
                 // if neccessary, override the default theme, for more info see:
                 // https://github.com/beto-rodriguez/LiveCharts2/blob/dev/samples/ViewModelsSamples/LiveChartsThemeExtensions.cs
@@ -46,44 +48,12 @@ public static class CustomLiveChartsExtensions
                 // City.Population as Y and the index as the X.
                 (city, index) => new(index, city.Population)) // mark
 
-            // LiveCharts uses some defaults for text rendering, but you can
-            // improve the configuration to fit your app needs.
-            .HasTextSettings(new TextSettings
-            {
-                // A typeface to use as a default when a paint does not
-                // explicitly set a typeface, this could improve the
-                // text quality but requires the font to be installed.
-                // example: SKTypeface.FromFamilyName("Arial")
-                DefaultTypeface = SKTypeface.Default,
-
-                // This function is called every time text is drawn,
-                // it allows you to configure the paint and font before
-                // drawing, you could improve the text quality by changing
-                // Edging, Hinting, etc.
-                FontBuilder = (paint, typeface, size) =>
-                {
-                    // This is the default used by LiveCharts:
-                    // you can improve this function to suit your needs.
-
-                    paint.TextSize = size;
-                    paint.Typeface = typeface;
-                    paint.IsAntialias = true;
-                    paint.LcdRenderText = true;
-
-                    return new SKFont(typeface, size)
-                    {
-                        Edging = SKFontEdging.SubpixelAntialias,
-                        Hinting = SKFontHinting.Normal
-                    };
-                }
-            })
-
             // RTL (right-to-left) shaping is handled already in the library by Harfbuzz,
             // but we can enable RTL to force RTL tooltips and legends.
             // RTL settings are enabled when the system culture is RTL,
             // but you can also force the use of RTL settings by calling:
             //.UseRightToLeftSettings()
-            ;
+        ;
 
     public record City(string Name, double Population);
 }
