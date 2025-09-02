@@ -23,7 +23,6 @@
 using System;
 using System.ComponentModel;
 using System.Windows.Forms;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -40,31 +39,9 @@ public partial class MotionCanvas : UserControl, IRenderMode
 {
     private IFrameTicker _ticker = null!;
 
-    /// <summary>
-    /// Gets the recommended rendering settings for WinForms.
-    /// </summary>
-    public static RenderingSettings RecommendedWinFormsRenderingSettings { get; } =
-        new()
-        {
-            // GPU disabled in WinForms by default for 2 reasons:
-            //   1. https://github.com/mono/SkiaSharp/issues/3309
-            //   2. OpenTK pointer events are sluggish (at least in WPF).
-            UseGPU = false,
-
-            // TryUseVSync makes no sense when GPU is false.
-            // Also, WinForms does not support VSync (at least not implemented by livecharts).
-            TryUseVSync = false,
-
-            // Because GPU is false, this is the target FPS:
-            LiveChartsRenderLoopFPS = 60,
-
-            // make this true to see the FPS in the top left corner of the chart
-            ShowFPS = false
-        };
-
     static MotionCanvas()
     {
-        LiveCharts.Configure(config => config.UseDefaults(RecommendedWinFormsRenderingSettings));
+        _ = LiveChartsSkiaSharp.EnsureInitialized();
     }
 
     /// <summary>

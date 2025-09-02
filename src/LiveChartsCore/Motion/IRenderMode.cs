@@ -22,13 +22,29 @@
 
 namespace LiveChartsCore.Motion;
 
-internal interface IRenderMode
+/// <summary>
+/// Defines a render mode interface.
+/// </summary>
+public interface IRenderMode
 {
+    /// <summary>
+    /// Occurs when a frame is requested to be drawn.
+    /// </summary>
     event CoreMotionCanvas.FrameRequestHandler FrameRequest;
 
+    /// <summary>
+    /// Initializes the render mode.
+    /// </summary>
+    /// <param name="canvas"></param>
     void InitializeRenderMode(CoreMotionCanvas canvas);
 
+    /// <summary>
+    /// Invalidates the render mode.
+    /// </summary>
     void InvalidateRenderer();
 
+    /// <summary>
+    /// Disposes the render mode.
+    /// </summary>
     void DisposeRenderMode();
 }

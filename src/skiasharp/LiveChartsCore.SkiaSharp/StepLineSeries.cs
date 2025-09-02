@@ -129,6 +129,11 @@ public class StepLineSeries<TModel, TVisual, TLabel>
         where TVisual : BoundedDrawnGeometry, new()
         where TLabel : BaseLabelGeometry, new()
 {
+    static StepLineSeries()
+    {
+        LiveChartsSkiaSharp.EnsureInitialized();
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="StepLineSeries{TModel, TVisual, TLabel}"/> class.
     /// </summary>

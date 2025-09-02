@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Native;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Native;
 using LiveChartsCore.SkiaSharpView.WinUI.Rendering;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -35,21 +35,40 @@ namespace LiveChartsCore.SkiaSharpView.WinUI;
 /// </summary>
 public partial class MotionCanvas : Canvas
 {
-    private readonly CanvasRenderSettings<CPURenderMode, GPURenderMode, NativeFrameTicker> _settings;
+    private readonly MotionCanvasComposer _composer;
+
+    static MotionCanvas()
+    {
+        _ = LiveChartsSkiaSharp
+            .EnsureInitialized()
+            .HasRenderingFactory(
+                (settings, forceGPU) =>
+                {
+#if __UNO_SKIA__ || DESKTOP
+                    var renderMode = new SkiaRenderMode();
+#else
+                    IRenderMode renderMode = forceGPU || settings.UseGPU
+                        ? new GPURenderMode()
+                        : new CPURenderMode();
+#endif
+
+
+                    IFrameTicker ticker = settings.TryUseVSync
+                        ? new NativeFrameTicker()
+                        : new AsyncLoopTicker();
+
+                    return new MotionCanvasComposer(renderMode, ticker);
+                });
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
     /// </summary>
-    public MotionCanvas()
+    public MotionCanvas(bool forceGPU)
     {
-#if __UNO_SKIA__ || DESKTOP
-        // then force the skiarendermode.
-        _settings = new(new SkiaRenderMode());
-#else
-        _settings = new();
-#endif
+        _composer = LiveChartsSkiaSharp.MotionCanvasRenderingFactory(LiveCharts.RenderingSettings, forceGPU);
 
-        Children.Add((UIElement)_settings.RenderMode);
+        Children.Add((UIElement)_composer.RenderMode);
 
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
@@ -62,15 +81,15 @@ public partial class MotionCanvas : Canvas
 
     private void OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
-        var fe = (FrameworkElement)_settings.RenderMode;
+        var fe = (FrameworkElement)_composer.RenderMode;
 
         fe.Width = e.NewSize.Width;
         fe.Height = e.NewSize.Height;
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e) =>
-        _settings.Initialize(CanvasCore);
+        _composer.Initialize(CanvasCore);
 
     private void OnUnloaded(object sender, RoutedEventArgs e) =>
-        _settings.Dispose(CanvasCore);
+        _composer.Dispose(CanvasCore);
 }

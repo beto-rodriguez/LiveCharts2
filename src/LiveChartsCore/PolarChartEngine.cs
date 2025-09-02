@@ -40,13 +40,11 @@ namespace LiveChartsCore;
 /// Initializes a new instance of the <see cref="PolarChartEngine"/> class.
 /// </remarks>
 /// <param name="view">The view.</param>
-/// <param name="defaultPlatformConfig">The default platform configuration.</param>
 /// <param name="canvas">The canvas.</param>
 public class PolarChartEngine(
     IPolarChartView view,
-    Action<LiveChartsSettings> defaultPlatformConfig,
     CoreMotionCanvas canvas)
-        : Chart(canvas, defaultPlatformConfig, view, ChartKind.Polar)
+        : Chart(canvas, view, ChartKind.Polar)
 {
     /// <summary>
     /// Gets the angle axes.
@@ -544,7 +542,9 @@ public class PolarChartEngine(
         if (_isToolTipOpen) DrawToolTip();
         _isFirstDraw = false;
 
-        Canvas.Invalidate();
+        if (IsLoaded)
+            Canvas.Invalidate();
+
         _isFirstDraw = false;
     }
 

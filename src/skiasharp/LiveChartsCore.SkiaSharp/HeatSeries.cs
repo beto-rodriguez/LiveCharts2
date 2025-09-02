@@ -130,6 +130,11 @@ public class HeatSeries<TModel, TVisual, TLabel>
         where TVisual : BoundedDrawnGeometry, IColoredGeometry, new()
         where TLabel : BaseLabelGeometry, new()
 {
+    static HeatSeries()
+    {
+        LiveChartsSkiaSharp.EnsureInitialized();
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ColumnSeries{TModel, TVisual, TLabel}"/> class.
     /// </summary>

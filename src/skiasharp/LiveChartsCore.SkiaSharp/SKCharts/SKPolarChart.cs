@@ -31,7 +31,6 @@ using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
 using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
-using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.SKCharts;
 
@@ -49,7 +48,7 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView
     public SKPolarChart(IChartView? chartView = null)
         : base(chartView)
     {
-        Core = new PolarChartEngine(this, config => config.UseDefaults(), CoreCanvas);
+        Core = new PolarChartEngine(this, CoreCanvas);
         Core.Measuring += OnCoreMeasuring;
         Core.UpdateStarted += OnCoreUpdateStarted;
         Core.UpdateFinished += OnCoreUpdateFinished;
@@ -59,6 +58,9 @@ public class SKPolarChart : InMemorySkiaSharpChart, IPolarChartView
 
     bool IChartView.DesignerMode => false;
     bool IChartView.IsDarkMode => false;
+
+    /// <inheritdoc cref="IChartView.ForceGPU" />
+    public bool ForceGPU { get; set; }
 
     /// <inheritdoc cref="IChartView.ChartTheme" />
     public Theme? ChartTheme { get; set; }

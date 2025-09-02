@@ -46,5 +46,6 @@ using System.Reflection;
 [assembly: InternalsVisibleTo("LiveChartsCore.SkiaSharpView.Maui")]
 [assembly: InternalsVisibleTo("LiveChartsCore.BackersPackage")]
 [assembly: InternalsVisibleTo("LiveChartsCore.UnitTesting")]
+[assembly: InternalsVisibleTo("LiveChartsCore.Vortice")]
 
 #endif

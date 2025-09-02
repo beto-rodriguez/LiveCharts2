@@ -20,25 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore;
 using System.Collections.ObjectModel;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 
-#if AVALONIA_LVC
-namespace LiveChartsCore.SkiaSharpView.Avalonia;
-#elif BLAZOR_LVC
-namespace LiveChartsCore.SkiaSharpView.Blazor;
-#elif ETO_LVC
-namespace LiveChartsCore.SkiaSharpView.Eto;
-#elif MAUI_LVC
-namespace LiveChartsCore.SkiaSharpView.Maui;
-#elif WINUI_LVC
-namespace LiveChartsCore.SkiaSharpView.WinUI;
-#elif WINFORMS_LVC
-namespace LiveChartsCore.SkiaSharpView.WinForms;
-#elif WPF_LVC
-namespace LiveChartsCore.SkiaSharpView.WPF;
-#endif
+namespace LiveChartsGeneratedCode;
 
 /// <inheritdoc cref="IPieChartView" />
 public partial class PieChart : ChartControl, IPieChartView
@@ -47,7 +34,7 @@ public partial class PieChart : ChartControl, IPieChartView
 
     /// <inheritdoc cref="ChartControl.CreateCoreChart"/>
     protected override Chart CreateCoreChart() =>
-         new PieChartEngine(this, config => config.UseDefaults(), CanvasView!.CanvasCore);
+         new PieChartEngine(this, CoreCanvas);
 
     /// <inheritdoc cref="ChartControl.InitializeObservedProperties"/>
     protected override void InitializeObservedProperties()

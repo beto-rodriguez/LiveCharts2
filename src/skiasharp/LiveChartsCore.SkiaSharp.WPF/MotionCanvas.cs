@@ -22,7 +22,6 @@
 
 using System.Windows;
 using System.Windows.Controls;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.WPF.Rendering;
 namespace LiveChartsCore.SkiaSharpView.WPF;
@@ -33,42 +32,35 @@ namespace LiveChartsCore.SkiaSharpView.WPF;
 /// <seealso cref="Control" />
 public class MotionCanvas : UserControl
 {
-    /// <summary>
-    /// Gets the recommended rendering settings for Uno and WinUI.
-    /// </summary>
-    public static RenderingSettings RecommendedWPFRenderingSettings { get; }
-        = new()
-        {
-            // GPU disabled in WPF by default for 2 reasons:
-            //   1. https://github.com/mono/SkiaSharp/issues/3309
-            //   2. OpenTK pointer events are sluggish.
-            UseGPU = false,
-
-            // TryUseVSync makes no sense when GPU is false
-            TryUseVSync = false,
-
-            // Because GPU is false, this is the target FPS:
-            LiveChartsRenderLoopFPS = 60,
-
-            // make this true to see the FPS in the top left corner of the chart
-            ShowFPS = false
-        };
-
-    private readonly CanvasRenderSettings<CPURenderMode, GPURenderMode, CompositionTargetTicker> _settings;
+    private readonly MotionCanvasComposer _composer;
 
     static MotionCanvas()
     {
-        LiveCharts.Configure(config => config.UseDefaults(RecommendedWPFRenderingSettings));
+        _ = LiveChartsSkiaSharp
+            .EnsureInitialized()
+            .HasRenderingFactory(
+                (settings, forceGPU) =>
+                {
+                    IRenderMode renderMode = forceGPU || settings.UseGPU
+                        ? new GPURenderMode()
+                        : new CPURenderMode();
+
+                    IFrameTicker ticker = settings.TryUseVSync
+                        ? new CompositionTargetTicker()
+                        : new AsyncLoopTicker();
+
+                    return new MotionCanvasComposer(renderMode, ticker);
+                });
     }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
     /// </summary>
-    public MotionCanvas()
+    public MotionCanvas(bool forceGPU)
     {
-        _settings = new();
+        _composer = LiveChartsSkiaSharp.MotionCanvasRenderingFactory(LiveCharts.RenderingSettings, forceGPU);
 
-        Content = _settings.RenderMode;
+        Content = _composer.RenderMode;
 
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
@@ -84,8 +76,8 @@ public class MotionCanvas : UserControl
         base.RemoveLogicalChild(child);
 
     private void OnLoaded(object sender, RoutedEventArgs e) =>
-        _settings.Initialize(CanvasCore);
+        _composer.Initialize(CanvasCore);
 
     private void OnUnloaded(object sender, RoutedEventArgs e) =>
-        _settings.Dispose(CanvasCore);
+        _composer.Dispose(CanvasCore);
 }

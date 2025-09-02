@@ -21,29 +21,16 @@
 // SOFTWARE.
 
 using System.Collections.ObjectModel;
+using LiveChartsCore;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Sketches;
 
-#if AVALONIA_LVC
-namespace LiveChartsCore.SkiaSharpView.Avalonia;
-#elif BLAZOR_LVC
-namespace LiveChartsCore.SkiaSharpView.Blazor;
-#elif ETO_LVC
-namespace LiveChartsCore.SkiaSharpView.Eto;
-#elif MAUI_LVC
-namespace LiveChartsCore.SkiaSharpView.Maui;
-#elif WINUI_LVC
-namespace LiveChartsCore.SkiaSharpView.WinUI;
-#elif WINFORMS_LVC
-namespace LiveChartsCore.SkiaSharpView.WinForms;
-#elif WPF_LVC
-namespace LiveChartsCore.SkiaSharpView.WPF;
-#endif
+namespace LiveChartsGeneratedCode;
 
 /// <inheritdoc cref="IPolarChartView" />
-public partial class PolarChart
+public partial class PolarChart : ChartControl, IPolarChartView
 {
     PolarChartEngine IPolarChartView.Core => (PolarChartEngine)CoreChart;
 
@@ -57,7 +44,7 @@ public partial class PolarChart
 
     /// <inheritdoc cref="ChartControl.CreateCoreChart"/>
     protected override Chart CreateCoreChart() =>
-        new PolarChartEngine(this, config => config.UseDefaults(), CanvasView.CanvasCore);
+        new PolarChartEngine(this, CoreCanvas);
 
     /// <inheritdoc cref="ChartControl.ConfigureObserver(ChartObserver)"/>
     protected override ChartObserver ConfigureObserver(ChartObserver observe)

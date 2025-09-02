@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using LiveChartsCore.SkiaSharpView.Maui.Handlers;
 using Microsoft.Maui.Controls;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;

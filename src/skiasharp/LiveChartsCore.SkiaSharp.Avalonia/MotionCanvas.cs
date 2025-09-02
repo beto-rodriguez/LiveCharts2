@@ -30,7 +30,6 @@ using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
 using Avalonia.Threading;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -45,28 +44,9 @@ public class MotionCanvas : UserControl
 {
     private bool _isDeatached = false;
 
-    /// <summary>
-    /// Gets the recommended rendering settings for Avalonia.
-    /// </summary>
-    public static RenderingSettings RecommendedAvaloniaRenderingSettings { get; }
-        = new()
-        {
-            // Ignored, handled by Avalonia
-            UseGPU = true,
-
-            // Ignored, handled by Avalonia
-            TryUseVSync = true,
-
-            // Ignored, handled by Avalonia
-            LiveChartsRenderLoopFPS = 60,
-
-            // make this true to see the FPS in the top left corner of the chart
-            ShowFPS = false
-        };
-
     static MotionCanvas()
     {
-        LiveCharts.Configure(config => config.UseDefaults(RecommendedAvaloniaRenderingSettings));
+        _ = LiveChartsSkiaSharp.EnsureInitialized();
     }
 
     /// <summary>

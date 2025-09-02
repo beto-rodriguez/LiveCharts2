@@ -36,6 +36,11 @@ public class HeatLandSeries<TModel>
     : CoreHeatLandSeries<TModel>
         where TModel : IWeigthedMapLand
 {
+    static HeatLandSeries()
+    {
+        LiveChartsSkiaSharp.EnsureInitialized();
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="HeatLandSeries{TModel}"/> class.
     /// </summary>
@@ -69,7 +74,6 @@ public class HeatLandSeries<TModel>
     {
         HeatMap = heatMap;
 
-        LiveCharts.Configure(config => config.UseDefaults());
         IntitializeSeries(LiveCharts.DefaultSettings.GetProvider().GetSolidColorPaint());
     }
 }

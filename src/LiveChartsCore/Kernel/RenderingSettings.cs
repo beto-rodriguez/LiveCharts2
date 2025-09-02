@@ -27,15 +27,13 @@ namespace LiveChartsCore.Kernel;
 /// </summary>
 public class RenderingSettings
 {
-    internal static RenderingSettings Default { get; set; } = new();
-
     /// <summary>
     /// Indicates whether hardware acceleration is used, this will only work
     /// if the platform and device support it.
     /// This is ignored in Avalonia and Uno-Desktop because in those platforms
     /// the frame rate and rendering cadence is determined by them.
     /// </summary>
-    public bool UseGPU { get; set; } = true;
+    public bool UseGPU { get; set; } = false;
 
     /// Indicates whether the rendering cadence should be aligned with the display refresh rate,
     /// GPU acceleration is required for this to work.

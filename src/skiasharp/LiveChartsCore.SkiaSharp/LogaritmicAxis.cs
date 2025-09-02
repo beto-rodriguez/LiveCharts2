@@ -30,6 +30,11 @@ namespace LiveChartsCore.SkiaSharpView;
 /// </summary>
 public class LogarithmicAxis : Axis
 {
+    static LogarithmicAxis()
+    {
+        LiveChartsSkiaSharp.EnsureInitialized();
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="LogaritmicAxis"/> class.
     /// </summary>

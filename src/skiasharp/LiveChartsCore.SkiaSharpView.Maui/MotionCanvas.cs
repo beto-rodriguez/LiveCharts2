@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using LiveChartsCore.Kernel;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Native;
 using LiveChartsCore.SkiaSharpView.Maui.Rendering;
@@ -35,42 +34,35 @@ namespace LiveChartsCore.SkiaSharpView.Maui;
 /// </summary>
 public class MotionCanvas : AbsoluteLayout
 {
-    /// <summary>
-    /// Gets the recommended rendering settings for MAUI.
-    /// </summary>
-    public static RenderingSettings RecommendedMAUIRenderingSettings { get; }
-        = new()
-        {
-            // GPU via SKGLView
-            UseGPU = true,
-
-            // Windows:         CompositionTarget.Rendering
-            // Android:         Coreograoher
-            // IOS/Catalyst:    CADisplayLink
-            TryUseVSync = true,
-
-            // fallback value when VSync is not used.
-            LiveChartsRenderLoopFPS = 60,
-
-            // make this true to see the FPS in the top left corner of the chart
-            ShowFPS = false
-        };
-
-    private readonly CanvasRenderSettings<CPURenderMode, GPURenderMode, NativeFrameTicker> _settings;
+    private readonly MotionCanvasComposer _composer;
 
     static MotionCanvas()
     {
-        LiveCharts.Configure(config => config.UseDefaults(RecommendedMAUIRenderingSettings));
+        _ = LiveChartsSkiaSharp
+            .EnsureInitialized()
+            .HasRenderingFactory(
+                (settings, forceGPU) =>
+                {
+                    IRenderMode renderMode = forceGPU || settings.UseGPU
+                        ? new GPURenderMode()
+                        : new CPURenderMode();
+
+                    IFrameTicker ticker = settings.TryUseVSync
+                        ? new NativeFrameTicker()
+                        : new AsyncLoopTicker();
+
+                    return new MotionCanvasComposer(renderMode, ticker);
+                });
     }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
     /// </summary>
-    public MotionCanvas()
+    public MotionCanvas(bool forceGPU)
     {
-        _settings = new();
+        _composer = LiveChartsSkiaSharp.MotionCanvasRenderingFactory(LiveCharts.RenderingSettings, forceGPU);
 
-        var view = (View)_settings.RenderMode;
+        var view = (View)_composer.RenderMode;
         AbsoluteLayout.SetLayoutBounds(view, new(0, 0, 1, 1));
         AbsoluteLayout.SetLayoutFlags(view, AbsoluteLayoutFlags.SizeProportional | AbsoluteLayoutFlags.PositionProportional);
         Children.Add(view);
@@ -83,8 +75,8 @@ public class MotionCanvas : AbsoluteLayout
     public CoreMotionCanvas CanvasCore { get; } = new();
 
     private void OnLoaded(object? sender, EventArgs e) =>
-        _settings.Initialize(CanvasCore);
+        _composer.Initialize(CanvasCore);
 
     private void OnUnloaded(object? sender, EventArgs e) =>
-        _settings.Dispose(CanvasCore);
+        _composer.Dispose(CanvasCore);
 }

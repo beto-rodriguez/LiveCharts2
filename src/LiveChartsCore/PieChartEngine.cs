@@ -40,15 +40,12 @@ namespace LiveChartsCore;
 /// Initializes a new instance of the <see cref="PieChartEngine"/> class.
 /// </remarks>
 /// <param name="view">The view.</param>
-/// <param name="defaultPlatformConfig">The default platform configuration.</param>
 /// <param name="canvas">The canvas.</param>
 public class PieChartEngine(
     IPieChartView view,
-    Action<LiveChartsSettings> defaultPlatformConfig,
     CoreMotionCanvas canvas)
-        : Chart(canvas, defaultPlatformConfig, view, ChartKind.Pie)
+        : Chart(canvas, view, ChartKind.Pie)
 {
-
     ///<inheritdoc cref="Chart.Series"/>
     public override IEnumerable<ISeries> Series =>
         view.Series?.Select(x => x.ChartElementSource).Cast<ISeries>() ?? [];
@@ -232,7 +229,9 @@ public class PieChartEngine(
         InvokeOnUpdateStarted();
         _isFirstDraw = false;
 
-        Canvas.Invalidate();
+        if (IsLoaded)
+            Canvas.Invalidate();
+
         _isFirstDraw = false;
     }
 

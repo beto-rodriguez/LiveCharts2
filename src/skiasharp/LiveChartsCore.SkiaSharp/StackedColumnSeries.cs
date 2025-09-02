@@ -130,6 +130,11 @@ public class StackedColumnSeries<TModel, TVisual, TLabel>
         where TVisual : BoundedDrawnGeometry, new()
         where TLabel : BaseLabelGeometry, new()
 {
+    static StackedColumnSeries()
+    {
+        LiveChartsSkiaSharp.EnsureInitialized();
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="StackedColumnSeries{TModel, TVisual, TLabel}"/> class.
     /// </summary>

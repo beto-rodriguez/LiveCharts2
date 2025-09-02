@@ -220,7 +220,7 @@ public class GeoMap : UserControl, IGeoMapView
     public override void OnApplyTemplate()
     {
         base.OnApplyTemplate();
-        Content = _canvas = new MotionCanvas();
+        Content = _canvas = new MotionCanvas(false);
         _core = new GeoMapChart(this);
     }
 

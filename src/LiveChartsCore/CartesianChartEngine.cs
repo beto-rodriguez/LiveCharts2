@@ -40,13 +40,11 @@ namespace LiveChartsCore;
 /// Initializes a new instance of the <see cref="CartesianChartEngine"/> class.
 /// </remarks>
 /// <param name="view">The view.</param>
-/// <param name="defaultPlatformConfig">The default platform configuration.</param>
 /// <param name="canvas">The canvas.</param>
 public class CartesianChartEngine(
     ICartesianChartView view,
-    Action<LiveChartsSettings> defaultPlatformConfig,
     CoreMotionCanvas canvas)
-        : Chart(canvas, defaultPlatformConfig, view, ChartKind.Cartesian)
+        : Chart(canvas, view, ChartKind.Cartesian)
 {
     private readonly ICartesianChartView _chartView = view;
     private BoundedDrawnGeometry? _zoomingSection;
@@ -273,7 +271,8 @@ public class CartesianChartEngine(
         if (xMode) _zoomingSection.Width = x - _sectionZoomingStart.Value.X;
         if (yMode) _zoomingSection.Height = y - _sectionZoomingStart.Value.Y;
 
-        Canvas.Invalidate();
+        if (IsLoaded)
+            Canvas.Invalidate();
     }
 
     /// <summary>
@@ -817,7 +816,9 @@ public class CartesianChartEngine(
 
         if (_isToolTipOpen) _ = DrawToolTip();
 
-        Canvas.Invalidate();
+        if (IsLoaded)
+            Canvas.Invalidate();
+
         _isFirstDraw = false;
     }
 

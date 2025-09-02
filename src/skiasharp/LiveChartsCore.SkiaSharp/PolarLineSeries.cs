@@ -130,6 +130,11 @@ public class PolarLineSeries<TModel, TVisual, TLabel>
         where TVisual : BoundedDrawnGeometry, new()
         where TLabel : BaseLabelGeometry, new()
 {
+    static PolarLineSeries()
+    {
+        LiveChartsSkiaSharp.EnsureInitialized();
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="PolarLineSeries{TModel, TVisual, TLabel}"/> class.
     /// </summary>

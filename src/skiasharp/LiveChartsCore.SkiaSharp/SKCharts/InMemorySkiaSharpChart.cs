@@ -41,7 +41,7 @@ public abstract class InMemorySkiaSharpChart(IChartView? chartView = null)
 
     static InMemorySkiaSharpChart()
     {
-        LiveCharts.Configure(config => config.UseDefaults());
+        LiveChartsSkiaSharp.EnsureInitialized();
     }
 
     /// <inheritdoc cref="IChartView.CoreCanvas"/>

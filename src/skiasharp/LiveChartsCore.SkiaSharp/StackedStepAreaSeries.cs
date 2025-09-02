@@ -130,6 +130,11 @@ public class StackedStepAreaSeries<TModel, TVisual, TLabel>
         where TVisual : BoundedDrawnGeometry, new()
         where TLabel : BaseLabelGeometry, new()
 {
+    static StackedStepAreaSeries()
+    {
+        LiveChartsSkiaSharp.EnsureInitialized();
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="StackedStepAreaSeries{TModel, TVisual, TLabel}"/> class.
     /// </summary>

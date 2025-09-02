@@ -130,6 +130,11 @@ public class CandlesticksSeries<TModel, TVisual, TLabel>
         where TVisual : BaseCandlestickGeometry, new()
         where TLabel : BaseLabelGeometry, new()
 {
+    static CandlesticksSeries()
+    {
+        LiveChartsSkiaSharp.EnsureInitialized();
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="CandlesticksSeries{TModel, TVisual, TLabel}"/> class.
     /// </summary>
