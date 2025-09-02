@@ -67,9 +67,7 @@ public static partial class CustomLiveChartsExtensions
             //.HasRenderingFactory(
             //    (settings, forceGPU) =>
             //    {
-            //        // return your rendering factory here
+            //        // return your renderer here.
             //    })
         ;
-
-    public record City(string Name, double Population);
 }
