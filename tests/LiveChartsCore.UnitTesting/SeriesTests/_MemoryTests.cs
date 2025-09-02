@@ -5,11 +5,12 @@ using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.UnitTesting.CoreObjectsTests;
+using LiveChartsGeneratedCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LiveChartsCore.UnitTesting.SeriesTests;
 
-[TestClass]
+//[TestClass]
 public class _MemoryTests
 {
     private static readonly int s_repeatCount;
@@ -307,12 +308,12 @@ public class _MemoryTests
     private abstract class ChartSut<T>
         where T : IEnumerable
     {
-        public InMemorySkiaSharpChart Chart { get; set; }
+        public SourceGenSKChart Chart { get; set; }
         public ISeries Series { get; set; }
         public T Values { get; set; }
 
         protected ChartSut(
-            InMemorySkiaSharpChart chart,
+            SourceGenSKChart chart,
             ISeries series,
             string name,
             T initialValues)

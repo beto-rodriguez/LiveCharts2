@@ -31,7 +31,7 @@ public class DataProviderTest
             _ = chart.GetImage();
 
             var datafactory = sutSeries.DataFactory;
-            var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
+            var points = datafactory.Fetch(sutSeries, chart.CoreChart).ToArray();
 
             if (test is not null)
             {
@@ -188,7 +188,7 @@ public class DataProviderTest
         _ = chart.GetImage();
 
         var datafactory = sutSeries.DataFactory;
-        var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
+        var points = datafactory.Fetch(sutSeries, chart.CoreChart).ToArray();
 
         for (var i = 0; i < points.Length; i++)
         {
@@ -221,7 +221,7 @@ public class DataProviderTest
         _ = chart.GetImage();
 
         var datafactory = sutSeries.DataFactory;
-        var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
+        var points = datafactory.Fetch(sutSeries, chart.CoreChart).ToArray();
 
         var emptyCount = 0;
         for (var i = 0; i < points.Length; i++)
@@ -263,7 +263,7 @@ public class DataProviderTest
         _ = chart.GetImage();
 
         var datafactory = sutSeries.DataFactory;
-        var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
+        var points = datafactory.Fetch(sutSeries, chart.CoreChart).ToArray();
 
         var emptyCount = 0;
         for (var i = 0; i < points.Length; i++)
@@ -307,8 +307,8 @@ public class DataProviderTest
 
         var datafactory = sutSeries.DataFactory;
 
-        var fetch0 = datafactory.Fetch(sutSeries, chart.Core).ToArray();
-        var fetch1 = datafactory.Fetch(sutSeries, chart.Core).ToArray();
+        var fetch0 = datafactory.Fetch(sutSeries, chart.CoreChart).ToArray();
+        var fetch1 = datafactory.Fetch(sutSeries, chart.CoreChart).ToArray();
 
         Assert.IsTrue(fetch0.Length == fetch1.Length);
 

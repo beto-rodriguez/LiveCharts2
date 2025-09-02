@@ -55,7 +55,7 @@ public class ScatterSeriesTest
         // chart.SaveImage("test.png"); // use this method to see the actual tested image
 
         var datafactory = sutSeries.DataFactory;
-        var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
+        var points = datafactory.Fetch(sutSeries, chart.CoreChart).ToArray();
 
         var unit = points.First(x => x.Coordinate.PrimaryValue == 1);
         var typedUnit = sutSeries.ConvertToTypedChartPoint(unit);
@@ -91,8 +91,8 @@ public class ScatterSeriesTest
             var p = 1f - sutPoint.Coordinate.PrimaryValue / 512f;
             Assert.IsTrue(
                 Math.Abs(
-                    p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Y -
-                    sutPoint.Visual.Height * 0.5f + chart.Core.DrawMarginLocation.Y) < 0.001);
+                    p * chart.CoreChart.DrawMarginSize.Height - sutPoint.Visual.Y -
+                    sutPoint.Visual.Height * 0.5f + chart.CoreChart.DrawMarginLocation.Y) < 0.001);
 
             previousX = previous.Visual.X - sutPoint.Visual.X;
             previous = sutPoint;
@@ -127,9 +127,9 @@ public class ScatterSeriesTest
             ExplicitDisposing = true
         };
 
-        chart.Core._isPointerIn = true;
-        chart.Core._isToolTipOpen = true;
-        chart.Core._pointerPosition = new(150, 150);
+        chart.CoreChart._isPointerIn = true;
+        chart.CoreChart._isToolTipOpen = true;
+        chart.CoreChart._pointerPosition = new(150, 150);
 
         chart.TooltipPosition = TooltipPosition.Top;
         _ = chart.GetImage();
@@ -185,34 +185,34 @@ public class ScatterSeriesTest
         Assert.IsTrue(
             Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
             Math.Abs(tp.Y - (150 - tp.Height)) < 0.1 &&
-            chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Top,
+            chart.CoreChart.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Top,
             "Tool tip on top failed [AUTO]");
 
-        chart.Core._pointerPosition = new(300 * 3 / 4d, 300 * 1 / 4d);
+        chart.CoreChart._pointerPosition = new(300 * 3 / 4d, 300 * 1 / 4d);
         _ = chart.GetImage();
         UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X - (300 * 3 / 4d - tp.Width * 0.5f)) < 0.1 &&
             Math.Abs(tp.Y - 300 * 1 / 4d) < 0.1 &&
-            chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Bottom,
+            chart.CoreChart.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Bottom,
             "Tool tip on bottom failed [AUTO]");
 
-        chart.Core._pointerPosition = new(295, 5);
+        chart.CoreChart._pointerPosition = new(295, 5);
         _ = chart.GetImage();
         UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X - (300 - tp.Width)) < 0.1 &&
             //Math.Abs(tp.Y - -tp.Height * 0.5f) < 0.1 &&
-            chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Left,
+            chart.CoreChart.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Left,
             "Tool tip on left failed [AUTO]");
 
-        chart.Core._pointerPosition = new(5, 295);
+        chart.CoreChart._pointerPosition = new(5, 295);
         _ = chart.GetImage();
         UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X) < 0.1 &&
             //Math.Abs(tp.Y - (300 - tp.Height * 0.5f)) < 0.1 &&
-            chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Right,
+            chart.CoreChart.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Right,
             "Tool tip on left failed [AUTO]");
     }
 
@@ -243,7 +243,7 @@ public class ScatterSeriesTest
         _ = chart.GetImage();
 
         var points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         Assert.IsTrue(sutSeries.DataLabelsPosition == DataLabelsPosition.End);
@@ -260,7 +260,7 @@ public class ScatterSeriesTest
         _ = chart.GetImage();
 
         points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         foreach (var p in points)
@@ -282,7 +282,7 @@ public class ScatterSeriesTest
         _ = chart.GetImage();
 
         points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         foreach (var p in points)
@@ -304,7 +304,7 @@ public class ScatterSeriesTest
         _ = chart.GetImage();
 
         points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         foreach (var p in points)
@@ -326,7 +326,7 @@ public class ScatterSeriesTest
         _ = chart.GetImage();
 
         points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         foreach (var p in points)
@@ -348,7 +348,7 @@ public class ScatterSeriesTest
         _ = chart.GetImage();
 
         points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         foreach (var p in points)
@@ -370,7 +370,7 @@ public class ScatterSeriesTest
         _ = chart.GetImage();
 
         points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         foreach (var p in points)
@@ -403,7 +403,7 @@ public class ScatterSeriesTest
         _ = chart.GetImage();
 
         points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         foreach (var p in points)

@@ -30,7 +30,7 @@ public class RowSeriesTest
         // chart.SaveImage("test.png"); // use this method to see the actual tested image
 
         var datafactory = sutSeries.DataFactory;
-        var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
+        var points = datafactory.Fetch(sutSeries, chart.CoreChart).ToArray();
 
         var unit = points.First(x => x.Coordinate.PrimaryValue == 1);
         var typedUnit = sutSeries.ConvertToTypedChartPoint(unit);
@@ -65,7 +65,7 @@ public class RowSeriesTest
 
             // test x
             Assert.IsTrue(
-                Math.Abs(sutPoint.Visual.X - chart.Core.DrawMarginLocation.X) < 0.001);
+                Math.Abs(sutPoint.Visual.X - chart.CoreChart.DrawMarginLocation.X) < 0.001);
 
             previousY = previous.Visual.Y - sutPoint.Visual.Y;
             previous = sutPoint;

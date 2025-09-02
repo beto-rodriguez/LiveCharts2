@@ -36,9 +36,9 @@ public class DrawMarginAndLegendsTests
         chart.LegendPosition = LegendPosition.Top;
         _ = chart.GetImage();
 
-        var legendSize = legend.Measure(chart.Core);
-        var dml = chart.Core.DrawMarginLocation;
-        var dms = chart.Core.DrawMarginSize;
+        var legendSize = legend.Measure(chart.CoreChart);
+        var dml = chart.CoreChart.DrawMarginLocation;
+        var dms = chart.CoreChart.DrawMarginSize;
         var x = legend.X;
         var y = legend.Y;
 
@@ -58,9 +58,9 @@ public class DrawMarginAndLegendsTests
         chart.LegendPosition = LegendPosition.Bottom;
         _ = chart.GetImage();
 
-        legendSize = legend.Measure(chart.Core);
-        dml = chart.Core.DrawMarginLocation;
-        dms = chart.Core.DrawMarginSize;
+        legendSize = legend.Measure(chart.CoreChart);
+        dml = chart.CoreChart.DrawMarginLocation;
+        dms = chart.CoreChart.DrawMarginSize;
         x = legend.X;
         y = legend.Y;
 
@@ -80,9 +80,9 @@ public class DrawMarginAndLegendsTests
         chart.LegendPosition = LegendPosition.Left;
         _ = chart.GetImage();
 
-        legendSize = legend.Measure(chart.Core);
-        dml = chart.Core.DrawMarginLocation;
-        dms = chart.Core.DrawMarginSize;
+        legendSize = legend.Measure(chart.CoreChart);
+        dml = chart.CoreChart.DrawMarginLocation;
+        dms = chart.CoreChart.DrawMarginSize;
         x = legend.X;
         y = legend.Y;
 
@@ -102,9 +102,9 @@ public class DrawMarginAndLegendsTests
         chart.LegendPosition = LegendPosition.Right;
         _ = chart.GetImage();
 
-        legendSize = legend.Measure(chart.Core);
-        dml = chart.Core.DrawMarginLocation;
-        dms = chart.Core.DrawMarginSize;
+        legendSize = legend.Measure(chart.CoreChart);
+        dml = chart.CoreChart.DrawMarginLocation;
+        dms = chart.CoreChart.DrawMarginSize;
         x = legend.X;
         y = legend.Y;
 
@@ -154,10 +154,10 @@ public class DrawMarginAndLegendsTests
         chart.LegendPosition = LegendPosition.Top;
         _ = chart.GetImage();
 
-        var legendSize = legend.Measure(chart.Core);
-        var titleSize = title.Measure(chart.Core);
-        var dml = chart.Core.DrawMarginLocation;
-        var dms = chart.Core.DrawMarginSize;
+        var legendSize = legend.Measure(chart.CoreChart);
+        var titleSize = title.Measure(chart.CoreChart);
+        var dml = chart.CoreChart.DrawMarginLocation;
+        var dms = chart.CoreChart.DrawMarginSize;
         var x = legend.X;
         var y = legend.Y;
 
@@ -177,9 +177,9 @@ public class DrawMarginAndLegendsTests
         chart.LegendPosition = LegendPosition.Bottom;
         _ = chart.GetImage();
 
-        legendSize = legend.Measure(chart.Core);
-        dml = chart.Core.DrawMarginLocation;
-        dms = chart.Core.DrawMarginSize;
+        legendSize = legend.Measure(chart.CoreChart);
+        dml = chart.CoreChart.DrawMarginLocation;
+        dms = chart.CoreChart.DrawMarginSize;
         x = legend.X;
         y = legend.Y;
 
@@ -199,9 +199,9 @@ public class DrawMarginAndLegendsTests
         chart.LegendPosition = LegendPosition.Left;
         _ = chart.GetImage();
 
-        legendSize = legend.Measure(chart.Core);
-        dml = chart.Core.DrawMarginLocation;
-        dms = chart.Core.DrawMarginSize;
+        legendSize = legend.Measure(chart.CoreChart);
+        dml = chart.CoreChart.DrawMarginLocation;
+        dms = chart.CoreChart.DrawMarginSize;
         x = legend.X;
         y = legend.Y;
 
@@ -221,9 +221,9 @@ public class DrawMarginAndLegendsTests
         chart.LegendPosition = LegendPosition.Right;
         _ = chart.GetImage();
 
-        legendSize = legend.Measure(chart.Core);
-        dml = chart.Core.DrawMarginLocation;
-        dms = chart.Core.DrawMarginSize;
+        legendSize = legend.Measure(chart.CoreChart);
+        dml = chart.CoreChart.DrawMarginLocation;
+        dms = chart.CoreChart.DrawMarginSize;
         x = legend.X;
         y = legend.Y;
 
@@ -259,9 +259,9 @@ public class DrawMarginAndLegendsTests
         chart.LegendPosition = LegendPosition.Top;
         _ = chart.GetImage();
 
-        var legendSize = legend.Measure(chart.Core);
-        var dml = chart.Core.DrawMarginLocation;
-        var dms = chart.Core.DrawMarginSize;
+        var legendSize = legend.Measure(chart.CoreChart);
+        var dml = chart.CoreChart.DrawMarginLocation;
+        var dms = chart.CoreChart.DrawMarginSize;
         var x = legend.X;
         var y = legend.Y;
 
@@ -281,9 +281,9 @@ public class DrawMarginAndLegendsTests
         chart.LegendPosition = LegendPosition.Bottom;
         _ = chart.GetImage();
 
-        legendSize = legend.Measure(chart.Core);
-        dml = chart.Core.DrawMarginLocation;
-        dms = chart.Core.DrawMarginSize;
+        legendSize = legend.Measure(chart.CoreChart);
+        dml = chart.CoreChart.DrawMarginLocation;
+        dms = chart.CoreChart.DrawMarginSize;
         x = legend.X;
         y = legend.Y;
 
@@ -303,9 +303,9 @@ public class DrawMarginAndLegendsTests
         chart.LegendPosition = LegendPosition.Left;
         _ = chart.GetImage();
 
-        legendSize = legend.Measure(chart.Core);
-        dml = chart.Core.DrawMarginLocation;
-        dms = chart.Core.DrawMarginSize;
+        legendSize = legend.Measure(chart.CoreChart);
+        dml = chart.CoreChart.DrawMarginLocation;
+        dms = chart.CoreChart.DrawMarginSize;
         x = legend.X;
         y = legend.Y;
 
@@ -325,9 +325,9 @@ public class DrawMarginAndLegendsTests
         chart.LegendPosition = LegendPosition.Right;
         _ = chart.GetImage();
 
-        legendSize = legend.Measure(chart.Core);
-        dml = chart.Core.DrawMarginLocation;
-        dms = chart.Core.DrawMarginSize;
+        legendSize = legend.Measure(chart.CoreChart);
+        dml = chart.CoreChart.DrawMarginLocation;
+        dms = chart.CoreChart.DrawMarginSize;
         x = legend.X;
         y = legend.Y;
 
@@ -374,10 +374,10 @@ public class DrawMarginAndLegendsTests
         chart.LegendPosition = LegendPosition.Top;
         _ = chart.GetImage();
 
-        var legendSize = legend.Measure(chart.Core);
-        var titleSize = title.Measure(chart.Core);
-        var dml = chart.Core.DrawMarginLocation;
-        var dms = chart.Core.DrawMarginSize;
+        var legendSize = legend.Measure(chart.CoreChart);
+        var titleSize = title.Measure(chart.CoreChart);
+        var dml = chart.CoreChart.DrawMarginLocation;
+        var dms = chart.CoreChart.DrawMarginSize;
         var x = legend.X;
         var y = legend.Y;
 
@@ -397,9 +397,9 @@ public class DrawMarginAndLegendsTests
         chart.LegendPosition = LegendPosition.Bottom;
         _ = chart.GetImage();
 
-        legendSize = legend.Measure(chart.Core);
-        dml = chart.Core.DrawMarginLocation;
-        dms = chart.Core.DrawMarginSize;
+        legendSize = legend.Measure(chart.CoreChart);
+        dml = chart.CoreChart.DrawMarginLocation;
+        dms = chart.CoreChart.DrawMarginSize;
         x = legend.X;
         y = legend.Y;
 
@@ -419,9 +419,9 @@ public class DrawMarginAndLegendsTests
         chart.LegendPosition = LegendPosition.Left;
         _ = chart.GetImage();
 
-        legendSize = legend.Measure(chart.Core);
-        dml = chart.Core.DrawMarginLocation;
-        dms = chart.Core.DrawMarginSize;
+        legendSize = legend.Measure(chart.CoreChart);
+        dml = chart.CoreChart.DrawMarginLocation;
+        dms = chart.CoreChart.DrawMarginSize;
         x = legend.X;
         y = legend.Y;
 
@@ -441,9 +441,9 @@ public class DrawMarginAndLegendsTests
         chart.LegendPosition = LegendPosition.Right;
         _ = chart.GetImage();
 
-        legendSize = legend.Measure(chart.Core);
-        dml = chart.Core.DrawMarginLocation;
-        dms = chart.Core.DrawMarginSize;
+        legendSize = legend.Measure(chart.CoreChart);
+        dml = chart.CoreChart.DrawMarginLocation;
+        dms = chart.CoreChart.DrawMarginSize;
         x = legend.X;
         y = legend.Y;
 
@@ -479,9 +479,9 @@ public class DrawMarginAndLegendsTests
         chart.LegendPosition = LegendPosition.Top;
         _ = chart.GetImage();
 
-        var legendSize = legend.Measure(chart.Core);
-        var dml = chart.Core.DrawMarginLocation;
-        var dms = chart.Core.DrawMarginSize;
+        var legendSize = legend.Measure(chart.CoreChart);
+        var dml = chart.CoreChart.DrawMarginLocation;
+        var dms = chart.CoreChart.DrawMarginSize;
         var x = legend.X;
         var y = legend.Y;
 
@@ -503,9 +503,9 @@ public class DrawMarginAndLegendsTests
         chart.LegendPosition = LegendPosition.Bottom;
         _ = chart.GetImage();
 
-        legendSize = legend.Measure(chart.Core);
-        dml = chart.Core.DrawMarginLocation;
-        dms = chart.Core.DrawMarginSize;
+        legendSize = legend.Measure(chart.CoreChart);
+        dml = chart.CoreChart.DrawMarginLocation;
+        dms = chart.CoreChart.DrawMarginSize;
         x = legend.X;
         y = legend.Y;
 
@@ -527,9 +527,9 @@ public class DrawMarginAndLegendsTests
         chart.LegendPosition = LegendPosition.Left;
         _ = chart.GetImage();
 
-        legendSize = legend.Measure(chart.Core);
-        dml = chart.Core.DrawMarginLocation;
-        dms = chart.Core.DrawMarginSize;
+        legendSize = legend.Measure(chart.CoreChart);
+        dml = chart.CoreChart.DrawMarginLocation;
+        dms = chart.CoreChart.DrawMarginSize;
         x = legend.X;
         y = legend.Y;
 
@@ -551,9 +551,9 @@ public class DrawMarginAndLegendsTests
         chart.LegendPosition = LegendPosition.Right;
         _ = chart.GetImage();
 
-        legendSize = legend.Measure(chart.Core);
-        dml = chart.Core.DrawMarginLocation;
-        dms = chart.Core.DrawMarginSize;
+        legendSize = legend.Measure(chart.CoreChart);
+        dml = chart.CoreChart.DrawMarginLocation;
+        dms = chart.CoreChart.DrawMarginSize;
         x = legend.X;
         y = legend.Y;
 
@@ -602,10 +602,10 @@ public class DrawMarginAndLegendsTests
         chart.LegendPosition = LegendPosition.Top;
         _ = chart.GetImage();
 
-        var legendSize = legend.Measure(chart.Core);
-        var titleSize = title.Measure(chart.Core);
-        var dml = chart.Core.DrawMarginLocation;
-        var dms = chart.Core.DrawMarginSize;
+        var legendSize = legend.Measure(chart.CoreChart);
+        var titleSize = title.Measure(chart.CoreChart);
+        var dml = chart.CoreChart.DrawMarginLocation;
+        var dms = chart.CoreChart.DrawMarginSize;
         var x = legend.X;
         var y = legend.Y;
 
@@ -627,9 +627,9 @@ public class DrawMarginAndLegendsTests
         chart.LegendPosition = LegendPosition.Bottom;
         _ = chart.GetImage();
 
-        legendSize = legend.Measure(chart.Core);
-        dml = chart.Core.DrawMarginLocation;
-        dms = chart.Core.DrawMarginSize;
+        legendSize = legend.Measure(chart.CoreChart);
+        dml = chart.CoreChart.DrawMarginLocation;
+        dms = chart.CoreChart.DrawMarginSize;
         x = legend.X;
         y = legend.Y;
 
@@ -651,9 +651,9 @@ public class DrawMarginAndLegendsTests
         chart.LegendPosition = LegendPosition.Left;
         _ = chart.GetImage();
 
-        legendSize = legend.Measure(chart.Core);
-        dml = chart.Core.DrawMarginLocation;
-        dms = chart.Core.DrawMarginSize;
+        legendSize = legend.Measure(chart.CoreChart);
+        dml = chart.CoreChart.DrawMarginLocation;
+        dms = chart.CoreChart.DrawMarginSize;
         x = legend.X;
         y = legend.Y;
 
@@ -677,9 +677,9 @@ public class DrawMarginAndLegendsTests
         _ = chart.GetImage();
         chart.SaveImage("mamá.png");
 
-        legendSize = legend.Measure(chart.Core);
-        dml = chart.Core.DrawMarginLocation;
-        dms = chart.Core.DrawMarginSize;
+        legendSize = legend.Measure(chart.CoreChart);
+        dml = chart.CoreChart.DrawMarginLocation;
+        dms = chart.CoreChart.DrawMarginSize;
         x = legend.X;
         y = legend.Y;
 

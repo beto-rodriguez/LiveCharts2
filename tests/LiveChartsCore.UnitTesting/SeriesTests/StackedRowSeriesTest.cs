@@ -35,7 +35,7 @@ public class StackedRowSeriesTest
         chart.SaveImage("test.png"); // use this method to see the actual tested image
 
         var datafactory = sutSeries.DataFactory;
-        var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
+        var points = datafactory.Fetch(sutSeries, chart.CoreChart).ToArray();
 
         var unit = points.First(x => x.Coordinate.PrimaryValue == 1);
         var typedUnit = sutSeries.ConvertToTypedChartPoint(unit);
@@ -43,7 +43,7 @@ public class StackedRowSeriesTest
         var toCompareGuys = points.Where(x => x != unit).Select(sutSeries.ConvertToTypedChartPoint);
 
         var datafactory2 = sutSeries2.DataFactory;
-        var points2 = datafactory2.Fetch(sutSeries2, chart.Core).ToArray();
+        var points2 = datafactory2.Fetch(sutSeries2, chart.CoreChart).ToArray();
 
         var unit2 = points2.First(x => x.Coordinate.PrimaryValue == 1);
         var typedUnit2 = sutSeries2.ConvertToTypedChartPoint(unit2);
@@ -82,9 +82,9 @@ public class StackedRowSeriesTest
             // test x
             // NOTICE THE + sutPoint.Visual.Width IS JUST TO FIX THE NOTE #1
             var p = sutPoint.StackedValue.Start / 512f;
-            var stacked = -p * chart.Core.DrawMarginSize.Width + sutPoint.Visual.Width;
+            var stacked = -p * chart.CoreChart.DrawMarginSize.Width + sutPoint.Visual.Width;
             Assert.IsTrue(
-                Math.Abs(sutPoint.Visual.X + stacked - chart.Core.DrawMarginLocation.X) < 0.001);
+                Math.Abs(sutPoint.Visual.X + stacked - chart.CoreChart.DrawMarginLocation.X) < 0.001);
 
             previousY = previous.Visual.Y - sutPoint.Visual.Y;
             previous = sutPoint;
@@ -115,9 +115,9 @@ public class StackedRowSeriesTest
             // test x
             // NOTICE THE + sutPoint.Visual.Width IS JUST TO FIX THE NOTE #1
             var p = sutPoint.StackedValue.Start / 512f;
-            var stacked = -p * chart.Core.DrawMarginSize.Width + sutPoint.Visual.Width;
+            var stacked = -p * chart.CoreChart.DrawMarginSize.Width + sutPoint.Visual.Width;
             Assert.IsTrue(
-                Math.Abs(sutPoint.Visual.X + stacked - chart.Core.DrawMarginLocation.X) < 0.001);
+                Math.Abs(sutPoint.Visual.X + stacked - chart.CoreChart.DrawMarginLocation.X) < 0.001);
 
             previousY = previous.Visual.Y - sutPoint.Visual.Y;
             previous = sutPoint;

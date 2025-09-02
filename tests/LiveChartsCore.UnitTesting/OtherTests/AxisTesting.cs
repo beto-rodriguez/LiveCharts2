@@ -39,8 +39,8 @@ public class AxisTesting
         _ = chart.GetImage();
 
         // ensure the separators are created
-        Assert.IsTrue(x.activeSeparators[chart.Core].Values.Count > 0);
-        Assert.IsTrue(y.activeSeparators[chart.Core].Values.Count > 0);
+        Assert.IsTrue(x.activeSeparators[chart.CoreChart].Values.Count > 0);
+        Assert.IsTrue(y.activeSeparators[chart.CoreChart].Values.Count > 0);
     }
 
     [TestMethod]
