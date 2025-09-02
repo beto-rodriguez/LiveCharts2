@@ -6,13 +6,13 @@
     <SharedGUID>2ad18dd8-c567-4bcf-a4fa-42519466d6a3</SharedGUID>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)CartesianChart.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CartesianChart.sgp.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ChartControl.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ChartControl.sgp.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PieChart.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PieChart.sgp.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PolarChart.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PolarChart.sgp.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SourceGenCartesianChart.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SourceGenCartesianChart.sgp.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SourceGenChartControl.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SourceGenChartControl.sgp.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SourceGenPieChart.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SourceGenPieChart.sgp.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SourceGenPolarChart.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SourceGenPolarChart.sgp.cs" />
   </ItemGroup>
 </Project>

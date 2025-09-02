@@ -38,8 +38,12 @@ using LiveChartsCore.VisualElements;
 
 namespace LiveChartsGeneratedCode;
 
-/// <inheritdoc cref="ICartesianChartView" />
-public abstract partial class ChartControl : IChartView
+/// <inheritdoc cref="IChartView" />
+#if SKIA_IMAGE_LVC
+public partial class SourceGenSKChart : IChartView
+#else
+public partial class SourceGenChart : IChartView
+#endif
 {
     private ChartObserver? _observer;
 
@@ -140,8 +144,10 @@ public abstract partial class ChartControl : IChartView
         CoreChart.UpdateStarted += OnCoreUpdateStarted;
         CoreChart.UpdateFinished += OnCoreUpdateFinished;
 
+#pragma warning disable CS0219 // Variable is assigned but its value is never used
         Action<object>? onAdd = null;
         Action<object>? onRemove = null;
+#pragma warning restore CS0219 // Variable is assigned but its value is never used
 
 #if XAML_LVC
         onAdd = AddUIElement;

@@ -45,7 +45,11 @@ using Avalonia;
 
 namespace LiveChartsGeneratedCode;
 
-public partial class PieChart
+#if SKIA_IMAGE_LVC
+public partial class SourceGenSKPieChart : SourceGenSKChart, IPieChartView
+#else
+public partial class SourceGenPieChart : SourceGenChart, IPieChartView
+#endif
 {
     static LiveChartsSettings d = LiveCharts.DefaultSettings;
 

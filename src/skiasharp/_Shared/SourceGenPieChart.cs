@@ -25,18 +25,28 @@ using System.Collections.ObjectModel;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 
+#if SKIA_IMAGE_LVC
+using SGChart = LiveChartsGeneratedCode.SourceGenSKChart;
+#else
+using SGChart = LiveChartsGeneratedCode.SourceGenChart;
+#endif
+
 namespace LiveChartsGeneratedCode;
 
 /// <inheritdoc cref="IPieChartView" />
-public partial class PieChart : ChartControl, IPieChartView
+#if SKIA_IMAGE_LVC
+public partial class SourceGenSKPieChart : SourceGenSKChart, IPieChartView
+#else
+public partial class SourceGenPieChart : SourceGenChart, IPieChartView
+#endif
 {
     PieChartEngine IPieChartView.Core => (PieChartEngine)CoreChart;
 
-    /// <inheritdoc cref="ChartControl.CreateCoreChart"/>
+    /// <inheritdoc cref="SGChart.CreateCoreChart"/>
     protected override Chart CreateCoreChart() =>
          new PieChartEngine(this, CoreCanvas);
 
-    /// <inheritdoc cref="ChartControl.InitializeObservedProperties"/>
+    /// <inheritdoc cref="SGChart.InitializeObservedProperties"/>
     protected override void InitializeObservedProperties()
     {
         Series = new ObservableCollection<ISeries>();

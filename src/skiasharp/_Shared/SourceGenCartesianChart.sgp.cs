@@ -51,7 +51,11 @@ using Avalonia;
 
 namespace LiveChartsGeneratedCode;
 
-public partial class CartesianChart
+#if SKIA_IMAGE_LVC
+public partial class SourceGenSKCartesianChart
+#else
+public partial class SourceGenCartesianChart
+#endif
 {
     static LiveChartsSettings d = LiveCharts.DefaultSettings;
 

@@ -49,7 +49,11 @@ using Avalonia;
 
 namespace LiveChartsGeneratedCode;
 
-public partial class PolarChart
+#if SKIA_IMAGE_LVC
+public partial class SourceGenSKPolarChart : SourceGenSKChart, IPolarChartView
+#else
+public partial class SourceGenPolarChart : SourceGenChart, IPolarChartView
+#endif
 {
     static LiveChartsSettings d = LiveCharts.DefaultSettings;
 

@@ -27,10 +27,20 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Sketches;
 
+#if SKIA_IMAGE_LVC
+using SGChart = LiveChartsGeneratedCode.SourceGenSKChart;
+#else
+using SGChart = LiveChartsGeneratedCode.SourceGenChart;
+#endif
+
 namespace LiveChartsGeneratedCode;
 
 /// <inheritdoc cref="IPolarChartView" />
-public partial class PolarChart : ChartControl, IPolarChartView
+#if SKIA_IMAGE_LVC
+public partial class SourceGenSKPolarChart : SourceGenSKChart, IPolarChartView
+#else
+public partial class SourceGenPolarChart : SourceGenChart, IPolarChartView
+#endif
 {
     PolarChartEngine IPolarChartView.Core => (PolarChartEngine)CoreChart;
 
@@ -42,11 +52,11 @@ public partial class PolarChart : ChartControl, IPolarChartView
     public LvcPointD ScaleDataToPixels(LvcPointD point, int angleAxisIndex = 0, int radiusAxisIndex = 0)
         => ((PolarChartEngine)CoreChart).ScaleDataToPixels(point, angleAxisIndex, radiusAxisIndex);
 
-    /// <inheritdoc cref="ChartControl.CreateCoreChart"/>
+    /// <inheritdoc cref="SGChart.CreateCoreChart"/>
     protected override Chart CreateCoreChart() =>
         new PolarChartEngine(this, CoreCanvas);
 
-    /// <inheritdoc cref="ChartControl.ConfigureObserver(ChartObserver)"/>
+    /// <inheritdoc cref="SGChart.ConfigureObserver(ChartObserver)"/>
     protected override ChartObserver ConfigureObserver(ChartObserver observe)
     {
         return base.ConfigureObserver(observe)
@@ -54,7 +64,7 @@ public partial class PolarChart : ChartControl, IPolarChartView
             .Collection(nameof(RadiusAxes), () => RadiusAxes);
     }
 
-    /// <inheritdoc cref="ChartControl.InitializeObservedProperties"/>
+    /// <inheritdoc cref="SGChart.InitializeObservedProperties"/>
     protected override void InitializeObservedProperties()
     {
         AngleAxes = new ObservableCollection<IPolarAxis>();

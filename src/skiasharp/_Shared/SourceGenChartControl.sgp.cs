@@ -50,6 +50,12 @@ using Microsoft.UI.Xaml;
 using System.Windows;
 #endif
 
+#if SKIA_IMAGE_LVC
+using SGChart = LiveChartsGeneratedCode.SourceGenSKChart;
+#else
+using SGChart = LiveChartsGeneratedCode.SourceGenChart;
+#endif
+
 // ==============================================================================================================
 // the static fileds in this file generate bindable/dependency/avalonia or whatever properties...
 // the disabled warning make it easier to maintain the code.
@@ -66,7 +72,11 @@ using System.Windows;
 
 namespace LiveChartsGeneratedCode;
 
-public partial class ChartControl
+#if SKIA_IMAGE_LVC
+public partial class SourceGenSKChart
+#else
+public partial class SourceGenChart
+#endif
 {
     static LiveChartsSettings d = LiveCharts.DefaultSettings;
 
@@ -156,7 +166,7 @@ public partial class ChartControl
     /// </summary>
     static UIProperty<DataTemplate>               seriesTemplate          = new(onChanged: OnSeriesSourceChanged);
 
-    static void OnSeriesSourceChanged(ChartControl chart)
+    static void OnSeriesSourceChanged(SGChart chart)
     {
         if (chart._observer is null)
             throw new InvalidOperationException("The chart observer is not initialized.");
@@ -166,7 +176,7 @@ public partial class ChartControl
     }
 #endif
 
-    static void OnChartPropertyChanged(ChartControl chart)
+    static void OnChartPropertyChanged(SGChart chart)
     {
 #if BLAZOR_LVC
         // hack for blazor, we need to wait for the OnAfterRender to have
@@ -176,7 +186,7 @@ public partial class ChartControl
         chart.CoreChart.Update();
     }
 
-    static void OnTextPaintPropertyChanged(ChartControl chart, object oldValue, object newValue)
+    static void OnTextPaintPropertyChanged(SGChart chart, object oldValue, object newValue)
     {
 #if BLAZOR_LVC
         // hack for blazor, we need to wait for the OnAfterRender to have
@@ -187,7 +197,7 @@ public partial class ChartControl
         chart.CoreChart.Update();
     }
 
-    static void OnSyncContextChanged(ChartControl chart, object oldValue, object newValue)
+    static void OnSyncContextChanged(SGChart chart, object oldValue, object newValue)
     {
 #if BLAZOR_LVC
         // hack for blazor, we need to wait for the OnAfterRender to have
@@ -206,7 +216,7 @@ public partial class ChartControl
     /// <param name="oldValue">The old property value.</param>
     /// <param name="newValue">The new property value.</param>
     /// <returns></returns>
-    protected static Action<ChartControl, object, object> OnObservedPropertyChanged(
+    protected static Action<SGChart, object, object> OnObservedPropertyChanged(
         string propertyName, object? oldValue = null, object? newValue = null) =>
             (chart, o, n) =>
             {
