@@ -187,8 +187,7 @@ chartControl.UpdateStarted +=
 
 ## Clearing the current zooming or panning
 
-Setting `MinLimit` and `MaxLimit` properties to `null` will clear the current `zooming` or `panning`, and will let the chart fit the view
-of the chart to the available data in the chart, the default value of both properties is `null`.
+Setting `MinLimit` and `MaxLimit` properties to `null` or `double.NaN` will clear the current limits and fit the the data to the viewport.
 
 ## MinStep property
 

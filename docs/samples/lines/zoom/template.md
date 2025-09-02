@@ -99,8 +99,7 @@ the max and min visible limits of the axis, default is `null` and `null` means t
 
 # Clearing zooming and panning
 
-Setting the axes `MinLimit` and `MaxLimit` properties to `null` will clear the current `zooming` or `panning`, and will let the chart fit the view
-of the chart to the available data in the chart, for example:
+Setting `MinLimit` and `MaxLimit` properties to `null` or `double.NaN` will clear the current limits and fit the the data to the viewport.
 
 ```c#
 // where myChart is a reference to the chart in the UI

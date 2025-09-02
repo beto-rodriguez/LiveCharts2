@@ -115,7 +115,7 @@ public interface IPlane : IChartElement
 
     /// <summary>
     /// Gets or sets the minimum value visible in the axis, any point less than this value will be hidden, 
-    /// set it to null to use a value based on the smaller value in the chart.
+    /// set it to null (or double.NaN) to use a value based on the smaller value in the chart.
     /// </summary>
     /// <value>
     /// The minimum value.
@@ -124,7 +124,7 @@ public interface IPlane : IChartElement
 
     /// <summary>
     /// Gets or sets the maximum value visible in the axis, any point greater than this value will be hidden, 
-    /// set it null to use a value based on the greater value in the chart.
+    /// set it null (or double.NaN) to use a value based on the greater value in the chart.
     /// </summary>
     /// <value>
     /// The maximum value.
