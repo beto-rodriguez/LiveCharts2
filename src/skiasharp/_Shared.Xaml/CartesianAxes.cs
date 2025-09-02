@@ -34,7 +34,6 @@ using System.Collections.Generic;
 using LiveChartsCore.Generators;
 using LiveChartsCore.Kernel.Sketches;
 
-
 #if AVALONIA_LVC
 using Avalonia;
 using BaseControl = Avalonia.Controls.Control;
@@ -54,12 +53,10 @@ namespace LiveChartsCore.SkiaSharpView.WPF;
 /// The base class for XAML-based axes in LiveCharts.
 /// </summary>
 /// <typeparam name="T">The type of the axis.</typeparam>
-#if WINUI_LVC
-[XamlClass(typeof(Axis), GenerateBaseTypeDeclaration = false, PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap")]
-#elif AVALONIA_LVC
+#if AVALONIA_LVC
 [XamlClass(typeof(Axis), GenerateBaseTypeDeclaration = false, GenerateOnChange = false)]
 #else
-[XamlClass(typeof(Axis), GenerateBaseTypeDeclaration = false)]
+[XamlClass(typeof(Axis), GenerateBaseTypeDeclaration = false, PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap")]
 #endif
 public abstract partial class BaseXamlAxis<T> : BaseControl, ICartesianAxis
     where T : Axis
@@ -76,25 +73,14 @@ public abstract partial class BaseXamlAxis<T> : BaseControl, ICartesianAxis
     internal static T _defaultAxis = (T)_defaults[typeof(T)]();
 
     string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
-
-#if WINUI_LVC
-    // WINUI does not support nullable value types in xaml, we map null to NaN
-
     double? IPlane.MinLimit { get => _baseType.MinLimit; set => _baseType.MinLimit = value; }
     double? IPlane.MaxLimit { get => _baseType.MaxLimit; set => _baseType.MaxLimit = value; }
 
-    private void MinLimitMap(object value)
-    {
-        var doubleValue = (double)value;
-        _baseType.MinLimit = double.IsNaN(doubleValue) ? null : doubleValue;
-    }
+    private void MinLimitMap(object value) =>
+        _baseType.MinLimit = (double)value;
 
-    private void MaxLimitMap(object value)
-    {
-        var doubleValue = (double)value;
-        _baseType.MaxLimit = double.IsNaN(doubleValue) ? null : doubleValue;
-    }
-#endif
+    private void MaxLimitMap(object value) =>
+        _baseType.MaxLimit = (double)value;
 
 #if AVALONIA_LVC
     /// <inheritdoc />

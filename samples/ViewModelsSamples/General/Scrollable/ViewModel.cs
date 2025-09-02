@@ -11,21 +11,23 @@ namespace ViewModelsSamples.General.Scrollable;
 
 public partial class ViewModel : ObservableObject
 {
+    private static double _defaultMin = 0;
+    private static double _defaultMax = 100;
     private bool _isDown = false;
 
     public ObservablePoint[] Values { get; } = Fetch();
 
     [ObservableProperty]
-    public partial double? MinX { get; set; }
+    public partial double MinX { get; set; }
 
     [ObservableProperty]
-    public partial double? MaxX { get; set; }
+    public partial double MaxX { get; set; }
 
     [ObservableProperty]
-    public partial double? MinXThumb { get; set; } = 0;
+    public partial double MinXThumb { get; set; } = _defaultMin;
 
     [ObservableProperty]
-    public partial double? MaxXThumb { get; set; } = 100;
+    public partial double MaxXThumb { get; set; } = _defaultMax;
 
     [RelayCommand]
     public void ChartUpdated(ChartCommandArgs args)
@@ -36,8 +38,8 @@ public partial class ViewModel : ObservableObject
         // when the main chart is updated, we need to update the scroll bar thumb limits
         // this will sync the scroll bar with the main chart when the user is zooming or panning
 
-        MinXThumb = x.MinLimit;
-        MaxXThumb = x.MaxLimit;
+        MinXThumb = x.MinLimit ?? _defaultMin;
+        MaxXThumb = x.MaxLimit ?? _defaultMax;
     }
 
     [RelayCommand]
@@ -52,12 +54,6 @@ public partial class ViewModel : ObservableObject
         var chart = (ICartesianChartView)args.Chart;
         var positionInData = chart.ScalePixelsToData(args.PointerPosition);
 
-        if (MaxXThumb is null || MinXThumb is null)
-        {
-            // if the limits are not defined yet, we skip the update
-            return;
-        }
-
         var currentRange = MaxXThumb - MinXThumb;
 
         var min = positionInData.X - currentRange / 2;
@@ -66,12 +62,12 @@ public partial class ViewModel : ObservableObject
         // optional, use the data bounds as limits for the thumb
         if (min < Values[0].X)
         {
-            min = Values[0].X;
+            min = Values[0].X ?? _defaultMin;
             max = min + currentRange;
         }
         if (max > Values[^1].X)
         {
-            max = Values[^1].X;
+            max = Values[^1].X ?? _defaultMax;
             min = max - currentRange;
         }
 

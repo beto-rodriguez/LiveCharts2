@@ -23,7 +23,6 @@
 using LiveChartsCore.Generators;
 using LiveChartsCore.Kernel.Sketches;
 
-
 #if AVALONIA_LVC
 using BaseControl = Avalonia.Controls.Control;
 namespace LiveChartsCore.SkiaSharpView.Avalonia;

@@ -735,27 +735,4 @@ public class FloatExtension : BaseExtension
     protected override object OnValueRequested(object serviceProvider) =>
         float.TryParse(Value, out var value) ? value : 0f;
 }
-
-/// <summary>
-/// The limits converter, this converter is used to convert nullable double values to double values,
-/// this is necessary because WinUI does not support nullable value types in XAML.
-/// </summary>
-public class LimitsConverter : Microsoft.UI.Xaml.Data.IValueConverter
-{
-    /// <inheritdoc/>
-    public object? Convert(object value, Type targetType, object parameter, string language)
-    {
-        return value is double d
-            ? d
-            : double.NaN;
-    }
-
-    /// <inheritdoc/>
-    public object? ConvertBack(object value, Type targetType, object parameter, string language)
-    {
-        return value is double d && !double.IsNaN(d)
-            ? d
-            : null;
-    }
-}
 #endif

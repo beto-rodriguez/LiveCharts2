@@ -12,10 +12,6 @@
         <vms:ViewModel/>
     </UserControl.DataContext>
 
-    <UserControl.Resources>
-        <lvc:LimitsConverter x:Key="AsNullable"/>
-    </UserControl.Resources>
-
     <Grid RowDefinitions="50, *">
         <StackPanel Orientation="Horizontal">
             <Button Command="{Binding GoToPage1Command}">Page 1</Button>
@@ -31,18 +27,10 @@
                 <lvc:XamlColumnSeries Values="{Binding Values}"/>
             </lvc:CartesianChart.Series>
 
-            <!--
-            On the XamlAxis class on WinUI, we use double.NaN to clear the limits.
-            This is because WinUI does not support nullable types in XAML.
-            In this example, we use a converter to convert the nullable double values to double.NaN,
-            but you could instead in the view model set the MinLimit and MaxLimit
-            properties to double.NaN directly.
-            -->
-
             <lvc:CartesianChart.XAxes>
                 <lvc:XamlAxis
-                    MinLimit="{Binding MinLimit, Converter={StaticResource AsNullable}}"
-                    MaxLimit="{Binding MaxLimit, Converter={StaticResource AsNullable}}"/>
+                    MinLimit="{Binding MinLimit}"
+                    MaxLimit="{Binding MaxLimit}"/>
             </lvc:CartesianChart.XAxes>
 
         </lvc:CartesianChart>

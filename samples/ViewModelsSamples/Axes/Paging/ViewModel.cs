@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -10,10 +11,10 @@ public partial class ViewModel : ObservableObject
     public int[] Values { get; set; } = Fetch();
 
     [ObservableProperty]
-    public partial double? MinLimit { get; set; }
+    public partial double MinLimit { get; set; }
 
     [ObservableProperty]
-    public partial double? MaxLimit { get; set; }
+    public partial double MaxLimit { get; set; }
 
     [RelayCommand]
     public void GoToPage1()
@@ -39,8 +40,8 @@ public partial class ViewModel : ObservableObject
     [RelayCommand]
     public void SeeAll()
     {
-        MinLimit = null;
-        MaxLimit = null;
+        MinLimit = double.NaN;
+        MaxLimit = double.NaN;
     }
 
     private static int[] Fetch()

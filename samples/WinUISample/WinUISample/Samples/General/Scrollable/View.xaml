@@ -12,10 +12,6 @@
         <vms:ViewModel/>
     </UserControl.DataContext>
 
-    <UserControl.Resources>
-        <lvc:LimitsConverter x:Key="AsNullable"/>
-    </UserControl.Resources>
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -25,16 +21,6 @@
         <!--
         We use the DrawMargin property to align both charts,
         both charts have a left margin of 100 and a right margin of 50
-        -->
-
-        <!--
-        WinUI Notice:
-        The XamlAxis Min and Max Limit properties are of type double,
-        on the rest of the platforms we use nullable doubles,
-        that is why we use a converter to convert the nullable double values to double.NaN,
-        you could also modify the view model to use double.NaN directly.
-
-        This also applies Xi and Xj properties of the RectangularSection.
         -->
 
         <lvc:CartesianChart
@@ -51,8 +37,8 @@
             </lvc:CartesianChart.Series>
             <lvc:CartesianChart.XAxes>
                 <lvc:XamlAxis
-                    MinLimit="{Binding MinX, Converter={StaticResource AsNullable}}"
-                    MaxLimit="{Binding MaxX, Converter={StaticResource AsNullable}}" />
+                    MinLimit="{Binding MinX}"
+                    MaxLimit="{Binding MaxX}" />
             </lvc:CartesianChart.XAxes>
         </lvc:CartesianChart>
 
@@ -78,8 +64,8 @@
             </lvc:CartesianChart.YAxes>
             <lvc:CartesianChart.Sections>
                 <lvc:XamlRectangularSection
-                    Xi="{Binding MinXThumb, Converter={StaticResource AsNullable}}"
-                    Xj="{Binding MaxXThumb, Converter={StaticResource AsNullable}}"
+                    Xi="{Binding MinXThumb}"
+                    Xj="{Binding MaxXThumb}"
                     Fill="{lvc:SolidColorPaint Color='#64FFCDD2'}"/>
             </lvc:CartesianChart.Sections>
         </lvc:CartesianChart>
