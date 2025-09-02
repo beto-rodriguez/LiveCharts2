@@ -124,10 +124,34 @@ public abstract class CoreAxis<TTextGeometry, TLineGeometry>
     public bool ForceStepToMin { get => _forceStepToMin; set => SetProperty(ref _forceStepToMin, value); }
 
     /// <inheritdoc cref="IPlane.MinLimit"/>
-    public double? MinLimit { get => _minLimit; set => SetProperty(ref _minLimit, value); }
+    public double? MinLimit
+    {
+        get => _minLimit;
+        set
+        {
+            var filtered = value;
+
+            if (filtered is not null && double.IsNaN(filtered.Value))
+                filtered = null;
+
+            SetProperty(ref _minLimit, filtered);
+        }
+    }
 
     /// <inheritdoc cref="IPlane.MaxLimit"/>
-    public double? MaxLimit { get => _maxLimit; set => SetProperty(ref _maxLimit, value); }
+    public double? MaxLimit
+    {
+        get => _maxLimit;
+        set
+        {
+            var filtered = value;
+
+            if (filtered is not null && double.IsNaN(filtered.Value))
+                filtered = null;
+
+            SetProperty(ref _maxLimit, filtered);
+        }
+    }
 
     /// <inheritdoc cref="IPlane.UnitWidth"/>
     public double UnitWidth { get; set => SetProperty(ref field, value); } = 1;
