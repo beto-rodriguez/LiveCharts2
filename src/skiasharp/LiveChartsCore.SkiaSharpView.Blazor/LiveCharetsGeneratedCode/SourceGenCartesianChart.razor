@@ -22,16 +22,9 @@
 	SOFTWARE.
 *@
 
-@inherits LiveChartsGeneratedCode.SourceGenPieChart
+@namespace LiveChartsGeneratedCode
 
-@*
-==============================================================================
-
-use the LiveChartsGeneratedCode.SourceGenPieChart class to add blazor specific
-code, this class is just to expose the PieChart class in this namespace.
-
-==============================================================================
-*@
+@inherits SourceGenChart
 
 @{
 	base.BuildRenderTree(__builder);

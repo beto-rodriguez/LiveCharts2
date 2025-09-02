@@ -20,17 +20,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using Eto.Forms;
+using LiveChartsCore;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Measure;
 
-namespace LiveChartsCore.SkiaSharpView.WinForms;
+namespace LiveChartsGeneratedCode;
 
 // ==============================================================================
 // 
-// use the LiveChartsGeneratedCode.SourceGenPieChart class to add winforms specific
-// code, this class is just to expose the PieChart class in this namespace.
+// this file contains the ETO specific code for the SourceGenCartesianChart class,
+// the rest of the code can be found in the _Shared project.
 // 
 // ==============================================================================
 
-/// <inheritdoc cref="IPieChartView" />
-public partial class PieChart : LiveChartsGeneratedCode.SourceGenPieChart
-{ }
+/// <inheritdoc cref="ICartesianChartView" />
+public partial class SourceGenCartesianChart : SourceGenChart, ICartesianChartView
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SourceGenCartesianChart"/> class.
+    /// </summary>
+    public SourceGenCartesianChart()
+    {
+        Content.MouseWheel += OnMouseWheel;
+    }
+
+    private void OnMouseWheel(object? sender, MouseEventArgs e)
+    {
+        var c = (CartesianChartEngine)CoreChart;
+        var p = e.Location;
+        c.Zoom(ZoomMode, new LvcPoint(p.X, p.Y), e.Delta.Height > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+        e.Handled = true;
+    }
+}

@@ -20,17 +20,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Windows.Input;
+using LiveChartsCore;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Measure;
 
-namespace LiveChartsCore.SkiaSharpView.WinForms;
+namespace LiveChartsGeneratedCode;
 
 // ==============================================================================
 // 
-// use the LiveChartsGeneratedCode.SourceGenPieChart class to add winforms specific
-// code, this class is just to expose the PieChart class in this namespace.
+// this file contains the WPF specific code for the SourceGenCartesianChart class,
+// the rest of the code can be found in the _Shared project.
 // 
 // ==============================================================================
 
-/// <inheritdoc cref="IPieChartView" />
-public partial class PieChart : LiveChartsGeneratedCode.SourceGenPieChart
-{ }
+/// <inheritdoc cref="ICartesianChartView" />
+public partial class SourceGenCartesianChart : SourceGenChart, ICartesianChartView
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SourceGenCartesianChart"/> class.
+    /// </summary>
+    public SourceGenCartesianChart()
+    {
+        MouseWheel += OnMouseWheel;
+    }
+
+    private void OnMouseWheel(object? sender, MouseWheelEventArgs e)
+    {
+        var c = (CartesianChartEngine)CoreChart;
+        var p = e.GetPosition(this);
+        c.Zoom(ZoomMode, new LvcPoint((float)p.X, (float)p.Y), e.Delta > 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+    }
+}

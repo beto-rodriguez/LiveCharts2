@@ -26,11 +26,11 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
 // ==============================================================================
 // 
-// use the LiveChartsGeneratedCode.CartesianChart class to add avalonia specific
+// use the LiveChartsGeneratedCode.SourceGenCartesianChart class to add avalonia specific
 // code, this class is just to expose the CartesianChart class in this namespace.
 // 
 // ==============================================================================
 
 /// <inheritdoc cref="ICartesianChartView" />
-public class CartesianChart : LiveChartsGeneratedCode.CartesianChart
+public class CartesianChart : LiveChartsGeneratedCode.SourceGenCartesianChart
 { }

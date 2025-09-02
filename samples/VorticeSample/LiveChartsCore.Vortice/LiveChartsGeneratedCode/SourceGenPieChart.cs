@@ -20,17 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Kernel.Sketches;
+namespace LiveChartsGeneratedCode;
 
-namespace LiveChartsCore.SkiaSharpView.WinForms;
-
-// ==============================================================================
-// 
-// use the LiveChartsGeneratedCode.SourceGenPieChart class to add winforms specific
-// code, this class is just to expose the PieChart class in this namespace.
-// 
-// ==============================================================================
-
-/// <inheritdoc cref="IPieChartView" />
-public partial class PieChart : LiveChartsGeneratedCode.SourceGenPieChart
-{ }
+public partial class SourceGenPieChart : SourceGenChart
+{
+    // add vortice specific code here
+}

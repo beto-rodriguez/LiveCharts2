@@ -22,7 +22,7 @@
 
 namespace LiveChartsCore.Vortice;
 
-public class CartesianChart : LiveChartsGeneratedCode.CartesianChart
+public class CartesianChart : LiveChartsGeneratedCode.SourceGenCartesianChart
 {
 
 }

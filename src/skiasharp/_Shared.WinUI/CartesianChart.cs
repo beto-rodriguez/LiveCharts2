@@ -26,11 +26,11 @@ namespace LiveChartsCore.SkiaSharpView.WinUI;
 
 // ==============================================================================
 // 
-// use the LiveChartsGeneratedCode.CartesianChart class to add winui/uno specific
+// use the LiveChartsGeneratedCode.SourceGenCartesianChart class to add winui/uno specific
 // code, this class is just to expose the CartesianChart class in this namespace.
 // 
 // ==============================================================================
 
 /// <inheritdoc cref="IChartView" />
-public sealed partial class CartesianChart : LiveChartsGeneratedCode.CartesianChart
+public sealed partial class CartesianChart : LiveChartsGeneratedCode.SourceGenCartesianChart
 { }

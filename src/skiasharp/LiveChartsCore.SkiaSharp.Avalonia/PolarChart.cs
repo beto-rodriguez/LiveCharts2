@@ -26,11 +26,11 @@ namespace LiveChartsCore.SkiaSharpView.Avalonia;
 
 // ==============================================================================
 // 
-// use the LiveChartsGeneratedCode.PolarChart class to add avalonia specific
+// use the LiveChartsGeneratedCode.SourceGenPolarChart class to add avalonia specific
 // code, this class is just to expose the PolarChart class in this namespace.
 // 
 // ==============================================================================
 
 /// <inheritdoc cref="IPolarChartView" />
-public partial class PolarChart : LiveChartsGeneratedCode.PolarChart
+public partial class PolarChart : LiveChartsGeneratedCode.SourceGenPolarChart
 { }

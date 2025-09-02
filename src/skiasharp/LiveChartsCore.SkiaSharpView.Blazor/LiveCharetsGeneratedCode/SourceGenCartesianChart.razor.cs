@@ -20,17 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Measure;
+using Microsoft.AspNetCore.Components.Web;
 
-namespace LiveChartsCore.SkiaSharpView.WinForms;
+namespace LiveChartsGeneratedCode;
 
 // ==============================================================================
 // 
-// use the LiveChartsGeneratedCode.SourceGenPieChart class to add winforms specific
-// code, this class is just to expose the PieChart class in this namespace.
+// this file contains the Blazor specific code for the CartesianChart class,
+// the rest of the code can be found in the _Shared project.
 // 
 // ==============================================================================
 
-/// <inheritdoc cref="IPieChartView" />
-public partial class PieChart : LiveChartsGeneratedCode.SourceGenPieChart
-{ }
+/// <inheritdoc cref="ICartesianChartView"/>
+public partial class SourceGenCartesianChart : SourceGenChart, ICartesianChartView
+{
+    /// <inheritdoc cref="SourceGenChart.OnWheel(WheelEventArgs)" />
+    protected override void OnWheel(WheelEventArgs e)
+    {
+        var c = (CartesianChartEngine)CoreChart;
+        var p = new LvcPoint((float)e.OffsetX, (float)e.OffsetY);
+
+        c.Zoom(ZoomMode, p, e.DeltaY < 0 ? ZoomDirection.ZoomIn : ZoomDirection.ZoomOut);
+    }
+}

@@ -22,15 +22,15 @@
 
 using LiveChartsCore.Kernel.Sketches;
 
-namespace LiveChartsCore.SkiaSharpView.WinForms;
+namespace LiveChartsGeneratedCode;
 
 // ==============================================================================
 // 
-// use the LiveChartsGeneratedCode.SourceGenPieChart class to add winforms specific
-// code, this class is just to expose the PieChart class in this namespace.
+// this file contains the WPF specific code for the SourceGenPieChart class,
+// the rest of the code can be found in the _Shared project.
 // 
 // ==============================================================================
 
 /// <inheritdoc cref="IPieChartView" />
-public partial class PieChart : LiveChartsGeneratedCode.SourceGenPieChart
+public partial class SourceGenPieChart : SourceGenChart, IPieChartView
 { }

@@ -26,11 +26,11 @@ namespace LiveChartsCore.SkiaSharpView.WinUI;
 
 // ==============================================================================
 // 
-// use the LiveChartsGeneratedCode.PolarChart class to add winui/uno specific
+// use the LiveChartsGeneratedCode.SourceGenPolarChart class to add winui/uno specific
 // code, this class is just to expose the PolarChart class in this namespace.
 // 
 // ==============================================================================
 
 /// <inheritdoc cref="IPolarChartView" />
-public sealed partial class PolarChart : LiveChartsGeneratedCode.PolarChart
+public sealed partial class PolarChart : LiveChartsGeneratedCode.SourceGenPolarChart
 { }
