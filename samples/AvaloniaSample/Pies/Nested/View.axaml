@@ -5,7 +5,8 @@
     xmlns:lv="clr-namespace:LiveChartsCore;assembly=LiveChartsCore"
     xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
     xmlns:vms="using:ViewModelsSamples.Pies.Nested"
-    xmlns:local="using:AvaloniaSample.Pies.Nested">
+    xmlns:local="using:AvaloniaSample.Pies.Nested"
+    x:DataType="vms:ViewModel">
 
     <UserControl.DataContext>
         <vms:ViewModel/>

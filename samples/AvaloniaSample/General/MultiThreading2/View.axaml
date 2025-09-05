@@ -3,7 +3,8 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-    xmlns:vms="using:ViewModelsSamples.General.MultiThreading2">
+    xmlns:vms="using:ViewModelsSamples.General.MultiThreading2"
+    x:DataType="vms:ViewModel">
 
     <lvc:CartesianChart>
         <lvc:CartesianChart.Series>

@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="using:AvaloniaSample"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="AvaloniaSample.MainView">
+             x:Class="AvaloniaSample.MainView"
+             x:DataType="local:MainWindowViewModel">
 
     <UserControl.Resources>
         <local:SampleConverter x:Key="SampleConverter"/>
