@@ -57,7 +57,7 @@ public class CustomColumnSeries<T> : ColumnSeries<T>
     private static float GetTargetValue(Animatable animatable, PropertyDefinition propertyDefinition)
     {
         // get the motion property in the shape that handles animations.
-        var motionProperty = (MotionProperty<float>)propertyDefinition.GetMotion(animatable);
+        var motionProperty = (MotionProperty<float>)propertyDefinition.GetMotion(animatable)!;
 
         // return the target value, it is the value where the animation will end.
         return motionProperty.ToValue;

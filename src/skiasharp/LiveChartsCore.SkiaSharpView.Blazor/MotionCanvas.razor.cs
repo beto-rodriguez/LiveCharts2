@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#pragma warning disable CA1416 // Validate platform compatibility
+
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Blazor.JsInterop;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -33,7 +35,7 @@ namespace LiveChartsCore.SkiaSharpView.Blazor;
 /// <inheritdoc cref="CoreMotionCanvas"/>
 public partial class MotionCanvas : IDisposable, IRenderMode
 {
-    private SKGLView? _glView;
+    private SKGLView _glView = null!;
     private DotNetObjectReference<MotionCanvas>? _dotNetRef;
     private DomJsInterop? _dom;
     private IFrameTicker _ticker = null!;

@@ -1,3 +1,5 @@
+#pragma warning disable CS0618 // Type or member is obsolete
+
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using SkiaSharp;
@@ -7,9 +9,9 @@ namespace WPFSample.Pies.Icons;
 public class SvgLabel : LabelGeometry
 {
     private SKPath _path = new();
-    public string? Name { get; set; }
+    public string Name { get; set; }
     public float Size { get; set; }
-    public string? SvgString
+    public string SvgString
     {
         get;
         set

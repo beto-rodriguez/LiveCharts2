@@ -15,7 +15,7 @@ public partial class View : UserControl
 
         var values1 = new double?[] { 5, 4, null, 3, 2, 6, 5, 6, 2 };
         var values2 = new double?[] { 2, 6, 5, 3, null, 5, 2, 4, null };
-        var values3 = new ObservablePoint?[]
+        var values3 = new ObservablePoint[]
         {
             new() { X = 0, Y = 1 },
             new() { X = 1, Y = 4 },
@@ -29,7 +29,7 @@ public partial class View : UserControl
         {
             new LineSeries<double?> { Name = "Series 1", Values = values1 },
             new LineSeries<double?> { Name = "Series 2", Values = values2 },
-            new LineSeries<ObservablePoint?> { Name = "Series 3", Values = values3 }
+            new LineSeries<ObservablePoint> { Name = "Series 3", Values = values3 }
         };
 
         var cartesianChart = new CartesianChart

@@ -10,7 +10,8 @@
 <CartesianChart
     @ref="_chart"
     Series="@series"
-    XAxes="@xAxes">
+    XAxes="@xAxes"
+    SyncContext="_sync">
 </CartesianChart>
 
 @code {
@@ -21,12 +22,6 @@
     private double[] _separators = new double[0];
     private ISeries[] series;
     private Axis[] xAxes;
-
-    protected override void OnAfterRender(bool firstRender)
-    {
-        base.OnAfterRender(firstRender);
-        _chart.SyncContext = _sync;
-    }
 
     protected override void OnInitialized()
     {

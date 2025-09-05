@@ -6,13 +6,13 @@ namespace MauiSample.StepLines.Properties;
 
 public class StringToPaintConverter : IValueConverter
 {
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
-        new SolidColorPaint(SKColor.Parse((string)value), 3);
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        new SolidColorPaint(SKColor.Parse((string?)value), 3);
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
         value is SolidColorPaint paint
             ? paint.Color.Red.ToString("X2") +
               paint.Color.Green.ToString("X2") +
               paint.Color.Blue.ToString("X2")
-            : (object)null;
+            : (object?)null;
 }

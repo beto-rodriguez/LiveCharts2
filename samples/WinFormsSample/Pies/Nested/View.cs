@@ -34,7 +34,7 @@ public partial class View : UserControl
             new("Mexico",   "North",    "Petter",   5)
         ];
 
-        double Sum(string country, string? zone = null, string? name = null) => data
+        double Sum(string country, string zone = null, string name = null) => data
                 .Where(x =>
                     (country is null || x.Country == country) &&
                     (zone is null || x.Zone == zone) &&

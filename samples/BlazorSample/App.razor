@@ -1,4 +1,6 @@
 ﻿@using LiveChartsCore
+@using LiveChartsCore.SkiaSharpView
+@using SkiaSharp
 @using ViewModelsSamples
 
 <Router AppAssembly="@typeof(App).Assembly">
@@ -17,8 +19,26 @@
 @code {
     protected override void OnInitialized()
     {
+
         // this is the recommended place to configure LiveCharts // mark
-        LiveCharts.Configure(config => // mark
-            config.AddLiveChartsAppSettings()); // mark
+        LiveCharts.Configure(c => c
+            .AddLiveChartsAppSettings());
     }
+
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     // or async initialization, for example to load a font that supports Chinese characters
+
+    //     var httpClient = new HttpClient { BaseAddress = new("https://localhost:7277") };
+    //     var fontStream = await httpClient.GetStreamAsync("Source Han Sans CN Light.otf");
+    //     var typeface = SKTypeface.FromStream(fontStream);
+
+    //     Console.WriteLine(typeface);
+
+    //     LiveCharts.Configure(config =>
+    //         config.HasTextSettings(new TextSettings
+    //         {
+    //             DefaultTypeface = typeface
+    //         }));
+    // }
 }

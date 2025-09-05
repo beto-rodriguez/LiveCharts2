@@ -40,8 +40,8 @@ public partial class ViewModel : ObservableObject
     [RelayCommand]
     public void OnPointMeasured(ChartPoint point)
     {
-        var dataPoint = (DataPoint)point.Context.DataSource;
-        point.Context.Visual.RotateTransform = dataPoint.Rotation;
+        var dataPoint = (DataPoint)point.Context.DataSource!;
+        point.Context.Visual!.RotateTransform = dataPoint.Rotation;
     }
 
     public DataPoint[] Fetch()

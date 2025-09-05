@@ -6,7 +6,8 @@
 
 <CartesianChart
     @ref="_chart"
-    Series="@series">
+    Series="@series"
+    SyncContext="_sync">
 </CartesianChart>
 
 @code {
@@ -16,12 +17,6 @@
     private int _current;
     private bool _isReading = true;
     private ISeries[] series;
-
-    protected override void OnAfterRender(bool firstRender)
-    {
-        base.OnAfterRender(firstRender);
-        _chart.SyncContext = _sync;
-    }
 
     protected override void OnInitialized()
     {

@@ -14,7 +14,7 @@ public partial class View : ContentPage
     private void Button_Clicked(object sender, EventArgs e)
     {
         _ = container.Remove(_currentView);
-        _currentView = null;
+        _currentView = null!;
         _currentView = new NewPage1();
         Grid.SetRow(_currentView, 1);
         container.Add(_currentView);

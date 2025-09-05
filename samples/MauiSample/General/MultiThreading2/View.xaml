@@ -7,11 +7,6 @@
     xmlns:vms="clr-namespace:ViewModelsSamples.General.MultiThreading2;assembly=ViewModelsSamples"
     x:DataType="vms:ViewModel">
 
-    <!-- Remove the automatic BindingContext to avoid constructor issues -->
-    <!--<ContentPage.BindingContext>
-        <vms:ViewModel/>
-    </ContentPage.BindingContext>-->
-
     <lvc:CartesianChart>
         <lvc:CartesianChart.Series>
             <lvc:SeriesCollection>

@@ -46,7 +46,7 @@
         var foundPoints = _chart.GetPointsAt(new LvcPointD(e.OffsetX, e.OffsetY));
         foreach (var point in foundPoints)
         {
-            var visual = point.Context.Visual;
+            var visual = point.Context.Visual!;
             if (!_activePoints.Contains(point))
             {
                 visual.Fill = new SolidColorPaint { Color = SKColors.Yellow };
