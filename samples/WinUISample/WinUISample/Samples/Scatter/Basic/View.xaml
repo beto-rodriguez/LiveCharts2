@@ -14,7 +14,9 @@
 
     <lvc:CartesianChart>
         <lvc:CartesianChart.Series>
-            <lvc:XamlScatterSeries Values="{Binding Values}"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlScatterSeries Values="{Binding Values}"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 

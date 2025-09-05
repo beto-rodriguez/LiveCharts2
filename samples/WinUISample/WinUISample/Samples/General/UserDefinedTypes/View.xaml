@@ -15,10 +15,12 @@
 
     <lvc:CartesianChart>
         <lvc:CartesianChart.Series>
-            <local:CustomCityLineSeries
-                SeriesName="Population"
-                Values="{Binding Values}"
-                YToolTipLabelFormatter="{Binding TooltipFormatter}"/>
+            <lvc:SeriesCollection>
+                <local:CustomCityLineSeries
+                    SeriesName="Population"
+                    Values="{Binding Values}"
+                    YToolTipLabelFormatter="{Binding TooltipFormatter}"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 

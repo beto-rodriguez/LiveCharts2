@@ -18,14 +18,16 @@
 
     <lvc:CartesianChart>
         <lvc:CartesianChart.Series>
-            <lvc:XamlColumnSeries
-                Values="{Binding Values1}"
-                MaxBarWidth="999999"
-                IgnoresBarPosition="True"/>
-            <lvc:XamlColumnSeries
-                Values="{Binding Values2}"
-                MaxBarWidth="30"
-                IgnoresBarPosition="True"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlColumnSeries
+                    Values="{Binding Values1}"
+                    MaxBarWidth="999999"
+                    IgnoresBarPosition="True"/>
+                <lvc:XamlColumnSeries
+                    Values="{Binding Values2}"
+                    MaxBarWidth="30"
+                    IgnoresBarPosition="True"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 

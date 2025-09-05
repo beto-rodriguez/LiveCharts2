@@ -20,20 +20,22 @@
         MinValue="0"
         MaxValue="100">
         <lvc:PieChart.Series>
-            <!--
-            The main gauge series.
-            -->
-            <lvc:XamlGaugeSeries
-                GaugeValue="{Binding Value}"
-                Fill="{lvc:SolidColorPaint Color='#9ACD32'}"
-                ShowDataLabels="True"
-                DataLabelsSize="50"
-                DataLabelsPosition="ChartCenter"
-                InnerRadius="75"/>
-            <!-- The background series is used to style the gauge background. -->
-            <lvc:XamlGaugeBackgroundSeries
-                InnerRadius="75"
-                Fill="{lvc:SolidColorPaint Color='#5A64B5F6'}"/>
+            <lvc:SeriesCollection>
+                <!--
+                The main gauge series.
+                -->
+                <lvc:XamlGaugeSeries
+                    GaugeValue="{Binding Value}"
+                    Fill="{lvc:SolidColorPaint Color='#9ACD32'}"
+                    ShowDataLabels="True"
+                    DataLabelsSize="50"
+                    DataLabelsPosition="ChartCenter"
+                    InnerRadius="75"/>
+                <!-- The background series is used to style the gauge background. -->
+                <lvc:XamlGaugeBackgroundSeries
+                    InnerRadius="75"
+                    Fill="{lvc:SolidColorPaint Color='#5A64B5F6'}"/>
+            </lvc:SeriesCollection>
         </lvc:PieChart.Series>
     </lvc:PieChart>
 

@@ -16,17 +16,21 @@
     <lvc:CartesianChart>
 
         <lvc:CartesianChart.Series>
-            <local:LogarithmicSeries Values="{Binding Values}"/>
+            <lvc:SeriesCollection>
+                <local:LogarithmicSeries Values="{Binding Values}"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
 
         <lvc:CartesianChart.YAxes>
-            <lvc:XamlLogarithmicAxis
-                LogBase="{Binding LogBase}"
-                SeparatorsPaint="{lvc:SolidColorPaint Color='#64b4b4b4'}"
-                SubseparatorsPaint="{lvc:SolidColorPaint
-                    Color='#64b4b4b4',
-                    StrokeWidth=0.5}"
-                SubseparatorsCount="9"/>
+            <lvc:AxesCollection>
+                <lvc:XamlLogarithmicAxis
+                    LogBase="{Binding LogBase}"
+                    SeparatorsPaint="{lvc:SolidColorPaint Color='#64b4b4b4'}"
+                    SubseparatorsPaint="{lvc:SolidColorPaint
+                        Color='#64b4b4b4',
+                        StrokeWidth=0.5}"
+                    SubseparatorsCount="9"/>
+            </lvc:AxesCollection>
         </lvc:CartesianChart.YAxes>
 
     </lvc:CartesianChart>

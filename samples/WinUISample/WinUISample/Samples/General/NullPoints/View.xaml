@@ -14,9 +14,11 @@
 
     <lvc:CartesianChart>
         <lvc:CartesianChart.Series>
-            <lvc:XamlLineSeries Values="{Binding Values1}"/>
-            <lvc:XamlLineSeries Values="{Binding Values2}"/>
-            <lvc:XamlLineSeries Values="{Binding Values3}"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlLineSeries Values="{Binding Values1}"/>
+                <lvc:XamlLineSeries Values="{Binding Values2}"/>
+                <lvc:XamlLineSeries Values="{Binding Values3}"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 

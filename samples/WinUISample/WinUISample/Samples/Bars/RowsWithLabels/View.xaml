@@ -14,21 +14,23 @@
 
     <lvc:CartesianChart>
         <lvc:CartesianChart.Series>
-            <lvc:XamlRowSeries
-                Values="{Binding Values1}"
-                ShowDataLabels="True"
-                DataLabelsSize="14"
-                DataLabelsPosition="End"/>
-            <lvc:XamlRowSeries
-                Values="{Binding Values2}"
-                ShowDataLabels="True"
-                DataLabelsSize="14"
-                DataLabelsPosition="Middle"/>
-            <lvc:XamlRowSeries
-                Values="{Binding Values3}"
-                ShowDataLabels="True"
-                DataLabelsSize="14"
-                DataLabelsPosition="Start"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlRowSeries
+                    Values="{Binding Values1}"
+                    ShowDataLabels="True"
+                    DataLabelsSize="14"
+                    DataLabelsPosition="End"/>
+                <lvc:XamlRowSeries
+                    Values="{Binding Values2}"
+                    ShowDataLabels="True"
+                    DataLabelsSize="14"
+                    DataLabelsPosition="Middle"/>
+                <lvc:XamlRowSeries
+                    Values="{Binding Values3}"
+                    ShowDataLabels="True"
+                    DataLabelsSize="14"
+                    DataLabelsPosition="Start"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 </UserControl>

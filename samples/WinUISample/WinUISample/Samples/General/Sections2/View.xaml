@@ -14,29 +14,33 @@
 
     <lvc:CartesianChart>
         <lvc:CartesianChart.Series>
-            <lvc:XamlScatterSeries
-                Values="{Binding Values}"
-                GeometrySize="10"
-                Stroke="{lvc:SolidColorPaint Color='#00f'}"
-                Fill="{x:Null}"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlScatterSeries
+                    Values="{Binding Values}"
+                    GeometrySize="10"
+                    Stroke="{lvc:SolidColorPaint Color='#00f'}"
+                    Fill="{x:Null}"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
         <lvc:CartesianChart.Sections>
-            <lvc:XamlRectangularSection
-                Yi="8"
-                Yj="8"
-                />
-            <!--
-            Nested extensions are not working in Uno
+            <lvc:SectionsCollection>
+                <lvc:XamlRectangularSection
+                    Yi="8"
+                    Yj="8"
+                    />
+                <!--
+                Nested extensions are not working in Uno
 
-             Stroke="{lvc:SolidColorPaint
-                 Color='#F00',
-                 StrokeWidth=3,
-                 PathEffect={lvc:Dashed Array='6, 6'}}"
-            -->
-            <lvc:XamlRectangularSection
-                Xi="6"
-                Xj="8"
-                Fill="{lvc:SolidColorPaint Color='#300000FF'}"/>
+                 Stroke="{lvc:SolidColorPaint
+                     Color='#F00',
+                     StrokeWidth=3,
+                     PathEffect={lvc:Dashed Array='6, 6'}}"
+                -->
+                <lvc:XamlRectangularSection
+                    Xi="6"
+                    Xj="8"
+                    Fill="{lvc:SolidColorPaint Color='#300000FF'}"/>
+            </lvc:SectionsCollection>
         </lvc:CartesianChart.Sections>
     </lvc:CartesianChart>
 </UserControl>

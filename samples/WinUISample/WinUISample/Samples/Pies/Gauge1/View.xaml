@@ -19,16 +19,18 @@
         MinValue="0"
         MaxValue="100">
         <lvc:PieChart.Series>
-            <!--
-            The main gauge series.
-            -->
-            <lvc:XamlGaugeSeries
-                GaugeValue="{Binding Value}"
-                DataLabelsSize="50"
-                MaxRadialColumnWidth="50"/>
+            <lvc:SeriesCollection>
+                <!--
+                The main gauge series.
+                -->
+                <lvc:XamlGaugeSeries
+                    GaugeValue="{Binding Value}"
+                    DataLabelsSize="50"
+                    MaxRadialColumnWidth="50"/>
 
-            <!-- The background series is used to style the gauge background. -->
-            <lvc:XamlGaugeBackgroundSeries/>
+                <!-- The background series is used to style the gauge background. -->
+                <lvc:XamlGaugeBackgroundSeries/>
+            </lvc:SeriesCollection>
         </lvc:PieChart.Series>
     </lvc:PieChart>
 

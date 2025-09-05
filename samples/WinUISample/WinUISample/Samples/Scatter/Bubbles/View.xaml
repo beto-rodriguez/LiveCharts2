@@ -14,20 +14,22 @@
 
     <lvc:CartesianChart>
         <lvc:CartesianChart.Series>
-            <lvc:XamlScatterSeries
-                Values="{Binding Values1}"
-                GeometrySize="100"
-                MinGeometrySize="5"/>
-            <lvc:XamlScatterSeries
-                Values="{Binding Values2}"
-                GeometrySize="100"
-                MinGeometrySize="5"
-                StackGroup="1"/>
-            <lvc:XamlScatterSeries
-                Values="{Binding Values3}"
-                GeometrySize="100"
-                MinGeometrySize="5"
-                StackGroup="1"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlScatterSeries
+                    Values="{Binding Values1}"
+                    GeometrySize="100"
+                    MinGeometrySize="5"/>
+                <lvc:XamlScatterSeries
+                    Values="{Binding Values2}"
+                    GeometrySize="100"
+                    MinGeometrySize="5"
+                    StackGroup="1"/>
+                <lvc:XamlScatterSeries
+                    Values="{Binding Values3}"
+                    GeometrySize="100"
+                    MinGeometrySize="5"
+                    StackGroup="1"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 

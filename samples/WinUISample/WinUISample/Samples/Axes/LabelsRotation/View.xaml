@@ -20,21 +20,27 @@
         </StackPanel>
         <lvc:CartesianChart Grid.Row="1">
             <lvc:CartesianChart.Series>
-                <lvc:XamlLineSeries
-                    Values="{Binding Values}"
-                    XToolTipLabelFormatter="{Binding TooltipFormat}" />
+                <lvc:SeriesCollection>
+                    <lvc:XamlLineSeries
+                        Values="{Binding Values}"
+                        XToolTipLabelFormatter="{Binding TooltipFormat}" />
+                </lvc:SeriesCollection>
             </lvc:CartesianChart.Series>
             <lvc:CartesianChart.XAxes>
-                <lvc:XamlAxis
-                    Labeler="{Binding Labeler}"
-                    MinStep="1"
-                    LabelsRotation="45"
-                    SeparatorsPaint="{lvc:SolidColorPaint Color='#eee', StrokeWidth=2}"/>
+                <lvc:AxesCollection>
+                    <lvc:XamlAxis
+                        Labeler="{Binding Labeler}"
+                        MinStep="1"
+                        LabelsRotation="45"
+                        SeparatorsPaint="{lvc:SolidColorPaint Color='#eee', StrokeWidth=2}"/>
+                </lvc:AxesCollection>
             </lvc:CartesianChart.XAxes>
             <lvc:CartesianChart.YAxes>
-                <lvc:XamlAxis
-                    LabelsRotation="{Binding Rotation}"
-                    SeparatorsPaint="{lvc:SolidColorPaint Color='#eee', StrokeWidth=2}" />
+                <lvc:AxesCollection>
+                    <lvc:XamlAxis
+                        LabelsRotation="{Binding Rotation}"
+                        SeparatorsPaint="{lvc:SolidColorPaint Color='#eee', StrokeWidth=2}" />
+                </lvc:AxesCollection>
             </lvc:CartesianChart.YAxes>
         </lvc:CartesianChart>
     </Grid>

@@ -15,7 +15,9 @@
     <lvc:CartesianChart
         ZoomMode="X"><!-- mark -->
         <lvc:CartesianChart.Series>
-            <lvc:XamlLineSeries Values="{Binding Values}"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlLineSeries Values="{Binding Values}"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 </UserControl>

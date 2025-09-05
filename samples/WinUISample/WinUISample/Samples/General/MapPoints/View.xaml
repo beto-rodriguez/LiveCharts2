@@ -14,11 +14,13 @@
 
     <lvc:CartesianChart>
         <lvc:CartesianChart.Series>
-            <lvc:XamlColumnSeries
-                ShowDataLabels="True"
-                DataLabelsPosition="Top"
-                Values="{Binding Values}"
-                PointMeasuredCommand="{Binding PointMeasuredCommand}"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlColumnSeries
+                    ShowDataLabels="True"
+                    DataLabelsPosition="Top"
+                    Values="{Binding Values}"
+                    PointMeasuredCommand="{Binding PointMeasuredCommand}"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 

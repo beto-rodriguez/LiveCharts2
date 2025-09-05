@@ -27,25 +27,31 @@
         <lvc:CartesianChart Grid.Row="1">
 
             <lvc:CartesianChart.Series>
-                <lvc:XamlColumnSeries Values="{Binding Values}"/>
+                <lvc:SeriesCollection>
+                    <lvc:XamlColumnSeries Values="{Binding Values}"/>
+                </lvc:SeriesCollection>
             </lvc:CartesianChart.Series>
 
             <lvc:CartesianChart.XAxes>
-                <lvc:XamlAxis
-                    AxisName="X axis"
-                    TextSize="20"
-                    Position="{Binding Position}"
-                    LabelsPaint="{Binding Color, Converter={StaticResource StringToPaintConverter}}"
-                    SeparatorsPaint="{Binding Color, Converter={StaticResource StringToPaintConverter}}"/>
+                <lvc:AxesCollection>
+                    <lvc:XamlAxis
+                        AxisName="X axis"
+                        TextSize="20"
+                        Position="{Binding Position}"
+                        LabelsPaint="{Binding Color, Converter={StaticResource StringToPaintConverter}}"
+                        SeparatorsPaint="{Binding Color, Converter={StaticResource StringToPaintConverter}}"/>
+                </lvc:AxesCollection>
             </lvc:CartesianChart.XAxes>
 
             <lvc:CartesianChart.YAxes>
-                <lvc:XamlAxis
-                    AxisName="Y axis"
-                    TextSize="20"
-                    Position="{Binding Position}"
-                    LabelsPaint="{Binding Color, Converter={StaticResource StringToPaintConverter}}"
-                    SeparatorsPaint="{Binding Color, Converter={StaticResource StringToPaintConverter}}"/>
+                <lvc:AxesCollection>
+                    <lvc:XamlAxis
+                        AxisName="Y axis"
+                        TextSize="20"
+                        Position="{Binding Position}"
+                        LabelsPaint="{Binding Color, Converter={StaticResource StringToPaintConverter}}"
+                        SeparatorsPaint="{Binding Color, Converter={StaticResource StringToPaintConverter}}"/>
+                </lvc:AxesCollection>
             </lvc:CartesianChart.YAxes>
 
         </lvc:CartesianChart>

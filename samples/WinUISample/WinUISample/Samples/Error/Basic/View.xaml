@@ -15,42 +15,50 @@
     <Grid RowDefinitions="*,*,*">
         <lvc:CartesianChart Grid.Row="0">
             <lvc:CartesianChart.Series>
-                <lvc:XamlColumnSeries
-                    Values="{Binding Values1}"
-                    ShowError="True"
-                    Padding="0"/>
-                <lvc:XamlColumnSeries
-                    Values="{Binding Values2}"
-                    ShowError="True"
-                    Padding="0"/>
+                <lvc:SeriesCollection>
+                    <lvc:XamlColumnSeries
+                        Values="{Binding Values1}"
+                        ShowError="True"
+                        Padding="0"/>
+                    <lvc:XamlColumnSeries
+                        Values="{Binding Values2}"
+                        ShowError="True"
+                        Padding="0"/>
+                </lvc:SeriesCollection>
             </lvc:CartesianChart.Series>
         </lvc:CartesianChart>
 
         <lvc:CartesianChart Grid.Row="1">
             <lvc:CartesianChart.Series>
-                <lvc:XamlLineSeries
-                    Values="{Binding Values1}"
-                    ShowError="True"
-                    GeometrySize="4"
-                    Fill="{x:Null}"/>
+                <lvc:SeriesCollection>
+                    <lvc:XamlLineSeries
+                        Values="{Binding Values1}"
+                        ShowError="True"
+                        GeometrySize="4"
+                        Fill="{x:Null}"/>
+                </lvc:SeriesCollection>
             </lvc:CartesianChart.Series>
         </lvc:CartesianChart>
 
         <lvc:CartesianChart Grid.Row="2">
             <lvc:CartesianChart.Series>
-                <lvc:XamlScatterSeries
-                    Values="{Binding Values3}"
-                    ShowError="True"
-                    GeometrySize="10"/>
+                <lvc:SeriesCollection>
+                    <lvc:XamlScatterSeries
+                        Values="{Binding Values3}"
+                        ShowError="True"
+                        GeometrySize="10"/>
+                </lvc:SeriesCollection>
             </lvc:CartesianChart.Series>
             <lvc:CartesianChart.XAxes>
-                <!--
-                To get more help about DateTime axes see:
-                https://livecharts.dev/docs/winui/latest/samples.axes.dateTimeScaled
-                -->
-                <lvc:XamlDateTimeAxis
-                    Interval="1.00:00:00"
-                    DateFormatter="{Binding Formatter}"/>
+                <lvc:AxesCollection>
+                    <!--
+                    To get more help about DateTime axes see:
+                    https://livecharts.dev/docs/winui/latest/samples.axes.dateTimeScaled
+                    -->
+                    <lvc:XamlDateTimeAxis
+                        Interval="1.00:00:00"
+                        DateFormatter="{Binding Formatter}"/>
+                </lvc:AxesCollection>
             </lvc:CartesianChart.XAxes>
         </lvc:CartesianChart>
     </Grid>

@@ -24,12 +24,14 @@
         -->
 
         <lvc:CartesianChart.Series>
-            <lvc:XamlLineSeries
-                Values="{Binding Values}"
-                Fill="{lvc:SolidColorPaint Color='#6495ED'}"
-                Stroke="{x:Null}"
-                GeometryFill="{x:Null}"
-                GeometryStroke="{x:Null}"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlLineSeries
+                    Values="{Binding Values}"
+                    Fill="{lvc:SolidColorPaint Color='#6495ED'}"
+                    Stroke="{x:Null}"
+                    GeometryFill="{x:Null}"
+                    GeometryStroke="{x:Null}"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 </UserControl>

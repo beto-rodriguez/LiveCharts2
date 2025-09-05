@@ -15,36 +15,38 @@
 
     <lvc:CartesianChart>
         <lvc:CartesianChart.Series>
-            <!--
-            The CustomStarLineSeries is a line series that draws a star shape.
-            -->
-            <lvc:XamlLineSeries
-                Values="{Binding Values1}"
-                Fill="{x:Null}"
-                GeometrySize="20"/>
+            <lvc:SeriesCollection>
+                <!--
+                The CustomStarLineSeries is a line series that draws a star shape.
+                -->
+                <lvc:XamlLineSeries
+                    Values="{Binding Values1}"
+                    Fill="{x:Null}"
+                    GeometrySize="20"/>
 
-            <local:CustomStarLineSeries
-                Values="{Binding Values2}"
-                Fill="{x:Null}"
-                GeometrySize="20"/>
+                <local:CustomStarLineSeries
+                    Values="{Binding Values2}"
+                    Fill="{x:Null}"
+                    GeometrySize="20"/>
 
-            <!--
-            You can also use SVG paths to draw the geometry
-            the VariableSVGPathGeometry can change the drawn path at runtime
-            -->
-            <local:CustomVariableSVGPathLineSeries
-                GeometrySvg="{Binding PinPath}"
-                Values="{Binding Values3}"
-                Fill="{x:Null}"
-                GeometrySize="20"/>
+                <!--
+                You can also use SVG paths to draw the geometry
+                the VariableSVGPathGeometry can change the drawn path at runtime
+                -->
+                <local:CustomVariableSVGPathLineSeries
+                    GeometrySvg="{Binding PinPath}"
+                    Values="{Binding Values3}"
+                    Fill="{x:Null}"
+                    GeometrySize="20"/>
 
-            <!--
-            Finally you can also use SkiaSharp to draw your own geometry
-            -->
-            <local:CustomMyGeometryLineSeries
-                Values="{Binding Values4}"
-                Fill="{x:Null}"
-                GeometrySize="20"/>
+                <!--
+                Finally you can also use SkiaSharp to draw your own geometry
+                -->
+                <local:CustomMyGeometryLineSeries
+                    Values="{Binding Values4}"
+                    Fill="{x:Null}"
+                    GeometrySize="20"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 

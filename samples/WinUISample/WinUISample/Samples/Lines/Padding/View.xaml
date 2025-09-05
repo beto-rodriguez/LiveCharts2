@@ -24,17 +24,19 @@
         -->
         
         <lvc:CartesianChart.Series>
-            <!--
-            this series fits the draw margin area
-            the key is to set the DataPadding to 0,0
-            also remove GeometryStroke, GeometryFill and GeometrySize
-            to prevent the series from reserving a space for the series geometry.
-            -->
-            <lvc:XamlLineSeries
-                Values="{Binding Values}"
-                GeometryStroke="{x:Null}"
-                GeometryFill="{x:Null}"
-                DataPadding="{lvc:Point Value='0,0'}"/>
+            <lvc:SeriesCollection>
+                <!--
+                this series fits the draw margin area
+                the key is to set the DataPadding to 0,0
+                also remove GeometryStroke, GeometryFill and GeometrySize
+                to prevent the series from reserving a space for the series geometry.
+                -->
+                <lvc:XamlLineSeries
+                    Values="{Binding Values}"
+                    GeometryStroke="{x:Null}"
+                    GeometryFill="{x:Null}"
+                    DataPadding="{lvc:Point Value='0,0'}"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 
