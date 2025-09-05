@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-    xmlns:vms="clr-namespace:ViewModelsSamples.Polar.RadialArea;assembly=ViewModelsSamples">
+    xmlns:vms="clr-namespace:ViewModelsSamples.Polar.RadialArea;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
 
     <ContentPage.BindingContext>
         <vms:ViewModel/>
@@ -13,25 +14,27 @@
     <lvc:PolarChart InitialRotation="-45">
 
         <lvc:PolarChart.Series>
+            <lvc:SeriesCollection>
+                <lvc:XamlPolarLineSeries
+                    Values="{Binding Values1}"
+                    LineSmoothness="0"
+                    GeometrySize="0"
+                    Fill="{lvc:SolidColorPaint Color='#900000ff'}"/>
 
-            <lvc:XamlPolarLineSeries
-                Values="{Binding Values1}"
-                LineSmoothness="0"
-                GeometrySize="0"
-                Fill="{lvc:SolidColorPaint Color='#900000ff'}"/>
-
-            <lvc:XamlPolarLineSeries
-                Values="{Binding Values2}"
-                LineSmoothness="1"
-                GeometrySize="0"
-                Fill="{lvc:SolidColorPaint Color='#90ff0000'}"/>
-
+                <lvc:XamlPolarLineSeries
+                    Values="{Binding Values2}"
+                    LineSmoothness="1"
+                    GeometrySize="0"
+                    Fill="{lvc:SolidColorPaint Color='#90ff0000'}"/>
+            </lvc:SeriesCollection>
         </lvc:PolarChart.Series>
 
         <lvc:PolarChart.AngleAxes>
-            <lvc:XamlPolarAxis
-                LabelsRotation="{Binding TangentAngle}"
-                Labels="{Binding Labels}"/>
+            <lvc:PolarAxesCollection>
+                <lvc:XamlPolarAxis
+                    LabelsRotation="{Binding TangentAngle}"
+                    Labels="{Binding Labels}"/>
+            </lvc:PolarAxesCollection>
         </lvc:PolarChart.AngleAxes>
 
     </lvc:PolarChart>

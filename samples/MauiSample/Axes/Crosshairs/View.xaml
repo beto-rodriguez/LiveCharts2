@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-    xmlns:vms="clr-namespace:ViewModelsSamples.Axes.Crosshairs;assembly=ViewModelsSamples">
+    xmlns:vms="clr-namespace:ViewModelsSamples.Axes.Crosshairs;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
 
     <ContentPage.BindingContext>
         <vms:ViewModel/>
@@ -13,24 +14,30 @@
     <lvc:CartesianChart>
 
         <lvc:CartesianChart.Series>
-            <lvc:XamlLineSeries Values="{Binding Values}" />
+            <lvc:SeriesCollection>
+                <lvc:XamlLineSeries Values="{Binding Values}" />
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
 
         <lvc:CartesianChart.XAxes>
-            <lvc:XamlAxis
-                CrosshairLabelsBackground="#FF8C00"
-                CrosshairLabelsPaint="#8B0000"
-                CrosshairPaint="#FF8C00"
-                Labeler="{Binding LabelFormatter}"/>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis
+                    CrosshairLabelsBackground="#FF8C00"
+                    CrosshairLabelsPaint="#8B0000"
+                    CrosshairPaint="#FF8C00"
+                    Labeler="{Binding LabelFormatter}"/>
+            </lvc:AxesCollection>
         </lvc:CartesianChart.XAxes>
         
         <lvc:CartesianChart.YAxes>
-            <lvc:XamlAxis
-                CrosshairLabelsBackground="#FF8C00"
-                CrosshairLabelsPaint="#8B0000"
-                CrosshairPaint="#FF8C00"
-                CrosshairSnapEnabled="True"
-                Labeler="{Binding LabelFormatter}"/>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis
+                    CrosshairLabelsBackground="#FF8C00"
+                    CrosshairLabelsPaint="#8B0000"
+                    CrosshairPaint="#FF8C00"
+                    CrosshairSnapEnabled="True"
+                    Labeler="{Binding LabelFormatter}"/>
+            </lvc:AxesCollection>
         </lvc:CartesianChart.YAxes>
 
     </lvc:CartesianChart>

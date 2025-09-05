@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-    xmlns:vms="clr-namespace:ViewModelsSamples.Pies.Gauge5;assembly=ViewModelsSamples">
+    xmlns:vms="clr-namespace:ViewModelsSamples.Pies.Gauge5;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
 
     <ContentPage.BindingContext>
         <vms:ViewModel/>
@@ -26,17 +27,17 @@
             LegendPosition="Bottom">
 
             <lvc:PieChart.Series>
+                <lvc:SeriesCollection>
+                    <lvc:XamlGaugeSeries
+                        SeriesName="North"
+                        GaugeValue="{Binding Value1}"
+                        DataLabelsPosition="Start"/>
 
-                <lvc:XamlGaugeSeries
-                    SeriesName="North"
-                    GaugeValue="{Binding Value1}"
-                    DataLabelsPosition="Start"/>
-
-                <lvc:XamlGaugeSeries
-                    SeriesName="South"
-                    GaugeValue="{Binding Value2}"
-                    DataLabelsPosition="Start"/>
-
+                    <lvc:XamlGaugeSeries
+                        SeriesName="South"
+                        GaugeValue="{Binding Value2}"
+                        DataLabelsPosition="Start"/>
+                </lvc:SeriesCollection>
             </lvc:PieChart.Series>
 
         </lvc:PieChart>

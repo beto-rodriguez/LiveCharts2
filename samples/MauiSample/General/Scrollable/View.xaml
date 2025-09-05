@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-    xmlns:vms="clr-namespace:ViewModelsSamples.General.Scrollable;assembly=ViewModelsSamples">
+    xmlns:vms="clr-namespace:ViewModelsSamples.General.Scrollable;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
 
     <ContentPage.BindingContext>
         <vms:ViewModel/>
@@ -24,17 +25,21 @@
                 UpdateStartedCommand="{Binding ChartUpdatedCommand}">
 
             <lvc:CartesianChart.Series>
-                <lvc:XamlLineSeries
-                    Values="{Binding Values}"
-                    GeometryStroke="{x:Null}"
-                    GeometryFill="{x:Null}"
-                    DataPadding="0,1"/>
+                <lvc:SeriesCollection>
+                    <lvc:XamlLineSeries
+                        Values="{Binding Values}"
+                        GeometryStroke="{x:Null}"
+                        GeometryFill="{x:Null}"
+                        DataPadding="0,1"/>
+                </lvc:SeriesCollection>
             </lvc:CartesianChart.Series>
 
             <lvc:CartesianChart.XAxes>
-                <lvc:XamlAxis
-                    MinLimit="{Binding MinX}"
-                    MaxLimit="{Binding MaxX}" />
+                <lvc:AxesCollection>
+                    <lvc:XamlAxis
+                        MinLimit="{Binding MinX}"
+                        MaxLimit="{Binding MaxX}" />
+                </lvc:AxesCollection>
             </lvc:CartesianChart.XAxes>
         </lvc:CartesianChart>
 
@@ -47,26 +52,34 @@
                 TooltipPosition="Hidden">
             
             <lvc:CartesianChart.Series>
-                <lvc:XamlLineSeries
-                    Values="{Binding Values}"
-                    GeometryStroke="{x:Null}"
-                    GeometryFill="{x:Null}"
-                    DataPadding="0,1"/>
+                <lvc:SeriesCollection>
+                    <lvc:XamlLineSeries
+                        Values="{Binding Values}"
+                        GeometryStroke="{x:Null}"
+                        GeometryFill="{x:Null}"
+                        DataPadding="0,1"/>
+                </lvc:SeriesCollection>
             </lvc:CartesianChart.Series>
             
             <lvc:CartesianChart.XAxes>
-                <lvc:XamlAxis IsVisible="False"/>
+                <lvc:AxesCollection>
+                    <lvc:XamlAxis IsVisible="False"/>
+                </lvc:AxesCollection>
             </lvc:CartesianChart.XAxes>
             
             <lvc:CartesianChart.YAxes>
-                <lvc:XamlAxis IsVisible="False"/>
+                <lvc:AxesCollection>
+                    <lvc:XamlAxis IsVisible="False"/>
+                </lvc:AxesCollection>
             </lvc:CartesianChart.YAxes>
             
             <lvc:CartesianChart.Sections>
-                <lvc:XamlRectangularSection
-                    Xi="{Binding MinXThumb}"
-                    Xj="{Binding MaxXThumb}"
-                    Fill="{lvc:SolidColorPaint Color='#64FFCDD2'}"/>
+                <lvc:SectionsCollection>
+                    <lvc:XamlRectangularSection
+                        Xi="{Binding MinXThumb}"
+                        Xj="{Binding MaxXThumb}"
+                        Fill="{lvc:SolidColorPaint Color='#64FFCDD2'}"/>
+                </lvc:SectionsCollection>
             </lvc:CartesianChart.Sections>
         </lvc:CartesianChart>
     </Grid>

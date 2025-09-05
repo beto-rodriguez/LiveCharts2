@@ -5,7 +5,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
     xmlns:vms="clr-namespace:ViewModelsSamples.Lines.Basic;assembly=ViewModelsSamples"
-    xmlns:draw="clr-namespace:LiveChartsCore.SkiaSharpView.Drawing.Geometries;assembly=LiveChartsCore.SkiaSharpView">
+    xmlns:draw="clr-namespace:LiveChartsCore.SkiaSharpView.Drawing.Geometries;assembly=LiveChartsCore.SkiaSharpView"
+    x:DataType="vms:ViewModel">
 
     <ContentPage.BindingContext>
         <vms:ViewModel/>
@@ -21,15 +22,17 @@
         </lvc:CartesianChart.Title>
         
         <lvc:CartesianChart.Series>
-            <lvc:XamlLineSeries
-                Values="{Binding Values1}"
-                Fill="{x:Null}"
-                GeometrySize="20"/>
-            <lvc:XamlLineSeries
-                x:TypeArguments="x:Int32, draw:StarGeometry"
-                Values="{Binding Values2}"
-                Fill="{x:Null}"
-                GeometrySize="20"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlLineSeries
+                    Values="{Binding Values1}"
+                    Fill="{x:Null}"
+                    GeometrySize="20"/>
+                <lvc:XamlLineSeries
+                    x:TypeArguments="x:Int32, draw:StarGeometry"
+                    Values="{Binding Values2}"
+                    Fill="{x:Null}"
+                    GeometrySize="20"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 

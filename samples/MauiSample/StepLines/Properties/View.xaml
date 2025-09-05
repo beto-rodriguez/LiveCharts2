@@ -5,11 +5,16 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
     xmlns:vms="clr-namespace:ViewModelsSamples.StepLines.Properties;assembly=ViewModelsSamples"
-    xmlns:local="clr-namespace:MauiSample.StepLines.Properties">
+    xmlns:local="clr-namespace:MauiSample.StepLines.Properties"
+    x:DataType="vms:ViewModel">
 
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+        <local:StringToPaintConverter x:Key="StringToPaintConverter" />
+    </ContentPage.Resources>
 
     <Grid RowDefinitions="Auto, Auto, Auto, *">
         <HorizontalStackLayout Grid.Row="0">
@@ -30,13 +35,15 @@
 
         <lvc:CartesianChart Grid.Row="3">
             <lvc:CartesianChart.Series>
-                <lvc:XamlStepLineSeries
-                    Values="{Binding Values}"
-                    Stroke="{Binding Stroke, Converter={StaticResource StringToPaintConverter}}"
-                    Fill="{Binding Fill, Converter={StaticResource StringToPaintConverter}}"
-                    GeometryStroke="{Binding GeometryStroke, Converter={StaticResource StringToPaintConverter}}"
-                    GeometryFill="{Binding GeometryFill, Converter={StaticResource StringToPaintConverter}}"
-                    GeometrySize="{Binding GeometrySize}"/>
+                <lvc:SeriesCollection>
+                    <lvc:XamlStepLineSeries
+                        Values="{Binding Values}"
+                        Stroke="{Binding Stroke, Converter={StaticResource StringToPaintConverter}}"
+                        Fill="{Binding Fill, Converter={StaticResource StringToPaintConverter}}"
+                        GeometryStroke="{Binding GeometryStroke, Converter={StaticResource StringToPaintConverter}}"
+                        GeometryFill="{Binding GeometryFill, Converter={StaticResource StringToPaintConverter}}"
+                        GeometrySize="{Binding GeometrySize}"/>
+                </lvc:SeriesCollection>
             </lvc:CartesianChart.Series>
         </lvc:CartesianChart>
     </Grid>

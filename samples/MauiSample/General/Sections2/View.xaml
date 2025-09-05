@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-    xmlns:vms="clr-namespace:ViewModelsSamples.General.Sections2;assembly=ViewModelsSamples">
+    xmlns:vms="clr-namespace:ViewModelsSamples.General.Sections2;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
     
     <ContentPage.BindingContext>
         <vms:ViewModel/>
@@ -13,26 +14,30 @@
     <lvc:CartesianChart>
 
         <lvc:CartesianChart.Series>
-            <lvc:XamlScatterSeries
-                Values="{Binding Values}"
-                GeometrySize="10"
-                Stroke="{lvc:SolidColorPaint Color='#00f'}"
-                Fill="{x:Null}"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlScatterSeries
+                    Values="{Binding Values}"
+                    GeometrySize="10"
+                    Stroke="{lvc:SolidColorPaint Color='#00f'}"
+                    Fill="{x:Null}"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
 
         <lvc:CartesianChart.Sections>
-            <lvc:XamlRectangularSection
-                Yi="8"
-                Yj="8"
-                Stroke="{lvc:SolidColorPaint
-                    Color='#F00',
-                    StrokeWidth=3,
-                    PathEffect={lvc:Dashed Array='6, 6'}}"/>
+            <lvc:SectionsCollection>
+                <lvc:XamlRectangularSection
+                    Yi="8"
+                    Yj="8"
+                    Stroke="{lvc:SolidColorPaint
+                        Color='#F00',
+                        StrokeWidth=3,
+                        PathEffect={lvc:Dashed Array='6, 6'}}"/>
 
-            <lvc:XamlRectangularSection
-                Xi="6"
-                Xj="8"
-                Fill="{lvc:SolidColorPaint Color='#300000FF'}"/>
+                <lvc:XamlRectangularSection
+                    Xi="6"
+                    Xj="8"
+                    Fill="{lvc:SolidColorPaint Color='#300000FF'}"/>
+            </lvc:SectionsCollection>
         </lvc:CartesianChart.Sections>
     </lvc:CartesianChart>
 </ContentPage>

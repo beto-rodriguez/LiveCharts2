@@ -7,7 +7,8 @@
     xmlns:vms="clr-namespace:ViewModelsSamples.Scatter.Custom;assembly=ViewModelsSamples"
     xmlns:svg="clr-namespace:LiveChartsCore.Drawing;assembly=LiveChartsCore"
     xmlns:draw="clr-namespace:LiveChartsCore.SkiaSharpView.Drawing.Geometries;assembly=LiveChartsCore.SkiaSharpView"
-    xmlns:d="clr-namespace:LiveChartsCore.Defaults;assembly=LiveChartsCore">
+    xmlns:d="clr-namespace:LiveChartsCore.Defaults;assembly=LiveChartsCore"
+    x:DataType="vms:ViewModel">
 
     <ContentPage.BindingContext>
         <vms:ViewModel/>
@@ -15,39 +16,40 @@
 
     <lvc:CartesianChart>
         <lvc:CartesianChart.Series>
-            <!--
-            Use the generic type arguments to set the type of the geometry to draw,
-            here are many predefined geometries in the LiveChartsCore.SkiaSharpView.Drawing.Geometries
-            namespace, for example, the StarGeometry, CrossGeometry, RectangleGeometry and DiamondGeometry
+            <lvc:SeriesCollection>
+                <!--
+                Use the generic type arguments to set the type of the geometry to draw,
+                here are many predefined geometries in the LiveChartsCore.SkiaSharpView.Drawing.Geometries
+                namespace, for example, the StarGeometry, CrossGeometry, RectangleGeometry and DiamondGeometry
 
-            The first type argument is the type of data.
-            The second type argument is the type of geometry to draw.
-            -->
+                The first type argument is the type of data.
+                The second type argument is the type of geometry to draw.
+                -->
 
-            <lvc:XamlScatterSeries
-                x:TypeArguments="d:ObservablePoint, draw:HeartGeometry"
-                Values="{Binding Values1}"
-                Stroke="{x:Null}"
-                GeometrySize="40" />
+                <lvc:XamlScatterSeries
+                    x:TypeArguments="d:ObservablePoint, draw:HeartGeometry"
+                    Values="{Binding Values1}"
+                    Stroke="{x:Null}"
+                    GeometrySize="40" />
 
-            <!--
-            You can also use SVG paths to draw the geometry
-            the VariableSVGPathGeometry can change the drawn path at runtime
-            -->
-            <lvc:XamlScatterSeries
-                x:TypeArguments="d:ObservablePoint, draw:VariableSVGPathGeometry"
-                Values="{Binding Values2}"
-                GeometrySvg="{Binding PinPath}"
-                GeometrySize="40"/>
+                <!--
+                You can also use SVG paths to draw the geometry
+                the VariableSVGPathGeometry can change the drawn path at runtime
+                -->
+                <lvc:XamlScatterSeries
+                    x:TypeArguments="d:ObservablePoint, draw:VariableSVGPathGeometry"
+                    Values="{Binding Values2}"
+                    GeometrySvg="{Binding PinPath}"
+                    GeometrySize="40"/>
 
-            <!--
-            Finally you can also use SkiaSharp to draw your own geometry
-            -->
-            <lvc:XamlScatterSeries
-                x:TypeArguments="d:ObservablePoint, vms:MyGeometry"
-                Values="{Binding Values3}"
-                GeometrySize="40"/>
-
+                <!--
+                Finally you can also use SkiaSharp to draw your own geometry
+                -->
+                <lvc:XamlScatterSeries
+                    x:TypeArguments="d:ObservablePoint, vms:MyGeometry"
+                    Values="{Binding Values3}"
+                    GeometrySize="40"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 </ContentPage>

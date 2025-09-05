@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-    xmlns:vms="clr-namespace:ViewModelsSamples.General.Tooltips;assembly=ViewModelsSamples">
+    xmlns:vms="clr-namespace:ViewModelsSamples.General.Tooltips;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
 
     <ContentPage.BindingContext>
         <vms:ViewModel/>
@@ -20,12 +21,14 @@
             Grid.Row="1"
             TooltipPosition="{Binding SelectedPosition}">
             <lvc:CartesianChart.Series>
-                <lvc:XamlColumnSeries
-                    Values="{Binding Values1}"
-                    SeriesName="Sales" />
-                <lvc:XamlLineSeries
-                    Values="{Binding Values2}"
-                    SeriesName="Customers" />
+                <lvc:SeriesCollection>
+                    <lvc:XamlColumnSeries
+                        Values="{Binding Values1}"
+                        SeriesName="Sales" />
+                    <lvc:XamlLineSeries
+                        Values="{Binding Values2}"
+                        SeriesName="Customers" />
+                </lvc:SeriesCollection>
             </lvc:CartesianChart.Series>
         </lvc:CartesianChart>
     </Grid>

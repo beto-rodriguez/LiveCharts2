@@ -5,7 +5,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
     xmlns:vms="clr-namespace:ViewModelsSamples.Heat.Basic;assembly=ViewModelsSamples"
-    xmlns:draw="clr-namespace:LiveChartsCore.SkiaSharpView.SKCharts;assembly=LiveChartsCore.SkiaSharpView">
+    xmlns:draw="clr-namespace:LiveChartsCore.SkiaSharpView.SKCharts;assembly=LiveChartsCore.SkiaSharpView"
+    x:DataType="vms:ViewModel">
 
     <ContentPage.BindingContext>
         <vms:ViewModel/>
@@ -15,17 +16,23 @@
         LegendPosition="Right">
 
         <lvc:CartesianChart.Series>
-            <lvc:XamlHeatSeries
-                Values="{Binding Values}"
-                HeatMap="#FFF176, #2F4F4F, #0000FF"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlHeatSeries
+                    Values="{Binding Values}"
+                    HeatMap="#FFF176, #2F4F4F, #0000FF"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
 
         <lvc:CartesianChart.XAxes>
-            <lvc:XamlAxis Labels="{Binding XLabels}"/>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis Labels="{Binding XLabels}"/>
+            </lvc:AxesCollection>
         </lvc:CartesianChart.XAxes>
 
         <lvc:CartesianChart.YAxes>
-            <lvc:XamlAxis Labels="{Binding YLabels}"/>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis Labels="{Binding YLabels}"/>
+            </lvc:AxesCollection>
         </lvc:CartesianChart.YAxes>
 
         <lvc:CartesianChart.Legend>

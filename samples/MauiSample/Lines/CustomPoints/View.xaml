@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-    xmlns:vms="clr-namespace:ViewModelsSamples.Lines.CustomPoints;assembly=ViewModelsSamples">
+    xmlns:vms="clr-namespace:ViewModelsSamples.Lines.CustomPoints;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
 
     <ContentPage.BindingContext>
         <vms:ViewModel/>
@@ -12,14 +13,16 @@
 
     <lvc:CartesianChart>
         <lvc:CartesianChart.Series>
-            <lvc:XamlLineSeries
-                x:TypeArguments="vms:DataPoint, vms:ArrowGeometry"
-                GeometrySize="50"
-                GeometryStroke="{x:Null}"
-                GeometryFill="{lvc:SolidColorPaint Color='#C71585'}"
-                Fill="{x:Null}"
-                Values="{Binding Values}"
-                PointMeasuredCommand="{Binding PointMeasuredCommand}"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlLineSeries
+                    x:TypeArguments="vms:DataPoint, vms:ArrowGeometry"
+                    GeometrySize="50"
+                    GeometryStroke="{x:Null}"
+                    GeometryFill="{lvc:SolidColorPaint Color='#C71585'}"
+                    Fill="{x:Null}"
+                    Values="{Binding Values}"
+                    PointMeasuredCommand="{Binding PointMeasuredCommand}"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 </ContentPage>

@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-    xmlns:vms="clr-namespace:ViewModelsSamples.Box.Basic;assembly=ViewModelsSamples">
+    xmlns:vms="clr-namespace:ViewModelsSamples.Box.Basic;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
 
     <ContentPage.BindingContext>
         <vms:ViewModel/>
@@ -14,25 +15,29 @@
         LegendPosition="Right">
 
         <lvc:CartesianChart.Series>
-            <lvc:XamlBoxSeries
-                SeriesName="Year 2023"
-                Values="{Binding Values1}"/>
-            <lvc:XamlBoxSeries
-                SeriesName="Year 2024"
-                Values="{Binding Values2}"/>
-            <lvc:XamlBoxSeries
-                SeriesName="Year 2025"
-                Values="{Binding Values3}"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlBoxSeries
+                    SeriesName="Year 2023"
+                    Values="{Binding Values1}"/>
+                <lvc:XamlBoxSeries
+                    SeriesName="Year 2024"
+                    Values="{Binding Values2}"/>
+                <lvc:XamlBoxSeries
+                    SeriesName="Year 2025"
+                    Values="{Binding Values3}"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
 
         <lvc:CartesianChart.XAxes>
-            <lvc:XamlAxis
-                Labels="{Binding Labels}"
-                LabelsRotation="0"
-                SeparatorsPaint="#c8c8c8"
-                SeparatorsAtCenter="False"
-                TicksPaint="#232323"
-                TicksAtCenter="True"/>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis
+                    Labels="{Binding Labels}"
+                    LabelsRotation="0"
+                    SeparatorsPaint="#c8c8c8"
+                    SeparatorsAtCenter="False"
+                    TicksPaint="#232323"
+                    TicksAtCenter="True"/>
+            </lvc:AxesCollection>
         </lvc:CartesianChart.XAxes>
         
     </lvc:CartesianChart>

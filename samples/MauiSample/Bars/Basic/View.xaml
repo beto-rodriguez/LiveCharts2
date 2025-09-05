@@ -6,7 +6,8 @@
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
     xmlns:vms="clr-namespace:ViewModelsSamples.Bars.Basic;assembly=ViewModelsSamples"
     xmlns:col="clr-namespace:System.Collections.Generic;assembly=mscorlib"
-    xmlns:k="clr-namespace:LiveChartsCore.Kernel.Sketches;assembly=LiveChartsCore">
+    xmlns:k="clr-namespace:LiveChartsCore.Kernel.Sketches;assembly=LiveChartsCore"
+    x:DataType="vms:ViewModel">
 
     <ContentPage.BindingContext>
         <vms:ViewModel/>
@@ -15,22 +16,26 @@
     <lvc:CartesianChart LegendPosition="Right">
 
         <lvc:CartesianChart.Series>
-            <lvc:XamlColumnSeries SeriesName="Mary" Values="{Binding MaryValues}"/>
-            <lvc:XamlColumnSeries SeriesName="Ana" Values="{Binding AnaValues}"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlColumnSeries SeriesName="Mary" Values="{Binding MaryValues}"/>
+                <lvc:XamlColumnSeries SeriesName="Ana" Values="{Binding AnaValues}"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
 
         <!-- We use force to min step to show all the labels always. -->
 
         <lvc:CartesianChart.XAxes>
-            <lvc:XamlAxis
-                Labels="{Binding Labels}"
-                LabelsRotation="0"
-                SeparatorsPaint="#c8c8c8"
-                SeparatorsAtCenter="False"
-                TicksPaint="#232323"
-                TicksAtCenter="True"
-                MinStep="1"
-                ForceStepToMin="True"/>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis
+                    Labels="{Binding Labels}"
+                    LabelsRotation="0"
+                    SeparatorsPaint="#c8c8c8"
+                    SeparatorsAtCenter="False"
+                    TicksPaint="#232323"
+                    TicksAtCenter="True"
+                    MinStep="1"
+                    ForceStepToMin="True"/>
+            </lvc:AxesCollection>
         </lvc:CartesianChart.XAxes>
 
     </lvc:CartesianChart>

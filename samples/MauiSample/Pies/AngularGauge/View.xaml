@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-    xmlns:vms="clr-namespace:ViewModelsSamples.Pies.AngularGauge;assembly=ViewModelsSamples">
+    xmlns:vms="clr-namespace:ViewModelsSamples.Pies.AngularGauge;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
 
     <ContentPage.BindingContext>
         <vms:ViewModel/>
@@ -25,39 +26,39 @@
             MaxValue="100">
 
             <lvc:PieChart.Series>
+                <lvc:SeriesCollection>
+                    <lvc:XamlAngularGaugeSeries
+                        GaugeValue="60"
+                        OuterRadiusOffset="130"
+                        MaxRadialColumnWidth="20"
+                        CornerRadius="0"/>
 
-                <lvc:XamlAngularGaugeSeries
-                    GaugeValue="60"
-                    OuterRadiusOffset="130"
-                    MaxRadialColumnWidth="20"
-                    CornerRadius="0"/>
+                    <lvc:XamlAngularGaugeSeries
+                        GaugeValue="30"
+                        OuterRadiusOffset="130"
+                        MaxRadialColumnWidth="20"
+                        CornerRadius="0"/>
 
-                <lvc:XamlAngularGaugeSeries
-                    GaugeValue="30"
-                    OuterRadiusOffset="130"
-                    MaxRadialColumnWidth="20"
-                    CornerRadius="0"/>
-
-                <lvc:XamlAngularGaugeSeries
-                    GaugeValue="10"
-                    OuterRadiusOffset="130"
-                    MaxRadialColumnWidth="20"
-                    CornerRadius="0"/>
-
+                    <lvc:XamlAngularGaugeSeries
+                        GaugeValue="10"
+                        OuterRadiusOffset="130"
+                        MaxRadialColumnWidth="20"
+                        CornerRadius="0"/>
+                </lvc:SeriesCollection>
             </lvc:PieChart.Series>
 
             <lvc:PieChart.VisualElements>
+                <lvc:VisualsCollection>
+                    <lvc:XamlNeedle
+                        Width="20"
+                        Value="{Binding Value}"/>
 
-                <lvc:XamlNeedle
-                    Width="20"
-                    Value="{Binding Value}"/>
-
-                <lvc:XamlAngularTicks
-                    LabelsSize="16"
-                    LabelsOuterOffset="15"
-                    OuterOffset="65"
-                    TicksLength="20" />
-
+                    <lvc:XamlAngularTicks
+                        LabelsSize="16"
+                        LabelsOuterOffset="15"
+                        OuterOffset="65"
+                        TicksLength="20" />
+                </lvc:VisualsCollection>
             </lvc:PieChart.VisualElements>
 
         </lvc:PieChart>

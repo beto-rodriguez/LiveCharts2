@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-    xmlns:vms="clr-namespace:ViewModelsSamples.General.RealTime;assembly=ViewModelsSamples">
+    xmlns:vms="clr-namespace:ViewModelsSamples.General.RealTime;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
 
     <ContentPage.BindingContext>
         <vms:ViewModel/>
@@ -14,20 +15,24 @@
         SyncContext="{Binding Sync}">
 
         <lvc:CartesianChart.Series>
-            <lvc:XamlLineSeries
-                Values="{Binding Values}"
-                Fill="{x:Null}"
-                GeometryFill="{x:Null}"
-                GeometryStroke="{x:Null}"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlLineSeries
+                    Values="{Binding Values}"
+                    Fill="{x:Null}"
+                    GeometryFill="{x:Null}"
+                    GeometryStroke="{x:Null}"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
         
         <lvc:CartesianChart.XAxes>
-            <lvc:XamlDateTimeAxis
-                Interval="0:0:1"
-                DateFormatter="{Binding LabelsFormatter}"
-                AnimationsSpeed="0"
-                SeparatorsPaint="{lvc:SolidColorPaint Color='64B4B4B4'}"
-                CustomSeparators="{Binding Separators}"/>
+            <lvc:AxesCollection>
+                <lvc:XamlDateTimeAxis
+                    Interval="0:0:1"
+                    DateFormatter="{Binding LabelsFormatter}"
+                    AnimationsSpeed="0"
+                    SeparatorsPaint="{lvc:SolidColorPaint Color='64B4B4B4'}"
+                    CustomSeparators="{Binding Separators}"/>
+            </lvc:AxesCollection>
         </lvc:CartesianChart.XAxes>
     </lvc:CartesianChart>
 

@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-    xmlns:vms="clr-namespace:ViewModelsSamples.Axes.LabelsFormat2;assembly=ViewModelsSamples">
+    xmlns:vms="clr-namespace:ViewModelsSamples.Axes.LabelsFormat2;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
 
     <ContentPage.BindingContext>
         <vms:ViewModel/>
@@ -13,30 +14,36 @@
     <lvc:CartesianChart>
 
         <lvc:CartesianChart.Series>
-            <lvc:XamlColumnSeries
-                Values="{Binding Values1}"/>
-            <lvc:XamlColumnSeries
-                Values="{Binding Values2}"
-                Fill="{x:Null}"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlColumnSeries
+                    Values="{Binding Values1}"/>
+                <lvc:XamlColumnSeries
+                    Values="{Binding Values2}"
+                    Fill="{x:Null}"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
 
         <lvc:CartesianChart.XAxes>
-            <lvc:XamlAxis
-                AxisName="Salesman/woman"
-                Labels="{Binding Labels}"/>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis
+                    AxisName="Salesman/woman"
+                    Labels="{Binding Labels}"/>
+            </lvc:AxesCollection>
         </lvc:CartesianChart.XAxes>
 
         <lvc:CartesianChart.YAxes>
-            <lvc:XamlAxis
-                AxisName="Sales"
-                NamePadding="0,15"
-                Labeler="{Binding Labeler}"
-                LabelsPaint="{lvc:SolidColorPaint
-                    Color='#00f',
-                    FontFamily='Times New Roman',
-                    FontWeight=ExtraBold,
-                    FontWidth=Normal,
-                    FontSlant=Italic}"/>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis
+                    AxisName="Sales"
+                    NamePadding="0,15"
+                    Labeler="{Binding Labeler}"
+                    LabelsPaint="{lvc:SolidColorPaint
+                        Color='#00f',
+                        FontFamily='Times New Roman',
+                        FontWeight=ExtraBold,
+                        FontWidth=Normal,
+                        FontSlant=Italic}"/>
+            </lvc:AxesCollection>
         </lvc:CartesianChart.YAxes>
 
     </lvc:CartesianChart>
