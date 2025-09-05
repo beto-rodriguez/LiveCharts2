@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-    xmlns:vms="clr-namespace:ViewModelsSamples.General.ConditionalDraw;assembly=ViewModelsSamples">
+    xmlns:vms="clr-namespace:ViewModelsSamples.General.ConditionalDraw;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
 
     <ContentPage.BindingContext>
         <vms:ViewModel/>
@@ -13,47 +14,49 @@
     <lvc:CartesianChart TooltipPosition="Bottom">
 
         <lvc:CartesianChart.Series>
-            <lvc:XamlColumnSeries
-                ShowDataLabels="True"
-                DataLabelsSize="15"
-                Values="{Binding Values}"
-                PointMeasuredCommand="{Binding PointMeasuredCommand}">
+            <lvc:SeriesCollection>
+                <lvc:XamlColumnSeries
+                    ShowDataLabels="True"
+                    DataLabelsSize="15"
+                    Values="{Binding Values}"
+                    PointMeasuredCommand="{Binding PointMeasuredCommand}">
 
-                <!--
-                Use the AdditionalVisualStates property to define the look of the points
-                when they are in a different state
-                -->
+                    <!--
+                    Use the AdditionalVisualStates property to define the look of the points
+                    when they are in a different state
+                    -->
 
-                <lvc:XamlColumnSeries.AdditionalVisualStates>
+                    <lvc:XamlColumnSeries.AdditionalVisualStates>
 
-                    <!-- When the state is "Danger", the Fill is set to red -->
-                    <lvc:ChartPointState Name="Danger">
-                        <lvc:Set
-                            PropertyName="Fill"
-                            Value="{lvc:SolidColorPaint Color='#f00'}"/>
-                    </lvc:ChartPointState>
-
-                    <lvc:ChartPointState Name="LabelDanger">
-                        <lvc:ChartPointState.Setters>
+                        <!-- When the state is "Danger", the Fill is set to red -->
+                        <lvc:ChartPointState Name="Danger">
                             <lvc:Set
-                                PropertyName="Paint"
+                                PropertyName="Fill"
                                 Value="{lvc:SolidColorPaint Color='#f00'}"/>
+                        </lvc:ChartPointState>
+
+                        <lvc:ChartPointState Name="LabelDanger">
+                            <lvc:ChartPointState.Setters>
+                                <lvc:Set
+                                    PropertyName="Paint"
+                                    Value="{lvc:SolidColorPaint Color='#f00'}"/>
+                                <lvc:Set
+                                    PropertyName="TextSize"
+                                    Value="30"/>
+                            </lvc:ChartPointState.Setters>
+                        </lvc:ChartPointState>
+
+                        <!-- The "Hover" state is fired when the pointer is over a point-->
+                        <lvc:ChartPointState Name="Hover">
                             <lvc:Set
-                                PropertyName="TextSize"
-                                Value="30"/>
-                        </lvc:ChartPointState.Setters>
-                    </lvc:ChartPointState>
+                                PropertyName="DropShadow"
+                                Value="{lvc:Shadow '4, 16, #00f'}"/>
+                        </lvc:ChartPointState>
 
-                    <!-- The "Hover" state is fired when the pointer is over a point-->
-                    <lvc:ChartPointState Name="Hover">
-                        <lvc:Set
-                            PropertyName="DropShadow"
-                            Value="{lvc:Shadow '4, 16, #00f'}"/>
-                    </lvc:ChartPointState>
+                    </lvc:XamlColumnSeries.AdditionalVisualStates>
 
-                </lvc:XamlColumnSeries.AdditionalVisualStates>
-
-            </lvc:XamlColumnSeries>
+                </lvc:XamlColumnSeries>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
 
     </lvc:CartesianChart>

@@ -21,7 +21,10 @@ public partial class View : UserControl
         // you can add this code when the app starts to register Chinese characters: // mark
 
         LiveCharts.Configure(config =>
-            config.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('汉')));
+            config.HasTextSettings(new TextSettings()
+            {
+                DefaultTypeface = SKFontManager.Default.MatchCharacter('汉')
+            }));
 
         // You can learn more about extra settings at: // mark
         // https://livecharts.dev/docs/{{ platform }}/{{ version }}/Overview.Installation#configure-themes-fonts-or-mappers-optional // mark

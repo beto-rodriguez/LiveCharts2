@@ -5,7 +5,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:core="clr-namespace:LiveChartsCore;assembly=LiveChartsCore"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-    xmlns:vms="clr-namespace:ViewModelsSamples.General.TemplatedLegends;assembly=ViewModelsSamples">
+    xmlns:vms="clr-namespace:ViewModelsSamples.General.TemplatedLegends;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
 
     <ContentPage.BindingContext>
         <vms:ViewModel/>
@@ -18,10 +19,12 @@
         </lvc:CartesianChart.Legend>
 
         <lvc:CartesianChart.Series>
-            <lvc:XamlColumnSeries
-                SeriesName="Roger" Values="{Binding RogerValues}"/>
-            <lvc:XamlColumnSeries
-                SeriesName="Susan" Values="{Binding SusanValues}" />
+            <lvc:SeriesCollection>
+                <lvc:XamlColumnSeries
+                    SeriesName="Roger" Values="{Binding RogerValues}"/>
+                <lvc:XamlColumnSeries
+                    SeriesName="Susan" Values="{Binding SusanValues}" />
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 </ContentPage>

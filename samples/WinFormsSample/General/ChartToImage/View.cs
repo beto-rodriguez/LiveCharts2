@@ -9,7 +9,6 @@ public partial class View : UserControl
 {
     private readonly CartesianChart _cartesian;
     private readonly PieChart _pie;
-    private readonly GeoMap _map;
 
     public View()
     {

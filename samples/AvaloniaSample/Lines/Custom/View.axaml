@@ -4,7 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
     xmlns:vms="using:ViewModelsSamples.Lines.Custom"
-    xmlns:draw="using:LiveChartsCore.SkiaSharpView.Drawing.Geometries">
+    xmlns:draw="using:LiveChartsCore.SkiaSharpView.Drawing.Geometries"
+    x:DataType="vms:ViewModel">
 
     <UserControl.DataContext>
         <vms:ViewModel/>

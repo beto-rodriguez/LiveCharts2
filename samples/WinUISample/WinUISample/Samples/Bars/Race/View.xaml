@@ -14,23 +14,29 @@
 
     <lvc:CartesianChart TooltipPosition="Hidden">
         <lvc:CartesianChart.Series>
-            <lvc:XamlRowSeries
-                Values="{Binding Data}"
-                DataLabelsFormatter="{Binding LabelsFormatter}"
-                ShowDataLabels="True"
-                DataLabelsPosition="End"
-                DataLabelsTranslate="{lvc:Point Value='-1,0'}"
-                MaxBarWidth="50"
-                Padding="10"
-                PointMeasuredCommand="{Binding PointMeasuredCommand}"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlRowSeries
+                    Values="{Binding Data}"
+                    DataLabelsFormatter="{Binding LabelsFormatter}"
+                    ShowDataLabels="True"
+                    DataLabelsPosition="End"
+                    DataLabelsTranslate="{lvc:Point Value='-1,0'}"
+                    MaxBarWidth="50"
+                    Padding="10"
+                    PointMeasuredCommand="{Binding PointMeasuredCommand}"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
 
         <lvc:CartesianChart.XAxes>
-            <lvc:XamlAxis SeparatorsPaint="{lvc:SolidColorPaint Color='#dcdcdc'}"/>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis SeparatorsPaint="{lvc:SolidColorPaint Color='#dcdcdc'}"/>
+            </lvc:AxesCollection>
         </lvc:CartesianChart.XAxes>
 
         <lvc:CartesianChart.YAxes>
-            <lvc:XamlAxis IsVisible="False"/>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis IsVisible="False"/>
+            </lvc:AxesCollection>
         </lvc:CartesianChart.YAxes>
     </lvc:CartesianChart>
 

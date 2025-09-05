@@ -67,11 +67,11 @@ public partial class SourceGenCartesianChart
     static UIProperty<FindingStrategy>              findingStrategy =       new(defaultValue: d.FindingStrategy);
 
     /// <inheritdoc cref="ICartesianChartView.XAxes"/>
-    static UIProperty<ICollection<ICartesianAxis>>  xAxes =                 new(onChanged: OnObservedPropertyChanged(nameof(XAxes)));
+    static UIProperty<IEnumerable<ICartesianAxis>>  xAxes =                 new(onChanged: OnObservedPropertyChanged(nameof(XAxes)));
     /// <inheritdoc cref="ICartesianChartView.YAxes"/>
-    static UIProperty<ICollection<ICartesianAxis>>  yAxes =                 new(onChanged: OnObservedPropertyChanged(nameof(YAxes)));
+    static UIProperty<IEnumerable<ICartesianAxis>>  yAxes =                 new(onChanged: OnObservedPropertyChanged(nameof(YAxes)));
     /// <inheritdoc cref="ICartesianChartView.Sections"/>
-    static UIProperty<ICollection<IChartElement>>   sections =              new(onChanged: OnObservedPropertyChanged(nameof(Sections)));
+    static UIProperty<IEnumerable<IChartElement>>   sections =              new(onChanged: OnObservedPropertyChanged(nameof(Sections)));
     /// <inheritdoc cref="ICartesianChartView.DrawMarginFrame"/>
     static UIProperty<IChartElement?>               drawMarginFrame =       new(onChanged: OnObservedPropertyChanged(nameof(DrawMarginFrame)));
 

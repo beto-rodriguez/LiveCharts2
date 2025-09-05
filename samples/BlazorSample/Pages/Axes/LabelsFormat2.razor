@@ -11,13 +11,6 @@
 </CartesianChart>
 
 @code {
-    static LabelsFormat2()
-    {
-        // Register a font that supports Chinese characters (optional, for full compatibility)
-        LiveCharts.Configure(config =>
-            config.HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('汉')));
-    }
-
     private static double[] values1 = new double[] { 426, 583, 104 };
     private static double[] values2 = new double[] { 200, 558, 458 };
     private static string[] labels = new string[] { "王", "赵", "张" };
@@ -48,4 +41,25 @@
             LabelsPaint = new SolidColorPaint(SKColors.DarkGreen)
         }
     };
+
+    // protected override async Task OnInitializedAsync()
+    // {
+        // Register a font that supports Chinese characters (optional, for full compatibility)
+        // this must be defined when the app starts not here... this is just an example,
+        // see App.razor.cs for a better place to do this
+
+        // we need to load a font that supports Chinese characters
+        // for example the Source Han Sans CN Light.otf, that is in the wwwroot folder
+        // https://github.com/beto-rodriguez/LiveCharts2/tree/master/samples/BlazorSample
+
+        // var httpClient = new HttpClient { BaseAddress = new("https://localhost:7277") };
+        // var fontStream = await httpClient.GetStreamAsync("Source Han Sans CN Light.otf");
+        // var typeface = SKTypeface.FromStream(fontStream);
+
+        // LiveCharts.Configure(config =>
+        //     config.HasTextSettings(new TextSettings
+        //     {
+        //         DefaultTypeface = typeface
+        //     }));
+    // }
 }

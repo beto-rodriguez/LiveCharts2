@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-    xmlns:vms="clr-namespace:ViewModelsSamples.Design.LinearGradients;assembly=ViewModelsSamples">
+    xmlns:vms="clr-namespace:ViewModelsSamples.Design.LinearGradients;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
 
     <ContentPage.BindingContext>
         <vms:ViewModel/>
@@ -28,24 +29,26 @@
     
     <lvc:CartesianChart LegendPosition="Right">
         <lvc:CartesianChart.Series>
-            <lvc:XamlColumnSeries
-                SeriesName="John"
-                Values="{Binding Values1}"
-                Fill="{lvc:LinearGradientPaint
-                    Colors='#FF8C94, #DCEDC2',
-                    StartPoint='0.5, 0',
-                    EndPoint='0.5, 1'}"/>
-            <lvc:XamlLineSeries
-                SeriesName="Charles"
-                Values="{Binding Values2}"
-                GeometrySize="22"
-                Fill="{x:Null}"
-                Stroke="{lvc:LinearGradientPaint
-                    Colors='#2D4059, #FFD360',
-                    StrokeWidth=10}"
-                GeometryStroke="{lvc:LinearGradientPaint
-                    Colors='#2D4059, #FFD360',
-                    StrokeWidth=10}"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlColumnSeries
+                    SeriesName="John"
+                    Values="{Binding Values1}"
+                    Fill="{lvc:LinearGradientPaint
+                        Colors='#FF8C94, #DCEDC2',
+                        StartPoint='0.5, 0',
+                        EndPoint='0.5, 1'}"/>
+                <lvc:XamlLineSeries
+                    SeriesName="Charles"
+                    Values="{Binding Values2}"
+                    GeometrySize="22"
+                    Fill="{x:Null}"
+                    Stroke="{lvc:LinearGradientPaint
+                        Colors='#2D4059, #FFD360',
+                        StrokeWidth=10}"
+                    GeometryStroke="{lvc:LinearGradientPaint
+                        Colors='#2D4059, #FFD360',
+                        StrokeWidth=10}"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 </ContentPage>

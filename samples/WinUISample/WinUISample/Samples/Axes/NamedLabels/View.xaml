@@ -19,21 +19,27 @@
         TooltipTextSize="16">
 
         <lvc:CartesianChart.Series>
-            <lvc:XamlColumnSeries
-                SeriesName="Sales"
-                Values="{Binding Values1}"/>
-            <lvc:XamlLineSeries
-                SeriesName="Projected"
-                Values="{Binding Values2}"
-                Fill="{x:Null}"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlColumnSeries
+                    SeriesName="Sales"
+                    Values="{Binding Values1}"/>
+                <lvc:XamlLineSeries
+                    SeriesName="Projected"
+                    Values="{Binding Values2}"
+                    Fill="{x:Null}"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
 
         <lvc:CartesianChart.XAxes>
-            <lvc:XamlAxis Labels="{Binding Labels}"/>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis Labels="{Binding Labels}"/>
+            </lvc:AxesCollection>
         </lvc:CartesianChart.XAxes>
 
         <lvc:CartesianChart.YAxes>
-            <lvc:XamlAxis Labeler="{Binding Labeler}"/>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis Labeler="{Binding Labeler}"/>
+            </lvc:AxesCollection>
         </lvc:CartesianChart.YAxes>
 
     </lvc:CartesianChart>

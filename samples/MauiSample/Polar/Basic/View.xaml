@@ -5,7 +5,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
     xmlns:vms="clr-namespace:ViewModelsSamples.Polar.Basic;assembly=ViewModelsSamples"
-    xmlns:c="clr-namespace:LiveChartsCore;assembly=LiveChartsCore">
+    xmlns:c="clr-namespace:LiveChartsCore;assembly=LiveChartsCore"
+    x:DataType="vms:ViewModel">
 
     <ContentPage.BindingContext>
         <vms:ViewModel/>
@@ -22,25 +23,31 @@
         </lvc:PolarChart.Title>
 
         <lvc:PolarChart.Series>
-            <lvc:XamlPolarLineSeries
-                Values="{Binding Values}"
-                ShowDataLabels="True"
-                GeometrySize="15"
-                DataLabelsSize="8"
-                DataLabelsPosition="Middle"
-                DataLabelsRotation="{Static c:LiveCharts.CotangentAngle}"
-                IsClosed="True"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlPolarLineSeries
+                    Values="{Binding Values}"
+                    ShowDataLabels="True"
+                    GeometrySize="15"
+                    DataLabelsSize="8"
+                    DataLabelsPosition="Middle"
+                    DataLabelsRotation="{Static c:LiveCharts.CotangentAngle}"
+                    IsClosed="True"/>
+            </lvc:SeriesCollection>
         </lvc:PolarChart.Series>
 
         <lvc:PolarChart.RadiusAxes>
-            <lvc:XamlPolarAxis
-                LabelsAngle="-60"
-                MaxLimit="30"/>
+            <lvc:PolarAxesCollection>
+                <lvc:XamlPolarAxis
+                    LabelsAngle="-60"
+                    MaxLimit="30"/>
+            </lvc:PolarAxesCollection>
         </lvc:PolarChart.RadiusAxes>
 
         <lvc:PolarChart.AngleAxes>
-            <lvc:XamlPolarAxis
-                LabelsRotation="{Static c:LiveCharts.TangentAngle}"/>
+            <lvc:PolarAxesCollection>
+                <lvc:XamlPolarAxis
+                    LabelsRotation="{Static c:LiveCharts.TangentAngle}"/>
+            </lvc:PolarAxesCollection>
         </lvc:PolarChart.AngleAxes>
 
     </lvc:PolarChart>

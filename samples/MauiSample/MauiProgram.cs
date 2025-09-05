@@ -15,8 +15,8 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         _ = builder
             .UseSkiaSharp()
-            .UseLiveCharts(config => // mark
-                config.AddLiveChartsAppSettings()) // mark
+            .UseLiveCharts(c => c // mark
+                .AddLiveChartsAppSettings()) // mark
             .UseMauiApp<App>()
             .ConfigureFonts(fonts =>
             {

@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-    xmlns:vms="clr-namespace:ViewModelsSamples.Axes.MatchScale;assembly=ViewModelsSamples">
+    xmlns:vms="clr-namespace:ViewModelsSamples.Axes.MatchScale;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
 
     <ContentPage.BindingContext>
         <vms:ViewModel/>
@@ -17,12 +18,14 @@
         TooltipPosition="Hidden">
 
         <lvc:CartesianChart.Series>
-            <lvc:XamlLineSeries
-                Values="{Binding Values}"
-                Stroke="{lvc:SolidColorPaint Color='#2196f3', StrokeWidth=4}"
-                Fill="{x:Null}"
-                GeometryStroke="{x:Null}"
-                GeometryFill="{x:Null}"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlLineSeries
+                    Values="{Binding Values}"
+                    Stroke="{lvc:SolidColorPaint Color='#2196f3', StrokeWidth=4}"
+                    Fill="{x:Null}"
+                    GeometryStroke="{x:Null}"
+                    GeometryFill="{x:Null}"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
 
         <!--
@@ -32,19 +35,23 @@
         -->
 
         <lvc:CartesianChart.XAxes>
-            <lvc:XamlAxis
-                AxisName="XAxis"
-                SeparatorsPaint="#64b4b4b4"
-                MinStep="0.1"
-                ForceStepToMin="True"/>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis
+                    AxisName="XAxis"
+                    SeparatorsPaint="#64b4b4b4"
+                    MinStep="0.1"
+                    ForceStepToMin="True"/>
+            </lvc:AxesCollection>
         </lvc:CartesianChart.XAxes>
 
         <lvc:CartesianChart.YAxes>
-            <lvc:XamlAxis
-                AxisName="YAxis"
-                SeparatorsPaint="#64b4b4b4"
-                MinStep="0.1"
-                ForceStepToMin="True"/>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis
+                    AxisName="YAxis"
+                    SeparatorsPaint="#64b4b4b4"
+                    MinStep="0.1"
+                    ForceStepToMin="True"/>
+            </lvc:AxesCollection>
         </lvc:CartesianChart.YAxes>
 
     </lvc:CartesianChart>

@@ -117,13 +117,13 @@ public partial class View : UserControl
         thumb.Xj = x.MaxLimit;
     }
 
-    private void CartesianChart2_MouseDown(object? sender, MouseEventArgs e) =>
+    private void CartesianChart2_MouseDown(object sender, MouseEventArgs e) =>
         _isDown = true;
 
-    private void CartesianChart2_MouseUp(object? sender, MouseEventArgs e) =>
+    private void CartesianChart2_MouseUp(object sender, MouseEventArgs e) =>
     _isDown = false;
 
-    private void CartesianChart2_MouseMove(object? sender, MouseEventArgs e)
+    private void CartesianChart2_MouseMove(object sender, MouseEventArgs e)
     {
         if (!_isDown) return;
 

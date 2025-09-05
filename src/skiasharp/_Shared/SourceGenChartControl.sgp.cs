@@ -150,9 +150,9 @@ public partial class SourceGenChart
     /// <inheritdoc cref="IChartView.Title"/>
     static UIProperty<IChartElement?>             title                   = new(onChanged: OnObservedPropertyChanged(nameof(Title)));
     /// <inheritdoc cref="IChartView.VisualElements"/>
-    static UIProperty<ICollection<IChartElement>> visualElements          = new(onChanged: OnObservedPropertyChanged(nameof(VisualElements)));
+    static UIProperty<IEnumerable<IChartElement>> visualElements          = new(onChanged: OnObservedPropertyChanged(nameof(VisualElements)));
     /// <inheritdoc cref="IChartView.Series"/>
-    static UIProperty<ICollection<ISeries>>       series                  = new(onChanged: OnObservedPropertyChanged(nameof(Series)));
+    static UIProperty<IEnumerable<ISeries>>       series                  = new(onChanged: OnObservedPropertyChanged(nameof(Series)));
 
 #if XAML_LVC
     // templates are only supported in xaml (Avalonia, Maui, Uno, WinUI and WPF).

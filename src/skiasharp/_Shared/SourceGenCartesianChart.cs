@@ -28,9 +28,9 @@ using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Kernel.Sketches;
 
 #if SKIA_IMAGE_LVC
-using ChartControl = LiveChartsGeneratedCode.SourceGenSKChart;
+using SGChart = LiveChartsGeneratedCode.SourceGenSKChart;
 #else
-using ChartControl = LiveChartsGeneratedCode.SourceGenChart;
+using SGChart = LiveChartsGeneratedCode.SourceGenChart;
 #endif
 
 namespace LiveChartsGeneratedCode;
@@ -65,11 +65,11 @@ public partial class SourceGenCartesianChart : SourceGenChart, ICartesianChartVi
     public LvcPointD ScaleDataToPixels(LvcPointD point, int xAxisIndex = 0, int yAxisIndex = 0)
         => ((CartesianChartEngine)CoreChart).ScaleDataToPixels(point, xAxisIndex, yAxisIndex);
 
-    /// <inheritdoc cref="SourceGenChart.CreateCoreChart"/>
+    /// <inheritdoc cref="SGChart.CreateCoreChart"/>
     protected override Chart CreateCoreChart() =>
         new CartesianChartEngine(this, CoreCanvas);
 
-    /// <inheritdoc cref="SourceGenChart.ConfigureObserver(ChartObserver)"/>
+    /// <inheritdoc cref="SGChart.ConfigureObserver(ChartObserver)"/>
     protected override ChartObserver ConfigureObserver(ChartObserver observe)
     {
         return base.ConfigureObserver(observe)
@@ -79,7 +79,7 @@ public partial class SourceGenCartesianChart : SourceGenChart, ICartesianChartVi
             .Property(nameof(DrawMarginFrame), () => DrawMarginFrame);
     }
 
-    /// <inheritdoc cref="SourceGenChart.InitializeObservedProperties"/>
+    /// <inheritdoc cref="SGChart.InitializeObservedProperties"/>
     protected override void InitializeObservedProperties()
     {
         XAxes = new ObservableCollection<ICartesianAxis>();

@@ -20,7 +20,7 @@
     private Axis[] yAxes;
     private Random _r = new Random();
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         _series = new RowSeries<PilotInfo>
         {
@@ -28,7 +28,7 @@
             DataLabelsTranslate = new LiveChartsCore.Drawing.LvcPoint(-1, 0),
             DataLabelsPaint = new SolidColorPaint(SKColors.Black),
             DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.End,
-            DataLabelsFormatter = point => ((PilotInfo)point.Context.DataSource).Name,
+            DataLabelsFormatter = point => ((PilotInfo)point.Context.DataSource!).Name,
         };
         _series.PointMeasured += OnPointMeasured;
         series = new ISeries[] { _series };
@@ -41,7 +41,7 @@
         await Task.Delay(1000);
         while (true)
         {
-            foreach (var item in _series.Values)
+            foreach (var item in _series.Values!)
                 item.Value += _r.Next(0, 100);
             _series.Values = _series.Values.OrderBy(x => x.Value).ToList();
             await InvokeAsync(StateHasChanged);
@@ -51,7 +51,7 @@
 
     private void OnPointMeasured(ChartPoint point)
     {
-        var pilot = (PilotInfo)point.Context.DataSource;
+        var pilot = (PilotInfo)point.Context.DataSource!;
         if (point.Context.Visual is null || pilot is null) return;
         point.Context.Visual.Fill = pilot.Paint;
     }

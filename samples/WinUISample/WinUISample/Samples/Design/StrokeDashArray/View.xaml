@@ -14,23 +14,24 @@
 
     <lvc:CartesianChart>
         <lvc:CartesianChart.Series>
-            <lvc:XamlLineSeries
-                Values="{Binding Values}"
-                LineSmoothness="1"
-                GeometrySize="22"
+            <lvc:SeriesCollection>
+                <lvc:XamlLineSeries
+                    Values="{Binding Values}"
+                    LineSmoothness="1"
+                    GeometrySize="22"
+                    
+                    Fill="{x:Null}"/>
+
+                <!--
+                Nested extensions are not working in Uno
                 
-                Fill="{x:Null}"/>
-
-            <!--
-            Nested extensions are not working in Uno
-            
-            Stroke="{lvc:SolidColorPaint
-                Color='#6495ED',
-                StrokeCap=Round,
-                StrokeWidth=10,
-                PathEffect={lvc:Dashed Array='30, 20'}}"
-            -->
-
+                Stroke="{lvc:SolidColorPaint
+                    Color='#6495ED',
+                    StrokeCap=Round,
+                    StrokeWidth=10,
+                    PathEffect={lvc:Dashed Array='30, 20'}}"
+                -->
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 </UserControl>

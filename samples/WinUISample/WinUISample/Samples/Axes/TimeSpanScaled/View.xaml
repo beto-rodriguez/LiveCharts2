@@ -14,7 +14,9 @@
     <lvc:CartesianChart>
 
         <lvc:CartesianChart.Series>
-            <lvc:XamlColumnSeries Values="{Binding Values}"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlColumnSeries Values="{Binding Values}"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
 
         <!--
@@ -25,9 +27,11 @@
         -->
 
         <lvc:CartesianChart.XAxes>
-            <lvc:XamlTimeSpanAxis
-                Interval="0:0:0.001"
-                TimeFormatter="{Binding Formatter}"/>
+            <lvc:AxesCollection>
+                <lvc:XamlTimeSpanAxis
+                    Interval="0:0:0.001"
+                    TimeFormatter="{Binding Formatter}"/>
+            </lvc:AxesCollection>
         </lvc:CartesianChart.XAxes>
         
     </lvc:CartesianChart>

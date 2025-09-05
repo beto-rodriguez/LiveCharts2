@@ -17,8 +17,10 @@
         PointerPressedCommand="{Binding PressedCommand}"
         HoveredPointsChangedCommand="{Binding HoveredPointsChangedCommand}">
         <lvc:CartesianChart.Series>
-            <lvc:XamlColumnSeries Values="{Binding Values1}" Stroke="{lvc:SolidColorPaint Color='#00000000'}"/>
-            <lvc:XamlColumnSeries Values="{Binding Values2}" Stroke="{lvc:SolidColorPaint Color='#00000000'}"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlColumnSeries Values="{Binding Values1}" Stroke="{lvc:SolidColorPaint Color='#00000000'}"/>
+                <lvc:XamlColumnSeries Values="{Binding Values2}" Stroke="{lvc:SolidColorPaint Color='#00000000'}"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 

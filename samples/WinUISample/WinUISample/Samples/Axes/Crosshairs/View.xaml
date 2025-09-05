@@ -15,24 +15,30 @@
     <lvc:CartesianChart>
 
         <lvc:CartesianChart.Series>
-            <lvc:XamlLineSeries Values="{Binding Values}" />
+            <lvc:SeriesCollection>
+                <lvc:XamlLineSeries Values="{Binding Values}" />
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
 
         <lvc:CartesianChart.XAxes>
-            <lvc:XamlAxis
-                CrosshairLabelsBackground="{lvc:Color Hex='#FF8C00'}"
-                CrosshairLabelsPaint="{lvc:SolidColorPaint Color='#8B0000'}"
-                CrosshairPaint="{lvc:SolidColorPaint Color='#FF8C00'}"
-                Labeler="{Binding LabelFormatter}"/>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis
+                    CrosshairLabelsBackground="{lvc:Color Hex='#FF8C00'}"
+                    CrosshairLabelsPaint="{lvc:SolidColorPaint Color='#8B0000'}"
+                    CrosshairPaint="{lvc:SolidColorPaint Color='#FF8C00'}"
+                    Labeler="{Binding LabelFormatter}"/>
+            </lvc:AxesCollection>
         </lvc:CartesianChart.XAxes>
 
         <lvc:CartesianChart.YAxes>
-            <lvc:XamlAxis
-                CrosshairLabelsBackground="{lvc:Color Hex='#FF8C00'}"
-                CrosshairLabelsPaint="{lvc:SolidColorPaint Color='#8B0000'}"
-                CrosshairPaint="{lvc:SolidColorPaint Color='#FF8C00'}"
-                CrosshairSnapEnabled="True"
-                Labeler="{Binding LabelFormatter}"/>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis
+                    CrosshairLabelsBackground="{lvc:Color Hex='#FF8C00'}"
+                    CrosshairLabelsPaint="{lvc:SolidColorPaint Color='#8B0000'}"
+                    CrosshairPaint="{lvc:SolidColorPaint Color='#FF8C00'}"
+                    CrosshairSnapEnabled="True"
+                    Labeler="{Binding LabelFormatter}"/>
+            </lvc:AxesCollection>
         </lvc:CartesianChart.YAxes>
 
     </lvc:CartesianChart>

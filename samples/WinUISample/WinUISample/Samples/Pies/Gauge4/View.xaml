@@ -20,41 +20,43 @@
         MinValue="0"
         MaxValue="100">
         <lvc:PieChart.Series>
-            <!--
-            The main gauge series for Vanessa.
-            -->
-            <lvc:XamlGaugeSeries
-                GaugeValue="{Binding Vanesa}"
-                SeriesName="Vanessa"
-                DataLabelsSize="20"
-                DataLabelsPosition="End"
-                DataLabelsFormatter="{Binding Formatter}"
-                InnerRadius="20"
-                MaxRadialColumnWidth="5"/>
-            <!--
-            The main gauge series for Charles.
-            -->
-            <lvc:XamlGaugeSeries
-                GaugeValue="{Binding Charles}"
-                SeriesName="Charles"
-                DataLabelsSize="20"
-                DataLabelsPosition="End"
-                DataLabelsFormatter="{Binding Formatter}"
-                InnerRadius="20"
-                MaxRadialColumnWidth="5"/>
-            <!--
-            The main gauge series for Ana.
-            -->
-            <lvc:XamlGaugeSeries
-                GaugeValue="{Binding Ana}"
-                SeriesName="Ana"
-                DataLabelsSize="20"
-                DataLabelsPosition="End"
-                DataLabelsFormatter="{Binding Formatter}"
-                InnerRadius="20"
-                MaxRadialColumnWidth="5"/>
-            <!-- The background series is used to style the gauge background. -->
-            <lvc:XamlGaugeBackgroundSeries Fill="{x:Null}"/>
+            <lvc:SeriesCollection>
+                <!--
+                The main gauge series for Vanessa.
+                -->
+                <lvc:XamlGaugeSeries
+                    GaugeValue="{Binding Vanesa}"
+                    SeriesName="Vanessa"
+                    DataLabelsSize="20"
+                    DataLabelsPosition="End"
+                    DataLabelsFormatter="{Binding Formatter}"
+                    InnerRadius="20"
+                    MaxRadialColumnWidth="5"/>
+                <!--
+                The main gauge series for Charles.
+                -->
+                <lvc:XamlGaugeSeries
+                    GaugeValue="{Binding Charles}"
+                    SeriesName="Charles"
+                    DataLabelsSize="20"
+                    DataLabelsPosition="End"
+                    DataLabelsFormatter="{Binding Formatter}"
+                    InnerRadius="20"
+                    MaxRadialColumnWidth="5"/>
+                <!--
+                The main gauge series for Ana.
+                -->
+                <lvc:XamlGaugeSeries
+                    GaugeValue="{Binding Ana}"
+                    SeriesName="Ana"
+                    DataLabelsSize="20"
+                    DataLabelsPosition="End"
+                    DataLabelsFormatter="{Binding Formatter}"
+                    InnerRadius="20"
+                    MaxRadialColumnWidth="5"/>
+                <!-- The background series is used to style the gauge background. -->
+                <lvc:XamlGaugeBackgroundSeries Fill="{x:Null}"/>
+            </lvc:SeriesCollection>
         </lvc:PieChart.Series>
     </lvc:PieChart>
 

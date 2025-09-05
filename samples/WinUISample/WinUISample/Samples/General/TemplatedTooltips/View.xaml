@@ -18,8 +18,10 @@
             <vms:CustomTooltip></vms:CustomTooltip>
         </lvc:CartesianChart.Tooltip>
         <lvc:CartesianChart.Series>
-            <local:CustomGeometryPointColumnSeries
-                    Values="{Binding Values}"/>
+            <lvc:SeriesCollection>
+                <local:CustomGeometryPointColumnSeries
+                        Values="{Binding Values}"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 

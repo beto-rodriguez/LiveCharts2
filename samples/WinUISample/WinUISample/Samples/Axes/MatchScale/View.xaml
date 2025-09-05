@@ -25,12 +25,14 @@
         -->
 
         <lvc:CartesianChart.Series>
-            <lvc:XamlLineSeries
-                Values="{Binding Values}"
-                Stroke="{lvc:SolidColorPaint Color='#2196f3', StrokeWidth=4}"
-                Fill="{x:Null}"
-                GeometryStroke="{x:Null}"
-                GeometryFill="{x:Null}"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlLineSeries
+                    Values="{Binding Values}"
+                    Stroke="{lvc:SolidColorPaint Color='#2196f3', StrokeWidth=4}"
+                    Fill="{x:Null}"
+                    GeometryStroke="{x:Null}"
+                    GeometryFill="{x:Null}"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
 
         <!--
@@ -40,19 +42,23 @@
         -->
 
         <lvc:CartesianChart.XAxes>
-            <lvc:XamlAxis
-                AxisName="XAxis"
-                SeparatorsPaint="{lvc:SolidColorPaint Color='#64b4b4b4'}"
-                MinStep="0.1"
-                ForceStepToMin="True"/>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis
+                    AxisName="XAxis"
+                    SeparatorsPaint="{lvc:SolidColorPaint Color='#64b4b4b4'}"
+                    MinStep="0.1"
+                    ForceStepToMin="True"/>
+            </lvc:AxesCollection>
         </lvc:CartesianChart.XAxes>
 
         <lvc:CartesianChart.YAxes>
-            <lvc:XamlAxis
-                AxisName="YAxis"
-                SeparatorsPaint="{lvc:SolidColorPaint Color='#64b4b4b4'}"
-                MinStep="0.1"
-                ForceStepToMin="True"/>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis
+                    AxisName="YAxis"
+                    SeparatorsPaint="{lvc:SolidColorPaint Color='#64b4b4b4'}"
+                    MinStep="0.1"
+                    ForceStepToMin="True"/>
+            </lvc:AxesCollection>
         </lvc:CartesianChart.YAxes>
 
     </lvc:CartesianChart>

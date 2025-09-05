@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-    xmlns:vms="clr-namespace:ViewModelsSamples.General.MultiThreading;assembly=ViewModelsSamples">
+    xmlns:vms="clr-namespace:ViewModelsSamples.General.MultiThreading;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
 
     <ContentPage.BindingContext>
         <vms:ViewModel/>
@@ -13,11 +14,13 @@
     <lvc:CartesianChart
         SyncContext="{Binding Sync}">
         <lvc:CartesianChart.Series>
-            <lvc:XamlLineSeries
-                Values="{Binding Values}"
-                GeometryFill="{x:Null}"
-                GeometryStroke="{x:Null}"
-                LineSmoothness="0"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlLineSeries
+                    Values="{Binding Values}"
+                    GeometryFill="{x:Null}"
+                    GeometryStroke="{x:Null}"
+                    LineSmoothness="0"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 

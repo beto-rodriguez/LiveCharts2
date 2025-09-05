@@ -15,18 +15,22 @@
     <lvc:CartesianChart>
 
         <lvc:CartesianChart.Series>
-            <lvc:XamlLineSeries Values="{Binding Values}"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlLineSeries Values="{Binding Values}"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
 
         <!--
         CustomSeparators allows you to define the exact values where separators will be drawn.
         -->
         <lvc:CartesianChart.YAxes>
-            <lvc:XamlAxis
-                CustomSeparators="{Binding CustomSeparators}"
-                MinLimit="0"
-                MaxLimit="100"
-                SeparatorsPaint="{lvc:SolidColorPaint Color='#64b4b4b4'}"/>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis
+                    CustomSeparators="{Binding CustomSeparators}"
+                    MinLimit="0"
+                    MaxLimit="100"
+                    SeparatorsPaint="{lvc:SolidColorPaint Color='#64b4b4b4'}"/>
+            </lvc:AxesCollection>
         </lvc:CartesianChart.YAxes>
 
     </lvc:CartesianChart>

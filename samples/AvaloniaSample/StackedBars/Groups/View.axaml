@@ -1,8 +1,10 @@
-<UserControl x:Class="AvaloniaSample.StackedBars.Groups.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.StackedBars.Groups">
+<UserControl
+    x:Class="AvaloniaSample.StackedBars.Groups.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.StackedBars.Groups"
+    x:DataType="vms:ViewModel">
 
   <UserControl.DataContext>
     <vms:ViewModel/>

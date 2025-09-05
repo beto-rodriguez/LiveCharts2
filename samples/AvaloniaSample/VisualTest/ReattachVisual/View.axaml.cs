@@ -15,10 +15,10 @@ public partial class View : UserControl
 
     private void OnToggleAttach(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        var parent = this.FindControl<Grid>("parent");
-        var chart = this.FindControl<CartesianChart>("chart");
-        var pieChart = this.FindControl<PieChart>("pieChart");
-        var polarChart = this.FindControl<PolarChart>("polarChart");
+        var parent = this.FindControl<Grid>("parent")!;
+        var chart = this.FindControl<CartesianChart>("chart")!;
+        var pieChart = this.FindControl<PieChart>("pieChart")!;
+        var polarChart = this.FindControl<PolarChart>("polarChart")!;
 
         if (_isInVisualTree)
         {

@@ -19,13 +19,15 @@ public partial class View : UserControl
         InitializeComponent();
         Size = new System.Drawing.Size(100, 100);
 
+        var seriesCollection = new ObservableCollection<ISeries>
+        {
+            new PieSeries<int>{ Values= Fetch() },
+            new PieSeries<int>{ Values= Fetch() },
+        };
+
         _piechart = new PieChart
         {
-            Series = new ObservableCollection<ISeries>()
-            {
-                new PieSeries<int>{ Values= Fetch() },
-                new PieSeries<int>{ Values= Fetch() },
-            },
+            Series = seriesCollection,
             Location = new System.Drawing.Point(0, 50),
             Size = new System.Drawing.Size(100, 50),
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom
@@ -34,11 +36,11 @@ public partial class View : UserControl
         Controls.Add(_piechart);
 
         var b1 = new Button { Text = "Add series", Location = new System.Drawing.Point(0, 0) };
-        b1.Click += (sender, e) => _piechart.Series.Add(new PieSeries<int> { Values = Fetch() });
+        b1.Click += (sender, e) => seriesCollection.Add(new PieSeries<int> { Values = Fetch() });
         Controls.Add(b1);
 
         var b2 = new Button { Text = "Remove series", Location = new System.Drawing.Point(80, 0) };
-        b2.Click += (sender, e) => _piechart.Series.Remove(_piechart.Series.First());
+        b2.Click += (sender, e) => seriesCollection.Remove(_piechart.Series.First());
         Controls.Add(b2);
 
         var b3 = new Button { Text = "Update all", Location = new System.Drawing.Point(160, 0) };

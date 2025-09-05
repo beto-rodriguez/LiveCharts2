@@ -67,9 +67,9 @@ public partial class SourceGenPolarChart : SourceGenChart, IPolarChartView
     static UIProperty<double>                         initialRotation     = new(defaultValue: d.PolarInitialRotation);
 
     /// <inheritdoc cref="IPolarChartView.AngleAxes"/>
-    static UIProperty<ICollection<IPolarAxis>>        angleAxes           = new(onChanged: OnObservedPropertyChanged(nameof(AngleAxes)));
+    static UIProperty<IEnumerable<IPolarAxis>>        angleAxes           = new(onChanged: OnObservedPropertyChanged(nameof(AngleAxes)));
     /// <inheritdoc cref="IPolarChartView.RadiusAxes"/>
-    static UIProperty<ICollection<IPolarAxis>>        radiusAxes          = new(onChanged: OnObservedPropertyChanged(nameof(RadiusAxes)));
+    static UIProperty<IEnumerable<IPolarAxis>>        radiusAxes          = new(onChanged: OnObservedPropertyChanged(nameof(RadiusAxes)));
 
 #if AVALONIA_LVC
     /// <inheritdoc />

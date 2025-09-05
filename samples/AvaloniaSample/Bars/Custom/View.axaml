@@ -5,7 +5,8 @@
     xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
     xmlns:vms="using:ViewModelsSamples.Bars.Custom"
     xmlns:draw="using:LiveChartsCore.SkiaSharpView.Drawing.Geometries"
-    xmlns:local="using:ViewModelsSamples.Bars.Custom">
+    xmlns:local="using:ViewModelsSamples.Bars.Custom"
+    x:DataType="vms:ViewModel">
 
     <UserControl.DataContext>
         <vms:ViewModel/>

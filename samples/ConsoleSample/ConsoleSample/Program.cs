@@ -1,5 +1,6 @@
 ﻿using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.SkiaSharpView.VisualElements;
@@ -13,13 +14,14 @@ var cartesianChart = new SKCartesianChart
         new LineSeries<int> { Values = [1, 5, 4, 6] },
         new ColumnSeries<int> { Values = [4, 8, 2, 4] }
     ],
-    Title = new LabelVisual
-    {
-        Text = "Hello LiveCharts",
-        TextSize = 30,
-        Padding = new Padding(15),
-        Paint = new SolidColorPaint(0xff303030)
-    },
+    Title = new DrawnLabelVisual(
+        new LabelGeometry
+        {
+            Text = "Hello LiveCharts",
+            TextSize = 30,
+            Padding = new Padding(15),
+            Paint = new SolidColorPaint(0xff303030)
+        }),
     LegendPosition = LiveChartsCore.Measure.LegendPosition.Right,
     Background = SKColors.White
 };

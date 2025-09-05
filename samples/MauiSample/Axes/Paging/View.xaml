@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-    xmlns:vms="clr-namespace:ViewModelsSamples.Axes.Paging;assembly=ViewModelsSamples">
+    xmlns:vms="clr-namespace:ViewModelsSamples.Axes.Paging;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
 
     <ContentPage.BindingContext>
         <vms:ViewModel/>
@@ -23,13 +24,17 @@
             ZoomMode="X">
 
             <lvc:CartesianChart.Series>
-                <lvc:XamlColumnSeries Values="{Binding Values}"/>
+                <lvc:SeriesCollection>
+                    <lvc:XamlColumnSeries Values="{Binding Values}"/>
+                </lvc:SeriesCollection>
             </lvc:CartesianChart.Series>
 
             <lvc:CartesianChart.XAxes>
-                <lvc:XamlAxis
-                    MinLimit="{Binding MinLimit}"
-                    MaxLimit="{Binding MaxLimit}"/>
+                <lvc:AxesCollection>
+                    <lvc:XamlAxis
+                        MinLimit="{Binding MinLimit}"
+                        MaxLimit="{Binding MaxLimit}"/>
+                </lvc:AxesCollection>
             </lvc:CartesianChart.XAxes>
             
         </lvc:CartesianChart>

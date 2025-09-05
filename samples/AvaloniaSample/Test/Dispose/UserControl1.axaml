@@ -2,7 +2,9 @@
              xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Test.Dispose">
+             xmlns:vms="using:ViewModelsSamples.Test.Dispose"
+             x:DataType="vms:ViewModel">
+    
     <UserControl.DataContext>
         <vms:ViewModel></vms:ViewModel>
     </UserControl.DataContext>

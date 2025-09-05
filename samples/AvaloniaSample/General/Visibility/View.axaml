@@ -3,7 +3,8 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-    xmlns:vms="using:ViewModelsSamples.General.Visibility">
+    xmlns:vms="using:ViewModelsSamples.General.Visibility"
+    x:DataType="vms:ViewModel">
 
     <UserControl.DataContext>
         <vms:ViewModel/>
@@ -17,7 +18,7 @@
         </StackPanel>
         <lvc:CartesianChart Grid.Row="1" SeriesSource="{Binding Data}">
             <lvc:CartesianChart.SeriesTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="vms:PlotData">
                     <lvc:XamlColumnSeries
                         Values="{Binding Values}"
                         IsVisible="{Binding IsVisible}"/>

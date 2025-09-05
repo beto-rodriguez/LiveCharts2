@@ -25,20 +25,22 @@
             MaxAngle="270"
             LegendPosition="Bottom">
             <lvc:PieChart.Series>
-                <!--
-                The main gauge series for North.
-                -->
-                <lvc:XamlGaugeSeries
-                    SeriesName="North"
-                    GaugeValue="{Binding Value1}"
-                    DataLabelsPosition="Start"/>
-                <!--
-                The main gauge series for South.
-                -->
-                <lvc:XamlGaugeSeries
-                    SeriesName="South"
-                    GaugeValue="{Binding Value2}"
-                    DataLabelsPosition="Start"/>
+                <lvc:SeriesCollection>
+                    <!--
+                    The main gauge series for North.
+                    -->
+                    <lvc:XamlGaugeSeries
+                        SeriesName="North"
+                        GaugeValue="{Binding Value1}"
+                        DataLabelsPosition="Start"/>
+                    <!--
+                    The main gauge series for South.
+                    -->
+                    <lvc:XamlGaugeSeries
+                        SeriesName="South"
+                        GaugeValue="{Binding Value2}"
+                        DataLabelsPosition="Start"/>
+                </lvc:SeriesCollection>
             </lvc:PieChart.Series>
         </lvc:PieChart>
     </Grid>

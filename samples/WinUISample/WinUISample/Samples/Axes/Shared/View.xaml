@@ -53,7 +53,9 @@
             ZoomMode="X">
 
             <lvc:CartesianChart.Series>
-                <lvc:XamlLineSeries Values="{Binding Values1}"/>
+                <lvc:SeriesCollection>
+                    <lvc:XamlLineSeries Values="{Binding Values1}"/>
+                </lvc:SeriesCollection>
             </lvc:CartesianChart.Series>
 
         </lvc:CartesianChart>
@@ -65,7 +67,9 @@
             ZoomMode="X">
 
             <lvc:CartesianChart.Series>
-                <lvc:XamlColumnSeries Values="{Binding Values2}"/>
+                <lvc:SeriesCollection>
+                    <lvc:XamlColumnSeries Values="{Binding Values2}"/>
+                </lvc:SeriesCollection>
             </lvc:CartesianChart.Series>
 
         </lvc:CartesianChart>

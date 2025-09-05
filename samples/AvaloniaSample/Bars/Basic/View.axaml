@@ -3,7 +3,8 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
-    xmlns:vms="clr-namespace:ViewModelsSamples.Bars.Basic;assembly=ViewModelsSamples">
+    xmlns:vms="clr-namespace:ViewModelsSamples.Bars.Basic;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
 
     <UserControl.DataContext>
         <vms:ViewModel/>

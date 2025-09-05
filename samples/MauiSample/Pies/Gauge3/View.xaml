@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-    xmlns:vms="clr-namespace:ViewModelsSamples.Pies.Gauge3;assembly=ViewModelsSamples">
+    xmlns:vms="clr-namespace:ViewModelsSamples.Pies.Gauge3;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
 
     <ContentPage.BindingContext>
         <vms:ViewModel/>
@@ -17,36 +18,37 @@
         MaxValue="100">
 
         <lvc:PieChart.Series>
-            <lvc:XamlGaugeSeries
-                GaugeValue="{Binding Vanesa}"
-                SeriesName="Vanesa"
-                DataLabelsFormatter="{Binding LabelFormatter}"
-                DataLabelsPosition="Start"
-                InnerRadius="20"
-                RelativeOuterRadius="8"
-                RelativeInnerRadius="8"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlGaugeSeries
+                    GaugeValue="{Binding Vanesa}"
+                    SeriesName="Vanesa"
+                    DataLabelsFormatter="{Binding LabelFormatter}"
+                    DataLabelsPosition="Start"
+                    InnerRadius="20"
+                    RelativeOuterRadius="8"
+                    RelativeInnerRadius="8"/>
 
-            <lvc:XamlGaugeSeries
-                GaugeValue="{Binding Charles}"
-                SeriesName="Charles"
-                DataLabelsFormatter="{Binding LabelFormatter}"
-                DataLabelsPosition="Start"
-                InnerRadius="20"
-                RelativeOuterRadius="8"
-                RelativeInnerRadius="8"/>
+                <lvc:XamlGaugeSeries
+                    GaugeValue="{Binding Charles}"
+                    SeriesName="Charles"
+                    DataLabelsFormatter="{Binding LabelFormatter}"
+                    DataLabelsPosition="Start"
+                    InnerRadius="20"
+                    RelativeOuterRadius="8"
+                    RelativeInnerRadius="8"/>
 
-            <lvc:XamlGaugeSeries
-                GaugeValue="{Binding Ana}"
-                SeriesName="Ana"
-                DataLabelsFormatter="{Binding LabelFormatter}"
-                DataLabelsPosition="Start"
-                InnerRadius="20"
-                RelativeOuterRadius="8"
-                RelativeInnerRadius="8"/>
+                <lvc:XamlGaugeSeries
+                    GaugeValue="{Binding Ana}"
+                    SeriesName="Ana"
+                    DataLabelsFormatter="{Binding LabelFormatter}"
+                    DataLabelsPosition="Start"
+                    InnerRadius="20"
+                    RelativeOuterRadius="8"
+                    RelativeInnerRadius="8"/>
 
-            <!-- The background series is used to style the gauge background. -->
-            <lvc:XamlGaugeBackgroundSeries InnerRadius="20"/>
-
+                <!-- The background series is used to style the gauge background. -->
+                <lvc:XamlGaugeBackgroundSeries InnerRadius="20"/>
+            </lvc:SeriesCollection>
         </lvc:PieChart.Series>
 
     </lvc:PieChart>

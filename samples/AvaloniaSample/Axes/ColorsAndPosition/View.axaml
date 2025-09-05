@@ -4,7 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
     xmlns:vms="using:ViewModelsSamples.Axes.ColorsAndPosition"
-    xmlns:local="using:AvaloniaSample.Axes.ColorsAndPosition">
+    xmlns:local="using:AvaloniaSample.Axes.ColorsAndPosition"
+    x:DataType="vms:ViewModel">
 
     <UserControl.DataContext>
         <vms:ViewModel/>

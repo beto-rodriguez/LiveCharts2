@@ -23,31 +23,35 @@
             MinValue="0"
             MaxValue="100">
             <lvc:PieChart.Series>
-                <lvc:XamlAngularGaugeSeries
-                    GaugeValue="60"
-                    OuterRadiusOffset="130"
-                    MaxRadialColumnWidth="20"
-                    CornerRadius="0"/>
-                <lvc:XamlAngularGaugeSeries
-                    GaugeValue="30"
-                    OuterRadiusOffset="130"
-                    MaxRadialColumnWidth="20"
-                    CornerRadius="0"/>
-                <lvc:XamlAngularGaugeSeries
-                    GaugeValue="10"
-                    OuterRadiusOffset="130"
-                    MaxRadialColumnWidth="20"
-                    CornerRadius="0"/>
+                <lvc:SeriesCollection>
+                    <lvc:XamlAngularGaugeSeries
+                        GaugeValue="60"
+                        OuterRadiusOffset="130"
+                        MaxRadialColumnWidth="20"
+                        CornerRadius="0"/>
+                    <lvc:XamlAngularGaugeSeries
+                        GaugeValue="30"
+                        OuterRadiusOffset="130"
+                        MaxRadialColumnWidth="20"
+                        CornerRadius="0"/>
+                    <lvc:XamlAngularGaugeSeries
+                        GaugeValue="10"
+                        OuterRadiusOffset="130"
+                        MaxRadialColumnWidth="20"
+                        CornerRadius="0"/>
+                </lvc:SeriesCollection>
             </lvc:PieChart.Series>
             <lvc:PieChart.VisualElements>
-                <lvc:XamlNeedle
-                    Width="20"
-                    Value="{Binding Value}"/>
-                <lvc:XamlAngularTicks
-                    LabelsSize="16"
-                    LabelsOuterOffset="15"
-                    OuterOffset="65"
-                    TicksLength="20" />
+                <lvc:VisualsCollection>
+                    <lvc:XamlNeedle
+                        Width="20"
+                        Value="{Binding Value}"/>
+                    <lvc:XamlAngularTicks
+                        LabelsSize="16"
+                        LabelsOuterOffset="15"
+                        OuterOffset="65"
+                        TicksLength="20" />
+                </lvc:VisualsCollection>
             </lvc:PieChart.VisualElements>
         </lvc:PieChart>
     </Grid>

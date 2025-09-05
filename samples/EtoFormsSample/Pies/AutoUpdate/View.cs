@@ -15,23 +15,25 @@ public class View : Panel
 
     public View()
     {
+        var seriesCollection = new ObservableCollection<ISeries>
+        {
+            new PieSeries<int>{ Values= Fetch() },
+            new PieSeries<int>{ Values= Fetch() },
+        };
+
         piechart = new PieChart
         {
-            Series = new ObservableCollection<ISeries>
-            {
-                new PieSeries<int>{ Values= Fetch() },
-                new PieSeries<int>{ Values= Fetch() },
-            }
+            Series = seriesCollection
         };
 
         var b1 = new Button { Text = "Add series" };
-        b1.Click += (sender, e) => piechart.Series.Add(new PieSeries<int> { Values = Fetch() });
+        b1.Click += (sender, e) => seriesCollection.Add(new PieSeries<int> { Values = Fetch() });
 
         var b2 = new Button { Text = "Remove series" };
         b2.Click += (sender, e) =>
         {
-            if (piechart.Series.Count > 0)
-                piechart.Series.Remove(piechart.Series.First());
+            if (seriesCollection.Count > 0)
+                seriesCollection.Remove(piechart.Series.First());
         };
 
         var b3 = new Button { Text = "Update all" };

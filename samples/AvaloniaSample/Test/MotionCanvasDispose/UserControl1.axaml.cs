@@ -14,7 +14,7 @@ public partial class UserControl1 : UserControl
         Initialized += UserControl1_Initialized;
     }
 
-    private async void UserControl1_Initialized(object? sender, EventArgs e)
+    private void UserControl1_Initialized(object? sender, EventArgs e)
     {
         var canvas = this.Find<MotionCanvas>("canvas")
             ?? throw new Exception();

@@ -14,18 +14,22 @@
 
     <lvc:PolarChart>
         <lvc:PolarChart.Series>
-            <lvc:XamlPolarLineSeries
-                Values="{Binding Values}"
-                IsClosed="True"
-                Fill="{x:Null}"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlPolarLineSeries
+                    Values="{Binding Values}"
+                    IsClosed="True"
+                    Fill="{x:Null}"/>
+            </lvc:SeriesCollection>
         </lvc:PolarChart.Series>
         <lvc:PolarChart.AngleAxes>
-            <lvc:XamlPolarAxis
-                MinLimit="0"
-                MaxLimit="360"
-                Labeler="{Binding Labeler}"
-                ForceStepToMin="True"
-                MinStep="30"/>
+            <lvc:PolarAxesCollection>
+                <lvc:XamlPolarAxis
+                    MinLimit="0"
+                    MaxLimit="360"
+                    Labeler="{Binding Labeler}"
+                    ForceStepToMin="True"
+                    MinStep="30"/>
+            </lvc:PolarAxesCollection>
         </lvc:PolarChart.AngleAxes>
     </lvc:PolarChart>
 </UserControl>

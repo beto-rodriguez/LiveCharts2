@@ -49,6 +49,9 @@ namespace LiveChartsCore.SkiaSharpView.WPF;
 /// <summary>
 /// The base LiveCharts extension.
 /// </summary>
+#if MAUI_LVC
+[Microsoft.Maui.Controls.Xaml.AcceptEmptyServiceProvider]
+#endif
 public abstract class BaseExtension : Extension
 {
     /// <summary>
@@ -156,8 +159,10 @@ public abstract class BaseSkiaPaintExtention : BaseExtension
         paint.ImageFilter = ImageFilter;
         paint.PathEffect = PathEffect;
 
+#pragma warning disable CS0618 // Type or member is obsolete
         if (FontWeight != SKFontStyleWeight.Normal || FontWidth != SKFontStyleWidth.Normal || FontSlant != SKFontStyleSlant.Upright)
             paint.SKFontStyle = new SKFontStyle(FontWeight, FontWidth, FontSlant);
+#pragma warning restore CS0618 // Type or member is obsolete
 
         if (FontFamily is not null)
         {

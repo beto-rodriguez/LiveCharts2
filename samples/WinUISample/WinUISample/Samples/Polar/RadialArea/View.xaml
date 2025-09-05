@@ -14,21 +14,25 @@
 
     <lvc:PolarChart InitialRotation="-45">
         <lvc:PolarChart.Series>
-            <lvc:XamlPolarLineSeries
-                Values="{Binding Values1}"
-                LineSmoothness="0"
-                GeometrySize="0"
-                Fill="{lvc:SolidColorPaint Color='#900000ff'}"/>
-            <lvc:XamlPolarLineSeries
-                Values="{Binding Values2}"
-                LineSmoothness="1"
-                GeometrySize="0"
-                Fill="{lvc:SolidColorPaint Color='#90ff0000'}"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlPolarLineSeries
+                    Values="{Binding Values1}"
+                    LineSmoothness="0"
+                    GeometrySize="0"
+                    Fill="{lvc:SolidColorPaint Color='#900000ff'}"/>
+                <lvc:XamlPolarLineSeries
+                    Values="{Binding Values2}"
+                    LineSmoothness="1"
+                    GeometrySize="0"
+                    Fill="{lvc:SolidColorPaint Color='#90ff0000'}"/>
+            </lvc:SeriesCollection>
         </lvc:PolarChart.Series>
         <lvc:PolarChart.AngleAxes>
-            <lvc:XamlPolarAxis
-                LabelsRotation="{Binding TangentAngle}"
-                Labels="{Binding Labels}"/>
+            <lvc:PolarAxesCollection>
+                <lvc:XamlPolarAxis
+                    LabelsRotation="{Binding TangentAngle}"
+                    Labels="{Binding Labels}"/>
+            </lvc:PolarAxesCollection>
         </lvc:PolarChart.AngleAxes>
     </lvc:PolarChart>
 

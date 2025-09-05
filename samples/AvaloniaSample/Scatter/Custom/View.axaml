@@ -6,7 +6,8 @@
     xmlns:vms="using:ViewModelsSamples.Scatter.Custom"
     xmlns:svg="using:LiveChartsCore.Drawing"
     xmlns:draw="using:LiveChartsCore.SkiaSharpView.Drawing.Geometries"
-    xmlns:d="using:LiveChartsCore.Defaults">
+    xmlns:d="using:LiveChartsCore.Defaults"
+    x:DataType="vms:ViewModel">
 
     <UserControl.DataContext>
         <vms:ViewModel/>

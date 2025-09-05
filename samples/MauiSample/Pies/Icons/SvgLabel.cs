@@ -1,4 +1,6 @@
-﻿using LiveChartsCore.SkiaSharpView.Drawing;
+﻿#pragma warning disable CS0618 // Type or member is obsolete
+
+using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using SkiaSharp;
 
@@ -30,6 +32,7 @@ public class SvgLabel : LabelGeometry
         };
 
         Svg.Draw(context, iconPaint, _path, X, Y, Size, Size);
+
 
         using var textPaint = new SKPaint
         {

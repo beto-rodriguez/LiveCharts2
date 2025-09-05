@@ -22,23 +22,29 @@
             Padding="{lvc:Padding Value='15'}"/>
         </lvc:PolarChart.Title>
         <lvc:PolarChart.Series>
-            <lvc:XamlPolarLineSeries
-                Values="{Binding Values}"
-                ShowDataLabels="True"
-                GeometrySize="15"
-                DataLabelsSize="8"
-                DataLabelsPosition="Middle"
-                DataLabelsRotation="{Binding CotangentAngle}"
-                IsClosed="True"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlPolarLineSeries
+                    Values="{Binding Values}"
+                    ShowDataLabels="True"
+                    GeometrySize="15"
+                    DataLabelsSize="8"
+                    DataLabelsPosition="Middle"
+                    DataLabelsRotation="{Binding CotangentAngle}"
+                    IsClosed="True"/>
+            </lvc:SeriesCollection>
         </lvc:PolarChart.Series>
         <lvc:PolarChart.RadiusAxes>
-            <lvc:XamlPolarAxis
-                LabelsAngle="-60"
-                MaxLimit="30"/>
+            <lvc:PolarAxesCollection>
+                <lvc:XamlPolarAxis
+                    LabelsAngle="-60"
+                    MaxLimit="30"/>
+            </lvc:PolarAxesCollection>
         </lvc:PolarChart.RadiusAxes>
         <lvc:PolarChart.AngleAxes>
-            <lvc:XamlPolarAxis
-                LabelsRotation="{Binding TangentAngle}"/>
+            <lvc:PolarAxesCollection>
+                <lvc:XamlPolarAxis
+                    LabelsRotation="{Binding TangentAngle}"/>
+            </lvc:PolarAxesCollection>
         </lvc:PolarChart.AngleAxes>
     </lvc:PolarChart>
 </UserControl>

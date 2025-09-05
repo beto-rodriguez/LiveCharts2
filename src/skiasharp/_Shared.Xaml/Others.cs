@@ -97,8 +97,6 @@ public class ChartPointState : BaseChartPointState { }
 /// <inheritdoc cref="BaseSet"/>
 public class Set : BaseSet { }
 
-#if WPF_LVC
-
 /// <summary>
 /// A series collection for WPF XAML parser.
 /// </summary>
@@ -123,4 +121,3 @@ public class SectionsCollection : System.Collections.ObjectModel.ObservableColle
 /// An axes collection for WPF XAML parser.
 /// </summary>
 public class VisualsCollection : System.Collections.ObjectModel.ObservableCollection<IChartElement> { }
-#endif

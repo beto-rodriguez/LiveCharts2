@@ -20,20 +20,24 @@
     <lvc:CartesianChart>
 
         <lvc:CartesianChart.Series>
-            <lvc:XamlColumnSeries
-                IsHoverable="False"
-                Values="{Binding Values1}"
-                Fill="{lvc:SolidColorPaint Color='#32b4b4b4'}"
-                IgnoresBarPosition="True"/>
-            <lvc:XamlColumnSeries
-                Values="{Binding Values2}"
-                IgnoresBarPosition="True"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlColumnSeries
+                    IsHoverable="False"
+                    Values="{Binding Values1}"
+                    Fill="{lvc:SolidColorPaint Color='#32b4b4b4'}"
+                    IgnoresBarPosition="True"/>
+                <lvc:XamlColumnSeries
+                    Values="{Binding Values2}"
+                    IgnoresBarPosition="True"/>
+            </lvc:SeriesCollection>
         </lvc:CartesianChart.Series>
 
         <lvc:CartesianChart.YAxes>
-            <lvc:XamlAxis
-                MinLimit="0"
-                MaxLimit="10"/>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis
+                    MinLimit="0"
+                    MaxLimit="10"/>
+            </lvc:AxesCollection>
         </lvc:CartesianChart.YAxes>
 
     </lvc:CartesianChart>

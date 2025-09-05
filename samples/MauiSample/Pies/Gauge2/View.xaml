@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-    xmlns:vms="clr-namespace:ViewModelsSamples.Pies.Gauge2;assembly=ViewModelsSamples">
+    xmlns:vms="clr-namespace:ViewModelsSamples.Pies.Gauge2;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
 
     <ContentPage.BindingContext>
         <vms:ViewModel/>
@@ -17,20 +18,20 @@
         MaxValue="100">
 
         <lvc:PieChart.Series>
+            <lvc:SeriesCollection>
+                <lvc:XamlGaugeSeries
+                    GaugeValue="{Binding Value}"
+                    Fill="{lvc:SolidColorPaint Color='#9ACD32'}"
+                    ShowDataLabels="True"
+                    DataLabelsSize="50"
+                    DataLabelsPosition="ChartCenter"
+                    InnerRadius="75"/>
 
-            <lvc:XamlGaugeSeries
-                GaugeValue="{Binding Value}"
-                Fill="{lvc:SolidColorPaint Color='#9ACD32'}"
-                ShowDataLabels="True"
-                DataLabelsSize="50"
-                DataLabelsPosition="ChartCenter"
-                InnerRadius="75"/>
-
-            <!-- The background series is used to style the gauge background. -->
-            <lvc:XamlGaugeBackgroundSeries
-                InnerRadius="75"
-                Fill="{lvc:SolidColorPaint Color='#5A64B5F6'}"/>
-
+                <!-- The background series is used to style the gauge background. -->
+                <lvc:XamlGaugeBackgroundSeries
+                    InnerRadius="75"
+                    Fill="{lvc:SolidColorPaint Color='#5A64B5F6'}"/>
+            </lvc:SeriesCollection>
         </lvc:PieChart.Series>
 
     </lvc:PieChart>

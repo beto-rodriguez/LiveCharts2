@@ -43,13 +43,15 @@
 
         <lvc:CartesianChart Grid.Row="3">
             <lvc:CartesianChart.Series>
-                <lvc:XamlStepLineSeries
-                    Values="{Binding Values}"
-                    Stroke="{Binding Stroke, Converter={StaticResource StringToPaintConverter}}"
-                    Fill="{Binding Fill, Converter={StaticResource StringToPaintConverter}}"
-                    GeometryStroke="{Binding GeometryStroke, Converter={StaticResource StringToPaintConverter}}"
-                    GeometryFill="{Binding GeometryFill, Converter={StaticResource StringToPaintConverter}}"
-                    GeometrySize="{Binding GeometrySize}"/>
+                <lvc:SeriesCollection>
+                    <lvc:XamlStepLineSeries
+                        Values="{Binding Values}"
+                        Stroke="{Binding Stroke, Converter={StaticResource StringToPaintConverter}}"
+                        Fill="{Binding Fill, Converter={StaticResource StringToPaintConverter}}"
+                        GeometryStroke="{Binding GeometryStroke, Converter={StaticResource StringToPaintConverter}}"
+                        GeometryFill="{Binding GeometryFill, Converter={StaticResource StringToPaintConverter}}"
+                        GeometrySize="{Binding GeometrySize}"/>
+                </lvc:SeriesCollection>
             </lvc:CartesianChart.Series>
         </lvc:CartesianChart>
     </Grid>

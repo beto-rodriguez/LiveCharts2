@@ -1203,11 +1203,11 @@ public class CartesianChartEngine(
     private double GetGeometryOffset(ICartesianAxis axis, Scaler scale) =>
         Math.Abs(scale.ToChartValues(axis.DataBounds.RequestedGeometrySize) - scale.ToChartValues(0));
 
-    private ICollection<ICartesianAxis> GetAxesCollection(
-        ICollection<ICartesianAxis>? viewAxes,
+    private IEnumerable<ICartesianAxis> GetAxesCollection(
+        IEnumerable<ICartesianAxis>? viewAxes,
         ref ICartesianAxis[]? virtualAxes)
     {
-        if (viewAxes is not null && viewAxes.Count > 0) return viewAxes;
+        if (viewAxes is not null && viewAxes.Any()) return viewAxes;
 
         if (virtualAxes is null)
         {

@@ -187,8 +187,7 @@ public partial class SourceGenChart : IChartView
 #if XAML_LVC
         // if xaml... add the series template/source observer
         observe.AddObserver(
-             new SeriesSourceObserver(
-                 () => Series, value => Series = value, InflateSeriesTemplate, GetSeriesSource, () => HasValidSource),
+             new SeriesSourceObserver(this, InflateSeriesTemplate, () => HasValidSource),
              nameof(SeriesSource),
              () => SeriesSource);
 #endif

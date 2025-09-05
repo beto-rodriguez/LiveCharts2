@@ -12,7 +12,7 @@ public partial class View : UserControl
 
     private void Button_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        var content = this.Find<ContentControl>("content");
+        var content = this.Find<ContentControl>("content")!;
         content.Content = new UserControl1();
     }
 

@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-    xmlns:vms="clr-namespace:ViewModelsSamples.Design.RadialGradients;assembly=ViewModelsSamples">
+    xmlns:vms="clr-namespace:ViewModelsSamples.Design.RadialGradients;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
 
     <ContentPage.BindingContext>
         <vms:ViewModel/>
@@ -28,16 +29,18 @@
 
     <lvc:PieChart LegendPosition="Right">
         <lvc:PieChart.Series>
-            <lvc:XamlPieSeries
-                SeriesName="Maria"
-                Values="{Binding MariaValues}"
-                Pushout="10"
-                OuterRadiusOffset="20"
-                Fill="{lvc:RadialGradientPaint Colors='#B3E5FC, #01579B'}"/>
-            <lvc:XamlPieSeries
-                SeriesName="Charles"
-                Values="{Binding CharlesValues}"
-                Fill="{lvc:RadialGradientPaint Colors='#FFCDD2, #B71C1C'}"/>
+            <lvc:SeriesCollection>
+                <lvc:XamlPieSeries
+                    SeriesName="Maria"
+                    Values="{Binding MariaValues}"
+                    Pushout="10"
+                    OuterRadiusOffset="20"
+                    Fill="{lvc:RadialGradientPaint Colors='#B3E5FC, #01579B'}"/>
+                <lvc:XamlPieSeries
+                    SeriesName="Charles"
+                    Values="{Binding CharlesValues}"
+                    Fill="{lvc:RadialGradientPaint Colors='#FFCDD2, #B71C1C'}"/>
+            </lvc:SeriesCollection>
         </lvc:PieChart.Series>
     </lvc:PieChart>
 </ContentPage>

@@ -23,14 +23,14 @@ public partial class View : UserControl
     private void CreateImageFromCartesianControl()
     {
         // you can take any chart in the UI, and build an image from it // mark
-        var chartControl = this.FindControl<CartesianChart>("cartesianChart");
+        var chartControl = this.FindControl<CartesianChart>("cartesianChart")!;
         var skChart = new SKCartesianChart(chartControl);
         skChart.SaveImage("CartesianImageFromControl.png");
     }
 
     private void CreateImageFromPieControl()
     {
-        var chartControl = this.FindControl<PieChart>("pieChart");
+        var chartControl = this.FindControl<PieChart>("pieChart")!;
         var skChart = new SKPieChart(chartControl);
         skChart.SaveImage("PieImageFromControl.png");
     }
