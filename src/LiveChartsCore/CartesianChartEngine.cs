@@ -1207,7 +1207,7 @@ public class CartesianChartEngine(
         IEnumerable<ICartesianAxis>? viewAxes,
         ref ICartesianAxis[]? virtualAxes)
     {
-        if (viewAxes is not null && !viewAxes.Any()) return viewAxes;
+        if (viewAxes is not null && viewAxes.Any()) return viewAxes;
 
         if (virtualAxes is null)
         {
