@@ -75,7 +75,7 @@ public interface IPolarChartView : IChartView
     /// <value>
     /// The angle axes.
     /// </value>
-    ICollection<IPolarAxis> AngleAxes { get; set; }
+    IEnumerable<IPolarAxis> AngleAxes { get; set; }
 
     /// <summary>
     /// Gets or sets the radius axes.
@@ -83,7 +83,7 @@ public interface IPolarChartView : IChartView
     /// <value>
     /// The radius axes.
     /// </value>
-    ICollection<IPolarAxis> RadiusAxes { get; set; }
+    IEnumerable<IPolarAxis> RadiusAxes { get; set; }
 
     /// <summary>
     /// Scales a point in pixels to the chart data scale.

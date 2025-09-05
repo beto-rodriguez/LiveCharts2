@@ -47,7 +47,7 @@ public interface ICartesianChartView : IChartView
     /// <value>
     /// The x axes.
     /// </value>
-    ICollection<ICartesianAxis> XAxes { get; set; }
+    IEnumerable<ICartesianAxis> XAxes { get; set; }
 
     /// <summary>
     /// Gets or sets the y axes.
@@ -55,7 +55,7 @@ public interface ICartesianChartView : IChartView
     /// <value>
     /// The y axes.
     /// </value>
-    ICollection<ICartesianAxis> YAxes { get; set; }
+    IEnumerable<ICartesianAxis> YAxes { get; set; }
 
     /// <summary>
     /// Gets or sets the sections.
@@ -63,7 +63,7 @@ public interface ICartesianChartView : IChartView
     /// <value>
     /// The sections.
     /// </value>
-    ICollection<IChartElement> Sections { get; set; }
+    IEnumerable<IChartElement> Sections { get; set; }
 
     /// <summary>
     /// Gets or sets the draw margin frame.

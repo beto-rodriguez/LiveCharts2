@@ -105,8 +105,6 @@ public abstract partial class SourceGenChart : ChartView, IChartView
         return series;
     }
 
-    private static object GetSeriesSource(ISeries series) => ((View)series).BindingContext;
-
     private void AddUIElement(object item)
     {
         if (item is not View view) return;

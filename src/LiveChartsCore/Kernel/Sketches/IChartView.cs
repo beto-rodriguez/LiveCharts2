@@ -40,7 +40,7 @@ public interface IChartView
     /// <summary>
     /// Gets or sets the series collection.
     /// </summary>
-    ICollection<ISeries> Series { get; set; }
+    IEnumerable<ISeries> Series { get; set; }
 
     /// <summary>
     /// Gets the core.
@@ -208,7 +208,7 @@ public interface IChartView
     /// <summary>
     /// Gets or sets the visual elements.
     /// </summary>
-    ICollection<IChartElement> VisualElements { get; set; }
+    IEnumerable<IChartElement> VisualElements { get; set; }
 
     /// <summary>
     /// Occurs when the pointer goes down over a chart point(s).
