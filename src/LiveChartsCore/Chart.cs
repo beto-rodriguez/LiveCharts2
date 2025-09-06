@@ -85,10 +85,10 @@ public abstract class Chart
         Canvas = canvas;
         canvas.Validated += OnCanvasValidated;
 
-        _updateThrottler = view.DesignerMode
-                ? new ActionThrottler(() => Task.CompletedTask, TimeSpan.FromMilliseconds(100))
-                : new ActionThrottler(UpdateThrottlerUnlocked, TimeSpan.FromMilliseconds(50));
-        _updateThrottler.ThrottlerTimeSpan = view.UpdaterThrottler;
+        _updateThrottler = new ActionThrottler(UpdateThrottlerUnlocked, TimeSpan.FromMilliseconds(50))
+        {
+            ThrottlerTimeSpan = view.UpdaterThrottler
+        };
 
         _tooltipThrottler = new ActionThrottler(TooltipThrottlerUnlocked, TimeSpan.FromMilliseconds(50));
         _panningThrottler = new ActionThrottler(PanningThrottlerUnlocked, TimeSpan.FromMilliseconds(30));
