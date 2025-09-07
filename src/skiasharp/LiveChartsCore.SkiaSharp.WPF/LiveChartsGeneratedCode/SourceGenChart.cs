@@ -96,13 +96,13 @@ public abstract partial class SourceGenChart : UserControl, IChartView
     private void AddUIElement(object item)
     {
         if (MotionCanvas is null || item is not FrameworkElement view) return;
-        MotionCanvas.AddLogicalChild(view);
+        _ = MotionCanvas.Children.Add(view);
     }
 
     private void RemoveUIElement(object item)
     {
         if (MotionCanvas is null || item is not FrameworkElement view) return;
-        MotionCanvas.RemoveLogicalChild(view);
+        MotionCanvas.Children.Remove(view);
     }
 
     private void Chart_MouseDown(object sender, MouseButtonEventArgs e)

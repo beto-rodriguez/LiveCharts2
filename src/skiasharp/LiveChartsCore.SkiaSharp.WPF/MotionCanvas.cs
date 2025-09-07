@@ -30,7 +30,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF;
 /// Defines the motion canvas control for WPF, <see cref="CoreMotionCanvas"/>.
 /// </summary>
 /// <seealso cref="Control" />
-public class MotionCanvas : UserControl
+public class MotionCanvas : Canvas
 {
     private readonly MotionCanvasComposer _composer;
 
@@ -60,20 +60,24 @@ public class MotionCanvas : UserControl
     {
         _composer = LiveChartsSkiaSharp.MotionCanvasRenderingFactory(LiveCharts.RenderingSettings, forceGPU);
 
-        Content = _composer.RenderMode;
+        _ = Children.Add((UIElement)_composer.RenderMode);
 
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
+
+        SizeChanged += OnSizeChanged;
     }
 
     /// <inheritdoc cref="CoreMotionCanvas"/>
     public CoreMotionCanvas CanvasCore { get; } = new();
 
-    internal void AddLogicalChild(DependencyObject child) =>
-        base.AddLogicalChild(child);
+    private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        var fe = (FrameworkElement)_composer.RenderMode;
 
-    internal void RemoveLogicalChild(DependencyObject child) =>
-        base.RemoveLogicalChild(child);
+        fe.Width = e.NewSize.Width;
+        fe.Height = e.NewSize.Height;
+    }
 
     private void OnLoaded(object sender, RoutedEventArgs e) =>
         _composer.Initialize(CanvasCore);
