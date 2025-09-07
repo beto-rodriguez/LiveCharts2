@@ -8,15 +8,12 @@ namespace MauiSample;
 
 public static class MauiProgram
 {
-    public record City(string Name, double Population);
-
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
         _ = builder
-            .UseSkiaSharp()
-            .UseLiveCharts(c => c // mark
-                .AddLiveChartsAppSettings()) // mark
+            .UseSkiaSharp() // mark
+            .UseLiveCharts(c => c.AddLiveChartsAppSettings()) // mark
             .UseMauiApp<App>()
             .ConfigureFonts(fonts =>
             {

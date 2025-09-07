@@ -1,0 +1,22 @@
+<UserControl
+    x:Class="AvaloniaSample.General.FirstChart.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:sys="clr-namespace:System;assembly=netstandard"
+    xmlns:scg="clr-namespace:System.Collections.Generic;assembly=netstandard">
+
+    <lvc:CartesianChart
+        LegendPosition="Right">
+        
+        <lvc:CartesianChart.Series>
+            <lvc:XamlLineSeries
+                SeriesName="Mary"
+                Values="{lvc:Values FromString='5, 10, 8, 4'}"/>
+            <lvc:XamlColumnSeries
+                SeriesName="Ana"
+                Values="{lvc:Values FromString='4, 7, 3, 8'}"/>
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
+
+</UserControl>

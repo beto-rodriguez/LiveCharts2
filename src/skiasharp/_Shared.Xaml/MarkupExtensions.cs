@@ -740,4 +740,38 @@ public class FloatExtension : BaseExtension
     protected override object OnValueRequested(object serviceProvider) =>
         float.TryParse(Value, out var value) ? value : 0f;
 }
+
+#endif
+
+#if WINUI_LVC || AVALONIA_LVC
+// a hacked extension because winui and avalonia do not support typeconverters from string to List<double>
+// at least I was not able to find how to do it... this extension is just to create simple charts,
+// used in the first chart sample.
+
+/// <summary>
+/// The float extension, becase WinUI parses numeric strings as double.
+/// </summary>
+public class ValuesExtension : BaseExtension
+{
+    /// <summary>
+    /// Gets or sets the collection, items separated by commas.
+    /// </summary>
+    public string? FromString { get; set; }
+
+    /// <inheritdoc/>
+    protected override object OnValueRequested(object serviceProvider)
+    {
+        if (FromString is null)
+            return new List<double>();
+
+        var split = FromString.Split(',');
+        var list = new List<double>(split.Length);
+        foreach (var item in split)
+        {
+            if (double.TryParse(item, out var value))
+                list.Add(value);
+        }
+        return list;
+    }
+}
 #endif

@@ -16,8 +16,8 @@ public partial class ViewModel
     private readonly Random _random = new();
 
     public ObservableCollection<ChartData> Data { get; set; } = [
-        new("Juana",  [ new(2), new(5), new(4) ]),
-        new("Mary",   [ new(5), new(4), new(1) ])
+        new("Juana",       [ new(2), new(5), new(4) ]),
+        new("La cubana",   [ new(5), new(4), new(1) ])
     ];
 
     [RelayCommand]
