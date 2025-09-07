@@ -188,13 +188,19 @@ public abstract class SkiaPaint(float strokeThickness = 1f, float strokeMiter = 
 
         if (PathEffect is not null)
         {
-            PathEffect.CreateEffect();
+            // path effects are immutable, so we create it only once.
+            if (PathEffect._sKPathEffect is null)
+                PathEffect.CreateEffect();
+
             paint.PathEffect = PathEffect._sKPathEffect;
         }
 
         if (ImageFilter is not null)
         {
-            ImageFilter.CreateFilter();
+            // image filters are immutable, so we create it only once.
+            if (ImageFilter._sKImageFilter is null)
+                ImageFilter.CreateFilter();
+
             paint.ImageFilter = ImageFilter._sKImageFilter;
         }
 
