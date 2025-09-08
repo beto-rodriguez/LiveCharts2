@@ -55,28 +55,14 @@ public partial class XamlDrawnLabelVisual : BaseControl, IChartElement, IInterna
         ?? throw new Exception("Drawn element not found");
 }
 
-#if WINUI_LVC
 [XamlClass(typeof(RectangularSection), PropertyChangeMap = "Xi{=}XiMap{,}Xj{=}XjMap")]
-#else
-[XamlClass(typeof(RectangularSection))]
-#endif
 public partial class XamlRectangularSection : BaseControl, IChartElement
 {
-#if WINUI_LVC
-    // WINUI does not support nullable value types in xaml, we map null to NaN
+    private void XiMap(object? value) =>
+        _baseType.Xi = (double?)value;
 
-    private void XiMap(object value)
-    {
-        var doubleValue = (double)value;
-        _baseType.Xi = double.IsNaN(doubleValue) ? null : doubleValue;
-    }
-
-    private void XjMap(object value)
-    {
-        var doubleValue = (double)value;
-        _baseType.Xj = double.IsNaN(doubleValue) ? null : doubleValue;
-    }
-#endif
+    private void XjMap(object? value) =>
+        _baseType.Xj = (double?)value;
 }
 
 [XamlClass(typeof(NeedleVisual))]

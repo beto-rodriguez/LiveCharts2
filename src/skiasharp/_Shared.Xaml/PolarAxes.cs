@@ -45,9 +45,9 @@ public partial class XamlPolarAxis : BaseControl, IPolarAxis
     double? IPlane.MinLimit { get => _baseType.MinLimit; set => _baseType.MinLimit = value; }
     double? IPlane.MaxLimit { get => _baseType.MaxLimit; set => _baseType.MaxLimit = value; }
 
-    private void MinLimitMap(object value) =>
+    private void MinLimitMap(object? value) =>
         _baseType.MinLimit = (double?)value;
 
-    private void MaxLimitMap(object value) =>
+    private void MaxLimitMap(object? value) =>
         _baseType.MaxLimit = (double?)value;
 }

@@ -31,6 +31,6 @@ public class RectangularSection : CoreSection<RectangleGeometry, LabelGeometry>
 {
     static RectangularSection()
     {
-        LiveChartsSkiaSharp.EnsureInitialized();
+        _ = LiveChartsSkiaSharp.EnsureInitialized();
     }
 }
