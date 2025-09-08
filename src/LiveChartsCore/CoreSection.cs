@@ -74,39 +74,39 @@ public abstract class CoreSection : ChartElement, INotifyPropertyChanged
 
     /// <summary>
     /// Gets or sets the xi, the value where the section starts at the X axis,
-    /// set the property to null to indicate that the section must start at the beginning of the X axis, default is null.
+    /// set the property to null (or double.NaN) to indicate that the section must start at the beginning of the X axis, default is null.
     /// </summary>
     /// <value>
     /// The xi.
     /// </value>
-    public double? Xi { get; set => SetProperty(ref field, value); }
+    public double? Xi { get; set => SetProperty(ref field, filterNaN(value)); }
 
     /// <summary>
     /// Gets or sets the xj, the value where the section ends and the X axis.
-    /// set the property to null to indicate that the section must go to the end of the X axis, default is null.
+    /// set the property to null (or double.NaN) to indicate that the section must go to the end of the X axis, default is null.
     /// </summary>
     /// <value>
     /// The xj.
     /// </value>
-    public double? Xj { get; set => SetProperty(ref field, value); }
+    public double? Xj { get; set => SetProperty(ref field, filterNaN(value)); }
 
     /// <summary>
     /// Gets or sets the yi, the value where the section starts and the Y axis.
-    /// set the property to null to indicate that the section must start at the beginning of the Y axis, default is null.
+    /// set the property to null (or double.NaN) to indicate that the section must start at the beginning of the Y axis, default is null.
     /// </summary>
     /// <value>
     /// The yi.
     /// </value>
-    public double? Yi { get; set => SetProperty(ref field, value); }
+    public double? Yi { get; set => SetProperty(ref field, filterNaN(value)); }
 
     /// <summary>
     /// Gets or sets the yj, the value where the section ends and the Y axis.
-    /// set the property to null to indicate that the section must go to the end of the Y axis, default is null.
+    /// set the property to null (or double.NaN) to indicate that the section must go to the end of the Y axis, default is null.
     /// </summary>
     /// <value>
     /// The yj.
     /// </value>
-    public double? Yj { get; set => SetProperty(ref field, value); }
+    public double? Yj { get; set => SetProperty(ref field, filterNaN(value)); }
 
     /// <summary>
     /// Gets or sets the axis index where the section is scaled in the X plane, the index must exist 
@@ -146,6 +146,14 @@ public abstract class CoreSection : ChartElement, INotifyPropertyChanged
     {
         base.OnPaintChanged(propertyName);
         OnPropertyChanged(propertyName);
+    }
+
+    private static double? filterNaN(double? value)
+    {
+        if (value is not null && double.IsNaN(value.Value))
+            value = null;
+
+        return value;
     }
 }
 

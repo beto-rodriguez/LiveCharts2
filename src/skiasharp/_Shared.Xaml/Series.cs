@@ -137,7 +137,11 @@ public partial class XamlGaugeSeries<TVisual, TLabel> : XamlSeries, IPieSeries, 
     where TLabel : BaseLabelGeometry, new()
 {
     private readonly ObservableValue _value = new(0d);
+#pragma warning disable IDE0052 // Remove unread private members
+#pragma warning disable IDE1006 // Naming Styles
     private static readonly UIProperty<double> gaugeValue = new(0d, OnGaugeValueChanged);
+#pragma warning restore IDE1006 // Naming Styles
+#pragma warning restore IDE0052 // Remove unread private members
 
     /// <inheritdoc cref="PieSeries{TModel, TVisual, TLabel}.PieSeries()"/>
     public XamlGaugeSeries()

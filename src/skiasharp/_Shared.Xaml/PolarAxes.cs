@@ -38,33 +38,16 @@ namespace LiveChartsCore.SkiaSharpView.WPF;
 #endif
 
 /// <inheritdoc cref="PolarAxis"/>
-#if WINUI_LVC
 [XamlClass(typeof(PolarAxis), PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap")]
-#elif AVALONIA_LVC
-[XamlClass(typeof(PolarAxis), GenerateOnChange = false)]
-#else
-[XamlClass(typeof(PolarAxis))]
-#endif
 public partial class XamlPolarAxis : BaseControl, IPolarAxis
 {
     string? IPlane.Name { get => _baseType.Name; set => _baseType.Name = value; }
-
-#if WINUI_LVC
-    // WINUI does not support nullable value types in xaml, we map null to NaN
-
     double? IPlane.MinLimit { get => _baseType.MinLimit; set => _baseType.MinLimit = value; }
     double? IPlane.MaxLimit { get => _baseType.MaxLimit; set => _baseType.MaxLimit = value; }
 
-    private void MinLimitMap(object value)
-    {
-        var doubleValue = (double)value;
-        _baseType.MinLimit = double.IsNaN(doubleValue) ? null : doubleValue;
-    }
+    private void MinLimitMap(object? value) =>
+        _baseType.MinLimit = (double?)value;
 
-    private void MaxLimitMap(object value)
-    {
-        var doubleValue = (double)value;
-        _baseType.MaxLimit = double.IsNaN(doubleValue) ? null : doubleValue;
-    }
-#endif
+    private void MaxLimitMap(object? value) =>
+        _baseType.MaxLimit = (double?)value;
 }
