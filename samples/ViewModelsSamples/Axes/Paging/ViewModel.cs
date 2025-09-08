@@ -10,10 +10,10 @@ public partial class ViewModel : ObservableObject
     public int[] Values { get; set; } = Fetch();
 
     [ObservableProperty]
-    public partial double MinLimit { get; set; }
+    public partial double MinLimit { get; set; } = double.NaN;
 
     [ObservableProperty]
-    public partial double MaxLimit { get; set; }
+    public partial double MaxLimit { get; set; } = double.NaN;
 
     [RelayCommand]
     public void GoToPage1()
