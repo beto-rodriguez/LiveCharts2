@@ -53,11 +53,7 @@ namespace LiveChartsCore.SkiaSharpView.WPF;
 /// The base class for XAML-based axes in LiveCharts.
 /// </summary>
 /// <typeparam name="T">The type of the axis.</typeparam>
-#if AVALONIA_LVC
-[XamlClass(typeof(Axis), GenerateBaseTypeDeclaration = false, GenerateOnChange = false)]
-#else
 [XamlClass(typeof(Axis), GenerateBaseTypeDeclaration = false, PropertyChangeMap = "MinLimit{=}MinLimitMap{,}MaxLimit{=}MaxLimitMap")]
-#endif
 public abstract partial class BaseXamlAxis<T> : BaseControl, ICartesianAxis
     where T : Axis
 {
@@ -77,21 +73,10 @@ public abstract partial class BaseXamlAxis<T> : BaseControl, ICartesianAxis
     double? IPlane.MaxLimit { get => _baseType.MaxLimit; set => _baseType.MaxLimit = value; }
 
     private void MinLimitMap(object value) =>
-        _baseType.MinLimit = (double)value;
+        _baseType.MinLimit = (double?)value;
 
     private void MaxLimitMap(object value) =>
-        _baseType.MaxLimit = (double)value;
-
-#if AVALONIA_LVC
-    /// <inheritdoc />
-    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
-    {
-        base.OnPropertyChanged(change);
-        // we cant define property change handlers in avalonia properties,
-        // we map the change manually.
-        MapChangeToBaseType(change.Property.Name);
-    }
-#endif
+        _baseType.MaxLimit = (double?)value;
 }
 
 /// <inheritdoc cref="Axis"/>
@@ -108,9 +93,10 @@ public partial class XamlDateTimeAxis : BaseXamlAxis<DateTimeAxis>
     /// <inheritdoc />
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
-        base.OnPropertyChanged(change);
+        // hack #250809
         // we cant define property change handlers in avalonia properties,
         // required to run the property change of the generated UIProperty
+        base.OnPropertyChanged(change);
         OnXamlPropertyChanged(change);
     }
 #endif
@@ -126,9 +112,8 @@ public partial class XamlTimeSpanAxis : BaseXamlAxis<TimeSpanAxis>
     /// <inheritdoc />
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
+        // hack #250809
         base.OnPropertyChanged(change);
-        // we cant define property change handlers in avalonia properties,
-        // required to run the property change of the generated UIProperty
         OnXamlPropertyChanged(change);
     }
 #endif
@@ -143,9 +128,8 @@ public partial class XamlLogarithmicAxis : BaseXamlAxis<LogarithmicAxis>
     /// <inheritdoc />
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
+        // hack #250809
         base.OnPropertyChanged(change);
-        // we cant define property change handlers in avalonia properties,
-        // required to run the property change of the generated UIProperty
         OnXamlPropertyChanged(change);
     }
 #endif
