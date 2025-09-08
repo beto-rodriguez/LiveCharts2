@@ -5,17 +5,17 @@ Zooming and panning is disabled by default, you can enable it by setting the `Zo
 it means that you can combine the options as you need, you can learn more about zooming and panning
 [here](https://lvcharts.com/docs/{{ platform }}/{{ version }}/CartesianChart.Axes%20properties#zooming-and-panning).
 
-{{~ if wpf || winforms || winui || blazor || eto ~}}
 
+
+{{~ if wpf || winforms || winui || blazor || eto ~}}
 :::tip
 Use the mouse wheel to zoom in/out, hold click and drag to pan.
 :::
-
 {{~ end ~}}
 
 
-{{~ if maui || uno || avalonia ~}}
 
+{{~ if maui || uno || avalonia ~}}
 :::tip
 On **Desktop**:
 
@@ -28,16 +28,21 @@ On **Mobile** and touch screens:
 - **Zoom**: Pinch the screen in or out using two fingers.
 - **Pan**: Tap and hold, then drag to move the view.
 :::
-
 {{~ end ~}}
+
+
 
 {{~ if xaml ~}}
 ## XAML
 {{~ end ~}}
 
+
+
 {{~ if winforms ~}}
 ## Form code behind
 {{~ end ~}}
+
+
 
 {{~ if blazor ~}}
 ## HTML
@@ -64,23 +69,25 @@ The [ZoomAndPanMode](https://lvcharts.com/api/{{ version }}/LiveChartsCore.Measu
 so you can combine the options, for example, if you want to enable zooming on the `Both` axes and disable "Fit top Bounds"
 you could set the `ZoomMode` property to:
 
-{{~ if blazor || winforms || eto ~}}
 
+
+{{~ if blazor || winforms || eto ~}}
 ```c#
 var flags = ZoomAndPanMode.Both | ZoomAndPanMode.NoFit;
 myChart.ZoomMode = flags;
 ```
+{{~ end ~}}
 
-{{~ endif ~}}
+
 
 {{~ if avalonia || uno || maui || winui || wpf ~}}
-
 ```xml
 &lt;lvc:CartesianChart ZoomMode="Both,NoFit">
 &lt;/lvc:CartesianChart>
 ```
+{{~ end ~}}
 
-{{~ endif ~}}
+
 
 <div class="text-center">
     <img src="{{ assets_url }}/docs/{{ unique_name }}/zoom-both-nofit.gif" alt="sample image" />
@@ -126,17 +133,16 @@ find more info [here](https://lvcharts.com/docs/{{ platform }}/{{ version }}/Car
     <img src="{{ assets_url }}/docs/{{ unique_name }}/selection-zoom.gif" alt="sample image" />
 </div>
 
-{{~ if wpf || winforms || winui || blazor || eto ~}}
 
+
+{{~ if wpf || winforms || winui || blazor || eto ~}}
 :::tip
 Right click on the chart, hold and drag to select an area in the chart.
 :::
-
 {{~ end ~}}
 
 
 {{~ if maui ~}}
-
 :::tip
 On **Windows**, right click on the chart, hold and drag to select an area on the chart.
 :::
@@ -144,11 +150,11 @@ On **Windows**, right click on the chart, hold and drag to select an area on the
 :::tip
 On **MacOS**, **Android** and **iOS** double tap the chart, hold the last tap and drag to select an area.
 :::
-
 {{~ end ~}}
 
-{{~ if avalonia ~}}
 
+
+{{~ if avalonia ~}}
 :::tip
 On **Desktop**, right click on the chart, hold and drag to select an area on the chart.
 :::
@@ -156,11 +162,11 @@ On **Desktop**, right click on the chart, hold and drag to select an area on the
 :::tip
 On **Desktop** and **Mobile** double tap the chart, hold the last tap and drag to select an area.
 :::
-
 {{~ end ~}}
 
-{{~ if uno ~}}
 
+
+{{~ if uno ~}}
 :::tip
 On **Desktop**, right click on the chart, hold and drag to select an area on the chart, the right click detection
 relies on the Uno implementation of `PointerPointProperties.IsRightButtonPressed`.
@@ -169,7 +175,6 @@ relies on the Uno implementation of `PointerPointProperties.IsRightButtonPressed
 :::tip
 On **Mobile** double tap the chart, hold the last tap and drag to select an area.
 :::
-
 {{~ end ~}}
 
 # Listen for zooming or panning user changes
@@ -202,7 +207,6 @@ private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
 # Axis bounds control
 
 You can listen to the axis range changes and override the limits to your needs:
-
 
 ```c#
 // where myChart is a reference to the chart in the UI

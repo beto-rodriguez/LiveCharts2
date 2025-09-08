@@ -77,21 +77,6 @@ public static class LiveChartsVortice
                     barSeries.Fill = new SolidColorPaint(color);
                     barSeries.Rx = 3;
                     barSeries.Ry = 3;
-
-                    if (barSeries.ShowDataLabels)
-                        barSeries.DataLabelsPaint =
-                            barSeries.DataLabelsPosition == DataLabelsPosition.Middle
-                                ? theme.IsDark
-                                    ? new SolidColorPaint(new(45, 45, 45))
-                                    : new SolidColorPaint(new(245, 245, 245))
-                                : theme.IsDark
-                                    ? new SolidColorPaint(new(245, 245, 245))
-                                    : new SolidColorPaint(new(45, 45, 45));
-
-                    if (barSeries.ShowError)
-                        barSeries.ErrorPaint = theme.IsDark
-                            ? new SolidColorPaint(new(245, 245, 245))
-                            : new SolidColorPaint(new(45, 45, 45));
                 }));
 }
 
