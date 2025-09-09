@@ -11,7 +11,7 @@ A legend is a visual element that displays a list with the name, stroke and fill
 This is a brief sample about how to use the main features of the `IChartLegend<T>` interface, you can find a more detailed article at the button below or at the 
 [API explorer]({{ website_url }}/api/{{ version }}/LiveChartsCore.Kernel.Sketches.IChartLegend-1).
 
-<a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Legends" class="btn btn-light btn-lg text-primary shadow-sm mb-3">
+<a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/CartesianChart.Legends" class="btn btn-outline-primary mb-3">
 <b>Go to the full legends article</b>
 </a>
 
