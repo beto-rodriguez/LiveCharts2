@@ -17,9 +17,9 @@ public partial class App : Application
 
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
-        // this is the recommended place to configure LiveCharts // mark
-        LiveCharts.Configure(c => c
-            .AddLiveChartsAppSettings());
+        // LiveCharts configuration section: // mark
+        LiveCharts.Configure(c => c // mark
+            .AddLiveChartsAppSettings()); // mark
 
         m_window = new MainWindow();
         m_window.Activate();

@@ -12,9 +12,9 @@ public partial class App : Application
     {
         AvaloniaXamlLoader.Load(this);
 
-        // this is the recommended place to configure LiveCharts // mark
-        LiveCharts.Configure(c => c
-            .AddLiveChartsAppSettings());
+        // LiveCharts configuration section: // mark
+        LiveCharts.Configure(c => c // mark
+            .AddLiveChartsAppSettings()); // mark
     }
 
     public override void OnFrameworkInitializationCompleted()

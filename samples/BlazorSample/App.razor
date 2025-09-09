@@ -19,10 +19,9 @@
 @code {
     protected override void OnInitialized()
     {
-
-        // this is the recommended place to configure LiveCharts // mark
-        LiveCharts.Configure(c => c
-            .AddLiveChartsAppSettings());
+        // LiveCharts configuration section: // mark
+        LiveCharts.Configure(c => c // mark
+            .AddLiveChartsAppSettings()); // mark
     }
 
     // protected override async Task OnInitializedAsync()

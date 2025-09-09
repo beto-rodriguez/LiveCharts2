@@ -46,7 +46,7 @@ public static partial class CustomLiveChartsExtensions
                 // the maper takes the City and its index in the collection,
                 // and returns a coordinate, in this case we are using the
                 // City.Population as Y and the index as the X.
-                (city, index) => new(index, city.Population)) // mark
+                (city, index) => new(index, city.Population))
 
             // RTL (right-to-left) shaping is handled already in the library by Harfbuzz,
             // but we can enable RTL to force RTL tooltips and legends.

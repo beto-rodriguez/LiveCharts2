@@ -10,9 +10,9 @@ static class Program
     [STAThread]
     static void Main()
     {
-        // this is the recommended place to configure LiveCharts // mark
-        LiveCharts.Configure(c => c
-            .AddLiveChartsAppSettings());
+        // LiveCharts configuration section: // mark
+        LiveCharts.Configure(c => c // mark
+            .AddLiveChartsAppSettings()); // mark
 
         _ = Application.SetHighDpiMode(HighDpiMode.SystemAware);
         Application.EnableVisualStyles();

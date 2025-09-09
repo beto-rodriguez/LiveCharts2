@@ -20,8 +20,8 @@ public partial class App : Application
     protected async override void OnLaunched(LaunchActivatedEventArgs args)
     {
         // this is the recommended place to configure LiveCharts // mark
-        LiveCharts.Configure(c => c
-             .AddLiveChartsAppSettings());
+        LiveCharts.Configure(c => c // mark
+             .AddLiveChartsAppSettings()); // mark
 
         var builder = this.CreateBuilder(args)
             // Add navigation support for toolkit controls such as TabBar and NavigationView
