@@ -82,8 +82,8 @@ myChart.ZoomMode = flags;
 
 {{~ if avalonia || uno || maui || winui || wpf ~}}
 ```xml
-&lt;lvc:CartesianChart ZoomMode="Both,NoFit">
-&lt;/lvc:CartesianChart>
+<lvc:CartesianChart ZoomMode="Both,NoFit">
+</lvc:CartesianChart>
 ```
 {{~ end ~}}
 
