@@ -17,7 +17,7 @@ When the `ICartesianChartView`.`MatchAxesScreenDataRatio` is `true`,  both axes 
 Now both axes use the same scale, we can easily notice this in the grid drawn by the axes separators, this grid is composed by perfect rectangles,
 no mater if we zoom in/out (or use the panning feature).
 
-<div class="text-center">
+<div class="text-center sample-img">
     <img src="{{ assets_url }}/docs/{{ unique_name }}/matchsdr.gif" alt="sample image" />
 </div>
 
@@ -38,7 +38,7 @@ CustomScaleExtensions.DoubleY(myChart);
 
 Once we run our app again, we can see that our scale works as expected:
 
-<div class="text-center">
+<div class="text-center sample-img">
     <img src="{{ assets_url }}/docs/{{ unique_name }}/doubley.png" alt="sample image" />
 </div>
 
@@ -64,7 +64,7 @@ InchScaleExtensions.InchSeparator(myChart);
 And that's it, now our separators will be one inch long always, no matter the chart size, the data on it, or the zooming
 and panning level.
 
-<div class="text-center">
+<div class="text-center sample-img">
     <img src="{{ assets_url }}/docs/{{ unique_name }}/inch-long-separator.jpg" alt="sample image" style="max-width: 650px" />
 </div>
 

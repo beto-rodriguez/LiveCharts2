@@ -86,7 +86,7 @@ public partial class ViewModel
 
 Run the app again, now there is a rectangle as our needle:
 
-<div class="text-center">
+<div class="text-center sample-img">
     <img src="{{ assets_url }}/docs/{{ unique_name }}/needle-rect.png" alt="sample image" />
 </div>
 

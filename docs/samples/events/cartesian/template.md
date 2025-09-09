@@ -40,7 +40,7 @@ this sample also uses a ViewModel to populate the properties of the control(s) i
 In this example a column turns yellow when the pointer is above, then it turns red when the pointer goes down and finally
 restores the default paint when the pointer leaves.
 
-<div class="text-center">
+<div class="text-center sample-img">
     <img src="{{ assets_url }}/docs/{{ unique_name }}/result.gif" alt="sample image" />
 </div>
 
@@ -77,7 +77,7 @@ the visual shape and the geometry.
 
 Please use the IDE intellisense to complete the signature:
 
-<div class="text-center">
+<div class="text-center sample-img">
     <img src="{{ assets_url }}/docs/{{ unique_name }}/intellisense.gif" alt="sample image" />
 </div>
 

@@ -89,7 +89,7 @@ myChart.ZoomMode = flags;
 
 
 
-<div class="text-center">
+<div class="text-center sample-img">
     <img src="{{ assets_url }}/docs/{{ unique_name }}/zoom-both-nofit.gif" alt="sample image" />
 </div>
 
@@ -129,7 +129,7 @@ You can also zoom by section, this is a feature that allows you to select an are
 when zooming is enabled, this feature is also enabled by default, you can also customize the trigger of this function, you can
 find more info [here](https://lvcharts.com/docs/{{ platform }}/{{ version }}/CartesianChart.Axes%20properties#zooming-and-panning).
 
-<div class="text-center">
+<div class="text-center sample-img">
     <img src="{{ assets_url }}/docs/{{ unique_name }}/selection-zoom.gif" alt="sample image" />
 </div>
 

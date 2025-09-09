@@ -1,6 +1,6 @@
 # {{ name | to_title_case }}
 
-<div class="text-center">
+<div class="text-center sample-img">
     <img src="{{ assets_url }}/docs/{{ unique_name }}/result.png" alt="sample image" />
 </div>
 

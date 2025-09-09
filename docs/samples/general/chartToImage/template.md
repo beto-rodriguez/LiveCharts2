@@ -44,7 +44,7 @@ Having the previous data (ViewModel), we add 3 charts to the UI, a `CartesianCha
 
 You will get the following plot in the UI.
 
-<div class="text-center">
+<div class="text-center sample-img">
     <img src="{{ assets_url }}/docs/{{ unique_name }}/result2.png" alt="sample image" />
 </div>
 

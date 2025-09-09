@@ -10,6 +10,6 @@ This sample uses C# 13 preview features such as partial properties, it also uses
 
 {{~ end ~}}
 
-<div class="text-center">
+<div class="text-center sample-img">
     <img src="{{ assets_url }}/docs/{{ unique_name }}/result.gif" alt="sample image" />
 </div>

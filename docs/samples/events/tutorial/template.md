@@ -9,7 +9,7 @@ When a series point is drawn, it also defines a virtual area called `HoverArea`,
 when a point is pressed/hovered; For example in the next gif, the tooltip opens for both Mary and Ana even when
 the pointer is not in the drawn shape, this is because the `HoverArea` is not the same as the drawn column.
 
-<div class="text-center">
+<div class="text-center sample-img">
     <img src="{{ assets_url }}/docs/{{ unique_name }}/hover-area-col.gif" alt="sample image" />
 </div>
 
@@ -47,13 +47,13 @@ Both `OnHoveredPointsChanged` and `OnPressed` are marked with the `RelayCommand`
 
 When running that example on the `FindingStrategy.Automatic` we get:
 
-<div class="text-center">
+<div class="text-center sample-img">
     <img src="{{ assets_url }}/docs/{{ unique_name }}/events-auto.gif" alt="sample image" />
 </div>
 
 But changing the strategy to `FindingStrategy.ExactMatch`, will only trigger only the points whose drawn column contains the pointer:
 
-<div class="text-center">
+<div class="text-center sample-img">
     <img src="{{ assets_url }}/docs/{{ unique_name }}/events-ex.gif" alt="sample image" />
 </div>
 

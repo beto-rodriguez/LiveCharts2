@@ -37,7 +37,7 @@ this sample also uses a ViewModel to populate the properties of the control(s) i
 
 {{~ end ~}}
 
-<div class="text-center">
+<div class="text-center sample-img">
     <img src="{{ assets_url }}/docs/{{ unique_name }}/all.png" alt="sample image" />
 </div>
 
