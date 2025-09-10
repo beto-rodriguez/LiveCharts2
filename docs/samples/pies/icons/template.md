@@ -1,1 +1,30 @@
-{{ render this "~/shared/genericSampleSimple.md" }}
+{{ render this "~/shared/genericSampleSimpleHeader.md" }}
+
+## View model
+
+```
+{{ full_name | get_vm_from_docs }}
+```
+
+{{~ if xaml ~}}
+## XAML
+{{~ end ~}}
+
+{{~ if winforms ~}}
+## Form code behind
+{{~ end ~}}
+
+{{~ if blazor~}}
+## HTML
+{{~ end~}}
+
+```
+{{ full_name | get_view_from_docs }}
+```
+
+{{~ if xaml~}}
+## StringToPaintConverter.cs
+{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/Pies/Nested/StringToPaintConverter.cs" ~}}
+{{~ end ~}}
+
+{{ render this "~/shared/relatedTo.md" }}

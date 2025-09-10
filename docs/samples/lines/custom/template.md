@@ -26,6 +26,11 @@
 {{ full_name | get_view_from_docs }}
 ```
 
+{{~ if xaml2006 ~}}
+## CustomSeries.cs
+{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/Lines/Custom/CustomSeries.cs" ~}}
+{{~ end ~}}
+
 {{~ if related_to != null ~}}
 
 ### Articles you might also find useful:

@@ -126,7 +126,7 @@ public class City
     public double Population { get; set; }
 }</code></pre>
 
-We can also show a label for the `X` coordinate, the default tooltip uses the X label as the header in the tooltip.
+We can also show a label for the `X` coordinate, the default tooltip uses the X label as the header.
 
 <pre><code>new LineSeries&lt;double>
 {
@@ -180,6 +180,11 @@ in the next example, we draw a geometry in the tooltip based on the point that i
 #### View
 
 {{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/General/TemplatedTooltips/$PlatformViewFile" ~}}
+
+{{~ if xaml2006 ~}}
+## CustomGeometryPointColumnSeries.cs
+{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/General/TemplatedTooltips/CustomGeometryPointColumnSeries.cs" ~}}
+{{~ end ~}}
 
 # Tooltip control from scratch
 
