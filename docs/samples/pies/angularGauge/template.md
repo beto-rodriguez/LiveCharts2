@@ -33,7 +33,7 @@ property to `0.6` in the `X` and `Y` axis, this will make the needle 40% smaller
 Finally we need to use this new needle in our gauge, in the example above change the type `NeedleVisual`
 to `NeedleVisual<SmallNeedle>`.
 
-```c#
+```csharp
 public partial class ViewModel
 {
     // ...
@@ -63,7 +63,7 @@ we are drawing a rectangle using SkiaSharp to represent the needle:
 
 Finally we need to use this new needle in our gauge:"
 
-```c#
+```csharp
 public partial class ViewModel
 {
     // ...

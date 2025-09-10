@@ -12,9 +12,6 @@ The cartesian chart control has the `XAxes` and `YAxes` properties, both of type
 when you do not set these properties, they will be an array containing only one element of the `Axis` class 
 (`new Axis[] { new Axis() }`). 
 
-This article will cover the properties of an `IAxis` interface that require a further explanation but it will 
-not cover all of them, if you need to know more about this type then use the [API explorer](./) in our website.
-
 ## Zooming and Panning
 
 Both of these features are directly related to the <a href="#MaxLimit and MinLimit properties">MaxLimit and MinLimit properties</a>,
@@ -36,7 +33,7 @@ The [ZoomAndPanMode](https://lvcharts.com/api/{{ version }}/LiveChartsCore.Measu
 so you can combine the options, for example, if you want to enable zooming on the `X` axis and disable "Fit top Bounds"
 and "Zoom by Section" you can set the `ZoomMode` property to:
 
-```c#
+```csharp
 var flags = ZoomAndPanMode.X | ZoomAndPanMode.NoFit | ZoomAndPanMode.NoZoomBySection;
 myChart.ZoomMode = flags;
 ```
@@ -49,11 +46,12 @@ When the user interacts with the chart, He/She/* is only moving the chart in the
 by the library to fit all the visible points in the X axis.
 
 {{~ if xaml ~}}
-<pre><code>&lt;lvc:CartesianChart
+```xml
+<lvc:CartesianChart
     Series="{Binding Series}"
     TooltipPosition="Hidden"
-    ZoomMode="X"> &lt;!-- mark -->
-&lt;/lvc:CartesianChart></code></pre>
+    ZoomMode="X"> <!-- mark -->
+</lvc:CartesianChart></code></pre>
 {{~ end ~}}
 
 {{~ if blazor ~}}

@@ -31,7 +31,7 @@ in the next example we will define our own scale, in this case we want the Y axi
 Using the previous example, we must remove the `MatchAxesScreenDataRatio=True`, then we take the chart instance in the UI and 
 call our function to initialize the custom scale:
 
-```c#
+```csharp
 // where myChart is a reference to chart in the UI.
 CustomScaleExtensions.DoubleY(myChart);
 ```
@@ -56,7 +56,7 @@ docs of your target UI framework.
 
 Finally we need to use our `InchSeparator()` extension in our chart:
 
-```c#
+```csharp
 // where myChart is a reference to chart in the UI.
 InchScaleExtensions.InchSeparator(myChart);
 ```

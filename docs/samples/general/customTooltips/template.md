@@ -31,7 +31,7 @@ You can quickly change the position, the font, the text size or the background c
 
 #### View model
 
-```c#
+```csharp
 [ObservableObject]
 public partial class ViewModel
 {

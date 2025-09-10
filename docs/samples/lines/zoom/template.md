@@ -72,7 +72,7 @@ you could set the `ZoomMode` property to:
 
 
 {{~ if blazor || winforms || eto ~}}
-```c#
+```csharp
 var flags = ZoomAndPanMode.Both | ZoomAndPanMode.NoFit;
 myChart.ZoomMode = flags;
 ```
@@ -108,7 +108,7 @@ the max and min visible limits of the axis, default is `null` and `null` means t
 
 Setting `MinLimit` and `MaxLimit` properties to `null` or `double.NaN` will clear the current limits and fit the the data to the viewport.
 
-```c#
+```csharp
 // where myChart is a reference to the chart in the UI
  foreach (var x in myChart.XAxes)
  {
@@ -182,7 +182,7 @@ On **Mobile** double tap the chart, hold the last tap and drag to select an area
 You can subscribe to the axis `PropertyChanged` event and read the `MinLimit` and `MaxLimit` properties, both are updated as the
 user zooms or pans.
 
-```c#
+```csharp
 // where myChart is a reference to the chart in the UI
 myChart.XAxes.First().PropertyChanged += OnPropertyChanged;
 
@@ -208,7 +208,7 @@ private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
 
 You can listen to the axis range changes and override the limits to your needs:
 
-```c#
+```csharp
 // where myChart is a reference to the chart in the UI
 myChart.XAxes.First().PropertyChanged += OnPropertyChanged;
 
@@ -241,7 +241,7 @@ You can manually trigger the functions in the chart that trigger zooming or pann
 `ZoomMode` property to `None`, this will prevent LiveCharts to fire zooming or panning, and then we could fire these features
 when we want, for example zooming on double tap or panning on mouse move.
 
-```c#
+```csharp
 // where myChart is a reference to the chart in the UI
 var engine = (CartesianChartEngine)myChart.CoreChart;
 
