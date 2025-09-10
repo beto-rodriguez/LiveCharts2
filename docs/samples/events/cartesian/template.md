@@ -52,17 +52,7 @@ restores the default paint when the pointer leaves.
 
 {{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/Events/Cartesian/Fruit.cs" ~}}
 
-{{~ if xaml ~}}
-### XAML
-{{~ end ~}}
-
-{{~ if winforms ~}}
-### Form code behind
-{{~ end ~}}
-
-{{~ if blazor~}}
-### HTML
-{{~ end~}}
+## {{~ view_title ~}}
 
 {{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/Events/Cartesian/$PlatformViewFile" ~}}
 

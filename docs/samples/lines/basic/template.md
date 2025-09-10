@@ -6,17 +6,7 @@
 {{ full_name | get_vm_from_docs }}
 ```
 
-{{~ if xaml ~}}
-## XAML
-{{~ end ~}}
-
-{{~ if winforms ~}}
-## Code Behind
-{{~ end ~}}
-
-{{~ if blazor~}}
-## HTML
-{{~ end~}}
+## {{~ view_title ~}}
 
 ```
 {{ full_name | get_view_from_docs }}

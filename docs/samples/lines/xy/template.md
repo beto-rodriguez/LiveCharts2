@@ -19,17 +19,7 @@ how to handle that object, if you want to learn more, please read the
 {{ full_name | get_vm_from_docs }}
 ```
 
-{{~ if xaml ~}}
-## XAML
-{{~ end ~}}
-
-{{~ if winforms ~}}
-## Code Behind
-{{~ end ~}}
-
-{{~ if blazor~}}
-## HTML
-{{~ end~}}
+## {{~ view_title ~}}
 
 ```
 {{ full_name | get_view_from_docs }}

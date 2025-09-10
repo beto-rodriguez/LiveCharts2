@@ -24,17 +24,7 @@ this sample also uses a ViewModel to populate the properties of the control(s) i
 {{ full_name | get_vm_from_docs }}
 ```
 
-{{~ if xaml ~}}
-## XAML
-{{~ end ~}}
-
-{{~ if winforms ~}}
-## Form code behind
-{{~ end ~}}
-
-{{~ if blazor ~}}
-## HTML
-{{~ end~}}
+## {{~ view_title ~}}
 
 Having the previous data (ViewModel), we add 3 charts to the UI, a `CartesianChart`, a `PieChart` and a `GeoMap`.
 

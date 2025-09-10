@@ -6,22 +6,12 @@
 {{ full_name | get_vm_from_docs }}
 ```
 
-{{~ if xaml ~}}
-## XAML
-{{~ end ~}}
-
-{{~ if winforms ~}}
-## Form code behind
-{{~ end ~}}
-
-{{~ if blazor~}}
-## HTML
-{{~ end~}}
+## {{~ view_title ~}}
 
 ```
 {{ full_name | get_view_from_docs }}
 ```
-`
+
 {{~ if !blazor ~}}
 ## CustomPieSeries.cs
 {{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/Pies/Icons/CustomPieSeries.cs" ~}}

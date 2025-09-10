@@ -26,17 +26,7 @@ measuring a chart.
 {{ full_name | get_vm_from_docs }}
 ```
 
-{{~ if xaml ~}}
-## XAML
-{{~ end ~}}
-
-{{~ if winforms ~}}
-## Form code behind
-{{~ end ~}}
-
-{{~ if blazor ~}}
-## HTML
-{{~ end~}}
+## {{~ view_title ~}}
 
 ```
 {{ full_name | get_view_from_docs }}
@@ -55,17 +45,7 @@ everything is happening on the same thread, but you must consider that now the U
 {{ full_name + "2" | get_vm_from_docs }}
 ```
 
-{{~ if xaml ~}}
-## XAML
-{{~ end ~}}
-
-{{~ if winforms ~}}
-## Form code behind
-{{~ end ~}}
-
-{{~ if blazor~}}
-## HTML
-{{~ end~}}
+## {{~ view_title ~}}
 
 ```
 {{ full_name + "2" | get_view_from_docs }}

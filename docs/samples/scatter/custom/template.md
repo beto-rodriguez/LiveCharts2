@@ -10,17 +10,7 @@
 
 {{~ "~/../samples/ViewModelsSamples/Scatter/Custom/MyGeometry.cs" | render_file_as_code ~}}
 
-{{~ if xaml ~}}
-## XAML
-{{~ end ~}}
-
-{{~ if winforms ~}}
-## Form code behind
-{{~ end ~}}
-
-{{~ if blazor~}}
-## HTML
-{{~ end~}}
+## {{~ view_title ~}}
 
 ```
 {{ full_name | get_view_from_docs }}
