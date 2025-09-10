@@ -22,9 +22,12 @@
 {{ full_name | get_view_from_docs }}
 ```
 
-{{~ if xaml~}}
-## StringToPaintConverter.cs
-{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/Pies/Nested/StringToPaintConverter.cs" ~}}
-{{~ end ~}}
+## CustomPieSeries.cs
+
+{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/Pies/Icons/CustomPieSeries.cs" ~}}
+
+## SvgLabel.cs
+
+{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/Pies/Icons/SvgLabel.cs" ~}}
 
 {{ render this "~/shared/relatedTo.md" }}
