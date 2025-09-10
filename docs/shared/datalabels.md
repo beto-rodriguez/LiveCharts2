@@ -3,7 +3,8 @@
 Data labels are labels for every point in a series, there are multiple properties to customize them, take a look at the 
 following sample:
 
-<pre><code>new {{ name  | to_title_case_no_spaces }}&lt;double>
+```csharp
+new {{ name  | to_title_case_no_spaces }}<double>
 {
     DataLabelsSize = 20,
     DataLabelsPaint = new SolidColorPaint(SKColors.Blue),
@@ -15,9 +16,10 @@ following sample:
     // and returns a string.
     // in this case we returned the PrimaryValue property as currency
     DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("C2"),
-    Values = new ObservableCollection&lt;double> { 2, 1, 3, 5, 3, 4, 6 },
+    Values = new ObservableCollection<double> { 2, 1, 3, 5, 3, 4, 6 },
     Fill = null
-}</code></pre>
+}
+```
 
 The previous series will result in the following chart:
 

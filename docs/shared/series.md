@@ -11,22 +11,23 @@ if this property is not set, then the library will generate a name for the serie
 series collection, "Series 3" when it is the third series in the series collection, and so on a series *n* will be 
 named "Series *n*".
 
-<pre><code>SeriesCollection = new ISeries[]
+```csharp
+SeriesCollection = new ISeries[]
 {
-    new {{ name  | to_title_case_no_spaces }}&lt;int>
+    new {{ name  | to_title_case_no_spaces }}<int>
     {
         Values = new []{ 2, 5, 4, 2, 6 },
         Name = "Income", // mark
         Stroke = null
     },
-    new {{ name | to_title_case_no_spaces }}&lt;int>
+    new {{ name | to_title_case_no_spaces }}<int>
     {
         Values = new []{ 3, 7, 2, 9, 4 },
         Name = "Outcome", // mark
         Stroke = null
     }
 };
-</code></pre>
+```
 
 ## Values property
 
@@ -36,18 +37,19 @@ generic argument (`<T>`) as soon as you let the library how to handle it, the li
 but you can register any type and teach the library how to handle any object in a chart, for more information please see the 
 [mappers article]({{ website_url }}/docs/{{ platform }}/{{ version }}/Overview.Mappers).
 
-<pre><code>var series1 = new {{ name  | to_title_case_no_spaces }}&lt;int>
+```csharp
+var series1 = new {{ name  | to_title_case_no_spaces }}<int>
 {
-    Values = new List&lt;int> { 2, 1, 3 }
+    Values = new List<int> { 2, 1, 3 }
 };
 
 // == Update the chart when a value is added, removed or replaced  == // mark
 // using ObservableCollections allows the chart to update
 // every time you add a new element to the values collection
 // (not needed in Blazor, it just... updates)
-var series2 = new {{ name  | to_title_case_no_spaces }}&lt;double>
+var series2 = new {{ name  | to_title_case_no_spaces }}<double>
 {
-    Values = new ObservableCollection&lt;double> { 2, 1, 3 }
+    Values = new ObservableCollection<double> { 2, 1, 3 }
 }
 series2.add(4); // and the chart will animate the change!
 
@@ -56,34 +58,38 @@ series2.add(4); // and the chart will animate the change!
 // update automatically when a property changes, the library already provides
 // many 'ready to go' objects such as the ObservableValue class.
 var observableValue =  new ObservableValue(5);
-var series3 = new {{ name  | to_title_case_no_spaces }}&lt;ObservableValue>
+var series3 = new {{ name  | to_title_case_no_spaces }}<ObservableValue>
 {
-    Values = new ObservableCollection&lt;ObservableValue> { observableValue },
+    Values = new ObservableCollection<ObservableValue> { observableValue },
 }
 observableValue.Value = 9; // the chart will animate the change from 5 to 9!
 
 // == Passing X and Y coordinates // mark 
 // you can indicate both, X and Y using the Observable point class.
 // or you could define your own object using mappers.
-var series4 = new {{ name  | to_title_case_no_spaces }}&lt;ObservablePoint>
+var series4 = new {{ name  | to_title_case_no_spaces }}<ObservablePoint>
 {
-    Values = new ObservableCollection&lt;ObservablePoint> { new ObservablePoint(2, 6)}
-}</code></pre>
+    Values = new ObservableCollection<ObservablePoint> { new ObservablePoint(2, 6)}
+}
+```
 
-<pre><code>// == Custom types and mappers == // mark
+```csharp
+// == Custom types and mappers == // mark
 // finally you can also use your own object, take a look at the City class.
 public class City 
 {
     public string Name { get; set; }
     public double Population { get; set; }
-}</code></pre>
+}
+```
 
-<pre><code>// we must let the series know how to handle the city class.
+```csharp
+// we must let the series know how to handle the city class.
 // use the Mapping property to build a point from the city class
 // you could also register the map globally.
 // for more about global mappers info see:
 // {{ website_url }}/docs/{{ platform }}/{{ version }}/Overview.Mappers
-var citiesSeries = new {{ name  | to_title_case_no_spaces }}&lt;City>
+var citiesSeries = new {{ name  | to_title_case_no_spaces }}<City>
 {
     Values = new City[]
     { 
@@ -102,7 +108,8 @@ var citiesSeries = new {{ name  | to_title_case_no_spaces }}&lt;City>
         
         return new Coordinate(index, city.Population.Value);
     }
-};</code></pre>
+};
+```
 
 :::info
 Automatic updates do not have a significant performance impact in most of the cases!

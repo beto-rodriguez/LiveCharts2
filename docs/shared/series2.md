@@ -24,14 +24,16 @@ every label or separator (even if they are not visible).
 
 If this property is not set, the library will set it according to the series type, take a look at the following samples:
 
-<pre><code>new LineSeries&lt;double>
+```csharp
+new LineSeries<double>
 {
     DataPadding = new LvcPoint(0, 0),
     Values = new ObservableCollection<double> { 2, 1, 3, 5, 3, 4, 6 },
     GeometryStroke = null,
     GeometryFill = null,
     Fill = null
-}</code></pre>
+}
+```
 
 Produces the following result:
 
@@ -39,26 +41,30 @@ Produces the following result:
 
 But you can remove the padding only from an axis, for example:
 
-<pre><code>new LineSeries&lt;double>
+```csharp
+new LineSeries<double>
 {
     DataPadding = new LvcPoint(0.5f, 0),
-    Values = new ObservableCollection&lt;double> { 2, 1, 3, 5, 3, 4, 6 },
+    Values = new ObservableCollection<double> { 2, 1, 3, 5, 3, 4, 6 },
     GeometryStroke = null,
     GeometryFill = null,
     Fill = null
-}</code></pre>
+}
+```
 
 ![image]({{ assets_url }}/docs/_assets/1.8.padding50.png)
 
 Or you can increase the distance:
 
-<pre><code>new LineSeries&lt;double>
+```csharp
+new LineSeries<double>
 {
     DataPadding = new LvcPoint(2, 2),
-    Values = new ObservableCollection&lt;double> { 2, 1, 3, 5, 3, 4, 6 },
+    Values = new ObservableCollection<double> { 2, 1, 3, 5, 3, 4, 6 },
     GeometryStroke = null,
     GeometryFill = null,
     Fill = null
-}</code></pre>
+}
+```
 
 ![image]({{ assets_url }}/docs/_assets/1.8.padding22.png)

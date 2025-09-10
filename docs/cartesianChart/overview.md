@@ -15,7 +15,8 @@ To get started all you need to do is assign the `Series` property with a collect
 [`ICartesianSeries`]({{ website_url }}/api/{{ version }}/LiveChartsCore.Kernel.Sketches.ICartesianSeries-1).
 
 {{~ if xaml ~}}
-<pre><code>using LiveChartsCore;
+```csharp
+using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Bars.Basic
@@ -25,55 +26,64 @@ namespace ViewModelsSamples.Bars.Basic
         public ISeries[] Series { get; set; }
             = new ISeries[]
             {
-                new LineSeries&lt;int>
+                new LineSeries<int>
                 {
                     Values = new int[] { 4, 6, 5, 3, -3, -1, 2 }
                 },
-                new ColumnSeries&lt;double>
+                new ColumnSeries<double>
                 {
                     Values = new double[] { 2, 5, 4, -2, 4, -3, 5 }
                 }
             };
     }
-}</code></pre>
+}
+```
 
-<pre><code>&lt;lvc:CartesianChart
+```xml
+<lvc:CartesianChart
     Series="{Binding Series}">
-&lt;/lvc:CartesianChart></code></pre>
+</lvc:CartesianChart>
+```
 {{~ end ~}}
 
 {{~ if blazor ~}}
-<pre><code>&lt;CartesianChart
+```xml
+<CartesianChart
     Series="series">
-&lt;/CartesianChart></code></pre>
+</CartesianChart>
+```
 
-<pre><code>private ISeries[] series = new ISeries[]
+```csharp
+private ISeries[] series = new ISeries[]
 {
-    new LineSeries&lt;int>
+    new LineSeries<int>
     {
         Values = new int[] { 4, 6, 5, 3, -3, -1, 2 }
     },
-    new ColumnSeries&lt;double>
+    new ColumnSeries<double>
     {
         Values = new double[] { 2, 5, 4, -2, 4, -3, 5 }
     }
-};</code></pre>
+};
+```
 {{~ end ~}}
 
 {{~ if winforms ~}}
 Drag a new `CartesianChart` control from your toolbox, then in the code behind assign the `Series` property:
 
-<pre><code>cartesianChart1.Series = new ISeries[]
+```csharp
+cartesianChart1.Series = new ISeries[]
 {
-    new LineSeries&lt;int>
+    new LineSeries<int>
     {
         Values = new int[] { 4, 6, 5, 3, -3, -1, 2 }
     },
-    new ColumnSeries&lt;double>
+    new ColumnSeries<double>
     {
         Values = new double[] { 2, 5, 4, -2, 4, -3, 5 }
     }
-};</code></pre>
+};
+```
 {{~ end ~}}
 
 ![image]({{ assets_url }}/docs/_assets/cc-mvp.png)
@@ -196,7 +206,8 @@ This is a brief sample about how to use the main features of the `Axis` class, y
 ## Axes.SeparatorsStyle
 
 {{~ if xaml ~}}
-<pre><code>using LiveChartsCore;
+```csharp
+using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
@@ -207,7 +218,7 @@ namespace ViewModelsSamples.Bars.Basic
     public class ViewModel
     {
         public ISeries[] Series { get; set; }
-            = new ISeries[] { new ColumnSeries&lt;int> { Values = new[] { 2, 5, 4, -2, 4, -3, 5 } } };
+            = new ISeries[] { new ColumnSeries<int> { Values = new[] { 2, 5, 4, -2, 4, -3, 5 } } };
 
         public Axis[] XAxes { get; set; }
             = new Axis[]
@@ -243,30 +254,36 @@ namespace ViewModelsSamples.Bars.Basic
                 }
             };
     }
-}</code></pre>
+}
+```
 
-<pre><code>&lt;lvc:CartesianChart
+```xml
+<lvc:CartesianChart
     Series="{Binding Series}"
     XAxes="{Binding XAxes}"
     YAxes="{Binding YAxes}">
-&lt;/lvc:CartesianChart></code></pre>
+</lvc:CartesianChart>
+```
 {{~ end ~}}
 
 {{~ if blazor ~}}
-<pre><code>&lt;CartesianChart
+```xml
+<CartesianChart
     Series="series"
     XAxes="xAxes"
     YAxes="yAxes">
-&lt;/CartesianChart></code></pre>
+</CartesianChart>
+```
 
-<pre><code>@using LiveChartsCore;
+```csharp
+@using LiveChartsCore;
 @using LiveChartsCore.SkiaSharpView;
 @using LiveChartsCore.SkiaSharpView.Painting;
 @using LiveChartsCore.SkiaSharpView.Painting.Effects;
 @using SkiaSharp;
 
 private ISeries[] series { get; set; }
-    = new ISeries[] { new ColumnSeries&lt;int> { Values = new[] { 2, 5, 4, -2, 4, -3, 5 } } };
+    = new ISeries[] { new ColumnSeries<int> { Values = new[] { 2, 5, 4, -2, 4, -3, 5 } } };
 
 private Axis[] xAxes { get; set; }
     = new Axis[]
@@ -300,11 +317,13 @@ private Axis[] yAxes { get; set; }
                 PathEffect = new DashEffect(new float[] { 3, 3 }) // mark
             } // mark
         }
-    };</code></pre>
+    };
+```
 {{~ end ~}}
 
 {{~ if winforms ~}}
-<pre><code>cartesianChart1.XAxes = new Axis[]
+```csharp
+cartesianChart1.XAxes = new Axis[]
 {
     new Axis
     {
@@ -334,22 +353,24 @@ cartesianChart1.YAxes = new Axis[]
             PathEffect = new DashEffect(new float[] { 3, 3 }) // mark
         } // mark
     }
-};</code></pre>
+};
+```
 {{~ end ~}}
 
 ![image]({{ assets_url }}/docs/_assets/axes-paints.png)
 
 ## Axes.Labels and Axes.Labelers
 
-<pre><code>Series = new ObservableCollection&lt;ISeries>
+```csharp
+Series = new ObservableCollection<ISeries>
 {
-    new ColumnSeries&lt;int>
+    new ColumnSeries<int>
     {
-        Values = new ObservableCollection&lt;int> { 200, 558, 458, 249 },
+        Values = new ObservableCollection<int> { 200, 558, 458, 249 },
     }
 };
 
-XAxes = new List&lt;Axis>
+XAxes = new List<Axis>
 {
     new Axis
     {
@@ -358,7 +379,7 @@ XAxes = new List&lt;Axis>
     }
 };
 
-YAxes = new List&lt;Axis>
+YAxes = new List<Axis>
 {
     new Axis
     {
@@ -374,7 +395,8 @@ YAxes = new List&lt;Axis>
         // But the one that LiveCharts provides creates shorter labels when
         // the amount is in millions or trillions
     }
-};</code></pre>
+};
+```
 
 ![image]({{ assets_url }}/docs/_assets/1.7.labels.png)
 
@@ -383,22 +405,28 @@ YAxes = new List&lt;Axis>
 It is disabled by default, to enable it you must set the `ZoomMode` property.
 
 {{~ if xaml ~}}
-<pre><code>&lt;lvc:CartesianChart
+```xml
+<lvc:CartesianChart
     Series="{Binding Series}"
     TooltipPosition="Hidden"
-    ZoomMode="X"> &lt;!-- mark -->
-&lt;/lvc:CartesianChart></code></pre>
+    ZoomMode="X"> <!-- mark -->
+</lvc:CartesianChart>
+```
 {{~ end ~}}
 
 {{~ if blazor ~}}
-<pre><code>&lt;CartesianChart
+```xml
+<CartesianChart
     Series="series"
-    ZoomMode="LiveChartsCore.Measure.ZoomAndPanMode.X"> &lt;!-- mark -->
-&lt;/CartesianChart></code></pre>
+    ZoomMode="LiveChartsCore.Measure.ZoomAndPanMode.X"> <!-- mark -->
+</CartesianChart>
+```
 {{~ end ~}}
 
 {{~ if winforms ~}}
-<pre><code>cartesianChart1.ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.X;</code></pre>
+```csharp
+cartesianChart1.ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.X;
+```
 {{~ end ~}}
 
 ![image]({{ assets_url }}/docs/_assets/zoom-x.gif)
@@ -410,21 +438,27 @@ do not confuse with animations seed, this property controls the new axis length 
 method is called.
 
 {{~ if xaml ~}}
-<pre><code>&lt;lvc:CartesianChart
+```xml
+<lvc:CartesianChart
     Series="{Binding Series}"
-    ZoomingSpeed="0"> &lt;!-- mark -->
-&lt;/lvc:CartesianChart></code></pre>
+    ZoomingSpeed="0"> <!-- mark -->
+</lvc:CartesianChart>
+```
 {{~ end ~}}
 
 {{~ if blazor ~}}
-<pre><code>&lt;CartesianChart
+```xml
+<CartesianChart
     Series="series"
-    ZoomingSpeed="0"> &lt;!-- mark -->
-&lt;/CartesianChart></code></pre>
+    ZoomingSpeed="0"> <!-- mark -->
+</CartesianChart>
+```
 {{~ end ~}}
 
 {{~ if winforms ~}}
-<pre><code>cartesianChart1.ZoomingSpeed = 0;</code></pre>
+```csharp
+cartesianChart1.ZoomingSpeed = 0;
+```
 {{~ end ~}}
 
 ## Clearing the current zooming or panning
@@ -442,7 +476,8 @@ Setting `MinLimit` and `MaxLimit` properties to `null` or `double.NaN` will clea
 This property defines a visual border for the `DrawMargin`.
 
 {{~ if xaml ~}}
-<pre><code>using LiveChartsCore;
+```csharp
+using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
@@ -459,34 +494,43 @@ namespace ViewModelsSamples.Lines.Area
 
         public ISeries[] Series { get; set; } = new[] { ... };
     }
-}</code></pre>
+}
+```
 
-<pre><code>&lt;lvc:CartesianChart
+```xml
+<lvc:CartesianChart
     Series="{Binding Series}"
-    DrawMarginFrame="{Binding DrawMarginFrame}">&lt;!-- mark -->
-&lt;/lvc:CartesianChart></code></pre>
+    DrawMarginFrame="{Binding DrawMarginFrame}"><!-- mark -->
+</lvc:CartesianChart>
+```
 {{~ end ~}}
 
 {{~ if blazor ~}}
-<pre><code>&lt;CartesianChart
+```xml
+<CartesianChart
     Series="series"
-    DrawMarginFrame="drawMarginFrame">&lt;!-- mark -->
-&lt;/CartesianChart></code></pre>
+    DrawMarginFrame="drawMarginFrame"><!-- mark -->
+</CartesianChart>
+```
 
-<pre><code>private DrawMarginFrame drawMarginFrame { get; set; }
+```csharp
+private DrawMarginFrame drawMarginFrame { get; set; }
     = new DrawMarginFrame
     {
         Fill = new SolidColorPaint(SKColors.AliceBlue),
         Stroke = new SolidColorPaint(SKColors.Black, 3)
-    };</code></pre>
+    };
+```
 {{~ end ~}}
 
 {{~ if winforms ~}}
-<pre><code>cartesianChart1.DrawMarginFrame = new DrawMarginFrame
+```csharp
+cartesianChart1.DrawMarginFrame = new DrawMarginFrame
 {
     Fill = new SolidColorPaint(SKColors.AliceBlue),
     Stroke = new SolidColorPaint(SKColors.Black, 3)
-};</code></pre>
+};
+```
 {{~ end ~}}
 
 ![sections]({{ assets_url }}/docs/_assets/drawmarginframe.png)
@@ -510,7 +554,8 @@ the section must start at the beginning of the Y axis, default is null.
 the section must go to the end of the Y axis, default is null.
 
 {{~ if xaml ~}}
-<pre><code>using LiveChartsCore;
+```csharp
+using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
@@ -551,21 +596,27 @@ namespace ViewModelsSamples.General.Sections
 
         public ISeries[] Series { get; set; } = new ISeries[] { ... };
     }
-}</code></pre>
+}
+```
 
-<pre><code>&lt;lvc:CartesianChart
+```xml
+<lvc:CartesianChart
     Series="{Binding Series}"
-    Sections="{Binding Sections}">&lt;!-- mark -->
-&lt;/lvc:CartesianChart></code></pre>
+    Sections="{Binding Sections}"><!-- mark -->
+</lvc:CartesianChart>
+```
 {{~ end ~}}
 
 {{~ if blazor ~}}
-<pre><code>&lt;CartesianChart
+```xml
+<CartesianChart
     Series="series"
-    Sections="sections">&lt;!-- mark -->
-&lt;/CartesianChart></code></pre>
+    Sections="sections"><!-- mark -->
+</CartesianChart>
+```
 
-<pre><code>private RectangularSection[] sections { get; set; }
+```csharp
+private RectangularSection[] sections { get; set; }
     = new RectangularSection[]
     {
         new RectangularSection
@@ -593,11 +644,13 @@ namespace ViewModelsSamples.General.Sections
             Xi = 8,
             Fill = new SolidColorPaint(new SKColor(249, 251, 231))
         }
-    };</code></pre>
+    };
+```
 {{~ end ~}}
 
 {{~ if winforms ~}}
-<pre><code>cartesianChart1.Sections = = new RectangularSection[]
+```csharp
+cartesianChart1.Sections = new RectangularSection[]
 {
     new RectangularSection
     {
@@ -624,7 +677,8 @@ namespace ViewModelsSamples.General.Sections
         Xi = 8,
         Fill = new SolidColorPaint(new SKColor(249, 251, 231))
     }
-};</code></pre>
+};
+```
 {{~ end ~}}
 
 ![sections]({{ assets_url }}/docs/_assets/cc-sections.png)

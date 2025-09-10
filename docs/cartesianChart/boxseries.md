@@ -15,9 +15,10 @@ and the current theme.
 
 ![image]({{ assets_url }}/docs/_assets/box-stroke.png)
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new BoxSeries&lt;BoxValue>
+    new BoxSeries<BoxValue>
     {
         Values = new BoxValue[]
         {
@@ -29,7 +30,8 @@ and the current theme.
         Stroke = new SolidColorPaint(SKColors.Red, 3),
         Fill = null
     }
-};</code></pre>
+};
+```
 
 :::info
 Paints can create gradients, dashed lines and more, if you need help using the `Paint` instances take 
@@ -43,9 +45,10 @@ and the current theme.
 
 ![image]({{ assets_url }}/docs/_assets/box-fill.png)
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new BoxSeries&lt;BoxValue>
+    new BoxSeries<BoxValue>
     {
         Values = new BoxValue[]
         {
@@ -56,7 +59,8 @@ and the current theme.
         },
         Fill = new SolidColorPaint(SKColors.Red)
     }
-};</code></pre>
+};
+```
 :::info
 Paints can create gradients, dashed lines and more, if you need help using the `Paint` instances take 
 a look at the [Paints article]({{ website_url }}/docs/{{ platform }}/{{ version }}/Overview.Paints).
@@ -68,40 +72,46 @@ Specifies the maximum width a column can take, take a look at the following samp
 
 ![image]({{ assets_url }}/docs/_assets/box-mw10.png)
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new BoxSeries&lt;BoxValue>
+    new BoxSeries<BoxValue>
     {
         Values = new BoxValue[] { ... },
         MaxBarWidth = 10 // mark
     }
-};</code></pre>
+};
+```
 
 But now lets use `double.MaxValue` to see the difference.
 
 ![image]({{ assets_url }}/docs/_assets/box-mw-.png)
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new BoxSeries&lt;BoxValue>
+    new BoxSeries<BoxValue>
     {
         Values = new BoxValue[] { ... },
         MaxBarWidth = double.MaxValue // mark
     }
-};</code></pre>
+};
+```
 
 Finally we could aso set the padding to `0`.
 
 ![image]({{ assets_url }}/docs/_assets/box-mw-p0.png)
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new BoxSeries&lt;BoxValue>
+    new BoxSeries<BoxValue>
     {
         Values = new BoxValue[] { ... },
         MaxBarWidth = double.MaxValue,
         Padding = 0 // mark
     }
-};</code></pre>
+};
+```
 
 {{ render this "~/shared/series2.md" }}

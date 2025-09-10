@@ -25,60 +25,66 @@ Notice the `Hidden` position will disable tooltips in a chart.
 :::
 
 {{~ if xaml ~}}
-<pre><code>&lt;lvc:CartesianChart
+```xml
+<lvc:CartesianChart
     Series="{Binding Series}"
-    TooltipPosition="Top">&lt;!-- mark -->
-&lt;/lvc:CartesianChart>
-&lt;lvc:CartesianChart
+    TooltipPosition="Top"><!-- mark -->
+</lvc:CartesianChart>
+<lvc:CartesianChart
     Series="{Binding Series}"
-    TooltipPosition="Bottom">&lt;!-- mark -->
-&lt;/lvc:CartesianChart>
-&lt;lvc:CartesianChart
+    TooltipPosition="Bottom"><!-- mark -->
+</lvc:CartesianChart>
+<lvc:CartesianChart
     Series="{Binding Series}"
-    TooltipPosition="Left">&lt;!-- mark -->
-&lt;/lvc:CartesianChart>
-&lt;lvc:CartesianChart
+    TooltipPosition="Left"><!-- mark -->
+</lvc:CartesianChart>
+<lvc:CartesianChart
     Series="{Binding Series}"
-    TooltipPosition="Right">&lt;!-- mark -->
-&lt;/lvc:CartesianChart>
-&lt;lvc:CartesianChart
+    TooltipPosition="Right"><!-- mark -->
+</lvc:CartesianChart>
+<lvc:CartesianChart
     Series="{Binding Series}"
-    TooltipPosition="Center">&lt;!-- mark -->
-&lt;/lvc:CartesianChart>
-&lt;lvc:CartesianChart
+    TooltipPosition="Center"><!-- mark -->
+</lvc:CartesianChart>
+<lvc:CartesianChart
     Series="{Binding Series}"
-    TooltipPosition="Hidden">&lt;!-- mark -->
-&lt;/lvc:CartesianChart></code></pre>
+    TooltipPosition="Hidden"><!-- mark -->
+</lvc:CartesianChart>
+```
 {{~ end ~}}
 
 {{~ if blazor ~}}
-<pre><code>&lt;CartesianChart
+```xml
+<CartesianChart
     Series="series"
-    TooltipPosition="LiveChartsCore.Measure.TooltipPosition.Top">&lt;!-- mark -->
-&lt;/CartesianChart>
-&lt;CartesianChart
+    TooltipPosition="LiveChartsCore.Measure.TooltipPosition.Top"><!-- mark -->
+</CartesianChart>
+<CartesianChart
     Series="series"
-    TooltipPosition="LiveChartsCore.Measure.TooltipPosition.Bottom">&lt;!-- mark -->
-&lt;/CartesianChart>
-&lt;CartesianChart
+    TooltipPosition="LiveChartsCore.Measure.TooltipPosition.Bottom"><!-- mark -->
+</CartesianChart>
+<CartesianChart
     Series="series"
-    TooltipPosition="LiveChartsCore.Measure.TooltipPosition.Left">&lt;!-- mark -->
-&lt;/CartesianChart>
-&lt;CartesianChart
+    TooltipPosition="LiveChartsCore.Measure.TooltipPosition.Left"><!-- mark -->
+</CartesianChart>
+<CartesianChart
     Series="series"
-    TooltipPosition="LiveChartsCore.Measure.TooltipPosition.Right">&lt;!-- mark -->
-&lt;/CartesianChart>
-&lt;CartesianChart
+    TooltipPosition="LiveChartsCore.Measure.TooltipPosition.Right"><!-- mark -->
+</CartesianChart>
+<CartesianChart
     Series="series"
-    TooltipPosition="LiveChartsCore.Measure.TooltipPosition.Center">&lt;!-- mark -->
-&lt;/CartesianChart>
-&lt;CartesianChart
+    TooltipPosition="LiveChartsCore.Measure.TooltipPosition.Center"><!-- mark -->
+</CartesianChart>
+<CartesianChart
     Series="series"
-    TooltipPosition="LiveChartsCore.Measure.TooltipPosition.Hidden">&lt;!-- mark -->
-&lt;/CartesianChart></code></pre>
+    TooltipPosition="LiveChartsCore.Measure.TooltipPosition.Hidden"><!-- mark -->
+</CartesianChart>
+```
 {{~ end ~}}
 
 {{~ if winforms ~}}
-<pre><code>cartesianChart1.Series = new ISeries[] { new LineSeries&lt;int> { Values = new[] { 2, 5, 4 } } };
-cartesianChart1.TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Bottom;</code></pre>
+```csharp
+cartesianChart1.Series = new ISeries[] { new LineSeries<int> { Values = new[] { 2, 5, 4 } } };
+cartesianChart1.TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Bottom;
+```
 {{~ end ~}}

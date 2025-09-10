@@ -14,7 +14,8 @@ if you need to know more about gauges please read
 [this guide]({{ website_url }}/docs/{{ platform }}/{{ version }}/PieChart.Gauges).
 
 {{~ if xaml ~}}
-<pre><code>using LiveChartsCore;
+```csharp
+using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Pies.Basic
@@ -24,46 +25,55 @@ namespace ViewModelsSamples.Pies.Basic
         public ISeries[] Series { get; set; }
             = new ISeries[]
             {
-                new PieSeries&lt;double> { Values = new double[] { 2 } },
-                new PieSeries&lt;double> { Values = new double[] { 4 } },
-                new PieSeries&lt;double> { Values = new double[] { 1 } },
-                new PieSeries&lt;double> { Values = new double[] { 4 } },
-                new PieSeries&lt;double> { Values = new double[] { 3 } }
+                new PieSeries<double> { Values = new double[] { 2 } },
+                new PieSeries<double> { Values = new double[] { 4 } },
+                new PieSeries<double> { Values = new double[] { 1 } },
+                new PieSeries<double> { Values = new double[] { 4 } },
+                new PieSeries<double> { Values = new double[] { 3 } }
             };
     }
-}</code></pre>
+}
+```
 
-<pre><code>&lt;lvc:PieChart
+```xml
+<lvc:PieChart
     Series="{Binding Series}">
-&lt;/lvc:PieChart></code></pre>
+</lvc:PieChart>
+```
 {{~ end ~}}
 
 {{~ if blazor ~}}
-<pre><code>&lt;PieChart
+```xml
+<PieChart
     Series="series">
-&lt;/PieChart></code></pre>
+</PieChart>
+```
 
-<pre><code>private ISeries[] series = new ISeries[]
+```csharp
+private ISeries[] series = new ISeries[]
 {
-    new PieSeries&lt;double> { Values = new double[] { 2 } },
-    new PieSeries&lt;double> { Values = new double[] { 4 } },
-    new PieSeries&lt;double> { Values = new double[] { 1 } },
-    new PieSeries&lt;double> { Values = new double[] { 4 } },
-    new PieSeries&lt;double> { Values = new double[] { 3 } }
-};</code></pre>
+    new PieSeries<double> { Values = new double[] { 2 } },
+    new PieSeries<double> { Values = new double[] { 4 } },
+    new PieSeries<double> { Values = new double[] { 1 } },
+    new PieSeries<double> { Values = new double[] { 4 } },
+    new PieSeries<double> { Values = new double[] { 3 } }
+};
+```
 {{~ end ~}}
 
 {{~ if winforms ~}}
 Drag a new `PieChart` control from your toolbox, then in the code behind assign the `Series` property:
 
-<pre><code>PieChart1.Series = new ISeries[]
+```csharp
+PieChart1.Series = new ISeries[]
 {
-    new PieSeries&lt;double> { Values = new double[] { 2 } },
-    new PieSeries&lt;double> { Values = new double[] { 4 } },
-    new PieSeries&lt;double> { Values = new double[] { 1 } },
-    new PieSeries&lt;double> { Values = new double[] { 4 } },
-    new PieSeries&lt;double> { Values = new double[] { 3 } }
-};</code></pre>
+    new PieSeries<double> { Values = new double[] { 2 } },
+    new PieSeries<double> { Values = new double[] { 4 } },
+    new PieSeries<double> { Values = new double[] { 1 } },
+    new PieSeries<double> { Values = new double[] { 4 } },
+    new PieSeries<double> { Values = new double[] { 3 } }
+};
+```
 {{~ end ~}}
 
 ![image]({{ assets_url }}/docs/_assets/piemvp.png)
@@ -76,21 +86,27 @@ the pie, the following diagram explains where the `PieChart` rotation starts:
 ![image]({{ assets_url }}/docs/_assets/pie-rotation.png)
 
 {{~ if xaml ~}}
-<pre><code>&lt;lvc:PieChart
+```xml
+<lvc:PieChart
     InitialRotation="-90">
-&lt;/lvc:PieChart></code></pre>
+</lvc:PieChart>
+```
 {{~ end ~}}
 
 {{~ if blazor ~}}
-<pre><code>&lt;PieChart
+```xml
+<PieChart
     InitialRotation="-90">
-&lt;/PieChart></code></pre>
+</PieChart>
+```
 {{~ end ~}}
 
 {{~ if winforms ~}}
 Drag a new `PieChart` control from your toolbox, then in the code behind assign the `Series` property:
 
-<pre><code>PieChart1.InitialRotation = -90;</code></pre>
+```csharp
+PieChart1.InitialRotation = -90;
+```
 {{~ end ~}}
 
 Notice a change in the `InitialRotation` property is animated automatically based on the chart animations settings:
@@ -102,21 +118,27 @@ Notice a change in the `InitialRotation` property is animated automatically base
 This property determines the complete angle in degrees of the chart, the default value is 360.
 
 {{~ if xaml ~}}
-<pre><code>&lt;lvc:PieChart
+```xml
+<lvc:PieChart
     MaxAngle="270">
-&lt;/lvc:PieChart></code></pre>
+</lvc:PieChart>
+```
 {{~ end ~}}
 
 {{~ if blazor ~}}
-<pre><code>&lt;PieChart
+```xml
+<PieChart
     MaxAngle="270">
-&lt;/PieChart></code></pre>
+</PieChart>
+```
 {{~ end ~}}
 
 {{~ if winforms ~}}
 Drag a new `PieChart` control from your toolbox, then in the code behind assign the `Series` property:
 
-<pre><code>PieChart1.MaxAngle = 270;</code></pre>
+```csharp
+PieChart1.MaxAngle = 270;
+```
 {{~ end ~}}
 
 Notice the `MaxAngle` property is animated automatically based on the chart animations settings:

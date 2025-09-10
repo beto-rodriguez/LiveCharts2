@@ -15,9 +15,10 @@ and the current theme.
 
 ![image]({{ assets_url }}/docs/_assets/polarlinestroke.png)
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new PolarLineSeries&lt;int>
+    new PolarLineSeries<int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
         Stroke = new SolidColorPaint(SKColors.Blue) { StrokeThickness = 4 }, // mark
@@ -25,7 +26,7 @@ and the current theme.
         GeometryFill = null,
         GeometryStroke = null
     },
-    new PolarLineSeries&lt;int>
+    new PolarLineSeries<int>
     {
         Values = new [] { 7, 5, 3, 2, 6 },
         Stroke = new SolidColorPaint(SKColors.Red) { StrokeThickness = 8 }, // mark
@@ -33,7 +34,7 @@ and the current theme.
         GeometryFill = null,
         GeometryStroke = null
     },
-    new PolarLineSeries&lt;int>
+    new PolarLineSeries<int>
     {
         Values = new [] { 4, 2, 5, 3, 9 },
         Stroke = new SolidColorPaint(SKColors.Green) { StrokeThickness = 1 }, // mark
@@ -41,7 +42,8 @@ and the current theme.
         GeometryFill = null,
         GeometryStroke = null
     }
-};</code></pre>
+};
+```
 
 ## Fill property
 
@@ -52,9 +54,10 @@ The alpha channel enables transparency, it goes from 0 to 255, 0 is transparent 
 
 ![image]({{ assets_url }}/docs/_assets/polarlinefill.png)
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new PolarLineSeries&lt;int>
+    new PolarLineSeries<int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
         Fill = new SolidColorPaint(SKColors.Blue.WithAlpha(90)), // mark
@@ -62,7 +65,7 @@ The alpha channel enables transparency, it goes from 0 to 255, 0 is transparent 
         GeometryFill = null,
         GeometryStroke = null
     },
-    new PolarLineSeries&lt;int>
+    new PolarLineSeries<int>
     {
         Values = new [] { 7, 5, 3, 2, 6 },
         Fill = new SolidColorPaint(SKColors.Red.WithAlpha(90)), // mark
@@ -70,7 +73,7 @@ The alpha channel enables transparency, it goes from 0 to 255, 0 is transparent 
         GeometryFill = null,
         GeometryStroke = null
     },
-    new PolarLineSeries&lt;int>
+    new PolarLineSeries<int>
     {
         Values = new [] { 4, 2, 5, 3, 9 },
         Fill = new SolidColorPaint(SKColors.Green.WithAlpha(90)), // mark
@@ -78,7 +81,8 @@ The alpha channel enables transparency, it goes from 0 to 255, 0 is transparent 
         GeometryFill = null,
         GeometryStroke = null
     }
-};</code></pre>
+};
+```
 
 ## GeometryFill and GeometryStroke properties
 
@@ -88,9 +92,10 @@ the series position in your series collection and the current theme.
 
 ![image]({{ assets_url }}/docs/_assets/polarlinegsf.png)
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new PolarLineSeries&lt;int>
+    new PolarLineSeries<int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
         Stroke = new SolidColorPaint(SKColors.Blue) { StrokeThickness = 4 },
@@ -98,7 +103,7 @@ the series position in your series collection and the current theme.
         GeometryFill = new SolidColorPaint(SKColors.AliceBlue), // mark
         GeometryStroke = new SolidColorPaint(SKColors.Gray) { StrokeThickness = 4 } // mark
     },
-    new PolarLineSeries&lt;int>
+    new PolarLineSeries<int>
     {
         Values = new [] { 7, 5, 3, 2, 6 },
         Stroke = new SolidColorPaint(SKColors.Red) { StrokeThickness = 8 },
@@ -106,7 +111,8 @@ the series position in your series collection and the current theme.
         GeometryFill = new SolidColorPaint(SKColors.IndianRed), // mark
         GeometryStroke = new SolidColorPaint(SKColors.DarkSalmon) { StrokeThickness = 8 } // mark
     }
-};</code></pre>
+};
+```
 
 ## GeometrySize property
 
@@ -114,19 +120,21 @@ Determines the size of the geometry, if this property is not set, then the libra
 
 ![image]({{ assets_url }}/docs/_assets/polarlinegs.png)
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new PolarLineSeries&lt;int>
+    new PolarLineSeries<int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
         GeometrySize = 10 // mark
     },
-    new PolarLineSeries&lt;int>
+    new PolarLineSeries<int>
     {
         Values = new [] { 7, 5, 3, 2, 6 },
         GeometrySize = 30 // mark
     }
-};</code></pre>
+};
+```
 
 ## LineSmoothness property
 
@@ -135,19 +143,21 @@ value will be ignored, where 0 is straight and 1 is the most curved line.
 
 ![image]({{ assets_url }}/docs/_assets/polarlinesmothness.png)
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new PolarLineSeries&lt;int>
+    new PolarLineSeries<int>
     {
         Values = new [] { 5, 4, 7, 3, 8 },
         LineSmoothness = 0 // mark
     },
-    new PolarLineSeries&lt;int>
+    new PolarLineSeries<int>
     {
         Values = new [] { 7, 2, 6, 2, 6 },
         LineSmoothness = 1 // mark
     }
-};</code></pre>
+};
+```
 
 ## EnableNullSplitting property
 
@@ -156,9 +166,10 @@ series finds a `null` instance then the series will create a gap.
 
 ![image]({{ assets_url }}/docs/_assets/polarlinesnullsplit.png)
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new PolarLineSeries&lt;int?>
+    new PolarLineSeries<int?>
     {
         Values = new int?[] 
         { 
@@ -173,6 +184,7 @@ series finds a `null` instance then the series will create a gap.
         LineSmoothness = 0,
         IsClosed = false
     }
-};</code></pre>
+};
+```
 
 {{ render this "~/shared/series2.md" }}

@@ -12,55 +12,60 @@ You can place a legend at `Top`, `Bottom`, `Left`, `Right` or `Hidden` positions
 disable legends in a chart, default value is `Hidden`.
 
 {{~ if xaml ~}}
-<pre><code>&lt;lvc:CartesianChart
+```xml
+<lvc:CartesianChart
     Series="{Binding Series}"
-    LegendPosition="Top">&lt;!-- mark -->
-&lt;/lvc:CartesianChart>
-&lt;lvc:CartesianChart
+    LegendPosition="Top"><!-- mark -->
+</lvc:CartesianChart>
+<lvc:CartesianChart
     Series="{Binding Series}"
-    LegendPosition="Bottom">&lt;!-- mark -->
-&lt;/lvc:CartesianChart>
-&lt;lvc:CartesianChart
+    LegendPosition="Bottom"><!-- mark -->
+</lvc:CartesianChart>
+<lvc:CartesianChart
     Series="{Binding Series}"
-    LegendPosition="Left">&lt;!-- mark -->
-&lt;/lvc:CartesianChart>
-&lt;lvc:CartesianChart
+    LegendPosition="Left"><!-- mark -->
+</lvc:CartesianChart>
+<lvc:CartesianChart
     Series="{Binding Series}"
-    LegendPosition="Right">&lt;!-- mark -->
-&lt;/lvc:CartesianChart>
-&lt;lvc:CartesianChart
+    LegendPosition="Right"><!-- mark -->
+</lvc:CartesianChart>
+<lvc:CartesianChart
     Series="{Binding Series}"
-    LegendPosition="Hidden">&lt;!-- mark -->
-&lt;/lvc:CartesianChart></code></pre>
+    LegendPosition="Hidden"><!-- mark -->
+</lvc:CartesianChart>
+```
 {{~ end ~}}
 
 {{~ if blazor ~}}
-<pre><code>&lt;CartesianChart
+```xml
+<CartesianChart
     Series="series"
-    LegendPosition="LiveChartsCore.Measure.LegendPosition.Top">&lt;!-- mark -->
-&lt;/CartesianChart>
-&lt;CartesianChart
+    LegendPosition="LiveChartsCore.Measure.LegendPosition.Top"><!-- mark -->
+</CartesianChart>
+<CartesianChart
     Series="series"
-    LegendPosition="LiveChartsCore.Measure.LegendPosition.Bottom">&lt;!-- mark -->
-&lt;/CartesianChart>
-&lt;CartesianChart
+    LegendPosition="LiveChartsCore.Measure.LegendPosition.Bottom"><!-- mark -->
+</CartesianChart>
+<CartesianChart
     Series="series"
-    LegendPosition="LiveChartsCore.Measure.LegendPosition.Left">&lt;!-- mark -->
-&lt;/CartesianChart>
-&lt;CartesianChart
+    LegendPosition="LiveChartsCore.Measure.LegendPosition.Left"><!-- mark -->
+</CartesianChart>
+<CartesianChart
     Series="series"
-    LegendPosition="LiveChartsCore.Measure.LegendPosition.Right">&lt;!-- mark -->
-&lt;/CartesianChart>
-&lt;CartesianChart
+    LegendPosition="LiveChartsCore.Measure.LegendPosition.Right"><!-- mark -->
+</CartesianChart>
+<CartesianChart
     Series="series"
-    LegendPosition="LiveChartsCore.Measure.LegendPosition.Hidden">&lt;!-- mark -->
-&lt;/CartesianChart></code></pre>
+    LegendPosition="LiveChartsCore.Measure.LegendPosition.Hidden"><!-- mark -->
+</CartesianChart>
+```
 {{~ end ~}}
 
 {{~ if winforms ~}}
-<pre><code>cartesianChart1.LegendPosition = LiveChartsCore.Measure.LegendPosition.Bottom; // mark
+```csharp
+cartesianChart1.LegendPosition = LiveChartsCore.Measure.LegendPosition.Bottom; // mark
 // or use Top, Left, Right or Hidden
-</code></pre>
+```
 {{~ end ~}}
 
 # Customize default legends

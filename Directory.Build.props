@@ -34,10 +34,10 @@
   the IsPacking check ensures that this config is not used in the NuGet packages.
   -->
   <PropertyGroup Condition="'$(IsPacking)' != 'true'">
-    <GPU>true</GPU>
+    <GPU>false</GPU>
     <VSYNC>true</VSYNC>
     <FPS>30</FPS>
-    <Diagnose>true</Diagnose>
+    <Diagnose>false</Diagnose>
     <UsesUnoSkiaRenderer>true</UsesUnoSkiaRenderer>
   </PropertyGroup>
 
