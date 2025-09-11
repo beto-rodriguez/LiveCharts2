@@ -12,7 +12,7 @@ This example uses `MotionProperties`, this is a special type of property in the 
 when the value changes. `MotionProperties` require a lot of metadata to work (similar to dependency or bindable properties)
 but instead of manually writing all that boring code, install the [LiveChartsGenerators](https://www.nuget.org/packages/LiveChartsGenerators) NuGet package:
 
-{{ "LiveChartsGenerators" | from_nuget_sg }}
+{{ "LiveChartsGenerators@1.0.1" | from_nuget_sg }}
 
 ## Intro
 
