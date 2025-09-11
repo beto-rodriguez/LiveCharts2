@@ -1,10 +1,12 @@
 {{ render "~/shared/genericSampleSimpleHeader.md" }}
 
+{{~ if mvvm ~}}
 ## View model
 
-```
+```csharp
 {{ full_name | get_vm_from_docs }}
 ```
+{{~ end ~}}
 
 ## LogarithmicPoint.cs
 

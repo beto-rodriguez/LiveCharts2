@@ -6,11 +6,13 @@ the creation and destruction of the drawn geometries in the canvas.
 
 In the next example, we create a `CartesianChart`, this chart contains multiple visual elements, each visual element is defined below in this article:
 
+{{~ if mvvm ~}}
 ## View Model
 
 ```csharp
 {{ full_name | get_vm_from_docs }}
 ```
+{{~ end ~}}
 
 ## {{~ view_title ~}}
 

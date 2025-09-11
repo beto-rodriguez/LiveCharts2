@@ -41,11 +41,13 @@ this sample also uses a ViewModel to populate the properties of the control(s) i
     <img src="{{ assets_url }}/docs/{{ unique_name }}/all.png" alt="sample image" />
 </div>
 
+{{~ if mvvm ~}}
 ## View model
 
 ```csharp
 {{ full_name | get_vm_from_docs }}
 ```
+{{~ end ~}}
 
 ## {{~ view_title ~}}
 

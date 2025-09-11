@@ -13,11 +13,13 @@ more information about SkiaSharp [here](https://learn.microsoft.com/en-us/xamari
 In the next example we use the `UpdateStarted` command/event in the `CartesianChart`, this command/event is raised every time
 the control is measured, a LiveCharts control is measured when the data or the control size change.
 
+{{~ if mvvm ~}}
 ## View model
 
 ```csharp
 {{ full_name | get_vm_from_docs }}
 ```
+{{~ end ~}}
 
 ## {{~ view_title ~}}
 

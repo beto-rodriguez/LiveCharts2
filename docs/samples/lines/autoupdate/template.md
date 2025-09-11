@@ -4,11 +4,13 @@
 This example uses the `LineSeries` class but it works the same for any series in the library
 :::
 
+{{~ if mvvm ~}}
 ## View model
 
 ```csharp
 {{ full_name | get_vm_from_docs }}
 ```
+{{~ end ~}}
 
 ## {{~ view_title ~}}
 

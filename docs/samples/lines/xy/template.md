@@ -13,11 +13,13 @@ that object to and `(X, Y)` point, the library can build charts from any object,
 how to handle that object, if you want to learn more, please read the 
 [Mappers article](https://livecharts.dev/docs/{{ platform }}/{{ version }}/Overview.Mappers).
 
+{{~ if mvvm ~}}
 ## View Model
 
 ```csharp
 {{ full_name | get_vm_from_docs }}
 ```
+{{~ end ~}}
 
 ## {{~ view_title ~}}
 

@@ -1,10 +1,12 @@
 {{ render "~/shared/genericSampleHeader.md" }}
 
+{{~ if mvvm ~}}
 ## View Model
 
 ```csharp
 {{ full_name | get_vm_from_docs }}
 ```
+{{~ end ~}}
 
 ## {{~ view_title ~}}
 

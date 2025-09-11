@@ -44,13 +44,15 @@ restores the default paint when the pointer leaves.
     <img src="{{ assets_url }}/docs/{{ unique_name }}/result.gif" alt="sample image" />
 </div>
 
-### View model
+{{~ if mvvm ~}}
+## View model
 
 ```csharp
 {{~ render "~/../samples/ViewModelsSamples/Events/Cartesian/ViewModel.cs" ~}}
 ```
+{{~ end ~}}
 
-### Fruit.cs
+## Fruit.cs
 
 ```csharp
 {{~ render "~/../samples/ViewModelsSamples/Events/Cartesian/Fruit.cs" ~}}
