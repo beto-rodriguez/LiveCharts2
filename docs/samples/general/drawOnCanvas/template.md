@@ -6,6 +6,16 @@ are handled in the library, but in general the recommended way to draw a custom 
 
 {{ render "~/shared/genericSampleJustGifHeader.md" }}
 
+## Pre-requisites
+
+This example uses `MotionProperties`, this is a special type of property in the library that allows properties to animate
+when the value changes. `MotionProperties` require a lot of metadata to work (similar to dependency or bindable properties)
+but instead of manually writing all that boring code, install the [LiveChartsGenerators](https://www.nuget.org/packages/LiveChartsGenerators) NuGet package:
+
+{{ "LiveChartsGenerators" | from_nuget_sg }}
+
+## Intro
+
 We can directly draw on the canvas to create custom shapes or effects, by default LiveCharts uses SkiaSharp
 to render the controls, this means that you can use all the SkiaSharp API to draw on the canvas, you can find
 more information about SkiaSharp [here](https://learn.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/graphics/skiasharp/basics/).
