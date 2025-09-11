@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if WINDOWS || __UNO_SKIA__ || DESKTOP || BROWSERWASM
+#if WINDOWS
 
-// reachable on winui, maui winui, uno winui and uno with skia renderer
+// reachable on winui, maui winui, uno winui
 
 using LiveChartsCore.Motion;
 using Microsoft.UI.Xaml.Media;

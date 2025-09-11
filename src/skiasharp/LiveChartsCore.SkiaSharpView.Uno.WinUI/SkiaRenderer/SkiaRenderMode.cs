@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if __UNO_SKIA__ || DESKTOP
+#if !HAS_OS_LVC
 
 using System.Diagnostics;
 using LiveChartsCore.Kernel.Sketches;
@@ -34,7 +34,7 @@ using SkiaSharp;
 using Uno.WinUI.Graphics2DSK;
 using Windows.Foundation;
 
-namespace LiveChartsCore.SkiaSharpView.WinUI.Rendering;
+namespace LiveChartsCore.SkiaSharpView.WinUI.SkiaRenderer;
 
 internal partial class SkiaRenderMode : Grid, IRenderMode
 {

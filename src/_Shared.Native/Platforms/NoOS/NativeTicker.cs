@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if !HAS_OS_LVC
+#if !HAS_OS_LVC && !UNO_LVC
 
 // This code is reached maybe only on test environments.
 // HAS_OS_LVC is true when the target framework contains any of the following:
