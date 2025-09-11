@@ -2,7 +2,7 @@
 
 ## View model
 
-```
+```csharp
 {{ full_name | get_vm_from_docs }}
 ```
 

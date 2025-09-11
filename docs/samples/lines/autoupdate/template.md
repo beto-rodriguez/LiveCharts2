@@ -6,7 +6,7 @@ This example uses the `LineSeries` class but it works the same for any series in
 
 ## View model
 
-```
+```csharp
 {{ full_name | get_vm_from_docs }}
 ```
 

@@ -8,7 +8,7 @@ In the next example, we create a `CartesianChart`, this chart contains multiple 
 
 ## View Model
 
-```
+```csharp
 {{ full_name | get_vm_from_docs }}
 ```
 

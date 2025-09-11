@@ -15,7 +15,7 @@ the control is measured, a LiveCharts control is measured when the data or the c
 
 ## View model
 
-```
+```csharp
 {{ full_name | get_vm_from_docs }}
 ```
 

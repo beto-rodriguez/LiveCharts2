@@ -15,7 +15,7 @@ how to handle that object, if you want to learn more, please read the
 
 ## View Model
 
-```
+```csharp
 {{ full_name | get_vm_from_docs }}
 ```
 

@@ -22,7 +22,7 @@ measuring a chart.
 
 ## View model
 
-```
+```csharp
 {{ full_name | get_vm_from_docs }}
 ```
 
@@ -41,7 +41,7 @@ everything is happening on the same thread, but you must consider that now the U
 
 ## View model
 
-```
+```csharp
 {{ full_name + "2" | get_vm_from_docs }}
 ```
 

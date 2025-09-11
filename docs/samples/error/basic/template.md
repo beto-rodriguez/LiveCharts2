@@ -43,7 +43,7 @@ this sample also uses a ViewModel to populate the properties of the control(s) i
 
 ## View model
 
-```
+```csharp
 {{ full_name | get_vm_from_docs }}
 ```
 
