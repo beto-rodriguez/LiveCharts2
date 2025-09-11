@@ -60,8 +60,15 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Uno.WinUI\LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj" />
         <ProjectReference Include="..\..\ViewModelsSamples\ViewModelsSamples.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(UseNuGetForSamples)">
+        <PackageReference Include="LiveChartsCore.SkiaSharpView.Uno.WinUI" Version="$(LiveChartsVersion)" />
+    </ItemGroup>
+
+    <ItemGroup Condition="!$(UseNuGetForSamples)">
+        <ProjectReference Include="..\..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Uno.WinUI\LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj" />
     </ItemGroup>
 
 </Project>

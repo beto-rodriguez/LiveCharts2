@@ -20,6 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// just diable this... this events are not called for all the platforms
+// this is an annoying warning that makes no sense in this case
+#pragma warning disable CS0067 // The event is never used
+
 using LiveChartsCore.Native.Events;
 
 namespace LiveChartsCore.Native;

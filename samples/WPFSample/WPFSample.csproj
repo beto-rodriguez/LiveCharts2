@@ -14,8 +14,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\skiasharp\LiveChartsCore.SkiaSharp.WPF\LiveChartsCore.SkiaSharpView.WPF.csproj" />
     <ProjectReference Include="..\ViewModelsSamples\ViewModelsSamples.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(UseNuGetForSamples)">
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="$(LiveChartsVersion)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="!$(UseNuGetForSamples)">
+    <ProjectReference Include="..\..\src\skiasharp\LiveChartsCore.SkiaSharp.WPF\LiveChartsCore.SkiaSharpView.WPF.csproj" />
   </ItemGroup>
 
   <ItemGroup>

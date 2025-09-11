@@ -35,9 +35,9 @@ namespace LiveChartsGeneratedCode;
 
 /// <inheritdoc cref="IPieChartView" />
 #if SKIA_IMAGE_LVC
-public partial class SourceGenSKPieChart : SourceGenSKChart, IPieChartView
+public partial class SourceGenSKPieChart : SGChart, IPieChartView
 #else
-public partial class SourceGenPieChart : SourceGenChart, IPieChartView
+public partial class SourceGenPieChart : SGChart, IPieChartView
 #endif
 {
     PieChartEngine IPieChartView.Core => (PieChartEngine)CoreChart;

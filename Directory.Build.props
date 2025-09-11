@@ -27,6 +27,12 @@
     -->
     <HarfBuzzWASMVersion>8.3.1.1</HarfBuzzWASMVersion>
 
+    <!--
+    Useful to toggle between using project references or nuget references
+    -->
+    <UseNuGetForSamples>true</UseNuGetForSamples>
+    <UseNuGetForGenerator>false</UseNuGetForGenerator>
+
   </PropertyGroup>
 
   <!--

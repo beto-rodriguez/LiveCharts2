@@ -9,9 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\skiasharp\LiveChartsCore.SkiaSharp.WinForms\LiveChartsCore.SkiaSharpView.WinForms.csproj" />
     <ProjectReference Include="..\ViewModelsSamples\ViewModelsSamples.csproj" />
-    <ProjectReference Include="..\..\generators\LiveChartsGenerators\LiveChartsGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(UseNuGetForSamples)">
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.WinForms" Version="$(LiveChartsVersion)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="!$(UseNuGetForSamples)">
+    <ProjectReference Include="..\..\src\skiasharp\LiveChartsCore.SkiaSharp.WinForms\LiveChartsCore.SkiaSharpView.WinForms.csproj" />
   </ItemGroup>
 
 </Project>

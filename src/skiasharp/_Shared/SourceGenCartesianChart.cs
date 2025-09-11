@@ -37,9 +37,9 @@ namespace LiveChartsGeneratedCode;
 
 /// <inheritdoc cref="ICartesianChartView" />
 #if SKIA_IMAGE_LVC
-public partial class SourceGenSKCartesianChart : SourceGenSKChart, ICartesianChartView
+public partial class SourceGenSKCartesianChart : SGChart, ICartesianChartView
 #else
-public partial class SourceGenCartesianChart : SourceGenChart, ICartesianChartView
+public partial class SourceGenCartesianChart : SGChart, ICartesianChartView
 #endif
 {
     CartesianChartEngine ICartesianChartView.Core => (CartesianChartEngine)CoreChart;
