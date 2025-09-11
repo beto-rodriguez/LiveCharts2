@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../../Directory.Build.props"/>
+  <Import Project="../../Directory.Build.props" />
   
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -29,7 +29,15 @@
    </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\src\skiasharp\LiveChartsCore.SkiaSharp.Avalonia\LiveChartsCore.SkiaSharpView.Avalonia.csproj" />
     <ProjectReference Include="..\ViewModelsSamples\ViewModelsSamples.csproj" />
   </ItemGroup>
+
+  <ItemGroup Condition="$(UseNuGetForSamples)">
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="$(LiveChartsVersion)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="!$(UseNuGetForSamples)">
+    <ProjectReference Include="..\..\src\skiasharp\LiveChartsCore.SkiaSharp.Avalonia\LiveChartsCore.SkiaSharpView.Avalonia.csproj" />
+  </ItemGroup>
+  
 </Project>

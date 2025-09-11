@@ -37,9 +37,9 @@ namespace LiveChartsGeneratedCode;
 
 /// <inheritdoc cref="IPolarChartView" />
 #if SKIA_IMAGE_LVC
-public partial class SourceGenSKPolarChart : SourceGenSKChart, IPolarChartView
+public partial class SourceGenSKPolarChart : SGChart, IPolarChartView
 #else
-public partial class SourceGenPolarChart : SourceGenChart, IPolarChartView
+public partial class SourceGenPolarChart : SGChart, IPolarChartView
 #endif
 {
     PolarChartEngine IPolarChartView.Core => (PolarChartEngine)CoreChart;

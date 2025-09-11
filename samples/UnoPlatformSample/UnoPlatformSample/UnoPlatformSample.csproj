@@ -35,19 +35,14 @@
             Localization;
             Navigation;
             ThemeService;
+            SkiaRenderer;
         </UnoFeatures>
-
-        <!--
-          TO ENABLE SKIARENDERER, USE THE DIRECTORY.BUILD.PROPERTIES IN THE
-          ROOT OF THE REPO.
-        -->
 
     </PropertyGroup>
 
     <Import Project="./../Directory.Build.props"/>
     <Import Project="./../../../Directory.Build.props"/>
     <Import Project="./../../../build/RenderSettings.Build.props"/>
-    <Import Project="./../../../build/RenderSettings.Uno.Build.props"/>
 
     <ItemGroup>
         <Page Include="..\..\WinUISample\WinUISample\Samples\**\*.xaml">
@@ -60,8 +55,15 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Uno.WinUI\LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj" />
         <ProjectReference Include="..\..\ViewModelsSamples\ViewModelsSamples.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(UseNuGetForSamples)">
+        <PackageReference Include="LiveChartsCore.SkiaSharpView.Uno.WinUI" />
+    </ItemGroup>
+
+    <ItemGroup Condition="!$(UseNuGetForSamples)">
+        <ProjectReference Include="..\..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Uno.WinUI\LiveChartsCore.SkiaSharpView.Uno.WinUI.csproj" />
     </ItemGroup>
 
 </Project>

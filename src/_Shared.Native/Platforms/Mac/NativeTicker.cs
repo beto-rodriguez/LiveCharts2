@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if (IOS || MACCATALYST) && !__UNO_SKIA__
+#if IOS || MACCATALYST
 
 // reachable on maui ios/catalys or uno ios/catalyst (without skia renderer)
 

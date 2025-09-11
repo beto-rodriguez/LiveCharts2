@@ -21,10 +21,15 @@
 // SOFTWARE.
 
 using LiveChartsCore.Motion;
-using LiveChartsCore.Native;
-using LiveChartsCore.SkiaSharpView.WinUI.Rendering;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using LiveChartsCore.Native;
+
+#if !HAS_OS_LVC
+using LiveChartsCore.SkiaSharpView.WinUI.SkiaRenderer;
+#else
+using LiveChartsCore.SkiaSharpView.WinUI.Rendering;
+#endif
 
 #pragma warning disable IDE0028 // Simplify collection initialization
 
@@ -44,18 +49,23 @@ public partial class MotionCanvas : Canvas
             .HasRenderingFactory(
                 (settings, forceGPU) =>
                 {
-#if __UNO_SKIA__ || DESKTOP
+                    IFrameTicker ticker;
+
+#if !HAS_OS_LVC
                     var renderMode = new SkiaRenderMode();
+
+                    ticker = settings.TryUseVSync
+                        ? new NativeFrameTicker()
+                        : new AsyncLoopTicker();
 #else
                     IRenderMode renderMode = forceGPU || settings.UseGPU
                         ? new GPURenderMode()
                         : new CPURenderMode();
-#endif
 
-
-                    IFrameTicker ticker = settings.TryUseVSync
+                    ticker = settings.TryUseVSync
                         ? new NativeFrameTicker()
                         : new AsyncLoopTicker();
+#endif
 
                     return new MotionCanvasComposer(renderMode, ticker);
                 });

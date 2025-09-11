@@ -24,9 +24,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Blazor\LiveChartsCore.SkiaSharpView.Blazor.csproj" />
     <ProjectReference Include="..\ViewModelsSamples\ViewModelsSamples.csproj" />
-    <ProjectReference Include="..\..\generators\LiveChartsGenerators\LiveChartsGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(UseNuGetForSamples)">
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.Blazor" Version="$(LiveChartsVersion)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="!$(UseNuGetForSamples)">
+    <ProjectReference Include="..\..\src\skiasharp\LiveChartsCore.SkiaSharpView.Blazor\LiveChartsCore.SkiaSharpView.Blazor.csproj" />
   </ItemGroup>
 
 </Project>

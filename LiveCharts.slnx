@@ -146,7 +146,6 @@
   </Folder>
   <Folder Name="/Solution Items/RenderingSettings/">
     <File Path="build/RenderSettings.Build.props" />
-    <File Path="build/RenderSettings.Uno.Build.props" />
   </Folder>
   <Folder Name="/Tests/">
     <Project Path="tests/LiveChartsCore.UnitTesting/LiveChartsCore.UnitTesting.csproj">

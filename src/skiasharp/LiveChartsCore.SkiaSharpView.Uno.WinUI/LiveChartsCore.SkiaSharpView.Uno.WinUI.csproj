@@ -1,4 +1,4 @@
-<Project Sdk="Uno.Sdk">
+﻿<Project Sdk="Uno.Sdk">
   <PropertyGroup>
     <Nullable>enable</Nullable>
     <LangVersion>$(GlobalLangVersion)</LangVersion>
@@ -23,6 +23,7 @@
     <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
 
+    <IsPackable>true</IsPackable>
     <Version>$(LiveChartsVersion)</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for Uno.WinUI.</Description>
@@ -45,7 +46,10 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
 
-  <Import Project="./../../../build/RenderSettings.Uno.Build.props"/>
+  <ItemGroup>
+    <!-- hack.. idk where is this being packed... -->
+    <None Include="$(OutputPath)$(AssemblyName).uprimarker" Pack="false" />
+  </ItemGroup>
 
   <Import Project="..\..\_Shared.Native\_Shared.Native.projitems" Label="Shared" />
   <Import Project="..\_Shared\_Shared.projitems" Label="Shared" />
@@ -71,11 +75,23 @@
        Version="$(LatestSkiaSharpVersion)" />
   </ItemGroup>
 
-  <ItemGroup>
+  <!-- Include Uno skia renderer if needed -->
+  <PropertyGroup Condition="'$(HasOS)' != 'true'">
+    <UnoFeatures>$(UnoFeatures);SkiaRenderer</UnoFeatures>
+  </PropertyGroup>
+
+  <ItemGroup Condition="$(UseNuGetForGenerator)">
     <PackageReference Include="LiveChartsGenerators" Version="$(LiveChartsCodeGenVersion)">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>analyzers</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="!$(UseNuGetForGenerator)">
+    <ProjectReference Include="..\..\..\generators\LiveChartsGenerators\LiveChartsGenerators.csproj">
+      <OutputItemType>Analyzer</OutputItemType>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>

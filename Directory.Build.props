@@ -27,6 +27,12 @@
     -->
     <HarfBuzzWASMVersion>8.3.1.1</HarfBuzzWASMVersion>
 
+    <!--
+    Useful to toggle between using project references or nuget references
+    -->
+    <UseNuGetForSamples>true</UseNuGetForSamples>
+    <UseNuGetForGenerator>false</UseNuGetForGenerator>
+
   </PropertyGroup>
 
   <!--
@@ -38,7 +44,6 @@
     <VSYNC>true</VSYNC>
     <FPS>30</FPS>
     <Diagnose>false</Diagnose>
-    <UsesUnoSkiaRenderer>true</UsesUnoSkiaRenderer>
   </PropertyGroup>
 
   <PropertyGroup Condition="
@@ -48,10 +53,10 @@
       $(TargetFramework.Contains('-android'))       or
       $(TargetFramework.Contains('-ios'))           or
       $(TargetFramework.Contains('-maccatalyst'))   or
-      $(TargetFramework.Contains('-desktop'))       or
-      $(TargetFramework.Contains('-browserwasm'))
+      $(TargetFramework.Contains('-tizen'))
     )">
-    <DefineConstants>$(DefineConstants);HAS_UI_LVC</DefineConstants>
+    <DefineConstants>$(DefineConstants);HAS_OS_LVC</DefineConstants>
+    <HasOS>true</HasOS>
   </PropertyGroup>
 
 </Project>

@@ -20,12 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if ANDROID
+#if !HAS_OS_LVC && UNO_LVC
 
-// reachable on maui android or uno android (without skia renderer)
+// reachable on uno skia renderer
+// HAS_OS_LVC is true when the target framework contains any of the following:
+// -windows, -android, -ios, -maccatalyst, -tizen
+// currently this is the the same file as WinUI, because uno makes this work across platforms
+// but by design this file is separated so in the future if there are any uno specific changes
 
-using System;
 using LiveChartsCore.Motion;
+using Microsoft.UI.Xaml.Media;
 
 namespace LiveChartsCore.Native;
 
@@ -33,24 +37,22 @@ internal partial class NativeFrameTicker : IFrameTicker
 {
     private IRenderMode _renderMode = null!;
     private CoreMotionCanvas _canvas = null!;
-    private VSyncTicker _vsyncTicker = null!;
 
     public void InitializeTicker(CoreMotionCanvas canvas, IRenderMode renderMode)
     {
         _canvas = canvas;
         _renderMode = renderMode;
-        _vsyncTicker = new VSyncTicker(OnFrameTick);
-        _vsyncTicker.Start();
 
         _canvas.Invalidated += OnCoreInvalidated;
+        CompositionTarget.Rendering += OnCompositonTargetRendering;
 
-        CoreMotionCanvas.s_tickerName = "Choreographer Android";
+        CoreMotionCanvas.s_tickerName = "CompositionTarget.Rendering WinUI";
     }
 
     private void OnCoreInvalidated(CoreMotionCanvas obj) =>
         _renderMode.InvalidateRenderer();
 
-    private void OnFrameTick()
+    private void OnCompositonTargetRendering(object? sender, object e)
     {
         if (_canvas.IsValid) return;
         _renderMode.InvalidateRenderer();
@@ -58,32 +60,11 @@ internal partial class NativeFrameTicker : IFrameTicker
 
     public void DisposeTicker()
     {
-        _canvas.Invalidated -= OnCoreInvalidated;
+        CompositionTarget.Rendering -= OnCompositonTargetRendering;
+        _canvas?.Invalidated -= OnCoreInvalidated;
 
         _canvas = null!;
         _renderMode = null!;
-        _vsyncTicker.Stop();
-        _vsyncTicker = null!;
-    }
-
-    private class VSyncTicker(Action onFrameTick)
-        : Java.Lang.Object, Android.Views.Choreographer.IFrameCallback
-    {
-        private readonly Android.Views.Choreographer _chor = Android.Views.Choreographer.Instance!;
-
-        public void Start() =>
-            _chor.PostFrameCallback(this);
-
-        // frameTimeNanos:
-        // the absolute timestamp (in nanoseconds) that the system’s choreographer assigns to this frame.
-        public void DoFrame(long frameTimeNanos)
-        {
-            onFrameTick();
-            _chor.PostFrameCallback(this);
-        }
-
-        public void Stop() =>
-            _chor.RemoveFrameCallback(this);
     }
 }
 

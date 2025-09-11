@@ -20,9 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if WINDOWS
+#if !HAS_OS_LVC && UNO_LVC
 
-// reachable on winui, maui winui, uno winui
+// reachable on uno skia renderer
+// HAS_OS_LVC is true when the target framework contains any of the following:
+// -windows, -android, -ios, -maccatalyst, -tizen
+// currently this is the the same file as WinUI, because uno makes this work across platforms
+// but by design this file is separated so in the future if there are any uno specific changes
 
 using System;
 using Microsoft.UI.Xaml;
@@ -39,11 +43,11 @@ internal partial class PointerController : INativePointerController
     {
         var winUIView = (UIElement)view;
 
-        winUIView.PointerPressed += OnWindowsPointerPressed;
-        winUIView.PointerMoved += OnWindowsPointerMoved;
-        winUIView.PointerReleased += OnWindowsPointerReleased;
-        winUIView.PointerWheelChanged += OnWindowsPointerWheelChanged;
-        winUIView.PointerExited += OnWindowsPointerExited;
+        winUIView.PointerPressed += OnUnoSkiaPointerPressed;
+        winUIView.PointerMoved += OnUnoSkiaPointerMoved;
+        winUIView.PointerReleased += OnUnoSkiaPointerReleased;
+        winUIView.PointerWheelChanged += OnUnoSkiaPointerWheelChanged;
+        winUIView.PointerExited += OnUnoSkiaPointerExited;
 
         winUIView.ManipulationMode = ManipulationModes.Scale;
         winUIView.ManipulationStarted += OnPinchSarted;
@@ -55,25 +59,25 @@ internal partial class PointerController : INativePointerController
     {
         var winUIView = (UIElement)view;
 
-        winUIView.PointerPressed -= OnWindowsPointerPressed;
-        winUIView.PointerMoved -= OnWindowsPointerMoved;
-        winUIView.PointerReleased -= OnWindowsPointerReleased;
-        winUIView.PointerWheelChanged -= OnWindowsPointerWheelChanged;
-        winUIView.PointerExited -= OnWindowsPointerExited;
+        winUIView.PointerPressed -= OnUnoSkiaPointerPressed;
+        winUIView.PointerMoved -= OnUnoSkiaPointerMoved;
+        winUIView.PointerReleased -= OnUnoSkiaPointerReleased;
+        winUIView.PointerWheelChanged -= OnUnoSkiaPointerWheelChanged;
+        winUIView.PointerExited -= OnUnoSkiaPointerExited;
 
         winUIView.ManipulationStarted -= OnPinchSarted;
         winUIView.ManipulationDelta -= OnPinching;
         winUIView.ManipulationCompleted -= OnPinchCompleted;
     }
 
-    private void OnWindowsPointerPressed(object sender, PointerRoutedEventArgs e)
+    private void OnUnoSkiaPointerPressed(object sender, PointerRoutedEventArgs e)
     {
         var element = (UIElement)sender;
 
         var p = e.GetCurrentPoint(element);
         if (p is null) return;
 
-#if WINDOWS || DESKTOP
+#if UnoSkia || DESKTOP
         _ = element.CapturePointer(e.Pointer);
 #endif
 
@@ -84,7 +88,7 @@ internal partial class PointerController : INativePointerController
         _pressedTime = DateTime.Now;
     }
 
-    private void OnWindowsPointerMoved(object sender, PointerRoutedEventArgs e)
+    private void OnUnoSkiaPointerMoved(object sender, PointerRoutedEventArgs e)
     {
         // wait 100ms to ensure it is not a pinch gesture.
         if (_isPinching || ((DateTime.Now - _pressedTime).TotalMilliseconds < 100)) return;
@@ -97,14 +101,14 @@ internal partial class PointerController : INativePointerController
             new(new(p.Position.X, p.Position.Y), e));
     }
 
-    private void OnWindowsPointerReleased(object sender, PointerRoutedEventArgs e)
+    private void OnUnoSkiaPointerReleased(object sender, PointerRoutedEventArgs e)
     {
         var element = (UIElement)sender;
 
         var p = e.GetCurrentPoint(element);
         if (p is null) return;
 
-#if WINDOWS || DESKTOP
+#if UnoSkia || DESKTOP
         element.ReleasePointerCapture(element.PointerCaptures[0]);
 #endif
 
@@ -113,13 +117,13 @@ internal partial class PointerController : INativePointerController
             new(new(p.Position.X, p.Position.Y), p.Properties.IsRightButtonPressed, e));
     }
 
-    private void OnWindowsPointerWheelChanged(object sender, PointerRoutedEventArgs e)
+    private void OnUnoSkiaPointerWheelChanged(object sender, PointerRoutedEventArgs e)
     {
         var p = e.GetCurrentPoint(sender as UIElement);
         Scrolled?.Invoke(sender, new(new(p.Position.X, p.Position.Y), p.Properties.MouseWheelDelta, e));
     }
 
-    private void OnWindowsPointerExited(object sender, PointerRoutedEventArgs e) =>
+    private void OnUnoSkiaPointerExited(object sender, PointerRoutedEventArgs e) =>
         Exited?.Invoke(sender, new(e));
 
     private void OnPinchSarted(object sender, ManipulationStartedRoutedEventArgs e)

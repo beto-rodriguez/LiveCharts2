@@ -2,7 +2,6 @@ param([string]$configuration = "Debug", [string]$nupkgOutputPath = "./nupkg")
 
 [Project[]]$projects = @(
     [Project]::new("./src/LiveChartsCore/LiveChartsCore.csproj")
-    [Project]::new("./src/LiveChartsCore.Behaviours/LiveChartsCore.Behaviours.csproj")
     [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharp/LiveChartsCore.SkiaSharpView.csproj")
     [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia/LiveChartsCore.SkiaSharpView.Avalonia.csproj")
     [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharp.WinForms/LiveChartsCore.SkiaSharpView.WinForms.csproj")
