@@ -15,28 +15,6 @@ You can quickly change the position, the font, the text size or the background c
 
 {{~ render $"~/../samples/{samples_folder}/Axes/NamedLabels{view_extension}" ~}}
 
-#### View model
-
-```csharp
-[ObservableObject]
-public partial class ViewModel
-{
-    public ISeries[] Series { get; set; } = { ... };
-    public Axis[] XAxes { get; set; } = { ... };
-    public Axis[] YAxes { get; set; } = { ... };
-
-    public SolidColorPaint TooltipTextPaint { get; set; } = // mark
-        new SolidColorPaint // mark
-        { // mark
-            Color = new SKColor(242, 244, 195), // mark
-            SKTypeface = SKTypeface.FromFamilyName("Courier New") // mark
-        }; // mark
-
-    public SolidColorPaint TooltipBackgroundPaint { get; set; } = // mark
-        new SolidColorPaint(new SKColor(72, 0, 50)); // mark
-}
-```
-
 ![image]({{ assets_url }}/docs/samples/general/customTooltips/styling-tooltips.png)
 
 # Customize tooltip format

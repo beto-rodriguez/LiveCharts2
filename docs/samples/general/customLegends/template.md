@@ -1,31 +1,7 @@
 # Customize default legends
 
-You can quickly change the position, the font, the text size or the background color:
-
-```
-{{~ render $"~/../samples/{samples_folder}/Axes/Multiple{view_extension}" ~}}
-```
-
-#### View model
-
-```csharp
-[ObservableObject]
-public partial class ViewModel
-{
-    public ISeries[] Series { get; set; } = { ... };
-    public Axis[] YAxes { get; set; } = { ... };
-
-    public SolidColorPaint LegendTextPaint { get; set; } = // mark
-        new SolidColorPaint // mark
-        { // mark
-            Color = new SKColor(50, 50, 50), // mark
-            SKTypeface = SKTypeface.FromFamilyName("Courier New") // mark
-        }; // mark
-
-    public SolidColorPaint LegendBackgroundPaint { get; set; } = // mark
-        new SolidColorPaint(new SKColor(240, 240, 240)); // mark
-}
-```
+You can use the chart `LegendPosition`, `LegendTextPaint`, `LegendBackgroundPaint` and `LegendTextSize` to 
+define the legend look (full example [here](https://github.com/beto-rodriguez/LiveCharts2/blob/master/samples/{{ samples_folder }}/Axes/Multiple{{ view_extension }})).
 
 ![custom]({{ assets_url }}/docs/_assets/legend-custom-style.png)
 
