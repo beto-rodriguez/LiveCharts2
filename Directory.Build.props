@@ -56,6 +56,7 @@
       $(TargetFramework.Contains('-tizen'))
     )">
     <DefineConstants>$(DefineConstants);HAS_OS_LVC</DefineConstants>
+    <HasOS>true</HasOS>
   </PropertyGroup>
 
 </Project>

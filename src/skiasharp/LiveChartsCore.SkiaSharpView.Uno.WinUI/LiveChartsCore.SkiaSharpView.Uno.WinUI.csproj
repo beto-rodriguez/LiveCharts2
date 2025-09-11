@@ -75,6 +75,11 @@
        Version="$(LatestSkiaSharpVersion)" />
   </ItemGroup>
 
+  <!-- Include Uno skia renderer if needed -->
+  <PropertyGroup Condition="'$(HasOS)' != 'true'">
+    <UnoFeatures>$(UnoFeatures);SkiaRenderer</UnoFeatures>
+  </PropertyGroup>
+
   <ItemGroup Condition="$(UseNuGetForGenerator)">
     <PackageReference Include="LiveChartsGenerators" Version="$(LiveChartsCodeGenVersion)">
       <PrivateAssets>all</PrivateAssets>
