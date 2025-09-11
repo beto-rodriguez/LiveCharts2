@@ -10,6 +10,7 @@ using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.WinForms;
 using SkiaSharp;
+using ViewModelsSamples.General.DrawOnCanvas;
 
 namespace WinFormsSample.General.DrawOnCanvas;
 
@@ -44,7 +45,7 @@ public partial class View : UserControl
             var locationInPixels = cartesianChart.ScaleDataToPixels(locationInChartValues);
             _geometry.X = (float)locationInPixels.X;
             _geometry.Y = (float)locationInPixels.Y;
-            _geometry.Initialize(chart);
+            _geometry.Initialize(new(chart));
         };
 
         cartesianChart.MouseDown += (s, e) =>
@@ -55,33 +56,5 @@ public partial class View : UserControl
         };
 
         Controls.Add(cartesianChart);
-    }
-}
-
-public partial class MotionGeometry : BoundedDrawnGeometry, IDrawnElement<SkiaSharpDrawingContext>
-{
-    private bool _isInitialized;
-
-    [MotionProperty] // The MotionProperty attribute makes the property animatable.
-    public partial float Diameter { get; set; }
-
-    public void Draw(SkiaSharpDrawingContext context)
-    {
-        var paint = context.ActiveSkiaPaint;
-        context.Canvas.DrawCircle(X, Y, Diameter, paint);
-    }
-
-    public void Initialize(IChartView chart)
-    {
-        if (_isInitialized) return;
-        chart.CoreChart.Canvas.AddGeometry(this);
-
-        var animation = new Animation(
-            easingFunction: EasingFunctions.BounceOut,
-            duration: TimeSpan.FromMilliseconds(800));
-
-        this.Animate(animation);
-
-        _isInitialized = true;
     }
 }
