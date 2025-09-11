@@ -53,4 +53,4 @@ this sample also uses a ViewModel to populate the properties of the control(s) i
 {{ full_name | get_view_from_docs }}
 ```
 
-{{ render this "~/shared/relatedTo.md" }}
+{{ render "~/shared/relatedTo.md" }}

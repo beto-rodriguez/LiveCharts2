@@ -51,10 +51,4 @@ everything is happening on the same thread, but you must consider that now the U
 {{ full_name + "2" | get_view_from_docs }}
 ```
 
-{{~ if xaml ~}}
-## View code behind
-
-{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/General/MultiThreading2/$PlatformViewCodeBehindFile" ~}}
-{{~ end ~}}
-
-{{ render this "~/shared/relatedTo.md" }}
+{{ render "~/shared/relatedTo.md" }}

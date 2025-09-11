@@ -4,9 +4,9 @@
 
 # {{ name | to_title_case }}
 
-{{ render this "~/shared/series.md" }}
+{{ render "~/shared/series.md" }}
 
-{{ render this "~/shared/datalabels.md" }}
+{{ render "~/shared/datalabels.md" }}
 
 ## HeatMap property
 
@@ -143,4 +143,4 @@ YAxes = new ObservableCollection<Axis>
 };
 ```
 
-{{ render this "~/shared/series2.md" }}
+{{ render "~/shared/series2.md" }}

@@ -4,9 +4,9 @@
 
 # {{ name | to_title_case }}
 
-{{ render this "~/shared/series.md" }}
+{{ render "~/shared/series.md" }}
 
-{{ render this "~/shared/datalabels.md" }}
+{{ render "~/shared/datalabels.md" }}
 
 ## Stroke property
 
@@ -145,4 +145,4 @@ Series = new ISeries[]
 };
 ```
 
-{{ render this "~/shared/series2.md" }}
+{{ render "~/shared/series2.md" }}

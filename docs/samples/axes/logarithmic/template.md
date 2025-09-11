@@ -1,4 +1,4 @@
-{{ render this "~/shared/genericSampleSimpleHeader.md" }}
+{{ render "~/shared/genericSampleSimpleHeader.md" }}
 
 ## View model
 
@@ -8,7 +8,9 @@
 
 ## LogarithmicPoint.cs
 
-{{~ "~/../samples/ViewModelsSamples/Axes/Logarithmic/LogarithmicPoint.cs" | render_file_as_code ~}}
+```csharp
+{{~ render "~/../samples/ViewModelsSamples/Axes/Logarithmic/LogarithmicPoint.cs" ~}}
+```
 
 ## {{~ view_title ~}}
 
@@ -18,7 +20,10 @@
 
 {{~ if xaml2006 ~}}
 ## LogarithmicSeries.cs
-{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/Axes/Logarithmic/LogarithmicSeries.cs" ~}}
+
+```csharp
+{{~ render $"~/../samples/{samples_folder}/Axes/Logarithmic/LogarithmicSeries.cs" ~}}
+```
 {{~ end ~}}
 
-{{ render this "~/shared/relatedTo.md" }}
+{{ render "~/shared/relatedTo.md" }}

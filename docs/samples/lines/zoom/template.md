@@ -1,4 +1,4 @@
-{{ render this "~/shared/genericSampleJustGifHeader.md" }}
+{{ render "~/shared/genericSampleJustGifHeader.md" }}
 
 Zooming and panning is disabled by default, you can enable it by setting the `ZoomMode` property, this property is of type
 [ZoomAndPanMode](https://lvcharts.com/api/{{ version }}/LiveChartsCore.Measure.ZoomAndPanMode), this type is a flag enum
@@ -250,4 +250,4 @@ engine.GrowZoomingSection(ZoomAndPanMode.Both, new(10, 10));
 engine.EndZoomingSection(ZoomAndPanMode.Both, new(110, 110));
 ```
 
-{{ render this "~/shared/relatedTo.md" }}
+{{ render "~/shared/relatedTo.md" }}

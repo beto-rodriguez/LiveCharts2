@@ -1,4 +1,4 @@
-{{ render this "~/shared/genericSampleSimpleHeader.md" }}
+{{ render "~/shared/genericSampleSimpleHeader.md" }}
 
 ## View model
 
@@ -12,4 +12,4 @@
 {{ full_name | get_view_from_docs }}
 ```
 
-{{ render this "~/shared/relatedTo.md" }}
+{{ render "~/shared/relatedTo.md" }}

@@ -1,4 +1,4 @@
-{{ render this "~/shared/genericSampleSimpleHeader.md" }}
+{{ render "~/shared/genericSampleSimpleHeader.md" }}
 
 ## View model
 
@@ -8,13 +8,16 @@
 
 ## {{~ view_title ~}}
 
-```
+```csharp
 {{ full_name | get_view_from_docs }}
 ```
 
 {{~ if xaml~}}
 ## StringToPaintConverter.cs
-{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/Pies/Nested/StringToPaintConverter.cs" ~}}
+
+```csharp
+{{~ render $"~/../samples/{samples_folder}/Pies/Nested/StringToPaintConverter.cs" ~}}
+```
 {{~ end ~}}
 
-{{ render this "~/shared/relatedTo.md" }}
+{{ render "~/shared/relatedTo.md" }}

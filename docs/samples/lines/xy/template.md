@@ -25,4 +25,4 @@ how to handle that object, if you want to learn more, please read the
 {{ full_name | get_view_from_docs }}
 ```
 
-{{ render this "~/shared/relatedTo.md" }}
+{{ render "~/shared/relatedTo.md" }}

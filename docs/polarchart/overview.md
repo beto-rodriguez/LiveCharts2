@@ -599,8 +599,8 @@ Series { get; set; } = new PolarAxis[]
 When the `Visible` property is set to `false` the axis will not be drawn and also it will not take any space in the chart
 default is `true`.
 
-{{ render this "~/shared/chart.md" }}
+{{ render "~/shared/chart.md" }}
 
-{{ render this "~/shared/tooltips.md" }}
+{{ render "~/shared/tooltips.md" }}
 
-{{ render this "~/shared/legends.md" }}
+{{ render "~/shared/legends.md" }}

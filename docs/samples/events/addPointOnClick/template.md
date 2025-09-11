@@ -1,4 +1,4 @@
-{{ render this "~/shared/genericSampleJustGifHeader.md" }}
+{{ render "~/shared/genericSampleJustGifHeader.md" }}
 
 ## View model
 
@@ -11,12 +11,6 @@
 ```
 {{ full_name | get_view_from_docs }}
 ```
-
-{{~ if xaml ~}}
-## View code behind
-
-{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/Events/AddPointOnClick/$PlatformViewCodeBehindFile" ~}}
-{{~ end ~}}
 
 {{~ if related_to != null ~}}
 

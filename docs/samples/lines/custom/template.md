@@ -1,4 +1,4 @@
-{{ render this "~/shared/genericSampleSimpleHeader.md" }}
+{{ render "~/shared/genericSampleSimpleHeader.md" }}
 
 ## View model
 
@@ -8,7 +8,7 @@
 
 ## MyGeometry.cs
 
-{{~ "~/../samples/ViewModelsSamples/Lines/Custom/MyGeometry.cs" | render_file_as_code ~}}
+{{~ render "~/../samples/ViewModelsSamples/Lines/Custom/MyGeometry.cs" ~}}
 
 ## {{~ view_title ~}}
 ```
@@ -17,7 +17,9 @@
 
 {{~ if xaml2006 ~}}
 ## CustomSeries.cs
-{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/Lines/Custom/CustomSeries.cs" ~}}
+
+```csharp
+{{~ render $"~/../samples/{samples_folder}/Lines/Custom/CustomSeries.cs" ~}}
 {{~ end ~}}
 
 {{~ if related_to != null ~}}

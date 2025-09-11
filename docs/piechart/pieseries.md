@@ -4,9 +4,9 @@
 
 # {{ name | to_title_case }}
 
-{{ render this "~/shared/series.md" }}
+{{ render "~/shared/series.md" }}
 
-{{ render this "~/shared/polarlabels.md" }}
+{{ render "~/shared/polarlabels.md" }}
 
 ## Stroke property
 
@@ -253,4 +253,4 @@ var pieSeries = new PieSeries<int>
 
 ![image]({{ assets_url }}/docs/_assets/pieOuterRadiusOffset.png)
 
-{{ render this "~/shared/series2.md" }}
+{{ render "~/shared/series2.md" }}

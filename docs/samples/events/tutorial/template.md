@@ -63,6 +63,8 @@ You can also build your own logic by overriding the `Series.FindPointsInPosition
 when the find request is made by a hover action, we return only the points whose hover area contains the pointer in the X axis,
 but when the request is made by any other source, we evaluate whether the pointer is inside the Y axis.
 
-{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/Events/OverrideFind/ViewModel.cs" ~}}
+```csharp
+{{~ render "~/../samples/ViewModelsSamples/Events/OverrideFind/ViewModel.cs" ~}}
+```
 
-{{ render this "~/shared/relatedTo.md" }}
+{{ render "~/shared/relatedTo.md" }}

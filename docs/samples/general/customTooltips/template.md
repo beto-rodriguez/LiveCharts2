@@ -13,21 +13,7 @@ You can quickly change the position, the font, the text size or the background c
 
 #### View
 
-{{~ if xaml ~}}
-{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/Axes/NamedLabels/$PlatformViewFile" ~}}
-{{~ end ~}}
-
-{{~ if winforms ~}}
-{{~ render_params_file_as_code this "~/../samples/WinFormsSample/Axes/NamedLabels/View.cs" ~}}
-{{~ end ~}}
-
-{{~ if eto ~}}
-{{~ render_params_file_as_code this "~/../samples/EtoFormsSample/Axes/NamedLabels/View.cs" ~}}
-{{~ end ~}}
-
-{{~ if blazor ~}}
-{{~ render_params_file_as_code this "~/../samples/BlazorSample/Pages/Axes/NamedLabels.razor" ~}}
-{{~ end ~}}
+{{~ render $"~/../samples/{samples_folder}/Axes/NamedLabels{view_extension}" ~}}
 
 #### View model
 
@@ -175,15 +161,21 @@ in the next example, we draw a geometry in the tooltip based on the point that i
 
 #### CustomTooltip.cs
 
-{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/General/TemplatedTooltips/CustomTooltip.cs" ~}}
+```csharp
+{{~ render $"~/../samples/ViewModelsSamples/General/TemplatedTooltips/CustomTooltip.cs" ~}}
+```
 
 #### View
 
-{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/General/TemplatedTooltips/$PlatformViewFile" ~}}
+```csharp
+{{~ render $"~/../samples/{samples_folder}/General/TemplatedTooltips{view_extension}" ~}}
+```
 
 {{~ if xaml2006 ~}}
 ## CustomGeometryPointColumnSeries.cs
-{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/General/TemplatedTooltips/CustomGeometryPointColumnSeries.cs" ~}}
+```csharp
+{{~ render $"~/../samples/{samples_folder}/General/TemplatedTooltips/CustomGeometryPointColumnSeries.cs" ~}}
+```
 {{~ end ~}}
 
 # Tooltip control from scratch
@@ -213,4 +205,6 @@ When the [FindingStrategy](https://livecharts.dev/docs/{{ platform }}/{{ version
 is not enough, we can override the logic to determine whether a given point is inside a drawn `ChartPoint`. This method
 will be used by the library to resolve the points to show in a tooltip, or the points passed in any pointer event:
 
-{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/Events/OverrideFind/ViewModel.cs" ~}}
+```csharp
+{{~ render "~/../samples/ViewModelsSamples/Events/OverrideFind/ViewModel.cs" ~}}
+```

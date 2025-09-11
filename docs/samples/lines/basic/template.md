@@ -1,4 +1,4 @@
-{{ render this "~/shared/genericSampleHeader.md" }}
+{{ render "~/shared/genericSampleHeader.md" }}
 
 ## View Model
 
@@ -14,7 +14,10 @@
 
 {{~ if xaml2006 ~}}
 ## CustomGeometryPointColumnSeries.cs
-{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/Lines/Basic/CustomStarLineSeries.cs" ~}}
+
+```csharp
+{{~ render $"~/../samples/{samples_folder}/Lines/Basic/CustomStarLineSeries.cs" ~}}
+```
 {{~ end ~}}
 
-{{ render this "~/shared/relatedTo.md" }}
+{{ render "~/shared/relatedTo.md" }}

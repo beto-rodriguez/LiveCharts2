@@ -145,8 +145,8 @@ Notice the `MaxAngle` property is animated automatically based on the chart anim
 
 ![image]({{ assets_url }}/docs/_assets/pie-maxangle.gif)
 
-{{ render this "~/shared/chart.md" }}
+{{ render "~/shared/chart.md" }}
 
-{{ render this "~/shared/tooltips.md" }}
+{{ render "~/shared/tooltips.md" }}
 
-{{ render this "~/shared/legends.md" }}
+{{ render "~/shared/legends.md" }}

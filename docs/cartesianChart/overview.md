@@ -465,11 +465,11 @@ cartesianChart1.ZoomingSpeed = 0;
 
 Setting `MinLimit` and `MaxLimit` properties to `null` or `double.NaN` will clear the current limits and fit the the data to the viewport.
 
-{{ render this "~/shared/chart.md" }}
+{{ render "~/shared/chart.md" }}
 
-{{ render this "~/shared/tooltips.md" }}
+{{ render "~/shared/tooltips.md" }}
 
-{{ render this "~/shared/legends.md" }}
+{{ render "~/shared/legends.md" }}
 
 ## DrawMarginFrame property
 

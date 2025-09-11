@@ -1,4 +1,4 @@
-{{ render this "~/shared/genericSampleJustGifHeader.md" }}
+{{ render "~/shared/genericSampleJustGifHeader.md" }}
 
 :::tip
 This example uses the `LineSeries` class but it works the same for any series in the library
