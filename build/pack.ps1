@@ -49,10 +49,11 @@ foreach ($p in $projects) {
     $expression = "dotnet pack $($p.src) -o $nupkgOutputPath -c $configuration -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg -p:IsPacking=true"
 
     Write-Progress -Activity "$name" -Status "Packing..."
-    $result = Invoke-Expression $expression
+    $result = & dotnet pack $p.src -o $nupkgOutputPath -c $configuration -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg -p:IsPacking=true -p:UseNuGetForGenerator=true 2>&1
 
     if ($LASTEXITCODE -ne 0) {
         Write-Output "✖ $name failed to pack."
+        Write-Output $result
         break
     }else {
         Write-Output "✓ $name packed successfully."
