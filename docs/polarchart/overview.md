@@ -15,7 +15,8 @@ To get started all you need to do is assign the `Series` property with a collect
 [`IPolarSeries`]({{ website_url }}/api/{{ version }}/LiveChartsCore.Kernel.Sketches.IPolarSeries-1).
 
 {{~ if xaml ~}}
-<pre><code>using LiveChartsCore;
+```csharp
+using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 
 namespace ViewModelsSamples.Polar.Basic
@@ -24,7 +25,7 @@ namespace ViewModelsSamples.Polar.Basic
     {
         public ISeries[] Series { get; set; } = new[]
         {
-            new PolarLineSeries&lt;double>
+            new PolarLineSeries<double>
             {
                 Values = new double[] { 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 },
                 Fill = null,
@@ -32,41 +33,50 @@ namespace ViewModelsSamples.Polar.Basic
             }
         };
     }
-}</code></pre>
+}
+```
 
-<pre><code>&lt;lvc:PolarChart
+```xml
+<lvc:PolarChart
     Series="{Binding Series}">
-&lt;/lvc:PolarChart></code></pre>
+</lvc:PolarChart>
+```
 {{~ end ~}}
 
 {{~ if blazor ~}}
-<pre><code>&lt;PolarChart
+```xml
+<PolarChart
     Series="series">
-&lt;/PolarChart></code></pre>
+</PolarChart>
+```
 
-<pre><code>private ISeries[] series = new[]
+```csharp
+private ISeries[] series = new[]
 {
-    new PolarLineSeries&lt;double>
+    new PolarLineSeries<double>
     {
         Values = new double[] { 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 },
         Fill = null,
         IsClosed = false
     }
-};</code></pre>
+};
+```
 {{~ end ~}}
 
 {{~ if winforms ~}}
 Drag a new `PolarChart` control from your toolbox, then in the code behind assign the `Series` property:
 
-<pre><code>PolarChart1.Series = new[]
+```csharp
+PolarChart1.Series = new[]
 {
-    new PolarLineSeries&lt;double>
+    new PolarLineSeries<double>
     {
         Values = new double[] { 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 },
         Fill = null,
         IsClosed = false
     }
-};</code></pre>
+};
+```
 {{~ end ~}}
 
 ![image]({{ assets_url }}/docs/_assets/polar-mvp.png)
@@ -99,24 +109,30 @@ any image below is a link to an article explaining more about them.
 Defines an offset to establish where the 0 angle is.
 
 {{~ if xaml ~}}
-<pre><code>&lt;lvc:PolarChart
+```xml
+<lvc:PolarChart
     Series="{Binding Series}"
     InitialRotation="-90">
-&lt;/lvc:PolarChart></code></pre>
+</lvc:PolarChart>
+```
 {{~ end ~}}
 
 {{~ if blazor ~}}
-<pre><code>&lt;PolarChart
+```xml
+<PolarChart
     Series="series"
     InitialRotation="-90">
-&lt;/PolarChart></code></pre>
+</PolarChart>
+```
 
 {{~ end ~}}
 
 {{~ if winforms ~}}
 Drag a new `PolarChart` control from your toolbox, then in the code behind assign the `Series` property:
 
-<pre><code>polarChart1.InitialRotation = -90;</code></pre>
+```csharp
+polarChart1.InitialRotation = -90;
+```
 {{~ end ~}}
 
 Notice a change in the `InitialRotation` property is animated automatically based on the chart animations settings:
@@ -128,24 +144,30 @@ Notice a change in the `InitialRotation` property is animated automatically base
 Defines the inner radius in pixels of the chart.
 
 {{~ if xaml ~}}
-<pre><code>&lt;lvc:PolarChart
+```xml
+<lvc:PolarChart
     Series="{Binding Series}"
     InnerRadius="50">
-&lt;/lvc:PolarChart></code></pre>
+</lvc:PolarChart>
+```
 {{~ end ~}}
 
 {{~ if blazor ~}}
-<pre><code>&lt;PolarChart
+```xml
+<PolarChart
     Series="Series"
     InnerRadius="50">
-&lt;/PolarChart></code></pre>
+</PolarChart>
+```
 
 {{~ end ~}}
 
 {{~ if winforms ~}}
 Drag a new `PolarChart` control from your toolbox, then in the code behind assign the `Series` property:
 
-<pre><code>polarChart1.InnerRadius = 50;</code></pre>
+```csharp
+polarChart1.InnerRadius = 50;
+```
 {{~ end ~}}
 
 Notice a change in the `InnerRadius` property is animated automatically based on the chart animations settings:
@@ -157,24 +179,30 @@ Notice a change in the `InnerRadius` property is animated automatically based on
 Defines the total circumference angle in degrees, from 0 to 360, default is 360.
 
 {{~ if xaml ~}}
-<pre><code>&lt;lvc:PolarChart
+```xml
+<lvc:PolarChart
     Series="{Binding Series}"
     TotalAngle="270">
-&lt;/lvc:PolarChart></code></pre>
+</lvc:PolarChart>
+```
 {{~ end ~}}
 
 {{~ if blazor ~}}
-<pre><code>&lt;PolarChart
+```xml
+<PolarChart
     Series="Series"
     TotalAngle="50">
-&lt;/PolarChart></code></pre>
+</PolarChart>
+```
 
 {{~ end ~}}
 
 {{~ if winforms ~}}
 Drag a new `PolarChart` control from your toolbox, then in the code behind assign the `Series` property:
 
-<pre><code>polarChart1.TotalAngle = 270;</code></pre>
+```csharp
+polarChart1.TotalAngle = 270;
+```
 {{~ end ~}}
 
 Notice a change in the `TotalAngle` property is animated automatically based on the chart animations settings:
@@ -187,7 +215,8 @@ You can set the color, use dashed lines, build gradients for the axis name, labe
 a look at the [Paints article]({{ website_url }}/docs/{{ platform }}/{{ version }}/Overview.Paints).
 
 {{~ if xaml ~}}
-<pre><code>using LiveChartsCore;
+```csharp
+using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
@@ -227,27 +256,31 @@ namespace ViewModelsSamples.Bars.Basic
                 }
             };
     }
-}</code></pre>
+}
+```
 
-<pre><code>&lt;lvc:CartesianChart
+```xml
+<lvc:CartesianChart
     Series="{Binding Series}"
     RadiusAxes="{Binding RadiusAxes}"
     AngleAxes="{Binding AngleAxes}">
-&lt;/lvc:CartesianChart></code></pre>
+</lvc:CartesianChart>
+```
 {{~ end ~}}
 
 {{~ if blazor ~}}
-<pre><code>@using LiveChartsCore;
+```csharp
+@using LiveChartsCore;
 @using LiveChartsCore.SkiaSharpView;
 @using LiveChartsCore.SkiaSharpView.Painting;
 @using LiveChartsCore.SkiaSharpView.Painting.Effects;
 @using SkiaSharp;
 
-&lt;CartesianChart
+<CartesianChart
     Series="series"
     RadiusAxes="radiusAxes"
     AngleAxes="angleAxes">
-&lt;/CartesianChart>
+</CartesianChart>
 
 @code {
     private ISeries[] series { get; set; } = new ISeries[] {  };
@@ -279,11 +312,13 @@ namespace ViewModelsSamples.Bars.Basic
                 } // mark
             }
         };
-}</code></pre>
+}
+```
 {{~ end ~}}
 
 {{~ if winforms ~}}
-<pre><code>polarChart1.RadiusAxes = new PolarAxis[]
+```csharp
+polarChart1.RadiusAxes = new PolarAxis[]
 {
     new PolarAxis
     {
@@ -307,7 +342,8 @@ polarChart1.AngleAxes = new PolarAxis[]
             PathEffect = new DashEffect(new float[] { 3, 3 }) // mark
         } // mark
     }
-};</code></pre>
+};
+```
 {{~ end ~}}
 
 ![image]({{ assets_url }}/docs/_assets/polar-axes-style.png)
@@ -323,7 +359,8 @@ if the axis requires a label outside the bounds of the labels collection, then t
 default value is null.
 
 {{~ if xaml ~}}
-<pre><code>using LiveChartsCore;
+```csharp
+using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
@@ -334,20 +371,20 @@ namespace ViewModelsSamples.Bars.Basic
     public class ViewModel
     {
         public ISeries[] Series { get; set; } 
-            = new ObservableCollection&lt;ISeries>
+            = new ObservableCollection<ISeries>
             {
-                new PolarLineSeries&lt;double>
+                new PolarLineSeries<double>
                 {
-                    Values = new ObservableCollection&lt;double> { 5, 2, 1, 4, 3, 3 },
+                    Values = new ObservableCollection<double> { 5, 2, 1, 4, 3, 3 },
                     GeometryFill = null,
                     GeometryStroke = null,
                     LineSmoothness = 0.2,
                     Stroke = null,
                     IsClosed = true,
                 },
-                new PolarLineSeries&lt;double>
+                new PolarLineSeries<double>
                 {
-                    Values = new ObservableCollection&lt;double> { 3, 5, 2, 3, 4, 5 },
+                    Values = new ObservableCollection<double> { 3, 5, 2, 3, 4, 5 },
                     GeometryFill = null,
                     GeometryStroke = null,
                     LineSmoothness = 0.2,
@@ -377,44 +414,48 @@ namespace ViewModelsSamples.Bars.Basic
                 }
             };
     }
-}</code></pre>
+}
+```
 
-<pre><code>&lt;lvc:CartesianChart
+```xml
+<lvc:CartesianChart
     Series="{Binding Series}"
     RadiusAxes="{Binding RadiusAxes}"
     AngleAxes="{Binding AngleAxes}">
-&lt;/lvc:CartesianChart></code></pre>
+</lvc:CartesianChart>
+```
 {{~ end ~}}
 
 {{~ if blazor ~}}
-<pre><code>@using LiveChartsCore;
+```csharp
+@using LiveChartsCore;
 @using LiveChartsCore.SkiaSharpView;
 @using LiveChartsCore.SkiaSharpView.Painting;
 @using LiveChartsCore.SkiaSharpView.Painting.Effects;
 @using SkiaSharp;
 
-&lt;CartesianChart
+<CartesianChart
     Series="series"
     RadiusAxes="radiusAxes"
     AngleAxes="angleAxes">
-&lt;/CartesianChart>
+</CartesianChart>
 
 @code {
     private ISeries[] series { get; set; } 
-        = new ObservableCollection&lt;ISeries>
+        = new ObservableCollection<ISeries>
         {
-            new PolarLineSeries&lt;double>
+            new PolarLineSeries<double>
             {
-                Values = new ObservableCollection&lt;double> { 5, 2, 1, 4, 3, 3 },
+                Values = new ObservableCollection<double> { 5, 2, 1, 4, 3, 3 },
                 GeometryFill = null,
                 GeometryStroke = null,
                 LineSmoothness = 0.2,
                 Stroke = null,
                 IsClosed = true,
             },
-            new PolarLineSeries&lt;double>
+            new PolarLineSeries<double>
             {
-                Values = new ObservableCollection&lt;double> { 3, 5, 2, 3, 4, 5 },
+                Values = new ObservableCollection<double> { 3, 5, 2, 3, 4, 5 },
                 GeometryFill = null,
                 GeometryStroke = null,
                 LineSmoothness = 0.2,
@@ -443,24 +484,26 @@ namespace ViewModelsSamples.Bars.Basic
                 ForceStepToMin = true
             }
         };
-}</code></pre>
+}
+```
 {{~ end ~}}
 
 {{~ if winforms ~}}
-<pre><code>polarChart1.Series = new ObservableCollection&lt;ISeries>
+```csharp
+polarChart1.Series = new ObservableCollection<ISeries>
 {
-    new PolarLineSeries&lt;double>
+    new PolarLineSeries<double>
     {
-        Values = new ObservableCollection&lt;double> { 5, 2, 1, 4, 3, 3 },
+        Values = new ObservableCollection<double> { 5, 2, 1, 4, 3, 3 },
         GeometryFill = null,
         GeometryStroke = null,
         LineSmoothness = 0.2,
         Stroke = null,
         IsClosed = true,
     },
-    new PolarLineSeries&lt;double>
+    new PolarLineSeries<double>
     {
-        Values = new ObservableCollection&lt;double> { 3, 5, 2, 3, 4, 5 },
+        Values = new ObservableCollection<double> { 3, 5, 2, 3, 4, 5 },
         GeometryFill = null,
         GeometryStroke = null,
         LineSmoothness = 0.2,
@@ -486,7 +529,8 @@ polarChart1.AngleAxes = new PolarAxis[]
         MinStep = 1,
         ForceStepToMin = true
     }
-};</code></pre>
+};
+```
 {{~ end ~}}
 
 ![image]({{ assets_url }}/docs/_assets/polar-star.png)
@@ -496,7 +540,8 @@ polarChart1.AngleAxes = new PolarAxis[]
 Indicates the axis labels rotation in degrees, in the following image we have a rotation of 45 degrees in the Radius axis,
 and for the angle axis the labels rotation will follow the tangent line.
 
-<pre><code>RadiusAxes = new PolarAxis[]
+```csharp
+RadiusAxes = new PolarAxis[]
 {
     new PolarAxis    
     {
@@ -509,26 +554,30 @@ AngleAxes = new PolarAxis[]
     {
         LabelsRotation = LiveCharts.TangentAngle // mark
     }
-};</code></pre>
+};
+```
 
 ![image]({{ assets_url }}/docs/_assets/polar-labels-rotation.png)
 
 You can also place labels at the cotangent angle:
 
-<pre><code>AngleAxes = new PolarAxis[]
+```csharp
+AngleAxes = new PolarAxis[]
 {
     new PolarAxis
     {
         LabelsRotation = LiveCharts.CotangentAngle // mark
     }
-};</code></pre>
+};
+```
 
 ![image]({{ assets_url }}/docs/_assets/polar-labels-rotation2.png)
 
 Finally notice that you can combine the `LiveCharts.CotangentAngle` and `LiveCharts.TangentAngle` with decimal degrees,
 the following expressions are valid also:
 
-<pre><code>Series { get; set; } = new PolarAxis[]
+```csharp
+Series { get; set; } = new PolarAxis[]
 {
     new PolarAxis
     {
@@ -542,15 +591,16 @@ the following expressions are valid also:
     {
         LabelsRotation = LiveCharts.CotangentAngle + 30, // the cotangent + 30 degrees
     }
-};</code></pre>
+};
+```
 
 ## PolarAxis.Visible property
 
 When the `Visible` property is set to `false` the axis will not be drawn and also it will not take any space in the chart
 default is `true`.
 
-{{ render this "~/shared/chart.md" }}
+{{ render "~/shared/chart.md" }}
 
-{{ render this "~/shared/tooltips.md" }}
+{{ render "~/shared/tooltips.md" }}
 
-{{ render this "~/shared/legends.md" }}
+{{ render "~/shared/legends.md" }}

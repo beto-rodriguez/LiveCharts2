@@ -4,9 +4,9 @@
 
 # {{ name | to_title_case }}
 
-{{ render this "~/shared/series.md" }}
+{{ render "~/shared/series.md" }}
 
-{{ render this "~/shared/datalabels.md" }}
+{{ render "~/shared/datalabels.md" }}
 
 ## Stroke property
 
@@ -15,27 +15,29 @@ and the current theme.
 
 ![image]({{ assets_url }}/docs/_assets/stackedcolstroke.png)
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new StackedColumnSeries&lt;int>
+    new StackedColumnSeries<int>
     {
-        Values = new List&lt;int> { 3, 5, 3, 2, 5, 4, 2 },
+        Values = new List<int> { 3, 5, 3, 2, 5, 4, 2 },
         Stroke = new SolidColorPaint(SKColors.Red) { StrokeThickness = 4 }, // mark
         Fill = null,
     },
-    new StackedColumnSeries&lt;int>
+    new StackedColumnSeries<int>
     {
-        Values = new List&lt;int> { 4, 2, 3, 2, 3, 4, 2 },
+        Values = new List<int> { 4, 2, 3, 2, 3, 4, 2 },
         Stroke = new SolidColorPaint(SKColors.Blue) { StrokeThickness = 8 }, // mark
         Fill = null,
     },
-    new StackedColumnSeries&lt;int>
+    new StackedColumnSeries<int>
     {
-        Values = new List&lt;int> { 4, 6, 6, 5, 4, 3 , 2 },
+        Values = new List<int> { 4, 6, 6, 5, 4, 3 , 2 },
         Stroke = new SolidColorPaint(SKColors.Green) { StrokeThickness = 12 }, // mark
         Fill = null,
     }
-};</code></pre>
+};
+```
 
 :::info
 Paints can create gradients, dashed lines and more, if you need help using the `Paint` instances take 
@@ -49,27 +51,29 @@ and the current theme.
 
 ![image]({{ assets_url }}/docs/_assets/stackedcolfill.png)
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new StackedColumnSeries&lt;int>
+    new StackedColumnSeries<int>
     {
-        Values = new List&lt;int> { 3, 5, 3, 2, 5, 4, 2 },
+        Values = new List<int> { 3, 5, 3, 2, 5, 4, 2 },
         Fill = new SolidColorPaint(SKColors.Red), // mark
         Stroke = null,
     },
-    new StackedColumnSeries&lt;int>
+    new StackedColumnSeries<int>
     {
-        Values = new List&lt;int> { 4, 2, 3, 2, 3, 4, 2 },
+        Values = new List<int> { 4, 2, 3, 2, 3, 4, 2 },
         Fill = new SolidColorPaint(SKColors.Blue), // mark
         Stroke = null,
     },
-    new StackedColumnSeries&lt;int>
+    new StackedColumnSeries<int>
     {
-        Values = new List&lt;int> { 4, 6, 6, 5, 4, 3 , 2 },
+        Values = new List<int> { 4, 6, 6, 5, 4, 3 , 2 },
         Fill = new SolidColorPaint(SKColors.Green), // mark
         Stroke = null,
     }
-};</code></pre>
+};
+```
 
 :::info
 Paints can create gradients, dashed lines and more, if you need help using the `Paint` instances take 
@@ -82,27 +86,29 @@ These properties define the corners radius in the rectangle geometry.
 
 ![image]({{ assets_url }}/docs/_assets/stackedcolcr.png)
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new StackedColumnSeries&lt;int>
+    new StackedColumnSeries<int>
     {
-        Values = new List&lt;int> { 3, 5, 3, 2, 5, 4, 2 },
+        Values = new List<int> { 3, 5, 3, 2, 5, 4, 2 },
         Rx = 50, // mark
         Ry = 50 // mark
     },
-    new StackedColumnSeries&lt;int>
+    new StackedColumnSeries<int>
     {
-        Values = new List&lt;int> { 4, 2, 3, 2, 3, 4, 2 },
+        Values = new List<int> { 4, 2, 3, 2, 3, 4, 2 },
         Rx = 50, // mark
         Ry = 50 // mark
     },
-    new StackedColumnSeries&lt;int>
+    new StackedColumnSeries<int>
     {
-        Values = new List&lt;int> { 4, 6, 6, 5, 4, 3 , 2 },
+        Values = new List<int> { 4, 6, 6, 5, 4, 3 , 2 },
         Rx = 50, // mark
         Ry = 50 // mark
     }
-};</code></pre>
+};
+```
 
 ## MaxBarWidth property
 
@@ -114,58 +120,66 @@ Specifies the maximum width a column can take, take a look at the following samp
 
 ![image]({{ assets_url }}/docs/_assets/columnmw10.png)
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new ColumnSeries&lt;int>
+    new ColumnSeries<int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
         MaxBarWidth = 10 // mark
     }
-};</code></pre>
+};
+```
 
 But now lets use `double.MaxValue` to see the difference.
 
 ![image]({{ assets_url }}/docs/_assets/columnmwmax.png)
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new ColumnSeries&lt;int>
+    new ColumnSeries<int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
         MaxBarWidth = double.MaxValue // mark
     }
-};</code></pre>
+};
+```
 
 Finally we could aso set the padding to `0`.
 
 ![image]({{ assets_url }}/docs/_assets/columnmwmaxp0.png)
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new ColumnSeries&lt;int>
+    new ColumnSeries<int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
         MaxBarWidth = double.MaxValue,
         Padding = 0 // mark
     }
-};</code></pre>
+};
+```
 
 ## Padding property
 
 Gets or sets the padding for each bar in the series.
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new StackedColumnSeries&lt;int>
+    new StackedColumnSeries<int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
-        adding = 5 // mark
+        Padding = 5 // mark
     },
-    new StackedColumnSeries&lt;int>
+    new StackedColumnSeries<int>
     {
         Values = new [] { 2, 3,1, 4, 6 },
         Padding = 5 // mark
     }
-};</code></pre>
+};
+```
 
-{{ render this "~/shared/series2.md" }}
+{{ render "~/shared/series2.md" }}

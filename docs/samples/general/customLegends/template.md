@@ -1,43 +1,7 @@
 # Customize default legends
 
-You can quickly change the position, the font, the text size or the background color:
-
-{{~ if xaml ~}}
-{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/Axes/Multiple/$PlatformViewFile" ~}}
-{{~ end ~}}
-
-{{~ if winforms ~}}
-{{~ render_params_file_as_code this "~/../samples/WinFormsSample/Axes/Multiple/View.cs" ~}}
-{{~ end ~}}
-
-{{~ if eto ~}}
-{{~ render_params_file_as_code this "~/../samples/EtoFormsSample/Axes/Multiple/View.cs" ~}}
-{{~ end ~}}
-
-{{~ if blazor ~}}
-{{~ render_params_file_as_code this "~/../samples/BlazorSample/Pages/Axes/Multiple.razor" ~}}
-{{~ end ~}}
-
-#### View model
-
-```c#
-[ObservableObject]
-public partial class ViewModel
-{
-    public ISeries[] Series { get; set; } = { ... };
-    public Axis[] YAxes { get; set; } = { ... };
-
-    public SolidColorPaint LegendTextPaint { get; set; } = // mark
-        new SolidColorPaint // mark
-        { // mark
-            Color = new SKColor(50, 50, 50), // mark
-            SKTypeface = SKTypeface.FromFamilyName("Courier New") // mark
-        }; // mark
-
-    public SolidColorPaint LegendBackgroundPaint { get; set; } = // mark
-        new SolidColorPaint(new SKColor(240, 240, 240)); // mark
-}
-```
+You can use the chart `LegendPosition`, `LegendTextPaint`, `LegendBackgroundPaint` and `LegendTextSize` to 
+define the legend look (full example [here](https://github.com/beto-rodriguez/LiveCharts2/blob/master/samples/{{ samples_folder }}/Axes/Multiple{{ view_extension }})).
 
 ![custom]({{ assets_url }}/docs/_assets/legend-custom-style.png)
 
@@ -48,15 +12,21 @@ in the next example we set a larger miniature compared with the default size.
 
 #### CustomLegend.cs
 
-{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/General/TemplatedLegends/CustomLegend.cs" ~}}
+```csharp
+{{~ render "~/../samples/ViewModelsSamples/General/TemplatedLegends/CustomLegend.cs" ~}}
+```
 
 #### LegendItem.cs
 
-{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/General/TemplatedLegends/LegendItem.cs" ~}}
+```csharp
+{{~ render "~/../samples/ViewModelsSamples/General/TemplatedLegends/LegendItem.cs" ~}}
+```
 
 #### View
 
-{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/General/TemplatedLegends/$PlatformViewFile" ~}}
+```
+{{~ render $"~/../samples/{samples_folder}/General/TemplatedLegends{view_extension}" ~}}
+```
 
 ![custom legend]({{ assets_url }}/docs/_assets/legend-custom-template.png)
 

@@ -12,97 +12,66 @@ You can place a legend at `Top`, `Bottom`, `Left`, `Right` or `Hidden` positions
 disable legends in a chart, default value is `Hidden`.
 
 {{~ if xaml ~}}
-<pre><code>&lt;lvc:CartesianChart
+```xml
+<lvc:CartesianChart
     Series="{Binding Series}"
-    LegendPosition="Top">&lt;!-- mark -->
-&lt;/lvc:CartesianChart>
-&lt;lvc:CartesianChart
+    LegendPosition="Top"><!-- mark -->
+</lvc:CartesianChart>
+<lvc:CartesianChart
     Series="{Binding Series}"
-    LegendPosition="Bottom">&lt;!-- mark -->
-&lt;/lvc:CartesianChart>
-&lt;lvc:CartesianChart
+    LegendPosition="Bottom"><!-- mark -->
+</lvc:CartesianChart>
+<lvc:CartesianChart
     Series="{Binding Series}"
-    LegendPosition="Left">&lt;!-- mark -->
-&lt;/lvc:CartesianChart>
-&lt;lvc:CartesianChart
+    LegendPosition="Left"><!-- mark -->
+</lvc:CartesianChart>
+<lvc:CartesianChart
     Series="{Binding Series}"
-    LegendPosition="Right">&lt;!-- mark -->
-&lt;/lvc:CartesianChart>
-&lt;lvc:CartesianChart
+    LegendPosition="Right"><!-- mark -->
+</lvc:CartesianChart>
+<lvc:CartesianChart
     Series="{Binding Series}"
-    LegendPosition="Hidden">&lt;!-- mark -->
-&lt;/lvc:CartesianChart></code></pre>
+    LegendPosition="Hidden"><!-- mark -->
+</lvc:CartesianChart>
+```
 {{~ end ~}}
 
 {{~ if blazor ~}}
-<pre><code>&lt;CartesianChart
+```xml
+<CartesianChart
     Series="series"
-    LegendPosition="LiveChartsCore.Measure.LegendPosition.Top">&lt;!-- mark -->
-&lt;/CartesianChart>
-&lt;CartesianChart
+    LegendPosition="LiveChartsCore.Measure.LegendPosition.Top"><!-- mark -->
+</CartesianChart>
+<CartesianChart
     Series="series"
-    LegendPosition="LiveChartsCore.Measure.LegendPosition.Bottom">&lt;!-- mark -->
-&lt;/CartesianChart>
-&lt;CartesianChart
+    LegendPosition="LiveChartsCore.Measure.LegendPosition.Bottom"><!-- mark -->
+</CartesianChart>
+<CartesianChart
     Series="series"
-    LegendPosition="LiveChartsCore.Measure.LegendPosition.Left">&lt;!-- mark -->
-&lt;/CartesianChart>
-&lt;CartesianChart
+    LegendPosition="LiveChartsCore.Measure.LegendPosition.Left"><!-- mark -->
+</CartesianChart>
+<CartesianChart
     Series="series"
-    LegendPosition="LiveChartsCore.Measure.LegendPosition.Right">&lt;!-- mark -->
-&lt;/CartesianChart>
-&lt;CartesianChart
+    LegendPosition="LiveChartsCore.Measure.LegendPosition.Right"><!-- mark -->
+</CartesianChart>
+<CartesianChart
     Series="series"
-    LegendPosition="LiveChartsCore.Measure.LegendPosition.Hidden">&lt;!-- mark -->
-&lt;/CartesianChart></code></pre>
+    LegendPosition="LiveChartsCore.Measure.LegendPosition.Hidden"><!-- mark -->
+</CartesianChart>
+```
 {{~ end ~}}
 
 {{~ if winforms ~}}
-<pre><code>cartesianChart1.LegendPosition = LiveChartsCore.Measure.LegendPosition.Bottom; // mark
+```csharp
+cartesianChart1.LegendPosition = LiveChartsCore.Measure.LegendPosition.Bottom; // mark
 // or use Top, Left, Right or Hidden
-</code></pre>
+```
 {{~ end ~}}
 
 # Customize default legends
 
-You can quickly change the position, the font, the text size or the background color:
-
-{{~ if xaml ~}}
-{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/Axes/Multiple/$PlatformViewFile" ~}}
-{{~ end ~}}
-
-{{~ if winforms ~}}
-{{~ render_params_file_as_code this "~/../samples/WinFormsSample/Axes/Multiple/View.cs" ~}}
-{{~ end ~}}
-
-{{~ if eto ~}}
-{{~ render_params_file_as_code this "~/../samples/EtoFormsSample/Axes/Multiple/View.cs" ~}}
-{{~ end ~}}
-
-{{~ if blazor ~}}
-{{~ render_params_file_as_code this "~/../samples/BlazorSample/Pages/Axes/Multiple.razor" ~}}
-{{~ end ~}}
-
-## View model
-
-```c#
-[ObservableObject]
-public partial class ViewModel
-{
-    public ISeries[] Series { get; set; } = { ... };
-    public Axis[] YAxes { get; set; } = { ... };
-
-    public SolidColorPaint LegendTextPaint { get; set; } = // mark
-        new SolidColorPaint // mark
-        { // mark
-            Color = new SKColor(50, 50, 50), // mark
-            SKTypeface = SKTypeface.FromFamilyName("Courier New") // mark
-        }; // mark
-
-    public SolidColorPaint LedgendBackgroundPaint { get; set; } = // mark
-        new SolidColorPaint(new SKColor(240, 240, 240)); // mark
-}
-```
+You can use the chart `LegendPosition`, `LegendTextPaint`, `LegendBackgroundPaint` and `LegendTextSize` to 
+define the legend look (full example [here](https://github.com/beto-rodriguez/LiveCharts2/blob/master/samples/{{ samples_folder }}/Axes/Multiple{{ view_extension }})).
 
 ![custom]({{ assets_url }}/docs/_assets/legend-custom-style.png)
 
@@ -114,10 +83,14 @@ a custom control to render legends in our charts using the LiveCharts API.
 
 ## CustomLegend.cs
 
-{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/General/TemplatedLegends/CustomLegend.cs" ~}}
+```csharp
+{{~ render "~/../samples/ViewModelsSamples/General/TemplatedLegends/CustomLegend.cs" ~}}
+```
 
 ## View
 
-{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/General/TemplatedLegends/$PlatformViewFile" ~}}
+```
+{{~ render $"~/../samples/{samples_folder}/General/TemplatedLegends{view_extension}" ~}}
+```
 
 ![custom tooltip]({{ assets_url }}/docs/_assets/legend-custom-template.png)

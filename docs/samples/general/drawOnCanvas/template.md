@@ -4,7 +4,7 @@ are handled in the library, but in general the recommended way to draw a custom 
 `Visual` class, for more info please see the [visual elements article](https://livecharts.dev/docs/{{ platform }}/{{ version }}/samples.general.visualElements).
 :::
 
-{{ render this "~/shared/genericSampleJustGifHeader.md" }}
+{{ render "~/shared/genericSampleJustGifHeader.md" }}
 
 We can directly draw on the canvas to create custom shapes or effects, by default LiveCharts uses SkiaSharp
 to render the controls, this means that you can use all the SkiaSharp API to draw on the canvas, you can find
@@ -13,23 +13,15 @@ more information about SkiaSharp [here](https://learn.microsoft.com/en-us/xamari
 In the next example we use the `UpdateStarted` command/event in the `CartesianChart`, this command/event is raised every time
 the control is measured, a LiveCharts control is measured when the data or the control size change.
 
+{{~ if mvvm ~}}
 ## View model
 
-```
+```csharp
 {{ full_name | get_vm_from_docs }}
 ```
-
-{{~ if xaml ~}}
-## XAML
 {{~ end ~}}
 
-{{~ if winforms ~}}
-## Form code behind
-{{~ end ~}}
-
-{{~ if blazor~}}
-## HTML
-{{~ end~}}
+## {{~ view_title ~}}
 
 ```
 {{ full_name | get_view_from_docs }}
@@ -65,4 +57,4 @@ nothing is rendered yet at this point.
 previous step is repeated multiple times per second (~60), so you must be careful when overriding the `OnDraw` method, you should only
 perform drawing operations there. LiveCharts will keep drawing until all animations are finished.
 
-{{ render this "~/shared/relatedTo.md" }}
+{{ render "~/shared/relatedTo.md" }}

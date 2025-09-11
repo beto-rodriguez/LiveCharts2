@@ -13,43 +13,7 @@ You can quickly change the position, the font, the text size or the background c
 
 #### View
 
-{{~ if xaml ~}}
-{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/Axes/NamedLabels/$PlatformViewFile" ~}}
-{{~ end ~}}
-
-{{~ if winforms ~}}
-{{~ render_params_file_as_code this "~/../samples/WinFormsSample/Axes/NamedLabels/View.cs" ~}}
-{{~ end ~}}
-
-{{~ if eto ~}}
-{{~ render_params_file_as_code this "~/../samples/EtoFormsSample/Axes/NamedLabels/View.cs" ~}}
-{{~ end ~}}
-
-{{~ if blazor ~}}
-{{~ render_params_file_as_code this "~/../samples/BlazorSample/Pages/Axes/NamedLabels.razor" ~}}
-{{~ end ~}}
-
-#### View model
-
-```c#
-[ObservableObject]
-public partial class ViewModel
-{
-    public ISeries[] Series { get; set; } = { ... };
-    public Axis[] XAxes { get; set; } = { ... };
-    public Axis[] YAxes { get; set; } = { ... };
-
-    public SolidColorPaint TooltipTextPaint { get; set; } = // mark
-        new SolidColorPaint // mark
-        { // mark
-            Color = new SKColor(242, 244, 195), // mark
-            SKTypeface = SKTypeface.FromFamilyName("Courier New") // mark
-        }; // mark
-
-    public SolidColorPaint TooltipBackgroundPaint { get; set; } = // mark
-        new SolidColorPaint(new SKColor(72, 0, 50)); // mark
-}
-```
+{{~ render $"~/../samples/{samples_folder}/Axes/NamedLabels{view_extension}" ~}}
 
 ![image]({{ assets_url }}/docs/samples/general/customTooltips/styling-tooltips.png)
 
@@ -126,7 +90,7 @@ public class City
     public double Population { get; set; }
 }</code></pre>
 
-We can also show a label for the `X` coordinate, the default tooltip uses the X label as the header in the tooltip.
+We can also show a label for the `X` coordinate, the default tooltip uses the X label as the header.
 
 <pre><code>new LineSeries&lt;double>
 {
@@ -175,11 +139,22 @@ in the next example, we draw a geometry in the tooltip based on the point that i
 
 #### CustomTooltip.cs
 
-{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/General/TemplatedTooltips/CustomTooltip.cs" ~}}
+```csharp
+{{~ render $"~/../samples/ViewModelsSamples/General/TemplatedTooltips/CustomTooltip.cs" ~}}
+```
 
 #### View
 
-{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/General/TemplatedTooltips/$PlatformViewFile" ~}}
+```csharp
+{{~ render $"~/../samples/{samples_folder}/General/TemplatedTooltips{view_extension}" ~}}
+```
+
+{{~ if xaml2006 ~}}
+## CustomGeometryPointColumnSeries.cs
+```csharp
+{{~ render $"~/../samples/{samples_folder}/General/TemplatedTooltips/CustomGeometryPointColumnSeries.cs" ~}}
+```
+{{~ end ~}}
 
 # Tooltip control from scratch
 
@@ -208,4 +183,6 @@ When the [FindingStrategy](https://livecharts.dev/docs/{{ platform }}/{{ version
 is not enough, we can override the logic to determine whether a given point is inside a drawn `ChartPoint`. This method
 will be used by the library to resolve the points to show in a tooltip, or the points passed in any pointer event:
 
-{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/Events/OverrideFind/ViewModel.cs" ~}}
+```csharp
+{{~ render "~/../samples/ViewModelsSamples/Events/OverrideFind/ViewModel.cs" ~}}
+```

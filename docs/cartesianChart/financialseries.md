@@ -4,9 +4,9 @@
 
 # {{ name | to_title_case }}
 
-{{ render this "~/shared/series.md" }}
+{{ render "~/shared/series.md" }}
 
-{{ render this "~/shared/datalabels.md" }}
+{{ render "~/shared/datalabels.md" }}
 
 ## UpStroke property
 
@@ -30,7 +30,8 @@ The following sample illustrates the use of the previous properties.
 
 ![image]({{ assets_url }}/docs/_assets/financialpaints.png)
 
-<pre><code>XAxes = new[]
+```csharp
+XAxes = new[]
 {
     new Axis
     {
@@ -45,13 +46,13 @@ The following sample illustrates the use of the previous properties.
 
 Series = new ISeries[]
 {
-    new CandlesticksSeries&lt;FinancialPoint>
+    new CandlesticksSeries<FinancialPoint>
     {
         UpFill = new SolidColorPaint(SKColors.Blue), // mark
         UpStroke = new SolidColorPaint(SKColors.CornflowerBlue) { StrokeThickness = 5 }, // mark
         DownFill = new SolidColorPaint(SKColors.Red), // mark
         DownStroke = new SolidColorPaint(SKColors.Orange) { StrokeThickness = 5 }, // mark
-        Values = new ObservableCollection&lt;FinancialPoint>
+        Values = new ObservableCollection<FinancialPoint>
         {
             //                             date,        high, open, close, low
             new FinancialPoint(new DateTime(2021, 1, 1), 523, 500, 450, 400),
@@ -77,7 +78,8 @@ Series = new ISeries[]
             new FinancialPoint(new DateTime(2021, 1, 21), 630, 610, 630, 590),
         }
     }
-};</code></pre>
+};
+```
 
 :::info
 Paints can create gradients, dashed lines and more, if you need help using the `Paint` instances take 
@@ -90,7 +92,8 @@ Specifies the maximum width a column can take, take a look at the following samp
 
 ![image]({{ assets_url }}/docs/_assets/financialw10.png)
 
-<pre><code>XAxes = new[]
+```csharp
+XAxes = new[]
 {
     new Axis
     {
@@ -105,9 +108,9 @@ Specifies the maximum width a column can take, take a look at the following samp
 
 Series = new ISeries[]
 {
-    new CandlesticksSeries&lt;FinancialPoint>
+    new CandlesticksSeries<FinancialPoint>
     {
-        Values = new ObservableCollection&lt;FinancialPoint>
+        Values = new ObservableCollection<FinancialPoint>
         {
             new FinancialPoint(new DateTime(2021, 1, 1), 523, 500, 450, 400),
             new FinancialPoint(new DateTime(2021, 1, 2), 500, 450, 425, 400),
@@ -121,6 +124,7 @@ Series = new ISeries[]
             new FinancialPoint(new DateTime(2021, 1, 10), 490, 420, 460, 400)
         }
     }
-};</code></pre>
+};
+```
 
-{{ render this "~/shared/series2.md" }}
+{{ render "~/shared/series2.md" }}

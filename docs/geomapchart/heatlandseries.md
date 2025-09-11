@@ -10,7 +10,8 @@ then based on the gradient a color will be assigned to each region, colors are i
 ![image]({{ assets_url }}/docs/_assets/geomaphs.png)
 
 {{~ if xaml ~}}
-<pre><code>using LiveChartsCore.SkiaSharpView;
+```csharp
+using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
 namespace ViewModelsSamples.Maps.World
@@ -40,16 +41,20 @@ namespace ViewModelsSamples.Maps.World
                 }
             };
     }
-}</code></pre>
+}
+```
 
-<pre><code>&lt;lvc:GeoMap Series="{Binding Series}">&lt;/lvc:GeoMap></code></pre>
+```xml
+<lvc:GeoMap Series="{Binding Series}"></lvc:GeoMap>
+```
 {{~ end ~}}
 
 {{~ if blazor ~}}
-<pre><code>@using LiveChartsCore.SkiaSharpView;
+```csharp
+@using LiveChartsCore.SkiaSharpView;
 @using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-&lt;GeoMap Series="series">&lt;/GeoMap>
+<GeoMap Series="series"></GeoMap>
 
 @code {
     private HeatLandSeries[] series = new HeatLandSeries[]
@@ -73,11 +78,13 @@ namespace ViewModelsSamples.Maps.World
             }
         }
     };
-}</code></pre>
+}
+```
 {{~ end ~}}
 
 {{~ if winforms ~}}
-<pre><code>geoMap1.Series = new HeatLandSeries[]
+```csharp
+geoMap1.Series = new HeatLandSeries[]
 {
     new HeatLandSeries
     {
@@ -97,7 +104,8 @@ namespace ViewModelsSamples.Maps.World
             new HeatLand { Name = "are", Value = 13 }
         }
     }
-};</code></pre>
+};
+```
 {{~ end ~}}
 
 ## HeatMap property
@@ -112,7 +120,8 @@ When this property is not specified, then it is assigned automatically based on 
 ![image]({{ assets_url }}/docs/_assets/geo-heatmap.png)
 
 {{~ if xaml ~}}
-<pre><code>using LiveChartsCore.SkiaSharpView;
+```csharp
+using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using SkiaSharp; // mark
 
@@ -145,16 +154,20 @@ namespace ViewModelsSamples.Maps.World
                 }
             };
     }
-}</code></pre>
+}
+```
 
-<pre><code>&lt;lvc:GeoMap Series="{Binding Series}">&lt;/lvc:GeoMap></code></pre>
+```xml
+<lvc:GeoMap Series="{Binding Series}"></lvc:GeoMap>
+```
 {{~ end ~}}
 
 {{~ if blazor ~}}
-<pre><code>@using LiveChartsCore.SkiaSharpView;
+```csharp
+@using LiveChartsCore.SkiaSharpView;
 @using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-&lt;GeoMap Series="series">&lt;/GeoMap>
+<GeoMap Series="series"></GeoMap>
 
 @code {
     private HeatLandSeries[] series = new HeatLandSeries[]
@@ -165,7 +178,7 @@ namespace ViewModelsSamples.Maps.World
             { // mark
                 SKColors.LightPink.AsLvcColor(), // the first element is the "coldest" // mark
                 SKColors.Pink.AsLvcColor(), // mark
-                SKKColors.DeepPink.AsLvcColor() // the last element is the "hottest" // mark
+                SKColors.DeepPink.AsLvcColor() // the last element is the "hottest" // mark
             }, // mark
             Lands = new HeatLand[]
             {
@@ -180,11 +193,13 @@ namespace ViewModelsSamples.Maps.World
             }
         }
     };
-}</code></pre>
+}
+```
 {{~ end ~}}
 
 {{~ if winforms ~}}
-<pre><code>geoMap1.Series = new HeatLandSeries[]
+```csharp
+geoMap1.Series = new HeatLandSeries[]
 {
     new HeatLandSeries
     {
@@ -206,7 +221,8 @@ namespace ViewModelsSamples.Maps.World
             new HeatLand { Name = "are", Value = 13 }
         }
     }
-};</code></pre>
+};
+```
 {{~ end ~}}
 
 ## ColorStops property
@@ -218,7 +234,8 @@ black to blue gradient is only used in the last 10 percent of the gradient, whil
 used in the remaining 90% of the gradient.
 
 {{~ if xaml ~}}
-<pre><code>namespace ViewModelsSamples.Maps.World
+```csharp
+namespace ViewModelsSamples.Maps.World
 {
     public class ViewModel
     {
@@ -243,16 +260,20 @@ used in the remaining 90% of the gradient.
                 }
             };
     }
-}</code></pre>
+}
+```
 
-<pre><code>&lt;lvc:GeoMap Series="{Binding Series}">&lt;/lvc:GeoMap></code></pre>
+```xml
+<lvc:GeoMap Series="{Binding Series}"></lvc:GeoMap>
+```
 {{~ end ~}}
 
 {{~ if blazor ~}}
-<pre><code>@using LiveChartsCore.SkiaSharpView;
+```csharp
+@using LiveChartsCore.SkiaSharpView;
 @using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 
-&lt;GeoMap Series="series">&lt;/GeoMap>
+<GeoMap Series="series"></GeoMap>
 
 @code {
     private HeatLandSeries[] series= new HeatLandSeries[]
@@ -274,11 +295,13 @@ used in the remaining 90% of the gradient.
             Lands = new HeatLand[] { ... }
         }
     };
-}</code></pre>
+}
+```
 {{~ end ~}}
 
 {{~ if winforms ~}}
-<pre><code>geoMap1.Series = = new HeatLandSeries[]
+```csharp
+geoMap1.Series = new HeatLandSeries[]
 {
     new HeatLandSeries
     {
@@ -296,7 +319,8 @@ used in the remaining 90% of the gradient.
         },
         Lands = new HeatLand[] { ... }
     }
-};</code></pre>
+};
+```
 {{~ end ~}}
 
 ![image]({{ assets_url }}/docs/_assets/heatcs.png)

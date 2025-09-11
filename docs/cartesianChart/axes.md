@@ -12,9 +12,6 @@ The cartesian chart control has the `XAxes` and `YAxes` properties, both of type
 when you do not set these properties, they will be an array containing only one element of the `Axis` class 
 (`new Axis[] { new Axis() }`). 
 
-This article will cover the properties of an `IAxis` interface that require a further explanation but it will 
-not cover all of them, if you need to know more about this type then use the [API explorer](./) in our website.
-
 ## Zooming and Panning
 
 Both of these features are directly related to the <a href="#MaxLimit and MinLimit properties">MaxLimit and MinLimit properties</a>,
@@ -36,7 +33,7 @@ The [ZoomAndPanMode](https://lvcharts.com/api/{{ version }}/LiveChartsCore.Measu
 so you can combine the options, for example, if you want to enable zooming on the `X` axis and disable "Fit top Bounds"
 and "Zoom by Section" you can set the `ZoomMode` property to:
 
-```c#
+```csharp
 var flags = ZoomAndPanMode.X | ZoomAndPanMode.NoFit | ZoomAndPanMode.NoZoomBySection;
 myChart.ZoomMode = flags;
 ```
@@ -49,22 +46,28 @@ When the user interacts with the chart, He/She/* is only moving the chart in the
 by the library to fit all the visible points in the X axis.
 
 {{~ if xaml ~}}
-<pre><code>&lt;lvc:CartesianChart
+```xml
+<lvc:CartesianChart
     Series="{Binding Series}"
     TooltipPosition="Hidden"
-    ZoomMode="X"> &lt;!-- mark -->
-&lt;/lvc:CartesianChart></code></pre>
+    ZoomMode="X"> <!-- mark -->
+</lvc:CartesianChart>
+````
 {{~ end ~}}
 
 {{~ if blazor ~}}
-<pre><code>&lt;CartesianChart
+```xml
+<CartesianChart
     Series="series"
-    ZoomMode="LiveChartsCore.Measure.ZoomAndPanMode.X"> &lt;!-- mark -->
-&lt;/CartesianChart></code></pre>
+    ZoomMode="LiveChartsCore.Measure.ZoomAndPanMode.X"> <!-- mark -->
+</CartesianChart>
+```
 {{~ end ~}}
 
 {{~ if winforms ~}}
-<pre><code>cartesianChart1.ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.X;</code></pre>
+```csharp
+cartesianChart1.ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.X;
+```
 {{~ end ~}}
 
 ![image]({{ assets_url }}/docs/_assets/zoom-x.gif)
@@ -75,22 +78,28 @@ When the user interacts with the chart, He/She/* is only moving the chart in the
 by the library to fit all the visible points in the Y axis.
 
 {{~ if xaml ~}}
-<pre><code>&lt;lvc:CartesianChart
+```xml
+<lvc:CartesianChart
     Series="{Binding Series}"
     TooltipPosition="Hidden"
-    ZoomMode="Y"> &lt;!-- mark -->
-&lt;/lvc:CartesianChart></code></pre>
+    ZoomMode="Y"> <!-- mark -->
+</lvc:CartesianChart>
+```
 {{~ end ~}}
 
 {{~ if blazor ~}}
-<pre><code>&lt;CartesianChart
+```xml
+<CartesianChart
     Series="series"
-    ZoomMode="LiveChartsCore.Measure.ZoomAndPanMode.Y"> &lt;!-- mark -->
-&lt;/CartesianChart></code></pre>
+    ZoomMode="LiveChartsCore.Measure.ZoomAndPanMode.Y"> <!-- mark -->
+</CartesianChart>
+```
 {{~ end ~}}
 
 {{~ if winforms ~}}
-<pre><code>cartesianChart1.ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.Y;</code></pre>
+```csharp
+cartesianChart1.ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.Y;
+```
 {{~ end ~}}
 
 ![image]({{ assets_url }}/docs/_assets/zoom-y.gif)
@@ -101,22 +110,28 @@ Both axis are moved by the user, this method could lead to the user to get lost 
 a button to reset the zoom to the data in the chart (settings `MinLimit` and `MaxLimit` properties to `null`).
 
 {{~ if xaml ~}}
-<pre><code>&lt;lvc:CartesianChart
+```xml
+<lvc:CartesianChart
     Series="{Binding Series}"
     TooltipPosition="Hidden"
-    ZoomMode="Both"> &lt;!-- mark -->
-&lt;/lvc:CartesianChart></code></pre>
+    ZoomMode="Both"> <!-- mark -->
+</lvc:CartesianChart>
+```
 {{~ end ~}}
 
 {{~ if blazor ~}}
-<pre><code>&lt;CartesianChart
+```xml
+<CartesianChart
     Series="series"
-    ZoomMode="LiveChartsCore.Measure.ZoomAndPanMode.Both"> &lt;!-- mark -->
-&lt;/CartesianChart></code></pre>
+    ZoomMode="LiveChartsCore.Measure.ZoomAndPanMode.Both"> <!-- mark -->
+</CartesianChart>
+```
 {{~ end ~}}
 
 {{~ if winforms ~}}
-<pre><code>cartesianChart1.ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.Both;</code></pre>
+```csharp
+cartesianChart1.ZoomMode = LiveChartsCore.Measure.ZoomAndPanMode.Both;
+```
 {{~ end ~}}
 
 ![image]({{ assets_url }}/docs/_assets/zoom-both.gif)
@@ -128,13 +143,15 @@ indicate the visible range of an axis setting these properties. For example, ima
 `LineSeries` that goes from 0 to 100 in the `X` axis, but you only need to show to the user the first 10 points (**paging**),
 in this case you could set the `MinLimit` property to 0 and the `MaxLimit` to 10.
 
-<pre><code>var xAxis = new Axis
+```csharp
+var xAxis = new Axis
 {
     MaxLimit = 10, // mark
     MinLimit = 0 // mark
 };
 
-myChart.XAxes = new List&lt;Axis>{ xAxis };</code></pre>
+myChart.XAxes = new List<Axis>{ xAxis };
+```
 
 When a user uses the zooming and panning features, both properties will be calculated by the library, this means 
 that you can always know where the user is at a chart when you read both of these properties, notice the `Axis` class
@@ -144,7 +161,8 @@ time a user uses these features (zooming and panning).
 With the code above, we could detect the chart visible range when the user is zooming or panning subscribing a handler in
 the `Axis.PropertyChanged` event:
 
-<pre><code>var xAxis = new Axis
+```csharp
+var xAxis = new Axis
 {
     MaxLimit = 10,
     MinLimit = 0
@@ -163,7 +181,8 @@ xAxis.PropertyChanged += (object sender, System.ComponentModel.PropertyChangedEv
     } // mark
 }; // mark
 
-myChart.XAxes = new List&lt;Axis>{ xAxis };</code></pre>
+myChart.XAxes = new List<Axis>{ xAxis };
+```
 
 Finally notice what when the chart loads, by default both of these properties are `null`, and `null` means that the library will
 calculate the value of both, so when you need to read the initial value of an axis you can access the `Axis.DataBounds` or
@@ -171,7 +190,8 @@ calculate the value of both, so when you need to read the initial value of an ax
 for the chart to be measured, in this example we will use the `Chart.UpdateStarted` event that happens when the chart is already measured
 and the draw in the UI is about to start.
 
-<pre><code>using System.Linq; // mark
+```csharp
+using System.Linq; // mark
 
 // get the control in the UI
 var chartControl = (CartesianChart)FindName("cartesianChart"); // notice this code is WPF specific
@@ -183,7 +203,8 @@ chartControl.UpdateStarted +=
 
         var minLimit = x.VisibleDataBounds.Min; // mark
         var maxLimit = x.VisibleDataBounds.Max; // mark
-    };</code></pre>
+    };
+```
 
 ## Clearing the current zooming or panning
 
@@ -196,13 +217,15 @@ based on the chart data and the chart size size, but you can configure the minim
 where you don't want decimal separations in the axis labels, you could set the `MinStep` property to `1`, this way, when the calculated 
 step is less that `1` the library will force it to be `1`.
 
-<pre><code>new Axis
+```csharp
+new Axis
 {
     // The MinStep property lets you define the minimum separation (in chart values scale)
     // between every axis separator, in this case we don't want decimals,
     // so lets force it to be greater or equals than 1
     MinStep = 1
-}</code></pre>
+}
+```
 
 ## Position property
 
@@ -210,13 +233,15 @@ The axis position property is type `AxisPosition`, it is an `enum` containing on
 the `Start` position places the axis at the bottom for X axes and at the left for Y axes and the `End` position 
 places the axis at the top for X axes and at the right for Y axes.
 
-<pre><code>YAxes = new List&lt;Axis>
+```csharp
+YAxes = new List<Axis>
 {
     new Axis    
     {
         Position = LiveChartsCore.Measure.AxisPosition.End
     }
-};</code></pre>
+};
+```
 
 ![image]({{ assets_url }}/docs/_assets/1.7.position.png)
 
@@ -225,7 +250,8 @@ places the axis at the top for X axes and at the right for Y axes.
 You can set the color, use dashed lines, build gradients for the axis name, labels and separators.
 
 {{~ if xaml ~}}
-<pre><code>using LiveChartsCore;
+```csharp
+using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
@@ -236,7 +262,7 @@ namespace ViewModelsSamples.Bars.Basic
     public class ViewModel
     {
         public ISeries[] Series { get; set; }
-            = new ISeries[] { new ColumnSeries&lt;int> { Values = new[] { 2, 5, 4, -2, 4, -3, 5 } } };
+            = new ISeries[] { new ColumnSeries<int> { Values = new[] { 2, 5, 4, -2, 4, -3, 5 } } };
 
         public Axis[] XAxes { get; set; }
             = new Axis[]
@@ -272,31 +298,35 @@ namespace ViewModelsSamples.Bars.Basic
                 }
             };
     }
-}</code></pre>
+}
+```
 
-<pre><code>&lt;lvc:CartesianChart
+```xml
+<lvc:CartesianChart
     Series="{Binding Series}"
     XAxes="{Binding XAxes}"
     YAxes="{Binding YAxes}">
-&lt;/lvc:CartesianChart></code></pre>
+</lvc:CartesianChart>
+```
 {{~ end ~}}
 
 {{~ if blazor ~}}
-<pre><code>@using LiveChartsCore;
+```csharp
+@using LiveChartsCore;
 @using LiveChartsCore.SkiaSharpView;
 @using LiveChartsCore.SkiaSharpView.Painting;
 @using LiveChartsCore.SkiaSharpView.Painting.Effects;
 @using SkiaSharp;
 
-&lt;CartesianChart
+<CartesianChart
     Series="series"
     XAxes="xAxes"
     YAxes="yAxes">
-&lt;/CartesianChart>
+</CartesianChart>
 
 @code {
     private ISeries[] series { get; set; }
-        = new ISeries[] { new ColumnSeries&lt;int> { Values = new[] { 2, 5, 4, -2, 4, -3, 5 } } };
+        = new ISeries[] { new ColumnSeries<int> { Values = new[] { 2, 5, 4, -2, 4, -3, 5 } } };
 
     private Axis[] xAxes { get; set; }
         = new Axis[]
@@ -331,11 +361,13 @@ namespace ViewModelsSamples.Bars.Basic
                 } // mark
             }
         };
-}</code></pre>
+}
+```
 {{~ end ~}}
 
 {{~ if winforms ~}}
-<pre><code>cartesianChart1.XAxes = new Axis[]
+```csharp
+cartesianChart1.XAxes = new Axis[]
 {
     new Axis
     {
@@ -365,7 +397,8 @@ cartesianChart1.YAxes = new Axis[]
             PathEffect = new DashEffect(new float[] { 3, 3 }) // mark
         } // mark
     }
-};</code></pre>
+};
+```
 {{~ end ~}}
 
 ![image]({{ assets_url }}/docs/_assets/axes-paints.png)
@@ -387,15 +420,16 @@ default value is null.
 
 ![image]({{ assets_url }}/docs/_assets/1.7.labels.png)
 
-<pre><code>Series = new ObservableCollection&lt;ISeries>
+```csharp
+Series = new ObservableCollection<ISeries>
 {
-    new ColumnSeries&lt;int>
+    new ColumnSeries<int>
     {
-        Values = new ObservableCollection&lt;int> { 200, 558, 458, 249 },
+        Values = new ObservableCollection<int> { 200, 558, 458, 249 },
     }
 };
 
-XAxes = new List&lt;Axis>
+XAxes = new List<Axis>
 {
     new Axis
     {
@@ -404,7 +438,7 @@ XAxes = new List&lt;Axis>
     }
 };
 
-YAxes = new List&lt;Axis>
+YAxes = new List<Axis>
 {
     new Axis
     {
@@ -420,19 +454,22 @@ YAxes = new List&lt;Axis>
         // But the one that LiveCharts provides creates shorter labels when
         // the amount is in millions or trillions
     }
-};</code></pre>
+};
+```
 
 ## LabelsRotation property
 
 Indicates the axis labels rotation in degrees, in the following image we have a rotation of 45 degrees in the Y axis.
 
-<pre><code>YAxes = new List&lt;Axis>
+```csharp
+YAxes = new List<Axis>
 {
     new Axis    
     {
         LabelsRotation = 45
     }
-};</code></pre>
+};
+```
 
 ![image]({{ assets_url }}/docs/_assets/1.7.rotation.png)
 
@@ -443,47 +480,48 @@ how to create a chart that uses multiple axes:
 
 ![image]({{ assets_url }}/docs/_assets/1.7.multiple.png)
 
-<pre><code>var blue = new SKColor(25, 118, 210);
+```csharp
+var blue = new SKColor(25, 118, 210);
 var red = new SKColor(229, 57, 53);
 var yellow = new SKColor(198, 167, 0);
 
-Series = new ObservableCollection&lt;ISeries>
+Series = new ObservableCollection<ISeries>
 {
-    new LineSeries&lt;double>
+    new LineSeries<double>
     {
         LineSmoothness = 1,
         Name = "tens",
-        Values = new ObservableCollection&lt;double> { 14, 13, 14, 15, 17 },
+        Values = new ObservableCollection<double> { 14, 13, 14, 15, 17 },
         Stroke = new SolidColorPaint(blue, 2),
         GeometryStroke = new SolidColorPaint(blue, 2),
         Fill = null,
         // it will be scaled at the Axis[0] instance (see YAxes property below)
         ScalesYAt = 0 // mark
     },
-    new LineSeries&lt;double>
+    new LineSeries<double>
     {
         Name = "tens 2",
-        Values = new ObservableCollection&lt;double> { 11, 12, 13, 10, 13 },
+        Values = new ObservableCollection<double> { 11, 12, 13, 10, 13 },
         Stroke = new SolidColorPaint(blue, 2),
         GeometryStroke = new SolidColorPaint(blue, 2),
         Fill = null,
         // it will be scaled at the Axis[0] instance (see YAxes property below)
         ScalesYAt = 0 // mark
     },
-    new LineSeries&lt;double>
+    new LineSeries<double>
     {
         Name = "hundreds",
-        Values = new ObservableCollection&lt;double> { 533, 586, 425, 579, 518 },
+        Values = new ObservableCollection<double> { 533, 586, 425, 579, 518 },
         Stroke = new SolidColorPaint(red, 2),
         GeometryStroke = new SolidColorPaint(red, 2),
         Fill = null,
         // it will be scaled at the YAxes[1] instance (see YAxes property below)
         ScalesYAt = 1 // mark
     },
-    new LineSeries&lt;double>
+    new LineSeries<double>
     {
         Name = "thousands",
-        Values = new ObservableCollection&lt;double> { 5493, 7843, 4368, 9018, 3902 },
+        Values = new ObservableCollection<double> { 5493, 7843, 4368, 9018, 3902 },
         Stroke = new SolidColorPaint(yellow, 2),
         GeometryStroke = new SolidColorPaint(yellow, 2),
         Fill = null,
@@ -492,7 +530,7 @@ Series = new ObservableCollection&lt;ISeries>
     }
 };
 
-YAxes = new List&lt;Axis>
+YAxes = new List<Axis>
 {
     new Axis // the "units" and "tens" series will be scaled on this axis
     {
@@ -510,7 +548,8 @@ YAxes = new List&lt;Axis>
         ShowSeparatorLines = false,
         Position = LiveChartsCore.Measure.AxisPosition.End
     }
-};</code></pre>
+};
+```
 
 ## Custom Separators
 
@@ -518,7 +557,8 @@ The library calculates the separators based on the data and the size of the char
 When the `CustomSeparators` property is not null, the library will not calculate the separators, instead it will use the 
 collection we passed here.
 
-<pre><code>public Axis[] YAxes { get; set; } =
+```csharp
+public Axis[] YAxes { get; set; } =
     {
         new Axis
         {
@@ -528,7 +568,8 @@ collection we passed here.
             CustomSeparators = new double[] { 0, 10, 25, 50, 100 },
             SeparatorsPaint = new SolidColorPaint(SKColors.Black.WithAlpha(100))
         }
-    };</code></pre>
+    };
+```
 
 ![image]({{ assets_url }}/docs/samples/axes/customSeparatorsInterval/result.png)
 
@@ -558,11 +599,12 @@ You normally do not need to use this property, unless you ware working in a Loga
 The unit width property affects a few series, `Column`, `Row` and `Financial` series, the unit width is the width of a bar in 
 a chart, by default this property is 1, but if you are using a custom scale, you must let the chart know about it.
 
-<pre><code>// The UnitWidth is only required for column or financial series
+```csharp
+// The UnitWidth is only required for column or financial series
 // because the library needs to know the width of each column, by default the
 // width is 1, but when you are using a different scale, you must let the library know it.
 
-XAxes = new List&lt;Axis>
+XAxes = new List<Axis>
 {
     new Axis
     {
@@ -578,4 +620,4 @@ XAxes = new List&lt;Axis>
         // Months: TimeSpan.FromDays(30.4375).Ticks
         // Years: TimeSpan.FromDays(365.25).Ticks
     }
-};</code></pre>
+};

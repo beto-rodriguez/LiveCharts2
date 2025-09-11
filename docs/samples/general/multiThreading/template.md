@@ -20,23 +20,15 @@ From MsDocs:
 Additionally from locking your data changes, you must also let LiveCharts know your lock object, then LiveCharts will grab the lock while it is 
 measuring a chart.
 
+{{~ if mvvm ~}}
 ## View model
 
-```
+```csharp
 {{ full_name | get_vm_from_docs }}
 ```
-
-{{~ if xaml ~}}
-## XAML
 {{~ end ~}}
 
-{{~ if winforms ~}}
-## Form code behind
-{{~ end ~}}
-
-{{~ if blazor ~}}
-## HTML
-{{~ end~}}
+## {{~ view_title ~}}
 
 ```
 {{ full_name | get_view_from_docs }}
@@ -49,32 +41,18 @@ Notice that we also set the chart `SyncContext` property so the chart knows our 
 You can also force the change to happen on the same thread where the chart is measured, this will prevent concurrency hazards because
 everything is happening on the same thread, but you must consider that now the UI thread is doing more operations.
 
+{{~ if mvvm ~}}
 ## View model
 
-```
+```csharp
 {{ full_name + "2" | get_vm_from_docs }}
 ```
-
-{{~ if xaml ~}}
-## XAML
 {{~ end ~}}
 
-{{~ if winforms ~}}
-## Form code behind
-{{~ end ~}}
-
-{{~ if blazor~}}
-## HTML
-{{~ end~}}
+## {{~ view_title ~}}
 
 ```
 {{ full_name + "2" | get_view_from_docs }}
 ```
 
-{{~ if xaml ~}}
-## View code behind
-
-{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/General/MultiThreading2/$PlatformViewCodeBehindFile" ~}}
-{{~ end ~}}
-
-{{ render this "~/shared/relatedTo.md" }}
+{{ render "~/shared/relatedTo.md" }}

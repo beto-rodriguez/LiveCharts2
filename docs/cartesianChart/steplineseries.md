@@ -4,9 +4,9 @@
 
 # {{ name | to_title_case }}
 
-{{ render this "~/shared/series.md" }}
+{{ render "~/shared/series.md" }}
 
-{{ render this "~/shared/datalabels.md" }}
+{{ render "~/shared/datalabels.md" }}
 
 ## Stroke property
 
@@ -15,9 +15,10 @@ and the current theme.
 
 ![image]({{ assets_url }}/docs/_assets/stepstroke.png)
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new StepLineSeries&lt;int>
+    new StepLineSeries<int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
         Stroke = new SolidColorPaint(SKColors.Blue) { StrokeThickness = 4 }, // mark
@@ -25,7 +26,7 @@ and the current theme.
         GeometryFill = null,
         GeometryStroke = null
     },
-    new StepLineSeries&lt;int>
+    new StepLineSeries<int>
     {
         Values = new [] { 7, 5, 3, 4, 6 },
         Stroke = new SolidColorPaint(SKColors.Red) { StrokeThickness = 8 }, // mark
@@ -33,7 +34,8 @@ and the current theme.
         GeometryFill = null,
         GeometryStroke = null
     }
-};</code></pre>
+};
+```
 
 :::info
 Paints can create gradients, dashed lines and more, if you need help using the `Paint` instances take 
@@ -49,10 +51,10 @@ The alpha channel enables transparency, it goes from 0 to 255, 0 is transparent 
 
 ![image]({{ assets_url }}/docs/_assets/stepfill.png)
 
-<pre><code>
+```csharp
 Series = new ISeries[]
 {
-    new StepLineSeries&lt;int>
+    new StepLineSeries<int>
     {
         Values = new [] { 4, 3, 7, 2, 8 },
         Fill = new SolidColorPaint(SKColors.Blue.WithAlpha(90)), // mark
@@ -60,7 +62,8 @@ Series = new ISeries[]
         GeometryFill = null,
         GeometryStroke = null
     }
-};</code></pre>
+};
+```
 
 :::info
 Paints can create gradients, dashed lines and more, if you need help using the `Paint` instances take 
@@ -75,9 +78,10 @@ the series position in your series collection and the current theme.
 
 ![image]({{ assets_url }}/docs/_assets/stepgeometrystrokefill.png)
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new StepLineSeries&lt;int>
+    new StepLineSeries<int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
         Stroke = new SolidColorPaint(SKColors.Blue) { StrokeThickness = 4 },
@@ -85,7 +89,8 @@ the series position in your series collection and the current theme.
         GeometryFill = new SolidColorPaint(SKColors.AliceBlue), // mark
         GeometryStroke = new SolidColorPaint(SKColors.Gray) { StrokeThickness = 4 } // mark
     }
-};</code></pre>
+};
+```
 
 :::info
 Paints can create gradients, dashed lines and more, if you need help using the `Paint` instances take 
@@ -98,19 +103,21 @@ Determines the size of the geometry, if this property is not set, then the libra
 
 ![image]({{ assets_url }}/docs/_assets/stepgeometrysize.png)
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new StepLineSeries&lt;int>
+    new StepLineSeries<int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
         GeometrySize = 10 // mark
     },
-    new StepLineSeries&lt;int>
+    new StepLineSeries<int>
     {
         Values = new [] { 7, 5, 3, 2, 6 },
         GeometrySize = 30 // mark
     }
-};</code></pre>
+};
+```
 
 ## EnableNullSplitting property
 
@@ -119,9 +126,10 @@ series finds a `null` instance then the series will create a gap.
 
 ![image]({{ assets_url }}/docs/_assets/stepnullsplit.png)
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new StepLineSeries&lt;int?>
+    new StepLineSeries<int?>
     {
         Values = new int?[] 
         { 
@@ -134,6 +142,7 @@ series finds a `null` instance then the series will create a gap.
             6 
         },
     }
-};</code></pre>
+};
+```
 
-{{ render this "~/shared/series2.md" }}
+{{ render "~/shared/series2.md" }}

@@ -4,9 +4,9 @@
 
 # {{ name | to_title_case }}
 
-{{ render this "~/shared/series.md" }}
+{{ render "~/shared/series.md" }}
 
-{{ render this "~/shared/polarlabels.md" }}
+{{ render "~/shared/polarlabels.md" }}
 
 ## Stroke property
 
@@ -16,7 +16,8 @@ and the current theme.
 ![image]({{ assets_url }}/docs/_assets/piestroke.png)
 
 {{~ if xaml ~}}
-<pre><code>using LiveChartsCore;
+```csharp
+using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
@@ -26,66 +27,73 @@ namespace ViewModelsSamples.Pies.Basic
 {
     public class ViewModel
     {
-        public IEnumerable&lt;ISeries> Series { get; set; } = new List&lt;ISeries>
+        public IEnumerable<ISeries> Series { get; set; } = new List<ISeries>
         {
-            new PieSeries&lt;double>
+            new PieSeries<double>
             {
-                Values = new List&lt;double> { 4 },
+                Values = new List<double> { 4 },
                 Pushout = 8,
                 Stroke = new SolidColorPaint(SKColors.Red) { StrokeThickness = 3 } // mark
             },
-            new PieSeries&lt;double> { Values = new List&lt;double> { 2 } },
-            new PieSeries&lt;double> { Values = new List&lt;double> { 1 } },
-            new PieSeries&lt;double> { Values = new List&lt;double> { 4 } },
-            new PieSeries&lt;double> { Values = new List&lt;double> { 3 } }
+            new PieSeries<double> { Values = new List<double> { 2 } },
+            new PieSeries<double> { Values = new List<double> { 1 } },
+            new PieSeries<double> { Values = new List<double> { 4 } },
+            new PieSeries<double> { Values = new List<double> { 3 } }
         };
     }
-}</code></pre>
+}
+```
 
-<pre><code>&lt;lvc:PieChart Series="{Binding Series}">&lt;/lvc:PieChart></code></pre>
+```xml
+<lvc:PieChart Series="{Binding Series}"></lvc:PieChart>
+```
 {{~ end ~}}
 
 {{~ if blazor ~}}
-<pre><code>@using LiveChartsCore;
+```csharp
+@using LiveChartsCore;
 @using LiveChartsCore.SkiaSharpView;
 @using LiveChartsCore.SkiaSharpView.Painting;
 @using SkiaSharp;
 @using System.Collections.Generic;
 
-&lt;PieChart Series="series">&lt;/PieChart>
+<PieChart Series="series"></PieChart>
 
 @code {
     private ISeries[] series 
-        = new List&lt;ISeries>
+        = new List<ISeries>
         {
-            new PieSeries&lt;double>
+            new PieSeries<double>
             {
-                Values = new List&lt;double> { 4 },
+                Values = new List<double> { 4 },
                 Pushout = 8,
                 Stroke = new SolidColorPaint(SKColors.Red) { StrokeThickness = 3 } // mark
             },
-            new PieSeries&lt;double> { Values = new List&lt;double> { 2 } },
-            new PieSeries&lt;double> { Values = new List&lt;double> { 1 } },
-            new PieSeries&lt;double> { Values = new List&lt;double> { 4 } },
-            new PieSeries&lt;double> { Values = new List&lt;double> { 3 } }
+            new PieSeries<double> { Values = new List<double> { 2 } },
+            new PieSeries<double> { Values = new List<double> { 1 } },
+            new PieSeries<double> { Values = new List<double> { 4 } },
+            new PieSeries<double> { Values = new List<double> { 3 } }
         };
-}</code></pre>
+}
+```
 {{~ end ~}}
 
 {{~ if winforms ~}}
-<pre><code>pieChart1.Series = new List&lt;ISeries>
+```csharp
+pieChart1.Series = new List<ISeries>
 {
-    new PieSeries&lt;double>
+    new PieSeries<double>
     {
-        Values = new List&lt;double> { 4 },
+        Values = new List<double> { 4 },
         Pushout = 8,
         Stroke = new SolidColorPaint(SKColors.Red) { StrokeThickness = 3 } // mark
     },
-    new PieSeries&lt;double> { Values = new List&lt;double> { 2 } },
-    new PieSeries&lt;double> { Values = new List&lt;double> { 1 } },
-    new PieSeries&lt;double> { Values = new List&lt;double> { 4 } },
-    new PieSeries&lt;double> { Values = new List&lt;double> { 3 } }
-};;</code></pre>
+    new PieSeries<double> { Values = new List<double> { 2 } },
+    new PieSeries<double> { Values = new List<double> { 1 } },
+    new PieSeries<double> { Values = new List<double> { 4 } },
+    new PieSeries<double> { Values = new List<double> { 3 } }
+};
+```
 {{~ end ~}}
 
 :::info
@@ -101,7 +109,8 @@ and the current theme.
 ![image]({{ assets_url }}/docs/_assets/piefill.png)
 
 {{~ if xaml ~}}
-<pre><code>using LiveChartsCore;
+```csharp
+using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
@@ -111,66 +120,73 @@ namespace ViewModelsSamples.Pies.Basic
 {
     public class ViewModel
     {
-        public IEnumerable&lt;ISeries> Series { get; set; } = new List&lt;ISeries>
+        public IEnumerable<ISeries> Series { get; set; } = new List<ISeries>
         {
-            new PieSeries&lt;double>
+            new PieSeries<double>
             {
-                Values = new List&lt;double> { 4 },
+                Values = new List<double> { 4 },
                 Pushout = 8,
                 Fill = new SolidColorPaint(SKColors.Yellow) // mark
             },
-            new PieSeries&lt;double> { Values = new List&lt;double> { 2 } },
-            new PieSeries&lt;double> { Values = new List&lt;double> { 1 } },
-            new PieSeries&lt;double> { Values = new List&lt;double> { 4 } },
-            new PieSeries&lt;double> { Values = new List&lt;double> { 3 } }
+            new PieSeries<double> { Values = new List<double> { 2 } },
+            new PieSeries<double> { Values = new List<double> { 1 } },
+            new PieSeries<double> { Values = new List<double> { 4 } },
+            new PieSeries<double> { Values = new List<double> { 3 } }
         };
     }
-}</code></pre>
+}
+```
 
-<pre><code>&lt;lvc:PieChart Series="{Binding Series}">&lt;/lvc:PieChart></code></pre>
+```xml
+<lvc:PieChart Series="{Binding Series}"></lvc:PieChart>
+```
 {{~ end ~}}
 
 {{~ if blazor ~}}
-<pre><code>@using LiveChartsCore;
+```csharp
+@using LiveChartsCore;
 @using LiveChartsCore.SkiaSharpView;
 @using LiveChartsCore.SkiaSharpView.Painting;
 @using SkiaSharp;
 @using System.Collections.Generic;
 
-&lt;PieChart Series="series">&lt;/PieChart>
+<PieChart Series="series"></PieChart>
 
 @code {
     private ISeries[] series 
-        = new List&lt;ISeries>
+        = new List<ISeries>
         {
-            new PieSeries&lt;double>
+            new PieSeries<double>
             {
-                Values = new List&lt;double> { 4 },
+                Values = new List<double> { 4 },
                 Pushout = 8,
                 Fill = new SolidColorPaint(SKColors.Yellow) // mark
             },
-            new PieSeries&lt;double> { Values = new List&lt;double> { 2 } },
-            new PieSeries&lt;double> { Values = new List&lt;double> { 1 } },
-            new PieSeries&lt;double> { Values = new List&lt;double> { 4 } },
-            new PieSeries&lt;double> { Values = new List&lt;double> { 3 } }
+            new PieSeries<double> { Values = new List<double> { 2 } },
+            new PieSeries<double> { Values = new List<double> { 1 } },
+            new PieSeries<double> { Values = new List<double> { 4 } },
+            new PieSeries<double> { Values = new List<double> { 3 } }
         };
-}</code></pre>
+}
+```
 {{~ end ~}}
 
 {{~ if winforms ~}}
-<pre><code>pieChart1.Series = new List&lt;ISeries>
+```csharp
+pieChart1.Series = new List<ISeries>
 {
-    new PieSeries&lt;double>
+    new PieSeries<double>
     {
-        Values = new List&lt;double> { 4 },
+        Values = new List<double> { 4 },
         Pushout = 8,
         Fill = new SolidColorPaint(SKColors.Yellow) // mark
     },
-    new PieSeries&lt;double> { Values = new List&lt;double> { 2 } },
-    new PieSeries&lt;double> { Values = new List&lt;double> { 1 } },
-    new PieSeries&lt;double> { Values = new List&lt;double> { 4 } },
-    new PieSeries&lt;double> { Values = new List&lt;double> { 3 } }
-};;</code></pre>
+    new PieSeries<double> { Values = new List<double> { 2 } },
+    new PieSeries<double> { Values = new List<double> { 1 } },
+    new PieSeries<double> { Values = new List<double> { 4 } },
+    new PieSeries<double> { Values = new List<double> { 3 } }
+};
+```
 {{~ end ~}}
 
 :::info
@@ -183,11 +199,13 @@ a look at the [Paints article]({{ website_url }}/docs/{{ platform }}/{{ version 
 It is the distance in pixels between the center of the control and the pie slice, notice the 
 `HoverPushout` property defines the push-out when the pointer is above the pie slice shape.
 
-<pre><code>var pieSeries = new PieSeries&lt;int>
+```csharp
+var pieSeries = new PieSeries<int>
 {
     Values = new [] { ... },
     Pushout = 40 // mark
-};</code></pre>
+};
+```
 
 ![image]({{ assets_url }}/docs/_assets/piepushout.png)
 
@@ -195,11 +213,13 @@ It is the distance in pixels between the center of the control and the pie slice
 
 Sets the maximum value a radial column can take in pixels.
 
-<pre><code>var pieSeries = new PieSeries&lt;int>
+```csharp
+var pieSeries = new PieSeries<int>
 {
     Values = new [] { ... },
     MaxRadialColumnWidth = 50 // mark
-};</code></pre>
+};
+```
 
 ![image]({{ assets_url }}/docs/_assets/pieMaxRadialCW.png)
 
@@ -209,11 +229,13 @@ The inner radius of the slice in pixels, it is similar to the `MaxRadialColumnWi
 both are useful to create doughnut charts, the difference is that `MaxRadialColumnWidth` is more flexible
 on different screen sizes.
 
-<pre><code>var pieSeries = new PieSeries&lt;int>
+```csharp
+var pieSeries = new PieSeries<int>
 {
     Values = new [] { ... },
     InnerRadius = 50 // mark
-};</code></pre>
+};
+```
 
 ![image]({{ assets_url }}/docs/_assets/pieInnerRadius.png)
 
@@ -221,12 +243,14 @@ on different screen sizes.
 
 It is the distance from the maximum radius available to the end of the slice in pixels.
 
-<pre><code>var pieSeries = new PieSeries&lt;int>
+```csharp
+var pieSeries = new PieSeries<int>
 {
     Values = new [] { ... },
     OuterRadiusOffset = 20 // mark
-};</code></pre>
+};
+```
 
 ![image]({{ assets_url }}/docs/_assets/pieOuterRadiusOffset.png)
 
-{{ render this "~/shared/series2.md" }}
+{{ render "~/shared/series2.md" }}

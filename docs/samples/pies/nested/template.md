@@ -14,17 +14,11 @@
 {{ full_name | get_view_from_docs }}
 ```
 
-{{~ if !blazor ~}}
-## CustomPieSeries.cs
+{{~ if xaml~}}
+## StringToPaintConverter.cs
 
 ```csharp
-{{~ render $"~/../samples/{samples_folder}/Pies/Icons/CustomPieSeries.cs" ~}}
-```
-
-## SvgLabel.cs
-
-```csharp
-{{~ render $"~/../samples/{samples_folder}/Pies/Icons/SvgLabel.cs" ~}}
+{{~ render $"~/../samples/{samples_folder}/Pies/Nested/StringToPaintConverter.cs" ~}}
 ```
 {{~ end ~}}
 

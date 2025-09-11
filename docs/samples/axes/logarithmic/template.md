@@ -1,29 +1,31 @@
-{{ render this "~/shared/genericSampleSimpleHeader.md" }}
+{{ render "~/shared/genericSampleSimpleHeader.md" }}
 
+{{~ if mvvm ~}}
 ## View model
 
-```
+```csharp
 {{ full_name | get_vm_from_docs }}
 ```
+{{~ end ~}}
 
 ## LogarithmicPoint.cs
 
-{{~ "~/../samples/ViewModelsSamples/Axes/Logarithmic/LogarithmicPoint.cs" | render_file_as_code ~}}
+```csharp
+{{~ render "~/../samples/ViewModelsSamples/Axes/Logarithmic/LogarithmicPoint.cs" ~}}
+```
 
-{{~ if xaml ~}}
-## XAML
-{{~ end ~}}
-
-{{~ if winforms ~}}
-## Form code behind
-{{~ end ~}}
-
-{{~ if blazor~}}
-## HTML
-{{~ end~}}
+## {{~ view_title ~}}
 
 ```
 {{ full_name | get_view_from_docs }}
 ```
 
-{{ render this "~/shared/relatedTo.md" }}
+{{~ if xaml2006 ~}}
+## LogarithmicSeries.cs
+
+```csharp
+{{~ render $"~/../samples/{samples_folder}/Axes/Logarithmic/LogarithmicSeries.cs" ~}}
+```
+{{~ end ~}}
+
+{{ render "~/shared/relatedTo.md" }}

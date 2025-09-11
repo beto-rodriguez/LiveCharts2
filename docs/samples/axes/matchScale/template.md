@@ -26,12 +26,14 @@ no mater if we zoom in/out (or use the panning feature).
 When using the `MatchAxesScreenDataRatio`, LiveCharts used the [MatchAxesScreenDataRatio](https://github.com/beto-rodriguez/LiveCharts2/blob/master/src/LiveChartsCore/SharedAxes.cs#L68), this function uses the `DrawMarginDefined` event to modify the axes range to match the same scale,
 in the next example we will define our own scale, in this case we want the Y axis to take the double of pixels per unit of data.
 
-{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/Axes/MatchScale/CustomScaleExtensions.cs" ~}}
+```csharp
+{{~ render "~/../samples/ViewModelsSamples/Axes/MatchScale/CustomScaleExtensions.cs" ~}}
+```
 
 Using the previous example, we must remove the `MatchAxesScreenDataRatio=True`, then we take the chart instance in the UI and 
 call our function to initialize the custom scale:
 
-```c#
+```csharp
 // where myChart is a reference to chart in the UI.
 CustomScaleExtensions.DoubleY(myChart);
 ```
@@ -46,7 +48,9 @@ Once we run our app again, we can see that our scale works as expected:
 
 In the following example, we will force the axis separators to be 1 inch long (2.54 cm).
 
-{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/Axes/MatchScale/InchScaleExtensions.cs" ~}}
+```csharp
+{{~ render "~/../samples/ViewModelsSamples/Axes/MatchScale/InchScaleExtensions.cs" ~}}
+```
 
 :::tip
 The `GetPixelsPerInch()` function, returns always `96`, this is a standard value, but varies depending on the screen,
@@ -56,7 +60,7 @@ docs of your target UI framework.
 
 Finally we need to use our `InchSeparator()` extension in our chart:
 
-```c#
+```csharp
 // where myChart is a reference to chart in the UI.
 InchScaleExtensions.InchSeparator(myChart);
 ```
@@ -68,4 +72,4 @@ and panning level.
     <img src="{{ assets_url }}/docs/{{ unique_name }}/inch-long-separator.jpg" alt="sample image" style="max-width: 650px" />
 </div>
 
-{{ render this "~/shared/relatedTo.md" }}
+{{ render "~/shared/relatedTo.md" }}
