@@ -24,7 +24,7 @@
 
 // reachable on uno skia renderer
 // HAS_OS_LVC is true when the target framework contains any of the following:
-// -windows, -android, -ios, -maccatalyst, -tize
+// -windows, -android, -ios, -maccatalyst, -tizen
 // currently this is the the same file as WinUI, because uno makes this work across platforms
 // but by design this file is separated so in the future if there are any uno specific changes
 
