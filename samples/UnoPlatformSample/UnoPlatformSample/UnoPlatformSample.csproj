@@ -64,7 +64,7 @@
     </ItemGroup>
 
     <ItemGroup Condition="$(UseNuGetForSamples)">
-        <PackageReference Include="LiveChartsCore.SkiaSharpView.Uno.WinUI" Version="$(LiveChartsVersion)" />
+        <PackageReference Include="LiveChartsCore.SkiaSharpView.Uno.WinUI" />
     </ItemGroup>
 
     <ItemGroup Condition="!$(UseNuGetForSamples)">

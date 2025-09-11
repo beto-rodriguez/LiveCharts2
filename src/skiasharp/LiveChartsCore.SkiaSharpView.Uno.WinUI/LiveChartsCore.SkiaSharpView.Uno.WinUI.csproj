@@ -23,6 +23,7 @@
     <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
 
+    <IsPackable>true</IsPackable>
     <Version>$(LiveChartsVersion)</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Simple, flexible, interactive and powerful data visualization for Uno.WinUI.</Description>
@@ -44,6 +45,11 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
+
+  <ItemGroup>
+    <!-- hack.. idk where is this being packed... -->
+    <None Include="$(OutputPath)$(AssemblyName).uprimarker" Pack="false" />
+  </ItemGroup>
 
   <Import Project="./../../../build/RenderSettings.Uno.Build.props"/>
 
