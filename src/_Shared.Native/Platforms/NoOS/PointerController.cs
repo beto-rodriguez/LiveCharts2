@@ -20,11 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if !HAS_UI_LVC
+#if !HAS_OS_LVC
 
 // This code is reached maybe only on test environments.
-// HAS_UI is true when the target framework contains any of the following:
-// -windows, -android, -ios, -maccatalyst, -tizen, -desktop, -browserwasm
+// HAS_OS_LVC is true when the target framework contains any of the following:
+// -windows, -android, -ios, -maccatalyst, -tizen
 
 namespace LiveChartsCore.Native;
 

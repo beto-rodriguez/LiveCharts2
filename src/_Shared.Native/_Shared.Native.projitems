@@ -13,7 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Platforms\INativePointerController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Platforms\Mac\PointerController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Platforms\NativeHelpers.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Platforms\NoUI\PointerController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Platforms\NoOS\PointerController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Platforms\WinUI\PointerController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PointerController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\EventArgs.cs" />
@@ -26,7 +26,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Events\ScreenHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\ScrollEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\ScrollHandler.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Platforms\NoUI\NativeTicker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Platforms\NoOS\NativeTicker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Platforms\Android\NativeTicker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Platforms\Mac\NativeTicker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Platforms\WinUI\NativeTicker.cs" />
