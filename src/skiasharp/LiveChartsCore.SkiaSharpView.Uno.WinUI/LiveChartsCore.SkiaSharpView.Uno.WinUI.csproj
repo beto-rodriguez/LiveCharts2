@@ -51,8 +51,6 @@
     <None Include="$(OutputPath)$(AssemblyName).uprimarker" Pack="false" />
   </ItemGroup>
 
-  <Import Project="./../../../build/RenderSettings.Uno.Build.props"/>
-
   <Import Project="..\..\_Shared.Native\_Shared.Native.projitems" Label="Shared" />
   <Import Project="..\_Shared\_Shared.projitems" Label="Shared" />
   <Import Project="..\_Shared.WinUI\_Shared.WinUI.projitems" Label="Shared" />

@@ -44,7 +44,6 @@
     <VSYNC>true</VSYNC>
     <FPS>30</FPS>
     <Diagnose>false</Diagnose>
-    <UsesUnoSkiaRenderer>true</UsesUnoSkiaRenderer>
   </PropertyGroup>
 
   <PropertyGroup Condition="
