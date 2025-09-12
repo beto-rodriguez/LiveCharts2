@@ -11,18 +11,6 @@
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">
       $(TargetFrameworks);
       net462;
-      <!--
-      workaround #250116
-      netx.0-windows and SupportedOSPlatformVersion is a workaround for
-      https://github.com/beto-rodriguez/LiveCharts2/issues/1765
-      this ensures the package is restore to net8 or net6 instead of net462,
-      we cant restore the core to net462 because it has a strong name.
-
-      ideally the user should update the target to net8.0-windows10.0.19041... but the
-      default template as today uses net8.0-windows and causes this issue.
-      -->
-      net6.0-windows;
-      net8.0-windows;
       net6.0-windows10.0.19041.0;
       net8.0-windows10.0.19041.0;
     </TargetFrameworks>
@@ -77,10 +65,24 @@
   <ItemGroup>
     <None Include="images\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
-
+  
   <ItemGroup>
     <PackageReference Condition="'$(TargetFramework)' == 'net462' OR '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netstandard2.1'" Include="System.Text.Json" Version="8.0.5" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(UseNuGetForGenerator)">
+    <PackageReference Include="LiveChartsGenerators" Version="$(LiveChartsCodeGenVersion)">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="!$(UseNuGetForGenerator)">
+    <ProjectReference Include="..\..\generators\LiveChartsGenerators\LiveChartsGenerators.csproj" >
+      <OutputItemType>Analyzer</OutputItemType>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
 
 </Project>

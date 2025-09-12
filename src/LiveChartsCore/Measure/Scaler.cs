@@ -31,7 +31,7 @@ namespace LiveChartsCore.Measure;
 /// </summary>
 public class Scaler
 {
-    private readonly double _deltaVal, _m, _mInv, _minPx, _maxPx, _deltaPx;
+    private readonly double _deltaVal, _m, _mInv, _minPx, _maxPx, _deltaPx, _minVal, _maxVal;
     private readonly AxisOrientation _orientation;
 
     /// <summary>
@@ -48,52 +48,19 @@ public class Scaler
         ICartesianAxis axis,
         Bounds? bounds = null)
     {
-        if (axis.Orientation == AxisOrientation.Unknown) throw new Exception("The axis is not ready to be scaled.");
+        if (axis.Orientation == AxisOrientation.Unknown)
+            throw new Exception("The axis is not ready to be scaled.");
 
         _orientation = axis.Orientation;
 
-        var actualBounds = axis.DataBounds;
-        var actualVisibleBounds = axis.VisibleDataBounds;
-        var maxLimit = axis.MaxLimit;
-        var minLimit = axis.MinLimit;
-
-        if (bounds != null)
-        {
-            actualBounds = bounds;
-            actualVisibleBounds = bounds;
-            minLimit = null;
-            maxLimit = null;
-        }
+        var max = bounds?.Max ?? axis.MaxLimit ?? axis.VisibleDataBounds.Max;
+        var min = bounds?.Min ?? axis.MinLimit ?? axis.VisibleDataBounds.Min;
 
         if (axis.Orientation == AxisOrientation.X)
         {
             _minPx = drawMarginLocation.X;
             _maxPx = drawMarginLocation.X + drawMarginSize.Width;
             _deltaPx = _maxPx - _minPx;
-
-            MaxVal = axis.IsInverted ? actualBounds.Min : actualBounds.Max;
-            MinVal = axis.IsInverted ? actualBounds.Max : actualBounds.Min;
-
-            if (maxLimit is not null || minLimit is not null)
-            {
-                MaxVal = axis.IsInverted ? minLimit ?? MinVal : maxLimit ?? MaxVal;
-                MinVal = axis.IsInverted ? maxLimit ?? MaxVal : minLimit ?? MinVal;
-            }
-            else
-            {
-                var visibleMax = axis.IsInverted ? actualVisibleBounds.Min : actualVisibleBounds.Max;
-                var visibleMin = axis.IsInverted ? actualVisibleBounds.Max : actualVisibleBounds.Min;
-
-                AxisLimit.ValidateLimits(ref visibleMin, ref visibleMax);
-
-                if (visibleMax != MaxVal || visibleMin != MinVal)
-                {
-                    MaxVal = visibleMax;
-                    MinVal = visibleMin;
-                }
-            }
-
-            _deltaVal = MaxVal - MinVal;
         }
         else
         {
@@ -101,30 +68,18 @@ public class Scaler
             _maxPx = drawMarginLocation.Y + drawMarginSize.Height;
             _deltaPx = _maxPx - _minPx;
 
-            MaxVal = axis.IsInverted ? actualBounds.Max : actualBounds.Min;
-            MinVal = axis.IsInverted ? actualBounds.Min : actualBounds.Max;
-
-            if (maxLimit is not null || minLimit is not null)
-            {
-                MaxVal = axis.IsInverted ? maxLimit ?? MinVal : minLimit ?? MaxVal;
-                MinVal = axis.IsInverted ? minLimit ?? MaxVal : maxLimit ?? MinVal;
-            }
-            else
-            {
-                var visibleMax = axis.IsInverted ? actualVisibleBounds.Max : actualVisibleBounds.Min;
-                var visibleMin = axis.IsInverted ? actualVisibleBounds.Min : actualVisibleBounds.Max;
-
-                AxisLimit.ValidateLimits(ref visibleMax, ref visibleMin);
-
-                if (visibleMax != MaxVal || visibleMin != MinVal)
-                {
-                    MaxVal = visibleMax;
-                    MinVal = visibleMin;
-                }
-            }
-
-            _deltaVal = MaxVal - MinVal;
+            // invert Y, because the y axis is inverted by the screen coordinates
+            (max, min) = (min, max);
         }
+
+        AxisLimit.ValidateLimits(ref max, ref min, axis.MinStep);
+
+        if (axis.IsInverted)
+            (max, min) = (min, max);
+
+        _maxVal = max;
+        _minVal = min;
+        _deltaVal = _maxVal - _minVal;
 
         _m = _deltaPx / _deltaVal;
         _mInv = 1 / _m;
@@ -140,23 +95,29 @@ public class Scaler
         _maxPx = 100;
         _deltaPx = _maxPx - _minPx;
 
-        MaxVal = 0;
-        MinVal = 100;
-        _deltaVal = MaxVal - MinVal;
+        _maxVal = 0;
+        _minVal = 100;
+        _deltaVal = _maxVal - _minVal;
 
         _m = _deltaPx / _deltaVal;
         _mInv = 1 / _m;
     }
 
     /// <summary>
-    /// Gets the maximum value.
+    /// Converts a given value (in chart values) to pixels.
     /// </summary>
-    public double MaxVal { get; private set; }
+    /// <param name="value">The value in chart values.</param>
+    /// <returns></returns>
+    public float ToPixels(double value) =>
+        unchecked((float)(_minPx + (value - _minVal) * _m));
 
     /// <summary>
-    /// Gets the minimum value.
+    /// Converts a given value (in pixels) to chart values.
     /// </summary>
-    public double MinVal { get; private set; }
+    /// <param name="pixels">The value in pixels.</param>
+    /// <returns></returns>
+    public double ToChartValues(double pixels) =>
+        _minVal + (pixels - _minPx) * _mInv;
 
     /// <summary>
     /// Measures an absolute value in pixels.
@@ -169,28 +130,8 @@ public class Scaler
         {
             return Math.Abs(
                 _orientation == AxisOrientation.X
-                    ? (float)(_minPx + (value - MinVal) * _m - (_minPx + (0 - MinVal) * _m))
-                    : (float)(_minPx + (0 - MinVal) * _m - (_minPx + (value - MinVal) * _m)));
+                    ? (float)(_minPx + (value - _minVal) * _m - (_minPx + (0 - _minVal) * _m))
+                    : (float)(_minPx + (0 - _minVal) * _m - (_minPx + (value - _minVal) * _m)));
         }
-    }
-
-    /// <summary>
-    /// Converts a given value (in chart values) to pixels.
-    /// </summary>
-    /// <param name="value">The value in chart values.</param>
-    /// <returns></returns>
-    public float ToPixels(double value)
-    {
-        return unchecked((float)(_minPx + (value - MinVal) * _m));
-    }
-
-    /// <summary>
-    /// Converts a given value (in pixels) to chart values.
-    /// </summary>
-    /// <param name="pixels">The value in pixels.</param>
-    /// <returns></returns>
-    public double ToChartValues(double pixels)
-    {
-        return MinVal + (pixels - _minPx) * _mInv;
     }
 }

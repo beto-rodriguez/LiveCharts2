@@ -33,8 +33,8 @@ public class ScaleFunctionsTests
 
         _ = chart.GetImage();
 
-        var location = chart.Core.DrawMarginLocation;
-        var size = chart.Core.DrawMarginSize;
+        var location = chart.CoreChart.DrawMarginLocation;
+        var size = chart.CoreChart.DrawMarginSize;
 
         var p00 = chart.ScaleDataToPixels(new LvcPointD(0, 0));
         Assert.IsTrue(
@@ -86,8 +86,8 @@ public class ScaleFunctionsTests
 
         _ = chart.GetImage();
 
-        var location = chart.Core.DrawMarginLocation;
-        var size = chart.Core.DrawMarginSize;
+        var location = chart.CoreChart.DrawMarginLocation;
+        var size = chart.CoreChart.DrawMarginSize;
 
         var p00 = chart.ScaleDataToPixels(new LvcPointD(0, 0));
         Assert.IsTrue(
@@ -139,8 +139,8 @@ public class ScaleFunctionsTests
 
         _ = chart.GetImage();
 
-        var location = chart.Core.DrawMarginLocation;
-        var size = chart.Core.DrawMarginSize;
+        var location = chart.CoreChart.DrawMarginLocation;
+        var size = chart.CoreChart.DrawMarginSize;
 
         var p00 = chart.ScaleDataToPixels(new LvcPointD(0, 0));
         Assert.IsTrue(
@@ -192,8 +192,8 @@ public class ScaleFunctionsTests
 
         _ = chart.GetImage();
 
-        var location = chart.Core.DrawMarginLocation;
-        var size = chart.Core.DrawMarginSize;
+        var location = chart.CoreChart.DrawMarginLocation;
+        var size = chart.CoreChart.DrawMarginSize;
 
         var p00 = chart.ScaleDataToPixels(new LvcPointD(0, 0));
         Assert.IsTrue(
@@ -245,8 +245,8 @@ public class ScaleFunctionsTests
 
         _ = chart.GetImage();
 
-        var location = chart.Core.DrawMarginLocation;
-        var size = chart.Core.DrawMarginSize;
+        var location = chart.CoreChart.DrawMarginLocation;
+        var size = chart.CoreChart.DrawMarginSize;
 
         var p00 = chart.ScaleDataToPixels(new LvcPointD(0, 0));
         Assert.IsTrue(

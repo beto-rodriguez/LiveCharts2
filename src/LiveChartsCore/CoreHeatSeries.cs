@@ -27,8 +27,8 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
-using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
 
@@ -44,18 +44,8 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
         where TLabel : BaseLabelGeometry, new()
 {
     private Paint? _paintTaks;
-    private Bounds _weightBounds = new();
     private int _heatKnownLength = 0;
     private List<Tuple<double, LvcColor>> _heatStops = [];
-    private LvcColor[] _heatMap =
-    [
-        LvcColor.FromArgb(255, 87, 103, 222), // cold (min value)
-        LvcColor.FromArgb(255, 95, 207, 249) // hot (max value)
-    ];
-    private double[]? _colorStops;
-    private Padding _pointPadding = new(4);
-    private double? _minValue;
-    private double? _maxValue;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreHeatSeries{TModel, TVisual, TLabel}"/> class.
@@ -82,24 +72,30 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
         DataLabelsPosition = DataLabelsPosition.Middle;
     }
 
+    /// <inheritdoc cref="IHeatSeries.WeightBounds"/>
+    public Bounds WeightBounds { get; private set; } = new();
+
     /// <inheritdoc cref="IHeatSeries.HeatMap"/>
     public LvcColor[] HeatMap
     {
-        get => _heatMap;
-        set => SetProperty(ref _heatMap, value);
-    }
+        get;
+        set => SetProperty(ref field, value);
+    } = [
+        LvcColor.FromArgb(255, 87, 103, 222), // cold (min value)
+        LvcColor.FromArgb(255, 95, 207, 249) // hot (max value)
+    ];
 
     /// <inheritdoc cref="IHeatSeries.ColorStops"/>
-    public double[]? ColorStops { get => _colorStops; set => SetProperty(ref _colorStops, value); }
+    public double[]? ColorStops { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="IHeatSeries.PointPadding"/>
-    public Padding PointPadding { get => _pointPadding; set => SetProperty(ref _pointPadding, value); }
+    public Padding PointPadding { get; set => SetProperty(ref field, value); } = new(4);
 
     /// <inheritdoc cref="IHeatSeries.MinValue"/>
-    public double? MinValue { get => _minValue; set => SetProperty(ref _minValue, value); }
+    public double? MinValue { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="IHeatSeries.MaxValue"/>
-    public double? MaxValue { get => _maxValue; set => SetProperty(ref _maxValue, value); }
+    public double? MaxValue { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
     public override void Invalidate(Chart chart)
@@ -111,8 +107,8 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
         }
 
         var cartesianChart = (CartesianChartEngine)chart;
-        var primaryAxis = cartesianChart.YAxes[ScalesYAt];
-        var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
+        var primaryAxis = cartesianChart.GetYAxis(this);
+        var secondaryAxis = cartesianChart.GetXAxis(this);
 
         var drawLocation = cartesianChart.DrawMarginLocation;
         var drawMarginSize = cartesianChart.DrawMarginSize;
@@ -125,19 +121,16 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
         var uwp = primaryScale.MeasureInPixels(primaryAxis.UnitWidth);
 
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
-        var clipping = GetClipRectangle(cartesianChart);
 
         if (_paintTaks is not null)
         {
-            _paintTaks.ZIndex = actualZIndex + 0.2;
-            _paintTaks.SetClipRectangle(cartesianChart.Canvas, clipping);
-            cartesianChart.Canvas.AddDrawableTask(_paintTaks);
+            _paintTaks.ZIndex = actualZIndex + PaintConstants.SeriesStrokeZIndexOffset;
+            cartesianChart.Canvas.AddDrawableTask(_paintTaks, zone: CanvasZone.DrawMargin);
         }
-        if (DataLabelsPaint is not null)
+        if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
         {
-            DataLabelsPaint.ZIndex = actualZIndex + 0.3;
-            DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
-            cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
+            DataLabelsPaint.ZIndex = actualZIndex + PaintConstants.SeriesGeometryFillZIndexOffset;
+            cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint, zone: CanvasZone.DrawMargin);
         }
 
         var dls = (float)DataLabelsSize;
@@ -165,7 +158,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
             var secondary = secondaryScale.ToPixels(coordinate.SecondaryValue);
             var tertiary = (float)coordinate.TertiaryValue;
 
-            var baseColor = HeatFunctions.InterpolateColor(tertiary, _weightBounds, HeatMap, _heatStops);
+            var baseColor = HeatFunctions.InterpolateColor(tertiary, WeightBounds, HeatMap, _heatStops);
 
             if (point.IsEmpty || !IsVisible)
             {
@@ -254,14 +247,18 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
 
             pointsCleanup.Clean(point);
 
-            if (DataLabelsPaint is not null)
+            if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
             {
                 var label = (TLabel?)point.Context.Label;
 
                 if (label is null)
                 {
                     var l = new TLabel { X = secondary - uws * 0.5f, Y = primary - uws * 0.5f, RotateTransform = (float)DataLabelsRotation, MaxWidth = (float)DataLabelsMaxWidth };
-                    l.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
+                    l.Animate(
+                        EasingFunction ?? cartesianChart.ActualEasingFunction,
+                        AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed,
+                        BaseLabelGeometry.XProperty,
+                        BaseLabelGeometry.YProperty);
                     label = l;
                     point.Context.Label = l;
                 }
@@ -275,7 +272,10 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
 
                 if (isFirstDraw)
                     label.CompleteTransition(
-                        nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
+                        BaseLabelGeometry.TextSizeProperty,
+                        BaseLabelGeometry.XProperty,
+                        BaseLabelGeometry.YProperty,
+                        BaseLabelGeometry.RotateTransformProperty);
 
                 var labelPosition = GetLabelPosition(
                      secondary - uws * 0.5f + p.Left, primary - uwp * 0.5f + p.Top, uws - p.Left - p.Right, uwp - p.Top - p.Bottom,
@@ -297,7 +297,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
     {
         var seriesBounds = base.GetBounds(chart, secondaryAxis, primaryAxis);
         var b = seriesBounds.Bounds.TertiaryBounds;
-        _weightBounds = new(_minValue ?? b.Min, _maxValue ?? b.Max);
+        WeightBounds = new(MinValue ?? b.Min, MaxValue ?? b.Max);
         return seriesBounds;
     }
 
@@ -312,7 +312,7 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
     {
         var chart = chartPoint.Context.Chart;
         if (chartPoint.Context.Visual is not TVisual visual) throw new Exception("Unable to initialize the point instance.");
-        visual.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
+        visual.Animate(EasingFunction ?? chart.CoreChart.ActualEasingFunction, AnimationsSpeed ?? chart.CoreChart.ActualAnimationsSpeed);
     }
 
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
@@ -330,51 +330,6 @@ public abstract class CoreHeatSeries<TModel, TVisual, TLabel>
 
         label.TextSize = 1;
         label.RemoveOnCompleted = true;
-    }
-
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniaturesSketch"/>
-    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
-    public override Sketch GetMiniaturesSketch()
-    {
-        var schedules = new List<PaintSchedule>();
-
-        var solidPaint = LiveCharts.DefaultSettings.GetProvider().GetSolidColorPaint();
-        var st = solidPaint.StrokeThickness;
-        solidPaint.PaintStyle = PaintStyle.Fill;
-
-        if (st > MAX_MINIATURE_STROKE_WIDTH)
-        {
-            st = MAX_MINIATURE_STROKE_WIDTH;
-            solidPaint.StrokeThickness = MAX_MINIATURE_STROKE_WIDTH;
-        }
-
-        var visual = new TVisual
-        {
-            X = st * 0.5f,
-            Y = st * 0.5f,
-            Height = (float)MiniatureShapeSize,
-            Width = (float)MiniatureShapeSize,
-            Color = HeatMap[0] // ToDo <- draw the gradient?
-        };
-        schedules.Add(new PaintSchedule(solidPaint, visual));
-
-        return new Sketch(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
-        {
-            PaintSchedules = schedules
-        };
-    }
-
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniature"/>
-    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
-    public override IChartElement GetMiniature(ChartPoint? point, int zindex)
-    {
-        // ToDo <- draw the gradient?
-        // what to show in the legend?
-        return new GeometryVisual<TVisual, TLabel>
-        {
-            Width = 0,
-            Height = 0,
-        };
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniatureGeometry"/>

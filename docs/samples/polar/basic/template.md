@@ -1,1 +1,1 @@
-{{ render this "~/shared/genericSampleSimple.md" }}
+{{ render "~/shared/genericSampleSimple.md" }}

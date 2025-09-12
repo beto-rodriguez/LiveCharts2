@@ -29,10 +29,6 @@ namespace LiveChartsCore.Drawing;
 /// </summary>
 public class Animation
 {
-    internal long _duration;
-    internal int _animationCompletedCount = 0;
-    internal int _repeatTimes;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="Animation"/> class.
     /// </summary>
@@ -49,7 +45,7 @@ public class Animation
     public Animation(Func<float, float>? easingFunction, TimeSpan duration)
     {
         EasingFunction = easingFunction;
-        _duration = (long)duration.TotalMilliseconds;
+        Duration = (long)duration.TotalMilliseconds;
     }
 
     /// <summary>
@@ -61,8 +57,8 @@ public class Animation
     public Animation(Func<float, float> easingFunction, TimeSpan duration, int repeatTimes)
     {
         EasingFunction = easingFunction;
-        _duration = (long)duration.TotalMilliseconds;
-        _repeatTimes = repeatTimes;
+        Duration = (long)duration.TotalMilliseconds;
+        RepeatTimes = repeatTimes;
     }
 
     /// <summary>
@@ -74,8 +70,8 @@ public class Animation
     public Animation(Func<float, float> easingFunction, long duration, int repeatTimes)
     {
         EasingFunction = easingFunction;
-        _duration = duration;
-        _repeatTimes = repeatTimes;
+        Duration = duration;
+        RepeatTimes = repeatTimes;
     }
 
     /// <summary>
@@ -85,23 +81,25 @@ public class Animation
     public Animation(Animation animation)
     {
         EasingFunction = animation.EasingFunction;
-        _duration = animation._duration;
-        _repeatTimes = animation._repeatTimes;
+        Duration = animation.Duration;
+        RepeatTimes = animation.RepeatTimes;
     }
 
     /// <summary>
     /// Gets or sets the easing function.
     /// </summary>
-    public Func<float, float>? EasingFunction { get; set; }
+    public Func<float, float>? EasingFunction { get; }
 
     /// <summary>
     /// Gets or sets the duration of the transition in Milliseconds.
     /// </summary>
-    public long Duration { get => _duration; set => _duration = value; }
+    public long Duration { get; }
 
     /// <summary>
     /// Gets or sets how many times the animation needs to repeat before it is completed, 
     /// use int.MaxValue to repeat it indefinitely number of times.
     /// </summary>
-    public int Repeat { get => _repeatTimes; set => _repeatTimes = value; }
+    public int RepeatTimes { get; }
+
+    internal int RepeatCount { get; set; } = 0;
 }

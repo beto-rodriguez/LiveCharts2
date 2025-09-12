@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Events.AddPointOnClick.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Events.AddPointOnClick;assembly=ViewModelsSamples"
-             >
+<ContentPage
+    x:Class="MauiSample.Events.AddPointOnClick.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Events.AddPointOnClick;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
+
     <lvc:CartesianChart
-                x:Name="chart"
-                Series="{Binding SeriesCollection}"
-                PressedCommand="{Binding PointerDownCommand}"
-                TooltipPosition="Hidden">
+        PressedCommand="{Binding PointerDownCommand}"
+        TooltipPosition="Hidden">
+        <lvc:CartesianChart.Series>
+            <lvc:SeriesCollection>
+                <lvc:XamlLineSeries
+                    Values="{Binding Points}"
+                    Fill="{x:Null}"
+                    DataPadding="5,5"/>
+            </lvc:SeriesCollection>
+        </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 </ContentPage>

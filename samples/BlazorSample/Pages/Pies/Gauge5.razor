@@ -1,6 +1,9 @@
 ﻿@page "/Pies/Gauge5"
+@using LiveChartsCore
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.Pies.Gauge5
+@using LiveChartsCore.SkiaSharpView.Extensions
+@using LiveChartsCore.Defaults
+@using LiveChartsCore.Measure
 
 <style>
 	.sample-wrap {
@@ -10,13 +13,13 @@
 	}
 </style>
 
-<button class="btn btn-primary" @onclick="ViewModel.DoRandomChange">
+<button class="btn btn-primary" @onclick="DoRandomChange">
 	Update Value
 </button>
 
 <div class="sample-wrap">
 	<PieChart
-		Series="ViewModel.Series"
+		Series="Series"
 		InitialRotation="-90"
         MaxAngle="270"
         MinValue="0"
@@ -26,5 +29,33 @@
 </div>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new();
+    private ISeries[] Series { get; set; }
+    private readonly Random _random = new();
+    private ObservableValue _observableValue1;
+    private ObservableValue _observableValue2;
+
+    protected override void OnInitialized()
+    {
+        _observableValue1 = new ObservableValue { Value = 50 };
+        _observableValue2 = new ObservableValue { Value = 80 };
+
+        Series = GaugeGenerator.BuildSolidGauge(
+            new GaugeItem(_observableValue1, series =>
+            {
+                series.Name = "North";
+                series.DataLabelsPosition = PolarLabelsPosition.Start;
+            }),
+            new GaugeItem(_observableValue2, series =>
+            {
+                series.Name = "South";
+                series.DataLabelsPosition = PolarLabelsPosition.Start;
+            }));
+    }
+
+    private void DoRandomChange()
+    {
+        _observableValue1.Value = _random.Next(0, 100);
+        _observableValue2.Value = _random.Next(0, 100);
+        StateHasChanged();
+    }
 }

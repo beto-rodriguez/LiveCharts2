@@ -43,15 +43,13 @@ public abstract class CoreStackedRowSeries<TModel, TVisual, TLabel, TErrorGeomet
         where TLabel : BaseLabelGeometry, new()
         where TErrorGeometry : BaseLineGeometry, new()
 {
-    private int _stackGroup = 0;
-
     /// <inheritdoc cref="IStackedBarSeries.StackGroup"/>
-    public int StackGroup { get => _stackGroup; set { _stackGroup = value; OnPropertyChanged(); } }
+    public int StackGroup { get; set { field = value; OnPropertyChanged(); } } = 0;
 
     /// <summary>
     /// Gets the stack group.
     /// </summary>
     /// <returns></returns>
     /// <inheritdoc />
-    public override int GetStackGroup() => _stackGroup;
+    public override int GetStackGroup() => StackGroup;
 }

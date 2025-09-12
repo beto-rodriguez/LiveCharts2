@@ -1,0 +1,22 @@
+﻿<UserControl
+    x:Class="WinUISample.General.FirstChart.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI">
+
+    <lvc:CartesianChart
+        LegendPosition="Right">
+
+        <lvc:CartesianChart.Series>
+            <lvc:SeriesCollection>
+                <lvc:XamlLineSeries
+                    SeriesName="Mary"
+                    Values="{lvc:Values FromString='5, 10, 8, 4'}"/>
+                <lvc:XamlColumnSeries
+                    SeriesName="Ana"
+                    Values="{lvc:Values FromString='4, 7, 3, 8'}"/>
+            </lvc:SeriesCollection>
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
+
+</UserControl>

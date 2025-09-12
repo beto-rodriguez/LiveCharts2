@@ -7,6 +7,7 @@ using LiveChartsCore.SkiaSharpView.VisualElements;
 using LiveChartsCore.VisualElements;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SkiaSharp;
+using LiveChartsCore.Kernel;
 
 namespace LiveChartsCore.UnitTesting.OtherTests;
 
@@ -16,7 +17,7 @@ public class VisualElementsTests
     [TestMethod]
     public void Dispose()
     {
-        var suts = new List<VisualElement>
+        var suts = new List<IChartElement>
         {
             new StackPanel<RectangleGeometry>(),
             new RelativePanel<RectangleGeometry>(),
@@ -43,7 +44,7 @@ public class VisualElementsTests
 
         void Draw()
         {
-            var coreChart = chart.Core;
+            var coreChart = chart.CoreChart;
 
             chart.CoreCanvas.DisableAnimations = true;
             coreChart.IsLoaded = true;
@@ -56,31 +57,28 @@ public class VisualElementsTests
             chart.CoreCanvas.DrawFrame(
                 new SkiaSharpDrawingContext(
                     chart.CoreCanvas,
-                    new SKImageInfo(chart.Width, chart.Height),
-                    null!,
                     canvas,
-                    SKColors.White,
-                    true));
+                    SKColors.White));
         }
 
         Draw();
 
         // get the count of geometries and paint tasks without the visuals
         var g = chart.CoreCanvas.CountGeometries();
-        var p = chart.CoreCanvas._paintTasks.Count;
+        var p = chart.CoreCanvas.CountPaintTasks();
 
         // add trhe visuals and ensure that the visuals were drawn
         chart.VisualElements = suts;
         Draw();
         Assert.IsTrue(
             chart.CoreCanvas.CountGeometries() > g &&
-            chart.CoreCanvas._paintTasks.Count > p);
+            chart.CoreCanvas.CountPaintTasks() > p);
 
         // clear the visuals and ensure that all the geometries and paints were removed
-        chart.VisualElements = new List<VisualElement>();
+        chart.VisualElements = new List<IChartElement>();
         Draw();
         Assert.IsTrue(
             chart.CoreCanvas.CountGeometries() == g &&
-            chart.CoreCanvas._paintTasks.Count == p);
+            chart.CoreCanvas.CountPaintTasks() == p);
     }
 }

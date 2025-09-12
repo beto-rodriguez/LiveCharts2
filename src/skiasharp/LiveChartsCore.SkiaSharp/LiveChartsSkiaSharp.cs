@@ -20,14 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// Ignore Spelling: Skia Lvc
-
 using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.SkiaSharpView.TypeConverters;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView;
@@ -37,10 +38,60 @@ namespace LiveChartsCore.SkiaSharpView;
 /// </summary>
 public static class LiveChartsSkiaSharp
 {
-    /// <summary>
-    /// Gets or sets an SKTypeface instance to use globally on any paint that does not specify any.
-    /// </summary>
-    public static SKTypeface? DefaultSKTypeface { get; set; }
+    internal static MotionCanvasComposer.MotionCanvasRenderingFactoryDelegate MotionCanvasRenderingFactory { get; set; } =
+        (settings, chart) => throw new NotImplementedException(
+            "No motion canvas rendering factory has been set, please use the method 'HasMotionCanvasRenderingFactory' to set one.");
+
+    internal static TextSettings DefaultTextSettings { get; set; } = new();
+
+    internal static LiveChartsSettings EnsureInitialized()
+    {
+        LiveCharts.Configure(settings => settings.UseDefaults());
+
+        var defaultRenderSettings = LiveCharts.RenderingSettings;
+
+#if __GPU_TRUE__
+        defaultRenderSettings.UseGPU = true;
+#endif
+#if __GPU_FALSE__
+        defaultRenderSettings.UseGPU = false;
+#endif
+#if __VSYNC_TRUE__
+        defaultRenderSettings.TryUseVSync = true;
+#endif
+#if __VSYNC_FALSE__
+        defaultRenderSettings.TryUseVSync = false;
+#endif
+#if __FPS_10__
+        defaultRenderSettings.LiveChartsRenderLoopFPS = 10;
+#endif
+#if __FPS_20__
+        defaultRenderSettings.LiveChartsRenderLoopFPS = 20;
+#endif
+#if __FPS_30__
+        defaultRenderSettings.LiveChartsRenderLoopFPS = 30;
+#endif
+#if __FPS_45__
+        defaultRenderSettings.LiveChartsRenderLoopFPS = 45;
+#endif
+#if __FPS_60__
+        defaultRenderSettings.LiveChartsRenderLoopFPS = 60;
+#endif
+#if __FPS_75__
+        defaultRenderSettings.LiveChartsRenderLoopFPS = 75;
+#endif
+#if __FPS_90__
+        defaultRenderSettings.LiveChartsRenderLoopFPS = 90;
+#endif
+#if __FPS_120__
+        defaultRenderSettings.LiveChartsRenderLoopFPS = 120;
+#endif
+#if __DIAGNOSE__
+        defaultRenderSettings.ShowFPS = true;
+#endif
+
+        return LiveCharts.DefaultSettings;
+    }
 
     /// <summary>
     /// Configures LiveCharts using the default settings for SkiaSharp.
@@ -49,9 +100,14 @@ public static class LiveChartsSkiaSharp
     /// <returns>The settings.</returns>
     public static LiveChartsSettings UseDefaults(this LiveChartsSettings settings)
     {
-        if (!LiveCharts.HasBackend) _ = settings.AddSkiaSharp();
-        if (!LiveCharts.HasTheme) _ = settings.AddLightTheme();
-        if (!LiveCharts.HasDefaultMappers) _ = settings.AddDefaultMappers();
+        if (!LiveCharts.DefaultSettings.HasBackedDefined)
+            _ = settings.AddSkiaSharp();
+
+        if (!LiveCharts.DefaultSettings.HasThemeDefined)
+            _ = settings.AddDefaultTheme();
+
+        if (!LiveCharts.DefaultSettings.HasMappersDefined)
+            _ = settings.AddDefaultMappers();
 
         return settings;
     }
@@ -60,22 +116,59 @@ public static class LiveChartsSkiaSharp
     /// Adds SkiaSharp as the library backend.
     /// </summary>
     /// <param name="settings">The settings.</param>
-    /// <returns></returns>
+    /// <returns>The current settings.</returns>
     public static LiveChartsSettings AddSkiaSharp(this LiveChartsSettings settings)
     {
-        LiveCharts.HasBackend = true;
+        PropertyDefinition.Parsers[typeof(Paint)] = HexToPaintTypeConverter.Parse;
+        PropertyDefinition.Parsers[typeof(LvcColor)] = HexToLvcColorTypeConverter.Parse;
+        PropertyDefinition.Parsers[typeof(Margin)] = MarginTypeConverter.ParseMargin;
+        PropertyDefinition.Parsers[typeof(Padding)] = PaddingTypeConverter.ParsePadding;
+        PropertyDefinition.Parsers[typeof(LvcPointD)] = PointDTypeConverter.ParsePoint;
+        PropertyDefinition.Parsers[typeof(LvcPoint)] = PointTypeConverter.ParsePoint;
+
         return settings.HasProvider(new SkiaSharpProvider());
     }
 
     /// <summary>
     /// Registers a global SKTypeface instance to use on any <see cref="SkiaPaint"/> that does not specify a typeface.
     /// </summary>
-    /// <param name="settings"></param>
-    /// <param name="typeface"></param>
-    /// <returns></returns>
+    /// <param name="settings">The current settings.</param>
+    /// <param name="typeface">The typeface to load for text paints.</param>
+    /// <returns>The current settings.</returns>
+    [Obsolete(
+        $"Use {nameof(HasTextSettings)} and set the {nameof(TextSettings.DefaultTypeface)} instead, " +
+        $"LiveCharts now uses the {nameof(SKFontManager)} to look for a valid font when necessesary, " +
+        $"Configuring a typeface could not be necessary anymore, but explicitly loading a typeface " +
+        $"could improve text quality, e.g. SKTypeface.FromFamilyName(\"my-font\")")]
     public static LiveChartsSettings HasGlobalSKTypeface(this LiveChartsSettings settings, SKTypeface typeface)
     {
-        DefaultSKTypeface = typeface;
+        DefaultTextSettings.DefaultTypeface = typeface;
+        return settings;
+    }
+
+    /// <summary>
+    /// Registers the text settings to use for SkiaSharp.
+    /// </summary>
+    /// <param name="settings">The current settings.</param>
+    /// <param name="textSettings">The text settings to use for SkiaSharp text rendering.</param>
+    /// <returns>The current settings.</returns>
+    public static LiveChartsSettings HasTextSettings(
+        this LiveChartsSettings settings, TextSettings textSettings)
+    {
+        DefaultTextSettings = textSettings;
+        return settings;
+    }
+
+    /// <summary>
+    /// Adds a render mode to the available render modes.
+    /// </summary>
+    /// <param name="settings">The current settings.</param>
+    /// <param name="factory">The rendering factory.</param>
+    /// <returns>The current settings.</returns>
+    public static LiveChartsSettings HasRenderingFactory(
+        this LiveChartsSettings settings, MotionCanvasComposer.MotionCanvasRenderingFactoryDelegate factory)
+    {
+        MotionCanvasRenderingFactory = factory;
         return settings;
     }
 
@@ -86,7 +179,9 @@ public static class LiveChartsSkiaSharp
     /// <param name="alphaOverrides">The alpha overrides.</param>
     /// <returns></returns>
     public static SKColor AsSKColor(this LvcColor color, byte? alphaOverrides = null) =>
-        new(color.R, color.G, color.B, alphaOverrides ?? color.A);
+        color == LvcColor.Empty
+            ? SKColor.Empty
+            : new(color.R, color.G, color.B, alphaOverrides ?? color.A);
 
     /// <summary>
     /// Creates a new color based on the 

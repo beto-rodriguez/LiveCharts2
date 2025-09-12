@@ -1,15 +1,53 @@
-<UserControl x:Class="AvaloniaSample.Design.LinearGradients.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Design.LinearGradients">
-  <UserControl.DataContext>
-    <vms:ViewModel/>
-  </UserControl.DataContext>
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="*"/>
-    </Grid.RowDefinitions>
-    <lvc:CartesianChart Series="{Binding Series}" LegendPosition="Right"></lvc:CartesianChart>
-  </Grid>  
+<UserControl
+    x:Class="AvaloniaSample.Design.LinearGradients.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Design.LinearGradients"
+    x:DataType="vms:ViewModel">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <!--
+    Use the LinearGradientPaint extension to create a linear gradients.
+
+    The Colors property accepts a string with the colors separated by a comma.
+    
+    The StartPoint and EndPoint properties accept a string with the coordinates separated by a comma,
+    both values are between 0 and 1, where 0,0 is the top left corner and 1,1 is the bottom right corner,
+    for example to create a vertical gradient from top to bottom use 0.5,0 and 0.5,1.
+
+    The ColorPositions property accepts a string with the color positions separated by a comma,
+    the positions are between 0 and 1, where 0 is the start of the gradient and 1 is the end of the gradient,
+    this defines the distribution of the colors in the gradient, use null to use the default distribution.
+
+    The TileMode property defines how the gradient is repeated.
+    -->
+    
+    <lvc:CartesianChart
+        LegendPosition="Right">
+        <lvc:CartesianChart.Series>
+            <lvc:XamlColumnSeries
+                SeriesName="John"
+                Values="{Binding Values1}"
+                Fill="{lvc:LinearGradientPaint
+                    Colors='#FF8C94, #DCEDC2',
+                    StartPoint='0.5, 0',
+                    EndPoint='0.5, 1'}"/>
+            <lvc:XamlLineSeries
+                SeriesName="Charles"
+                Values="{Binding Values2}"
+                GeometrySize="22"
+                Fill="{x:Null}"
+                Stroke="{lvc:LinearGradientPaint
+                    Colors='#2D4059, #FFD360',
+                    StrokeWidth=10}"
+                GeometryStroke="{lvc:LinearGradientPaint
+                    Colors='#2D4059, #FFD360',
+                    StrokeWidth=10}"/>
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
+
 </UserControl>

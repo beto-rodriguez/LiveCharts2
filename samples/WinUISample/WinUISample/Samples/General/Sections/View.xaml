@@ -1,0 +1,46 @@
+﻿<UserControl
+    x:Class="WinUISample.General.Sections.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
+    xmlns:vms="using:ViewModelsSamples.General.Sections"
+    mc:Ignorable="d">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <lvc:CartesianChart>
+        <lvc:CartesianChart.Series>
+            <lvc:SeriesCollection>
+                <lvc:XamlScatterSeries Values="{Binding Values}"/>
+            </lvc:SeriesCollection>
+        </lvc:CartesianChart.Series>
+        <lvc:CartesianChart.Sections>
+            <lvc:SectionsCollection>
+                <!-- creates a section from 3 to 4 in the X axis -->
+                <lvc:XamlRectangularSection
+                    Xi="3"
+                    Xj="4"
+                    Fill="{lvc:SolidColorPaint Color='#FFCDD2'}"/>
+                <!--
+                creates a section from 5 to 6 in the X axis
+                and from 2 to 8 in the Y axis
+                -->
+                <lvc:XamlRectangularSection
+                    Xi="5" Xj="6"
+                    Yi="2" Yj="8"
+                    Fill="{lvc:SolidColorPaint Color='#BBDEFB'}"/>
+                <!-- creates a section from 8 to the end in the X axis -->
+                <lvc:XamlRectangularSection
+                    Xi="8"
+                    Label="A section here!"
+                    LabelSize="14"
+                    LabelPaint="{lvc:SolidColorPaint Color='#FF6F00'}"
+                    Fill="{lvc:SolidColorPaint Color='#F9FBE7'}"/>
+            </lvc:SectionsCollection>
+        </lvc:CartesianChart.Sections>
+    </lvc:CartesianChart>
+</UserControl>

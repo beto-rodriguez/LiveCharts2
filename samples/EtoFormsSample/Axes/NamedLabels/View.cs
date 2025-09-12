@@ -1,6 +1,9 @@
 ﻿using Eto.Forms;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Eto;
-using ViewModelsSamples.Axes.NamedLabels;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
 
 namespace EtoFormsSample.Axes.NamedLabels;
 
@@ -10,17 +13,35 @@ public class View : Panel
 
     public View()
     {
-        var viewModel = new ViewModel();
+        var values1 = new int[] { 200, 558, 458, 249 };
+        var values2 = new int[] { 300, 450, 400, 280 };
+        var labels = new string[] { "Anne", "Johnny", "Zac", "Rosa" };
+        static string Labeler(double value) => value.ToString("C");
+
+        var series = new ISeries[]
+        {
+            new ColumnSeries<int> { Name = "Sales", Values = values1 },
+            new LineSeries<int> { Name = "Projected", Values = values2, Fill = null }
+        };
+
+        var xAxis = new Axis
+        {
+            Labels = labels
+        };
+        var yAxis = new Axis
+        {
+            Labeler = Labeler
+        };
 
         cartesianChart = new CartesianChart
         {
-            Series = viewModel.Series,
-            XAxes = viewModel.XAxes,
-            YAxes = viewModel.YAxes,
-            TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Left, // mark
-            TooltipTextPaint = viewModel.TooltipTextPaint, // mark
-            TooltipBackgroundPaint = viewModel.TooltipBackgroundPaint, // mark
-            TooltipTextSize = 16
+            Series = series,
+            XAxes = new[] { xAxis },
+            YAxes = new[] { yAxis },
+            TooltipTextSize = 16,
+            TooltipTextPaint = new SolidColorPaint(new SKColor(242, 244, 255)),
+            TooltipBackgroundPaint = new SolidColorPaint(new SKColor(72, 0, 50)),
+            TooltipPosition = LiveChartsCore.Measure.TooltipPosition.Left
         };
 
         Content = cartesianChart;

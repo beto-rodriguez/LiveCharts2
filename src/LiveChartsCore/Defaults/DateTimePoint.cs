@@ -32,8 +32,6 @@ namespace LiveChartsCore.Defaults;
 /// </summary>
 public class DateTimePoint : IChartEntity, INotifyPropertyChanged
 {
-    private DateTime _dateTime;
-    private double? _value;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DateTimePoint"/> class.
@@ -59,7 +57,7 @@ public class DateTimePoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The date time.
     /// </value>
-    public DateTime DateTime { get => _dateTime; set { _dateTime = value; OnPropertyChanged(); } }
+    public DateTime DateTime { get; set { field = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the value.
@@ -67,7 +65,7 @@ public class DateTimePoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The value.
     /// </value>
-    public double? Value { get => _value; set { _value = value; OnPropertyChanged(); } }
+    public double? Value { get; set { field = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartEntity.MetaData"/>
     [System.Text.Json.Serialization.JsonIgnore]
@@ -89,7 +87,7 @@ public class DateTimePoint : IChartEntity, INotifyPropertyChanged
     /// <param name="propertyName">Name of the property.</param>
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
-        Coordinate = _value is null ? Coordinate.Empty : new(_dateTime.Ticks, _value.Value);
+        Coordinate = Value is null ? Coordinate.Empty : new(DateTime.Ticks, Value.Value);
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

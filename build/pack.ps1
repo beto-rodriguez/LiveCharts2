@@ -2,7 +2,6 @@ param([string]$configuration = "Debug", [string]$nupkgOutputPath = "./nupkg")
 
 [Project[]]$projects = @(
     [Project]::new("./src/LiveChartsCore/LiveChartsCore.csproj")
-    [Project]::new("./src/LiveChartsCore.Behaviours/LiveChartsCore.Behaviours.csproj")
     [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharp/LiveChartsCore.SkiaSharpView.csproj")
     [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharp.Avalonia/LiveChartsCore.SkiaSharpView.Avalonia.csproj")
     [Project]::new("./src/skiasharp/LiveChartsCore.SkiaSharp.WinForms/LiveChartsCore.SkiaSharpView.WinForms.csproj")
@@ -47,13 +46,14 @@ foreach ($p in $projects) {
         Remove-Item $($folder + "/bin") -Force -Recurse
     }
 
-    $expression = "dotnet pack $($p.src) -o $nupkgOutputPath -c $configuration -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg"
+    $expression = "dotnet pack $($p.src) -o $nupkgOutputPath -c $configuration -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg -p:IsPacking=true"
 
     Write-Progress -Activity "$name" -Status "Packing..."
-    $result = Invoke-Expression $expression
+    $result = & dotnet pack $p.src -o $nupkgOutputPath -c $configuration -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg -p:IsPacking=true -p:UseNuGetForGenerator=true 2>&1
 
     if ($LASTEXITCODE -ne 0) {
         Write-Output "✖ $name failed to pack."
+        Write-Output $result
         break
     }else {
         Write-Output "✓ $name packed successfully."

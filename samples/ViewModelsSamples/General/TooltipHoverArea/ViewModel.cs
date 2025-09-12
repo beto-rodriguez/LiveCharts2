@@ -33,10 +33,10 @@ public class CustomColumnSeries<T> : ColumnSeries<T>
     {
         var rectangle = (RoundedRectangleGeometry)point.Context.Visual!;
 
-        var x = GetTargetValue(rectangle, nameof(RoundedRectangleGeometry.X));
-        var y = GetTargetValue(rectangle, nameof(RoundedRectangleGeometry.Y));
-        var w = GetTargetValue(rectangle, nameof(RoundedRectangleGeometry.Width));
-        var h = GetTargetValue(rectangle, nameof(RoundedRectangleGeometry.Height));
+        var x = GetTargetValue(rectangle, RoundedRectangleGeometry.XProperty);
+        var y = GetTargetValue(rectangle, RoundedRectangleGeometry.YProperty);
+        var w = GetTargetValue(rectangle, RoundedRectangleGeometry.WidthProperty);
+        var h = GetTargetValue(rectangle, RoundedRectangleGeometry.HeightProperty);
 
         // we replace the point hover area with a custom hover area
         // the area also suggests the tooltip location, this location could change
@@ -54,10 +54,10 @@ public class CustomColumnSeries<T> : ColumnSeries<T>
         point.Context.HoverArea = customHoverArea;
     }
 
-    private static float GetTargetValue(Animatable animatable, string name)
+    private static float GetTargetValue(Animatable animatable, PropertyDefinition propertyDefinition)
     {
         // get the motion property in the shape that handles animations.
-        var motionProperty = (MotionProperty<float>)animatable.MotionProperties[name];
+        var motionProperty = (MotionProperty<float>)propertyDefinition.GetMotion(animatable)!;
 
         // return the target value, it is the value where the animation will end.
         return motionProperty.ToValue;

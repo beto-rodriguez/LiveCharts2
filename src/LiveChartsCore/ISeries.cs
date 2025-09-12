@@ -29,6 +29,7 @@ using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
+using LiveChartsCore.VisualStates;
 
 namespace LiveChartsCore;
 
@@ -93,6 +94,11 @@ public interface ISeries : IChartElement
     double MiniatureShapeSize { get; set; }
 
     /// <summary>
+    /// Gets or sets the miniature stroke thickness.
+    /// </summary>
+    double MiniatureStrokeThickness { get; set; }
+
+    /// <summary>
     /// Gets or sets the data padding, the distance from the edge of the chart to where the series is drawn,
     /// both coordinates (X and Y) from 0 to 1, where 0 is nothing and 1 is the axis tick (the separation between every label).
     /// </summary>
@@ -122,7 +128,7 @@ public interface ISeries : IChartElement
 
     /// <summary>
     /// Gets or sets the animations speed, if this property is null, the
-    /// <see cref="Chart.AnimationsSpeed"/> property will be used.
+    /// <see cref="Chart.ActualAnimationsSpeed"/> property will be used.
     /// </summary>
     /// <value>
     /// The animations speed.
@@ -131,12 +137,20 @@ public interface ISeries : IChartElement
 
     /// <summary>
     /// Gets or sets the easing function to animate the series, if this property is null, the
-    /// <see cref="Chart.EasingFunction"/> property will be used.
+    /// <see cref="Chart.ActualEasingFunction"/> property will be used.
     /// </summary>
     /// <value>
     /// The easing function.
     /// </value>
     Func<float, float>? EasingFunction { get; set; }
+
+    /// <summary>
+    /// Indicates whether the data labels are visible,
+    /// to set the color use the <see cref="DataLabelsPaint"/> property, the <see cref="DataLabelsPaint"/> property
+    /// could be defined by the theme when not explicitly set.
+    /// Default is <c>false</c>.
+    /// </summary>
+    bool ShowDataLabels { get; set; }
 
     /// <summary>
     /// Gets or sets the data labels paint.
@@ -177,6 +191,17 @@ public interface ISeries : IChartElement
     /// The max with of the data labels.
     /// </value>
     double DataLabelsMaxWidth { get; set; }
+
+    /// <summary>
+    /// Gets the visual states, states define the look of chart points when they are in a certain state, for example
+    /// the hover, active, or selected states.
+    /// </summary>
+    VisualStatesDictionary VisualStates { get; }
+
+    /// <summary>
+    /// Gets or sets the data labels formatter, the function receives a <see cref="ChartPoint"/> instance and must return a string.
+    /// </summary>
+    Func<ChartPoint, string> DataLabelsFormatter { get; set; }
 
     /// <summary>
     /// Gets the tool tip text for a give chart point.
@@ -244,21 +269,6 @@ public interface ISeries : IChartElement
     /// </summary>
     /// <returns></returns>
     int GetStackGroup();
-
-    /// <summary>
-    /// </summary>
-    /// <returns></returns>
-    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
-    Sketch GetMiniaturesSketch();
-
-    /// <summary>
-    /// Return the visual element shown in tooltips and legends, this is an old method and will be replaced by
-    /// <see cref="GetMiniatureGeometry(ChartPoint?)"/>.
-    /// </summary>
-    /// <param name="point">The point.</param>
-    /// <param name="zindex">The zindex.</param>
-    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
-    IChartElement GetMiniature(ChartPoint? point, int zindex);
 
     /// <summary>
     /// Returns a geometry that represents the series in a tooltip or legend.

@@ -1,12 +1,36 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Lines.Straight.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Lines.Straight;assembly=ViewModelsSamples"
-             >
+<ContentPage
+    x:Class="MauiSample.Lines.Straight.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Lines.Straight;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-    <lvc:CartesianChart Series="{Binding Series}"/>
+
+    <!--
+    The line smoothness property controls the curve between points
+    it goes from 0 to 1, where 0 is straight and 1 is the most curved.
+    -->
+
+    <lvc:CartesianChart>
+        <lvc:CartesianChart.Series>
+            <lvc:SeriesCollection>
+                <lvc:XamlLineSeries
+                    Values="{Binding Values1}"
+                    Fill="{x:Null}"
+                    GeometrySize="0"
+                    LineSmoothness="0"/>
+
+                <lvc:XamlLineSeries
+                    Values="{Binding Values2}"
+                    Fill="{x:Null}"
+                    GeometrySize="0"
+                    LineSmoothness="1"/>
+            </lvc:SeriesCollection>
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
 </ContentPage>

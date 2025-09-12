@@ -28,7 +28,7 @@ namespace LiveChartsCore.Kernel;
 public readonly struct Error
 {
     /// <summary>
-    /// Initalizes a new instance of the <see cref="Error"/> struct.
+    /// Initializes a new instance of the <see cref="Error"/> struct.
     /// </summary>
     /// <param name="xi">The left error in the x axis.</param>
     /// <param name="xj">The right error in the x axis.</param>
@@ -43,7 +43,7 @@ public readonly struct Error
     }
 
     /// <summary>
-    /// Initalizes a new instance of the <see cref="Error"/> struct.
+    /// Initializes a new instance of the <see cref="Error"/> struct.
     /// </summary>
     /// <param name="x">The error in x.</param>
     /// <param name="y">The error in y.</param>

@@ -54,10 +54,12 @@ public class ChartPoint
         Context = new ChartPointContext();
     }
 
+    internal (double, double) HoverKey { get; set; }
+
     /// <summary>
     /// Gets a new instance of an empty chart point.
     /// </summary>
-    public static ChartPoint Empty => new() { Coordinate = Coordinate.Empty };
+    public static ChartPoint Empty => new();
 
     /// <summary>
     /// Gets the position of the point the collection that was used when the point was drawn.
@@ -67,11 +69,7 @@ public class ChartPoint
     /// <summary>
     /// Gets or sets the coordinate.
     /// </summary>
-    public Coordinate Coordinate
-    {
-        get => Context.Entity.Coordinate;
-        set => Context.Entity.Coordinate = value;
-    }
+    public Coordinate Coordinate => Context.Entity.Coordinate;
 
     /// <summary>
     /// Gets or a value indicating whether this instance is empty, LivveCharts will ignore the point in the chart.
@@ -114,23 +112,6 @@ public class ChartPoint
     /// <returns>The distance in pixels.</returns>
     public double DistanceTo(LvcPoint point, FindingStrategy strategy) =>
         Context.HoverArea?.DistanceTo(point, strategy) ?? double.NaN;
-
-    private void SetCoordinate(
-        double primary = double.NaN, double secondary = double.NaN, double tertiary = double.NaN,
-        double quaternary = double.NaN, double quinary = double.NaN)
-    {
-        // This is a method that allows previous versions of LiveCharts to map the entity to the chart coordinate
-        // you should not use the setters of PrimaryValue, SecondaryValue, etc. instead set the Coordinate property.
-        var current = Coordinate;
-
-        if (double.IsNaN(primary)) primary = current.PrimaryValue;
-        if (double.IsNaN(secondary)) secondary = current.SecondaryValue;
-        if (double.IsNaN(tertiary)) tertiary = current.TertiaryValue;
-        if (double.IsNaN(quaternary)) quaternary = current.QuaternaryValue;
-        if (double.IsNaN(quinary)) quinary = current.QuinaryValue;
-
-        Coordinate = new Coordinate(secondary, primary, tertiary, quaternary, quinary);
-    }
 }
 
 /// <summary>

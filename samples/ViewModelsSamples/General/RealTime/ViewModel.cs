@@ -1,55 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using LiveChartsCore;
+using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore.Defaults;
-using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
 
 namespace ViewModelsSamples.General.RealTime;
 
-public class ViewModel
+public partial class ViewModel : ObservableObject
 {
-    private readonly Random _random = new();
-    private readonly List<DateTimePoint> _values = [];
-    private readonly DateTimeAxis _customAxis;
+    public ViewModel()
+    {
+        _ = ReadData();
+    }
 
-    public ObservableCollection<ISeries> Series { get; set; }
+    [ObservableProperty]
+    public partial double[] Separators { get; set; } = [];
 
-    public Axis[] XAxes { get; set; }
+    public ObservableCollection<DateTimePoint> Values { get; set; } = [];
+
+    public Func<DateTime, string> LabelsFormatter { get; } = Formatter;
 
     public object Sync { get; } = new object();
 
     public bool IsReading { get; set; } = true;
 
-    public ViewModel()
-    {
-        Series = [
-            new LineSeries<DateTimePoint>
-            {
-                Values = _values,
-                Fill = null,
-                GeometryFill = null,
-                GeometryStroke = null
-            }
-        ];
-
-        _customAxis = new DateTimeAxis(TimeSpan.FromSeconds(1), Formatter)
-        {
-            CustomSeparators = GetSeparators(),
-            AnimationsSpeed = TimeSpan.FromMilliseconds(0),
-            SeparatorsPaint = new SolidColorPaint(SKColors.Black.WithAlpha(100))
-        };
-
-        XAxes = [_customAxis];
-
-        _ = ReadData();
-    }
-
     private async Task ReadData()
     {
+        var random = new Random();
+
         // to keep this sample simple, we run the next infinite loop // mark
         // in a real application you should stop the loop/task when the view is disposed // mark
 
@@ -62,11 +40,11 @@ public class ViewModel
             // this is not necessary if your changes are made on the UI thread. // mark
             lock (Sync)
             {
-                _values.Add(new DateTimePoint(DateTime.Now, _random.Next(0, 10)));
-                if (_values.Count > 250) _values.RemoveAt(0);
+                Values.Add(new DateTimePoint(DateTime.Now, random.Next(0, 10)));
+                if (Values.Count > 250) Values.RemoveAt(0);
 
                 // we need to update the separators every time we add a new point // mark
-                _customAxis.CustomSeparators = GetSeparators();
+                Separators = GetSeparators();
             }
         }
     }

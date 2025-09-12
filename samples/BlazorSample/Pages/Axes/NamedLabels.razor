@@ -1,32 +1,51 @@
 ﻿@page "/Axes/NamedLabels"
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.Axes.NamedLabels
+@using LiveChartsCore
+@using LiveChartsCore.SkiaSharpView
+@using LiveChartsCore.SkiaSharpView.Painting
+@using SkiaSharp
 
 <style>
-	/*
-		You can also use css to override the styles.
-	*/
-
-	.lvc-tooltip {
-		background-color: #480032 !important;
-	}
-
-	.lvc-tooltip-item {
-		font-family: SFMono-Regular,Menlo,Monaco,Consolas !important;
-		color: #F2F4C3 !important;
-	}
+    .lvc-tooltip {
+        background-color: #480032 !important;
+    }
+    .lvc-tooltip-item {
+        font-family: SFMono-Regular,Menlo,Monaco,Consolas !important;
+        color: #F2F4C3 !important;
+    }
 </style>
 
 <CartesianChart
-	Series="ViewModel.Series"
-	XAxes="ViewModel.XAxes"
-	YAxes="ViewModel.YAxes"
+    Series="@series"
+    XAxes="@xAxes"
+    YAxes="@yAxes"
     TooltipPosition="LiveChartsCore.Measure.TooltipPosition.Left"
-    TooltipBackgroundPaint="ViewModel.TooltipBackgroundPaint"
-    TooltipTextPaint="ViewModel.TooltipTextPaint"
+    TooltipBackgroundPaint="@tooltipBackgroundPaint"
+    TooltipTextPaint="@tooltipTextPaint"
     TooltipTextSize="16">
 </CartesianChart>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new();
+    private static int[] values1 = new int[] { 200, 558, 458, 249 };
+    private static int[] values2 = new int[] { 300, 450, 400, 280 };
+    private static string[] labels = new string[] { "Anne", "Johnny", "Zac", "Rosa" };
+    private static string Labeler(double value) => value.ToString("C");
+
+    private ISeries[] series = new ISeries[]
+    {
+        new ColumnSeries<int> { Name = "Sales", Values = values1 },
+        new LineSeries<int> { Name = "Projected", Values = values2, Fill = null }
+    };
+
+    private Axis[] xAxes = new Axis[]
+    {
+        new Axis { Labels = labels }
+    };
+    private Axis[] yAxes = new Axis[]
+    {
+        new Axis { Labeler = Labeler }
+    };
+
+    private SolidColorPaint tooltipBackgroundPaint = new SolidColorPaint(new SKColor(72, 0, 50));
+    private SolidColorPaint tooltipTextPaint = new SolidColorPaint(new SKColor(242, 244, 195));
 }

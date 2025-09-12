@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.SkiaSharpView;
@@ -139,7 +140,7 @@ public class GeneralSeriesTests
 
     private void RunPieTest()
     {
-        var seriesCollection = new[] { 1, 2, 3 }.AsPieSeries();
+        var seriesCollection = new ObservableCollection<ISeries>(new[] { 1, 2, 3 }.AsPieSeries());
 
         var chart = new SKPieChart
         {
@@ -148,7 +149,7 @@ public class GeneralSeriesTests
             Series = seriesCollection
         };
 
-        int getSum() => seriesCollection.Sum(x => x.everFetched.Count);
+        int getSum() => seriesCollection.Sum(x => ((PieSeries<int>)x).everFetched.Count);
 
         _ = chart.GetImage();
         Assert.IsTrue(getSum() == 3, $"Basic case for pie");

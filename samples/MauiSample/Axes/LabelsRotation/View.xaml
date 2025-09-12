@@ -1,47 +1,57 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Axes.LabelsRotation.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Axes.LabelsRotation;assembly=ViewModelsSamples"
-             >
+<ContentPage
+    x:Class="MauiSample.Axes.LabelsRotation.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Axes.LabelsRotation;assembly=ViewModelsSamples"
+    xmlns:core="clr-namespace:LiveChartsCore;assembly=LiveChartsCore"
+    x:DataType="vms:ViewModel">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-	<ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            
-            <StackLayout
-                Grid.Row="0"
-                Orientation="Horizontal"
-                VerticalOptions="Center"
-                >
-                <Label Text="Rotation"></Label>
-                <Label
-                    MinimumWidthRequest="100"
-                    Margin="10, 0" Text="{Binding SliderValue, StringFormat='{0:D2}'}">
-                </Label>
-            </StackLayout>
-            
+
+    <Grid RowDefinitions="Auto, *">
+        <VerticalStackLayout
+            Grid.Row="0">
+            <Label
+                Margin="10, 0"
+                Text="{Binding Rotation, StringFormat='Rotation {0:D2}'}"/>
             <Slider
                 Grid.Row="1"
                 MinimumWidthRequest="300"
                 Minimum="-360"
                 Maximum="720"
-                Value="{Binding SliderValue, Mode=TwoWay}" />
-            
-            <lvc:CartesianChart
-                Grid.Row="2"
-                Series="{Binding Series}"
-                XAxes="{Binding XAxes}"
-                YAxes="{Binding YAxes}">
-            </lvc:CartesianChart>
-            
-        </Grid>
-    </ContentPage.Content>
+                Value="{Binding Rotation, Mode=TwoWay}" />
+        </VerticalStackLayout>
+
+        <lvc:CartesianChart
+            Grid.Row="1">
+            <lvc:CartesianChart.Series>
+                <lvc:SeriesCollection>
+                    <lvc:XamlLineSeries
+                        Values="{Binding Values}"
+                        XToolTipLabelFormatter="{Binding TooltipFormat}" />
+                </lvc:SeriesCollection>
+            </lvc:CartesianChart.Series>
+            <lvc:CartesianChart.XAxes>
+                <lvc:AxesCollection>
+                    <lvc:XamlAxis
+                        Labeler="{Binding Labeler}"
+                        MinStep="1"
+                        LabelsRotation="45"
+                        SeparatorsPaint="{lvc:SolidColorPaint Color='#eee', StrokeWidth=2}"/>
+                </lvc:AxesCollection>
+            </lvc:CartesianChart.XAxes>
+            <lvc:CartesianChart.YAxes>
+                <lvc:AxesCollection>
+                    <lvc:XamlAxis
+                        LabelsRotation="{Binding Rotation}"
+                        Labeler="{Static core:Labelers.Currency}"
+                        SeparatorsPaint="{lvc:SolidColorPaint Color='#eee', StrokeWidth=2}" />
+                </lvc:AxesCollection>
+            </lvc:CartesianChart.YAxes>
+        </lvc:CartesianChart>
+    </Grid>
 </ContentPage>

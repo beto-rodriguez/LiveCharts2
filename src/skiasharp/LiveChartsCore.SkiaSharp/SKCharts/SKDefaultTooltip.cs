@@ -43,8 +43,9 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
 {
     private bool _isInitialized;
+    private object? _themeId;
     private DrawnTask? _drawnTask;
-    private const int Py = 12;
+    private const int Py = 4;
     private const int Px = 8;
 
     /// <summary>
@@ -65,10 +66,13 @@ public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
     /// <inheritdoc cref="IChartTooltip.Show(IEnumerable{ChartPoint}, Chart)" />
     public virtual void Show(IEnumerable<ChartPoint> foundPoints, Chart chart)
     {
-        if (!_isInitialized)
+        var theme = chart.GetTheme();
+
+        if (!_isInitialized || _themeId != theme.ThemeId || chart.View.TooltipBackgroundPaint is not null)
         {
             Initialize(chart);
             _isInitialized = true;
+            _themeId = theme.ThemeId;
         }
 
         if (_drawnTask is null || _drawnTask.IsEmpty)
@@ -128,10 +132,14 @@ public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
     protected virtual Layout<SkiaSharpDrawingContext> GetLayout(
         IEnumerable<ChartPoint> foundPoints, Chart chart)
     {
+        var theme = chart.GetTheme();
+
         var textSize = (float)chart.View.TooltipTextSize;
+        if (textSize < 0) textSize = theme.TooltipTextSize;
 
         var fontPaint =
             chart.View.TooltipTextPaint ??
+            theme.TooltipTextPaint ??
             new SolidColorPaint(new SKColor(28, 49, 58));
 
         var stackLayout = new StackLayout
@@ -175,13 +183,12 @@ public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
             }
 
             var content = point.Context.Series.GetPrimaryToolTipText(point) ?? string.Empty;
-
-            var ltr = LiveCharts.DefaultSettings.IsRightToLeft;
+            var rtl = LiveChartsSkiaSharp.DefaultTextSettings.IsRTL;
 
             if (content != LiveCharts.IgnoreToolTipLabel)
             {
                 var skiaMiniature = (IDrawnElement<SkiaSharpDrawingContext>)series.GetMiniatureGeometry(point);
-                _ = tableLayout.AddChild(skiaMiniature, i, ltr ? 3 : 0);
+                _ = tableLayout.AddChild(skiaMiniature, i, rtl ? 3 : 0);
 
                 if (point.Context.Series.Name != LiveCharts.IgnoreSeriesName)
                     _ = tableLayout.AddChild(new LabelGeometry
@@ -189,22 +196,22 @@ public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
                         Text = point.Context.Series.Name ?? string.Empty,
                         Paint = fontPaint,
                         TextSize = textSize,
-                        Padding = new Padding(10, 0, 0, 0),
+                        Padding = new Padding(10, 0),
                         MaxWidth = lw,
                         VerticalAlign = Align.Start,
                         HorizontalAlign = Align.Start
-                    }, i, 1, horizontalAlign: Align.Start);
+                    }, i, 1, horizontalAlign: rtl ? Align.End : Align.Start);
 
                 _ = tableLayout.AddChild(new LabelGeometry
                 {
                     Text = content,
                     Paint = fontPaint,
                     TextSize = textSize,
-                    Padding = new Padding(10, 2, 0, 2),
+                    Padding = new Padding(8, 2),
                     MaxWidth = lw,
                     VerticalAlign = Align.Start,
                     HorizontalAlign = Align.Start
-                }, i, ltr ? 0 : 2, horizontalAlign: Align.End);
+                }, i, rtl ? 0 : 2, horizontalAlign: Align.End);
 
                 i++;
             }
@@ -220,8 +227,11 @@ public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
     /// </summary>
     protected virtual void Initialize(Chart chart)
     {
+        var theme = chart.GetTheme();
+
         var backgroundPaint =
             chart.View.TooltipBackgroundPaint ??
+            theme.TooltipBackgroundPaint ??
             new SolidColorPaint(new SKColor(235, 235, 235, 230))
             {
                 ImageFilter = new DropShadow(2, 2, 6, 6, new SKColor(50, 0, 0, 100))
@@ -235,10 +245,10 @@ public class SKDefaultTooltip : Container<PopUpGeometry>, IChartTooltip
 
         this.Animate(
             new Animation(Easing, AnimationsSpeed),
-                nameof(IDrawnElement.Opacity),
-                nameof(IDrawnElement.ScaleTransform),
-                nameof(IDrawnElement.X),
-                nameof(IDrawnElement.Y));
+                OpacityProperty,
+                ScaleTransformProperty,
+                XProperty,
+                YProperty);
     }
 
     private void AlignWedge(PopUpPlacement placement, Layout<SkiaSharpDrawingContext> layout)

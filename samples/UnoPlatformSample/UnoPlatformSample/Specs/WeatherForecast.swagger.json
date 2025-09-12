@@ -1,0 +1,59 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+      "title": "WeatherForecast API",
+      "version": "v1",
+      "description": "Auto‑generated spec for the WeatherForecast endpoint"
+    },
+    "servers": [
+      {
+        "url": "https://localhost:5002",
+        "description": "Local development server"
+      }
+    ],
+    "paths": {
+      "/api/weatherforecast": {
+        "get": {
+          "summary": "GetWeather",
+          "operationId": "GetForecast",
+          "tags": [ "Weather" ],
+          "responses": {
+            "200": {
+              "description": "A list of weather forecasts",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/WeatherForecast"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "WeatherForecast": {
+          "type": "object",
+          "properties": {
+            "date": {
+              "type": "string",
+              "format": "date"
+            },
+            "temperatureC": {
+              "type": "integer"
+            },
+            "summary": {
+              "type": "string"
+            }
+          },
+          "required": [ "date", "temperatureC", "summary" ]
+        }
+      }
+    }
+  }
+  

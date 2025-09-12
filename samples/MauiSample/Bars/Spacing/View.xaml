@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Bars.Spacing.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Bars.Spacing;assembly=ViewModelsSamples"
-             >
+<ContentPage
+    x:Class="MauiSample.Bars.Spacing.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Bars.Spacing;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-	<ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            
-            <lvc:CartesianChart Series="{Binding Series}"></lvc:CartesianChart>
 
-        </Grid>
-    </ContentPage.Content>
+    <!--
+    Padding: Defines the distance between every bars in the series
+    MaxBarWidth: Defines the maximum width a bar can take
+    -->
+
+    <lvc:CartesianChart>
+        <lvc:CartesianChart.Series>
+            <lvc:SeriesCollection>
+                <lvc:XamlColumnSeries
+                    Values="{Binding Values}"
+                    Padding="0"
+                    MaxBarWidth="99999"/>
+            </lvc:SeriesCollection>
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
 </ContentPage>

@@ -40,19 +40,15 @@ namespace LiveChartsCore;
 /// Initializes a new instance of the <see cref="PieChartEngine"/> class.
 /// </remarks>
 /// <param name="view">The view.</param>
-/// <param name="defaultPlatformConfig">The default platform configuration.</param>
 /// <param name="canvas">The canvas.</param>
 public class PieChartEngine(
     IPieChartView view,
-    Action<LiveChartsSettings> defaultPlatformConfig,
     CoreMotionCanvas canvas)
-        : Chart(canvas, defaultPlatformConfig, view, ChartKind.Pie)
+        : Chart(canvas, view, ChartKind.Pie)
 {
-    private int _nextSeries = 0;
-
     ///<inheritdoc cref="Chart.Series"/>
     public override IEnumerable<ISeries> Series =>
-        view.Series?.Cast<ISeries>() ?? [];
+        view.Series?.Select(x => x.ChartElementSource).Cast<ISeries>() ?? [];
 
     ///<inheritdoc cref="Chart.VisibleSeries"/>
     public override IEnumerable<ISeries> VisibleSeries =>
@@ -97,7 +93,7 @@ public class PieChartEngine(
     /// <returns></returns>
     public override IEnumerable<ChartPoint> FindHoveredPointsBy(LvcPoint pointerPosition)
     {
-        return view.Series
+        return VisibleSeries
             .Where(series => (series is IPieSeries pieSeries) && !pieSeries.IsFillSeries)
             .Where(series => series.IsHoverable)
             .SelectMany(series => series.FindHitPoints(this, pointerPosition, FindingStrategy.CompareAll, FindPointFor.HoverEvent));
@@ -113,14 +109,14 @@ public class PieChartEngine(
         if (LiveCharts.EnableLogging)
         {
             Trace.WriteLine(
-                $"[Cartesian chart measured]".PadRight(60) +
+                $"[Pie chart measured]".PadRight(60) +
+                $"geometries: {Canvas.CountGeometries()}    " +
                 $"thread: {Environment.CurrentManagedThreadId}");
         }
 #endif
 
-        if (!IsLoaded) return; // <- prevents a visual glitch where the visual call the measure method
-                               // while they are not visible, the problem is when the control is visible again
-                               // the animations are not as expected because previously it ran in an invalid case.
+        if (!IsLoaded || !IsRendering())
+            return;
 
         InvokeOnMeasuring();
 
@@ -130,7 +126,7 @@ public class PieChartEngine(
             _preserveFirstDraw = false;
         }
 
-        MeasureWork = new object();
+        var theme = GetTheme();
 
         var viewDrawMargin = view.DrawMargin;
         ControlSize = view.ControlSize;
@@ -143,13 +139,15 @@ public class PieChartEngine(
         TooltipPosition = view.TooltipPosition;
         Tooltip = view.Tooltip;
 
-        AnimationsSpeed = view.AnimationsSpeed;
-        EasingFunction = view.EasingFunction;
+        ActualAnimationsSpeed = view.AnimationsSpeed == TimeSpan.MaxValue
+            ? theme.AnimationsSpeed
+            : view.AnimationsSpeed;
+        ActualEasingFunction = view.EasingFunction == EasingFunctions.Unset
+            ? theme.EasingFunction
+            : view.EasingFunction;
 
         SeriesContext = new SeriesContext(VisibleSeries, this);
-        var themeId = LiveCharts.DefaultSettings.CurrentThemeId;
-
-        var theme = LiveCharts.DefaultSettings.GetTheme();
+        var themeId = theme.ThemeId;
 
         ValueBounds = new Bounds();
         IndexBounds = new Bounds();
@@ -157,9 +155,9 @@ public class PieChartEngine(
 
         foreach (var series in VisibleSeries.Cast<IPieSeries>())
         {
-            if (series.SeriesId == -1) series.SeriesId = _nextSeries++;
+            if (series.SeriesId == -1) series.SeriesId = GetNextSeriesId();
 
-            var ce = (ChartElement)series;
+            var ce = series.ChartElementSource;
             ce._isInternalSet = true;
             if (ce._theme != themeId)
             {
@@ -181,13 +179,11 @@ public class PieChartEngine(
 
         InitializeVisualsCollector();
 
-        var title = View.Title;
         var m = new Margin();
         float ts = 0f, bs = 0f, ls = 0f, rs = 0f;
-        if (title is not null)
+        if (View.Title is not null)
         {
-            title.ClippingMode = ClipMode.None;
-            var titleSize = title.Measure(this);
+            var titleSize = MeasureTitle();
             m.Top = titleSize.Height;
             ts = titleSize.Height;
             _titleHeight = titleSize.Height;
@@ -213,16 +209,7 @@ public class PieChartEngine(
         // or it is initializing in the UI and has no dimensions yet
         if (DrawMarginSize.Width <= 0 || DrawMarginSize.Height <= 0) return;
 
-        UpdateBounds();
-
-        if (title is not null)
-        {
-            var titleSize = title.Measure(this);
-            title.AlignToTopLeftCorner();
-            title.X = ControlSize.Width * 0.5f - titleSize.Width * 0.5f;
-            title.Y = 0;
-            AddVisual(title);
-        }
+        if (View.Title is not null) AddTitleToChart();
 
         // we draw all the series even invisible because it animates the series when hidden.
         // Sections and Visuals are not animated when hidden, thus we just skip them.
@@ -232,7 +219,7 @@ public class PieChartEngine(
         foreach (var visual in VisualElements.Where(x => x.IsVisible)) AddVisual(visual);
         foreach (var series in Series)
         {
-            AddVisual((ChartElement)series);
+            AddVisual(series.ChartElementSource);
             _drawnSeries.Add(series.SeriesId);
         }
 
@@ -242,7 +229,9 @@ public class PieChartEngine(
         InvokeOnUpdateStarted();
         _isFirstDraw = false;
 
-        Canvas.Invalidate();
+        if (IsLoaded)
+            Canvas.Invalidate();
+
         _isFirstDraw = false;
     }
 

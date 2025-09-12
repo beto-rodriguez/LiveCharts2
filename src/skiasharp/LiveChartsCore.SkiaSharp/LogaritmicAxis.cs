@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace LiveChartsCore.SkiaSharpView;
 
@@ -29,15 +30,18 @@ namespace LiveChartsCore.SkiaSharpView;
 /// </summary>
 public class LogarithmicAxis : Axis
 {
+    static LogarithmicAxis()
+    {
+        LiveChartsSkiaSharp.EnsureInitialized();
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="LogaritmicAxis"/> class.
     /// </summary>
     /// <param name="base">The log base.</param>
     public LogarithmicAxis(double @base)
     {
-        MinStep = 1;
-        Labeler = value => Math.Pow(@base, value).ToString("N2");
-        _logBase = @base;
+        ((ICartesianAxis)this).SetLogBase(@base);
     }
 }
 

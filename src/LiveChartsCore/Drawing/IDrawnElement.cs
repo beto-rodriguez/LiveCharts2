@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Drawing;
@@ -33,7 +34,7 @@ public interface IDrawnElement
     /// Gets the parent shape, if any, the <see cref="X"/> and <see cref="Y"/>
     /// coordinates will be relative to the parent.
     /// </summary>
-    public IDrawnElement? Parent { get; set; }
+    IDrawnElement? Parent { get; set; }
 
     /// <summary>
     /// Gets or sets the x coordinate, if the parent is not null the x coordinate will be relative to the parent.
@@ -74,6 +75,16 @@ public interface IDrawnElement
     /// Gets or sets the skew transform.
     /// </summary>
     LvcPoint SkewTransform { get; set; }
+
+    /// <summary>
+    /// Gets or sets the drop shadow.
+    /// </summary>
+    LvcDropShadow? DropShadow { get; set; }
+
+    /// <summary>
+    /// Gets or sets the clipping bounds.
+    /// </summary>
+    LvcRectangle ClippingBounds { get; set; }
 
     /// <summary>
     /// Gets a value indicating whether the instance has transform.
@@ -117,14 +128,14 @@ public interface IDrawnElement
     Paint? Paint { get; set; }
 
     /// <summary>
+    /// Gets or sets the Stroke thickness.
+    /// </summary>
+    float StrokeThickness { get; set; }
+
+    /// <summary>
     /// Gets a value indicating whether the instance is valid.
     /// </summary>
     bool IsValid { get; set; }
-
-    /// <summary>
-    /// Gets or sets the current time, this property is used to animate the instance.
-    /// </summary>
-    long CurrentTime { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether the instance should be removed from the canvas when all the animations are completed.
@@ -132,16 +143,34 @@ public interface IDrawnElement
     bool RemoveOnCompleted { get; set; }
 
     /// <summary>
+    /// Sets the transition for the specified properties.
+    /// </summary>
+    /// <param name="animation">The animation.</param>
+    /// <param name="properties">The properties, null to select all properties.</param>
+    void SetTransition(Animation? animation, params PropertyDefinition[]? properties);
+
+    /// <summary>
+    /// Removes the transition for the specified properties.
+    /// </summary>
+    /// <param name="properties">The properties to remove, null to select all properties.</param>
+    void RemoveTransition(params PropertyDefinition[]? properties);
+
+    /// <summary>
     /// Completes the transition for the specified properties.
     /// </summary>
-    /// <param name="propertyName">The properties, null to seledct all.</param>
-    void CompleteTransition(params string[]? propertyName);
+    /// <param name="properties">The properties to complete, null to select all properties.</param>
+    void CompleteTransition(params PropertyDefinition[]? properties);
 
     /// <summary>
     /// Measures the instance.
     /// </summary>
     /// <returns>The size.</returns>
     LvcSize Measure();
+
+    /// <summary>
+    /// Disposes the paints holded by the instance.
+    /// </summary>
+    void DisposePaints();
 }
 
 /// <summary>

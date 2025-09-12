@@ -1,11 +1,43 @@
 ﻿@page "/General/MapPoints"
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.General.MapPoints
+@using LiveChartsCore;
+@using LiveChartsCore.Kernel;
+@using LiveChartsCore.SkiaSharpView;
+@using LiveChartsCore.SkiaSharpView.Painting;
+@using SkiaSharp;
 
 <CartesianChart
-	Series="ViewModel.Series">
+    Series="@series">
 </CartesianChart>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new();
+    private ISeries[] series;
+
+    protected override void OnInitialized()
+    {
+        var columnSeries = new ColumnSeries<int>
+        {
+            Values = new int[] { 2, 5, 4, 6, 8, 3, 2, 4, 6 }
+        };
+        columnSeries.PointMeasured += OnPointMeasured;
+        series = new ISeries[] { columnSeries };
+    }
+
+    private void OnPointMeasured(ChartPoint point)
+    {
+        if (point.Context.Visual is null) return;
+        point.Context.Visual.Fill = GetPaint(point.Index);
+    }
+
+    private SolidColorPaint GetPaint(int index)
+    {
+        var paints = new SolidColorPaint[]
+        {
+            new(SKColors.Red),
+            new(SKColors.Green),
+            new(SKColors.Blue),
+            new(SKColors.Yellow)
+        };
+        return paints[index % paints.Length];
+    }
 }

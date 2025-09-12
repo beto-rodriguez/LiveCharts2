@@ -1,15 +1,32 @@
-<UserControl x:Class="AvaloniaSample.Bars.RowsWithLabels.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Bars.RowsWithLabels">
-  <UserControl.DataContext>
-    <vms:ViewModel/>
-  </UserControl.DataContext>
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="*"/>
-    </Grid.RowDefinitions>
-    <lvc:CartesianChart Series="{Binding Series}"></lvc:CartesianChart>
-  </Grid>  
+<UserControl
+    x:Class="AvaloniaSample.Bars.RowsWithLabels.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Bars.RowsWithLabels"
+    x:DataType="vms:ViewModel">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <lvc:CartesianChart>
+        <lvc:CartesianChart.Series>
+            <lvc:XamlRowSeries
+                Values="{Binding Values1}"
+                ShowDataLabels="True"
+                DataLabelsSize="14"
+                DataLabelsPosition="End"/>
+            <lvc:XamlRowSeries
+                Values="{Binding Values2}"
+                ShowDataLabels="True"
+                DataLabelsSize="14"
+                DataLabelsPosition="Middle"/>
+            <lvc:XamlRowSeries
+                Values="{Binding Values3}"
+                ShowDataLabels="True"
+                DataLabelsSize="14"
+                DataLabelsPosition="Start"/>
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
 </UserControl>

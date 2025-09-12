@@ -20,15 +20,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.Collections.Generic;
 using LiveChartsCore.Motion;
+using LiveChartsCore.VisualStates;
 
 namespace LiveChartsCore.Drawing;
 
 /// <inheritdoc cref="Animatable" />
 public abstract class Animatable
 {
+    internal VisualStatesDictionary.StatesTracker? _statesTracker;
+    internal static EmptyAnimatable Empty { get; } = new();
+
+    /// <summary>
+    /// Gets the <see cref="PropertyDefinition"/> collection in the <see cref="Animatable"/> type.
+    /// </summary>
+    public static Dictionary<string, PropertyDefinition> PropertyDefinitions { get; } = [];
+
     /// <summary>
     /// Gets or sets a value indicating whether this instance is valid, the instance is valid when all the
     /// motion properties in the object finished their animations.
@@ -36,77 +44,105 @@ public abstract class Animatable
     public bool IsValid { get; set; } = true;
 
     /// <summary>
-    /// Gets or sets the current time, this property is used by the motion engine to calculate the progress of the animations.
-    /// </summary>
-    public long CurrentTime { get; set; } = long.MinValue;
-
-    /// <summary>
     /// Gets or sets a value indicating whether this instance should be removed from the canvas when all the animations are completed.
     /// </summary>
     public bool RemoveOnCompleted { get; set; }
 
     /// <summary>
-    /// Gets the motion properties.
-    /// </summary>
-    public Dictionary<string, IMotionProperty> MotionProperties { get; } = [];
-
-    /// <summary>
     /// Sets the transition for the specified properties.
     /// </summary>
     /// <param name="animation">The animation.</param>
-    /// <param name="propertyName">The property name, null to select all properties.</param>
-    public void SetTransition(Animation? animation, params string[]? propertyName)
+    /// <param name="properties">
+    /// The properties to animate, when no properties, all properties are selected.
+    /// </param>
+    public void SetTransition(Animation? animation, params PropertyDefinition[]? properties)
     {
-        var a = animation?.Duration == 0 ? null : animation;
-        if (propertyName is null || propertyName.Length == 0) propertyName = [.. MotionProperties.Keys];
+        var propertiesEnumerable = properties is null || properties.Length == 0
+            ? GetPropertyDefinitions().Values
+            : (IEnumerable<PropertyDefinition>)properties;
 
-        foreach (var name in propertyName)
-            MotionProperties[name].Animation = a;
+        foreach (var property in propertiesEnumerable)
+        {
+            var motionProperty = property.GetMotion(this);
+            if (motionProperty is null) continue;
+
+            motionProperty.Animation = animation;
+        }
     }
 
     /// <summary>
     /// Removes the transition for the specified properties.
     /// </summary>
-    /// <param name="propertyName">The properties to remove, null to select all properties.</param>
-    public void RemoveTransition(params string[]? propertyName)
+    /// <param name="properties">The properties to remove, when no properties, all properties are selected.
+    /// </param>
+    public void RemoveTransition(params PropertyDefinition[]? properties)
     {
-        if (propertyName is null || propertyName.Length == 0) propertyName = [.. MotionProperties.Keys];
+        var propertiesEnumerable = properties is null || properties.Length == 0
+            ? GetPropertyDefinitions().Values
+            : (IEnumerable<PropertyDefinition>)properties;
 
-        foreach (var name in propertyName)
+        foreach (var property in propertiesEnumerable)
         {
-            MotionProperties[name].Animation = null;
+            var motionProperty = property.GetMotion(this);
+            if (motionProperty is null) continue;
+
+            motionProperty.Animation = null;
         }
     }
 
     /// <summary>
     /// Completes the transition for the specified properties.
     /// </summary>
-    /// <param name="propertyName">The property name, null to select all properties.</param>
-    public virtual void CompleteTransition(params string[]? propertyName)
+    /// <param name="properties">The properties to complete, when no properties, all properties are selected.
+    /// </param>
+    public virtual void CompleteTransition(params PropertyDefinition[]? properties)
     {
-        if (propertyName is null || propertyName.Length == 0) propertyName = [.. MotionProperties.Keys];
+        var propertiesEnumerable = properties is null || properties.Length == 0
+            ? GetPropertyDefinitions().Values
+            : (IEnumerable<PropertyDefinition>)properties;
 
-        foreach (var property in propertyName)
+        foreach (var property in propertiesEnumerable)
         {
-            if (!MotionProperties.TryGetValue(property, out var transitionProperty))
-                throw new Exception(
-                    $"The property {property} is not a transition property of this instance.");
+            var motionProperty = property.GetMotion(this);
+            if (motionProperty is null) continue;
 
-            if (transitionProperty.Animation is null) continue;
-            transitionProperty.IsCompleted = true;
+            motionProperty.Finish();
         }
     }
 
     /// <summary>
-    /// Registers a motion property.
+    /// Gets the property definition by name.
     /// </summary>
-    /// <typeparam name="T">The type of the property.</typeparam>
-    /// <param name="motionProperty">The transition.</param>
-    /// <returns></returns>
-    protected T RegisterMotionProperty<T>(T motionProperty)
-        where T : IMotionProperty
+    /// <param name="propertyName">The name of the property.</param>
+    /// <returns>The property definition, null if not found.</returns>
+    public PropertyDefinition? GetPropertyDefinition(string propertyName) =>
+        GetPropertyDefinitions().TryGetValue(propertyName, out var property)
+            ? property
+            : null;
+
+    /// <summary>
+    /// Merges two dictionaries of property definitions into one.
+    /// </summary>
+    /// <param name="one">The first.</param>
+    /// <param name="two">The second.</param>
+    /// <returns>A new instance that contains both dictionaries.</returns>
+    protected static Dictionary<string, PropertyDefinition> Merge(
+        Dictionary<string, PropertyDefinition> one,
+        Dictionary<string, PropertyDefinition> two)
     {
-        MotionProperties[motionProperty.PropertyName] = motionProperty;
-        return motionProperty;
+        var merged = new Dictionary<string, PropertyDefinition>(one);
+
+        foreach (var item in two)
+            merged[item.Key] = item.Value;
+
+        return merged;
     }
+
+    /// <summary>
+    /// Gets the motion property definitions in the instance.
+    /// </summary>
+    /// <returns>The propertt definitions.</returns>
+    protected virtual Dictionary<string, PropertyDefinition> GetPropertyDefinitions() => PropertyDefinitions;
+
+    internal class EmptyAnimatable : Animatable { }
 }

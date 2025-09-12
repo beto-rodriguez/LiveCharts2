@@ -1,21 +1,31 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Bars.DelayedAnimation.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Bars.DelayedAnimation;assembly=ViewModelsSamples"
-             >
+<ContentPage
+    x:Class="MauiSample.Bars.DelayedAnimation.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Bars.DelayedAnimation;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-	<ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            
-            <lvc:CartesianChart Series="{Binding Series}"></lvc:CartesianChart>
 
-        </Grid>
-    </ContentPage.Content>
+    <lvc:CartesianChart>
+
+        <lvc:CartesianChart.Series>
+            <lvc:SeriesCollection>
+                <lvc:XamlColumnSeries
+                    Values="{Binding Values1}"
+                    Padding="2"
+                    PointMeasuredCommand="{Binding PointMeasuredCommand}"/>
+                <lvc:XamlColumnSeries
+                    Values="{Binding Values2}"
+                    Padding="0"
+                    PointMeasuredCommand="{Binding PointMeasuredCommand}"/>
+            </lvc:SeriesCollection>
+        </lvc:CartesianChart.Series>
+
+    </lvc:CartesianChart>
+
 </ContentPage>

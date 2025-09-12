@@ -1,15 +1,30 @@
-<UserControl x:Class="AvaloniaSample.Bars.Layered.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Bars.Layered">
-  <UserControl.DataContext>
-    <vms:ViewModel/>
-  </UserControl.DataContext>
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="*"/>
-    </Grid.RowDefinitions>
-    <lvc:CartesianChart Series="{Binding Series}"></lvc:CartesianChart>
-  </Grid>  
+<UserControl
+    x:Class="AvaloniaSample.Bars.Layered.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Bars.Layered"
+    x:DataType="vms:ViewModel">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <!--
+      When the bar positon is ignored, all bars are drawn in the same position.
+    -->
+
+    <lvc:CartesianChart>
+        <lvc:CartesianChart.Series>
+            <lvc:XamlColumnSeries
+                Values="{Binding Values1}"
+                MaxBarWidth="999999"
+                IgnoresBarPosition="True"/>
+            <lvc:XamlColumnSeries
+                Values="{Binding Values2}"
+                MaxBarWidth="30"
+                IgnoresBarPosition="True"/>
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
+
 </UserControl>

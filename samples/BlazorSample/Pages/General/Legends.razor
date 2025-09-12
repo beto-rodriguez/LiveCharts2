@@ -1,21 +1,29 @@
 ﻿@page "/General/Legends"
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.General.Legends
+@using LiveChartsCore;
+@using LiveChartsCore.Measure;
+@using LiveChartsCore.SkiaSharpView;
 
-<h2>@ViewModel.Position</h2>
+<h2>@_legendPosition</h2>
 
-<select @bind="ViewModel.Position">
-	@foreach(var option in ViewModel.Positions)
-	{
-		<option value="@option.Position">@option.Name</option>
-	}
+<select @bind="_legendPosition">
+    <option value="Hidden">hidden</option>
+    <option value="Top">top</option>
+    <option value="Left">left</option>
+    <option value="Right">right</option>
+    <option value="Bottom">bottom</option>
 </select>
 
 <CartesianChart
-	Series="ViewModel.Series"
-	LegendPosition="ViewModel.Position">
+    Series="@series"
+    LegendPosition="@_legendPosition">
 </CartesianChart>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new();
+    private LegendPosition _legendPosition = LegendPosition.Right;
+    private ISeries[] series = new ISeries[]
+    {
+        new LineSeries<double> { Name = "Series 1", Values = new double[] { 2, 4, 6, 8, 10 } },
+        new LineSeries<double> { Name = "Series 2", Values = new double[] { 1, 3, 5, 7, 9 } }
+    };
 }

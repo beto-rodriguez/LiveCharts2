@@ -1,11 +1,59 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Lines.Custom.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Lines.Custom;assembly=ViewModelsSamples">
+<ContentPage
+    x:Class="MauiSample.Lines.Custom.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Lines.Custom;assembly=ViewModelsSamples"
+    xmlns:draw="clr-namespace:LiveChartsCore.SkiaSharpView.Drawing.Geometries;assembly=LiveChartsCore.SkiaSharpView"
+    x:DataType="vms:ViewModel">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-    <lvc:CartesianChart Series="{Binding Series}"/>
+
+    <lvc:CartesianChart>
+        <lvc:CartesianChart.Series>
+            <lvc:SeriesCollection>
+                <lvc:XamlLineSeries
+                    Values="{Binding Values1}"
+                    Fill="{x:Null}"
+                    GeometrySize="20"/>
+
+                <!--
+                Use the generic type arguments to set the type of the geometry to draw,
+                here are many predefined geometries in the LiveChartsCore.SkiaSharpView.Drawing.Geometries
+                namespace, for example, the StarGeometry, CrossGeometry, RectangleGeometry and DiamondGeometry
+
+                The first type argument is the type of data, in this case double (parsed from the values string).
+                The second type argument is the type of geometry to draw.
+                -->
+                <lvc:XamlLineSeries
+                    x:TypeArguments="x:Double, draw:StarGeometry"
+                    Values="{Binding Values2}"
+                    Fill="{x:Null}"
+                    GeometrySize="20" />
+
+                <!--
+                You can also use SVG paths to draw the geometry
+                the VariableSVGPathGeometry can change the drawn path at runtime
+                -->
+                <lvc:XamlLineSeries
+                    x:TypeArguments="x:Double, draw:VariableSVGPathGeometry"
+                    GeometrySvg="{Binding PinPath}"
+                    Values="{Binding Values3}"
+                    Fill="{x:Null}"
+                    GeometrySize="20"/>
+
+                <!--
+                Finally you can also use SkiaSharp to draw your own geometry
+                -->
+                <lvc:XamlLineSeries
+                    x:TypeArguments="x:Double, vms:MyGeometry"
+                    Values="{Binding Values4}"
+                    Fill="{x:Null}"
+                    GeometrySize="20"/>
+            </lvc:SeriesCollection>
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
 </ContentPage>

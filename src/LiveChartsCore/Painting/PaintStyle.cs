@@ -31,6 +31,11 @@ namespace LiveChartsCore.Painting;
 public enum PaintStyle
 {
     /// <summary>
+    /// The undefined paint style.
+    /// </summary>
+    Undefined = 0,
+
+    /// <summary>
     /// The stroke.
     /// </summary>
     Stroke = 1 << 0,
@@ -38,5 +43,10 @@ public enum PaintStyle
     /// <summary>
     /// The fill.
     /// </summary>
-    Fill = 1 << 1
+    Fill = 1 << 1,
+
+    /// <summary>
+    /// The text, check for fonts and things.
+    /// </summary>
+    Text = 1 << 2 | 1 << 1  // add also the fill flag by default this will draw text with a fill style
 }

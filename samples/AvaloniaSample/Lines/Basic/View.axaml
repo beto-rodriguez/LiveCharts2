@@ -1,13 +1,36 @@
-<UserControl x:Class="AvaloniaSample.Lines.Basic.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Lines.Basic">
-  <UserControl.DataContext>
-    <vms:ViewModel/>
-  </UserControl.DataContext>
-    <lvc:CartesianChart
-        Series="{Binding Series}"
-        Title="{Binding Title}">
+<UserControl
+    x:Class="AvaloniaSample.Lines.Basic.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Lines.Basic"
+    xmlns:draw="using:LiveChartsCore.SkiaSharpView.Drawing.Geometries"
+    x:DataType="vms:ViewModel">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <lvc:CartesianChart>
+        <lvc:CartesianChart.Title>
+            <lvc:XamlDrawnLabelVisual
+                Text="My chart title"
+                Paint="{lvc:SolidColorPaint Color='#303030'}"
+                TextSize="25"
+                Padding="{lvc:Padding '15'}"/>
+        </lvc:CartesianChart.Title>
+
+        <lvc:CartesianChart.Series>
+            <lvc:XamlLineSeries
+                Values="{Binding Values1}"
+                Fill="{x:Null}"
+                GeometrySize="20"/>
+            <lvc:XamlLineSeries
+                x:TypeArguments="x:Int32, draw:StarGeometry"
+                Values="{Binding Values2}"
+                Fill="{x:Null}"
+                GeometrySize="20"/>
+        </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
+
 </UserControl>

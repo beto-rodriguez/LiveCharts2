@@ -1,17 +1,11 @@
 ﻿@page "/Pies/Gauge1"
+@using LiveChartsCore
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.Pies.Gauge1
-
-<style>
-	.sample-wrap {
-		display: inline-block;
-		max-width: 400px
-	}
-</style>
+@using LiveChartsCore.SkiaSharpView.Extensions
 
 <div class="sample-wrap">
 	<PieChart
-		Series="ViewModel.Series"
+		Series="Series"
 		InitialRotation="-90"
         MinValue="0"
         MaxValue="100">
@@ -19,5 +13,17 @@
 </div>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new();
+    private ISeries[] Series { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Series = GaugeGenerator.BuildSolidGauge(
+            new GaugeItem(
+                30,          // the gauge value
+                series =>    // the series style
+                {
+                    series.MaxRadialColumnWidth = 50;
+                    series.DataLabelsSize = 50;
+                }));
+    }
 }

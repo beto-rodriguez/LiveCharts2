@@ -4,9 +4,9 @@
 
 # {{ name | to_title_case }}
 
-{{ render this "~/shared/series.md" }}
+{{ render "~/shared/series.md" }}
 
-{{ render this "~/shared/datalabels.md" }}
+{{ render "~/shared/datalabels.md" }}
 
 ## HeatMap property
 
@@ -17,12 +17,13 @@ to define the gradient.
 
 ![image]({{ assets_url }}/docs/_assets/heathm.png)
 
-<pre><code>using SkiaSharp;
+```csharp
+using SkiaSharp;
 using LiveChartsCore.SkiaSharpView;
 
 Series = new ISeries[]
 {
-    new HeatSeries&lt;WeightedPoint>
+    new HeatSeries<WeightedPoint>
     {
         HeatMap = new[] // mark
         { // mark
@@ -30,9 +31,10 @@ Series = new ISeries[]
             SKColors.Black.AsLvcColor(), // mark
             SKColors.Blue.AsLvcColor() // the last element is the "hottest" // mark
         }, // mark
-        Values = new ObservableCollection&lt;WeightedPoint> { ... }
+        Values = new ObservableCollection<WeightedPoint> { ... }
     }
-};</code></pre>
+};
+```
 
 ## ColorStops property
 
@@ -44,12 +46,13 @@ used in the remaining 90% of the gradient.
 
 ![image]({{ assets_url }}/docs/_assets/heatcs.png)
 
-<pre><code>using SkiaSharp;
+```csharp
+using SkiaSharp;
 using LiveChartsCore.SkiaSharpView;
 
 Series = new ISeries[]
 {
-    new HeatSeries&lt;WeightedPoint>
+    new HeatSeries<WeightedPoint>
     {
         HeatMap = new[]
         {
@@ -63,9 +66,10 @@ Series = new ISeries[]
             0.9, // mark
             1 // mark
         }, // mark
-        Values = new ObservableCollection&lt;WeightedPoint> { ... }
+        Values = new ObservableCollection<WeightedPoint> { ... }
     }
-};</code></pre>
+};
+```
 
 ## PointPadding property
 
@@ -73,9 +77,10 @@ Defines the padding for every point in the series.
 
 ![image]({{ assets_url }}/docs/_assets/heatp.png)
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new HeatSeries&lt;WeightedPoint>
+    new HeatSeries<WeightedPoint>
     {
         PointPadding = new LiveChartsCore.Drawing.Common.Padding(20), // mark
         HeatMap = new[]
@@ -84,7 +89,7 @@ Defines the padding for every point in the series.
             Color.DarkSlateGray,
             Color.Blue // the last element is the "hottest"
         },
-        Values = new ObservableCollection&lt;WeightedPoint>
+        Values = new ObservableCollection<WeightedPoint>
         {
             // Charles
             new WeightedPoint(0, 0, 150), // Jan
@@ -121,7 +126,7 @@ Defines the padding for every point in the series.
     }
 };
 
-XAxes = new ObservableCollection&lt;Axis>
+XAxes = new ObservableCollection<Axis>
 {
     new Axis
     {
@@ -129,12 +134,13 @@ XAxes = new ObservableCollection&lt;Axis>
     }
 };
 
-YAxes = new ObservableCollection&lt;Axis>
+YAxes = new ObservableCollection<Axis>
 {
     new Axis
     {
         Labels = new [] { "Jan", "Feb", "Mar", "Apr", "May", "Jun" }
     }
-};</code></pre>
+};
+```
 
-{{ render this "~/shared/series2.md" }}
+{{ render "~/shared/series2.md" }}

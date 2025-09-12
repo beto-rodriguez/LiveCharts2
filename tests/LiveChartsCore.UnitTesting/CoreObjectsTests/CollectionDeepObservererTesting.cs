@@ -9,7 +9,7 @@ namespace LiveChartsCore.UnitTesting.CoreObjectsTests;
 public class CollectionDeepObservererTesting
 {
     [TestMethod]
-    public void TestMethod1()
+    public void ChangesCountTest()
     {
         var propertyChanges = 0;
         var collectionChanges = 0;
@@ -20,13 +20,13 @@ public class CollectionDeepObservererTesting
         dummyObserver.MyCollection = dummyList;
         dummyList.Add(10);
 
-        Assert.IsTrue(dummyObserver.CollectionChangedCount == 0 && dummyObserver.PropertyChangedCount == 0);
+        Assert.IsTrue(dummyObserver.ChangesCount == 0);
 
         // CASE 1, ANOTHER DUMMY CASE
-        var propertyChangedObserver = new TestObserver<PropertyChangedObject>();
+        var observer = new TestObserver<PropertyChangedObject>();
 
         var caseOneCollection = new List<PropertyChangedObject>();
-        propertyChangedObserver.MyCollection = caseOneCollection;
+        observer.MyCollection = caseOneCollection;
 
         var o1 = new PropertyChangedObject();
 
@@ -37,11 +37,11 @@ public class CollectionDeepObservererTesting
         // because the collection does not implements INCC
         // the add occurs after we assigned the instance to propertyChangedObserver.MyCollection
         // sadly we can not detect this without consuming unnecessary resources.
-        Assert.IsTrue(propertyChangedObserver.CollectionChangedCount == 0 && propertyChangedObserver.PropertyChangedCount == 0);
+        Assert.IsTrue(observer.ChangesCount == 0);
 
         // CASE 2, MUST DETECT BOTH: INCC, IPC
         var caseTwoCollection = new ObservableCollection<PropertyChangedObject>();
-        propertyChangedObserver.MyCollection = caseTwoCollection;
+        observer.MyCollection = caseTwoCollection;
 
         var o2 = new PropertyChangedObject();
 
@@ -54,13 +54,11 @@ public class CollectionDeepObservererTesting
         // o1 change must be ignored
         o1.Value = 30;
 
-        Assert.IsTrue(
-            propertyChangedObserver.CollectionChangedCount == collectionChanges &&
-            propertyChangedObserver.PropertyChangedCount == propertyChanges);
+        Assert.IsTrue(observer.ChangesCount == collectionChanges + propertyChanges);
 
         // CASE 3, INSTANCE CHANGED.
         var caseThreeCollection = new ObservableCollection<PropertyChangedObject>();
-        propertyChangedObserver.MyCollection = caseThreeCollection;
+        observer.MyCollection = caseThreeCollection;
 
         var o3 = new PropertyChangedObject();
         caseThreeCollection.Add(o3);
@@ -82,9 +80,7 @@ public class CollectionDeepObservererTesting
         o1.Value = 100;
         o2.Value = 100;
 
-        Assert.IsTrue(
-            propertyChangedObserver.CollectionChangedCount == collectionChanges &&
-            propertyChangedObserver.PropertyChangedCount == propertyChanges);
+        Assert.IsTrue(observer.ChangesCount == collectionChanges + propertyChanges);
 
         // CASE 4, IT MUST STOP LISTENING WHEN WE REMOVE THE OBJECT FROM THE COLLECTION 
         _ = caseThreeCollection.Remove(o4);
@@ -93,9 +89,7 @@ public class CollectionDeepObservererTesting
         o4.Value = 20;
         o4.Value = 40;
 
-        Assert.IsTrue(
-            propertyChangedObserver.CollectionChangedCount == collectionChanges &&
-            propertyChangedObserver.PropertyChangedCount == propertyChanges);
+        Assert.IsTrue(observer.ChangesCount == collectionChanges + propertyChanges);
 
         // CASE 5, BUT IT MUST BE LISTENING FOR THE OBJECTS THAT ARE INCLUDED IN THE COLLECTION
         o3.Value = 30;
@@ -105,9 +99,7 @@ public class CollectionDeepObservererTesting
         o3.Value = 50;
         propertyChanges++;
 
-        Assert.IsTrue(
-            propertyChangedObserver.CollectionChangedCount == collectionChanges &&
-            propertyChangedObserver.PropertyChangedCount == propertyChanges);
+        Assert.IsTrue(observer.ChangesCount == collectionChanges + propertyChanges);
 
         // CASE 5, REPLACEMENT
         var o5 = new PropertyChangedObject();
@@ -126,9 +118,7 @@ public class CollectionDeepObservererTesting
         o5.Value = 2;
         propertyChanges++;
 
-        Assert.IsTrue(
-           propertyChangedObserver.CollectionChangedCount == collectionChanges &&
-           propertyChangedObserver.PropertyChangedCount == propertyChanges);
+        Assert.IsTrue(observer.ChangesCount == collectionChanges + propertyChanges);
 
         // CASE 6, COLLECTION CLEARED.
         caseThreeCollection.Clear();
@@ -139,8 +129,6 @@ public class CollectionDeepObservererTesting
         o5.Value = 2;
         o5.Value = 2;
 
-        Assert.IsTrue(
-          propertyChangedObserver.CollectionChangedCount == collectionChanges &&
-          propertyChangedObserver.PropertyChangedCount == propertyChanges);
+        Assert.IsTrue(observer.ChangesCount == collectionChanges + propertyChanges);
     }
 }

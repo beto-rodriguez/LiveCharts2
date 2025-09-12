@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <LangVersion>$(GlobalLangVersion)</LangVersion>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\generators\LiveChartsGenerators\LiveChartsGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\..\..\src\LiveChartsCore\LiveChartsCore.csproj" />
+    <ProjectReference Include="..\Vortice.SampleFramework\Vortice.SampleFramework.csproj" />
+    <PackageReference Include="Vortice.Direct2D1" Version="3.6.2" />
+    <PackageReference Include="Vortice.Mathematics" Version="1.9.3" />
+  </ItemGroup>
+
+  <Import Project="..\..\..\src\skiasharp\_Shared\_Shared.projitems" Label="Shared" />
+
+</Project>

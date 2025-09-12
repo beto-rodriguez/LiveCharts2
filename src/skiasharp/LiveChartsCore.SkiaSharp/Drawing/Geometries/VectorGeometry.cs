@@ -30,9 +30,7 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <summary>
 /// Defines an area geometry.
 /// </summary>
-/// <typeparam name="TSegment">The type of the segment.</typeparam>
-public abstract class VectorGeometry<TSegment> : BaseVectorGeometry<TSegment>, IDrawnElement<SkiaSharpDrawingContext>
-    where TSegment : Segment
+public abstract class VectorGeometry : BaseVectorGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
     /// <summary>
     /// Called when the area begins the draw.
@@ -40,8 +38,7 @@ public abstract class VectorGeometry<TSegment> : BaseVectorGeometry<TSegment>, I
     /// <param name="context">The context.</param>
     /// <param name="path">The path.</param>
     /// <param name="segment">The segment.</param>
-    protected virtual void OnOpen(SkiaSharpDrawingContext context, SKPath path, TSegment segment)
-    { }
+    protected abstract void OnOpen(SkiaSharpDrawingContext context, SKPath path, Segment segment);
 
     /// <summary>
     /// Called to close the area.
@@ -49,8 +46,7 @@ public abstract class VectorGeometry<TSegment> : BaseVectorGeometry<TSegment>, I
     /// <param name="context">The context.</param>
     /// <param name="path">The path.</param>
     /// <param name="segment">The segment.</param>
-    protected virtual void OnClose(SkiaSharpDrawingContext context, SKPath path, TSegment segment)
-    { }
+    protected abstract void OnClose(SkiaSharpDrawingContext context, SKPath path, Segment segment);
 
     /// <summary>
     /// Called to draw the segment.
@@ -58,27 +54,24 @@ public abstract class VectorGeometry<TSegment> : BaseVectorGeometry<TSegment>, I
     /// <param name="context">The context.</param>
     /// <param name="path">The path.</param>
     /// <param name="segment">The segment.</param>
-    protected virtual void OnDrawSegment(SkiaSharpDrawingContext context, SKPath path, TSegment segment)
-    { }
+    protected abstract void OnDrawSegment(SkiaSharpDrawingContext context, SKPath path, Segment segment);
 
     /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
     public void Draw(SkiaSharpDrawingContext context)
     {
         if (Commands.Count == 0) return;
 
-        var toRemoveSegments = new List<TSegment>();
+        var toRemoveSegments = new List<Segment>();
 
         using var path = new SKPath();
         var isValid = true;
 
-        var currentTime = CurrentTime;
         var isFirst = true;
-        TSegment? last = null;
+        Segment? last = null;
 
         foreach (var segment in Commands)
         {
             segment.IsValid = true;
-            segment.CurrentTime = currentTime;
 
             if (isFirst)
             {

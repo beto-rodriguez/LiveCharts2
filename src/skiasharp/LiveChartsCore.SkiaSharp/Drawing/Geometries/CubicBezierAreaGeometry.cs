@@ -28,14 +28,17 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <summary>
 /// Defines an area drawn using cubic beziers.
 /// </summary>
-public class CubicBezierAreaGeometry : VectorGeometry<CubicBezierSegment>
+public class CubicBezierAreaGeometry : VectorGeometry
 {
-    /// <inheritdoc cref="VectorGeometry{TSegment}.OnDrawSegment(SkiaSharpDrawingContext, SKPath, TSegment)"/>
-    protected override void OnDrawSegment(SkiaSharpDrawingContext context, SKPath path, CubicBezierSegment segment) =>
-        path.CubicTo(segment.Xi, segment.Yi, segment.Xm, segment.Ym, segment.Xj, segment.Yj);
+    /// <inheritdoc cref="VectorGeometry.OnDrawSegment(SkiaSharpDrawingContext, SKPath, Segment)"/>
+    protected override void OnDrawSegment(SkiaSharpDrawingContext context, SKPath path, Segment segment)
+    {
+        var cubic = (CubicBezierSegment)segment;
+        path.CubicTo(segment.Xi, segment.Yi, cubic.Xm, cubic.Ym, segment.Xj, segment.Yj);
+    }
 
-    /// <inheritdoc cref="VectorGeometry{TSegment}.OnOpen(SkiaSharpDrawingContext, SKPath, TSegment)"/>
-    protected override void OnOpen(SkiaSharpDrawingContext context, SKPath path, CubicBezierSegment segment)
+    /// <inheritdoc cref="VectorGeometry.OnOpen(SkiaSharpDrawingContext, SKPath, Segment)"/>
+    protected override void OnOpen(SkiaSharpDrawingContext context, SKPath path, Segment segment)
     {
         if (ClosingMethod == LiveChartsCore.Drawing.VectorClosingMethod.NotClosed)
         {
@@ -51,10 +54,11 @@ public class CubicBezierAreaGeometry : VectorGeometry<CubicBezierSegment>
         }
     }
 
-    /// <inheritdoc cref="VectorGeometry{TSegment}.OnClose(SkiaSharpDrawingContext, SKPath, TSegment)"/>
-    protected override void OnClose(SkiaSharpDrawingContext context, SKPath path, CubicBezierSegment segment)
+    /// <inheritdoc cref="VectorGeometry.OnClose(SkiaSharpDrawingContext, SKPath, Segment)"/>
+    protected override void OnClose(SkiaSharpDrawingContext context, SKPath path, Segment segment)
     {
-        if (ClosingMethod == LiveChartsCore.Drawing.VectorClosingMethod.NotClosed) return;
+        if (ClosingMethod == LiveChartsCore.Drawing.VectorClosingMethod.NotClosed)
+            return;
 
         if (ClosingMethod == LiveChartsCore.Drawing.VectorClosingMethod.CloseToPivot)
         {

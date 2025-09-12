@@ -25,13 +25,13 @@ public class DataProviderTest
             {
                 Width = 100,
                 Height = 100,
-                Series = new[] { sutSeries }
+                Series = [sutSeries]
             };
 
             _ = chart.GetImage();
 
             var datafactory = sutSeries.DataFactory;
-            var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
+            var points = datafactory.Fetch(sutSeries, chart.CoreChart).ToArray();
 
             if (test is not null)
             {
@@ -48,7 +48,7 @@ public class DataProviderTest
         }
 
         testType(new short[] { 1, 1, 1, 1, 1 });
-        testType(new int[] { 1, 1, 1, 1, 1 });
+        testType([1, 1, 1, 1, 1]);
         testType(new long[] { 1, 1, 1, 1, 1 });
         testType(new float[] { 1, 1, 1, 1, 1 });
         testType(new double[] { 1, 1, 1, 1, 1 });
@@ -174,7 +174,7 @@ public class DataProviderTest
         // finally lets test a mapper
         var sutSeries = new ColumnSeries<City>
         {
-            Values = new City[] { new(1), new(1), new(1), new(1), new(1) },
+            Values = [new(1), new(1), new(1), new(1), new(1)],
             Mapping = (city, index) => new(index, city.Population.Value)
         };
 
@@ -182,13 +182,13 @@ public class DataProviderTest
         {
             Width = 100,
             Height = 100,
-            Series = new[] { sutSeries }
+            Series = [sutSeries]
         };
 
         _ = chart.GetImage();
 
         var datafactory = sutSeries.DataFactory;
-        var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
+        var points = datafactory.Fetch(sutSeries, chart.CoreChart).ToArray();
 
         for (var i = 0; i < points.Length; i++)
         {
@@ -204,7 +204,7 @@ public class DataProviderTest
         // finally lets test a mapper
         var sutSeries = new ColumnSeries<City>
         {
-            Values = new City[] { new(1), new(null), new(1), new(null), new(1) },
+            Values = [new(1), new(null), new(1), new(null), new(1)],
             Mapping = (city, index) =>
                 city.Population is null
                     ? Coordinate.Empty
@@ -215,13 +215,13 @@ public class DataProviderTest
         {
             Width = 100,
             Height = 100,
-            Series = new[] { sutSeries }
+            Series = [sutSeries]
         };
 
         _ = chart.GetImage();
 
         var datafactory = sutSeries.DataFactory;
-        var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
+        var points = datafactory.Fetch(sutSeries, chart.CoreChart).ToArray();
 
         var emptyCount = 0;
         for (var i = 0; i < points.Length; i++)
@@ -249,7 +249,7 @@ public class DataProviderTest
         // finally lets test a mapper
         var sutSeries = new ColumnSeries<City>
         {
-            Values = new City[] { new(1), null, new(1), null, new(1) },
+            Values = [new(1), null, new(1), null, new(1)],
             Mapping = (city, index) => new(index, city.Population.Value)
         };
 
@@ -257,13 +257,13 @@ public class DataProviderTest
         {
             Width = 100,
             Height = 100,
-            Series = new[] { sutSeries }
+            Series = [sutSeries]
         };
 
         _ = chart.GetImage();
 
         var datafactory = sutSeries.DataFactory;
-        var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
+        var points = datafactory.Fetch(sutSeries, chart.CoreChart).ToArray();
 
         var emptyCount = 0;
         for (var i = 0; i < points.Length; i++)
@@ -307,8 +307,8 @@ public class DataProviderTest
 
         var datafactory = sutSeries.DataFactory;
 
-        var fetch0 = datafactory.Fetch(sutSeries, chart.Core).ToArray();
-        var fetch1 = datafactory.Fetch(sutSeries, chart.Core).ToArray();
+        var fetch0 = datafactory.Fetch(sutSeries, chart.CoreChart).ToArray();
+        var fetch1 = datafactory.Fetch(sutSeries, chart.CoreChart).ToArray();
 
         Assert.IsTrue(fetch0.Length == fetch1.Length);
 

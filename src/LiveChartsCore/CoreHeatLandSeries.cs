@@ -26,7 +26,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Geo;
-using LiveChartsCore.Kernel;
+using LiveChartsCore.Kernel.Observers;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
 
@@ -41,12 +41,8 @@ public abstract class CoreHeatLandSeries<TModel> : IGeoSeries, INotifyPropertyCh
 {
     private Paint? _heatPaint;
     private bool _isHeatInCanvas = false;
-    private LvcColor[] _heatMap = [];
-    private double[]? _colorStops;
-    private ICollection<TModel>? _lands;
-    private bool _isVisible;
     private readonly HashSet<GeoMapChart> _subscribedTo = [];
-    private readonly CollectionDeepObserver<TModel> _observer;
+    private readonly CollectionDeepObserver _observer;
     private readonly HashSet<LandDefinition> _everUsed = [];
 
     /// <summary>
@@ -56,10 +52,7 @@ public abstract class CoreHeatLandSeries<TModel> : IGeoSeries, INotifyPropertyCh
     public CoreHeatLandSeries(ICollection<TModel>? lands)
     {
         Lands = lands;
-
-        _observer = new CollectionDeepObserver<TModel>(
-            (sender, e) => NotifySubscribers(),
-            (sender, e) => NotifySubscribers());
+        _observer = new CollectionDeepObserver(NotifySubscribers);
     }
 
     /// <summary>
@@ -75,30 +68,30 @@ public abstract class CoreHeatLandSeries<TModel> : IGeoSeries, INotifyPropertyCh
     /// <summary>
     /// Gets or sets the heat map.
     /// </summary>
-    public LvcColor[] HeatMap { get => _heatMap; set { _heatMap = value; OnPropertyChanged(); } }
+    public LvcColor[] HeatMap { get; set { field = value; OnPropertyChanged(); } } = [];
 
     /// <summary>
     /// Gets or sets the color stops.
     /// </summary>
-    public double[]? ColorStops { get => _colorStops; set { _colorStops = value; OnPropertyChanged(); } }
+    public double[]? ColorStops { get; set { field = value; OnPropertyChanged(); } }
 
     /// <summary>
     /// Gets or sets the lands.
     /// </summary>
     public ICollection<TModel>? Lands
     {
-        get => _lands;
+        get;
         set
         {
-            _observer?.Dispose(_lands);
+            _observer?.Dispose();
             _observer?.Initialize(value);
-            _lands = value;
+            field = value;
             OnPropertyChanged();
         }
     }
 
     /// <inheritdoc cref="IGeoSeries.IsVisible"/>
-    public bool IsVisible { get => _isVisible; set { _isVisible = value; OnPropertyChanged(); } }
+    public bool IsVisible { get; set { field = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IGeoSeries.Measure(MapContext)"/>
     public void Measure(MapContext context)

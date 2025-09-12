@@ -1,13 +1,37 @@
-﻿<UserControl x:Class="WPFSample.Axes.TimeSpanScaled.View"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Axes.TimeSpanScaled;assembly=ViewModelsSamples">
+﻿<UserControl
+    x:Class="WPFSample.Axes.TimeSpanScaled.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Axes.TimeSpanScaled;assembly=ViewModelsSamples">
+
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <lvc:CartesianChart
-        Series="{Binding Series}"
-        XAxes="{Binding XAxes}">
+
+    <lvc:CartesianChart>
+
+        <lvc:CartesianChart.Series>
+            <lvc:SeriesCollection>
+                <lvc:XamlColumnSeries Values="{Binding Values}"/>
+            </lvc:SeriesCollection>
+        </lvc:CartesianChart.Series>
+
+        <!--
+            The Interval property is used to set the interval between each label,
+            in this case, the interval is set to 1 millisecond.
+
+            In the DateFormatter property, we define the format of the labels.
+        -->
+
+        <lvc:CartesianChart.XAxes>
+            <lvc:AxesCollection>
+                <lvc:XamlTimeSpanAxis
+                    Interval="0:0:0.001"
+                    TimeFormatter="{Binding Formatter}"/>
+            </lvc:AxesCollection>
+        </lvc:CartesianChart.XAxes>
+
     </lvc:CartesianChart>
+
 </UserControl>

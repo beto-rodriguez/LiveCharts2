@@ -19,7 +19,8 @@ Probably the less lovely thing about MVVM is how verbose it was, now with source
 
 To define a series property that notifies the change to the UI, without any MVVM framework a view model would look like:
 
-<pre><code>using LiveChartsCore;
+```csharp
+using LiveChartsCore;
 using System.ComponentModel;
 
 public class ViewModel2 : INotifyPropertyChanged
@@ -43,18 +44,21 @@ public class ViewModel2 : INotifyPropertyChanged
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
-}</code></pre>
+}
+```
 
 Too much code to declare a property isn't it? but now we can use the `CommunityToolkit.Mvvm` package and write a cleaner view model:
 
-<pre><code>using LiveChartsCore;
+```csharp
+using LiveChartsCore;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 public partial class ViewModel : ObservableObject
 {
     [ObservableProperty]
     public ISeries[] _series;
-}</code></pre>
+}
+```
 
 Now we inherited from `ObservableObject` and marked the *_series* field with the `ObservableProperty` attribute; by convention and with 
 the magic of source generators, the property `Series` now exists in our class, source generators are adding all this boring and repetitive 

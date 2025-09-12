@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
-using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.SKCharts;
 using LiveChartsCore.UnitTesting.CoreObjectsTests;
+using LiveChartsGeneratedCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SkiaSharp;
 
@@ -103,12 +103,12 @@ public class VisibilityTests
     private abstract class ChartSut<T>
         where T : IEnumerable
     {
-        public InMemorySkiaSharpChart Chart { get; set; }
+        public SourceGenSKChart Chart { get; set; }
         public ISeries Series { get; set; }
         public T Values { get; set; }
 
         protected ChartSut(
-            InMemorySkiaSharpChart chart,
+            SourceGenSKChart chart,
             ISeries series,
             string name,
             T initialValues)

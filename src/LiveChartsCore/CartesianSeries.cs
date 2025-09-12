@@ -50,22 +50,18 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel>(
             where TVisual : DrawnGeometry, new()
             where TLabel : BaseLabelGeometry, new()
 {
-    private int _scalesXAt;
-    private int _scalesYAt;
-    private DataLabelsPosition _labelsPosition;
     private LvcPoint? _labelsTranslate = null;
-    private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _xTooltipLabelFormatter;
-    private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _yTooltipLabelFormatter;
-    private ClipMode _clippingMode = ClipMode.XY;
+    private Func<ChartPoint, string>? _xTooltipLabelFormatter;
+    private Func<ChartPoint, string>? _yTooltipLabelFormatter;
 
     /// <inheritdoc cref="ICartesianSeries.ScalesXAt"/>
-    public int ScalesXAt { get => _scalesXAt; set => SetProperty(ref _scalesXAt, value); }
+    public int ScalesXAt { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="ICartesianSeries.ScalesYAt"/>
-    public int ScalesYAt { get => _scalesYAt; set => SetProperty(ref _scalesYAt, value); }
+    public int ScalesYAt { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="ICartesianSeries.DataLabelsPosition"/>
-    public DataLabelsPosition DataLabelsPosition { get => _labelsPosition; set => SetProperty(ref _labelsPosition, value); }
+    public DataLabelsPosition DataLabelsPosition { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="ICartesianSeries.DataLabelsTranslate"/>
     public LvcPoint? DataLabelsTranslate { get => _labelsTranslate; set => SetProperty(ref _labelsTranslate, value); }
@@ -78,6 +74,13 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel>(
     /// The tool tip label formatter.
     /// </value>
     public Func<ChartPoint<TModel, TVisual, TLabel>, string>? XToolTipLabelFormatter
+    {
+        get => _xTooltipLabelFormatter;
+        // hack #040425
+        set => ((ICartesianSeries)this).XToolTipLabelFormatter = value is null ? null : p => value(ConvertToTypedChartPoint(p));
+    }
+
+    Func<ChartPoint, string>? ICartesianSeries.XToolTipLabelFormatter
     {
         get => _xTooltipLabelFormatter;
         set => SetProperty(ref _xTooltipLabelFormatter, value);
@@ -93,11 +96,18 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel>(
     public Func<ChartPoint<TModel, TVisual, TLabel>, string>? YToolTipLabelFormatter
     {
         get => _yTooltipLabelFormatter;
+        // hack #040425
+        set => ((ICartesianSeries)this).YToolTipLabelFormatter = value is null ? null : p => value(ConvertToTypedChartPoint(p));
+    }
+
+    Func<ChartPoint, string>? ICartesianSeries.YToolTipLabelFormatter
+    {
+        get => _yTooltipLabelFormatter;
         set => SetProperty(ref _yTooltipLabelFormatter, value);
     }
 
     /// <inheritdoc cref="ICartesianSeries.ClippingMode"/>
-    public ClipMode ClippingMode { get => _clippingMode; set => SetProperty(ref _clippingMode, value); }
+    public ClipMode ClippingMode { get; set => SetProperty(ref field, value); } = ClipMode.XY;
 
     /// <inheritdoc cref="ICartesianSeries.GetBounds(Chart, ICartesianAxis, ICartesianAxis)"/>
     public virtual SeriesBounds GetBounds(
@@ -206,14 +216,6 @@ public abstract class CartesianSeries<TModel, TVisual, TLabel>(
 
         return label;
     }
-
-    /// <summary>
-    /// Gets the clip rectangle for the series.
-    /// </summary>
-    /// <param name="cartesianChart">The cartesian chart.</param>
-    /// <returns></returns>
-    protected virtual LvcRectangle GetClipRectangle(CartesianChartEngine cartesianChart) =>
-        Clipping.GetClipRectangle(ClippingMode, cartesianChart);
 
     /// <summary>
     /// Gets the geometry size to calculate the series bounds.

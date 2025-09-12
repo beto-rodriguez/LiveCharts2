@@ -1,72 +1,45 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using SkiaSharp;
-using LiveChartsCore;
 using LiveChartsCore.Defaults;
-using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Painting;
-using LiveChartsCore.Kernel.Events;
-using LiveChartsCore.Kernel.Sketches;
+using CommunityToolkit.Mvvm.Input;
+using LiveChartsCore.Kernel;
+using System.Threading.Tasks;
 
 namespace ViewModelsSamples.General.ConditionalDraw;
 
-public class ViewModel
+public partial class ViewModel
 {
-    private readonly ObservableCollection<ObservableValue> _values = [];
-
     public ViewModel()
     {
-        var dangerPaint = new SolidColorPaint(SKColors.Red);
-
-        _values = [
-            new(2),
-            new(8),
-            new(4)
-        ];
-
-        var series = new ColumnSeries<ObservableValue>
-        {
-            Name = "Mary",
-            Values = _values
-        };
-
-        series
-            .OnPointMeasured(point =>
-            {
-                if (point.Visual is null) return;
-
-                var isDanger = point.Model?.Value > 5;
-
-                point.Visual.Fill = isDanger
-                    ? dangerPaint
-                    : null; // when null, the series fill is used // mark
-            });
-
-        Series = [series];
-
         Randomize();
     }
 
-    public ISeries[] Series { get; set; }
+    public ObservableCollection<ObservableValue> Values { get; set; } =
+        [
+            new(2),
+            new(3),
+            new(4)
+        ];
 
-    public RectangularSection[] Sections { get; set; } = [
-        new RectangularSection
+    [RelayCommand]
+    private void OnPointMeasured(ChartPoint point)
+    {
+        var ctx = point.Context;
+        if (ctx.DataSource is not ObservableValue observable) return;
+
+        var states = ctx.Series.VisualStates;
+
+        if (observable.Value > 5)
         {
-            Label = "Danger zone!",
-            LabelSize = 15,
-            LabelPaint = new SolidColorPaint(SKColors.Red)
-            {
-                SKTypeface = SKTypeface.FromFamilyName("Arial", SKFontStyle.Bold)
-            },
-            Yj = 5,
-            Fill = new SolidColorPaint(SKColors.Red.WithAlpha(50))
+            states.SetState("Danger", ctx.Visual);
+            states.SetState("LabelDanger", ctx.Label);
         }
-    ];
-
-    public ICartesianAxis[] Y { get; set; } = [
-        new Axis { MinLimit = 0 }
-    ];
+        else
+        {
+            states.ClearState("Danger", ctx.Visual);
+            states.ClearState("LabelDanger", ctx.Label);
+        }
+    }
 
     private async void Randomize()
     {
@@ -76,7 +49,7 @@ public class ViewModel
         {
             await Task.Delay(3000);
 
-            foreach (var item in _values)
+            foreach (var item in Values)
             {
                 item.Value = r.Next(0, 10);
             }

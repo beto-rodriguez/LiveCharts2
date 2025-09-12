@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Motion;
+using LiveChartsCore.Generators;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
@@ -29,24 +29,19 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// <summary>
 /// Defines a rectangle geometry with a specified color.
 /// </summary>
-public class ColoredRectangleGeometry : BoundedDrawnGeometry, IColoredGeometry, IDrawnElement<SkiaSharpDrawingContext>
+public partial class ColoredRectangleGeometry : BoundedDrawnGeometry, IColoredGeometry, IDrawnElement<SkiaSharpDrawingContext>
 {
-    private readonly ColorMotionProperty _colorProperty;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="ColoredRectangleGeometry"/> class.
     /// </summary>
-    public ColoredRectangleGeometry() : base()
+    public ColoredRectangleGeometry()
     {
-        _colorProperty = RegisterMotionProperty(new ColorMotionProperty(nameof(Color)));
+        _ColorMotionProperty = new(LvcColor.Empty);
     }
 
     /// <inheritdoc cref="IColoredGeometry.Color" />
-    public LvcColor Color
-    {
-        get => _colorProperty.GetMovement(this);
-        set => _colorProperty.SetMovement(value, this);
-    }
+    [MotionProperty]
+    public partial LvcColor Color { get; set; }
 
     /// <inheritdoc cref="IDrawnElement{TDrawingContext}.Draw(TDrawingContext)" />
     public virtual void Draw(SkiaSharpDrawingContext context)

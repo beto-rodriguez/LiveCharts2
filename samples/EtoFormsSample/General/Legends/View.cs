@@ -1,7 +1,8 @@
 ﻿using Eto.Forms;
+using LiveChartsCore;
 using LiveChartsCore.Measure;
+using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Eto;
-using ViewModelsSamples.General.Legends;
 
 namespace EtoFormsSample.General.Legends;
 
@@ -11,11 +12,15 @@ public class View : Panel
 
     public View()
     {
-        var viewModel = new ViewModel();
+        var series = new ISeries[]
+        {
+            new LineSeries<double> { Name = "Series 1", Values = [2, 4, 6, 8, 10] },
+            new LineSeries<double> { Name = "Series 2", Values = [1, 3, 5, 7, 9] }
+        };
 
         cartesianChart = new CartesianChart
         {
-            Series = viewModel.Series,
+            Series = series,
             LegendPosition = LegendPosition.Right,
         };
 
@@ -32,7 +37,7 @@ public class View : Panel
         b1.SelectedIndex = 0;
 
         Content = new DynamicLayout(
-            new DynamicRow(new DynamicControl() { Control = b1, XScale = true }),
+            new DynamicRow(new DynamicControl { Control = b1, XScale = true }),
             cartesianChart);
     }
 }

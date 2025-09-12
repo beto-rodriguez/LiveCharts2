@@ -38,8 +38,9 @@ public abstract class ChartElement : IChartElement, INotifyPropertyChanged
     internal bool _isInternalSet = false;
     internal object _theme = new();
     internal readonly HashSet<string> _userSets = [];
-    private bool _isVisible = true;
     private readonly List<Paint> _deletingTasks = [];
+
+    ChartElement IChartElement.ChartElementSource => this;
 
     /// <summary>
     /// Occurs when a property value changes.
@@ -53,9 +54,9 @@ public abstract class ChartElement : IChartElement, INotifyPropertyChanged
     /// <inheritdoc cref="IChartElement.IsVisible" />
     public bool IsVisible
     {
-        get => _isVisible;
-        set => SetProperty(ref _isVisible, value);
-    }
+        get;
+        set => SetProperty(ref field, value);
+    } = true;
 
     /// <inheritdoc cref="IChartElement.Invalidate(Chart)" />
     public abstract void Invalidate(Chart chart);
@@ -65,10 +66,10 @@ public abstract class ChartElement : IChartElement, INotifyPropertyChanged
     {
         if (_deletingTasks.Count == 0) return;
 
-        foreach (var item in _deletingTasks)
+        foreach (var paintTask in _deletingTasks)
         {
-            chart.CoreCanvas.RemovePaintTask(item);
-            item.Dispose();
+            chart.CoreCanvas.RemovePaintTask(paintTask);
+            paintTask.DisposeTask();
         }
 
         _deletingTasks.Clear();
@@ -104,7 +105,18 @@ public abstract class ChartElement : IChartElement, INotifyPropertyChanged
         PaintStyle style = PaintStyle.Fill,
         [CallerMemberName] string? propertyName = null)
     {
-        if (!_isInternalSet) TouchProperty(propertyName);
+        if (!_isInternalSet)
+        {
+            if (value == Paint.Default)
+            {
+                UntouchProperty(propertyName);
+                _theme = new(); // <- force the theme to be re-evaluated.
+            }
+            else
+            {
+                TouchProperty(propertyName);
+            }
+        }
         if (value == reference) return;
 
         if (propertyName is null) throw new ArgumentNullException(nameof(propertyName));
@@ -113,8 +125,7 @@ public abstract class ChartElement : IChartElement, INotifyPropertyChanged
         if (reference is not null) _deletingTasks.Add(reference);
         reference = value;
 
-        if (reference is not null)
-            reference.PaintStyle = style;
+        reference?.PaintStyle = style;
 
         OnPropertyChanged(propertyName);
     }
@@ -182,6 +193,9 @@ public abstract class ChartElement : IChartElement, INotifyPropertyChanged
 
     private void TouchProperty([CallerMemberName] string? propertyName = null) =>
         _ = _userSets.Add(propertyName ?? throw new ArgumentNullException(nameof(propertyName)));
+
+    private void UntouchProperty([CallerMemberName] string? propertyName = null) =>
+        _ = _userSets.Remove(propertyName ?? throw new ArgumentNullException(nameof(propertyName)));
 }
 
 /// <summary>

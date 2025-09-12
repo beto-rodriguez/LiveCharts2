@@ -1,6 +1,7 @@
 ﻿using Eto.Forms;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Eto;
-using ViewModelsSamples.Axes.CustomSeparatorsInterval;
 
 namespace EtoFormsSample.Axes.CustomSeparatorsInterval;
 
@@ -10,12 +11,23 @@ public class View : Panel
 
     public View()
     {
-        var viewModel = new ViewModel();
+        var values = new int[] { 10, 55, 45, 68, 60, 70, 75, 78 };
+        var customSeparators = new double[] { 0, 10, 25, 50, 100 };
+
+        var series = new ISeries[]
+        {
+            new LineSeries<int> { Values = values }
+        };
+
+        var yAxis = new Axis
+        {
+            CustomSeparators = customSeparators
+        };
 
         cartesianChart = new CartesianChart
         {
-            Series = viewModel.Series,
-            YAxes = viewModel.YAxes
+            Series = series,
+            YAxes = [yAxis],
         };
 
         Content = cartesianChart;

@@ -22,7 +22,6 @@
 
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
-using LiveChartsCore.Drawing.Segments;
 
 namespace LiveChartsCore;
 
@@ -37,7 +36,7 @@ namespace LiveChartsCore;
 /// <seealso cref="CoreLineSeries{TModel, TVisual, TLabel, TPathGeometry, TErrorGeometry}" />
 public abstract class CoreStackedAreaSeries<TModel, TVisual, TLabel, TPathGeometry, TErrorGeometry>
     : CoreLineSeries<TModel, TVisual, TLabel, TPathGeometry, TErrorGeometry>
-        where TPathGeometry : BaseVectorGeometry<CubicBezierSegment>, new()
+        where TPathGeometry : BaseVectorGeometry, new()
         where TVisual : BoundedDrawnGeometry, new()
         where TLabel : BaseLabelGeometry, new()
         where TErrorGeometry : BaseLineGeometry, new()

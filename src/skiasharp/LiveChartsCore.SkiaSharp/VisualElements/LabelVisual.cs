@@ -20,11 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.SkiaSharpView.VisualElements;
 
 /// <inheritdoc cref="BaseLabelVisual{TLabelGeometry}"/>
+[Obsolete($"Use {nameof(DrawnLabelVisual)} instead.")]
 public class LabelVisual : BaseLabelVisual<LabelGeometry>
-{ }
+{
+    /// <summary>
+    /// The default values used for the Xaml generator.
+    /// </summary>
+    public static LabelVisual DefaultValues { get; } = new();
+}

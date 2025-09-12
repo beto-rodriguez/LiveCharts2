@@ -1,0 +1,45 @@
+﻿<UserControl
+    x:Class="WinUISample.Axes.Crosshairs.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
+    xmlns:vms="using:ViewModelsSamples.Axes.Crosshairs"
+    mc:Ignorable="d">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <lvc:CartesianChart>
+
+        <lvc:CartesianChart.Series>
+            <lvc:SeriesCollection>
+                <lvc:XamlLineSeries Values="{Binding Values}" />
+            </lvc:SeriesCollection>
+        </lvc:CartesianChart.Series>
+
+        <lvc:CartesianChart.XAxes>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis
+                    CrosshairLabelsBackground="{lvc:Color Hex='#FF8C00'}"
+                    CrosshairLabelsPaint="{lvc:SolidColorPaint Color='#8B0000'}"
+                    CrosshairPaint="{lvc:SolidColorPaint Color='#FF8C00'}"
+                    Labeler="{Binding LabelFormatter}"/>
+            </lvc:AxesCollection>
+        </lvc:CartesianChart.XAxes>
+
+        <lvc:CartesianChart.YAxes>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis
+                    CrosshairLabelsBackground="{lvc:Color Hex='#FF8C00'}"
+                    CrosshairLabelsPaint="{lvc:SolidColorPaint Color='#8B0000'}"
+                    CrosshairPaint="{lvc:SolidColorPaint Color='#FF8C00'}"
+                    CrosshairSnapEnabled="True"
+                    Labeler="{Binding LabelFormatter}"/>
+            </lvc:AxesCollection>
+        </lvc:CartesianChart.YAxes>
+
+    </lvc:CartesianChart>
+</UserControl>

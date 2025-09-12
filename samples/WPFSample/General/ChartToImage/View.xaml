@@ -1,36 +1,42 @@
-﻿<UserControl x:Class="WPFSample.General.ChartToImage.View"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
-             xmlns:vms="clr-namespace:ViewModelsSamples.General.ChartToImage;assembly=ViewModelsSamples">
+﻿<UserControl
+    x:Class="WPFSample.General.ChartToImage.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+    xmlns:vms="clr-namespace:ViewModelsSamples.General.ChartToImage;assembly=ViewModelsSamples">
 
     <UserControl.DataContext>
-        <vms:ViewModel></vms:ViewModel>
+        <vms:ViewModel/>
     </UserControl.DataContext>
     
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <lvc:CartesianChart
             Grid.Row="0"
-            x:Name="cartesianChart"
-            Series="{Binding CatesianSeries}">
+            x:Name="cartesianChart">
+            <lvc:CartesianChart.Series>
+                <lvc:SeriesCollection>
+                    <lvc:XamlLineSeries Values="{Binding Values1}"/>
+                    <lvc:XamlColumnSeries Values="{Binding Values2}"/>
+                </lvc:SeriesCollection>
+            </lvc:CartesianChart.Series>
         </lvc:CartesianChart>
 
         <lvc:PieChart
             Grid.Row="1"
-            x:Name="pieChart"
-            Series="{Binding PieSeries}">
+            x:Name="pieChart">
+            <lvc:PieChart.Series>
+                <lvc:SeriesCollection>
+                    <lvc:XamlPieSeries Values="{Binding PieValues1}"/>
+                    <lvc:XamlPieSeries Values="{Binding PieValues2}"/>
+                    <lvc:XamlPieSeries Values="{Binding PieValues3}"/>
+                </lvc:SeriesCollection>
+            </lvc:PieChart.Series>
         </lvc:PieChart>
-
-        <lvc:GeoMap
-            Grid.Row="2"
-            x:Name="geoChart"
-            Series="{Binding GeoSeries}">
-        </lvc:GeoMap>
     </Grid>
+
 </UserControl>

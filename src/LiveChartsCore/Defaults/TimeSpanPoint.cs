@@ -33,7 +33,6 @@ namespace LiveChartsCore.Defaults;
 public class TimeSpanPoint : IChartEntity, INotifyPropertyChanged
 {
     private TimeSpan _timeSpan;
-    private double? _value;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TimeSpanPoint"/> class.
@@ -66,7 +65,7 @@ public class TimeSpanPoint : IChartEntity, INotifyPropertyChanged
     /// <value>
     /// The value.
     /// </value>
-    public double? Value { get => _value; set { _value = value; OnPropertyChanged(); } }
+    public double? Value { get; set { field = value; OnPropertyChanged(); } }
 
     /// <inheritdoc cref="IChartEntity.MetaData"/>
     [System.Text.Json.Serialization.JsonIgnore]
@@ -88,9 +87,9 @@ public class TimeSpanPoint : IChartEntity, INotifyPropertyChanged
     /// <param name="propertyName">Name of the property.</param>
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
-        Coordinate = _value is null
+        Coordinate = Value is null
             ? Coordinate.Empty
-            : new(_timeSpan.Ticks, _value ?? 0d);
+            : new(_timeSpan.Ticks, Value ?? 0d);
 
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

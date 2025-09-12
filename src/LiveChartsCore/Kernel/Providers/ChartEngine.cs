@@ -36,10 +36,7 @@ public abstract class ChartEngine
     /// <summary>
     /// Gets a new instance of the default data factory.
     /// </summary>
-    /// <typeparam name="TModel">The type of the model.</typeparam>
-    /// <returns></returns>
-    public virtual DataFactory<TModel> GetDefaultDataFactory<TModel>()
-        => new();
+    public virtual DataFactory<TModel> GetDefaultDataFactory<TModel>() => new();
 
     /// <summary>
     /// Gets a new instance of the default map factory.

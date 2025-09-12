@@ -63,7 +63,7 @@ public class EventsTests
         // Charts use the Series.FindHitPoints method to check if the mouse is over a point.
         var strategy = chart.Series.GetFindingStrategy();
         var s = chart.Series
-            .SelectMany(x => x.FindHitPoints(chart.Core, new LvcPoint(251, 251), strategy, FindPointFor.HoverEvent))
+            .SelectMany(x => x.FindHitPoints(chart.CoreChart, new LvcPoint(251, 251), strategy, FindPointFor.HoverEvent))
             .ToArray();
         Assert.IsTrue(s.Length == 1);
 
@@ -71,7 +71,7 @@ public class EventsTests
         // Charts use the VisualElement.IsHitBy method to check if the mouse is over a visual element.
         var v = chart.VisualElements
             .Cast<VisualElement>()
-            .SelectMany(x => x.IsHitBy(chart.Core, new LvcPoint(251, 251)))
+            .SelectMany(x => x.IsHitBy(chart.CoreChart, new LvcPoint(251, 251)))
             .ToArray();
         Assert.IsTrue(v.Length == 2);
     }

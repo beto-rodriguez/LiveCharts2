@@ -4,9 +4,9 @@
 
 # {{ name | to_title_case }}
 
-{{ render this "~/shared/series.md" }}
+{{ render "~/shared/series.md" }}
 
-{{ render this "~/shared/datalabels.md" }}
+{{ render "~/shared/datalabels.md" }}
 
 ## Stroke property
 
@@ -15,9 +15,10 @@ and the current theme.
 
 ![image]({{ assets_url }}/docs/_assets/linestroke.png)
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new LineSeries&lt;int>
+    new LineSeries<int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
         Stroke = new SolidColorPaint(SKColors.Blue) { StrokeThickness = 4 }, // mark
@@ -25,7 +26,7 @@ and the current theme.
         GeometryFill = null,
         GeometryStroke = null
     },
-    new LineSeries&lt;int>
+    new LineSeries<int>
     {
         Values = new [] { 7, 5, 3, 2, 6 },
         Stroke = new SolidColorPaint(SKColors.Red) { StrokeThickness = 8 }, // mark
@@ -33,7 +34,7 @@ and the current theme.
         GeometryFill = null,
         GeometryStroke = null
     },
-    new LineSeries&lt;int>
+    new LineSeries<int>
     {
         Values = new [] { 4, 2, 5, 3, 9 },
         Stroke = new SolidColorPaint(SKColors.Green) { StrokeThickness = 1 }, // mark
@@ -41,7 +42,8 @@ and the current theme.
         GeometryFill = null,
         GeometryStroke = null
     }
-};</code></pre>
+};
+```
 
 :::info
 Paints can create gradients, dashed lines and more, if you need help using the `Paint` instances take 
@@ -57,9 +59,10 @@ The alpha channel enables transparency, it goes from 0 to 255, 0 is transparent 
 
 ![image]({{ assets_url }}/docs/_assets/linefill.png)
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new LineSeries&lt;int>
+    new LineSeries<int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
         Fill = new SolidColorPaint(SKColors.Blue.WithAlpha(90)), // mark
@@ -67,7 +70,7 @@ The alpha channel enables transparency, it goes from 0 to 255, 0 is transparent 
         GeometryFill = null,
         GeometryStroke = null
     },
-    new LineSeries&lt;int>
+    new LineSeries<int>
     {
         Values = new [] { 7, 5, 3, 2, 6 },
         Fill = new SolidColorPaint(SKColors.Red.WithAlpha(90)), // mark
@@ -75,7 +78,7 @@ The alpha channel enables transparency, it goes from 0 to 255, 0 is transparent 
         GeometryFill = null,
         GeometryStroke = null
     },
-    new LineSeries&lt;int>
+    new LineSeries<int>
     {
         Values = new [] { 4, 2, 5, 3, 9 },
         Fill = new SolidColorPaint(SKColors.Green.WithAlpha(90)), // mark
@@ -83,7 +86,8 @@ The alpha channel enables transparency, it goes from 0 to 255, 0 is transparent 
         GeometryFill = null,
         GeometryStroke = null
     }
-};</code></pre>
+};
+```
 
 :::info
 Paints can create gradients, dashed lines and more, if you need help using the `Paint` instances take 
@@ -98,9 +102,10 @@ the series position in your series collection and the current theme.
 
 ![image]({{ assets_url }}/docs/_assets/geometrystrokefill.png)
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new LineSeries&lt;int>
+    new LineSeries<int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
         Stroke = new SolidColorPaint(SKColors.Blue) { StrokeThickness = 4 },
@@ -108,7 +113,7 @@ the series position in your series collection and the current theme.
         GeometryFill = new SolidColorPaint(SKColors.AliceBlue), // mark
         GeometryStroke = new SolidColorPaint(SKColors.Gray) { StrokeThickness = 4 } // mark
     },
-    new LineSeries&lt;int>
+    new LineSeries<int>
     {
         Values = new [] { 7, 5, 3, 2, 6 },
         Stroke = new SolidColorPaint(SKColors.Red) { StrokeThickness = 8 },
@@ -116,7 +121,8 @@ the series position in your series collection and the current theme.
         GeometryFill = new SolidColorPaint(SKColors.IndianRed), // mark
         GeometryStroke = new SolidColorPaint(SKColors.DarkSalmon) { StrokeThickness = 8 } // mark
     }
-};</code></pre>
+};
+```
 
 :::info
 Paints can create gradients, dashed lines and more, if you need help using the `Paint` instances take 
@@ -129,19 +135,21 @@ Determines the size of the geometry, if this property is not set, then the libra
 
 ![image]({{ assets_url }}/docs/_assets/geometrysize.png)
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new LineSeries&lt;int>
+    new LineSeries<int>
     {
         Values = new [] { 4, 4, 7, 2, 8 },
         GeometrySize = 10 // mark
     },
-    new LineSeries&lt;int>
+    new LineSeries<int>
     {
         Values = new [] { 7, 5, 3, 2, 6 },
         GeometrySize = 30 // mark
     }
-};</code></pre>
+};
+```
 
 ## LineSmoothness property
 
@@ -150,19 +158,21 @@ value will be ignored, where 0 is straight and 1 is the most curved line.
 
 ![image]({{ assets_url }}/docs/_assets/linesmothness.png)
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new LineSeries&lt;int>
+    new LineSeries<int>
     {
         Values = new [] { 5, 4, 7, 3, 8 },
         LineSmoothness = 0 // mark
     },
-    new LineSeries&lt;int>
+    new LineSeries<int>
     {
         Values = new [] { 7, 2, 6, 2, 6 },
         LineSmoothness = 1 // mark
     }
-};</code></pre>
+};
+```
 
 ## EnableNullSplitting property
 
@@ -171,9 +181,10 @@ series finds a `null` instance then the series will create a gap.
 
 ![image]({{ assets_url }}/docs/_assets/linesnullsplit.png)
 
-<pre><code>Series = new ISeries[]
+```csharp
+Series = new ISeries[]
 {
-    new LineSeries&lt;int?>
+    new LineSeries<int?>
     {
         Values = new int?[] 
         { 
@@ -187,6 +198,7 @@ series finds a `null` instance then the series will create a gap.
         },
         LineSmoothness = 0
     }
-};</code></pre>
+};
+```
 
-{{ render this "~/shared/series2.md" }}
+{{ render "~/shared/series2.md" }}

@@ -1,19 +1,54 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Design.LinearGradients.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Design.LinearGradients;assembly=ViewModelsSamples"
-             >
+<ContentPage
+    x:Class="MauiSample.Design.LinearGradients.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Design.LinearGradients;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-	<ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <lvc:CartesianChart Series="{Binding Series}" LegendPosition="Right"></lvc:CartesianChart>
-        </Grid>
-    </ContentPage.Content>
+
+    <!--
+    Use the LinearGradientPaint extension to create a linear gradients.
+
+    The Colors property accepts a string with the colors separated by a comma.
+    
+    The StartPoint and EndPoint properties accept a string with the coordinates separated by a comma,
+    both values are between 0 and 1, where 0,0 is the top left corner and 1,1 is the bottom right corner,
+    for example to create a vertical gradient from top to bottom use 0.5,0 and 0.5,1.
+
+    The ColorPositions property accepts a string with the color positions separated by a comma,
+    the positions are between 0 and 1, where 0 is the start of the gradient and 1 is the end of the gradient,
+    this defines the distribution of the colors in the gradient, use null to use the default distribution.
+
+    The TileMode property defines how the gradient is repeated.
+    -->
+    
+    <lvc:CartesianChart LegendPosition="Right">
+        <lvc:CartesianChart.Series>
+            <lvc:SeriesCollection>
+                <lvc:XamlColumnSeries
+                    SeriesName="John"
+                    Values="{Binding Values1}"
+                    Fill="{lvc:LinearGradientPaint
+                        Colors='#FF8C94, #DCEDC2',
+                        StartPoint='0.5, 0',
+                        EndPoint='0.5, 1'}"/>
+                <lvc:XamlLineSeries
+                    SeriesName="Charles"
+                    Values="{Binding Values2}"
+                    GeometrySize="22"
+                    Fill="{x:Null}"
+                    Stroke="{lvc:LinearGradientPaint
+                        Colors='#2D4059, #FFD360',
+                        StrokeWidth=10}"
+                    GeometryStroke="{lvc:LinearGradientPaint
+                        Colors='#2D4059, #FFD360',
+                        StrokeWidth=10}"/>
+            </lvc:SeriesCollection>
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
 </ContentPage>

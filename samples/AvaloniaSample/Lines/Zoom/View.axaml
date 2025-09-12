@@ -1,13 +1,19 @@
-<UserControl x:Class="AvaloniaSample.Lines.Zoom.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Lines.Zoom">
+<UserControl
+    x:Class="AvaloniaSample.Lines.Zoom.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Lines.Zoom"
+    x:DataType="vms:ViewModel">
+
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
+
     <lvc:CartesianChart
-        Series="{Binding SeriesCollection}"
-        ZoomMode="X"> <!-- mark -->
+        ZoomMode="X"><!-- mark -->
+        <lvc:CartesianChart.Series>
+            <lvc:XamlLineSeries Values="{Binding Values}"/>
+        </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 </UserControl>

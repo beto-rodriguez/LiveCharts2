@@ -20,6 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+using LiveChartsCore.Kernel;
+using LiveChartsCore.SkiaSharpView.Maui.Handlers;
 using Microsoft.Maui.Hosting;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
@@ -34,14 +37,25 @@ public static class LiveChartsCoreMauiAppBuilderExtensions
     /// <summary>
     /// Adds LiveCharts components to the MAUI app.
     /// </summary>
-    /// <param name="mauiAppBuilder"></param>
-    /// <returns></returns>
-    public static MauiAppBuilder UseLiveCharts(this MauiAppBuilder mauiAppBuilder)
+    /// <param name="mauiAppBuilder">The Maui app buylder.</param>
+    /// <param name="configuration">An optional action to configure LiveCharts settings.</param>
+    /// <returns>The current MAui app builder.</returns>
+    public static MauiAppBuilder UseLiveCharts(
+        this MauiAppBuilder mauiAppBuilder, Action<LiveChartsSettings>? configuration = null)
     {
+        if (!AreHandlersRegistered)
+        {
+            _ = mauiAppBuilder
+                .ConfigureMauiHandlers(handlers => handlers
+                    .AddHandler<ChartView, ChartViewHandler>()
+                    .AddHandler<EmptyContentView, EmptyViewHandler>());
+        }
+
         AreHandlersRegistered = true;
 
-        return mauiAppBuilder.ConfigureMauiHandlers(
-            handlers =>
-                handlers.AddHandler<ChartView, ChartViewHandler>());
+        if (configuration is not null)
+            LiveCharts.Configure(configuration);
+
+        return mauiAppBuilder;
     }
 }

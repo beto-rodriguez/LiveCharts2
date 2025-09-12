@@ -1,14 +1,31 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Lines.Area.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Lines.Area;assembly=ViewModelsSamples">
+<ContentPage
+    x:Class="MauiSample.Lines.Area.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Lines.Area;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
+
     <lvc:CartesianChart
-            Series="{Binding Series}"
-            DrawMarginFrame="{Binding DrawMarginFrame}">
+        DrawMarginFrame="{lvc:Frame
+            Stroke={lvc:SolidColorPaint Color='64b4b4b4'},
+            Fill={lvc:SolidColorPaint Color='32dcdcdc'}}">
+
+        <lvc:CartesianChart.Series>
+            <lvc:SeriesCollection>
+                <lvc:XamlLineSeries
+                    Values="{Binding Values}"
+                    Fill="{lvc:SolidColorPaint Color='6495ED'}"
+                    Stroke="{x:Null}"
+                    GeometryFill="{x:Null}"
+                    GeometryStroke="{x:Null}"/>
+            </lvc:SeriesCollection>
+        </lvc:CartesianChart.Series>
+
     </lvc:CartesianChart>
 </ContentPage>

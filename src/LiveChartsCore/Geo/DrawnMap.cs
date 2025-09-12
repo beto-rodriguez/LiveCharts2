@@ -128,12 +128,9 @@ public class DrawnMap : IDisposable
             Layers.Add(layerName, layer);
         }
 
-        var geoJson = System.Text.Json.JsonSerializer.Deserialize<GeoJsonFile>(
+        var geoJson = System.Text.Json.JsonSerializer.Deserialize(
             streamReader.ReadToEnd(),
-            new System.Text.Json.JsonSerializerOptions
-            {
-                PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase
-            }) ?? throw new Exception("Map not found");
+            GeoJsonFileSourceGenerationContext.Default.GeoJsonFile) ?? throw new Exception("Map not found");
 
         layer.AddFile(geoJson);
         return layer;

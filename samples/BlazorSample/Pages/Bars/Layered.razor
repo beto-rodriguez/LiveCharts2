@@ -1,11 +1,29 @@
 ﻿@page "/Bars/Layered"
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.Bars.Layered
+@using LiveChartsCore;
+@using LiveChartsCore.SkiaSharpView;
 
 <CartesianChart
-	Series="ViewModel.Series">
+    Series="@series">
 </CartesianChart>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new();
+    private static int[] values1 = new int[] { 6, 3, 5, 7, 3, 4, 6, 3 };
+    private static int[] values2 = new int[] { 2, 4, 8, 9, 5, 2, 4, 7 };
+
+    private ISeries[] series = new ISeries[]
+    {
+        new ColumnSeries<int>
+        {
+            Values = values1,
+            MaxBarWidth = 999999,
+            IgnoresBarPosition = true
+        },
+        new ColumnSeries<int>
+        {
+            Values = values2,
+            MaxBarWidth = 30,
+            IgnoresBarPosition = true
+        }
+    };
 }

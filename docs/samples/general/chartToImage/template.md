@@ -18,23 +18,15 @@ this sample also uses a ViewModel to populate the properties of the control(s) i
 
 {{~ end ~}}
 
+{{~ if mvvm ~}}
 ## View model
 
-```
+```csharp
 {{ full_name | get_vm_from_docs }}
 ```
-
-{{~ if xaml ~}}
-## XAML
 {{~ end ~}}
 
-{{~ if winforms ~}}
-## Form code behind
-{{~ end ~}}
-
-{{~ if blazor ~}}
-## HTML
-{{~ end~}}
+## {{~ view_title ~}}
 
 Having the previous data (ViewModel), we add 3 charts to the UI, a `CartesianChart`, a `PieChart` and a `GeoMap`.
 
@@ -44,7 +36,7 @@ Having the previous data (ViewModel), we add 3 charts to the UI, a `CartesianCha
 
 You will get the following plot in the UI.
 
-<div class="text-center">
+<div class="text-center sample-img">
     <img src="{{ assets_url }}/docs/{{ unique_name }}/result2.png" alt="sample image" />
 </div>
 
@@ -53,7 +45,9 @@ You will get the following plot in the UI.
 You can take any control in the UI and build an image from it, in the next example, for simplicity, we build an image of our charts once the 
 view is loaded.
 
-{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/General/ChartToImage/$PlatformViewCodeBehindFile" ~}}
+```csharp
+{{~ render $"~/../samples/{samples_folder}/General/ChartToImage{view_code}" ~}}
+```
 {{~ end ~}}
 
 ## Build an image in the server side or console app
@@ -61,7 +55,7 @@ view is loaded.
 LiveCharts can render images without the need of any UI framework, you can build images in the server side or in a console 
 application as far as you install the SkiaSharp view package, it is available from NuGet:
 
-> LiveChartsCore.SkiaSharpView
+{{ "LiveChartsCore.SkiaSharpView" | from_nuget }}
 
 :::info
 Notice any view of LiveCharts (WPF, WinForms, Maui, etc..) has a dependency on
@@ -81,10 +75,12 @@ The Net 6.0 template is much cleaner than previous console app templates, notice
 
 Finally build the images in the `Program.cs` file.
 
-{{~ "~/../samples/ConsoleSample/ConsoleSample/Program.cs" | render_file_as_code ~}}
+```csharp
+{{~ "~/../samples/ConsoleSample/ConsoleSample/Program.cs" ~}}
+```
 
 :::tip
 Notice that the previous code also works in an `ASP.net` project, as far as you are using .NET core 3.1 or greater
 :::
 
-{{ render this "~/shared/relatedTo.md" }}
+{{ render "~/shared/relatedTo.md" }}

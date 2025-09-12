@@ -20,16 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
-using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Painting;
-using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
 
@@ -53,72 +50,56 @@ public abstract class BarSeries<TModel, TVisual, TLabel>(
             where TVisual : BoundedDrawnGeometry, new()
             where TLabel : BaseLabelGeometry, new()
 {
-    private double _pading = 2;
-    private double _maxBarWidth = 50;
-    private bool _ignoresBarPosition = false;
-    private double _rx;
-    private double _ry;
-    private Paint? _errorPaint;
+    private bool _showError;
 
     /// <inheritdoc cref="IBarSeries.Padding"/>
-    public double Padding { get => _pading; set => SetProperty(ref _pading, value); }
+    public double Padding { get; set => SetProperty(ref field, value); } = 2;
 
     /// <inheritdoc cref="IBarSeries.MaxBarWidth"/>
-    public double MaxBarWidth { get => _maxBarWidth; set => SetProperty(ref _maxBarWidth, value); }
+    public double MaxBarWidth { get; set => SetProperty(ref field, value); } = 50;
 
     /// <inheritdoc cref="IBarSeries.IgnoresBarPosition"/>
-    public bool IgnoresBarPosition { get => _ignoresBarPosition; set => SetProperty(ref _ignoresBarPosition, value); }
+    public bool IgnoresBarPosition { get; set => SetProperty(ref field, value); } = false;
 
     /// <inheritdoc cref="IBarSeries.Rx"/>
-    public double Rx { get => _rx; set => SetProperty(ref _rx, value); }
+    public double Rx { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="IBarSeries.Ry"/>
-    public double Ry { get => _ry; set => SetProperty(ref _ry, value); }
+    public double Ry { get; set => SetProperty(ref field, value); }
+
+    /// <inheritdoc cref="IErrorSeries.ShowError"/>
+    public bool ShowError
+    {
+        get => _showError;
+        set
+        {
+            SetProperty(ref _showError, value);
+            ErrorPaint?.IsPaused = !value;
+        }
+    }
 
     /// <inheritdoc cref="IErrorSeries.ErrorPaint"/>
     public Paint? ErrorPaint
     {
-        get => _errorPaint;
-        set => SetPaintProperty(ref _errorPaint, value, PaintStyle.Stroke);
-    }
-
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniaturesSketch"/>
-    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
-    public override Sketch GetMiniaturesSketch()
-    {
-        var schedules = new List<PaintSchedule>();
-
-        if (Fill is not null) schedules.Add(BuildMiniatureSchedule(Fill, new TVisual()));
-        if (Stroke is not null) schedules.Add(BuildMiniatureSchedule(Stroke, new TVisual()));
-
-        return new Sketch(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
+        get;
+        set
         {
-            PaintSchedules = schedules
-        };
-    }
-
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniature"/>
-    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
-    public override IChartElement GetMiniature(ChartPoint? point, int zindex)
-    {
-        return new GeometryVisual<TVisual, TLabel>
-        {
-            Fill = GetMiniatureFill(point, zindex + 1),
-            Stroke = GetMiniatureStroke(point, zindex + 2),
-            Width = MiniatureShapeSize,
-            Height = MiniatureShapeSize,
-            Svg = GeometrySvg,
-            ClippingMode = ClipMode.None
-        };
-    }
+            SetPaintProperty(ref field, value, PaintStyle.Stroke);
+            _showError = value is not null && value != Paint.Default;
+        }
+    } = Paint.Default;
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniatureGeometry"/>
     public override IDrawnElement GetMiniatureGeometry(ChartPoint? point)
     {
+        var v = point?.Context.Visual;
+
         var m = new TVisual
         {
-            Fill = GetMiniatureFill(point, 0),
-            Stroke = GetMiniatureStroke(point, 0),
+            Fill = v?.Fill ?? Fill,
+            Stroke = v?.Stroke ?? Stroke,
+            StrokeThickness = (float)MiniatureStrokeThickness,
+            ClippingBounds = LvcRectangle.Empty,
             Width = (float)MiniatureShapeSize,
             Height = (float)MiniatureShapeSize
         };
@@ -221,29 +202,9 @@ public abstract class BarSeries<TModel, TVisual, TLabel>(
         public float uw, uwm, cp, p, actualUw;
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerEnter(ChartPoint)"/>
-    protected override void OnPointerEnter(ChartPoint point)
-    {
-        var visual = (TVisual?)point.Context.Visual;
-        if (visual is null) return;
-        visual.Opacity = 0.8f;
-
-        base.OnPointerEnter(point);
-    }
-
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerLeft(ChartPoint)"/>
-    protected override void OnPointerLeft(ChartPoint point)
-    {
-        var visual = (TVisual?)point.Context.Visual;
-        if (visual is null) return;
-        visual.Opacity = 1;
-
-        base.OnPointerLeft(point);
-    }
-
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
-        [Stroke, Fill, DataLabelsPaint, _errorPaint];
+        [Stroke, Fill, DataLabelsPaint, ErrorPaint];
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.FindPointsInPosition(Chart, LvcPoint, FindingStrategy, FindPointFor)"/>
     protected override IEnumerable<ChartPoint> FindPointsInPosition(

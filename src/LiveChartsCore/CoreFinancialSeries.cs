@@ -28,8 +28,8 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
-using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
 
@@ -48,11 +48,6 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
         where TLabel : BaseLabelGeometry, new()
         where TMiniatureGeometry : BoundedDrawnGeometry, new()
 {
-    private Paint? _upStroke = null;
-    private Paint? _upFill = null;
-    private Paint? _downStroke = null;
-    private Paint? _downFill = null;
-    private double _maxBarWidth = 25;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreFinancialSeries{TModel, TVisual, TLabel, TMiniatureGeometry}"/> class.
@@ -78,42 +73,42 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
     }
 
     /// <inheritdoc cref="IFinancialSeries.MaxBarWidth"/>
-    public double MaxBarWidth { get => _maxBarWidth; set => SetProperty(ref _maxBarWidth, value); }
+    public double MaxBarWidth { get; set => SetProperty(ref field, value); } = 25;
 
     /// <inheritdoc cref="IFinancialSeries.UpStroke"/>
     public Paint? UpStroke
     {
-        get => _upStroke;
-        set => SetPaintProperty(ref _upStroke, value, PaintStyle.Stroke);
-    }
+        get;
+        set => SetPaintProperty(ref field, value, PaintStyle.Stroke);
+    } = Paint.Default;
 
     /// <inheritdoc cref="IFinancialSeries.UpFill"/>
     public Paint? UpFill
     {
-        get => _upFill;
-        set => SetPaintProperty(ref _upFill, value);
-    }
+        get;
+        set => SetPaintProperty(ref field, value);
+    } = Paint.Default;
 
     /// <inheritdoc cref="IFinancialSeries.DownStroke"/>
     public Paint? DownStroke
     {
-        get => _downStroke;
-        set => SetPaintProperty(ref _downStroke, value, PaintStyle.Stroke);
-    }
+        get;
+        set => SetPaintProperty(ref field, value, PaintStyle.Stroke);
+    } = Paint.Default;
 
     /// <inheritdoc cref="IFinancialSeries.DownFill"/>
     public Paint? DownFill
     {
-        get => _downFill;
-        set => SetPaintProperty(ref _downFill, value);
-    }
+        get;
+        set => SetPaintProperty(ref field, value);
+    } = Paint.Default;
 
     /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
     public override void Invalidate(Chart chart)
     {
         var cartesianChart = (CartesianChartEngine)chart;
-        var primaryAxis = cartesianChart.YAxes[ScalesYAt];
-        var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
+        var primaryAxis = cartesianChart.GetYAxis(this);
+        var secondaryAxis = cartesianChart.GetXAxis(this);
 
         var drawLocation = cartesianChart.DrawMarginLocation;
         var drawMarginSize = cartesianChart.DrawMarginSize;
@@ -136,37 +131,31 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
         }
 
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
-        var clipping = GetClipRectangle(cartesianChart);
 
-        if (UpFill is not null)
+        if (UpFill is not null && UpFill != Paint.Default)
         {
-            UpFill.ZIndex = actualZIndex + 0.1;
-            UpFill.SetClipRectangle(cartesianChart.Canvas, clipping);
-            cartesianChart.Canvas.AddDrawableTask(UpFill);
+            UpFill.ZIndex = actualZIndex + PaintConstants.SeriesFillZIndexOffset;
+            cartesianChart.Canvas.AddDrawableTask(UpFill, zone: CanvasZone.DrawMargin);
         }
-        if (DownFill is not null)
+        if (DownFill is not null && DownFill != Paint.Default)
         {
-            DownFill.ZIndex = actualZIndex + 0.1;
-            DownFill.SetClipRectangle(cartesianChart.Canvas, clipping);
-            cartesianChart.Canvas.AddDrawableTask(DownFill);
+            DownFill.ZIndex = actualZIndex + PaintConstants.SeriesFillZIndexOffset;
+            cartesianChart.Canvas.AddDrawableTask(DownFill, zone: CanvasZone.DrawMargin);
         }
-        if (UpStroke is not null)
+        if (UpStroke is not null && UpStroke != Paint.Default)
         {
-            UpStroke.ZIndex = actualZIndex + 0.2;
-            UpStroke.SetClipRectangle(cartesianChart.Canvas, clipping);
-            cartesianChart.Canvas.AddDrawableTask(UpStroke);
+            UpStroke.ZIndex = actualZIndex + PaintConstants.SeriesStrokeZIndexOffset;
+            cartesianChart.Canvas.AddDrawableTask(UpStroke, zone: CanvasZone.DrawMargin);
         }
-        if (DownStroke is not null)
+        if (DownStroke is not null && DownStroke != Paint.Default)
         {
-            DownStroke.ZIndex = actualZIndex + 0.2;
-            DownStroke.SetClipRectangle(cartesianChart.Canvas, clipping);
-            cartesianChart.Canvas.AddDrawableTask(DownStroke);
+            DownStroke.ZIndex = actualZIndex + PaintConstants.SeriesStrokeZIndexOffset;
+            cartesianChart.Canvas.AddDrawableTask(DownStroke, zone: CanvasZone.DrawMargin);
         }
-        if (DataLabelsPaint is not null)
+        if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
         {
-            DataLabelsPaint.ZIndex = actualZIndex + 0.3;
-            DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
-            cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
+            DataLabelsPaint.ZIndex = actualZIndex + PaintConstants.SeriesGeometryFillZIndexOffset;
+            cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint, zone: CanvasZone.DrawMargin);
         }
 
         var dls = (float)DataLabelsSize;
@@ -221,7 +210,6 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
             {
                 var xi = secondary - uwm;
                 var uwi = uw;
-                var hi = 0f;
 
                 if (previousSecondaryScale is not null && previousPrimaryScale is not null)
                 {
@@ -232,7 +220,6 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
 
                     xi = previousSecondaryScale.ToPixels(coordinate.SecondaryValue) - uwm;
                     uwi = puw;
-                    hi = cartesianChart.IsZoomingOrPanning ? bp : 0;
                 }
 
                 var r = new TVisual
@@ -254,17 +241,25 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
 
             if (open > close)
             {
-                UpFill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-                UpStroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-                DownFill?.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visual);
-                DownStroke?.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visual);
+                if (UpFill is not null && UpFill != Paint.Default)
+                    UpFill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                if (UpStroke is not null && UpStroke != Paint.Default)
+                    UpStroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                if (DownFill is not null && DownFill != Paint.Default)
+                    DownFill.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visual);
+                if (DownStroke is not null && DownStroke != Paint.Default)
+                    DownStroke.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visual);
             }
             else
             {
-                DownFill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-                DownStroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-                UpFill?.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visual);
-                UpStroke?.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visual);
+                if (DownFill is not null && DownFill != Paint.Default)
+                    DownFill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                if (DownStroke is not null && DownStroke != Paint.Default)
+                    DownStroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+                if (UpFill is not null && UpFill != Paint.Default)
+                    UpFill.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visual);
+                if (UpStroke is not null && UpStroke != Paint.Default)
+                    UpStroke.RemoveGeometryFromPaintTask(cartesianChart.Canvas, visual);
             }
 
             var x = secondary - uwm;
@@ -298,14 +293,18 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
 
             pointsCleanup.Clean(point);
 
-            if (DataLabelsPaint is not null)
+            if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
             {
                 var label = (TLabel?)point.Context.Label;
 
                 if (label is null)
                 {
                     var l = new TLabel { X = secondary - uwm, Y = high, RotateTransform = (float)DataLabelsRotation, MaxWidth = (float)DataLabelsMaxWidth };
-                    l.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
+                    l.Animate(
+                        EasingFunction ?? cartesianChart.ActualEasingFunction,
+                        AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed,
+                        BaseLabelGeometry.XProperty,
+                        BaseLabelGeometry.YProperty);
                     label = l;
                     point.Context.Label = l;
                 }
@@ -319,7 +318,10 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
 
                 if (isFirstDraw)
                     label.CompleteTransition(
-                        nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
+                        BaseLabelGeometry.TextSizeProperty,
+                        BaseLabelGeometry.XProperty,
+                        BaseLabelGeometry.YProperty,
+                        BaseLabelGeometry.RotateTransformProperty);
 
                 var m = label.Measure();
                 var labelPosition = GetLabelPosition(
@@ -403,7 +405,7 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
     {
         var chart = chartPoint.Context.Chart;
         if (chartPoint.Context.Visual is not TVisual visual) throw new Exception("Unable to initialize the point instance.");
-        visual.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
+        visual.Animate(EasingFunction ?? chart.CoreChart.ActualEasingFunction, AnimationsSpeed ?? chart.CoreChart.ActualAnimationsSpeed);
     }
 
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
@@ -434,27 +436,7 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
-        [_upFill, _upStroke, _downFill, _downStroke, DataLabelsPaint];
-
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerEnter(ChartPoint)"/>
-    protected override void OnPointerEnter(ChartPoint point)
-    {
-        var visual = (TVisual?)point.Context.Visual;
-        if (visual is null) return;
-        visual.Opacity = 0.8f;
-
-        base.OnPointerEnter(point);
-    }
-
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerLeft(ChartPoint)"/>
-    protected override void OnPointerLeft(ChartPoint point)
-    {
-        var visual = (TVisual?)point.Context.Visual;
-        if (visual is null) return;
-        visual.Opacity = 1;
-
-        base.OnPointerLeft(point);
-    }
+        [UpFill, UpStroke, DownFill, DownStroke, DataLabelsPaint];
 
     /// <summary>
     /// Called when [paint changed].
@@ -465,32 +447,6 @@ public abstract class CoreFinancialSeries<TModel, TVisual, TLabel, TMiniatureGeo
     {
         base.OnPaintChanged(propertyName);
         OnPropertyChanged();
-    }
-
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniaturesSketch"/>
-    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
-    public override Sketch GetMiniaturesSketch()
-    {
-        var schedules = new List<PaintSchedule>();
-
-        if (UpStroke is not null) schedules.Add(BuildMiniatureSchedule(UpStroke, new TMiniatureGeometry()));
-
-        return new Sketch(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
-        {
-            PaintSchedules = schedules
-        };
-    }
-
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniature"/>
-    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
-    public override IChartElement GetMiniature(ChartPoint? point, int zindex)
-    {
-        // No miniature.
-        return new GeometryVisual<TMiniatureGeometry, TLabel>
-        {
-            Width = 0,
-            Height = 0
-        };
     }
 
     /// <inheritdoc cref="ISeries.GetMiniatureGeometry"/>

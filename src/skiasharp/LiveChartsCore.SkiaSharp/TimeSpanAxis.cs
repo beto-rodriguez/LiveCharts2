@@ -29,6 +29,11 @@ namespace LiveChartsCore.SkiaSharpView;
 /// </summary>
 public class TimeSpanAxis : Axis
 {
+    static TimeSpanAxis()
+    {
+        LiveChartsSkiaSharp.EnsureInitialized();
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="DateTimeAxis"/> class.
     /// </summary>

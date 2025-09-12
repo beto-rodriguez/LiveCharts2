@@ -27,6 +27,7 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
+using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.Kernel.Sketches;
@@ -36,6 +37,11 @@ namespace LiveChartsCore.Kernel.Sketches;
 /// </summary>
 public interface IChartView
 {
+    /// <summary>
+    /// Gets or sets the series collection.
+    /// </summary>
+    IEnumerable<ISeries> Series { get; set; }
+
     /// <summary>
     /// Gets the core.
     /// </summary>
@@ -50,12 +56,29 @@ public interface IChartView
     bool DesignerMode { get; }
 
     /// <summary>
+    /// Gets whether the control is in dark mode.
+    /// </summary>
+    bool IsDarkMode { get; }
+
+    /// <summary>
+    /// Gets or sets whether the chart should force GPU acceleration, this property will only work
+    /// while globaly <see cref="RenderingSettings.UseGPU"/> is false, when <see cref="RenderingSettings.UseGPU"/> is true,
+    /// all charts will use GPU acceleration.
+    /// </summary>
+    bool ForceGPU { get; set; }
+
+    /// <summary>
+    /// Gets or sets the chart theme.
+    /// </summary>
+    Theme? ChartTheme { get; set; }
+
+    /// <summary>
     /// Sets the back color of the control.
     /// </summary>
     /// <value>
     /// The color of the back.
     /// </value>
-    LvcColor BackColor { get; set; }
+    LvcColor BackColor { get; }
 
     /// <summary>
     /// Gets the size of the control.
@@ -164,7 +187,7 @@ public interface IChartView
     /// <summary>
     /// Gets or sets the chart title.
     /// </summary>
-    VisualElement? Title { get; set; }
+    IChartElement? Title { get; set; }
 
     /// <summary>
     /// Gets or sets the legend.
@@ -185,7 +208,7 @@ public interface IChartView
     /// <summary>
     /// Gets or sets the visual elements.
     /// </summary>
-    IEnumerable<ChartElement> VisualElements { get; set; }
+    IEnumerable<IChartElement> VisualElements { get; set; }
 
     /// <summary>
     /// Occurs when the pointer goes down over a chart point(s).

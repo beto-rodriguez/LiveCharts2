@@ -35,5 +35,5 @@ public interface IChartEntity
     /// <summary>
     /// Gets or sets the coordinate, the position of the point in the chart.
     /// </summary>
-    Coordinate Coordinate { get; set; }
+    Coordinate Coordinate { get; }
 }

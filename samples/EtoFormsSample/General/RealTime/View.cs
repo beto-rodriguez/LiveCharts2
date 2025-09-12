@@ -1,24 +1,90 @@
-﻿using Eto.Forms;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using Eto.Forms;
+using LiveChartsCore;
+using LiveChartsCore.Defaults;
+using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Eto;
-using ViewModelsSamples.General.RealTime;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
 
 namespace EtoFormsSample.General.RealTime;
 
 public class View : Panel
 {
-    private readonly CartesianChart cartesianChart;
+    private readonly ObservableCollection<DateTimePoint> _values;
+    private readonly object _sync = new();
+    private bool _isReading = true;
+    private double[] _separators = Array.Empty<double>();
+    private readonly CartesianChart _cartesianChart;
 
     public View()
     {
-        var viewModel = new ViewModel();
+        _values = new ObservableCollection<DateTimePoint>();
 
-        cartesianChart = new CartesianChart
+        var seriesCollection = new ISeries[]
         {
-            SyncContext = viewModel.Sync,
-            Series = viewModel.Series,
-            XAxes = viewModel.XAxes
+            new LineSeries<DateTimePoint>
+            {
+                Values = _values,
+                Fill = null,
+                GeometryFill = null,
+                GeometryStroke = null
+            }
         };
 
-        Content = cartesianChart;
+        var xAxis = new Axis
+        {
+            Labeler = value => Formatter(new DateTime((long)value)),
+            AnimationsSpeed = TimeSpan.FromMilliseconds(0),
+            SeparatorsPaint = new SolidColorPaint(SKColors.Gray),
+            CustomSeparators = _separators
+        };
+
+        _cartesianChart = new CartesianChart
+        {
+            Series = seriesCollection,
+            XAxes = [xAxis],
+        };
+
+        Content = _cartesianChart;
+        _ = ReadData(xAxis);
+    }
+
+    private async Task ReadData(Axis xAxis)
+    {
+        var random = new Random();
+        while (_isReading)
+        {
+            await Task.Delay(100);
+            lock (_sync)
+            {
+                _values.Add(new DateTimePoint(DateTime.Now, random.Next(0, 10)));
+                if (_values.Count > 250) _values.RemoveAt(0);
+                _separators = GetSeparators();
+                xAxis.CustomSeparators = _separators;
+            }
+        }
+    }
+
+    private static double[] GetSeparators()
+    {
+        var now = DateTime.Now;
+        return
+        [
+            now.AddSeconds(-25).Ticks,
+            now.AddSeconds(-20).Ticks,
+            now.AddSeconds(-15).Ticks,
+            now.AddSeconds(-10).Ticks,
+            now.AddSeconds(-5).Ticks,
+            now.Ticks
+        ];
+    }
+
+    private static string Formatter(DateTime date)
+    {
+        var secsAgo = (DateTime.Now - date).TotalSeconds;
+        return secsAgo < 1 ? "now" : $"{secsAgo:N0}s ago";
     }
 }

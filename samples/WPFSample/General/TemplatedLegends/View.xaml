@@ -1,20 +1,28 @@
-﻿<UserControl x:Class="WPFSample.General.TemplatedLegends.View"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
-             xmlns:vms="clr-namespace:ViewModelsSamples.General.TemplatedLegends;assembly=ViewModelsSamples">
+﻿<UserControl
+    x:Class="WPFSample.General.TemplatedLegends.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+    xmlns:vms="clr-namespace:ViewModelsSamples.General.TemplatedLegends;assembly=ViewModelsSamples">
+
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <lvc:CartesianChart Grid.Row="0" Series="{Binding Series}" LegendPosition="Right" >
-            <!-- mark -untilCloses CartesianChart.Legend -->
-            <lvc:CartesianChart.Legend>
-                <vms:CustomLegend></vms:CustomLegend>
-            </lvc:CartesianChart.Legend>
-        </lvc:CartesianChart>
-    </Grid>
+
+    <lvc:CartesianChart LegendPosition="Right">
+        <!-- mark -untilCloses CartesianChart.Legend -->
+        <lvc:CartesianChart.Legend>
+            <vms:CustomLegend></vms:CustomLegend>
+        </lvc:CartesianChart.Legend>
+
+        <lvc:CartesianChart.Series>
+            <lvc:SeriesCollection>
+                <lvc:XamlColumnSeries
+                    SeriesName="Roger" Values="{Binding RogerValues}"/>
+                <lvc:XamlColumnSeries
+                    SeriesName="Susan" Values="{Binding SusanValues}" />
+            </lvc:SeriesCollection>
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
+
 </UserControl>

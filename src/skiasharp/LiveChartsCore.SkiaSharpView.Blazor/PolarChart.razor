@@ -22,15 +22,16 @@
 	SOFTWARE.
 *@
 
-@using LiveChartsCore.Drawing
-@using LiveChartsCore.Kernel
-@using LiveChartsCore.Kernel.Sketches
-@using LiveChartsCore.SkiaSharpView.Drawing
-@using System.Collections.ObjectModel
-@using System.Collections.Specialized
-@using System.ComponentModel
+@inherits LiveChartsGeneratedCode.SourceGenPolarChart
 
-@inherits Chart
+@*
+==============================================================================
+
+use the LiveChartsGeneratedCode.SourceGenPolarChart class to add blazor specific
+code, this class is just to expose the PolarChart class in this namespace.
+
+==============================================================================
+*@
 
 @{
 	base.BuildRenderTree(__builder);

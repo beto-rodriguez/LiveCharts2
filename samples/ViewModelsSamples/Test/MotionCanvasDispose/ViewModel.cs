@@ -14,9 +14,9 @@ public partial class ViewModel : ObservableObject
     public static void Generate(CoreMotionCanvas canvas)
     {
         var r = new Random();
-        var p = new SolidColorPaint(SKColors.Blue, 3) { IsStroke = false };
+        var p = new SolidColorPaint(SKColors.Blue, 3);
 
-        canvas.AddDrawableTask(p);
+        canvas.AddDrawableTask(p, LiveChartsCore.Painting.PaintStyle.Fill);
 
         for (var i = 0; i < 1000; i++)
         {

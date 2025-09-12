@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 using System;
-using LiveChartsCore.Motion;
+using LiveChartsCore.Generators;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.Drawing;
@@ -30,18 +30,8 @@ namespace LiveChartsCore.Drawing;
 /// <summary>
 /// Initializes a new instance of the <see cref="DrawnGeometry"/> class.
 /// </summary>
-public abstract class DrawnGeometry : Animatable, IDrawnElement
+public abstract partial class DrawnGeometry : Animatable, IDrawnElement
 {
-    private readonly FloatMotionProperty _xProperty;
-    private readonly FloatMotionProperty _yProperty;
-    private readonly FloatMotionProperty _rotationProperty;
-    private readonly PointMotionProperty _transformOriginProperty;
-    private readonly PointMotionProperty _scaleProperty;
-    private readonly PointMotionProperty _skewProperty;
-    private readonly PointMotionProperty _translateProperty;
-    private readonly FloatMotionProperty _opacityProperty;
-    private Paint? _stroke;
-    private Paint? _fill;
     private IDrawnElement? _parent;
 
     /// <summary>
@@ -49,105 +39,102 @@ public abstract class DrawnGeometry : Animatable, IDrawnElement
     /// </summary>
     protected DrawnGeometry()
     {
-        _xProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(X), 0));
-        _yProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Y), 0));
-        _transformOriginProperty = RegisterMotionProperty(
-            new PointMotionProperty(nameof(TransformOrigin), new LvcPoint(0.5f, 0.5f)));
-        _translateProperty = RegisterMotionProperty(
-            new PointMotionProperty(nameof(TranslateTransform), new LvcPoint(0, 0)));
-        _rotationProperty = RegisterMotionProperty(
-            new FloatMotionProperty(nameof(RotateTransform), 0));
-        _scaleProperty = RegisterMotionProperty(
-            new PointMotionProperty(nameof(ScaleTransform), new LvcPoint(1, 1)));
-        _skewProperty = RegisterMotionProperty(
-            new PointMotionProperty(nameof(SkewTransform), new LvcPoint(1, 1)));
-        _opacityProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Opacity), 1));
+        _TransformOriginMotionProperty = new(new(0.5f, 0.5f));
+        _ScaleTransformMotionProperty = new(new(1f, 1f));
+        _SkewTransformMotionProperty = new(new(1f, 1f));
+        _OpacityMotionProperty = new(1f);
+        _StrokeThicknessMotionProperty = new(1f);
     }
 
-    /// <inheritdoc cref="IDrawnElement.Parent"/>
     IDrawnElement? IDrawnElement.Parent { get => _parent; set => _parent = value; }
 
     /// <inheritdoc cref="IDrawnElement.Opacity"/>
-    public float Opacity
-    {
-        get => _opacityProperty.GetMovement(this);
-        set => _opacityProperty.SetMovement(value, this);
-    }
+    [MotionProperty]
+    public partial float Opacity { get; set; }
 
     /// <inheritdoc cref="IDrawnElement.X"/>
-    public float X
+    [MotionProperty(HasExplicitAcessors = true)]
+    public partial float X
     {
         get => _parent is null
-            ? _xProperty.GetMovement(this)
-            : _xProperty.GetMovement(this) + _parent.X;
-        set => _xProperty.SetMovement(value, this);
+            ? _XMotionProperty.GetMovement(this)
+            : _XMotionProperty.GetMovement(this) + _parent.X;
+        set => _XMotionProperty.SetMovement(value, this);
     }
 
     /// <inheritdoc cref="IDrawnElement.Y"/>
-    public float Y
+    [MotionProperty(HasExplicitAcessors = true)]
+    public partial float Y
     {
         get => _parent is null
-            ? _yProperty.GetMovement(this)
-            : _yProperty.GetMovement(this) + _parent.Y;
-        set => _yProperty.SetMovement(value, this);
+            ? _YMotionProperty.GetMovement(this)
+            : _YMotionProperty.GetMovement(this) + _parent.Y;
+        set => _YMotionProperty.SetMovement(value, this);
     }
 
     /// <inheritdoc cref="IDrawnElement.TransformOrigin"/>
-    public LvcPoint TransformOrigin
-    {
-        get => _transformOriginProperty.GetMovement(this);
-        set => _transformOriginProperty.SetMovement(value, this);
-    }
+    [MotionProperty]
+    public partial LvcPoint TransformOrigin { get; set; }
 
     /// <inheritdoc cref="IDrawnElement.TranslateTransform"/>
-    public LvcPoint TranslateTransform
-    {
-        get => _translateProperty.GetMovement(this);
-        set
-        {
-            _translateProperty.SetMovement(value, this);
-            HasTransform = true;
-        }
-    }
+    [MotionProperty]
+    public partial LvcPoint TranslateTransform { get; set; }
+    partial void OnTranslateTransformChanged(LvcPoint value) => HasTransform = true;
 
     /// <inheritdoc cref="IDrawnElement.RotateTransform"/>
-    public float RotateTransform
-    {
-        get => _rotationProperty.GetMovement(this);
-        set
-        {
-            _rotationProperty.SetMovement(value, this);
-            HasTransform = true;
-        }
-    }
+    [MotionProperty]
+    public partial float RotateTransform { get; set; }
+    partial void OnRotateTransformChanged(float value) => HasTransform = true;
 
     /// <inheritdoc cref="IDrawnElement.ScaleTransform"/>
-    public LvcPoint ScaleTransform
+    [MotionProperty]
+    public partial LvcPoint ScaleTransform { get; set; }
+    partial void OnScaleTransformChanged(LvcPoint value) => HasTransform = true;
+
+    /// <inheritdoc cref="IDrawnElement.SkewTransform"/>
+    [MotionProperty]
+    public partial LvcPoint SkewTransform { get; set; }
+    partial void OnSkewTransformChanged(LvcPoint value) => HasTransform = true;
+
+    /// <inheritdoc cref="IDrawnElement.Stroke"/>
+    [MotionProperty(HasExplicitAcessors = true)]
+    public partial Paint? Stroke
     {
-        get => _scaleProperty.GetMovement(this);
+        get => _StrokeMotionProperty.GetMovement(this);
         set
         {
-            _scaleProperty.SetMovement(value, this);
-            HasTransform = true;
+            value?.PaintStyle = PaintStyle.Stroke;
+            _StrokeMotionProperty.SetMovement(value, this);
         }
     }
 
-    /// <inheritdoc cref="IDrawnElement.SkewTransform"/>
-    public LvcPoint SkewTransform
+    /// <inheritdoc cref="IDrawnElement.Fill"/>
+    [MotionProperty(HasExplicitAcessors = true)]
+    public partial Paint? Fill
     {
-        get => _skewProperty.GetMovement(this);
+        get => _FillMotionProperty.GetMovement(this);
         set
         {
-            _skewProperty.SetMovement(value, this);
-            HasTransform = true;
+            value?.PaintStyle = PaintStyle.Fill;
+            _FillMotionProperty.SetMovement(value, this);
         }
     }
+
+    /// <inheritdoc cref="IDrawnElement.DropShadow"/>
+    [MotionProperty]
+    public partial LvcDropShadow? DropShadow { get; set; }
 
     /// <inheritdoc cref="IDrawnElement.HasTransform"/>
     public bool HasTransform { get; protected set; }
 
-    /// <inheritdoc cref="IDrawnElement.HasTranslate"/>
-    public bool HasTranslate
+    /// <inheritdoc cref="IDrawnElement.StrokeThickness"/>
+    [MotionProperty]
+    public partial float StrokeThickness { get; set; }
+
+    /// <inheritdoc cref="IDrawnElement.ClippingBounds"/>
+    public LvcRectangle ClippingBounds { get; set; } = LvcRectangle.Unset;
+
+    bool IDrawnElement.HasTranslate
     {
         get
         {
@@ -156,8 +143,7 @@ public abstract class DrawnGeometry : Animatable, IDrawnElement
         }
     }
 
-    /// <inheritdoc cref="IDrawnElement.HasScale"/>
-    public bool HasScale
+    bool IDrawnElement.HasScale
     {
         get
         {
@@ -166,8 +152,7 @@ public abstract class DrawnGeometry : Animatable, IDrawnElement
         }
     }
 
-    /// <inheritdoc cref="IDrawnElement.HasSkew"/>
-    public bool HasSkew
+    bool IDrawnElement.HasSkew
     {
         get
         {
@@ -176,32 +161,16 @@ public abstract class DrawnGeometry : Animatable, IDrawnElement
         }
     }
 
-    /// <inheritdoc cref="IDrawnElement.HasSkew"/>
-    public bool HasRotation => Math.Abs(RotateTransform) > 0;
-
-    /// <inheritdoc cref="IDrawnElement.Stroke"/>
-    public Paint? Stroke
-    {
-        get => _stroke;
-        set
-        {
-            _stroke = value;
-            if (_stroke is not null) _stroke.PaintStyle = PaintStyle.Stroke;
-        }
-    }
-
-    /// <inheritdoc cref="IDrawnElement.Fill"/>
-    public Paint? Fill
-    {
-        get => _fill;
-        set
-        {
-            _fill = value;
-            if (_fill is not null) _fill.PaintStyle = PaintStyle.Fill;
-        }
-    }
+    bool IDrawnElement.HasRotation => Math.Abs(RotateTransform) > 0;
 
     Paint? IDrawnElement.Paint { get; set; }
+
+    void IDrawnElement.DisposePaints()
+    {
+        Stroke?.DisposeTask();
+        Fill?.DisposeTask();
+        ((IDrawnElement)this).Paint?.DisposeTask();
+    }
 
     /// <inheritdoc cref="IDrawnElement.Measure()"/>
     public abstract LvcSize Measure();

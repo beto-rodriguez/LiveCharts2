@@ -20,8 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// Ignore Spelling: Tooltip
-
 using System;
 using System.Collections.Generic;
 using LiveChartsCore.Drawing;
@@ -37,17 +35,34 @@ namespace LiveChartsCore.Kernel;
 /// </summary>
 public class LiveChartsSettings
 {
+    private bool _isRightToLeftDefined;
     private object? _currentProvider;
     private readonly Dictionary<Type, object> _mappers = [];
     private object _theme = new();
 
-    /// <summary>
-    /// Gets the theme identifier.
-    /// </summary>
-    /// <value>
-    /// The theme identifier.
-    /// </value>
-    public object CurrentThemeId { get; set; } = new();
+    internal bool HasBackedDefined => _currentProvider is not null;
+    internal bool HasThemeDefined => _theme is not null and Theme;
+    internal bool HasMappersDefined => _mappers.Count > 0;
+    internal bool IsRightToLeft
+    {
+        get
+        {
+            if (_isRightToLeftDefined)
+                return field;
+
+            // if the user has not defined the right to left mode, we will use the system culture.
+            var culture = System.Globalization.CultureInfo.CurrentCulture;
+            field = culture.TextInfo.IsRightToLeft;
+            _isRightToLeftDefined = true;
+
+            return field;
+        }
+        set
+        {
+            _isRightToLeftDefined = true;
+            field = value;
+        }
+    }
 
     /// <summary>
     /// Gets or sets the default easing function.
@@ -55,7 +70,7 @@ public class LiveChartsSettings
     /// <value>
     /// The default easing function.
     /// </value>
-    public Func<float, float> EasingFunction { get; set; } = EasingFunctions.ExponentialOut;
+    public Func<float, float> EasingFunction { get; set; } = EasingFunctions.Unset;
 
     /// <summary>
     /// Gets or sets the default animations speed.
@@ -63,7 +78,7 @@ public class LiveChartsSettings
     /// <value>
     /// The default animations speed.
     /// </value>
-    public TimeSpan AnimationsSpeed { get; set; } = TimeSpan.FromMilliseconds(800);
+    public TimeSpan AnimationsSpeed { get; set; } = TimeSpan.MaxValue;
 
     /// <summary>
     /// Gets or sets the default zoom speed.
@@ -92,17 +107,17 @@ public class LiveChartsSettings
     /// <summary>
     /// Gets or sets the default legend background paint.
     /// </summary>
-    public object? LegendBackgroundPaint { get; set; }
+    public Paint? LegendBackgroundPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the default legend text paint.
     /// </summary>
-    public object? LegendTextPaint { get; set; }
+    public Paint? LegendTextPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the default legend text size.
     /// </summary>
-    public double LegendTextSize { get; set; } = 15;
+    public double LegendTextSize { get; set; } = -1;
 
     /// <summary>
     /// Gets or sets the default tooltip position.
@@ -115,17 +130,17 @@ public class LiveChartsSettings
     /// <summary>
     /// Gets or sets the default tooltip background paint.
     /// </summary>
-    public object? TooltipBackgroundPaint { get; set; }
+    public Paint? TooltipBackgroundPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the default tooltip text paint.
     /// </summary>
-    public object? TooltipTextPaint { get; set; }
+    public Paint? TooltipTextPaint { get; set; }
 
     /// <summary>
     /// Gets or sets the default tooltip text size.
     /// </summary>
-    public double TooltipTextSize { get; set; } = 16;
+    public double TooltipTextSize { get; set; } = -1;
 
     /// <summary>
     /// Gets or sets the default max with for labels inside tooltips and legends.
@@ -157,9 +172,44 @@ public class LiveChartsSettings
     public TimeSpan UpdateThrottlingTimeout { get; set; } = TimeSpan.FromMilliseconds(50);
 
     /// <summary>
-    /// Gets or sets a value indicating whether the text is right to left.
+    /// Gets or sets a value indicating whether the pie slices are clockwise.
     /// </summary>
-    public bool IsRightToLeft { get; set; }
+    public bool PieIsClockwise { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets the initial rotation for pie charts, this value is used to calculate the pie slices.
+    /// </summary>
+    public double PieInitialRotation { get; set; } = 0;
+
+    /// <summary>
+    /// Gets or sets the maximum angle for pie charts, this value is used to calculate the pie slices.
+    /// </summary>
+    public double PieMaxAngle { get; set; } = 360;
+
+    /// <summary>
+    /// Gets or sets the maximum value for pie charts, this value is used to calculate the pie slices.
+    /// </summary>
+    public double PieMaxValue { get; set; } = double.NaN;
+
+    /// <summary>
+    /// Gets or sets the minimum value for pie charts, this value is used to calculate the pie slices.
+    /// </summary>
+    public double PieMinValue { get; set; } = 0d;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the polar series should fit to bounds.
+    /// </summary>
+    public bool PolarFitToBounds { get; set; } = false;
+
+    /// <summary>
+    /// Gets or sets the total angle for polar series, this value is used to calculate the polar chart.
+    /// </summary>
+    public double PolarTotalAngle { get; set; } = 360d;
+
+    /// <summary>
+    /// Gets or sets the outer radius for polar series, this value is used to calculate the polar chart.
+    /// </summary>
+    public double PolarInnerRadius { get; set; } = 0d;
 
     /// <summary>
     /// Adds or replaces a mapping for a given type, the mapper defines how a type is mapped to a <see cref="Coordinate"/>
@@ -176,10 +226,10 @@ public class LiveChartsSettings
     }
 
     /// <summary>
-    /// Indicates that the library should render tooltips in a right to left mode, you also need to load
-    /// a right to left font.
+    /// Indicates that the library should render tooltips and legends in the right to left mode, if not defined,
+    /// the library will use the system culture to determine if it should render in right to left mode or not.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The current settings.</returns>
     public LiveChartsSettings UseRightToLeftSettings()
     {
         IsRightToLeft = true;
@@ -194,12 +244,25 @@ public class LiveChartsSettings
     /// <exception cref="NotImplementedException"></exception>
     public Func<TModel, int, Coordinate> GetMap<TModel>()
     {
-        return !_mappers.TryGetValue(typeof(TModel), out var mapper)
-            ? throw new NotImplementedException(
-                $"A mapper for type {typeof(TModel)} is not implemented yet, consider using " +
-                $"{nameof(LiveCharts)}.{nameof(LiveCharts.Configure)}() " +
-                $"method to call {nameof(HasMap)}() with the type you are trying to plot.")
-            : (Func<TModel, int, Coordinate>)mapper;
+        if (_mappers.TryGetValue(typeof(TModel), out var mapper))
+            return (Func<TModel, int, Coordinate>)mapper;
+
+        var type = typeof(TModel);
+
+        // most likely a xaml series
+        if (type == typeof(object))
+            throw new Exception(
+                "A mapper for the type to plot was not found. " +
+                "When using custom types in XAML, you must define the series data type, " +
+                "for example to plot a collection of double add the x:TypeArguments=\"x:Double\" attribute " +
+                "to the series XAML, the mapper must also be configured, alternatively, you can also " +
+                "implement IChartEntity in the type your are plotting, for more info see: " +
+                "https://livecharts.dev/docs/wpf/2.0.0-rc5.4/Overview.Mappers");
+
+        throw new NotImplementedException(
+            $"A mapper for type {typeof(TModel)} is not implemented yet, consider using " +
+            $"{nameof(LiveCharts)}.{nameof(LiveCharts.Configure)}() " +
+            $"method to call {nameof(HasMap)}() with the type you are trying to plot.");
     }
 
     internal LiveChartsSettings HasProvider(ChartEngine factory)
@@ -341,7 +404,7 @@ public class LiveChartsSettings
     /// Removes a map from the settings.
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
-    /// <returns></returns>
+    /// <returns>The current settings.</returns>
     public LiveChartsSettings RemoveMap<TModel>()
     {
         _ = _mappers.Remove(typeof(TModel));
@@ -352,11 +415,12 @@ public class LiveChartsSettings
     /// Adds the default styles.
     /// </summary>
     /// <param name="builder">The builder.</param>
-    /// <returns></returns>
+    /// <returns>The current settings.</returns>
     public LiveChartsSettings HasTheme(Action<Theme> builder)
     {
         Theme t;
         _theme = t = new Theme();
+
         builder(t);
 
         return this;
@@ -365,7 +429,6 @@ public class LiveChartsSettings
     /// <summary>
     /// Gets the styles builder.
     /// </summary>
-    /// <returns></returns>
     public Theme GetTheme() =>
         (Theme?)_theme ?? throw new Exception("A theme is required.");
 
@@ -383,7 +446,7 @@ public class LiveChartsSettings
     /// <summary>
     /// Enables LiveCharts to be able to plot short, int, long, float, double, decimal, short?, int?, long?, float?, double?, decimal?.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The current settings.</returns>
     public LiveChartsSettings AddDefaultMappers()
     {
         return
@@ -399,5 +462,17 @@ public class LiveChartsSettings
             .HasMap<float?>((model, index) => new(index, model!.Value))
             .HasMap<double?>((model, index) => new(index, model!.Value))
             .HasMap<decimal?>((model, index) => new(index, (double)model!.Value));
+    }
+
+    /// <summary>
+    /// Configures the rendering settings for LiveCharts.
+    /// </summary>
+    /// <param name="builder">The rendering settings builder.</param>
+    /// <returns>The current settings.</returns>
+    public LiveChartsSettings HasRenderingSettings(Action<RenderingSettings> builder)
+    {
+        builder(LiveCharts.RenderingSettings);
+
+        return this;
     }
 }

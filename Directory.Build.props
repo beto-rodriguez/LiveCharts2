@@ -1,14 +1,62 @@
 <Project>
   <PropertyGroup>
 
-    <LiveChartsVersion>2.0.0-rc5.4</LiveChartsVersion>
+    <LiveChartsVersion>2.0.0-rc6</LiveChartsVersion>
+    <LiveChartsCodeGenVersion>1.0.1</LiveChartsCodeGenVersion>
     <LiveChartsAuthors>BetoRodriguez</LiveChartsAuthors>
 
-    <GlobalLangVersion>12.0</GlobalLangVersion>
+    <GlobalLangVersion>preview</GlobalLangVersion>
 
-    <MauiVersion>8.0.82</MauiVersion>
-    <SkiaSharpVersion>2.88.9</SkiaSharpVersion>
-    <LatestSkiaSharpVersion>3.116.1</LatestSkiaSharpVersion> <!-- used for views that use the SkiaSharp 3 as default -->
+    <!--
+    This version is the minimum supported version by LiveCharts,
+    currently only used by Avalonia, if you need to downgrade any view package,
+    you could but manually downgrading and compile your own version of LiveCharts.
+    -->
+    <MinSkiaSharpVersion>2.88.9</MinSkiaSharpVersion>
+
+    <!--
+    The latest version used normally by the view packages.
+    Because GPU has better support on the latest versions of SkiaSharp,
+    and now LiveCharts defaults to GPU when possible.
+    -->
+    <LatestSkiaSharpVersion>3.119.0</LatestSkiaSharpVersion>
+
+    <!--
+    Must be compatible with the SkiaSharp version, on WASM the
+    "LatestSkiaSharpVersion" is used.
+    -->
+    <HarfBuzzWASMVersion>8.3.1.1</HarfBuzzWASMVersion>
+
+    <!--
+    Useful to toggle between using project references or nuget references
+    -->
+    <UseNuGetForSamples>true</UseNuGetForSamples>
+    <UseNuGetForGenerator>false</UseNuGetForGenerator>
 
   </PropertyGroup>
+
+  <!--
+  used to test the library on multiple render modes,
+  the IsPacking check ensures that this config is not used in the NuGet packages.
+  -->
+  <PropertyGroup Condition="'$(IsPacking)' != 'true'">
+    <GPU>false</GPU>
+    <VSYNC>true</VSYNC>
+    <FPS>30</FPS>
+    <Diagnose>false</Diagnose>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="
+    '$(TargetFramework)' != ''                      and
+    (
+      $(TargetFramework.Contains('-windows'))       or
+      $(TargetFramework.Contains('-android'))       or
+      $(TargetFramework.Contains('-ios'))           or
+      $(TargetFramework.Contains('-maccatalyst'))   or
+      $(TargetFramework.Contains('-tizen'))
+    )">
+    <DefineConstants>$(DefineConstants);HAS_OS_LVC</DefineConstants>
+    <HasOS>true</HasOS>
+  </PropertyGroup>
+
 </Project>

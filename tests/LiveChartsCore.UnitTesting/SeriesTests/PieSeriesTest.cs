@@ -39,7 +39,7 @@ public class PieSeriesTest
         var toCompareGuys = seriesCollection.Select(sutSeries =>
         {
             var datafactory = sutSeries.DataFactory;
-            var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
+            var points = datafactory.Fetch(sutSeries, chart.CoreChart).ToArray();
 
             var unit = points.First();
             return sutSeries.ConvertToTypedChartPoint(unit);
@@ -85,9 +85,9 @@ public class PieSeriesTest
             ExplicitDisposing = true
         };
 
-        chart.Core._isPointerIn = true;
-        chart.Core._isToolTipOpen = true;
-        chart.Core._pointerPosition = new(150 + 10, 150 + 10);
+        chart.CoreChart._isPointerIn = true;
+        chart.CoreChart._isToolTipOpen = true;
+        chart.CoreChart._pointerPosition = new(150 + 10, 150 + 10);
 
         _ = chart.GetImage();
 
@@ -104,7 +104,7 @@ public class PieSeriesTest
             tp.Y + tp.Height - 150 > 0,
             "Tool tip failed");
 
-        chart.Core._pointerPosition = new(150 - 10, 150 + 10);
+        chart.CoreChart._pointerPosition = new(150 - 10, 150 + 10);
         _ = chart.GetImage();
         UpdateTooltipRect();
         Assert.IsTrue(
@@ -112,7 +112,7 @@ public class PieSeriesTest
             tp.Y + tp.Height - 150 > 0,
             "Tool tip failed");
 
-        chart.Core._pointerPosition = new(150 - 10, 150 - 10);
+        chart.CoreChart._pointerPosition = new(150 - 10, 150 - 10);
         _ = chart.GetImage();
         UpdateTooltipRect();
         Assert.IsTrue(
@@ -120,7 +120,7 @@ public class PieSeriesTest
             tp.Y + tp.Height - 150 < 0,
             "Tool tip failed");
 
-        chart.Core._pointerPosition = new(150 + 10, 150 - 10);
+        chart.CoreChart._pointerPosition = new(150 + 10, 150 - 10);
         _ = chart.GetImage();
         UpdateTooltipRect();
         Assert.IsTrue(
@@ -152,7 +152,7 @@ public class PieSeriesTest
 
         var points = seriesCollection.SelectMany(x =>
             x.DataFactory
-                .Fetch(x, chart.Core)
+                .Fetch(x, chart.CoreChart)
                 .Select(x.ConvertToTypedChartPoint));
 
         Assert.IsTrue(seriesCollection.All(x => x.DataLabelsPosition == PolarLabelsPosition.Middle));
@@ -173,7 +173,7 @@ public class PieSeriesTest
 
         points = seriesCollection.SelectMany(x =>
             x.DataFactory
-                .Fetch(x, chart.Core)
+                .Fetch(x, chart.CoreChart)
                 .Select(x.ConvertToTypedChartPoint));
 
         foreach (var p in points)
@@ -189,7 +189,7 @@ public class PieSeriesTest
 
         points = seriesCollection.SelectMany(x =>
             x.DataFactory
-                .Fetch(x, chart.Core)
+                .Fetch(x, chart.CoreChart)
                 .Select(x.ConvertToTypedChartPoint));
 
         foreach (var p in points)
@@ -210,7 +210,7 @@ public class PieSeriesTest
 
         points = seriesCollection.SelectMany(x =>
             x.DataFactory
-                .Fetch(x, chart.Core)
+                .Fetch(x, chart.CoreChart)
                 .Select(x.ConvertToTypedChartPoint));
 
         foreach (var p in points)
@@ -248,7 +248,7 @@ public class PieSeriesTest
 
         points = seriesCollection.SelectMany(x =>
             x.DataFactory
-                .Fetch(x, chart.Core)
+                .Fetch(x, chart.CoreChart)
                 .Select(x.ConvertToTypedChartPoint));
 
         foreach (var p in points)
@@ -275,7 +275,7 @@ public class PieSeriesTest
 
         points = seriesCollection.SelectMany(x =>
             x.DataFactory
-                .Fetch(x, chart.Core)
+                .Fetch(x, chart.CoreChart)
                 .Select(x.ConvertToTypedChartPoint));
 
         foreach (var p in points)
@@ -291,7 +291,7 @@ public class PieSeriesTest
 
         points = seriesCollection.SelectMany(x =>
             x.DataFactory
-                .Fetch(x, chart.Core)
+                .Fetch(x, chart.CoreChart)
                 .Select(x.ConvertToTypedChartPoint));
 
         foreach (var p in points)
@@ -312,7 +312,7 @@ public class PieSeriesTest
 
         points = seriesCollection.SelectMany(x =>
             x.DataFactory
-                .Fetch(x, chart.Core)
+                .Fetch(x, chart.CoreChart)
                 .Select(x.ConvertToTypedChartPoint));
 
         foreach (var p in points)
@@ -350,7 +350,7 @@ public class PieSeriesTest
 
         points = seriesCollection.SelectMany(x =>
             x.DataFactory
-                .Fetch(x, chart.Core)
+                .Fetch(x, chart.CoreChart)
                 .Select(x.ConvertToTypedChartPoint));
 
         foreach (var p in points)
@@ -378,7 +378,7 @@ public class PieSeriesTest
 
         points = seriesCollection.SelectMany(x =>
             x.DataFactory
-                .Fetch(x, chart.Core)
+                .Fetch(x, chart.CoreChart)
                 .Select(x.ConvertToTypedChartPoint));
 
         foreach (var p in points)
@@ -394,7 +394,7 @@ public class PieSeriesTest
 
         points = seriesCollection.SelectMany(x =>
             x.DataFactory
-                .Fetch(x, chart.Core)
+                .Fetch(x, chart.CoreChart)
                 .Select(x.ConvertToTypedChartPoint));
 
         foreach (var p in points)
@@ -415,7 +415,7 @@ public class PieSeriesTest
 
         points = seriesCollection.SelectMany(x =>
             x.DataFactory
-                .Fetch(x, chart.Core)
+                .Fetch(x, chart.CoreChart)
                 .Select(x.ConvertToTypedChartPoint));
 
         foreach (var p in points)
@@ -453,7 +453,7 @@ public class PieSeriesTest
 
         points = seriesCollection.SelectMany(x =>
             x.DataFactory
-                .Fetch(x, chart.Core)
+                .Fetch(x, chart.CoreChart)
                 .Select(x.ConvertToTypedChartPoint));
 
         foreach (var p in points)
@@ -481,7 +481,7 @@ public class PieSeriesTest
 
         points = seriesCollection.SelectMany(x =>
             x.DataFactory
-                .Fetch(x, chart.Core)
+                .Fetch(x, chart.CoreChart)
                 .Select(x.ConvertToTypedChartPoint));
 
         foreach (var p in points)
@@ -497,7 +497,7 @@ public class PieSeriesTest
 
         points = seriesCollection.SelectMany(x =>
             x.DataFactory
-                .Fetch(x, chart.Core)
+                .Fetch(x, chart.CoreChart)
                 .Select(x.ConvertToTypedChartPoint));
 
         foreach (var p in points)
@@ -518,7 +518,7 @@ public class PieSeriesTest
 
         points = seriesCollection.SelectMany(x =>
             x.DataFactory
-                .Fetch(x, chart.Core)
+                .Fetch(x, chart.CoreChart)
                 .Select(x.ConvertToTypedChartPoint));
 
         foreach (var p in points)
@@ -556,7 +556,7 @@ public class PieSeriesTest
 
         points = seriesCollection.SelectMany(x =>
             x.DataFactory
-                .Fetch(x, chart.Core)
+                .Fetch(x, chart.CoreChart)
                 .Select(x.ConvertToTypedChartPoint));
 
         foreach (var p in points)

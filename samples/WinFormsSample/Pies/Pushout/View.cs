@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
+using LiveChartsCore.SkiaSharpView.Extensions;
 using LiveChartsCore.SkiaSharpView.WinForms;
-using ViewModelsSamples.Pies.Pushout;
 
 namespace WinFormsSample.Pies.Pushout;
 
@@ -13,13 +13,15 @@ public partial class View : UserControl
         InitializeComponent();
         Size = new System.Drawing.Size(50, 50);
 
-        var viewModel = new ViewModel();
-
         pieChart = new PieChart
         {
-            Series = viewModel.Series,
+            Series = new[] { 6, 5, 4, 3, 2 }.AsPieSeries((value, series) =>
+            {
+                // pushes out the slice with the value of 6 to 30 pixels.
+                if (value != 6) return;
 
-            // out of livecharts properties...
+                series.Pushout = 30;
+            }),
             Location = new System.Drawing.Point(0, 0),
             Size = new System.Drawing.Size(50, 50),
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom

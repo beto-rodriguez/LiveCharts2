@@ -28,7 +28,8 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
-using LiveChartsCore.VisualElements;
+using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore;
 
@@ -47,8 +48,6 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
         where TLabel : BaseLabelGeometry, new()
         where TMiniatureGeometry : BoundedDrawnGeometry, new()
 {
-    private double _pading = 5;
-    private double _maxBarWidth = 25;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreBoxSeries{TModel, TVisual, TLabel, TMiniatureGeometry}"/> class.
@@ -78,17 +77,17 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
     }
 
     /// <inheritdoc cref="IBoxSeries.MaxBarWidth"/>
-    public double MaxBarWidth { get => _maxBarWidth; set => SetProperty(ref _maxBarWidth, value); }
+    public double MaxBarWidth { get; set => SetProperty(ref field, value); } = 25;
 
     /// <inheritdoc cref="IBoxSeries.Padding"/>
-    public double Padding { get => _pading; set => SetProperty(ref _pading, value); }
+    public double Padding { get; set => SetProperty(ref field, value); } = 5;
 
     /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
     public override void Invalidate(Chart chart)
     {
         var cartesianChart = (CartesianChartEngine)chart;
-        var primaryAxis = cartesianChart.YAxes[ScalesYAt];
-        var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
+        var primaryAxis = cartesianChart.GetYAxis(this);
+        var secondaryAxis = cartesianChart.GetXAxis(this);
 
         var drawLocation = cartesianChart.DrawMarginLocation;
         var drawMarginSize = cartesianChart.DrawMarginSize;
@@ -114,25 +113,21 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
         }
 
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
-        var clipping = GetClipRectangle(cartesianChart);
 
-        if (Stroke is not null)
+        if (Stroke is not null && Stroke != Paint.Default)
         {
-            Stroke.ZIndex = actualZIndex + 0.2;
-            Stroke.SetClipRectangle(cartesianChart.Canvas, clipping);
-            cartesianChart.Canvas.AddDrawableTask(Stroke);
+            Stroke.ZIndex = actualZIndex + PaintConstants.SeriesStrokeZIndexOffset;
+            cartesianChart.Canvas.AddDrawableTask(Stroke, zone: CanvasZone.DrawMargin);
         }
-        if (Fill is not null)
+        if (Fill is not null && Fill != Paint.Default)
         {
-            Fill.ZIndex = actualZIndex + 0.1;
-            Fill.SetClipRectangle(cartesianChart.Canvas, clipping);
-            cartesianChart.Canvas.AddDrawableTask(Fill);
+            Fill.ZIndex = actualZIndex + PaintConstants.SeriesFillZIndexOffset;
+            cartesianChart.Canvas.AddDrawableTask(Fill, zone: CanvasZone.DrawMargin);
         }
-        if (DataLabelsPaint is not null)
+        if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
         {
-            DataLabelsPaint.ZIndex = actualZIndex + 0.3;
-            DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
-            cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
+            DataLabelsPaint.ZIndex = actualZIndex + PaintConstants.SeriesGeometryFillZIndexOffset;
+            cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint, zone: CanvasZone.DrawMargin);
         }
 
         var dls = (float)DataLabelsSize;
@@ -187,7 +182,6 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
             {
                 var xi = secondary - helper.uwm + helper.cp;
                 var uwi = helper.uw;
-                var hi = 0f;
 
                 if (previousSecondaryScale is not null && previousPrimaryScale is not null)
                 {
@@ -198,7 +192,6 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
 
                     xi = previousSecondaryScale.ToPixels(coordinate.SecondaryValue) - uwm;
                     uwi = helper.uw;
-                    hi = cartesianChart.IsZoomingOrPanning ? bp : 0;
                 }
 
                 var r = new TVisual
@@ -219,8 +212,10 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
                 _ = everFetched.Add(point);
             }
 
-            Stroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-            Fill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+            if (Stroke is not null && Stroke != Paint.Default)
+                Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+            if (Fill is not null && Fill != Paint.Default)
+                Fill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
 
             var x = secondary - helper.uwm + helper.cp;
 
@@ -259,14 +254,18 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
 
             pointsCleanup.Clean(point);
 
-            if (DataLabelsPaint is not null)
+            if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
             {
                 var label = (TLabel?)point.Context.Label;
 
                 if (label is null)
                 {
                     var l = new TLabel { X = secondary - helper.uwm + helper.cp, Y = high, RotateTransform = (float)DataLabelsRotation, MaxWidth = (float)DataLabelsMaxWidth };
-                    l.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
+                    l.Animate(
+                        EasingFunction ?? cartesianChart.ActualEasingFunction,
+                        AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed,
+                        BaseLabelGeometry.XProperty,
+                        BaseLabelGeometry.YProperty);
                     label = l;
                     point.Context.Label = l;
                 }
@@ -370,43 +369,17 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
         return new SeriesBounds(dimensionalBounds, false);
     }
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniaturesSketch"/>
-    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
-    public override Sketch GetMiniaturesSketch()
-    {
-        var schedules = new List<PaintSchedule>();
-
-        if (Fill is not null) schedules.Add(BuildMiniatureSchedule(Fill, new TMiniatureGeometry()));
-        if (Stroke is not null) schedules.Add(BuildMiniatureSchedule(Stroke, new TMiniatureGeometry()));
-
-        return new Sketch(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
-        {
-            PaintSchedules = schedules
-        };
-    }
-
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniature"/>
-    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
-    public override IChartElement GetMiniature(ChartPoint? point, int zindex)
-    {
-        return new GeometryVisual<TMiniatureGeometry, TLabel>
-        {
-            Fill = GetMiniatureFill(point, zindex + 1),
-            Stroke = GetMiniatureStroke(point, zindex + 2),
-            Width = MiniatureShapeSize,
-            Height = MiniatureShapeSize,
-            Svg = GeometrySvg,
-            ClippingMode = ClipMode.None
-        };
-    }
-
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniatureGeometry(ChartPoint?)"/>
     public override IDrawnElement GetMiniatureGeometry(ChartPoint? point)
     {
+        var v = point?.Context.Visual;
+
         var m = new TMiniatureGeometry
         {
-            Fill = GetMiniatureFill(point, 0),
-            Stroke = GetMiniatureStroke(point, 0),
+            Fill = v?.Fill ?? Fill,
+            Stroke = v?.Stroke ?? Stroke,
+            StrokeThickness = (float)MiniatureStrokeThickness,
+            ClippingBounds = LvcRectangle.Empty,
             Width = (float)MiniatureShapeSize,
             Height = (float)MiniatureShapeSize
         };
@@ -424,7 +397,7 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
     {
         var chart = chartPoint.Context.Chart;
         if (chartPoint.Context.Visual is not TVisual visual) throw new Exception("Unable to initialize the point instance.");
-        visual.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
+        visual.Animate(EasingFunction ?? chart.CoreChart.ActualEasingFunction, AnimationsSpeed ?? chart.CoreChart.ActualAnimationsSpeed);
     }
 
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
@@ -452,26 +425,6 @@ public abstract class CoreBoxSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
 
         label.TextSize = 1;
         label.RemoveOnCompleted = true;
-    }
-
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerEnter(ChartPoint)"/>
-    protected override void OnPointerEnter(ChartPoint point)
-    {
-        var visual = (TVisual?)point.Context.Visual;
-        if (visual is null) return;
-        visual.Opacity = 0.8f;
-
-        base.OnPointerEnter(point);
-    }
-
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerLeft(ChartPoint)"/>
-    protected override void OnPointerLeft(ChartPoint point)
-    {
-        var visual = (TVisual?)point.Context.Visual;
-        if (visual is null) return;
-        visual.Opacity = 1;
-
-        base.OnPointerLeft(point);
     }
 
     /// <summary>

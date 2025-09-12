@@ -40,31 +40,29 @@ this sample also uses a ViewModel to populate the properties of the control(s) i
 In this example a column turns yellow when the pointer is above, then it turns red when the pointer goes down and finally
 restores the default paint when the pointer leaves.
 
-<div class="text-center">
+<div class="text-center sample-img">
     <img src="{{ assets_url }}/docs/{{ unique_name }}/result.gif" alt="sample image" />
 </div>
 
-### View model
+{{~ if mvvm ~}}
+## View model
 
-{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/Events/Cartesian/ViewModel.cs" ~}}
-
-### Fruit.cs
-
-{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/Events/Cartesian/Fruit.cs" ~}}
-
-{{~ if xaml ~}}
-### XAML
+```csharp
+{{~ render "~/../samples/ViewModelsSamples/Events/Cartesian/ViewModel.cs" ~}}
+```
 {{~ end ~}}
 
-{{~ if winforms ~}}
-### Form code behind
-{{~ end ~}}
+## Fruit.cs
 
-{{~ if blazor~}}
-### HTML
-{{~ end~}}
+```csharp
+{{~ render "~/../samples/ViewModelsSamples/Events/Cartesian/Fruit.cs" ~}}
+```
 
-{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/Events/Cartesian/$PlatformViewFile" ~}}
+## {{~ view_title ~}}
+
+```
+{{~ render "~/../samples/{samples_folder}/Events/Cartesian{view_extension}" ~}}
+```
 
 By using the `Series` events you can subscribe strongly typed method signatures, where the library knows the type of
 the visual, the type of the label and the data context we are drawing.
@@ -77,7 +75,7 @@ the visual shape and the geometry.
 
 Please use the IDE intellisense to complete the signature:
 
-<div class="text-center">
+<div class="text-center sample-img">
     <img src="{{ assets_url }}/docs/{{ unique_name }}/intellisense.gif" alt="sample image" />
 </div>
 
@@ -89,15 +87,13 @@ type `double` and is drawing `RectangleGeometry` instances to represent the visu
 You could also detect the pointer down events/commands at the chart level but since the chart `Series` property is of type 
 `ISeries` the library is not able to determine the type of the series and we lose the strongly typed chart points.
 
-{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/Events/Polar/ViewModel.cs" ~}}
+```csharp
+{{~ render "~/../samples/ViewModelsSamples/Events/Polar/ViewModel.cs" ~}}
+```
 
-{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/Events/Polar/$PlatformViewFile" ~}}
-
-{{~ if xaml ~}}
-### View code behind
-
-{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/Events/Polar/$PlatformViewCodeBehindFile" ~}}
-{{~ end ~}}
+```
+{{~ render "~/../samples/{samples_folder}/Events/Polar{view_extension}" ~}}
+```
 
 {{~ if related_to != null ~}}
 

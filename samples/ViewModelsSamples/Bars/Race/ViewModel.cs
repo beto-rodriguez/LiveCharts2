@@ -2,26 +2,25 @@
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using LiveChartsCore;
-using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Defaults;
-using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.Themes;
-using SkiaSharp;
+using LiveChartsCore.Kernel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace ViewModelsSamples.Bars.Race;
 
 // this class is used to store the data for each pilot // mark
+// it inherits from ObservableValue, this class implements // mark
+// IChartEntity, so it can be used as a data source, it draws the // mark
+// Value property as a bar in the chart. // mark
 public class PilotInfo : ObservableValue
 {
     public PilotInfo(string name, int value, SolidColorPaint paint)
     {
         Name = name;
         Paint = paint;
-
-        // the ObservableValue.Value property is used by the chart
         Value = value;
     }
 
@@ -32,61 +31,40 @@ public class PilotInfo : ObservableValue
 public partial class ViewModel : ObservableObject
 {
     private readonly Random _r = new();
-    private readonly PilotInfo[] _data;
 
     public ViewModel()
     {
-        // generate some paints for each pilot:
-        var paints = Enumerable.Range(0, 7)
-            .Select(i => new SolidColorPaint(ColorPalletes.MaterialDesign500[i].AsSKColor()))
-            .ToArray();
-
-        // generate some data for each pilot:
-        _data =
-        [
-            new("Tsunoda",   500,  paints[0]),
-            new("Sainz",     450,  paints[1]),
-            new("Riccardo",  520,  paints[2]),
-            new("Bottas",    550,  paints[3]),
-            new("Perez",     660,  paints[4]),
-            new("Verstapen", 920,  paints[5]),
-            new("Hamilton",  1000, paints[6])
-        ];
-
-        var rowSeries = new RowSeries<PilotInfo>
-        {
-            Values = SortData(),
-            DataLabelsPaint = new SolidColorPaint(new SKColor(245, 245, 245)),
-            DataLabelsPosition = DataLabelsPosition.End,
-            DataLabelsTranslate = new(-1, 0),
-            DataLabelsFormatter = point => $"{point.Model!.Name} {point.Coordinate.PrimaryValue}",
-            MaxBarWidth = 50,
-            Padding = 10,
-        }
-        .OnPointMeasured(point =>
-        {
-            // assign a different color to each point
-            if (point.Visual is null) return;
-            point.Visual.Fill = point.Model!.Paint;
-        });
-
-        _series = [rowSeries];
-
         _ = StartRace();
     }
 
     [ObservableProperty]
-    private ISeries[] _series;
+    public partial PilotInfo[] Data { get; set; } =
+        Fetch();
 
-    [ObservableProperty]
-    private Axis[] _xAxes = [new Axis { SeparatorsPaint = new SolidColorPaint(new SKColor(220, 220, 220)) }];
+    public bool IsReading { get; set; } =
+        true;
 
-    [ObservableProperty]
-    private Axis[] _yAxes = [new Axis { IsVisible = false }];
+    public Func<ChartPoint, string> LabelsFormatter { get; set; } =
+        GetPilotName;
 
-    public bool IsReading { get; set; } = true;
+    [RelayCommand]
+    public void OnPointMeasured(ChartPoint point)
+    {
+        // assign the pilot color to the bar
 
-    public async Task StartRace()
+        var pilot = (PilotInfo?)point.Context.DataSource;
+        if (point.Context.Visual is null || pilot is null) return;
+
+        point.Context.Visual.Fill = pilot.Paint;
+    }
+
+    private static string GetPilotName(ChartPoint point)
+    {
+        var pilot = (PilotInfo?)point.Context.DataSource;
+        return pilot is null ? string.Empty : pilot.Name;
+    }
+
+    private async Task StartRace()
     {
         await Task.Delay(1000);
 
@@ -96,14 +74,30 @@ public partial class ViewModel : ObservableObject
         while (IsReading)
         {
             // do a random change to the data
-            foreach (var item in _data)
+            foreach (var item in Data)
                 item.Value += _r.Next(0, 100);
 
-            Series[0].Values = SortData();
+            Data = [.. Data.OrderBy(x => x.Value)];
 
             await Task.Delay(100);
         }
     }
 
-    private PilotInfo[] SortData() => [.. _data.OrderBy(x => x.Value)];
+    private static PilotInfo[] Fetch()
+    {
+        // generate a different color for each pilot
+        var paints = Enumerable.Range(0, 7)
+            .Select(i => new SolidColorPaint(ColorPalletes.MaterialDesign500[i].AsSKColor()))
+            .ToArray();
+
+        return [
+            new("Tsunoda",   500,  paints[0]),
+            new("Sainz",     450,  paints[1]),
+            new("Riccardo",  520,  paints[2]),
+            new("Bottas",    550,  paints[3]),
+            new("Perez",     660,  paints[4]),
+            new("Verstapen", 920,  paints[5]),
+            new("Hamilton",  1000, paints[6])
+        ];
+    }
 }

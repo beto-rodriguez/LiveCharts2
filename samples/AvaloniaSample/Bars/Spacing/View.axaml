@@ -1,16 +1,27 @@
-<UserControl x:Class="AvaloniaSample.Bars.Spacing.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Bars.Spacing">
+<UserControl
+    x:Class="AvaloniaSample.Bars.Spacing.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Bars.Spacing"
+    x:DataType="vms:ViewModel">
+
   <UserControl.DataContext>
     <vms:ViewModel/>
   </UserControl.DataContext>
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="*"/>
-    </Grid.RowDefinitions>
 
-    <lvc:CartesianChart Series="{Binding Series}"></lvc:CartesianChart>
-  </Grid>
+  <!--
+  Padding: Defines the distance between every bars in the series
+  MaxBarWidth: Defines the maximum width a bar can take
+  -->
+
+  <lvc:CartesianChart>
+    <lvc:CartesianChart.Series>
+      <lvc:XamlColumnSeries
+          Values="{Binding Values}"
+          Padding="0"
+          MaxBarWidth="99999"/>
+    </lvc:CartesianChart.Series>
+  </lvc:CartesianChart>
+
 </UserControl>

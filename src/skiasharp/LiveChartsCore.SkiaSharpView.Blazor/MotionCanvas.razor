@@ -31,8 +31,12 @@
 
 @implements IDisposable
 
-@if(LiveCharts.UseGPU)
-{
+<!--
+    the first wrapper <div/> is required so blazor is able to the isolate the css, do not remove!
+    blazor bug?
+-->
+
+<div>
     <SKGLView
 	    @ref="_glView"
 	    OnPaintSurface="OnPaintGlSurface"
@@ -43,16 +47,4 @@
 	    @onpointerout="OnPointerOut"
 	    @onmousewheel="OnWheel">
     </SKGLView>
-}
-else
-{
-    <SKCanvasView
-	    @ref="_canvas"
-	    OnPaintSurface="OnPaintSurface"
-	    @onpointerdown="OnPointerDown"
-	    @onpointermove="OnPointerMove"
-	    @onpointerup="OnPointerUp"
-	    @onpointerout="OnPointerOut"
-	    @onmousewheel="OnWheel" >
-    </SKCanvasView>
-}
+</div>

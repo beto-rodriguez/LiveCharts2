@@ -1,10 +1,57 @@
-<UserControl x:Class="AvaloniaSample.Lines.Custom.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Lines.Custom">
-  <UserControl.DataContext>
-    <vms:ViewModel/>
-  </UserControl.DataContext>
-  <lvc:CartesianChart Series="{Binding Series}"/>
+<UserControl
+    x:Class="AvaloniaSample.Lines.Custom.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Lines.Custom"
+    xmlns:draw="using:LiveChartsCore.SkiaSharpView.Drawing.Geometries"
+    x:DataType="vms:ViewModel">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <lvc:CartesianChart>
+        <lvc:CartesianChart.Series>
+            <lvc:XamlLineSeries
+                Values="{Binding Values1}"
+                Fill="{x:Null}"
+                GeometrySize="20"/>
+
+            <!--
+            Use the generic type arguments to set the type of the geometry to draw,
+            here are many predefined geometries in the LiveChartsCore.SkiaSharpView.Drawing.Geometries
+            namespace, for example, the StarGeometry, CrossGeometry, RectangleGeometry and DiamondGeometry
+
+            The first type argument is the type of data, in this case double (parsed from the values string).
+            The second type argument is the type of geometry to draw.
+            -->
+            <lvc:XamlLineSeries
+                x:TypeArguments="x:Double, draw:StarGeometry"
+                Values="{Binding Values2}"
+                Fill="{x:Null}"
+                GeometrySize="20"/>
+
+            <!--
+            You can also use SVG paths to draw the geometry
+            the VariableSVGPathGeometry can change the drawn path at runtime
+            -->
+            <lvc:XamlLineSeries
+                x:TypeArguments="x:Double, draw:VariableSVGPathGeometry"
+                GeometrySvg="{Binding PinPath}"
+                Values="{Binding Values3}"
+                Fill="{x:Null}"
+                GeometrySize="20"/>
+
+            <!--
+            Finally you can also use SkiaSharp to draw your own geometry
+            -->
+            <lvc:XamlLineSeries
+                x:TypeArguments="x:Double, vms:MyGeometry"
+                Values="{Binding Values4}"
+                Fill="{x:Null}"
+                GeometrySize="20"/>
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
+
 </UserControl>

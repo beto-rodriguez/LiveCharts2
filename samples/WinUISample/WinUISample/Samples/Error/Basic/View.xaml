@@ -1,0 +1,65 @@
+﻿<UserControl
+    x:Class="WinUISample.Error.Basic.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
+    xmlns:vms="using:ViewModelsSamples.Error.Basic"
+    mc:Ignorable="d">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <Grid RowDefinitions="*,*,*">
+        <lvc:CartesianChart Grid.Row="0">
+            <lvc:CartesianChart.Series>
+                <lvc:SeriesCollection>
+                    <lvc:XamlColumnSeries
+                        Values="{Binding Values1}"
+                        ShowError="True"
+                        Padding="0"/>
+                    <lvc:XamlColumnSeries
+                        Values="{Binding Values2}"
+                        ShowError="True"
+                        Padding="0"/>
+                </lvc:SeriesCollection>
+            </lvc:CartesianChart.Series>
+        </lvc:CartesianChart>
+
+        <lvc:CartesianChart Grid.Row="1">
+            <lvc:CartesianChart.Series>
+                <lvc:SeriesCollection>
+                    <lvc:XamlLineSeries
+                        Values="{Binding Values1}"
+                        ShowError="True"
+                        GeometrySize="4"
+                        Fill="{x:Null}"/>
+                </lvc:SeriesCollection>
+            </lvc:CartesianChart.Series>
+        </lvc:CartesianChart>
+
+        <lvc:CartesianChart Grid.Row="2">
+            <lvc:CartesianChart.Series>
+                <lvc:SeriesCollection>
+                    <lvc:XamlScatterSeries
+                        Values="{Binding Values3}"
+                        ShowError="True"
+                        GeometrySize="10"/>
+                </lvc:SeriesCollection>
+            </lvc:CartesianChart.Series>
+            <lvc:CartesianChart.XAxes>
+                <lvc:AxesCollection>
+                    <!--
+                    To get more help about DateTime axes see:
+                    https://livecharts.dev/docs/winui/latest/samples.axes.dateTimeScaled
+                    -->
+                    <lvc:XamlDateTimeAxis
+                        Interval="1.00:00:00"
+                        DateFormatter="{Binding Formatter}"/>
+                </lvc:AxesCollection>
+            </lvc:CartesianChart.XAxes>
+        </lvc:CartesianChart>
+    </Grid>
+</UserControl>

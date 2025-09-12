@@ -1,13 +1,86 @@
 ﻿@page "/General/ConditionalDraw"
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.General.ConditionalDraw
+@using LiveChartsCore;
+@using LiveChartsCore.Defaults;
+@using LiveChartsCore.Kernel;
+@using LiveChartsCore.SkiaSharpView;
+@using LiveChartsCore.SkiaSharpView.Painting;
+@using LiveChartsCore.VisualStates;
+@using SkiaSharp;
+@using LiveChartsCore.Drawing;
+@using System.Collections.ObjectModel
 
 <CartesianChart
-	Series="ViewModel.Series"
-    Sections="ViewModel.Sections"
-	YAxes="ViewModel.Y">
+    Series="@series"
+    TooltipPosition="LiveChartsCore.Measure.TooltipPosition.Bottom">
 </CartesianChart>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new();
+    private ObservableCollection<ObservableValue> _values = new ObservableCollection<ObservableValue>
+    {
+        new ObservableValue(2),
+        new ObservableValue(3),
+        new ObservableValue(4)
+    };
+    private Random _random = new Random();
+    private ISeries[] series;
+
+    protected override void OnInitialized()
+    {
+        var columnSeries = new ColumnSeries<ObservableValue>
+        {
+            ShowDataLabels = true,
+            DataLabelsSize = 15,
+            Values = _values
+        };
+        columnSeries.PointMeasured += OnPointMeasured;
+
+        columnSeries.HasState("Danger", [
+            (nameof(IDrawnElement.Fill), new SolidColorPaint(SKColors.Red))
+        ]);
+
+        columnSeries.HasState("LabelDanger", [
+            (nameof(IDrawnElement.Paint), new SolidColorPaint(SKColors.Red)),
+            (nameof(BaseLabelGeometry.TextSize), 30f)
+        ]);
+
+        columnSeries.HasState("Hover", [
+            (nameof(IDrawnElement.DropShadow), new LvcDropShadow(4, 4, 16, 16, new(0, 0, 255)))
+        ]);
+
+        series = new ISeries[] { columnSeries };
+
+        _ = Randomize();
+    }
+
+    private void OnPointMeasured(ChartPoint point)
+    {
+        var ctx = point.Context;
+        if (ctx.DataSource is not ObservableValue observable) return;
+
+        var states = ctx.Series.VisualStates;
+
+        if (observable.Value > 5)
+        {
+            states.SetState("Danger", ctx.Visual);
+            states.SetState("LabelDanger", ctx.Label);
+        }
+        else
+        {
+            states.ClearState("Danger", ctx.Visual);
+            states.ClearState("LabelDanger", ctx.Label);
+        }
+    }
+
+    private async Task Randomize()
+    {
+        while (true)
+        {
+            await Task.Delay(3000);
+            foreach (var item in _values)
+            {
+                item.Value = _random.Next(1, 10);
+            }
+        }
+    }
 }

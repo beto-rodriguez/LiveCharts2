@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
@@ -34,30 +33,33 @@ namespace LiveChartsCore.SkiaSharpView.Painting.ImageFilters;
 /// </remarks>
 /// <param name="sigmaX">The sigma x.</param>
 /// <param name="sigmaY">The sigma y.</param>
-/// <param name="input">The input.</param>
 public class Blur(
     float sigmaX,
-    float sigmaY,
-    SKImageFilter? input = null)
-        : ImageFilter
+    float sigmaY)
+        : ImageFilter(s_key)
 {
-    /// <summary>
-    /// Clones this instance.
-    /// </summary>
-    /// <returns></returns>
-    /// <exception cref="System.NotImplementedException"></exception>
-    public override ImageFilter Clone()
-    {
-        return new Blur(sigmaX, sigmaY, input);
-    }
+    internal static object s_key = new();
 
-    /// <summary>
-    /// Creates the filter.
-    /// </summary>
-    /// <param name="drawingContext">The drawing context.</param>
-    /// <returns></returns>
-    public override void CreateFilter(SkiaSharpDrawingContext drawingContext)
+    private float SigmaX { get; set; } = sigmaX;
+    private float SigmaY { get; set; } = sigmaY;
+
+    /// <inheritdoc cref="ImageFilter.Clone"/>
+    public override ImageFilter Clone() => new Blur(SigmaX, SigmaY);
+
+    /// <inheritdoc cref="ImageFilter.CreateFilter()"/>
+    public override void CreateFilter() =>
+        _sKImageFilter = SKImageFilter.CreateBlur(SigmaX, SigmaY);
+
+    /// <inheritdoc cref="ImageFilter.Transitionate(float, ImageFilter)"/>
+    protected override ImageFilter Transitionate(float progress, ImageFilter target)
     {
-        SKImageFilter = SKImageFilter.CreateBlur(sigmaX, sigmaY, input);
+        var blur = (Blur)target;
+
+        var clone = (Blur)Clone();
+
+        clone.SigmaX = SigmaX + (blur.SigmaX - SigmaX) * progress;
+        clone.SigmaY = SigmaY + (blur.SigmaY - SigmaY) * progress;
+
+        return clone;
     }
 }

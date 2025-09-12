@@ -28,41 +28,28 @@ namespace LiveChartsCore.SkiaSharpView.Motion;
 /// <summary>
 /// Defines a motion property to handle the <see cref="SKMatrix"/> type.
 /// </summary>
-public class SKMatrixMotionProperty : MotionProperty<SKMatrix>
+/// <remarks>
+/// Initializes a new instance of the <see cref="ColorMotionProperty"/> class.
+/// </remarks>
+/// <param name="defaultValue">The default value.</param>
+public class SKMatrixMotionProperty(SKMatrix defaultValue)
+    : MotionProperty<SKMatrix>(defaultValue)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SKMatrixMotionProperty"/> class.
-    /// </summary>
-    /// <param name="propertyName">The property name.</param>
-    public SKMatrixMotionProperty(string propertyName)
-        : base(propertyName)
-    {
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SKMatrixMotionProperty"/> class.
-    /// </summary>
-    /// <param name="propertyName">The property name.</param>
-    /// <param name="matrix">The initial matrix.</param>
-    public SKMatrixMotionProperty(string propertyName, SKMatrix matrix)
-        : base(propertyName)
-    {
-        fromValue = matrix;
-        toValue = matrix;
-    }
+    /// <inheritdoc cref="MotionProperty{T}.CanTransitionate"/>
+    protected override bool CanTransitionate => true;
 
     /// <inheritdoc cref="MotionProperty{T}.OnGetMovement(float)"/>
     protected override SKMatrix OnGetMovement(float progress)
     {
         return new SKMatrix(
-            fromValue.ScaleX + progress * (toValue.ScaleX - fromValue.ScaleX),
-            fromValue.SkewX + progress * (toValue.SkewX - fromValue.SkewX),
-            fromValue.TransX + progress * (toValue.TransX - fromValue.TransX),
-            fromValue.SkewY + progress * (toValue.SkewY - fromValue.SkewY),
-            fromValue.ScaleY + progress * (toValue.ScaleY - fromValue.ScaleY),
-            fromValue.TransY + progress * (toValue.TransY - fromValue.TransY),
-            fromValue.Persp0 + progress * (toValue.Persp0 - fromValue.Persp0),
-            fromValue.Persp1 + progress * (toValue.Persp1 - fromValue.Persp1),
-            fromValue.Persp2 + progress * (toValue.Persp2 - fromValue.Persp2));
+            FromValue.ScaleX + progress * (ToValue.ScaleX - FromValue.ScaleX),
+            FromValue.SkewX + progress * (ToValue.SkewX - FromValue.SkewX),
+            FromValue.TransX + progress * (ToValue.TransX - FromValue.TransX),
+            FromValue.SkewY + progress * (ToValue.SkewY - FromValue.SkewY),
+            FromValue.ScaleY + progress * (ToValue.ScaleY - FromValue.ScaleY),
+            FromValue.TransY + progress * (ToValue.TransY - FromValue.TransY),
+            FromValue.Persp0 + progress * (ToValue.Persp0 - FromValue.Persp0),
+            FromValue.Persp1 + progress * (ToValue.Persp1 - FromValue.Persp1),
+            FromValue.Persp2 + progress * (ToValue.Persp2 - FromValue.Persp2));
     }
 }

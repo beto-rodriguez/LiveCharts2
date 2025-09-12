@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using LiveChartsCore.Drawing;
 
 namespace LiveChartsCore.Painting;
@@ -33,17 +32,17 @@ internal class MeasureTask : Paint
     public static MeasureTask Instance { get; } = new MeasureTask();
 
     /// <inheritdoc cref="Paint.CloneTask" />
-    public override void ApplyOpacityMask(DrawingContext context, float opacity) { }
+    public override Paint CloneTask() => this;
 
-    /// <inheritdoc cref="Paint.CloneTask" />
-    public override Paint CloneTask() => throw new NotImplementedException();
+    internal override void ApplyOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement) { }
 
-    /// <inheritdoc cref="Paint.Dispose" />
-    public override void Dispose() { }
+    internal override void OnPaintFinished(DrawingContext context, IDrawnElement? drawnElement) { }
 
-    /// <inheritdoc cref="Paint.InitializeTask(DrawingContext)" />
-    public override void InitializeTask(DrawingContext drawingContext) { }
+    internal override void OnPaintStarted(DrawingContext drawingContext, IDrawnElement? drawnElement) { }
 
-    /// <inheritdoc cref="Paint.RestoreOpacityMask(DrawingContext, float)" />
-    public override void RestoreOpacityMask(DrawingContext context, float opacity) { }
+    internal override void RestoreOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement) { }
+
+    internal override Paint Transitionate(float progress, Paint target) => this;
+
+    internal override void DisposeTask() { }
 }

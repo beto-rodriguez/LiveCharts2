@@ -1,38 +1,83 @@
-﻿<UserControl x:Class="WPFSample.General.Scrollable.View"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
-             xmlns:vms="clr-namespace:ViewModelsSamples.General.Scrollable;assembly=ViewModelsSamples">
+﻿<UserControl
+    x:Class="WPFSample.General.Scrollable.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+    xmlns:vms="clr-namespace:ViewModelsSamples.General.Scrollable;assembly=ViewModelsSamples">
+
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
 
+        <!--
+        We use the DrawMargin property to align both charts,
+        both charts have a left margin of 100 and a right margin of 50
+        -->
+
         <lvc:CartesianChart
             Grid.Row="0"
-            Series="{Binding Series}"
-            XAxes="{Binding ScrollableAxes}"
+            DrawMargin="100, Auto, 50, Auto"
             ZoomMode="X"
-            DrawMargin="{Binding Margin}"
             UpdateStartedCommand="{Binding ChartUpdatedCommand}">
+            <lvc:CartesianChart.Series>
+                <lvc:SeriesCollection>
+                    <lvc:XamlLineSeries
+                        Values="{Binding Values}"
+                        GeometryStroke="{x:Null}"
+                        GeometryFill="{x:Null}"
+                        DataPadding="0,1"/>
+                </lvc:SeriesCollection>
+            </lvc:CartesianChart.Series>
+            <lvc:CartesianChart.XAxes>
+                <lvc:AxesCollection>
+                    <lvc:XamlAxis
+                        MinLimit="{Binding MinX}"
+                        MaxLimit="{Binding MaxX}" />
+                </lvc:AxesCollection>
+            </lvc:CartesianChart.XAxes>
         </lvc:CartesianChart>
 
         <lvc:CartesianChart
-            x:Name="ScrollBarChart"
             Grid.Row="1"
-            Series="{Binding ScrollbarSeries}"
-            DrawMargin="{Binding Margin}"
-            Sections="{Binding Thumbs}"
-            XAxes="{Binding InvisibleX}"
-            YAxes="{Binding InvisibleY}"
+            DrawMargin="100, Auto, 50, Auto"
             PointerPressedCommand="{Binding PointerDownCommand}"
             PointerMoveCommand="{Binding PointerMoveCommand}"
             PointerReleasedCommand="{Binding PointerUpCommand}"
             TooltipPosition="Hidden">
+            <lvc:CartesianChart.Series>
+                <lvc:SeriesCollection>
+                    <lvc:XamlLineSeries
+                        Values="{Binding Values}"
+                        GeometryStroke="{x:Null}"
+                        GeometryFill="{x:Null}"
+                        DataPadding="0,1"/>
+                </lvc:SeriesCollection>
+            </lvc:CartesianChart.Series>
+            <lvc:CartesianChart.XAxes>
+                <lvc:AxesCollection>
+                    <lvc:XamlAxis IsVisible="False"/>
+                </lvc:AxesCollection>
+            </lvc:CartesianChart.XAxes>
+            <lvc:CartesianChart.YAxes>
+                <lvc:AxesCollection>
+                    <lvc:XamlAxis IsVisible="False"/>
+                </lvc:AxesCollection>
+            </lvc:CartesianChart.YAxes>
+            <lvc:CartesianChart.Sections>
+                <lvc:SectionsCollection>
+                    <lvc:XamlRectangularSection
+                        Xi="{Binding MinXThumb}"
+                        Xj="{Binding MaxXThumb}"
+                        Fill="{lvc:SolidColorPaint Color='#64FFCDD2'}"/>
+                </lvc:SectionsCollection>
+            </lvc:CartesianChart.Sections>
         </lvc:CartesianChart>
     </Grid>
+
 </UserControl>

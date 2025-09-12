@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Drawing;
+using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.Kernel.Sketches;
 
@@ -45,6 +46,11 @@ public interface IHeatSeries : ICartesianSeries
     /// The color stops.
     /// </value>
     double[]? ColorStops { get; set; }
+
+    /// <summary>
+    /// Gets the weight bounds.
+    /// </summary>
+    Bounds WeightBounds { get; }
 
     /// <summary>
     /// Gets or sets the padding for each point.

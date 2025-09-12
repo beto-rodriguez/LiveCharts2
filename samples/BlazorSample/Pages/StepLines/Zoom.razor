@@ -1,12 +1,39 @@
 ﻿@page "/StepLines/Zoom"
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.StepLines.Zoom
+@using LiveChartsCore.SkiaSharpView
+@using LiveChartsCore
 
 <CartesianChart
-	Series="ViewModel.SeriesCollection"
+	Series="Series"
 	ZoomMode="LiveChartsCore.Measure.ZoomAndPanMode.X">
 </CartesianChart>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new();
+    private ISeries[] Series { get; set; }
+
+    protected override void OnInitialized()
+    {
+        var values = Fetch();
+
+        Series = new ISeries[]
+        {
+            new StepLineSeries<int>
+            {
+                Values = values
+            }
+        };
+    }
+
+    private static int[] Fetch()
+    {
+        var values = new int[100];
+        var r = new Random();
+        var t = 0;
+        for (var i = 0; i < 100; i++)
+        {
+            t += r.Next(-90, 100);
+            values[i] = t;
+        }
+        return values;
+    }
 }

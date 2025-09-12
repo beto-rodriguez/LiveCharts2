@@ -20,113 +20,80 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using LiveChartsCore.Drawing;
 using LiveChartsCore.Drawing.Segments;
 
 namespace LiveChartsCore.Measure;
 
-/// <summary>
-/// Defines the vector manager class.
-/// </summary>
-/// <typeparam name="TSegment">The type of the segment.</typeparam>
-/// <remarks>
-/// Initializes a new instance of the <see cref="VectorManager{TSegment}"/> class.
-/// </remarks>
-/// <param name="areaGeometry">The area geometry</param>
-public class VectorManager<TSegment>(BaseVectorGeometry<TSegment> areaGeometry)
-    where TSegment : Segment
+internal class VectorManager(LinkedList<Segment> list)
 {
-    private LinkedListNode<TSegment>? _nextNode = areaGeometry.Commands.First;
-    private LinkedListNode<TSegment>? _currentNode;
+    private LinkedListNode<Segment>? _currentNode = list.First;
 
-    /// <summary>
-    /// Gets the area geometry.
-    /// </summary>
-    public BaseVectorGeometry<TSegment> AreaGeometry { get; private set; } = areaGeometry;
-
-    /// <summary>
-    /// Adds a segment to the area geometry.
-    /// </summary>
-    /// <param name="segment">The segment.</param>
-    /// <param name="followsPrevious">Indicates whether the segment follows the previous segment visual state.</param>
-    public void AddConsecutiveSegment(TSegment segment, bool followsPrevious)
+    public void AddConsecutiveSegment(Segment segment, bool followsPrevious)
     {
-        while (
-            _nextNode is not null &&
-            _nextNode.Next is not null &&
-            segment.Id >= _nextNode.Next.Value.Id)
-        {
-            _nextNode = _nextNode.Next;
-            if (_nextNode.Previous is null) continue;
-            AreaGeometry.Commands.Remove(_nextNode.Previous);
-        }
+        LinkedListNode<Segment>? replaceCandidate = null;
+        List<LinkedListNode<Segment>>? deleteCandidates = null;
 
-        // at this points "_nextNode" is:
-        // the next node after "segment"
-        // or it could also be "segment"
-        // or null in case there are no more segments.
-
-        if (_nextNode is null)
+        // look for the segment in the list
+        while (_currentNode is not null && _currentNode.Value != segment)
         {
-            if (_currentNode is not null && followsPrevious) segment.Follows(_currentNode.Value);
-            _currentNode = AreaGeometry.Commands.AddLast(segment);
-            return;
-        }
-
-        if (_nextNode.Value.Id == segment.Id)
-        {
-            if (!Equals(_nextNode.Value, segment))
+            if (_currentNode.Value.Id == segment.Id)
             {
-                if (followsPrevious) segment.Follows(_nextNode.Value);
-                _nextNode.Value = segment; // <- ensure it is the same instance
+                // save this node, if we can not find the segment
+                // but we found a node with the same id,
+                // we have a candidate to do a replace.
+                replaceCandidate = _currentNode;
             }
-            _currentNode = _nextNode;
-            _nextNode = _currentNode.Next;
-            return;
+
+            deleteCandidates ??= [];
+            deleteCandidates.Add(_currentNode);
+
+            _currentNode = _currentNode?.Next;
         }
 
-        _currentNode ??= _nextNode;
-
-        if (followsPrevious) segment.Follows(_currentNode.Value);
-        _currentNode = AreaGeometry.Commands.AddBefore(_nextNode, segment);
-        _nextNode = _currentNode.Next;
-    }
-
-    /// <summary>
-    /// Clears the current vector segments.
-    /// </summary>
-    public void Clear() => AreaGeometry.Commands.Clear();
-
-    /// <summary>
-    /// Ends the vector.
-    /// </summary>
-    public void End()
-    {
-        while (_currentNode?.Next is not null)
+        if (_currentNode is null)
         {
-            AreaGeometry.Commands.Remove(_currentNode.Next);
+            // if we did not find the segment
+            // we have to options
+            //   1. add it to the end of the list
+            //   2. replace the node with the same id
+
+            if (segment.Id <= list.Last?.Value.Id)
+            {
+                // at this point we know that the path contains this segment
+                // but the instance changed, so we replace the node
+
+                if (replaceCandidate is null)
+                    throw new InvalidOperationException("This should not happen :(");
+
+                if (followsPrevious)
+                    segment.Copy(replaceCandidate.Value);
+
+                replaceCandidate.Value = segment;
+                _currentNode = replaceCandidate.Next;
+            }
+            else
+            {
+                // this is a new segment
+
+                if (followsPrevious && list.Last is not null)
+                    segment.Follows(list.Last.Value);
+
+                _currentNode = list.AddLast(segment);
+            }
         }
-
-        AreaGeometry.IsValid = false;
-    }
-
-    /// <summary>
-    /// Logs the path segments ids.
-    /// </summary>
-    public void LogPath()
-    {
-        var a = "";
-        var c = AreaGeometry.Commands.First;
-
-        while (c != null)
+        else
         {
-            a += $"{c.Value.Id}, ";
-            c = c.Next;
-        }
+            // we found the segment
 
-        Trace.WriteLine(a);
+            // lets clean any outdated segments
+            // the deleteCandidates list contains all the segments
+            // that are not used before the current segment
+            foreach (var node in deleteCandidates ?? [])
+                list.Remove(node);
+
+            _currentNode = _currentNode.Next;
+        }
     }
 }
-

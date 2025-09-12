@@ -1,0 +1,33 @@
+﻿<UserControl
+    x:Class="WinUISample.General.Tooltips.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
+    xmlns:vms="using:ViewModelsSamples.General.Tooltips"
+    mc:Ignorable="d">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <Grid RowDefinitions="Auto, *">
+        <ComboBox Grid.Row="0"
+                  ItemsSource="{Binding Positions}"
+                  SelectedItem="{Binding SelectedPosition, Mode=TwoWay}"/>
+        <lvc:CartesianChart Grid.Row="1" TooltipPosition="{Binding SelectedPosition}">
+            <lvc:CartesianChart.Series>
+                <lvc:SeriesCollection>
+                    <lvc:XamlColumnSeries
+                        Values="{Binding Values1}"
+                        SeriesName="Sales" />
+                    <lvc:XamlLineSeries
+                        Values="{Binding Values2}"
+                        SeriesName="Customers" />
+                </lvc:SeriesCollection>
+            </lvc:CartesianChart.Series>
+        </lvc:CartesianChart>
+    </Grid>
+
+</UserControl>

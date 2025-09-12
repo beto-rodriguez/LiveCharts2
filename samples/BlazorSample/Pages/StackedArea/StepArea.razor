@@ -1,11 +1,26 @@
 ﻿@page "/StackedArea/StepArea"
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.StackedArea.StepArea
+@using LiveChartsCore.SkiaSharpView
+@using LiveChartsCore
 
 <CartesianChart
-	Series="ViewModel.Series">
+	Series="Series">
 </CartesianChart>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new();
+    private ISeries[] Series { get; set; }
+
+    protected override void OnInitialized()
+    {
+        var values1 = new double[] { 3, 2, 3, 5, 3, 4, 6 };
+        var values2 = new double[] { 6, 5, 6, 3, 8, 5, 2 };
+        var values3 = new double[] { 4, 8, 2, 8, 9, 5, 3 };
+
+        Series = new ISeries[]
+        {
+            new StackedStepAreaSeries<double> { Values = values1 },
+            new StackedStepAreaSeries<double> { Values = values2 },
+            new StackedStepAreaSeries<double> { Values = values3 }
+        };
+    }
 }

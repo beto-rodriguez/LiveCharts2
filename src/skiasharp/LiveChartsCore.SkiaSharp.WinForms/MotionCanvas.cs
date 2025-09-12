@@ -22,10 +22,11 @@
 
 using System;
 using System.ComponentModel;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
+using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 
 namespace LiveChartsCore.SkiaSharpView.WinForms;
@@ -34,9 +35,14 @@ namespace LiveChartsCore.SkiaSharpView.WinForms;
 /// The motion canvas control for windows forms, <see cref="CoreMotionCanvas"/>.
 /// </summary>
 /// <seealso cref="UserControl" />
-public partial class MotionCanvas : UserControl
+public partial class MotionCanvas : UserControl, IRenderMode
 {
-    private bool _isDrawingLoopRunning = false;
+    private IFrameTicker _ticker = null!;
+
+    static MotionCanvas()
+    {
+        _ = LiveChartsSkiaSharp.EnsureInitialized();
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
@@ -46,12 +52,13 @@ public partial class MotionCanvas : UserControl
         InitializeComponent();
     }
 
-    /// <summary>
-    /// Gets the canvas core.
-    /// </summary>
-    /// <value>
-    /// The canvas core.
-    /// </value>
+    event CoreMotionCanvas.FrameRequestHandler IRenderMode.FrameRequest
+    {
+        add => throw new NotImplementedException();
+        remove => throw new NotImplementedException();
+    }
+
+    /// <inheritdoc cref="CoreMotionCanvas"/>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public CoreMotionCanvas CanvasCore { get; } = new();
 
@@ -59,53 +66,40 @@ public partial class MotionCanvas : UserControl
     protected override void CreateHandle()
     {
         base.CreateHandle();
-        CanvasCore.Invalidated += CanvasCore_Invalidated;
+        _ticker = new AsyncLoopTicker();
+        _ticker.InitializeTicker(CanvasCore, this);
+        _skControl?.Invalidate();
+        _skglControl?.Invalidate();
     }
 
     /// <inheritdoc cref="Control.OnHandleDestroyed(EventArgs)"/>
     protected override void OnHandleDestroyed(EventArgs e)
     {
         base.OnHandleDestroyed(e);
-
-        CanvasCore.Invalidated -= CanvasCore_Invalidated;
+        _ticker.DisposeTicker();
         CanvasCore.Dispose();
     }
 
     private void SkControl_PaintSurface(object sender, SKPaintSurfaceEventArgs e) =>
         CanvasCore.DrawFrame(
-            new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas));
+            new SkiaSharpDrawingContext(CanvasCore, e.Surface.Canvas, GetBackground()));
 
-#if NET6_0_OR_GREATER
-    // workaround #250115
     private void SkglControl_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e) =>
         CanvasCore.DrawFrame(
-            new SkiaSharpDrawingContext(CanvasCore, e.Info, e.Surface, e.Surface.Canvas)
-            {
-                Background = new SkiaSharp.SKColor(Parent!.BackColor.R, Parent.BackColor.G, Parent.BackColor.B)
-            });
-#endif
+            new SkiaSharpDrawingContext(CanvasCore, e.Surface.Canvas, GetBackground()));
 
-    private void CanvasCore_Invalidated(CoreMotionCanvas sender) =>
-        RunDrawingLoop();
+    private SKColor GetBackground() =>
+        ((IChartView)Parent!)?.BackColor.AsSKColor() ?? SKColor.Empty;
 
-    private async void RunDrawingLoop()
+    void IRenderMode.InitializeRenderMode(CoreMotionCanvas canvas) =>
+        throw new NotImplementedException();
+
+    void IRenderMode.InvalidateRenderer()
     {
-        if (_isDrawingLoopRunning) return;
-        _isDrawingLoopRunning = true;
-
-        var ts = TimeSpan.FromSeconds(1 / LiveCharts.MaxFps);
-
-        while (!CanvasCore.IsValid)
-        {
-            _skControl?.Invalidate();
-#if NET6_0_OR_GREATER
-            // workaround #250115
-            _skglControl?.Invalidate();
-#endif
-
-            await Task.Delay(ts);
-        }
-
-        _isDrawingLoopRunning = false;
+        _skControl?.Invalidate();
+        _skglControl?.Invalidate();
     }
+
+    void IRenderMode.DisposeRenderMode() =>
+        throw new NotImplementedException();
 }

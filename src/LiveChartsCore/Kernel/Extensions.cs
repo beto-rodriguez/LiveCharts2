@@ -20,15 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// Ignore Spelling: animatable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore.Kernel;
@@ -38,8 +36,6 @@ namespace LiveChartsCore.Kernel;
 /// </summary>
 public static class Extensions
 {
-    private static readonly Type s_nullableType = typeof(Nullable<>);
-
     /// <summary>
     /// Calculates the tooltip location.
     /// </summary>
@@ -226,7 +222,7 @@ public static class Extensions
         var max = axis.MaxLimit is null ? bounds.Max : axis.MaxLimit.Value;
         var min = axis.MinLimit is null ? bounds.Min : axis.MinLimit.Value;
 
-        AxisLimit.ValidateLimits(ref min, ref max);
+        AxisLimit.ValidateLimits(ref min, ref max, axis.MinStep);
 
         var unit = axis.UnitWidth;
 
@@ -292,7 +288,7 @@ public static class Extensions
     /// <param name="properties">
     /// The properties, if this argument is not set then all the animatable properties in the object will use the given animation.
     /// </param>
-    public static void Animate(this Animatable animatable, Animation animation, params string[]? properties)
+    public static void Animate(this Animatable animatable, Animation animation, params PropertyDefinition[]? properties)
     {
         animatable.SetTransition(animation, properties);
         animatable.CompleteTransition(properties);
@@ -307,7 +303,7 @@ public static class Extensions
     /// <param name="properties">
     /// The properties, if this argument is not set then all the animatable properties in the object will use the given animation.
     /// </param>
-    public static void Animate(this Animatable animatable, Func<float, float>? easingFunction, TimeSpan speed, params string[]? properties) =>
+    public static void Animate(this Animatable animatable, Func<float, float>? easingFunction, TimeSpan speed, params PropertyDefinition[]? properties) =>
         Animate(animatable, new Animation(easingFunction, speed), properties);
 
     /// <summary>
@@ -316,14 +312,14 @@ public static class Extensions
     /// </summary>
     /// <param name="animatable">The animatable object.</param>
     /// <param name="chart">
-    /// The chart, an animation will be built based on the <see cref="Chart.AnimationsSpeed"/>
-    /// and <see cref="Chart.EasingFunction"/>.
+    /// The chart, an animation will be built based on the <see cref="Chart.ActualAnimationsSpeed"/>
+    /// and <see cref="Chart.ActualEasingFunction"/>.
     /// </param>
     /// <param name="properties">
     /// The properties, if this argument is not set then all the animatable properties in the object will use the given animation.
     /// </param>
-    public static void Animate(this Animatable animatable, Chart chart, params string[]? properties) =>
-        Animate(animatable, new Animation(chart.EasingFunction, chart.AnimationsSpeed), properties);
+    public static void Animate(this Animatable animatable, Chart chart, params PropertyDefinition[]? properties) =>
+        Animate(animatable, new Animation(chart.ActualEasingFunction, chart.ActualAnimationsSpeed), properties);
 
     /// <summary>
     /// Sets the transition of the given <paramref name="properties"/> to the animations config in the chart
@@ -332,7 +328,7 @@ public static class Extensions
     /// <param name="visual">The visual.</param>
     /// <param name="animation">The animation.</param>
     /// <param name="properties">The properties.</param>
-    public static void Animate(this VisualElement visual, Animation animation, params string[]? properties)
+    public static void Animate(this VisualElement visual, Animation animation, params PropertyDefinition[]? properties)
     {
         foreach (var animatable in visual.GetDrawnGeometries())
         {
@@ -509,19 +505,23 @@ public static class Extensions
     /// <param name="axis"></param>
     /// <param name="chart"></param>
     /// <returns></returns>
-    public static Scaler? GetActualScaler(this ICartesianAxis axis, CartesianChartEngine chart)
+    public static Scaler GetActualScaler(this ICartesianAxis axis, CartesianChartEngine chart)
     {
-        return !axis.ActualBounds.HasPreviousState
-            ? null
-            : new Scaler(
-                chart.ActualBounds.Location,
-                chart.ActualBounds.Size,
-                axis,
-                new Bounds
-                {
-                    Max = axis.ActualBounds.MaxVisibleBound,
-                    Min = axis.ActualBounds.MinVisibleBound
-                });
+        // returns an scaler with the "Motion bounds", which means the bounds but tracked by the motion canvas
+        // clock, so this returns the bounds that are being animated at the moment this method is called.
+        // DrawMarginLocation and DrawMarginSize are the actual chart size, so they are not completely accurate
+        // but this should not be a big issue, since this normally has no big changes during the animations,
+        // if necessary, implement motion properties to track the DrawMarginLocation and DrawMarginSize.
+
+        return new Scaler(
+            chart.DrawMarginLocation,
+            chart.DrawMarginSize,
+            axis,
+            new Bounds
+            {
+                Max = axis.MotionMaxLimit,
+                Min = axis.MotionMinLimit
+            });
     }
 
     /// <summary>
@@ -597,12 +597,6 @@ public static class Extensions
         data.GoNext(data.Next);
         yield return data;
     }
-
-    /// <summary>
-    /// Returns <see langword="true" /> when the given type is either a reference type or of type <see cref="Nullable{T}"/>.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static bool CanBeNull(Type type) => !type.IsValueType || (type.IsGenericType && type.GetGenericTypeDefinition() == s_nullableType);
 
     private static IEnumerable<ChartPoint> YieldReturnUntilNextNullChartPoint(
         GapsBuilder builder,

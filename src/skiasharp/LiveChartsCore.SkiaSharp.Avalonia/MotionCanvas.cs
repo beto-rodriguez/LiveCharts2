@@ -22,12 +22,15 @@
 
 using System;
 using Avalonia;
+using Avalonia.Collections;
 using Avalonia.Controls;
+using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
 using Avalonia.Threading;
+using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Motion;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using SkiaSharp;
@@ -41,14 +44,22 @@ public class MotionCanvas : UserControl
 {
     private bool _isDeatached = false;
 
+    static MotionCanvas()
+    {
+        _ = LiveChartsSkiaSharp.EnsureInitialized();
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
     /// </summary>
     public MotionCanvas()
     {
+        CoreMotionCanvas.s_externalRenderer = "Avalonia renderer";
         AttachedToVisualTree += OnAttached;
         DetachedFromVisualTree += OnDetached;
     }
+
+    internal IAvaloniaList<ILogical> Children => LogicalChildren;
 
     /// <summary>
     /// Gets the canvas core.
@@ -66,8 +77,7 @@ public class MotionCanvas : UserControl
     {
         if (_isDeatached) return;
 
-        context.Custom(new ChartFrameOperation(
-            CanvasCore, new Rect(0, 0, Bounds.Width, Bounds.Height)));
+        context.Custom(new ChartFrameOperation(CanvasCore, Bounds, GetBackground()));
 
         if (CanvasCore.IsValid) return;
         _ = Dispatcher.UIThread.InvokeAsync(InvalidateVisual, DispatcherPriority.Background);
@@ -89,11 +99,13 @@ public class MotionCanvas : UserControl
         CanvasCore.Dispose();
     }
 
+    private SKColor GetBackground() =>
+        (Parent as IChartView)?.BackColor.AsSKColor() ?? SKColor.Empty;
+
     // based on:
     // https://github.com/AvaloniaUI/Avalonia/blob/release/11.0.0/samples/RenderDemo/Pages/CustomSkiaPage.cs
     private class ChartFrameOperation(
-        CoreMotionCanvas motionCanvas,
-        Rect bounds)
+        CoreMotionCanvas motionCanvas, Rect bounds, SKColor background)
             : ICustomDrawOperation
     {
         public Rect Bounds { get; } = bounds;
@@ -106,17 +118,11 @@ public class MotionCanvas : UserControl
             using var lease = leaseFeature.Lease();
 
             motionCanvas.DrawFrame(
-                new SkiaSharpDrawingContext(motionCanvas,
-                    new SKImageInfo((int)Bounds.Width, (int)Bounds.Height),
-                    lease.SkSurface,
-                    lease.SkCanvas,
-                    false));
+                new SkiaSharpDrawingContext(motionCanvas, lease.SkCanvas, background));
         }
 
         public void Dispose() { }
-
         public bool HitTest(Point p) => false;
-
         public bool Equals(ICustomDrawOperation? other) => false;
     }
 }

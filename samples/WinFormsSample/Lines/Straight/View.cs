@@ -1,25 +1,41 @@
 ﻿using System.Windows.Forms;
 using LiveChartsCore.SkiaSharpView.WinForms;
-using ViewModelsSamples.Lines.Straight;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore;
 
 namespace WinFormsSample.Lines.Straight;
 
 public partial class View : UserControl
 {
-    private readonly CartesianChart cartesianChart;
-
     public View()
     {
         InitializeComponent();
         Size = new System.Drawing.Size(50, 50);
 
-        var viewModel = new ViewModel();
+        var values1 = new double[] { 5, 0, 5, 0, 5, 0 };
+        var values2 = new double[] { 7, 2, 7, 2, 7, 2 };
 
-        cartesianChart = new CartesianChart
+        var series = new ISeries[]
         {
-            Series = viewModel.Series,
+            new LineSeries<double>
+            {
+                Values = values1,
+                Fill = null,
+                GeometrySize = 0,
+                LineSmoothness = 0
+            },
+            new LineSeries<double>
+            {
+                Values = values2,
+                Fill = null,
+                GeometrySize = 0,
+                LineSmoothness = 1
+            }
+        };
 
-            // out of livecharts properties...
+        var cartesianChart = new CartesianChart
+        {
+            Series = series,
             Location = new System.Drawing.Point(0, 0),
             Size = new System.Drawing.Size(50, 50),
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom

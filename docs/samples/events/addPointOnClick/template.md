@@ -1,32 +1,18 @@
-{{ render this "~/shared/genericSampleJustGifHeader.md" }}
+{{ render "~/shared/genericSampleJustGifHeader.md" }}
 
+{{~ if mvvm ~}}
 ## View model
 
-```
+```csharp
 {{ full_name | get_vm_from_docs }}
 ```
-
-{{~ if xaml ~}}
-## XAML
 {{~ end ~}}
 
-{{~ if winforms ~}}
-## Form code behind
-{{~ end ~}}
-
-{{~ if blazor~}}
-## HTML
-{{~ end~}}
+## {{~ view_title ~}}
 
 ```
 {{ full_name | get_view_from_docs }}
 ```
-
-{{~ if xaml ~}}
-## View code behind
-
-{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/Events/AddPointOnClick/$PlatformViewCodeBehindFile" ~}}
-{{~ end ~}}
 
 {{~ if related_to != null ~}}
 

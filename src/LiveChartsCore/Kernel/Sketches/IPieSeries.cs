@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using LiveChartsCore.Measure;
 
 namespace LiveChartsCore.Kernel.Sketches;
@@ -135,6 +136,11 @@ public interface IPieSeries : ISeries, IStrokedAndFilled
     /// <see cref="IPieChartView.MinValue"/> property in the chart.
     /// </summary>
     bool IsRelativeToMinValue { get; set; }
+
+    /// <summary>
+    /// Gets or sets the tooltip label formatter, the function receives a <see cref="ChartPoint"/> instance and must return a string.
+    /// </summary>
+    Func<ChartPoint, string>? TooltipLabelFormatter { get; set; }
 
     /// <summary>
     /// Gets the series bounds.

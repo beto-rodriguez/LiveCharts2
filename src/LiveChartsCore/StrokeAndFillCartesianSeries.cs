@@ -45,9 +45,6 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>(
             where TVisual : DrawnGeometry, new()
             where TLabel : BaseLabelGeometry, new()
 {
-    private Paint? _stroke = null;
-    private Paint? _fill = null;
-
     /// <summary>
     /// Gets or sets the stroke.
     /// </summary>
@@ -56,9 +53,9 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>(
     /// </value>
     public Paint? Stroke
     {
-        get => _stroke;
-        set => SetPaintProperty(ref _stroke, value, PaintStyle.Stroke);
-    }
+        get;
+        set => SetPaintProperty(ref field, value, PaintStyle.Stroke);
+    } = Paint.Default;
 
     /// <summary>
     /// Gets or sets the fill.
@@ -68,39 +65,11 @@ public abstract class StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>(
     /// </value>
     public Paint? Fill
     {
-        get => _fill;
-        set => SetPaintProperty(ref _fill, value);
-    }
+        get;
+        set => SetPaintProperty(ref field, value);
+    } = Paint.Default;
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
-        [_stroke, _fill, DataLabelsPaint];
-
-    /// <summary>
-    /// Gets the fill paint for the miniature.
-    /// </summary>
-    /// <param name="point">the point/</param>
-    /// <param name="zIndex">the x index.</param>
-    /// <returns></returns>
-    protected virtual Paint? GetMiniatureFill(ChartPoint? point, int zIndex)
-    {
-        var p = point is null ? null : ConvertToTypedChartPoint(point);
-        var paint = p?.Visual?.Fill ?? Fill;
-
-        return GetMiniaturePaint(paint, zIndex);
-    }
-
-    /// <summary>
-    /// Gets the fill paint for the miniature.
-    /// </summary>
-    /// <param name="point">the point/</param>
-    /// <param name="zIndex">the x index.</param>
-    /// <returns></returns>
-    protected virtual Paint? GetMiniatureStroke(ChartPoint? point, int zIndex)
-    {
-        var p = point is null ? null : ConvertToTypedChartPoint(point);
-        var paint = p?.Visual?.Stroke ?? Stroke;
-
-        return GetMiniaturePaint(paint, zIndex);
-    }
+        [Stroke, Fill, DataLabelsPaint];
 }

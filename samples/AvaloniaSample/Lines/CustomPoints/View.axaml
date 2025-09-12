@@ -1,10 +1,26 @@
-<UserControl x:Class="AvaloniaSample.Lines.CustomPoints.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Lines.CustomPoints">
-  <UserControl.DataContext>
-    <vms:ViewModel/>
-  </UserControl.DataContext>
-  <lvc:CartesianChart Series="{Binding Series}"/>
+<UserControl
+    x:Class="AvaloniaSample.Lines.CustomPoints.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Lines.CustomPoints"
+    x:DataType="vms:ViewModel">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <lvc:CartesianChart>
+        <lvc:CartesianChart.Series>
+            <lvc:XamlLineSeries
+                x:TypeArguments="vms:DataPoint, vms:ArrowGeometry"
+                GeometrySize="50"
+                GeometryStroke="{x:Null}"
+                GeometryFill="{lvc:SolidColorPaint Color='#C71585'}"
+                Fill="{x:Null}"
+                Values="{Binding Values}"
+                PointMeasuredCommand="{Binding PointMeasuredCommand}"/>
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
+
 </UserControl>

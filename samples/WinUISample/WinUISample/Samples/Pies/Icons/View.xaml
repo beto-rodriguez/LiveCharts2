@@ -1,0 +1,29 @@
+﻿<UserControl
+    x:Class="WinUISample.Pies.Icons.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
+    xmlns:vms="using:ViewModelsSamples.Pies.Icons"
+    xmlns:local="using:WinUISample.Pies.Icons"
+    mc:Ignorable="d">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <lvc:PieChart SeriesSource="{Binding Data}">
+        <lvc:PieChart.SeriesTemplate>
+            <DataTemplate>
+                <local:CustomPieSeries
+                    SeriesName="{Binding Name}"
+                    Values="{Binding Values}"
+                    IconName="{Binding Name}"
+                    Icon="{Binding Icon}"
+                    ShowDataLabels="True"/>
+            </DataTemplate>
+        </lvc:PieChart.SeriesTemplate>
+    </lvc:PieChart>
+
+</UserControl>

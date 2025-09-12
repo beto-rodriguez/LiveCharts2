@@ -28,8 +28,8 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
-using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
 
@@ -52,22 +52,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
             where TLabel : BaseLabelGeometry, new()
             where TMiniatureGeometry : BoundedDrawnGeometry, new()
 {
-    private Paint? _stroke = null;
-    private Paint? _fill = null;
-    private double _pushout = 0;
-    private double _innerRadius = 0;
-    private double _outerRadiusOffset = 0;
-    private double _hoverPushout = 20;
-    private double _innerPadding = 0;
-    private double _outerPadding = 0;
-    private double _maxRadialColW = double.MaxValue;
-    private double _cornerRadius = 0;
-    private RadialAlignment _radialAlign = RadialAlignment.Outer;
-    private bool _invertedCornerRadius = false;
-    private bool _isFillSeries;
-    private bool _isRelativeToMin;
-    private PolarLabelsPosition _labelsPosition = PolarLabelsPosition.Middle;
-    private Func<ChartPoint<TModel, TVisual, TLabel>, string>? _tooltipLabelFormatter;
+    private Func<ChartPoint, string>? _tooltipLabelFormatter;
 
     /// <summary>
     /// Gets or sets the stroke.
@@ -77,9 +62,9 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
     /// </value>
     public Paint? Stroke
     {
-        get => _stroke;
-        set => SetPaintProperty(ref _stroke, value, PaintStyle.Stroke);
-    }
+        get;
+        set => SetPaintProperty(ref field, value, PaintStyle.Stroke);
+    } = null;
 
     /// <summary>
     /// Gets or sets the fill.
@@ -89,48 +74,48 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
     /// </value>
     public Paint? Fill
     {
-        get => _fill;
-        set => SetPaintProperty(ref _fill, value);
-    }
+        get;
+        set => SetPaintProperty(ref field, value);
+    } = null;
 
     /// <inheritdoc cref="IPieSeries.Pushout"/>
-    public double Pushout { get => _pushout; set => SetProperty(ref _pushout, value); }
+    public double Pushout { get; set => SetProperty(ref field, value); } = 0;
 
     /// <inheritdoc cref="IPieSeries.InnerRadius"/>
-    public double InnerRadius { get => _innerRadius; set => SetProperty(ref _innerRadius, value); }
+    public double InnerRadius { get; set => SetProperty(ref field, value); } = 0;
 
     /// <inheritdoc cref="IPieSeries.OuterRadiusOffset"/>
-    public double OuterRadiusOffset { get => _outerRadiusOffset; set => SetProperty(ref _outerRadiusOffset, value); }
+    public double OuterRadiusOffset { get; set => SetProperty(ref field, value); } = 0;
 
     /// <inheritdoc cref="IPieSeries.HoverPushout"/>
-    public double HoverPushout { get => _hoverPushout; set => SetProperty(ref _hoverPushout, value); }
+    public double HoverPushout { get; set => SetProperty(ref field, value); } = 20;
 
     /// <inheritdoc cref="IPieSeries.RelativeInnerRadius"/>
-    public double RelativeInnerRadius { get => _innerPadding; set => SetProperty(ref _innerPadding, value); }
+    public double RelativeInnerRadius { get; set => SetProperty(ref field, value); } = 0;
 
     /// <inheritdoc cref="IPieSeries.RelativeOuterRadius"/>
-    public double RelativeOuterRadius { get => _outerPadding; set => SetProperty(ref _outerPadding, value); }
+    public double RelativeOuterRadius { get; set => SetProperty(ref field, value); } = 0;
 
     /// <inheritdoc cref="IPieSeries.MaxRadialColumnWidth"/>
-    public double MaxRadialColumnWidth { get => _maxRadialColW; set => SetProperty(ref _maxRadialColW, value); }
+    public double MaxRadialColumnWidth { get; set => SetProperty(ref field, value); } = double.MaxValue;
 
     /// <inheritdoc cref="IPieSeries.RadialAlign"/>
-    public RadialAlignment RadialAlign { get => _radialAlign; set => SetProperty(ref _radialAlign, value); }
+    public RadialAlignment RadialAlign { get; set => SetProperty(ref field, value); } = RadialAlignment.Outer;
 
     /// <inheritdoc cref="IPieSeries.CornerRadius"/>
-    public double CornerRadius { get => _cornerRadius; set => SetProperty(ref _cornerRadius, value); }
+    public double CornerRadius { get; set => SetProperty(ref field, value); } = 0;
 
     /// <inheritdoc cref="IPieSeries.InvertedCornerRadius"/>
-    public bool InvertedCornerRadius { get => _invertedCornerRadius; set => SetProperty(ref _invertedCornerRadius, value); }
+    public bool InvertedCornerRadius { get; set => SetProperty(ref field, value); } = false;
 
     /// <inheritdoc cref="IPieSeries.IsFillSeries"/>
-    public bool IsFillSeries { get => _isFillSeries; set => SetProperty(ref _isFillSeries, value); }
+    public bool IsFillSeries { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="IPieSeries.IsRelativeToMinValue"/>
-    public bool IsRelativeToMinValue { get => _isRelativeToMin; set => SetProperty(ref _isRelativeToMin, value); }
+    public bool IsRelativeToMinValue { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="IPieSeries.DataLabelsPosition"/>
-    public PolarLabelsPosition DataLabelsPosition { get => _labelsPosition; set => SetProperty(ref _labelsPosition, value); }
+    public PolarLabelsPosition DataLabelsPosition { get; set => SetProperty(ref field, value); } = PolarLabelsPosition.Middle;
 
     /// <summary>
     /// Gets or sets the tool tip label formatter for the Y axis, this function will build the label when a point in this series 
@@ -140,6 +125,12 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
     /// The tool tip label formatter.
     /// </value>
     public Func<ChartPoint<TModel, TVisual, TLabel>, string>? ToolTipLabelFormatter
+    {
+        get => _tooltipLabelFormatter;
+        set => ((IPieSeries)this).TooltipLabelFormatter = value is null ? null : p => value(ConvertToTypedChartPoint(p));
+    }
+
+    Func<ChartPoint, string>? IPieSeries.TooltipLabelFormatter
     {
         get => _tooltipLabelFormatter;
         set => SetProperty(ref _tooltipLabelFormatter, value);
@@ -174,21 +165,19 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
         double? chartTotal = double.IsNaN(view.MaxValue) ? null : view.MaxValue;
 
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
-        if (Fill is not null)
+        if (Fill is not null && Fill != Paint.Default)
         {
-            Fill.ZIndex = actualZIndex + 0.1;
-            Fill.SetClipRectangle(pieChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
-            pieChart.Canvas.AddDrawableTask(Fill);
+            Fill.ZIndex = actualZIndex + PaintConstants.SeriesFillZIndexOffset;
+            pieChart.Canvas.AddDrawableTask(Fill, zone: CanvasZone.DrawMargin);
         }
-        if (Stroke is not null)
+        if (Stroke is not null && Stroke != Paint.Default)
         {
-            Stroke.ZIndex = actualZIndex + 0.2;
-            Stroke.SetClipRectangle(pieChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
-            pieChart.Canvas.AddDrawableTask(Stroke);
+            Stroke.ZIndex = actualZIndex + PaintConstants.SeriesStrokeZIndexOffset;
+            pieChart.Canvas.AddDrawableTask(Stroke, zone: CanvasZone.DrawMargin);
         }
-        if (DataLabelsPaint is not null)
+        if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
         {
-            DataLabelsPaint.ZIndex = 1000 + actualZIndex + 0.3;
+            DataLabelsPaint.ZIndex = PaintConstants.PieSeriesDataLabelsBaseZIndex + actualZIndex + PaintConstants.SeriesGeometryFillZIndexOffset;
             // this does not require clipping...
             //DataLabelsPaint.SetClipRectangle(pieChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             pieChart.Canvas.AddDrawableTask(DataLabelsPaint);
@@ -240,15 +229,15 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
         var isTangent = false;
         var isCotangent = false;
 
-        if (((int)r & LiveCharts.TangentAngle) != 0)
+        if (((int)r & (int)LiveCharts.TangentAngle) != 0)
         {
-            r -= LiveCharts.TangentAngle;
+            r -= (int)LiveCharts.TangentAngle;
             isTangent = true;
         }
 
-        if (((int)r & LiveCharts.CotangentAngle) != 0)
+        if (((int)r & (int)LiveCharts.CotangentAngle) != 0)
         {
-            r -= LiveCharts.CotangentAngle;
+            r -= (int)LiveCharts.CotangentAngle;
             isCotangent = true;
         }
 
@@ -315,7 +304,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
             }
             else
             {
-                if (_isRelativeToMin)
+                if (IsRelativeToMinValue)
                 {
                     // when the series is relative to min value,
                     // the start value is always the PieChart.MinValue
@@ -366,8 +355,10 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
                 _ = everFetched.Add(point);
             }
 
-            Fill?.AddGeometryToPaintTask(pieChart.Canvas, visual);
-            Stroke?.AddGeometryToPaintTask(pieChart.Canvas, visual);
+            if (Fill is not null && Fill != Paint.Default)
+                Fill.AddGeometryToPaintTask(pieChart.Canvas, visual);
+            if (Stroke is not null && Stroke != Paint.Default)
+                Stroke.AddGeometryToPaintTask(pieChart.Canvas, visual);
 
             var dougnutGeometry = visual;
 
@@ -402,7 +393,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
 
             pointsCleanup.Clean(point);
 
-            if (DataLabelsPaint is not null)
+            if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default && !IsFillSeries)
             {
                 var label = (TLabel?)point.Context.Label;
 
@@ -418,7 +409,11 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
                 if (label is null)
                 {
                     var l = new TLabel { X = cx, Y = cy, RotateTransform = actualRotation, MaxWidth = (float)DataLabelsMaxWidth };
-                    l.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
+                    l.Animate(
+                        EasingFunction ?? chart.ActualEasingFunction,
+                        AnimationsSpeed ?? chart.ActualAnimationsSpeed,
+                        BaseLabelGeometry.XProperty,
+                        BaseLabelGeometry.YProperty);
                     label = l;
                     point.Context.Label = l;
                 }
@@ -435,7 +430,10 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
 
                 if (isFirstDraw)
                     label.CompleteTransition(
-                        nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
+                        BaseLabelGeometry.TextSizeProperty,
+                        BaseLabelGeometry.XProperty,
+                        BaseLabelGeometry.YProperty,
+                        BaseLabelGeometry.RotateTransformProperty);
 
                 var labelPosition = GetLabelPolarPosition(
                     cx,
@@ -465,43 +463,17 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
     public virtual DimensionalBounds GetBounds(Chart chart) =>
         DataFactory.GetPieBounds(chart, this).Bounds;
 
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniaturesSketch"/>
-    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
-    public override Sketch GetMiniaturesSketch()
-    {
-        var schedules = new List<PaintSchedule>();
-
-        if (Fill is not null) schedules.Add(BuildMiniatureSchedule(Fill, new TMiniatureGeometry()));
-        if (Stroke is not null) schedules.Add(BuildMiniatureSchedule(Stroke, new TMiniatureGeometry()));
-
-        return new Sketch(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
-        {
-            PaintSchedules = schedules
-        };
-    }
-
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniature"/>"/>
-    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
-    public override IChartElement GetMiniature(ChartPoint? point, int zindex)
-    {
-        return new GeometryVisual<TMiniatureGeometry, TLabel>
-        {
-            Fill = GetMiniatureFill(point, zindex + 1),
-            Stroke = GetMiniatureStroke(point, zindex + 2),
-            Width = MiniatureShapeSize,
-            Height = MiniatureShapeSize,
-            Svg = GeometrySvg,
-            ClippingMode = ClipMode.None
-        };
-    }
-
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniatureGeometry(ChartPoint?)"/>
     public override IDrawnElement GetMiniatureGeometry(ChartPoint? point)
     {
+        var v = point?.Context.Visual;
+
         var m = new TMiniatureGeometry
         {
-            Fill = GetMiniatureFill(point, 0),
-            Stroke = GetMiniatureStroke(point, 0),
+            Fill = v?.Fill ?? Fill,
+            Stroke = v?.Stroke ?? Stroke,
+            StrokeThickness = (float)MiniatureStrokeThickness,
+            ClippingBounds = LvcRectangle.Empty,
             Width = (float)MiniatureShapeSize,
             Height = (float)MiniatureShapeSize
         };
@@ -533,29 +505,7 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
-        [_fill, _stroke, DataLabelsPaint];
-
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerEnter(ChartPoint)"/>
-    protected override void OnPointerEnter(ChartPoint point)
-    {
-        var visual = (TVisual?)point.Context.Visual;
-        if (visual is null) return;
-        visual.PushOut = (float)HoverPushout;
-        visual.Opacity = 0.8f;
-
-        base.OnPointerEnter(point);
-    }
-
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerLeft(ChartPoint)"/>
-    protected override void OnPointerLeft(ChartPoint point)
-    {
-        var visual = (TVisual?)point.Context.Visual;
-        if (visual is null) return;
-        visual.PushOut = (float)Pushout;
-        visual.Opacity = 1;
-
-        base.OnPointerLeft(point);
-    }
+        [Fill, Stroke, DataLabelsPaint];
 
     /// <summary>
     /// Sets the default point transitions.
@@ -569,13 +519,13 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
         if (chartPoint.Context.Visual is not TVisual visual) throw new Exception("Unable to initialize the point instance.");
 
         if ((SeriesProperties & SeriesProperties.Gauge) == 0)
-            visual.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
+            visual.Animate(EasingFunction ?? chart.CoreChart.ActualEasingFunction, AnimationsSpeed ?? chart.CoreChart.ActualAnimationsSpeed);
         else
             visual.Animate(
-                EasingFunction ?? chart.EasingFunction,
-                AnimationsSpeed ?? chart.AnimationsSpeed,
-                nameof(visual.StartAngle),
-                nameof(visual.SweepAngle));
+                EasingFunction ?? chart.CoreChart.ActualEasingFunction,
+                AnimationsSpeed ?? chart.CoreChart.ActualAnimationsSpeed,
+                BaseDoughnutGeometry.StartAngleProperty,
+                BaseDoughnutGeometry.SweepAngleProperty);
     }
 
     /// <summary>
@@ -685,34 +635,6 @@ public abstract class CorePieSeries<TModel, TVisual, TLabel, TMiniatureGeometry>
         }
 
         foreach (var item in toDelete) _ = everFetched.Remove(item);
-    }
-
-    /// <summary>
-    /// Gets the fill paint for the miniature.
-    /// </summary>
-    /// <param name="point">the point/</param>
-    /// <param name="zIndex">the x index.</param>
-    /// <returns></returns>
-    protected virtual Paint? GetMiniatureFill(ChartPoint? point, int zIndex)
-    {
-        var p = point is null ? null : ConvertToTypedChartPoint(point);
-        var paint = p?.Visual?.Fill ?? Fill;
-
-        return GetMiniaturePaint(paint, zIndex);
-    }
-
-    /// <summary>
-    /// Gets the fill paint for the miniature.
-    /// </summary>
-    /// <param name="point">the point/</param>
-    /// <param name="zIndex">the x index.</param>
-    /// <returns></returns>
-    protected virtual Paint? GetMiniatureStroke(ChartPoint? point, int zIndex)
-    {
-        var p = point is null ? null : ConvertToTypedChartPoint(point);
-        var paint = p?.Visual?.Stroke ?? Stroke;
-
-        return GetMiniaturePaint(paint, zIndex);
     }
 
     private void AlignLabel(TLabel label, double start, double initialRotation, double sweep)

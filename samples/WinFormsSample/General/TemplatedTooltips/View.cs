@@ -1,13 +1,13 @@
 ﻿using System.Windows.Forms;
 using LiveChartsCore.SkiaSharpView.WinForms;
+using LiveChartsCore.SkiaSharpView;
 using ViewModelsSamples.General.TemplatedTooltips;
+using LiveChartsCore;
 
 namespace WinFormsSample.General.TemplatedTooltips;
 
 public partial class View : UserControl
 {
-    private readonly CartesianChart cartesianChart;
-
     public View()
     {
         InitializeComponent();
@@ -15,11 +15,15 @@ public partial class View : UserControl
 
         var viewModel = new ViewModel();
 
-        cartesianChart = new CartesianChart
+        var series = new ISeries[]
         {
-            Series = viewModel.Series,
-            Tooltip = new CustomTooltip(),
+            new ColumnSeries<GeometryPoint> { Values = viewModel.Values }
+        };
 
+        var cartesianChart = new CartesianChart
+        {
+            Series = series,
+            Tooltip = new CustomTooltip(),
             // out of livecharts properties...
             Location = new System.Drawing.Point(0, 0),
             Size = new System.Drawing.Size(50, 50),

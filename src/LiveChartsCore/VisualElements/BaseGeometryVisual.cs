@@ -32,34 +32,28 @@ namespace LiveChartsCore.VisualElements;
 /// </summary>
 public abstract class BaseGeometryVisual : VisualElement
 {
-    private double _width;
-    private double _height;
-    private Paint? _fill;
-    private Paint? _stroke;
-    private MeasureUnit _sizeUnit = MeasureUnit.Pixels;
-
     /// <summary>
     /// Gets or sets the height of the rectangle [in Pixels or ChartValues, see <see cref="SizeUnit"/>].
     /// </summary>
-    public double Width { get => _width; set => SetProperty(ref _width, value); }
+    public double Width { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets or sets the width of the rectangle [in Pixels or ChartValues, see <see cref="SizeUnit"/>].
     /// </summary>
-    public double Height { get => _height; set => SetProperty(ref _height, value); }
+    public double Height { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets or sets the unit of the <see cref="Height"/> and <see cref="Width"/> properties.
     /// </summary>
-    public MeasureUnit SizeUnit { get => _sizeUnit; set => SetProperty(ref _sizeUnit, value); }
+    public MeasureUnit SizeUnit { get; set => SetProperty(ref field, value); } = MeasureUnit.Pixels;
 
     /// <summary>
     /// Gets or sets the fill paint.
     /// </summary>
     public Paint? Fill
     {
-        get => _fill;
-        set => SetPaintProperty(ref _fill, value);
+        get;
+        set => SetPaintProperty(ref field, value);
     }
 
     /// <summary>
@@ -67,13 +61,13 @@ public abstract class BaseGeometryVisual : VisualElement
     /// </summary>
     public Paint? Stroke
     {
-        get => _stroke;
-        set => SetPaintProperty(ref _stroke, value, PaintStyle.Stroke);
+        get;
+        set => SetPaintProperty(ref field, value, PaintStyle.Stroke);
     }
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
-        [_fill, _stroke];
+        [Fill, Stroke];
 
     /// <summary>
     /// Called when [paint changed].

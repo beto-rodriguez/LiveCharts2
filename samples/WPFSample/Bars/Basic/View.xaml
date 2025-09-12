@@ -3,12 +3,36 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
              xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
              xmlns:vms="clr-namespace:ViewModelsSamples.Bars.Basic;assembly=ViewModelsSamples">
+
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
-    <lvc:CartesianChart
-        Series="{Binding Series}"
-        XAxes="{Binding XAxes}"
-        LegendPosition="Right">
+
+    <lvc:CartesianChart LegendPosition="Right">
+
+        <lvc:CartesianChart.Series>
+            <lvc:SeriesCollection>
+                <lvc:XamlColumnSeries SeriesName="Mary" Values="{Binding MaryValues}"/>
+                <lvc:XamlColumnSeries SeriesName="Ana" Values="{Binding AnaValues}"/>
+            </lvc:SeriesCollection>
+        </lvc:CartesianChart.Series>
+
+        <!-- We use force to min step to show all the labels always. -->
+
+        <lvc:CartesianChart.XAxes>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis
+                    Labels="{Binding Labels}"
+                    LabelsRotation="0"
+                    SeparatorsPaint="#c8c8c8"
+                    SeparatorsAtCenter="False"
+                    TicksPaint="#232323"
+                    TicksAtCenter="True"
+                    MinStep="1"
+                    ForceStepToMin="True"/>
+            </lvc:AxesCollection>
+        </lvc:CartesianChart.XAxes>
+
     </lvc:CartesianChart>
+
 </UserControl>

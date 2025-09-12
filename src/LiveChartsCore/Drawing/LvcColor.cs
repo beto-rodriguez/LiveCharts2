@@ -20,6 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Globalization;
+using System;
+
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
@@ -89,6 +92,89 @@ public struct LvcColor
     /// Gets or sets whether this color is empty.
     /// </summary>
     private bool IsEmpty { get; set; }
+
+    /// <summary>
+    /// Parses a hexadecimal color string.
+    /// </summary>
+    /// <param name="hexString"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    public static LvcColor Parse(string hexString)
+    {
+        return !TryParse(hexString, out var result)
+            ? throw new ArgumentException("Invalid hexadecimal color string.", "hexString")
+            : result;
+    }
+
+    /// <summary>
+    /// Tries to parses a hexadecimal color string.
+    /// </summary>
+    /// <param name="hexString"></param>
+    /// <param name="color"></param>
+    /// <returns></returns>
+    public static bool TryParse(string hexString, out LvcColor color)
+    {
+        if (string.IsNullOrWhiteSpace(hexString))
+        {
+            color = Empty;
+            return false;
+        }
+
+        hexString = hexString.Trim();
+        var num = (hexString[0] == '#') ? 1 : 0;
+        var num2 = hexString.Length - num;
+
+        switch (num2)
+        {
+            case 3:
+            case 4:
+                {
+                    byte result2;
+                    if (num2 == 4)
+                    {
+                        if (!byte.TryParse(string.Concat(new string(hexString[num2 - 4 + num], 2)), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out result2))
+                        {
+                            color = Empty;
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        result2 = byte.MaxValue;
+                    }
+
+                    if (!byte.TryParse(new string(hexString[num2 - 3 + num], 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var result3) || !byte.TryParse(new string(hexString[num2 - 2 + num], 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var result4) || !byte.TryParse(new string(hexString[num2 - 1 + num], 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var result5))
+                    {
+                        color = Empty;
+                        return false;
+                    }
+
+                    color = new LvcColor(result3, result4, result5, result2);
+                    return true;
+                }
+            case 6:
+            case 8:
+                {
+                    if (!uint.TryParse(hexString.Substring(num), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var result))
+                    {
+                        color = Empty;
+                        return false;
+                    }
+
+                    var a = num2 == 6 ? (byte)255 : (byte)((result >> 24) & 255);
+                    var r = (byte)((result >> 16) & 255);
+                    var g = (byte)((result >> 8) & 255);
+                    var b = (byte)(result & 255);
+
+                    color = new LvcColor(r, g, b, a);
+
+                    return true;
+                }
+            default:
+                color = Empty;
+                return false;
+        }
+    }
 
     /// <summary>
     /// Determines whether the instance is equals to the given instance.

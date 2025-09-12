@@ -1,9 +1,7 @@
-﻿@using LiveChartsCore;
-@using LiveChartsCore.SkiaSharpView;
-@using LiveChartsCore.SkiaSharpView.Blazor
-@using System.Collections.ObjectModel;
-@inject NavigationManager NavigationManager
-@inject IJSRuntime JS
+﻿@using LiveChartsCore
+@using LiveChartsCore.SkiaSharpView
+@using SkiaSharp
+@using ViewModelsSamples
 
 <Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
@@ -12,50 +10,34 @@
     </Found>
     <NotFound>
         <PageTitle>Not found</PageTitle>
-        <LayoutView Layout="@typeof(MainLayout)"></LayoutView>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p role="alert">Sorry, there's nothing at this address.</p>
+        </LayoutView>
     </NotFound>
 </Router>
 
 @code {
-    public record City(string Name, double Population);
-
     protected override void OnInitialized()
     {
-        LiveCharts.Configure(config => // mark
-            config // you can override the theme
-                // .AddDarkTheme() // mark
-
-                // finally register your own mappers
-                // you can learn more about mappers at:
-                // https://livecharts.dev/docs/{{ platform }}/{{ version }}/Overview.Mappers
-
-                // here we use the index as X, and the population as Y // mark
-                .HasMap<City>((city, index) => new(index, city.Population)) // mark
-            // .HasMap<Foo>( .... ) // mark
-            // .HasMap<Bar>( .... ) // mark
-            ); // mark
+        // LiveCharts configuration section: // mark
+        LiveCharts.Configure(c => c // mark
+            .AddLiveChartsAppSettings()); // mark
     }
 
-    protected override void OnAfterRender(bool firstRender)
-    {
-        base.OnAfterRender(firstRender);
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     // or async initialization, for example to load a font that supports Chinese characters
 
-        RenderSidebar(NavigationManager.ToBaseRelativePath(NavigationManager.Uri));
-        NavigationManager.LocationChanged += (object? sender, LocationChangedEventArgs e) =>
-        {
-            RenderSidebar(NavigationManager.ToBaseRelativePath(e.Location));
-        };
-    }
+    //     var httpClient = new HttpClient { BaseAddress = new("https://localhost:7277") };
+    //     var fontStream = await httpClient.GetStreamAsync("Source Han Sans CN Light.otf");
+    //     var typeface = SKTypeface.FromStream(fontStream);
 
-    private void RenderSidebar(string uri)
-    {
-         if (uri.ToLower().Contains("hello") || uri.Length == 0)
-        {
-            JS.InvokeVoidAsync("hideSideBar");
-        }
-        else
-        {
-            JS.InvokeVoidAsync("showSideBar");
-        }
-    }
+    //     Console.WriteLine(typeface);
+
+    //     LiveCharts.Configure(config =>
+    //         config.HasTextSettings(new TextSettings
+    //         {
+    //             DefaultTypeface = typeface
+    //         }));
+    // }
 }

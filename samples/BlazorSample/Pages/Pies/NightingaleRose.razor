@@ -1,11 +1,30 @@
 ﻿@page "/Pies/NightingaleRose"
+@using LiveChartsCore
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.Pies.NightingaleRose
+@using LiveChartsCore.SkiaSharpView.Extensions
 
 <PieChart
-	Series="ViewModel.Series">
+	Series="Series">
 </PieChart>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new();
+    private ISeries[] Series { get; set; }
+
+    protected override void OnInitialized()
+    {
+        var outer = 0;
+        var data = new[] { 6, 5, 4, 3, 2 };
+
+        // you can convert any array, list or IEnumerable<T> to a pie series collection:
+        Series = data.AsPieSeries((value, series) =>
+        {
+            // this method is called once per element in the array
+            // we are decrementing the outer radius 50px
+            // on every element in the array.
+
+            series.InnerRadius = 50;
+            series.OuterRadiusOffset = outer;
+            outer += 50;
+        });
+    }
 }

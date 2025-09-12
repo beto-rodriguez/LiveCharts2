@@ -1,34 +1,85 @@
 ﻿@page "/Bars/AutoUpdate"
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.Bars.AutoUpdate
+@using LiveChartsCore;
+@using LiveChartsCore.Defaults;
+@using LiveChartsCore.SkiaSharpView;
 
 <div>
-	<button type="button" class="btn btn-primary" @onclick="ViewModel.AddItem">Add item</button>
-	<button type="button" class="btn btn-primary" @onclick="ViewModel.RemoveItem">Remove item</button>
-	<button type="button" class="btn btn-primary" @onclick="ViewModel.ReplaceItem">Replace item</button>
-	<button type="button" class="btn btn-primary" @onclick="ViewModel.AddSeries">Add Series</button>
-	<button type="button" class="btn btn-primary" @onclick="ViewModel.RemoveSeries">Remove Series</button>
-	<button type="button" class="btn btn-primary" @onclick="ToggleConstantChanges">Constant changes</button>
+    <button type="button" class="btn btn-primary" @onclick="AddItem">Add item</button>
+    <button type="button" class="btn btn-primary" @onclick="RemoveItem">Remove item</button>
+    <button type="button" class="btn btn-primary" @onclick="ReplaceItem">Replace item</button>
+    <button type="button" class="btn btn-primary" @onclick="AddSeries">Add Series</button>
+    <button type="button" class="btn btn-primary" @onclick="RemoveSeries">Remove Series</button>
 </div>
 
 <CartesianChart
-	Series="ViewModel.Series">
+    Series="@seriesCollection">
 </CartesianChart>
 
 @code {
-	private bool? _isStreaming = false;
+    private List<ISeries> seriesCollection;
+    private List<ObservableValue> juanaValues;
+    private Random random = new Random();
 
-	public ViewModel ViewModel { get; set; } = new();
+    protected override void OnInitialized()
+    {
+        juanaValues = new List<ObservableValue> { new(2), new(5), new(4) };
+        seriesCollection = new List<ISeries>
+        {
+            new ColumnSeries<ObservableValue>
+            {
+                Name = "Juana",
+                Values = juanaValues
+            },
+            new ColumnSeries<ObservableValue>
+            {
+                Name = "Mary",
+                Values = new List<ObservableValue> { new(5), new(4), new(1) }
+            }
+        };
+    }
 
-	public async void ToggleConstantChanges()
-	{
-		_isStreaming = _isStreaming is null ? true : !_isStreaming;
+    private void AddSeries()
+    {
+        seriesCollection.Add(
+            new ColumnSeries<ObservableValue>
+            {
+                Name = $"User #{seriesCollection.Count}",
+                Values = FetchValues()
+            });
+    }
 
-		while (_isStreaming.Value)
-		{
-			ViewModel.RemoveItem();
-			ViewModel.AddItem();
-			await Task.Delay(100);
-		}
-	}
+    private void RemoveSeries()
+    {
+        if (seriesCollection.Count <= 1) return;
+        seriesCollection.RemoveAt(seriesCollection.Count - 1);
+    }
+
+    private void AddItem()
+    {
+        juanaValues.Add(new ObservableValue { Value = random.Next(0, 10) });
+    }
+
+    private void RemoveItem()
+    {
+        if (juanaValues.Count < 2) return;
+        juanaValues.RemoveAt(0);
+    }
+
+    private void ReplaceItem()
+    {
+        if (juanaValues.Count < 2) return;
+        var randomIndex = random.Next(0, juanaValues.Count - 1);
+        juanaValues[randomIndex] = new ObservableValue(random.Next(1, 10));
+    }
+
+    private List<ObservableValue> FetchValues()
+    {
+        return new List<ObservableValue>
+        {
+            new(random.Next(0, 10)),
+            new(random.Next(0, 10)),
+            new(random.Next(0, 10))
+        };
+    }
 }

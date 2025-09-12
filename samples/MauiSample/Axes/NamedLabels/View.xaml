@@ -1,29 +1,45 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Axes.NamedLabels.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Axes.NamedLabels;assembly=ViewModelsSamples"
-             >
+<ContentPage
+    x:Class="MauiSample.Axes.NamedLabels.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Axes.NamedLabels;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-	<ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
 
-            <lvc:CartesianChart
-                Series="{Binding Series}"
-                XAxes="{Binding XAxes}"
-                YAxes="{Binding YAxes}"
-                TooltipPosition="Left"
-                TooltipBackgroundPaint="{Binding TooltipBackgroundPaint}"
-                TooltipTextPaint="{Binding TooltipTextPaint}"
-                TooltipTextSize="16">
-            </lvc:CartesianChart>
+    <lvc:CartesianChart
+        TooltipPosition="Left"
+        TooltipBackgroundPaint="#480032"
+        TooltipTextPaint="{lvc:SolidColorPaint Color='#F2F4FF', FontFamily='Courier New'}"
+        TooltipTextSize="16">
 
-        </Grid>
-    </ContentPage.Content>
+        <lvc:CartesianChart.Series>
+            <lvc:SeriesCollection>
+                <lvc:XamlColumnSeries
+                    SeriesName="Sales"
+                    Values="{Binding Values1}"/>
+                <lvc:XamlLineSeries
+                    SeriesName="Projected"
+                    Values="{Binding Values2}"
+                    Fill="{x:Null}"/>
+            </lvc:SeriesCollection>
+        </lvc:CartesianChart.Series>
+
+        <lvc:CartesianChart.XAxes>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis Labels="{Binding Labels}"/>
+            </lvc:AxesCollection>
+        </lvc:CartesianChart.XAxes>
+
+        <lvc:CartesianChart.YAxes>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis Labeler="{Binding Labeler}"/>
+            </lvc:AxesCollection>
+        </lvc:CartesianChart.YAxes>
+
+    </lvc:CartesianChart>
 </ContentPage>

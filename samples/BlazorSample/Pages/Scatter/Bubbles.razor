@@ -1,11 +1,59 @@
 ﻿@page "/Scatter/Bubbles"
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.Scatter.Bubbles
+@using LiveChartsCore.SkiaSharpView
+@using LiveChartsCore
+@using LiveChartsCore.Defaults
 
 <CartesianChart
-	Series="ViewModel.Series">
+	Series="Series">
 </CartesianChart>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new();
+    private ISeries[] Series { get; set; }
+
+    protected override void OnInitialized()
+    {
+        var values1 = Fetch(1);
+        var values2 = Fetch(10);
+        var values3 = Fetch(10);
+
+        Series = new ISeries[]
+        {
+            new ScatterSeries<WeightedPoint>
+            {
+                Values = values1,
+                GeometrySize = 100,
+                MinGeometrySize = 5
+            },
+            new ScatterSeries<WeightedPoint>
+            {
+                Values = values2,
+                GeometrySize = 100,
+                MinGeometrySize = 5,
+                StackGroup = 1
+            },
+            new ScatterSeries<WeightedPoint>
+            {
+                Values = values3,
+                GeometrySize = 100,
+                MinGeometrySize = 5,
+                StackGroup = 1
+            }
+        };
+    }
+
+    private static WeightedPoint[] Fetch(int scale)
+    {
+        var r = new Random();
+        var length = 10;
+        var values = new WeightedPoint[length];
+        for (var i = 0; i < length; i++)
+        {
+            var x = r.Next(0, 20);
+            var y = r.Next(0, 20);
+            var w = r.Next(0, 100) * scale;
+            values[i] = new WeightedPoint(x, y, w);
+        }
+        return values;
+    }
 }

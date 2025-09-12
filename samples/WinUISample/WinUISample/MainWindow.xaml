@@ -37,7 +37,7 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border Padding="0 8" PointerPressed="Border_PointerPressed">
-                                <TextBlock Text="{Binding}" Foreground="#303030" FontSize="15" FontFamily="Trebuchet MS" FontWeight="Normal"></TextBlock>
+                                <TextBlock Text="{Binding}" FontSize="15" FontFamily="Trebuchet MS" FontWeight="Normal"/>
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
@@ -46,18 +46,11 @@
             </ScrollViewer>
         </Grid>
 
-        <Border Name="contentBorder" Grid.Column="1">
-            <ContentControl x:Name="content"
-                            HorizontalContentAlignment="Stretch"
-                            VerticalContentAlignment="Stretch">
-
-                <ContentControl.Resources>
-                    <Style TargetType="Button">
-                        <Setter Property="Foreground" Value="Black"></Setter>
-                    </Style>
-                </ContentControl.Resources>
-
-            </ContentControl>
+        <Border Name="contentBorder" Grid.Column="1" Padding="5">
+            <ContentControl
+                x:Name="content"
+                HorizontalContentAlignment="Stretch"
+                VerticalContentAlignment="Stretch"/>
         </Border>
     </Grid>
 </Window>

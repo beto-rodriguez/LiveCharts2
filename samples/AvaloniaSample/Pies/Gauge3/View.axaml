@@ -1,17 +1,50 @@
-<UserControl x:Class="AvaloniaSample.Pies.Gauge3.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lv="clr-namespace:LiveChartsCore;assembly=LiveChartsCore"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Pies.Gauge3">
+<UserControl
+    x:Class="AvaloniaSample.Pies.Gauge3.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Pies.Gauge3"
+    x:DataType="vms:ViewModel">
+
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>
+
     <lvc:PieChart
-        Series="{Binding Series}"
         InitialRotation="45"
         MaxAngle="270"
         MinValue="0"
         MaxValue="100">
+
+        <lvc:PieChart.Series>
+            <lvc:XamlGaugeSeries
+                GaugeValue="{Binding Vanesa}"
+                SeriesName="Vanesa"
+                DataLabelsFormatter="{Binding LabelFormatter}"
+                DataLabelsPosition="Start"
+                InnerRadius="20"
+                RelativeOuterRadius="8"
+                RelativeInnerRadius="8"/>
+            <lvc:XamlGaugeSeries
+                GaugeValue="{Binding Charles}"
+                SeriesName="Charles"
+                DataLabelsFormatter="{Binding LabelFormatter}"
+                DataLabelsPosition="Start"
+                InnerRadius="20"
+                RelativeOuterRadius="8"
+                RelativeInnerRadius="8"/>
+            <lvc:XamlGaugeSeries
+                GaugeValue="{Binding Ana}"
+                SeriesName="Ana"
+                DataLabelsFormatter="{Binding LabelFormatter}"
+                DataLabelsPosition="Start"
+                InnerRadius="20"
+                RelativeOuterRadius="8"
+                RelativeInnerRadius="8"/>
+
+            <!-- The background series is used to style the gauge background. -->
+            <lvc:XamlGaugeBackgroundSeries InnerRadius="20"/>
+        </lvc:PieChart.Series>
+
     </lvc:PieChart>
 </UserControl>

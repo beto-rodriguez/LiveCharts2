@@ -9,7 +9,7 @@ When a series point is drawn, it also defines a virtual area called `HoverArea`,
 when a point is pressed/hovered; For example in the next gif, the tooltip opens for both Mary and Ana even when
 the pointer is not in the drawn shape, this is because the `HoverArea` is not the same as the drawn column.
 
-<div class="text-center">
+<div class="text-center sample-img">
     <img src="{{ assets_url }}/docs/{{ unique_name }}/hover-area-col.gif" alt="sample image" />
 </div>
 
@@ -47,13 +47,13 @@ Both `OnHoveredPointsChanged` and `OnPressed` are marked with the `RelayCommand`
 
 When running that example on the `FindingStrategy.Automatic` we get:
 
-<div class="text-center">
+<div class="text-center sample-img">
     <img src="{{ assets_url }}/docs/{{ unique_name }}/events-auto.gif" alt="sample image" />
 </div>
 
 But changing the strategy to `FindingStrategy.ExactMatch`, will only trigger only the points whose drawn column contains the pointer:
 
-<div class="text-center">
+<div class="text-center sample-img">
     <img src="{{ assets_url }}/docs/{{ unique_name }}/events-ex.gif" alt="sample image" />
 </div>
 
@@ -63,6 +63,8 @@ You can also build your own logic by overriding the `Series.FindPointsInPosition
 when the find request is made by a hover action, we return only the points whose hover area contains the pointer in the X axis,
 but when the request is made by any other source, we evaluate whether the pointer is inside the Y axis.
 
-{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/Events/OverrideFind/ViewModel.cs" ~}}
+```csharp
+{{~ render "~/../samples/ViewModelsSamples/Events/OverrideFind/ViewModel.cs" ~}}
+```
 
-{{ render this "~/shared/relatedTo.md" }}
+{{ render "~/shared/relatedTo.md" }}

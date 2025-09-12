@@ -27,6 +27,8 @@ using LiveChartsCore.Drawing.Segments;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
+using LiveChartsCore.Painting;
 
 namespace LiveChartsCore;
 
@@ -56,8 +58,8 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>
     public override void Invalidate(Chart chart)
     {
         var cartesianChart = (CartesianChartEngine)chart;
-        var primaryAxis = cartesianChart.YAxes[ScalesYAt];
-        var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
+        var primaryAxis = cartesianChart.GetYAxis(this);
+        var secondaryAxis = cartesianChart.GetXAxis(this);
 
         var drawLocation = cartesianChart.DrawMarginLocation;
         var drawMarginSize = cartesianChart.DrawMarginSize;
@@ -72,39 +74,32 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>
             secondaryScale, cartesianChart, this, secondaryAxis, primaryScale.ToPixels(pivot),
             cartesianChart.DrawMarginLocation.Y,
             cartesianChart.DrawMarginLocation.Y + cartesianChart.DrawMarginSize.Height, isStacked, false);
-        var pHelper = previousSecondaryScale == null || previousPrimaryScale == null
-            ? null
-            : new MeasureHelper(
+        var pHelper = new MeasureHelper(
                 previousSecondaryScale, cartesianChart, this, secondaryAxis, previousPrimaryScale.ToPixels(pivot),
                 cartesianChart.DrawMarginLocation.Y,
                 cartesianChart.DrawMarginLocation.Y + cartesianChart.DrawMarginSize.Height, isStacked, false);
 
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
-        var clipping = GetClipRectangle(cartesianChart);
 
-        if (Fill is not null)
+        if (Fill is not null && Fill != Paint.Default)
         {
-            Fill.ZIndex = actualZIndex + 0.1;
-            Fill.SetClipRectangle(cartesianChart.Canvas, clipping);
-            cartesianChart.Canvas.AddDrawableTask(Fill);
+            Fill.ZIndex = actualZIndex + PaintConstants.SeriesFillZIndexOffset;
+            cartesianChart.Canvas.AddDrawableTask(Fill, zone: CanvasZone.DrawMargin);
         }
-        if (Stroke is not null)
+        if (Stroke is not null && Stroke != Paint.Default)
         {
-            Stroke.ZIndex = actualZIndex + 0.2;
-            Stroke.SetClipRectangle(cartesianChart.Canvas, clipping);
-            cartesianChart.Canvas.AddDrawableTask(Stroke);
+            Stroke.ZIndex = actualZIndex + PaintConstants.SeriesStrokeZIndexOffset;
+            cartesianChart.Canvas.AddDrawableTask(Stroke, zone: CanvasZone.DrawMargin);
         }
-        if (ErrorPaint is not null)
+        if (ShowError && ErrorPaint is not null && ErrorPaint != Paint.Default)
         {
-            ErrorPaint.ZIndex = actualZIndex + 0.3;
-            ErrorPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
-            cartesianChart.Canvas.AddDrawableTask(ErrorPaint);
+            ErrorPaint.ZIndex = actualZIndex + PaintConstants.SeriesGeometryFillZIndexOffset;
+            cartesianChart.Canvas.AddDrawableTask(ErrorPaint, zone: CanvasZone.DrawMargin);
         }
-        if (DataLabelsPaint is not null)
+        if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
         {
-            DataLabelsPaint.ZIndex = actualZIndex + 0.4;
-            DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
-            cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
+            DataLabelsPaint.ZIndex = actualZIndex + PaintConstants.SeriesGeometryStrokeZIndexOffset;
+            cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint, zone: CanvasZone.DrawMargin);
         }
 
         var dls = (float)DataLabelsSize;
@@ -163,18 +158,16 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>
                 var xi = secondary - helper.uwm + helper.cp;
                 var pi = helper.p;
                 var uwi = helper.uw;
-                var hi = 0f;
 
-                if (previousSecondaryScale is not null && previousPrimaryScale is not null && pHelper is not null)
+                if (!isFirstDraw)
                 {
                     var previousPrimary = previousPrimaryScale.ToPixels(coordinate.PrimaryValue);
                     var bp = Math.Abs(previousPrimary - pHelper.p);
                     var cyp = coordinate.PrimaryValue > pivot ? previousPrimary : previousPrimary - bp;
 
                     xi = previousSecondaryScale.ToPixels(coordinate.SecondaryValue) - pHelper.uwm + pHelper.cp;
-                    pi = cartesianChart.IsZoomingOrPanning ? cyp : pHelper.p;
+                    pi = pHelper.p;
                     uwi = pHelper.uw;
-                    hi = cartesianChart.IsZoomingOrPanning ? bp : 0;
                 }
 
                 var r = new TVisual
@@ -182,13 +175,13 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>
                     X = xi,
                     Y = pi,
                     Width = uwi,
-                    Height = hi
+                    Height = 0f
                 };
 
                 if (r is BaseRoundedRectangleGeometry rg)
                     rg.BorderRadius = new LvcPoint(rx, ry);
 
-                if (ErrorPaint is not null)
+                if (ShowError && ErrorPaint is not null && ErrorPaint != Paint.Default)
                 {
                     e = new ErrorVisual<TErrorGeometry>();
 
@@ -219,10 +212,15 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>
                     svgVisual.SVGPath = GeometrySvg ?? throw new Exception("svg path is not defined");
             }
 
-            Fill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-            Stroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
-            ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, e!.YError);
-            ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, e!.XError);
+            if (Fill is not null && Fill != Paint.Default)
+                Fill.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+            if (Stroke is not null && Stroke != Paint.Default)
+                Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual);
+            if (ErrorPaint is not null && ErrorPaint != Paint.Default)
+            {
+                ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, e!.YError);
+                ErrorPaint?.AddGeometryToPaintTask(cartesianChart.Canvas, e!.XError);
+            }
 
             var cy = primaryAxis.IsInverted
                 ? (coordinate.PrimaryValue > pivot ? primary - b : primary)
@@ -254,7 +252,7 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>
             visual.Width = helper.uw;
             visual.Height = b;
 
-            if (!coordinate.PointError.IsEmpty && ErrorPaint is not null)
+            if (!coordinate.PointError.IsEmpty && ShowError && ErrorPaint is not null && ErrorPaint != Paint.Default)
             {
                 var pe = coordinate.PointError;
                 var xe = secondary - helper.uwm + helper.cp + helper.uw * 0.5f;
@@ -293,14 +291,18 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>
 
             pointsCleanup.Clean(point);
 
-            if (DataLabelsPaint is not null)
+            if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
             {
                 var label = (TLabel?)point.Context.Label;
 
                 if (label is null)
                 {
                     var l = new TLabel { X = secondary - helper.uwm + helper.cp, Y = helper.p, RotateTransform = (float)DataLabelsRotation, MaxWidth = (float)DataLabelsMaxWidth };
-                    l.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
+                    l.Animate(
+                        EasingFunction ?? cartesianChart.ActualEasingFunction,
+                        AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed,
+                        BaseLabelGeometry.XProperty,
+                        BaseLabelGeometry.YProperty);
                     label = l;
                     point.Context.Label = l;
                 }
@@ -314,7 +316,10 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>
 
                 if (isFirstDraw)
                     label.CompleteTransition(
-                        nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
+                        BaseLabelGeometry.TextSizeProperty,
+                        BaseLabelGeometry.XProperty,
+                        BaseLabelGeometry.YProperty,
+                        BaseLabelGeometry.RotateTransformProperty);
 
                 var m = label.Measure();
                 var labelPosition = GetLabelPosition(
@@ -344,8 +349,8 @@ public abstract class CoreColumnSeries<TModel, TVisual, TLabel, TErrorGeometry>
         var chart = chartPoint.Context.Chart;
         if (chartPoint.Context.Visual is not TVisual visual) throw new Exception("Unable to initialize the point instance.");
 
-        var easing = EasingFunction ?? chart.EasingFunction;
-        var speed = AnimationsSpeed ?? chart.AnimationsSpeed;
+        var easing = EasingFunction ?? chart.CoreChart.ActualEasingFunction;
+        var speed = AnimationsSpeed ?? chart.CoreChart.ActualAnimationsSpeed;
 
         visual.Animate(easing, speed);
 

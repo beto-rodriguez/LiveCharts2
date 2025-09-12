@@ -1,0 +1,35 @@
+﻿<UserControl
+    x:Class="WinUISample.Polar.Coordinates.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
+    xmlns:vms="using:ViewModelsSamples.Polar.Coordinates"
+    mc:Ignorable="d">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <lvc:PolarChart>
+        <lvc:PolarChart.Series>
+            <lvc:SeriesCollection>
+                <lvc:XamlPolarLineSeries
+                    Values="{Binding Values}"
+                    IsClosed="True"
+                    Fill="{x:Null}"/>
+            </lvc:SeriesCollection>
+        </lvc:PolarChart.Series>
+        <lvc:PolarChart.AngleAxes>
+            <lvc:PolarAxesCollection>
+                <lvc:XamlPolarAxis
+                    MinLimit="0"
+                    MaxLimit="360"
+                    Labeler="{Binding Labeler}"
+                    ForceStepToMin="True"
+                    MinStep="30"/>
+            </lvc:PolarAxesCollection>
+        </lvc:PolarChart.AngleAxes>
+    </lvc:PolarChart>
+</UserControl>

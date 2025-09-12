@@ -35,18 +35,16 @@ namespace LiveChartsCore.Kernel;
 /// <param name="onEntityIndexChanged">The callback to call when the entity index changes.</param>
 public class ChartEntityMetaData(Action<int>? onEntityIndexChanged = null)
 {
-    private int _entityIndex;
-
     /// <summary>
     /// Gets the entity index, a consecutive integer based on the position of the entity in the data collection.
     /// </summary>
     public int EntityIndex
     {
-        get => _entityIndex;
+        get;
         set
         {
-            if (value == _entityIndex) return;
-            _entityIndex = value;
+            if (value == field) return;
+            field = value;
             onEntityIndexChanged?.Invoke(value);
         }
     }

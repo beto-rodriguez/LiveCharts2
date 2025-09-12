@@ -24,6 +24,7 @@ using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.VisualElements;
@@ -38,15 +39,13 @@ public class GeometryVisual<TGeometry, TLabelGeometry> : BaseGeometryVisual
     where TLabelGeometry : BaseLabelGeometry, new()
 {
     internal TGeometry? _geometry;
-    private string _label = string.Empty;
     private float _labelSize = 12;
     internal TLabelGeometry? _labelGeometry;
-    private Paint? _labelPaint = null;
 
     /// <summary>
     /// Gets or sets the label, a string to be displayed within the section.
     /// </summary>
-    public string Label { get => _label; set => SetProperty(ref _label, value); }
+    public string Label { get; set => SetProperty(ref field, value); } = string.Empty;
 
     /// <summary>
     /// Gets or sets the label size.
@@ -66,9 +65,9 @@ public class GeometryVisual<TGeometry, TLabelGeometry> : BaseGeometryVisual
     /// </value>
     public Paint? LabelPaint
     {
-        get => _labelPaint;
-        set => SetPaintProperty(ref _labelPaint, value);
-    }
+        get;
+        set => SetPaintProperty(ref field, value, PaintStyle.Text);
+    } = null;
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Animatable?[] GetDrawnGeometries() =>
@@ -79,7 +78,6 @@ public class GeometryVisual<TGeometry, TLabelGeometry> : BaseGeometryVisual
     {
         var l = GetActualCoordinate();
         var size = Measure(chart);
-        var clipping = Clipping.GetClipRectangle(ClippingMode, chart);
 
         if (_geometry is null)
         {
@@ -112,16 +110,14 @@ public class GeometryVisual<TGeometry, TLabelGeometry> : BaseGeometryVisual
 
         if (Fill is not null)
         {
-            chart.Canvas.AddDrawableTask(Fill);
+            chart.Canvas.AddDrawableTask(Fill, zone: CanvasZone.DrawMargin);
             Fill.AddGeometryToPaintTask(chart.Canvas, _geometry);
-            Fill.SetClipRectangle(chart.Canvas, clipping);
         }
 
         if (Stroke is not null)
         {
-            chart.Canvas.AddDrawableTask(Stroke);
+            chart.Canvas.AddDrawableTask(Stroke, zone: CanvasZone.DrawMargin);
             Stroke.AddGeometryToPaintTask(chart.Canvas, _geometry);
-            Stroke.SetClipRectangle(chart.Canvas, clipping);
         }
 
         if (LabelPaint is not null)
@@ -139,22 +135,21 @@ public class GeometryVisual<TGeometry, TLabelGeometry> : BaseGeometryVisual
 
                 _labelGeometry.Animate(
                     chart,
-                    nameof(_labelGeometry.X), nameof(_labelGeometry.Y), nameof(_labelGeometry.Opacity));
+                    BaseLabelGeometry.XProperty, BaseLabelGeometry.YProperty, BaseLabelGeometry.OpacityProperty);
                 _labelGeometry.VerticalAlign = Align.Start;
                 _labelGeometry.HorizontalAlign = Align.Start;
             }
 
             _labelGeometry.X = l.X + padding;
             _labelGeometry.Y = l.Y + padding;
-            _labelGeometry.Text = _label;
+            _labelGeometry.Text = Label;
             _labelGeometry.TextSize = _labelSize;
             _labelGeometry.RotateTransform = (float)Rotation;
             _labelGeometry.TranslateTransform = Translate;
             _labelGeometry.Paint = LabelPaint;
 
-            chart.Canvas.AddDrawableTask(LabelPaint);
+            chart.Canvas.AddDrawableTask(LabelPaint, zone: CanvasZone.DrawMargin);
             LabelPaint.AddGeometryToPaintTask(chart.Canvas, _labelGeometry);
-            LabelPaint.SetClipRectangle(chart.Canvas, clipping);
         }
     }
 
@@ -185,5 +180,5 @@ public class GeometryVisual<TGeometry, TLabelGeometry> : BaseGeometryVisual
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
-        [Fill, Stroke, _labelPaint];
+        [Fill, Stroke, LabelPaint];
 }

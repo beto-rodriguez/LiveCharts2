@@ -21,125 +21,62 @@
 // SOFTWARE.
 
 using System;
-using System.Threading.Tasks;
 using LiveChartsCore.Motion;
-using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.Native;
+using LiveChartsCore.SkiaSharpView.Maui.Rendering;
 using Microsoft.Maui.Controls;
-using Microsoft.Maui.Devices;
-using SkiaSharp.Views.Maui;
-using SkiaSharp.Views.Maui.Controls;
+using Microsoft.Maui.Layouts;
 
 namespace LiveChartsCore.SkiaSharpView.Maui;
 
 /// <summary>
 /// Defines the motion cavnas class for Maui.
 /// </summary>
-public class MotionCanvas : ContentView
+public class MotionCanvas : AbsoluteLayout
 {
-    private bool _isDrawingLoopRunning = false;
-    private bool _isLoaded = true;
-    private double _density = 1;
-    private SKCanvasView? _canvasView;
-    private SKGLView? _glView;
+    private readonly MotionCanvasComposer _composer;
+
+    static MotionCanvas()
+    {
+        _ = LiveChartsSkiaSharp
+            .EnsureInitialized()
+            .HasRenderingFactory(
+                (settings, forceGPU) =>
+                {
+                    IRenderMode renderMode = forceGPU || settings.UseGPU
+                        ? new GPURenderMode()
+                        : new CPURenderMode();
+
+                    IFrameTicker ticker = settings.TryUseVSync
+                        ? new NativeFrameTicker()
+                        : new AsyncLoopTicker();
+
+                    return new MotionCanvasComposer(renderMode, ticker);
+                });
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MotionCanvas"/> class.
     /// </summary>
-    public MotionCanvas()
+    public MotionCanvas(bool forceGPU)
     {
-        InitializeView();
+        _composer = LiveChartsSkiaSharp.MotionCanvasRenderingFactory(LiveCharts.RenderingSettings, forceGPU);
 
-        _density = DeviceDisplay.MainDisplayInfo.Density;
-        DeviceDisplay.MainDisplayInfoChanged += MainDisplayInfoChanged;
+        var view = (View)_composer.RenderMode;
+        AbsoluteLayout.SetLayoutBounds(view, new(0, 0, 1, 1));
+        AbsoluteLayout.SetLayoutFlags(view, AbsoluteLayoutFlags.SizeProportional | AbsoluteLayoutFlags.PositionProportional);
+        Children.Add(view);
 
-        CanvasCore.Invalidated += OnCanvasCoreInvalidated;
-        Unloaded += OnUnloaded;
         Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
     }
 
-    /// <summary>
-    /// Gets the canvas core.
-    /// </summary>
-    /// <value>
-    /// The canvas core.
-    /// </value>
+    /// <inheritdoc cref="CoreMotionCanvas"/>
     public CoreMotionCanvas CanvasCore { get; } = new();
 
-    /// <summary>
-    /// Invalidates this instance.
-    /// </summary>
-    /// <returns></returns>
-    public void Invalidate() =>
-        RunDrawingLoop();
-
-    /// <inheritdoc cref="NavigableElement.OnParentSet"/>
-    protected override void OnParentSet()
-    {
-        base.OnParentSet();
-
-        if (Parent == null)
-        {
-            CanvasCore.Invalidated -= OnCanvasCoreInvalidated;
-            CanvasCore.Dispose();
-        }
-    }
-
-    private void OnCanvasViewPaintSurface(object? sender, SKPaintSurfaceEventArgs args)
-    {
-        args.Surface.Canvas.Scale((float)_density, (float)_density);
-        CanvasCore.DrawFrame(
-            new SkiaSharpDrawingContext(CanvasCore, args.Info, args.Surface, args.Surface.Canvas));
-    }
-
-    private void OnGlViewPaintSurface(object? sender, SKPaintGLSurfaceEventArgs args)
-    {
-        args.Surface.Canvas.Scale((float)_density, (float)_density);
-        CanvasCore.DrawFrame(
-            new SkiaSharpDrawingContext(CanvasCore, new SkiaSharp.SKImageInfo((int)Width, (int)Height), args.Surface, args.Surface.Canvas));
-    }
-
-    private void OnCanvasCoreInvalidated(CoreMotionCanvas sender) =>
-        Invalidate();
-
-    private void InitializeView()
-    {
-        if (LiveCharts.UseGPU)
-        {
-            _glView = new SKGLView();
-            _glView.PaintSurface += OnGlViewPaintSurface;
-            Content = _glView;
-        }
-        else
-        {
-            _canvasView = new SKCanvasView();
-            _canvasView.PaintSurface += OnCanvasViewPaintSurface;
-            Content = _canvasView;
-        }
-    }
-
-    private async void RunDrawingLoop()
-    {
-        if (_isDrawingLoopRunning) return;
-        _isDrawingLoopRunning = true;
-
-        var ts = TimeSpan.FromSeconds(1 / LiveCharts.MaxFps);
-
-        while (!CanvasCore.IsValid && _isLoaded)
-        {
-            _canvasView?.InvalidateSurface();
-            _glView?.InvalidateSurface();
-            await Task.Delay(ts);
-        }
-
-        _isDrawingLoopRunning = false;
-    }
-
     private void OnLoaded(object? sender, EventArgs e) =>
-        _isLoaded = true;
+        _composer.Initialize(CanvasCore);
 
     private void OnUnloaded(object? sender, EventArgs e) =>
-        _isLoaded = false;
-
-    private void MainDisplayInfoChanged(object? sender, EventArgs e) =>
-        _density = DeviceDisplay.MainDisplayInfo.Density;
+        _composer.Dispose(CanvasCore);
 }

@@ -4,7 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
              xmlns:vms="clr-namespace:ViewModelsSamples.VisualTest.ReattachVisual;assembly=ViewModelsSamples"
-             >
+             x:DataType="vms:ViewModel">
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>

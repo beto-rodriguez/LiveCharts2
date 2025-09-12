@@ -30,6 +30,7 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Motion;
+using LiveChartsCore.Themes;
 using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
@@ -49,17 +50,19 @@ public abstract class Chart
     internal float _titleHeight = 0f;
     internal LvcSize _legendSize;
     internal bool _preserveFirstDraw = false;
-    internal readonly HashSet<int> _drawnSeries = [];
+    internal HashSet<int> _drawnSeries = [];
     internal bool _isFirstDraw = true;
     private readonly ActionThrottler _updateThrottler;
     private readonly ActionThrottler _tooltipThrottler;
     private readonly ActionThrottler _panningThrottler;
-    private LvcPoint _pointerPanningStartPosition = new(-10, -10);
     private LvcPoint _pointerPanningPosition = new(-10, -10);
     private LvcPoint _pointerPreviousPanningPosition = new(-10, -10);
-    private bool _isPanning = false;
+    internal bool _isPanning = false;
     private readonly HashSet<ChartPoint> _activePoints = [];
     private LvcSize _previousSize = new();
+    private int _nextSeriesId = 0;
+    private long _lastMeasureTimeStamp = -1;
+
 #if NET5_0_OR_GREATER
     private readonly bool _isMobile;
     private bool _isTooltipCanceled;
@@ -71,25 +74,21 @@ public abstract class Chart
     /// Initializes a new instance of the <see cref="Chart"/> class.
     /// </summary>
     /// <param name="canvas">The canvas.</param>
-    /// <param name="defaultPlatformConfig">The default platform configuration.</param>
     /// <param name="view">The chart view.</param>
     /// <param name="kind">The chart kind.</param>
     protected Chart(
         CoreMotionCanvas canvas,
-        Action<LiveChartsSettings> defaultPlatformConfig,
         IChartView view,
         ChartKind kind)
     {
         Kind = kind;
         Canvas = canvas;
         canvas.Validated += OnCanvasValidated;
-        EasingFunction = EasingFunctions.QuadraticOut;
-        LiveCharts.Configure(defaultPlatformConfig);
 
-        _updateThrottler = view.DesignerMode
-                ? new ActionThrottler(() => Task.CompletedTask, TimeSpan.FromMilliseconds(100))
-                : new ActionThrottler(UpdateThrottlerUnlocked, TimeSpan.FromMilliseconds(50));
-        _updateThrottler.ThrottlerTimeSpan = view.UpdaterThrottler;
+        _updateThrottler = new ActionThrottler(UpdateThrottlerUnlocked, TimeSpan.FromMilliseconds(50))
+        {
+            ThrottlerTimeSpan = view.UpdaterThrottler
+        };
 
         _tooltipThrottler = new ActionThrottler(TooltipThrottlerUnlocked, TimeSpan.FromMilliseconds(50));
         _panningThrottler = new ActionThrottler(PanningThrottlerUnlocked, TimeSpan.FromMilliseconds(30));
@@ -116,19 +115,6 @@ public abstract class Chart
     /// Gets the tool tip meta data.
     /// </summary>
     public ToolTipMetaData AutoToolTipsInfo { get; internal set; } = new();
-
-    /// <summary>
-    /// Gets the bounds of the chart.
-    /// </summary>
-    public AnimatableContainer ActualBounds { get; } = new();
-
-    /// <summary>
-    /// Gets the measure work.
-    /// </summary>
-    /// <value>
-    /// The measure work.
-    /// </value>
-    public object MeasureWork { get; protected set; } = new();
 
     /// <summary>
     /// Gets the kind of the chart.
@@ -247,7 +233,7 @@ public abstract class Chart
     /// <value>
     /// The animations speed.
     /// </value>
-    public TimeSpan AnimationsSpeed { get; protected set; }
+    public TimeSpan ActualAnimationsSpeed { get; protected set; }
 
     /// <summary>
     /// Gets the easing function.
@@ -255,7 +241,7 @@ public abstract class Chart
     /// <value>
     /// The easing function.
     /// </value>
-    public Func<float, float>? EasingFunction { get; protected set; }
+    public Func<float, float>? ActualEasingFunction { get; protected set; } = EasingFunctions.QuadraticOut;
 
     /// <summary>
     /// Gets the visual elements.
@@ -263,7 +249,7 @@ public abstract class Chart
     /// <value>
     /// The visual elements.
     /// </value>
-    public IEnumerable<ChartElement> VisualElements { get; protected set; } =
+    public IEnumerable<IChartElement> VisualElements { get; protected set; } =
         [];
 
     internal event Action<Chart, LvcPoint>? PointerDown;
@@ -302,6 +288,22 @@ public abstract class Chart
     /// <returns></returns>
     public abstract IEnumerable<ChartPoint> FindHoveredPointsBy(LvcPoint pointerPosition);
 
+    /// <inheritdoc cref="IChartView.GetPointsAt(LvcPointD, FindingStrategy, FindPointFor)"/>
+    public IEnumerable<ChartPoint> GetPointsAt(
+        LvcPointD point, FindingStrategy strategy = FindingStrategy.Automatic, FindPointFor findPointFor = FindPointFor.HoverEvent)
+    {
+        if (strategy == FindingStrategy.Automatic)
+            strategy = Series.GetFindingStrategy();
+
+        return Series.SelectMany(series =>
+            series.FindHitPoints(this, new(point), strategy, FindPointFor.HoverEvent));
+    }
+
+    /// <inheritdoc cref="IChartView.GetVisualsAt(LvcPointD)"/>
+    public IEnumerable<IChartElement> GetVisualsAt(LvcPointD point) =>
+        VisualElements.SelectMany(visual =>
+            ((VisualElement)visual).IsHitBy(this, new(point)));
+
     /// <summary>
     /// Loads the control resources.
     /// </summary>
@@ -309,8 +311,9 @@ public abstract class Chart
     {
         IsLoaded = true;
         _isFirstDraw = true;
-        View.Tooltip ??= LiveCharts.DefaultSettings.GetTheme().DefaultTooltip();
-        View.Legend ??= LiveCharts.DefaultSettings.GetTheme().DefaultLegend();
+        var theme = GetTheme();
+        View.Tooltip ??= theme.GetDefaultTooltip();
+        View.Legend ??= theme.GetDefaultLegend();
         Update();
     }
 
@@ -335,7 +338,6 @@ public abstract class Chart
     {
         _isPanning = true;
         _pointerPreviousPanningPosition = point;
-        _pointerPanningStartPosition = point;
 
         lock (Canvas.Sync)
         {
@@ -512,25 +514,10 @@ public abstract class Chart
     }
 
     /// <summary>
-    /// Updates the bounds tracker.
-    /// </summary>
-    protected void UpdateBounds()
-    {
-        ActualBounds.Location = DrawMarginLocation;
-        ActualBounds.Size = DrawMarginSize;
-
-        if (_isFirstDraw)
-        {
-            ActualBounds.Animate(EasingFunction, AnimationsSpeed);
-            _ = Canvas.Trackers.Add(ActualBounds);
-        }
-    }
-
-    /// <summary>
     /// Initializes the visuals collector.
     /// </summary>
     protected void InitializeVisualsCollector() =>
-        _toDeleteElements = new HashSet<IChartElement>(_everMeasuredElements);
+        _toDeleteElements = [.. _everMeasuredElements];
 
     /// <summary>
     /// Adds a visual element to the chart.
@@ -592,6 +579,25 @@ public abstract class Chart
     /// <param name="seriesId">The series id.</param>
     /// <returns>A boolean indicating whether the series is drawn.</returns>
     public bool IsDrawn(int seriesId) => _drawnSeries.Contains(seriesId);
+
+    /// <summary>
+    /// Gets the active theme.
+    /// </summary>
+    /// <returns></returns>
+    public Theme GetTheme()
+    {
+        var theme = View.ChartTheme ?? LiveCharts.DefaultSettings.GetTheme();
+        theme.Setup(View.IsDarkMode);
+        Canvas._virtualBackgroundColor = theme.VirtualBackroundColor;
+        return theme;
+    }
+
+    /// <summary>
+    /// Applies the current theme to the chart.
+    /// </summary>
+    public virtual void ApplyTheme() =>
+        // this is not optimal, we should only update the colors instead of re-measuring everything.
+        Measure();
 
     /// <summary>
     /// Collects and deletes from the UI the unused visuals.
@@ -672,12 +678,18 @@ public abstract class Chart
 
         foreach (var point in hovered)
         {
-            if (_activePoints.Contains(point)) continue;
+            if (_activePoints.Contains(point) &&
+                point.HoverKey.Item1 == point.Coordinate.PrimaryValue &&
+                point.HoverKey.Item2 == point.Coordinate.SecondaryValue)
+            {
+                continue;
+            }
 
             point.Context.Series.OnPointerEnter(point);
 
             _ = _activePoints.Add(point);
             _ = added.Add(point);
+            point.HoverKey = (point.Coordinate.PrimaryValue, point.Coordinate.SecondaryValue);
         }
 
         var removed = CleanHoveredPoints(hovered);
@@ -704,6 +716,106 @@ public abstract class Chart
         return true;
     }
 
+    /// <summary>
+    /// Gets the next series id.
+    /// </summary>
+    /// <returns></returns>
+    protected int GetNextSeriesId() => _nextSeriesId++;
+
+    internal void ResetNextSeriesId()
+    {
+        _nextSeriesId = 0;
+        _drawnSeries = [];
+    }
+
+    /// <summary>
+    /// Measures the title.
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    protected LvcSize MeasureTitle()
+    {
+        // Visual is the recommended type for the title,
+        // more flexibility compared with VisualElement.
+        if (View.Title?.ChartElementSource is Visual v)
+        {
+            return v.GetHitBox().Size;
+        }
+
+        // VisualElement is an older type for the title, this is kept for compatibility.
+        if (View.Title?.ChartElementSource is VisualElement ve)
+            return ve.Measure(this);
+
+        throw new Exception("The title must be a Visual or a VisualElement.");
+    }
+
+    /// <summary>
+    /// Adds the title to the chart.
+    /// </summary>
+    /// <exception cref="Exception"></exception>
+    protected void AddTitleToChart()
+    {
+        // Visual is the recommended type for the title,
+        // more flexibility compared with VisualElement.
+        if (View.Title?.ChartElementSource is Visual v && v.DrawnElement is not null)
+        {
+            var size = v.GetHitBox().Size;
+            v.DrawnElement.X = ControlSize.Width * 0.5f - size.Width * 0.5f;
+            v.DrawnElement.Y = 0;
+            AddVisual(((IChartElement)v).ChartElementSource);
+            return;
+        }
+
+        // VisualElement is an older type for the title, this is kept for compatibility.
+        if (View.Title?.ChartElementSource is VisualElement ve)
+        {
+            var titleSize = ve.Measure(this);
+            ve.AlignToTopLeftCorner();
+            ve.X = ControlSize.Width * 0.5f - titleSize.Width * 0.5f;
+            ve.Y = 0;
+            AddVisual(((IChartElement)ve).ChartElementSource);
+            return;
+        }
+
+        throw new Exception("The title must be a Visual or a VisualElement.");
+    }
+
+    /// <summary>
+    /// Determines whether this instance is rendering the previous measure request.
+    /// </summary>
+    protected bool IsRendering()
+    {
+        // Why is this method needed?
+        // It is a fix for https://github.com/beto-rodriguez/LiveCharts2/issues/1944
+        // it ensures that the chart is not measured while the canvas is not rendering frames.
+        // there could be multiple reasons for this including:
+        // - the chart is not visible
+        // - the chart is virtualized by the UI framework
+
+        // after trying https://github.com/beto-rodriguez/LiveCharts2/pull/1945 I realized
+        // that it will be messy to handle this in the UI framework side, I tested and
+        // there are multiple reasons where the UI framework fails to notify whether the
+        // control is the viewport, and also there are even framework that do not provide an API for this.
+
+        // so lets handle this on our side. we will save the time the chart was measured and the time the canvas
+        // rendered the last frame, if both timestamps are different it means the canvas is rendering
+        // and we are safe to keep measuring, otherwise we skip measuring until the canvas renders a new frame.
+
+#if DEBUG
+        // hack.
+        // a flag to to remove this check in unit tests.
+        if (CoreMotionCanvas.IsTesting)
+            return true;
+#endif
+
+        var canMeasure = Canvas._lastFrameTimestamp != _lastMeasureTimeStamp;
+
+        if (canMeasure)
+            _lastMeasureTimeStamp = Canvas._lastFrameTimestamp;
+
+        return canMeasure;
+    }
+
     private List<ChartPoint> CleanHoveredPoints(HashSet<ChartPoint> hovered)
     {
         var removed = new List<ChartPoint>();
@@ -712,7 +824,7 @@ public abstract class Chart
 
 #if NET5_0_OR_GREATER
 #else
-        active = active.ToArray();
+        active = [.. active];
 #endif
 
         foreach (var point in active)
@@ -757,7 +869,7 @@ public abstract class Chart
                     var dx = _pointerPanningPosition.X - _pointerPreviousPanningPosition.X;
                     var dy = _pointerPanningPosition.Y - _pointerPreviousPanningPosition.Y;
 
-                    cartesianChart.Pan(new LvcPoint(dx, dy), _isPanning);
+                    cartesianChart.Pan(((ICartesianChartView)cartesianChart.View).ZoomMode, new LvcPoint(dx, dy));
                     _pointerPreviousPanningPosition = new LvcPoint(_pointerPanningPosition.X, _pointerPanningPosition.Y);
                 }
             }));

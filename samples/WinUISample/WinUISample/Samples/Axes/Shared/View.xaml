@@ -1,0 +1,78 @@
+﻿<UserControl
+    x:Class="WinUISample.Axes.Shared.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
+    xmlns:vms="using:ViewModelsSamples.Axes.Shared"
+    mc:Ignorable="d">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <Grid RowDefinitions="*,*">
+
+        <!--
+        We define a SharedAxesPair, it cointains a pair of axes, one for each chart,
+        The SharedAxesPair class will take care of keeping the axes in sync as the user
+        zooms and pans the charts.
+        -->
+
+        <Grid.Resources>
+            <lvc:SharedAxesPair x:Key="SharedAxes">
+
+                <lvc:SharedAxesPair.First>
+                    <lvc:XamlAxis
+                        CrosshairLabelsBackground="{lvc:Color Hex='#FF4500'}"
+                        CrosshairLabelsPaint="{lvc:SolidColorPaint Color='#FFF'}"
+                        CrosshairPaint="{lvc:SolidColorPaint Color='#40FF4500'}"
+                        Labeler="{Binding Labeler}"
+                        MaxLimit="{Binding Max}"/>
+                </lvc:SharedAxesPair.First>
+
+                <lvc:SharedAxesPair.Second>
+                    <lvc:XamlAxis
+                        CrosshairPaint="{lvc:SolidColorPaint Color='#40FF4500'}"
+                        MaxLimit="{Binding Max}" />
+                </lvc:SharedAxesPair.Second>
+
+            </lvc:SharedAxesPair>
+        </Grid.Resources>
+
+        <!--
+        We force the left margin in the "DrawMargin" to 70 in both charts, this to align the
+        axes no matter the size of the labels on each axis.
+        -->
+        
+        <lvc:CartesianChart
+            Grid.Row="0"
+            XAxes="{lvc:FromSharedAxes AxesPair={StaticResource SharedAxes}, Element=First}"
+            DrawMargin="{lvc:Margin Value='70, Auto, Auto, Auto'}"
+            ZoomMode="X">
+
+            <lvc:CartesianChart.Series>
+                <lvc:SeriesCollection>
+                    <lvc:XamlLineSeries Values="{Binding Values1}"/>
+                </lvc:SeriesCollection>
+            </lvc:CartesianChart.Series>
+
+        </lvc:CartesianChart>
+
+        <lvc:CartesianChart
+            Grid.Row="1"
+            XAxes="{lvc:FromSharedAxes AxesPair={StaticResource SharedAxes}, Element=Second}"
+            DrawMargin="{lvc:Margin Value='70, Auto, Auto, Auto'}"
+            ZoomMode="X">
+
+            <lvc:CartesianChart.Series>
+                <lvc:SeriesCollection>
+                    <lvc:XamlColumnSeries Values="{Binding Values2}"/>
+                </lvc:SeriesCollection>
+            </lvc:CartesianChart.Series>
+
+        </lvc:CartesianChart>
+
+    </Grid>
+</UserControl>

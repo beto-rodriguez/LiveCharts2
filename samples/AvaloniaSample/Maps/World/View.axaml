@@ -5,7 +5,8 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AvaloniaSample.Maps.World.View"
              xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Maps.World">
+             xmlns:vms="using:ViewModelsSamples.Maps.World"
+             x:DataType="vms:ViewModel">
     <UserControl.DataContext>
         <vms:ViewModel/>
     </UserControl.DataContext>

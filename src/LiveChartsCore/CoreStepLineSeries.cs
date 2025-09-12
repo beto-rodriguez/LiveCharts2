@@ -30,8 +30,8 @@ using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
-using LiveChartsCore.VisualElements;
 
 namespace LiveChartsCore;
 
@@ -45,7 +45,7 @@ namespace LiveChartsCore;
 /// <typeparam name="TLineGeometry">The type of the line geometry</typeparam>
 public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry, TLineGeometry>
     : StrokeAndFillCartesianSeries<TModel, TVisual, TLabel>, IStepLineSeries
-        where TPathGeometry : BaseVectorGeometry<Segment>, new()
+        where TPathGeometry : BaseVectorGeometry, new()
         where TVisual : BoundedDrawnGeometry, new()
         where TLabel : BaseLabelGeometry, new()
         where TLineGeometry : BaseLineGeometry, new()
@@ -53,9 +53,6 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
     private readonly Dictionary<object, List<TPathGeometry>> _fillPathHelperDictionary = [];
     private readonly Dictionary<object, List<TPathGeometry>> _strokePathHelperDictionary = [];
     private float _geometrySize = 14f;
-    private Paint? _geometryFill;
-    private Paint? _geometryStroke;
-    private bool _enableNullSplitting = true;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CoreStepLineSeries{TModel, TVisual, TLabel, TPathGeometry, TLineGeometry}"/> class.
@@ -69,7 +66,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
     }
 
     /// <inheritdoc cref="IStepLineSeries.EnableNullSplitting"/>
-    public bool EnableNullSplitting { get => _enableNullSplitting; set => SetProperty(ref _enableNullSplitting, value); }
+    public bool EnableNullSplitting { get; set => SetProperty(ref field, value); } = true;
 
     /// <inheritdoc cref="IStepLineSeries.GeometrySize"/>
     public double GeometrySize { get => _geometrySize; set => SetProperty(ref _geometrySize, (float)value); }
@@ -77,23 +74,23 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
     /// <inheritdoc cref="IStepLineSeries.GeometryFill"/>
     public Paint? GeometryFill
     {
-        get => _geometryFill;
-        set => SetPaintProperty(ref _geometryFill, value);
-    }
+        get;
+        set => SetPaintProperty(ref field, value);
+    } = Paint.Default;
 
     /// <inheritdoc cref="IStepLineSeries.GeometrySize"/>
     public Paint? GeometryStroke
     {
-        get => _geometryStroke;
-        set => SetPaintProperty(ref _geometryStroke, value, PaintStyle.Stroke);
-    }
+        get;
+        set => SetPaintProperty(ref field, value, PaintStyle.Stroke);
+    } = Paint.Default;
 
     /// <inheritdoc cref="ChartElement.Invalidate(Chart)"/>
     public override void Invalidate(Chart chart)
     {
         var cartesianChart = (CartesianChartEngine)chart;
-        var primaryAxis = cartesianChart.YAxes[ScalesYAt];
-        var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
+        var primaryAxis = cartesianChart.GetYAxis(this);
+        var secondaryAxis = cartesianChart.GetXAxis(this);
 
         var drawLocation = cartesianChart.DrawMarginLocation;
         var drawMarginSize = cartesianChart.DrawMarginSize;
@@ -108,7 +105,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
         var p = primaryScale.ToPixels(pivot);
 
         // see note #240222
-        var segments = _enableNullSplitting
+        var segments = EnableNullSplitting
             ? Fetch(cartesianChart).SplitByNullGaps(point => DeleteNullPoint(point, secondaryScale, primaryScale))
             : [Fetch(cartesianChart)];
 
@@ -117,14 +114,13 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
             : null;
 
         var actualZIndex = ZIndex == 0 ? ((ISeries)this).SeriesId : ZIndex;
-        var clipping = GetClipRectangle(cartesianChart);
 
         if (stacker is not null)
         {
             // see note #010621
-            actualZIndex = 1000 - stacker.Position;
-            if (Fill is not null) Fill.ZIndex = actualZIndex;
-            if (Stroke is not null) Stroke.ZIndex = actualZIndex;
+            actualZIndex = (int)PaintConstants.StackedSeriesBaseZIndex - stacker.Position;
+            Fill?.ZIndex = actualZIndex;
+            Stroke?.ZIndex = actualZIndex;
         }
 
         var dls = (float)DataLabelsSize;
@@ -154,7 +150,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
         {
             var hasPaths = false;
             var isSegmentEmpty = true;
-            VectorManager<Segment>? strokeVector = null, fillVector = null;
+            VectorManager? strokeVector = null, fillVector = null;
 
             double previousPrimary = 0, previousSecondary = 0;
 
@@ -189,31 +185,29 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
                     var fillPath = fillLookup.Path;
                     var strokePath = strokeLookup.Path;
 
-                    strokeVector = new VectorManager<Segment>(strokePath);
-                    fillVector = new VectorManager<Segment>(fillPath);
+                    strokeVector = new VectorManager(strokePath.Commands);
+                    fillVector = new VectorManager(fillPath.Commands);
 
-                    if (Fill is not null)
+                    if (Fill is not null && Fill != Paint.Default)
                     {
                         Fill.AddGeometryToPaintTask(cartesianChart.Canvas, fillPath);
-                        cartesianChart.Canvas.AddDrawableTask(Fill);
-                        Fill.ZIndex = actualZIndex + 0.1;
-                        Fill.SetClipRectangle(cartesianChart.Canvas, clipping);
+                        cartesianChart.Canvas.AddDrawableTask(Fill, zone: CanvasZone.DrawMargin);
+                        Fill.ZIndex = actualZIndex + PaintConstants.SeriesFillZIndexOffset;
                         fillPath.Pivot = p;
                         if (isNew)
                         {
-                            fillPath.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
+                            fillPath.Animate(EasingFunction ?? cartesianChart.ActualEasingFunction, AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed);
                         }
                     }
-                    if (Stroke is not null)
+                    if (Stroke is not null && Stroke != Paint.Default)
                     {
                         Stroke.AddGeometryToPaintTask(cartesianChart.Canvas, strokePath);
-                        cartesianChart.Canvas.AddDrawableTask(Stroke);
-                        Stroke.ZIndex = actualZIndex + 0.2;
-                        Stroke.SetClipRectangle(cartesianChart.Canvas, clipping);
+                        cartesianChart.Canvas.AddDrawableTask(Stroke, zone: CanvasZone.DrawMargin);
+                        Stroke.ZIndex = actualZIndex + PaintConstants.SeriesStrokeZIndexOffset;
                         strokePath.Pivot = p;
                         if (isNew)
                         {
-                            strokePath.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
+                            strokePath.Animate(EasingFunction ?? cartesianChart.ActualEasingFunction, AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed);
                         }
                     }
 
@@ -230,7 +224,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
                         ? stacker.GetStack(point).Start
                         : stacker.GetStack(point).NegativeStart;
 
-                var visual = (SegmentVisualPoint<TVisual, Segment>?)point.Context.AdditionalVisuals;
+                var visual = (SegmentVisualPoint?)point.Context.AdditionalVisuals;
                 var dp = coordinate.PrimaryValue + s - previousPrimary;
                 var ds = coordinate.SecondaryValue - previousSecondary;
 
@@ -249,6 +243,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
                         visual.Segment.Yj = p;
 
                         point.Context.Visual = null;
+                        point.Context.AdditionalVisuals = null;
                     }
 
                     if (point.Context.Label is not null)
@@ -270,7 +265,7 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
 
                 if (visual is null)
                 {
-                    var v = new SegmentVisualPoint<TVisual, Segment>();
+                    var v = new SegmentVisualPoint(new TVisual());
                     visual = v;
 
                     if (isFirstDraw)
@@ -302,13 +297,17 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
 
                 _ = everFetched.Add(point);
 
-                GeometryFill?.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
-                GeometryStroke?.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
+                if (GeometryFill is not null && GeometryFill != Paint.Default)
+                    GeometryFill.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
+                if (GeometryStroke is not null && GeometryStroke != Paint.Default)
+                    GeometryStroke.AddGeometryToPaintTask(cartesianChart.Canvas, visual.Geometry);
 
                 visual.Segment.Id = point.Context.Entity.MetaData!.EntityIndex;
 
-                if (Fill is not null) fillVector!.AddConsecutiveSegment(visual.Segment, !isFirstDraw);
-                if (Stroke is not null) strokeVector!.AddConsecutiveSegment(visual.Segment, !isFirstDraw);
+                if (Fill is not null && Fill != Paint.Default)
+                    fillVector!.AddConsecutiveSegment(visual.Segment, !isFirstDraw);
+                if (Stroke is not null && Stroke != Paint.Default)
+                    strokeVector!.AddConsecutiveSegment(visual.Segment, !isFirstDraw);
 
                 visual.Segment.Xi = secondaryScale.ToPixels(coordinate.SecondaryValue - ds);
                 visual.Segment.Xj = secondaryScale.ToPixels(coordinate.SecondaryValue);
@@ -318,18 +317,16 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
                 var x = secondaryScale.ToPixels(coordinate.SecondaryValue);
                 var y = primaryScale.ToPixels(coordinate.PrimaryValue + s);
 
-                visual.Geometry.MotionProperties[nameof(visual.Geometry.X)]
-                    .CopyFrom(visual.Segment.MotionProperties[nameof(visual.Segment.Xj)]);
-                visual.Geometry.MotionProperties[nameof(visual.Geometry.Y)]
-                    .CopyFrom(visual.Segment.MotionProperties[nameof(visual.Segment.Yj)]);
+                DrawnGeometry.XProperty.GetMotion(visual.Geometry)!
+                    .CopyFrom(Segment.XjProperty.GetMotion(visual.Segment)!);
+                DrawnGeometry.YProperty.GetMotion(visual.Geometry)!
+                    .CopyFrom(Segment.YjProperty.GetMotion(visual.Segment)!);
+
                 visual.Geometry.TranslateTransform = new LvcPoint(-hgs, -hgs);
 
                 visual.Geometry.Width = gs;
                 visual.Geometry.Height = gs;
                 visual.Geometry.RemoveOnCompleted = false;
-
-                visual.FillPath = fillVector!.AreaGeometry;
-                visual.StrokePath = strokeVector!.AreaGeometry;
 
                 var hags = gs < 8 ? 8 : gs;
 
@@ -346,14 +343,18 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
 
                 pointsCleanup.Clean(point);
 
-                if (DataLabelsPaint is not null)
+                if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
                 {
                     var label = (TLabel?)point.Context.Label;
 
                     if (label is null)
                     {
                         var l = new TLabel { X = x - hgs, Y = p - hgs, RotateTransform = (float)DataLabelsRotation, MaxWidth = (float)DataLabelsMaxWidth };
-                        l.Animate(EasingFunction ?? cartesianChart.EasingFunction, AnimationsSpeed ?? cartesianChart.AnimationsSpeed);
+                        l.Animate(
+                            EasingFunction ?? cartesianChart.ActualEasingFunction,
+                            AnimationsSpeed ?? cartesianChart.ActualAnimationsSpeed,
+                            BaseLabelGeometry.XProperty,
+                            BaseLabelGeometry.YProperty);
                         label = l;
                         point.Context.Label = l;
                     }
@@ -366,7 +367,10 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
 
                     if (isFirstDraw)
                         label.CompleteTransition(
-                            nameof(label.TextSize), nameof(label.X), nameof(label.Y), nameof(label.RotateTransform));
+                            BaseLabelGeometry.TextSizeProperty,
+                            BaseLabelGeometry.XProperty,
+                            BaseLabelGeometry.YProperty,
+                            BaseLabelGeometry.RotateTransformProperty);
 
                     var m = label.Measure();
                     var labelPosition = GetLabelPosition(
@@ -385,20 +389,15 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
                 previousSecondary = coordinate.SecondaryValue;
             }
 
-            strokeVector?.End();
-            fillVector?.End();
-
-            if (GeometryFill is not null)
+            if (GeometryFill is not null && GeometryFill != Paint.Default)
             {
-                cartesianChart.Canvas.AddDrawableTask(GeometryFill);
-                GeometryFill.SetClipRectangle(cartesianChart.Canvas, clipping);
-                GeometryFill.ZIndex = actualZIndex + 0.3;
+                cartesianChart.Canvas.AddDrawableTask(GeometryFill, zone: CanvasZone.DrawMargin);
+                GeometryFill.ZIndex = actualZIndex + PaintConstants.SeriesGeometryFillZIndexOffset;
             }
-            if (GeometryStroke is not null)
+            if (GeometryStroke is not null && GeometryStroke != Paint.Default)
             {
-                cartesianChart.Canvas.AddDrawableTask(GeometryStroke);
-                GeometryStroke.SetClipRectangle(cartesianChart.Canvas, clipping);
-                GeometryStroke.ZIndex = actualZIndex + 0.4;
+                cartesianChart.Canvas.AddDrawableTask(GeometryStroke, zone: CanvasZone.DrawMargin);
+                GeometryStroke.ZIndex = actualZIndex + PaintConstants.SeriesGeometryStrokeZIndexOffset;
             }
 
             if (!isSegmentEmpty) segmentI++;
@@ -427,11 +426,10 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
             }
         }
 
-        if (DataLabelsPaint is not null)
+        if (ShowDataLabels && DataLabelsPaint is not null && DataLabelsPaint != Paint.Default)
         {
-            cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint);
-            DataLabelsPaint.SetClipRectangle(cartesianChart.Canvas, clipping);
-            DataLabelsPaint.ZIndex = actualZIndex + 0.5;
+            cartesianChart.Canvas.AddDrawableTask(DataLabelsPaint, zone: CanvasZone.DrawMargin);
+            DataLabelsPaint.ZIndex = actualZIndex + PaintConstants.SeriesDataLabelsZIndexOffset;
         }
 
         pointsCleanup.CollectPoints(
@@ -475,71 +473,22 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
         };
     }
 
-    /// <inheritdoc cref="GetRequestedGeometrySize"/>
-    protected override double GetRequestedGeometrySize() =>
-        (GeometrySize + (GeometryStroke?.StrokeThickness ?? 0)) * 0.5f;
-
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniaturesSketch"/>
-    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
-    public override Sketch GetMiniaturesSketch()
-    {
-        var schedules = new List<PaintSchedule>();
-
-        if (GeometryFill is not null) schedules.Add(BuildMiniatureSchedule(GeometryFill, new TVisual()));
-        else if (Fill is not null) schedules.Add(BuildMiniatureSchedule(Fill, new TVisual()));
-
-        if (GeometryStroke is not null) schedules.Add(BuildMiniatureSchedule(GeometryStroke, new TVisual()));
-        else if (Stroke is not null) schedules.Add(BuildMiniatureSchedule(Stroke, new TVisual()));
-
-        return new Sketch(MiniatureShapeSize, MiniatureShapeSize, GeometrySvg)
-        {
-            PaintSchedules = schedules
-        };
-    }
-
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniature"/>"/>
-    [Obsolete($"Replaced by ${nameof(GetMiniatureGeometry)}")]
-    public override IChartElement GetMiniature(ChartPoint? point, int zindex)
-    {
-        var noGeometryPaint = GeometryStroke is null && GeometryFill is null;
-        var usesLine = (GeometrySize < 1 || noGeometryPaint) && Stroke is not null;
-
-        var typedPoint = point is null ? null : ConvertToTypedChartPoint(point);
-
-        return usesLine
-            ? new LineVisual<TLineGeometry>
-            {
-                Stroke = GetMiniaturePaint(Stroke, zindex + 2),
-                Width = MiniatureShapeSize,
-                Height = 0,
-                ClippingMode = ClipMode.None
-            }
-            : new GeometryVisual<TVisual, TLabel>
-            {
-                Fill = GetMiniatureFill(point, zindex + 1),
-                Stroke = GetMiniatureStroke(point, zindex + 2),
-                Width = MiniatureShapeSize,
-                Height = MiniatureShapeSize,
-                Rotation = typedPoint?.Visual?.RotateTransform ?? 0,
-                Svg = GeometrySvg,
-                ClippingMode = ClipMode.None
-            };
-    }
-
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.GetMiniatureGeometry(ChartPoint?)"/>
     public override IDrawnElement GetMiniatureGeometry(ChartPoint? point)
     {
         var noGeometryPaint = GeometryStroke is null && GeometryFill is null;
         var usesLine = (GeometrySize < 1 || noGeometryPaint) && Stroke is not null;
 
-        var typedPoint = point is null ? null : ConvertToTypedChartPoint(point);
+        var v = point?.Context.Visual;
 
         if (usesLine)
         {
             return new TLineGeometry
             {
                 IsRelativeToLocation = true,
-                Stroke = GetMiniaturePaint(Stroke, 0),
+                Stroke = Stroke,
+                StrokeThickness = (float)MiniatureStrokeThickness,
+                ClippingBounds = LvcRectangle.Empty,
                 X = 0,
                 Y = 0,
                 X1 = (float)MiniatureShapeSize,
@@ -549,44 +498,18 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
 
         var m = new TVisual
         {
-            Fill = GetMiniatureFill(point, 0),
-            Stroke = GetMiniatureStroke(point, 0),
+            Fill = v?.Fill ?? GeometryFill ?? Fill,
+            Stroke = v?.Stroke ?? GeometryStroke ?? Stroke,
+            StrokeThickness = (float)MiniatureStrokeThickness,
+            ClippingBounds = LvcRectangle.Empty,
             Width = (float)MiniatureShapeSize,
             Height = (float)MiniatureShapeSize,
-            RotateTransform = typedPoint?.Visual?.RotateTransform ?? 0
+            RotateTransform = v?.RotateTransform ?? 0
         };
 
         if (m is IVariableSvgPath svg) svg.SVGPath = GeometrySvg;
 
         return m;
-    }
-
-    /// <inheritdoc cref="GetMiniatureFill(ChartPoint?, int)"/>
-    protected override Paint? GetMiniatureFill(ChartPoint? point, int zIndex)
-    {
-        var p = point is null ? null : ConvertToTypedChartPoint(point);
-        var paint = p?.Visual?.Fill ?? GeometryFill ?? Fill;
-
-        return GetMiniaturePaint(paint, zIndex);
-    }
-
-    /// <inheritdoc cref="GetMiniatureStroke(ChartPoint?, int)"/>
-    protected override Paint? GetMiniatureStroke(ChartPoint? point, int zIndex)
-    {
-        var p = point is null ? null : ConvertToTypedChartPoint(point);
-        var paint = p?.Visual?.Stroke ?? GeometryStroke ?? Stroke;
-
-        return GetMiniaturePaint(paint, zIndex);
-    }
-
-    /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerEnter(ChartPoint)"/>
-    protected override void OnPointerEnter(ChartPoint point)
-    {
-        var visual = (TVisual?)point.Context.Visual;
-        if (visual is null) return;
-        visual.ScaleTransform = new LvcPoint(1.3f, 1.3f);
-
-        base.OnPointerEnter(point);
     }
 
     /// <inheritdoc cref="Series{TModel, TVisual, TLabel}.OnPointerLeft(ChartPoint)"/>
@@ -604,17 +527,17 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
     {
         var chart = chartPoint.Context.Chart;
 
-        if (chartPoint.Context.AdditionalVisuals is not SegmentVisualPoint<TVisual, Segment> visual)
+        if (chartPoint.Context.AdditionalVisuals is not SegmentVisualPoint visual)
             throw new Exception("Unable to initialize the point instance.");
 
-        visual.Geometry.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
-        visual.Segment.Animate(EasingFunction ?? chart.EasingFunction, AnimationsSpeed ?? chart.AnimationsSpeed);
+        visual.Geometry.Animate(EasingFunction ?? chart.CoreChart.ActualEasingFunction, AnimationsSpeed ?? chart.CoreChart.ActualAnimationsSpeed);
+        visual.Segment.Animate(EasingFunction ?? chart.CoreChart.ActualEasingFunction, AnimationsSpeed ?? chart.CoreChart.ActualAnimationsSpeed);
     }
 
     /// <inheritdoc cref="CartesianSeries{TModel, TVisual, TLabel}.SoftDeleteOrDisposePoint(ChartPoint, Scaler, Scaler)"/>
     protected internal override void SoftDeleteOrDisposePoint(ChartPoint point, Scaler primaryScale, Scaler secondaryScale)
     {
-        var visual = (SegmentVisualPoint<TVisual, Segment>?)point.Context.AdditionalVisuals;
+        var visual = (SegmentVisualPoint?)point.Context.AdditionalVisuals;
         if (visual is null) return;
         if (DataFactory is null) throw new Exception("Data provider not found");
 
@@ -676,11 +599,11 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
     /// </summary>
     /// <returns></returns>
     protected internal override Paint?[] GetPaintTasks() =>
-        [Stroke, Fill, _geometryFill, _geometryStroke, DataLabelsPaint];
+        [Stroke, Fill, GeometryFill, GeometryStroke, DataLabelsPaint];
 
     private void DeleteNullPoint(ChartPoint point, Scaler xScale, Scaler yScale)
     {
-        if (point.Context.Visual is not SegmentVisualPoint<TVisual, Segment> visual) return;
+        if (point.Context.Visual is not SegmentVisualPoint visual) return;
 
         var coordinate = point.Coordinate;
 
@@ -712,6 +635,8 @@ public abstract class CoreStepLineSeries<TModel, TVisual, TLabel, TPathGeometry,
         {
             path = container[index];
         }
+
+        path.IsValid = false;
 
         return new SegmentVisual(isNew, path);
     }

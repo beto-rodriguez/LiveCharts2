@@ -22,7 +22,7 @@ public partial class AppShell : Shell
         for (var i1 = 0; i1 < samples.Length; i1++)
         {
             var item = samples[i1];
-            var t = Type.GetType($"MauiSample.{item.Replace('/', '.')}.View");
+            var t = Type.GetType($"MauiSample.{item.Replace('/', '.')}.View")!;
             //var i = Activator.CreateInstance(t);
             Routing.RegisterRoute(item, t);
 

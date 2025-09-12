@@ -1,12 +1,35 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Polar.Coordinates.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Polar.Coordinates;assembly=ViewModelsSamples"
-             >
+<ContentPage
+    x:Class="MauiSample.Polar.Coordinates.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Polar.Coordinates;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-    <lvc:PolarChart Series="{Binding Series}" AngleAxes="{Binding AngleAxes}" />
+
+    <lvc:PolarChart>
+        <lvc:PolarChart.Series>
+            <lvc:SeriesCollection>
+                <lvc:XamlPolarLineSeries
+                    Values="{Binding Values}"
+                    IsClosed="True"
+                    Fill="{x:Null}"/>
+            </lvc:SeriesCollection>
+        </lvc:PolarChart.Series>
+
+        <lvc:PolarChart.AngleAxes>
+            <lvc:PolarAxesCollection>
+                <lvc:XamlPolarAxis
+                    MinLimit="0"
+                    MaxLimit="360"
+                    Labeler="{Binding Labeler}"
+                    ForceStepToMin="True"
+                    MinStep="30"/>
+            </lvc:PolarAxesCollection>
+        </lvc:PolarChart.AngleAxes>
+    </lvc:PolarChart>
 </ContentPage>

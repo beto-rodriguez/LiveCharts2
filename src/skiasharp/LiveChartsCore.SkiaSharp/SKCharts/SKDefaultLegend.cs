@@ -41,6 +41,7 @@ namespace LiveChartsCore.SkiaSharpView.SKCharts;
 public class SKDefaultLegend : Container, IChartLegend
 {
     private bool _isInitialized;
+    private object? _themeId;
     private DrawnTask? _drawnTask;
 
     /// <summary>
@@ -56,9 +57,12 @@ public class SKDefaultLegend : Container, IChartLegend
     /// <inheritdoc cref="IChartLegend.Draw(Chart)"/>
     public virtual void Draw(Chart chart)
     {
-        if (!_isInitialized)
+        var theme = chart.GetTheme();
+
+        if (!_isInitialized || _themeId != theme.ThemeId || chart.View.LegendBackgroundPaint is not null)
         {
             Initialize(chart);
+            _themeId = theme.ThemeId;
             _isInitialized = true;
         }
 
@@ -105,13 +109,22 @@ public class SKDefaultLegend : Container, IChartLegend
     /// <returns>The content layout.</returns>
     protected virtual Layout<SkiaSharpDrawingContext> GetLayout(Chart chart)
     {
+        var theme = chart.GetTheme();
+
         var textSize = (float)chart.View.LegendTextSize;
-        var fontPaint = chart.View.LegendTextPaint ?? new SolidColorPaint(new SKColor(30, 30, 30, 255));
+        if (textSize < 0) textSize = theme.LegendTextSize;
+
+        var fontPaint =
+            chart.View.LegendTextPaint ??
+            theme.LegendTextPaint ??
+            new SolidColorPaint(new SKColor(30, 30, 30, 255));
+
+        var rtl = LiveChartsSkiaSharp.DefaultTextSettings.IsRTL;
 
         var stackLayout = new StackLayout
         {
             Padding = new Padding(15, 4),
-            HorizontalAlignment = Align.Start,
+            HorizontalAlignment = rtl ? Align.End : Align.Start,
             VerticalAlignment = Align.Middle,
             Orientation = chart.LegendPosition is LegendPosition.Left or LegendPosition.Right
                 ? ContainerOrientation.Vertical
@@ -131,25 +144,26 @@ public class SKDefaultLegend : Container, IChartLegend
 
         foreach (var series in chart.Series.Where(x => x.IsVisibleAtLegend))
         {
+            var miniature = (IDrawnElement<SkiaSharpDrawingContext>)series.GetMiniatureGeometry(null);
+            var label = new LabelGeometry
+            {
+                Text = series.Name ?? string.Empty,
+                Paint = fontPaint,
+                TextSize = textSize,
+                Padding = new Padding(8, 2, 8, 2),
+                MaxWidth = (float)LiveCharts.DefaultSettings.MaxTooltipsAndLegendsLabelsWidth,
+                VerticalAlign = Align.Start,
+                HorizontalAlign = Align.Start
+            };
+
             stackLayout.Children.Add(new StackLayout
             {
                 Padding = new Padding(12, 6),
                 VerticalAlignment = Align.Middle,
                 HorizontalAlignment = Align.Middle,
-                Children =
-                {
-                    (IDrawnElement<SkiaSharpDrawingContext>)series.GetMiniatureGeometry(null),
-                    new LabelGeometry
-                    {
-                        Text = series.Name ?? string.Empty,
-                        Paint = fontPaint,
-                        TextSize = textSize,
-                        Padding = new Padding(8, 2, 0, 2),
-                        MaxWidth = (float)LiveCharts.DefaultSettings.MaxTooltipsAndLegendsLabelsWidth,
-                        VerticalAlign = Align.Start,
-                        HorizontalAlign = Align.Start
-                    }
-                }
+                Children = rtl
+                    ? [label, miniature]
+                    : [miniature, label]
             });
         }
 
@@ -159,6 +173,10 @@ public class SKDefaultLegend : Container, IChartLegend
     /// <summary>
     /// Called to initialize the tooltip.
     /// </summary>
-    protected virtual void Initialize(Chart chart) =>
-        Geometry.Fill = chart.View.LegendBackgroundPaint;
+    protected virtual void Initialize(Chart chart)
+    {
+        Geometry.Fill =
+            chart.View.LegendBackgroundPaint ??
+            chart.GetTheme().LegendBackgroundPaint;
+    }
 }

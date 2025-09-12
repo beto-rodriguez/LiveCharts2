@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
 using LiveChartsCore.Drawing;
 using SkiaSharp;
 
@@ -34,25 +33,15 @@ namespace LiveChartsCore.SkiaSharpView.Drawing.Geometries;
 /// </summary>
 public class VariableSVGPathGeometry : BaseSVGPathGeometry, IVariableSvgPath
 {
-    private string? _svgPath;
-
-    /// <summary>
-    /// Svg paths are cached in this dictionary to prevent parsing multiple times the same path,
-    /// when you use the <see cref="VariableSVGPathGeometry"/> class, keep in mind that the parsed paths are living in
-    /// memory, this has no secondary effects in most of the cases, but if you are parsing a lot of paths
-    /// (maybe over 500) then you must consider cleaning the cache when you no longer need a path.
-    /// </summary>
-    public static readonly Dictionary<string, SKPath> Cache = [];
-
     /// <inheritdoc cref="IVariableSvgPath.SVGPath"/>
     public string? SVGPath
     {
-        get => _svgPath;
+        get;
         set
         {
-            if (value == _svgPath) return;
+            if (value == field) return;
 
-            _svgPath = value;
+            field = value;
             OnPathChanged(value);
         }
     }
@@ -65,13 +54,7 @@ public class VariableSVGPathGeometry : BaseSVGPathGeometry, IVariableSvgPath
             return;
         }
 
-        if (!Cache.TryGetValue(path, out var skPath))
-        {
-            skPath = SKPath.ParseSvgPathData(path);
-            Cache[path] = skPath;
-        }
-
         Path?.Dispose();
-        Path = skPath;
+        Path = SKPath.ParseSvgPathData(path);
     }
 }

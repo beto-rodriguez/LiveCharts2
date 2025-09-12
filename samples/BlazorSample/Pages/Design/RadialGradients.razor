@@ -1,12 +1,43 @@
 ﻿@page "/Design/RadialGradients"
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.Design.RadialGradients
+@using LiveChartsCore;
+@using LiveChartsCore.SkiaSharpView;
+@using LiveChartsCore.SkiaSharpView.Painting;
+@using SkiaSharp;
 
 <PieChart
-	Series="ViewModel.Series"
+    Series="@series"
     LegendPosition="LiveChartsCore.Measure.LegendPosition.Right">
 </PieChart>
 
 @code {
-	public ViewModel ViewModel { get; set; } = new();
+    private static double[] mariaValues = new double[] { 7 };
+    private static double[] charlesValues = new double[] { 3 };
+
+    private static RadialGradientPaint mariaGradient = new RadialGradientPaint(
+        new[] { new SKColor(0xB3, 0xE5, 0xFC), new SKColor(0x01, 0x57, 0x9B) },
+        new SKPoint(0.5f, 0.5f)
+    );
+    private static RadialGradientPaint charlesGradient = new RadialGradientPaint(
+        new[] { new SKColor(0xFF, 0xCD, 0xD2), new SKColor(0xB7, 0x1C, 0x1C) },
+        new SKPoint(0.5f, 0.5f)
+    );
+
+    private ISeries[] series = new ISeries[]
+    {
+        new PieSeries<double>
+        {
+            Name = "Maria",
+            Values = mariaValues,
+            Pushout = 10,
+            OuterRadiusOffset = 20,
+            Fill = mariaGradient
+        },
+        new PieSeries<double>
+        {
+            Name = "Charles",
+            Values = charlesValues,
+            Fill = charlesGradient
+        }
+    };
 }

@@ -22,28 +22,20 @@ public partial class View : UserControl
     {
         CreateImageFromCartesianControl();
         CreateImageFromPieControl();
-        CreateImageFromGeoControl();
     }
 
     private void CreateImageFromCartesianControl()
     {
         // you can take any chart in the UI, and build an image from it // mark
         var chartControl = (CartesianChart)FindName("cartesianChart");
-        var skChart = new SKCartesianChart(chartControl) { Width = 900, Height = 600, };
+        var skChart = new SKCartesianChart(chartControl);
         skChart.SaveImage("CartesianImageFromControl.png");
     }
 
     private void CreateImageFromPieControl()
     {
         var chartControl = (PieChart)FindName("pieChart");
-        var skChart = new SKPieChart(chartControl) { Width = 900, Height = 600, };
+        var skChart = new SKPieChart(chartControl);
         skChart.SaveImage("PieImageFromControl.png");
-    }
-
-    private void CreateImageFromGeoControl()
-    {
-        var chartControl = (GeoMap)FindName("geoChart");
-        var skChart = new SKGeoMap(chartControl) { Width = 900, Height = 600, };
-        skChart.SaveImage("MapImageFromControl.png");
     }
 }

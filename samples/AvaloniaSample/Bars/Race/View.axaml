@@ -1,20 +1,34 @@
-<UserControl x:Class="AvaloniaSample.Bars.Race.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Bars.Race">
-  <UserControl.DataContext>
-    <vms:ViewModel/>
-  </UserControl.DataContext>
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="*"/>
-    </Grid.RowDefinitions>
-    <lvc:CartesianChart
-        Series="{Binding Series}"
-        XAxes="{Binding XAxes}"
-        YAxes="{Binding YAxes}"
-        TooltipPosition="Hidden">
+<UserControl
+    x:Class="AvaloniaSample.Bars.Race.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Bars.Race"
+    x:DataType="vms:ViewModel">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <lvc:CartesianChart TooltipPosition="Hidden">
+        <lvc:CartesianChart.Series>
+            <lvc:XamlRowSeries
+                Values="{Binding Data}"
+                DataLabelsFormatter="{Binding LabelsFormatter}"
+                ShowDataLabels="True"
+                DataLabelsPosition="End"
+                DataLabelsTranslate="{lvc:Point '-1,0'}"
+                MaxBarWidth="50"
+                Padding="10"
+                PointMeasuredCommand="{Binding PointMeasuredCommand}"/>
+        </lvc:CartesianChart.Series>
+
+        <lvc:CartesianChart.XAxes>
+            <lvc:XamlAxis SeparatorsPaint="{lvc:SolidColorPaint Color='#dcdcdc'}"/>
+        </lvc:CartesianChart.XAxes>
+
+        <lvc:CartesianChart.YAxes>
+            <lvc:XamlAxis IsVisible="False"/>
+        </lvc:CartesianChart.YAxes>
     </lvc:CartesianChart>
-  </Grid>  
 </UserControl>

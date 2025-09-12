@@ -1,18 +1,26 @@
-<UserControl x:Class="AvaloniaSample.Lines.Padding.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Lines.Padding">
-  <UserControl.DataContext>
-    <vms:ViewModel/>
-  </UserControl.DataContext>
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="*"/>
-    </Grid.RowDefinitions>
+<UserControl
+    x:Class="AvaloniaSample.Lines.Padding.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Lines.Padding"
+    x:DataType="vms:ViewModel">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
     <lvc:CartesianChart
-        Series="{Binding Series}"
-        DrawMarginFrame="{Binding DrawMarginFrame}">
+        DrawMarginFrame="{lvc:Frame
+            Stroke={lvc:SolidColorPaint Color='64b4b4b4'},
+            Fill={lvc:SolidColorPaint Color='32dcdcdc'}}">
+        <lvc:CartesianChart.Series>
+            <lvc:XamlLineSeries
+                Values="{Binding Values}"
+                GeometryStroke="{x:Null}"
+                GeometryFill="{x:Null}"
+                DataPadding="{lvc:Point '0,0'}"/>
+        </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
-  </Grid>  
+
 </UserControl>

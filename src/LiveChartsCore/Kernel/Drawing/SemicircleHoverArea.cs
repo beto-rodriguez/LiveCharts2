@@ -128,7 +128,7 @@ public class SemicircleHoverArea : HoverArea
             return
                 startAngle <= beta &&
                 endAngle >= beta &&
-                r >= InnerRadius && r <= Radius;
+                r >= InnerRadius && r <= Radius * 0.5f;
         }
 
         if (beta < startAngle) beta += 360;
@@ -136,7 +136,7 @@ public class SemicircleHoverArea : HoverArea
         return
             startAngle <= beta &&
             endAngle + 360 >= beta &&
-            r >= InnerRadius && r <= Radius;
+            r >= InnerRadius && r <= Radius * 0.5f;
     }
 
     /// <inheritdoc cref="HoverArea.SuggestTooltipPlacement(TooltipPlacementContext, LvcSize)"/>

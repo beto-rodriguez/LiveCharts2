@@ -1,16 +1,37 @@
-<UserControl x:Class="AvaloniaSample.Axes.Crosshairs.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Axes.Crosshairs">
-  <UserControl.DataContext>
-    <vms:ViewModel/>
-  </UserControl.DataContext>
-    <Grid>
-        <lvc:CartesianChart
-            Series="{Binding Series}"
-            XAxes="{Binding XAxes}"
-            YAxes="{Binding YAxes}">
-        </lvc:CartesianChart>
-    </Grid>
+<UserControl
+    x:Class="AvaloniaSample.Axes.Crosshairs.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Axes.Crosshairs"
+    x:DataType="vms:ViewModel">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <lvc:CartesianChart>
+
+        <lvc:CartesianChart.Series>
+            <lvc:XamlLineSeries Values="{Binding Values}" />
+        </lvc:CartesianChart.Series>
+
+        <lvc:CartesianChart.XAxes>
+            <lvc:XamlAxis
+                CrosshairLabelsBackground="{lvc:Color '#FF8C00'}"
+                CrosshairLabelsPaint="{lvc:SolidColorPaint Color='#8B0000'}"
+                CrosshairPaint="{lvc:SolidColorPaint Color='#FF8C00'}"
+                Labeler="{Binding LabelFormatter}"/>
+        </lvc:CartesianChart.XAxes>
+
+        <lvc:CartesianChart.YAxes>
+            <lvc:XamlAxis
+                CrosshairLabelsBackground="{lvc:Color '#FF8C00'}"
+                CrosshairLabelsPaint="{lvc:SolidColorPaint Color='#8B0000'}"
+                CrosshairPaint="{lvc:SolidColorPaint Color='#FF8C00'}"
+                CrosshairSnapEnabled="True"
+                Labeler="{Binding LabelFormatter}"/>
+        </lvc:CartesianChart.YAxes>
+
+    </lvc:CartesianChart>
 </UserControl>

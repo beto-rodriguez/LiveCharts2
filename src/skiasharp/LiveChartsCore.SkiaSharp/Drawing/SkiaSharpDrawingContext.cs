@@ -20,9 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
+using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 
 namespace LiveChartsCore.SkiaSharpView.Drawing;
@@ -34,39 +36,12 @@ namespace LiveChartsCore.SkiaSharpView.Drawing;
 /// Initializes a new instance of the <see cref="SkiaSharpDrawingContext"/> class.
 /// </remarks>
 /// <param name="motionCanvas">The motion canvas.</param>
-/// <param name="info">The information.</param>
-/// <param name="surface">The surface.</param>
 /// <param name="canvas">The canvas.</param>
-/// <param name="clearOnBeginDraw">Indicates whether the canvas is cleared on frame draw.</param>
+/// <param name="background">The background color.</param>
 public class SkiaSharpDrawingContext(
-    CoreMotionCanvas motionCanvas,
-    SKImageInfo info,
-    SKSurface? surface,
-    SKCanvas canvas,
-    bool clearOnBeginDraw = true)
+    CoreMotionCanvas motionCanvas, SKCanvas canvas, SKColor background)
         : DrawingContext
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SkiaSharpDrawingContext"/> class.
-    /// </summary>
-    /// <param name="motionCanvas">The motion canvas.</param>
-    /// <param name="info">The information.</param>
-    /// <param name="surface">The surface.</param>
-    /// <param name="canvas">The canvas.</param>
-    /// <param name="background">The background.</param>
-    /// <param name="clearOnBeginDraw">Indicates whether the canvas is cleared on frame draw.</param>
-    public SkiaSharpDrawingContext(
-        CoreMotionCanvas motionCanvas,
-        SKImageInfo info,
-        SKSurface? surface,
-        SKCanvas canvas,
-        SKColor background,
-        bool clearOnBeginDraw = true)
-        : this(motionCanvas, info, surface, canvas, clearOnBeginDraw)
-    {
-        Background = background;
-    }
-
     /// <summary>
     /// Gets or sets the motion canvas.
     /// </summary>
@@ -76,28 +51,12 @@ public class SkiaSharpDrawingContext(
     public CoreMotionCanvas MotionCanvas { get; set; } = motionCanvas;
 
     /// <summary>
-    /// Gets or sets the information.
-    /// </summary>
-    /// <value>
-    /// The information.
-    /// </value>
-    public SKImageInfo Info { get; set; } = info;
-
-    /// <summary>
-    /// Gets or sets the surface.
-    /// </summary>
-    /// <value>
-    /// The surface.
-    /// </value>
-    public SKSurface? Surface { get; set; } = surface;
-
-    /// <summary>
     /// Gets or sets the canvas.
     /// </summary>
     /// <value>
     /// The canvas.
     /// </value>
-    public SKCanvas Canvas { get; set; } = canvas;
+    public SKCanvas Canvas { get; } = canvas;
 
     /// <summary>
     /// Gets or sets the paint.
@@ -110,102 +69,98 @@ public class SkiaSharpDrawingContext(
     /// <summary>
     /// Gets or sets the background.
     /// </summary>
-    public SKColor Background { get; set; } = SKColor.Empty;
-
-    /// <inheritdoc cref="DrawingContext.OnBeginDraw"/>
-    public override void OnBeginDraw()
-    {
-        if (clearOnBeginDraw) Canvas.Clear();
-        if (Background != SKColor.Empty)
-        {
-            Canvas.DrawRect(Info.Rect, new SKPaint { Color = Background });
-        }
-    }
+    public SKColor Background { get; set; } = background;
 
     /// <inheritdoc cref="DrawingContext.LogOnCanvas(string)"/>
     public override void LogOnCanvas(string log)
     {
-        using var p = new SKPaint
+        using var textPaint = new SKPaint
         {
-            Color = SKColors.Blue,
+            Color = SKColors.White,
             TextSize = 14,
             IsAntialias = true,
-            FakeBoldText = true
+            Typeface = SkiaPaint.FallbackTypeface
         };
 
-        Canvas.DrawText(
-            log,
-            new SKPoint(50, 10 + p.TextSize),
-            p);
+        using var backgroundPaint = new SKPaint
+        {
+            Color = SKColors.Black.WithAlpha(180),
+            Style = SKPaintStyle.Fill
+        };
+
+        var lines = log.Split('`');
+
+        Canvas.DrawRect(new(10, 0, 400, (textPaint.TextSize + 4f) * lines.Length), backgroundPaint);
+
+        for (var i = 0; i < lines.Length; i++)
+        {
+            var line = lines[i];
+            if (string.IsNullOrWhiteSpace(line)) continue;
+            Canvas.DrawText(
+                line,
+                new SKPoint(10, 10 + 2 + (textPaint.TextSize + 4f) * i),
+                textPaint);
+        }
     }
 
-    /// <inheritdoc cref="DrawingContext.Draw(IDrawnElement)"/>
-    public override void Draw(IDrawnElement drawable)
+    internal override void OnBeginDraw()
+    {
+        if (Background == SKColor.Empty) return;
+
+        Canvas.Clear(Background);
+    }
+
+    internal override void OnEndDraw()
+    {
+        // No cleanup is needed at the end of the draw operation.
+        // This method is intentionally left empty, following the pattern in SkiaPaint.OnPaintFinished.
+    }
+
+    internal override void OnBeginZone(CanvasZone zone)
+    {
+        if (zone.Clip == LvcRectangle.Empty) return;
+
+        zone.StateId = Canvas.Save();
+        Canvas.ClipRect(new(zone.Clip.X, zone.Clip.Y, zone.Clip.X + zone.Clip.Width, zone.Clip.Y + zone.Clip.Height));
+    }
+
+    internal override void OnEndZone(CanvasZone zone)
+    {
+        if (zone.Clip == LvcRectangle.Empty) return;
+
+        Canvas.RestoreToCount(zone.StateId);
+    }
+
+    internal override void Draw(IDrawnElement drawable)
     {
         var opacity = ActiveOpacity;
 
         var element = (IDrawnElement<SkiaSharpDrawingContext>)drawable;
 
+        var canvasState = 0;
         if (element.HasTransform)
         {
-            _ = Canvas.Save();
-
-            var m = element.Measure();
-            var o = element.TransformOrigin;
-            var p = new SKPoint(element.X, element.Y);
-
-            var xo = m.Width * o.X;
-            var yo = m.Height * o.Y;
-
-            if (element.HasRotation)
-            {
-                Canvas.Translate(p.X + xo, p.Y + yo);
-                Canvas.RotateDegrees(element.RotateTransform);
-                Canvas.Translate(-p.X - xo, -p.Y - yo);
-            }
-
-            if (element.HasTranslate)
-            {
-                var translate = element.TranslateTransform;
-                Canvas.Translate(translate.X, translate.Y);
-            }
-
-            if (element.HasScale)
-            {
-                var scale = element.ScaleTransform;
-                Canvas.Translate(p.X + xo, p.Y + yo);
-                Canvas.Scale(scale.X, scale.Y);
-                Canvas.Translate(-p.X - xo, -p.Y - yo);
-            }
-
-            if (element.HasSkew)
-            {
-                var skew = element.SkewTransform;
-                Canvas.Translate(p.X + xo, p.Y + yo);
-                Canvas.Skew(skew.X, skew.Y);
-                Canvas.Translate(-p.X - xo, -p.Y - yo);
-            }
-
-            // DISABLED FOR NOW.
-            //if (_hasTransform)
-            //{
-            //    var transform = Transform;
-            //    context.Canvas.Concat(ref transform);
-            //}
+            canvasState = Canvas.Save();
+            var transform = BuildTransform(element);
+            Canvas.Concat(ref transform);
         }
 
         if (ActiveLvcPaint is null)
         {
             // if the active paint is null, we need to draw by the element paint
 
-            if (element.Fill is not null)
-                DrawByPaint(element.Fill, element, opacity);
+            var elementFill = element.Fill;
+            var elementStroke = element.Stroke;
+            var elementPaint = element.Paint;
 
-            if (element.Stroke is not null)
-                DrawByPaint(element.Stroke, element, opacity);
+            if (elementFill is not null)
+                DrawByPaint(elementFill, element, opacity);
 
-            if (element.Paint is not null)
-                DrawByPaint(element.Paint, element, opacity);
+            if (elementStroke is not null)
+                DrawByPaint(elementStroke, element, opacity);
+
+            if (elementPaint is not null)
+                DrawByPaint(elementPaint, element, opacity);
         }
         else
         {
@@ -213,67 +168,167 @@ public class SkiaSharpDrawingContext(
 
             if (ActiveLvcPaint.PaintStyle.HasFlag(PaintStyle.Fill))
             {
-                if (element.Fill is null)
-                    DrawByActivePaint(element, opacity);
+                var elementFill = element.Fill;
+
+                if (elementFill is null)
+                    DrawElement(element, opacity);
                 else
-                    DrawByPaint(element.Fill, element, opacity);
+                    DrawByPaint(elementFill, element, opacity);
             }
 
             if (ActiveLvcPaint.PaintStyle.HasFlag(PaintStyle.Stroke))
             {
-                if (element.Stroke is null)
-                    DrawByActivePaint(element, opacity);
+                var elementStroke = element.Stroke;
+
+                if (elementStroke is null)
+                    DrawElement(element, opacity);
                 else
-                    DrawByPaint(element.Stroke, element, opacity);
+                    DrawByPaint(elementStroke, element, opacity);
             }
         }
 
-        if (element.HasTransform) Canvas.Restore();
+        if (element.HasTransform)
+        {
+            Canvas.RestoreToCount(canvasState);
+        }
     }
 
-    /// <inheritdoc cref="DrawingContext.InitializePaintTask(Paint)"/>
-    public override void InitializePaintTask(Paint paint)
+    internal override void SelectPaint(Paint paint)
     {
         ActiveLvcPaint = paint;
-        //ActiveSkiaPaint = paint.SKPaint; set by paint.InitializeTask
+        //ActiveSkiaPaint = paint.SKPaint; set by paint.OnPaintStarted
+        PaintMotionProperty.s_activePaint = paint;
 
-        paint.InitializeTask(this);
+        paint.OnPaintStarted(this, null);
     }
 
-    /// <inheritdoc cref="DrawingContext.DisposePaintTask(Paint)"/>
-    public override void DisposePaintTask(Paint paint)
+    internal override void ClearPaintSelection(Paint paint)
     {
-        paint.Dispose();
+        paint.OnPaintFinished(this, null);
 
         ActiveLvcPaint = null!;
         ActiveSkiaPaint = null!;
-    }
-
-    private void DrawByActivePaint(IDrawnElement<SkiaSharpDrawingContext> element, float opacity)
-    {
-        var hasGeometryOpacity = opacity < 1;
-
-        if (hasGeometryOpacity) ActiveLvcPaint!.ApplyOpacityMask(this, opacity);
-        element.Draw(this);
-        if (hasGeometryOpacity) ActiveLvcPaint!.RestoreOpacityMask(this, opacity);
+        PaintMotionProperty.s_activePaint = null!;
     }
 
     private void DrawByPaint(Paint paint, IDrawnElement<SkiaSharpDrawingContext> element, float opacity)
     {
-        var hasGeometryOpacity = opacity < 1;
-
         var originalPaint = ActiveSkiaPaint;
         var originalTask = ActiveLvcPaint;
 
-        paint.InitializeTask(this);
+        // hack for now...
+        // ActiveLvcPaint must be null for this kind of draw method...
+        // normally used to draw tooltips and legends
+        // Improve this? maybe a cleaner way?
+        if (paint != MeasureTask.Instance)
+        {
+            ActiveLvcPaint = paint;
+            paint.OnPaintStarted(this, element);
+        }
 
-        if (hasGeometryOpacity) paint.ApplyOpacityMask(this, opacity);
-        element.Draw(this);
-        if (hasGeometryOpacity) paint.RestoreOpacityMask(this, opacity);
+        DrawElement(element, opacity);
 
-        paint.Dispose();
+        paint.OnPaintFinished(this, element);
 
         ActiveSkiaPaint = originalPaint;
         ActiveLvcPaint = originalTask;
     }
+
+    private void DrawElement(IDrawnElement<SkiaSharpDrawingContext> element, float opacity)
+    {
+        var hasGeometryOpacity =
+            ActiveLvcPaint is not null &&
+            opacity < 1;
+
+        var hasShadow =
+            ActiveLvcPaint is not null &&
+            element.DropShadow is not null &&
+            element.DropShadow != LvcDropShadow.Empty;
+
+        SKImageFilter? originalFilter = null;
+
+        if (hasGeometryOpacity)
+        {
+            ActiveLvcPaint!.ApplyOpacityMask(this, opacity, element);
+        }
+
+        if (hasShadow)
+        {
+            var shadow = element.DropShadow!;
+            originalFilter = ActiveSkiaPaint.ImageFilter;
+
+            ActiveSkiaPaint.ImageFilter = SKImageFilter.CreateDropShadow(
+                shadow.Dx, shadow.Dy,
+                shadow.SigmaX, shadow.SigmaY,
+                new(shadow.Color.R, shadow.Color.G, shadow.Color.B, shadow.Color.A));
+        }
+
+        element.Draw(this);
+
+        if (hasShadow)
+        {
+            ActiveSkiaPaint.ImageFilter!.Dispose();
+            ActiveSkiaPaint.ImageFilter = originalFilter;
+        }
+
+        if (hasGeometryOpacity)
+        {
+            ActiveLvcPaint!.RestoreOpacityMask(this, opacity, element);
+        }
+    }
+
+    private static SKMatrix BuildTransform(IDrawnElement<SkiaSharpDrawingContext> element)
+    {
+        var m = element.Measure();
+        var o = element.TransformOrigin;
+        var p = new SKPoint(element.X, element.Y);
+        var xo = m.Width * o.X;
+        var yo = m.Height * o.Y;
+
+        var origin = new SKPoint(p.X + xo, p.Y + yo);
+        var matrix = SKMatrix.CreateIdentity();
+
+        if (element.HasTranslate)
+        {
+            var t = element.TranslateTransform;
+            matrix = SKMatrix.Concat(matrix, SKMatrix.CreateTranslation(t.X, t.Y));
+        }
+
+        if (element.HasRotation)
+        {
+            matrix = SKMatrix.Concat(matrix, SKMatrix.CreateRotationDegrees(
+                element.RotateTransform, origin.X, origin.Y));
+        }
+
+        if (element.HasScale)
+        {
+            var s = element.ScaleTransform;
+            matrix = SKMatrix.Concat(matrix, SKMatrix.CreateScale(s.X, s.Y, origin.X, origin.Y));
+        }
+
+        if (element.HasSkew)
+        {
+            var skew = element.SkewTransform;
+            var skewMatrix = new SKMatrix
+            {
+                ScaleX = 1,
+                SkewX = (float)Math.Tan(skew.X * Math.PI / 180),
+                TransX = 0,
+                SkewY = (float)Math.Tan(skew.Y * Math.PI / 180),
+                ScaleY = 1,
+                TransY = 0,
+                Persp0 = 0,
+                Persp1 = 0,
+                Persp2 = 1
+            };
+            var translateToOrigin = SKMatrix.CreateTranslation(origin.X, origin.Y);
+            var translateBack = SKMatrix.CreateTranslation(-origin.X, -origin.Y);
+            matrix = SKMatrix.Concat(matrix, translateToOrigin);
+            matrix = SKMatrix.Concat(matrix, skewMatrix);
+            matrix = SKMatrix.Concat(matrix, translateBack);
+        }
+
+        return matrix;
+    }
+
 }

@@ -1,30 +1,72 @@
-<UserControl x:Class="AvaloniaSample.Axes.Shared.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Axes.Shared">
+<UserControl
+    x:Class="AvaloniaSample.Axes.Shared.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Axes.Shared"
+    x:DataType="vms:ViewModel">
+    
   <UserControl.DataContext>
     <vms:ViewModel/>
   </UserControl.DataContext>
-  <Grid>
-      <Grid.RowDefinitions>
-          <RowDefinition Height="*"/>
-          <RowDefinition Height="*"/>
-      </Grid.RowDefinitions>
 
-      <lvc:CartesianChart
-          Grid.Row="0"
-          Series="{Binding SeriesCollection1}"
-          XAxes="{Binding X1}"
-          DrawMargin="{Binding DrawMargin}"
-          ZoomMode="X">
-      </lvc:CartesianChart>
-      <lvc:CartesianChart
-          Grid.Row="1"
-          Series="{Binding SeriesCollection2}"
-          XAxes="{Binding X2}"
-          DrawMargin="{Binding DrawMargin}"
-          ZoomMode="X">
-      </lvc:CartesianChart>
-  </Grid> 
+    <Grid RowDefinitions="*,*">
+
+        <!--
+        We define a SharedAxesPair, it cointains a pair of axes, one for each chart,
+        The SharedAxesPair class will take care of keeping the axes in sync as the user
+        zooms and pans the charts.
+        -->
+
+        <Grid.Resources>
+            <lvc:SharedAxesPair x:Key="SharedAxes">
+
+                <lvc:SharedAxesPair.First>
+                    <lvc:XamlAxis
+                        CrosshairLabelsBackground="#FF4500"
+                        CrosshairLabelsPaint="{lvc:SolidColorPaint Color='#FFF'}"
+                        CrosshairPaint="{lvc:SolidColorPaint Color='#40FF4500'}"
+                        Labeler="{Binding Labeler}"
+                        MaxLimit="{Binding Max}"/>
+                </lvc:SharedAxesPair.First>
+
+                <lvc:SharedAxesPair.Second>
+                    <lvc:XamlAxis
+                        CrosshairPaint="{lvc:SolidColorPaint Color='#40FF4500'}"
+                        MaxLimit="{Binding Max}" />
+                </lvc:SharedAxesPair.Second>
+
+            </lvc:SharedAxesPair>
+        </Grid.Resources>
+
+        <!--
+        We force the left margin in the "DrawMargin" to 70 in both charts, this to align the
+        axes no matter the size of the labels on each axis.
+        -->
+
+        <lvc:CartesianChart
+            Grid.Row="0"
+            XAxes="{lvc:FromSharedAxes AxesPair={StaticResource SharedAxes}, Element=First}"
+            DrawMargin="{lvc:Margin '70, Auto, Auto, Auto'}"
+            ZoomMode="X">
+
+            <lvc:CartesianChart.Series>
+                <lvc:XamlLineSeries Values="{Binding Values1}"/>
+            </lvc:CartesianChart.Series>
+
+        </lvc:CartesianChart>
+
+        <lvc:CartesianChart
+            Grid.Row="1"
+            XAxes="{lvc:FromSharedAxes AxesPair={StaticResource SharedAxes}, Element=Second}"
+            DrawMargin="{lvc:Margin '70, Auto, Auto, Auto'}"
+            ZoomMode="X">
+
+            <lvc:CartesianChart.Series>
+                <lvc:XamlColumnSeries Values="{Binding Values2}"/>
+            </lvc:CartesianChart.Series>
+
+        </lvc:CartesianChart>
+
+    </Grid>
 </UserControl>

@@ -20,44 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using LiveChartsCore.Motion;
+using LiveChartsCore.Generators;
 
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
 /// Defines a geometry with width and height dimensions.
 /// </summary>
-public abstract class BoundedDrawnGeometry : DrawnGeometry
+public abstract partial class BoundedDrawnGeometry : DrawnGeometry
 {
-    private readonly FloatMotionProperty _widthProperty;
-    private readonly FloatMotionProperty _heightProperty;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="BoundedDrawnGeometry"/> class.
-    /// </summary>
-    protected BoundedDrawnGeometry()
-    {
-        _widthProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Width), 0));
-        _heightProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Height), 0));
-    }
-
     /// <summary>
     /// Gets or sets the width.
     /// </summary>
-    public float Width
-    {
-        get => _widthProperty.GetMovement(this);
-        set => _widthProperty.SetMovement(value, this);
-    }
+    [MotionProperty]
+    public partial float Width { get; set; }
 
     /// <summary>
     /// Gets or sets the height.
     /// </summary>
-    public float Height
-    {
-        get => _heightProperty.GetMovement(this);
-        set => _heightProperty.SetMovement(value, this);
-    }
+    [MotionProperty]
+    public partial float Height { get; set; }
 
     /// <inheritdoc cref="DrawnGeometry.Measure()" />
     public override LvcSize Measure() =>

@@ -1,20 +1,58 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Axes.MatchScale.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Axes.MatchScale;assembly=ViewModelsSamples">
+<ContentPage
+    x:Class="MauiSample.Axes.MatchScale.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Axes.MatchScale;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
+
     <lvc:CartesianChart
-        Margin="20"
-        Series="{Binding Series}"
-        XAxes="{Binding XAxes}"
-        YAxes="{Binding YAxes}"
-        DrawMarginFrame="{Binding Frame}"
         MatchAxesScreenDataRatio="True"
-        ZoomMode="Both"
+        DrawMarginFrame="{lvc:Frame Stroke={lvc:SolidColorPaint Color='#64b4b4b4', StrokeWidth=2}}"
+        ZoomMode="Both,NoFit"
         TooltipPosition="Hidden">
+
+        <lvc:CartesianChart.Series>
+            <lvc:SeriesCollection>
+                <lvc:XamlLineSeries
+                    Values="{Binding Values}"
+                    Stroke="{lvc:SolidColorPaint Color='#2196f3', StrokeWidth=4}"
+                    Fill="{x:Null}"
+                    GeometryStroke="{x:Null}"
+                    GeometryFill="{x:Null}"/>
+            </lvc:SeriesCollection>
+        </lvc:CartesianChart.Series>
+
+        <!--
+            we are forcing the step to 0.1 to highlight that
+            both axes take the same amount of pixels per unit of data,
+            but in a real scenario the MinStep is not necessary
+        -->
+
+        <lvc:CartesianChart.XAxes>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis
+                    AxisName="XAxis"
+                    SeparatorsPaint="#64b4b4b4"
+                    MinStep="0.1"
+                    ForceStepToMin="True"/>
+            </lvc:AxesCollection>
+        </lvc:CartesianChart.XAxes>
+
+        <lvc:CartesianChart.YAxes>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis
+                    AxisName="YAxis"
+                    SeparatorsPaint="#64b4b4b4"
+                    MinStep="0.1"
+                    ForceStepToMin="True"/>
+            </lvc:AxesCollection>
+        </lvc:CartesianChart.YAxes>
+
     </lvc:CartesianChart>
 </ContentPage>

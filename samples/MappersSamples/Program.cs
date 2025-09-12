@@ -54,7 +54,7 @@ using var citiesStreamReader = new StreamReader("cities.json");
 
 // we will use the System.Text.Json library to deserialize the json file.
 var cities = JsonSerializer.Deserialize<City[]>(citiesStreamReader.ReadToEnd())!;
-cities = cities.OrderByDescending(x => x.Population).ToArray();
+cities = [.. cities.OrderByDescending(x => x.Population)];
 
 var citiesChart = new SKCartesianChart
 {
@@ -74,7 +74,7 @@ var citiesChart = new SKCartesianChart
     [
         new Axis
         {
-            Labels = cities.Select(x => x.Name).ToArray(),
+            Labels = [.. cities.Select(x => x.Name)],
             LabelsRotation = 90
         }
     ],

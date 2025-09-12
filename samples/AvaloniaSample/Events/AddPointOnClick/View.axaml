@@ -1,15 +1,24 @@
-<UserControl x:Class="AvaloniaSample.Events.AddPointOnClick.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Events.AddPointOnClick">
-  <UserControl.DataContext>
-    <vms:ViewModel/>
-  </UserControl.DataContext>
-  <lvc:CartesianChart
-      x:Name="chart"
-      Series="{Binding SeriesCollection}"
-      PointerPressedCommand="{Binding PointerDownCommand}"
-      TooltipPosition="Hidden">
-  </lvc:CartesianChart>
+<UserControl
+    x:Class="AvaloniaSample.Events.AddPointOnClick.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Events.AddPointOnClick"
+    x:DataType="vms:ViewModel">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <lvc:CartesianChart
+        PointerPressedCommand="{Binding PointerDownCommand}"
+        TooltipPosition="Hidden">
+        <lvc:CartesianChart.Series>
+            <lvc:XamlLineSeries
+                Values="{Binding Points}"
+                Fill="{x:Null}"
+                DataPadding="{lvc:Point '5,5'}"/>
+        </lvc:CartesianChart.Series>
+    </lvc:CartesianChart>
+
 </UserControl>

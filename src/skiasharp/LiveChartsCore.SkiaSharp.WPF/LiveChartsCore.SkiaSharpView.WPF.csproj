@@ -7,18 +7,6 @@
 
     <TargetFrameworks>
       net462;
-      <!--
-      workaround #250116
-      netx.0-windows and SupportedOSPlatformVersion is a workaround for
-      https://github.com/beto-rodriguez/LiveCharts2/issues/1765
-      this ensures the package is restore to net8 or net6 instead of net462,
-      we cant restore the core to net462 because it has a strong name.
-
-      ideally the user should update the target to net8.0-windows10.0.19041... but the
-      default template as today uses net8.0-windows and causes this issue.
-      -->
-      net6.0-windows;
-      net8.0-windows;
       net6.0-windows10.0.19041;
       net8.0-windows10.0.19041
     </TargetFrameworks>
@@ -41,6 +29,13 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
 
+  <Import Project="..\_Shared\_Shared.projitems" Label="Shared" />
+  <Import Project="..\_Shared.Xaml\_Shared.Xaml.projitems" Label="Shared" />
+
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);WPF_LVC;XAML_LVC</DefineConstants>
+  </PropertyGroup>
+
   <PropertyGroup>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
@@ -48,39 +43,26 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-
-    <!--
-    workaround #250115
-    SkiaSharp is not loading natives in net framework
-    https://github.com/mono/SkiaSharp/issues/3111
-
-    the LatestSkiaSharpVersion is required for the new LiveCharts.UseGPU flag,
-    we include the LatestSkiaSharpVersion when net 6 or above is targeted.
-
-    On net 462 the code will throw when LiveCharts.UseGPU is set to true, and will
-    explain the user that the feature is not supported on net 462.
-    -->
-    <PackageReference
-      Condition="'$(TargetFramework)' == 'net462'"
-      Include="SkiaSharp.Views.WPF"
-      Version="$(SkiaSharpVersion)" />
-    <PackageReference
-      Condition="'$(TargetFramework)' == 'net462'"
-      Include="SkiaSharp.HarfBuzz"
-      Version="$(SkiaSharpVersion)" />
-
-    <PackageReference
-      Condition="'$(TargetFramework)' != 'net462'"
-      Include="SkiaSharp.Views.WPF"
-      Version="$(LatestSkiaSharpVersion)" />
-    <PackageReference
-      Condition="'$(TargetFramework)' != 'net462'"
-      Include="SkiaSharp.HarfBuzz"
-      Version="$(LatestSkiaSharpVersion)" />
+    <PackageReference Include="SkiaSharp.Views.WPF" Version="$(LatestSkiaSharpVersion)" />
+    <PackageReference Include="SkiaSharp.HarfBuzz" Version="$(LatestSkiaSharpVersion)" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\LiveChartsCore.SkiaSharp\LiveChartsCore.SkiaSharpView.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(UseNuGetForGenerator)">
+    <PackageReference Include="LiveChartsGenerators" Version="$(LiveChartsCodeGenVersion)">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="!$(UseNuGetForGenerator)">
+    <ProjectReference Include="..\..\..\generators\LiveChartsGenerators\LiveChartsGenerators.csproj">
+      <OutputItemType>Analyzer</OutputItemType>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>

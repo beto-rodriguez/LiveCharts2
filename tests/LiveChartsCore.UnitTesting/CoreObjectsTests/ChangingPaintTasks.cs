@@ -5,6 +5,7 @@ using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Drawing;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.SKCharts;
+using LiveChartsGeneratedCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SkiaSharp;
 
@@ -38,7 +39,9 @@ public class ChangingPaintTasks
         {
             AnimationsSpeed = TimeSpan.FromSeconds(1),
             EasingFunction = EasingFunctions.Lineal,
-            Series = [new LineSeries<int>([1, 2, 3])]
+            Series = [new LineSeries<int>([1, 2, 3])],
+            XAxes = [new Axis()],
+            YAxes = [new Axis()],
         };
 
         var measureCount = 0;
@@ -367,9 +370,9 @@ public class ChangingPaintTasks
             geometries == canvas.CountGeometries());
     }
 
-    public static int DrawChart(InMemorySkiaSharpChart chart, bool animated = false)
+    public static int DrawChart(SourceGenSKChart chart, bool animated = false)
     {
-        var coreChart = (Chart)chart.CoreChart;
+        var coreChart = chart.CoreChart;
 
         coreChart.IsLoaded = true;
         coreChart._isFirstDraw = true;
@@ -385,9 +388,8 @@ public class ChangingPaintTasks
             canvas.DrawFrame(
                 new SkiaSharpDrawingContext(
                     canvas,
-                    new SKImageInfo(100, 100),
-                    SKSurface.CreateNull(100, 100),
-                    new SKCanvas(new SKBitmap())));
+                    SKSurface.Create(new SKImageInfo(100, 100)).Canvas,
+                    SKColor.Empty));
         }
 
         return frames;

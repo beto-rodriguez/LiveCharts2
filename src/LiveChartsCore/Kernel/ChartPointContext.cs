@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using LiveChartsCore.Defaults;
+using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel.Drawing;
 using LiveChartsCore.Kernel.Sketches;
 
@@ -85,7 +86,7 @@ public class ChartPointContext
     /// <value>
     /// The visual.
     /// </value>
-    public object? Visual { get; internal set; }
+    public IDrawnElement? Visual { get; internal set; }
 
     /// <summary>
     /// Gets the additional visuals, some series might have more than one visual, here you can find the rest of them.
@@ -98,7 +99,7 @@ public class ChartPointContext
     /// <value>
     /// The label.
     /// </value>
-    public object? Label { get; internal set; }
+    public IDrawnElement? Label { get; internal set; }
 
     /// <summary>
     /// Gets or sets the area that triggers the ToolTip.

@@ -25,6 +25,7 @@ using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore;
@@ -35,17 +36,6 @@ namespace LiveChartsCore;
 /// <seealso cref="ChartElement" />
 public abstract class CoreSection : ChartElement, INotifyPropertyChanged
 {
-    private Paint? _stroke = null;
-    private Paint? _fill = null;
-    private Paint? _labelPaint = null;
-    private double? _xi;
-    private double? _xj;
-    private double? _yi;
-    private double? _yj;
-    private int _scalesXAt;
-    private int _scalesYAt;
-    private int? _zIndex;
-
     /// <summary>
     /// Gets or sets the stroke.
     /// </summary>
@@ -54,9 +44,9 @@ public abstract class CoreSection : ChartElement, INotifyPropertyChanged
     /// </value>
     public Paint? Stroke
     {
-        get => _stroke;
-        set => SetPaintProperty(ref _stroke, value, PaintStyle.Stroke);
-    }
+        get;
+        set => SetPaintProperty(ref field, value, PaintStyle.Stroke);
+    } = null;
 
     /// <summary>
     /// Gets or sets the fill.
@@ -66,9 +56,9 @@ public abstract class CoreSection : ChartElement, INotifyPropertyChanged
     /// </value>
     public Paint? Fill
     {
-        get => _fill;
-        set => SetPaintProperty(ref _fill, value);
-    }
+        get;
+        set => SetPaintProperty(ref field, value);
+    } = null;
 
     /// <summary>
     /// Gets or sets the label paint.
@@ -78,45 +68,45 @@ public abstract class CoreSection : ChartElement, INotifyPropertyChanged
     /// </value>
     public Paint? LabelPaint
     {
-        get => _labelPaint;
-        set => SetPaintProperty(ref _labelPaint, value);
-    }
+        get;
+        set => SetPaintProperty(ref field, value, PaintStyle.Text);
+    } = null;
 
     /// <summary>
     /// Gets or sets the xi, the value where the section starts at the X axis,
-    /// set the property to null to indicate that the section must start at the beginning of the X axis, default is null.
+    /// set the property to null (or double.NaN) to indicate that the section must start at the beginning of the X axis, default is null.
     /// </summary>
     /// <value>
     /// The xi.
     /// </value>
-    public double? Xi { get => _xi; set => SetProperty(ref _xi, value); }
+    public double? Xi { get; set => SetProperty(ref field, filterNaN(value)); }
 
     /// <summary>
     /// Gets or sets the xj, the value where the section ends and the X axis.
-    /// set the property to null to indicate that the section must go to the end of the X axis, default is null.
+    /// set the property to null (or double.NaN) to indicate that the section must go to the end of the X axis, default is null.
     /// </summary>
     /// <value>
     /// The xj.
     /// </value>
-    public double? Xj { get => _xj; set => SetProperty(ref _xj, value); }
+    public double? Xj { get; set => SetProperty(ref field, filterNaN(value)); }
 
     /// <summary>
     /// Gets or sets the yi, the value where the section starts and the Y axis.
-    /// set the property to null to indicate that the section must start at the beginning of the Y axis, default is null.
+    /// set the property to null (or double.NaN) to indicate that the section must start at the beginning of the Y axis, default is null.
     /// </summary>
     /// <value>
     /// The yi.
     /// </value>
-    public double? Yi { get => _yi; set => SetProperty(ref _yi, value); }
+    public double? Yi { get; set => SetProperty(ref field, filterNaN(value)); }
 
     /// <summary>
     /// Gets or sets the yj, the value where the section ends and the Y axis.
-    /// set the property to null to indicate that the section must go to the end of the Y axis, default is null.
+    /// set the property to null (or double.NaN) to indicate that the section must go to the end of the Y axis, default is null.
     /// </summary>
     /// <value>
     /// The yj.
     /// </value>
-    public double? Yj { get => _yj; set => SetProperty(ref _yj, value); }
+    public double? Yj { get; set => SetProperty(ref field, filterNaN(value)); }
 
     /// <summary>
     /// Gets or sets the axis index where the section is scaled in the X plane, the index must exist 
@@ -125,7 +115,7 @@ public abstract class CoreSection : ChartElement, INotifyPropertyChanged
     /// <value>
     /// The index of the axis.
     /// </value>
-    public int ScalesXAt { get => _scalesXAt; set => SetProperty(ref _scalesXAt, value); }
+    public int ScalesXAt { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets or sets the axis index where the section is scaled in the Y plane, the index must exist 
@@ -134,7 +124,7 @@ public abstract class CoreSection : ChartElement, INotifyPropertyChanged
     /// <value>
     /// The index of the axis.
     /// </value>
-    public int ScalesYAt { get => _scalesYAt; set => SetProperty(ref _scalesYAt, value); }
+    public int ScalesYAt { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets or sets the index of the z axis.
@@ -142,11 +132,11 @@ public abstract class CoreSection : ChartElement, INotifyPropertyChanged
     /// <value>
     /// The index of the z.
     /// </value>
-    public int? ZIndex { get => _zIndex; set => SetProperty(ref _zIndex, value); }
+    public int? ZIndex { get; set => SetProperty(ref field, value); }
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
-        [_stroke, _fill, _labelPaint];
+        [Stroke, Fill, LabelPaint];
 
     /// <summary>
     /// Called when the fill changes.
@@ -156,6 +146,14 @@ public abstract class CoreSection : ChartElement, INotifyPropertyChanged
     {
         base.OnPaintChanged(propertyName);
         OnPropertyChanged(propertyName);
+    }
+
+    private static double? filterNaN(double? value)
+    {
+        if (value is not null && double.IsNaN(value.Value))
+            value = null;
+
+        return value;
     }
 }
 
@@ -169,7 +167,6 @@ public abstract class CoreSection<TSizedGeometry, TLabelGeometry> : CoreSection
     where TSizedGeometry : BoundedDrawnGeometry, new()
     where TLabelGeometry : BaseLabelGeometry, new()
 {
-    private string _label = string.Empty;
     private float _labelSize = 12;
 
     /// <summary>
@@ -190,7 +187,7 @@ public abstract class CoreSection<TSizedGeometry, TLabelGeometry> : CoreSection
     /// <summary>
     /// Gets or sets the label, a string to be displayed within the section.
     /// </summary>
-    public string Label { get => _label; set => SetProperty(ref _label, value); }
+    public string Label { get; set => SetProperty(ref field, value); } = string.Empty;
 
     /// <summary>
     /// Gets or sets the label size.
@@ -207,8 +204,8 @@ public abstract class CoreSection<TSizedGeometry, TLabelGeometry> : CoreSection
         var drawMarginSize = chart.DrawMarginSize;
 
         var cartesianChart = (CartesianChartEngine)chart;
-        var primaryAxis = cartesianChart.YAxes[ScalesYAt];
-        var secondaryAxis = cartesianChart.XAxes[ScalesXAt];
+        var primaryAxis = cartesianChart.GetYAxis(ScalesYAt);
+        var secondaryAxis = cartesianChart.GetXAxis(ScalesXAt);
 
         var secondaryScale = new Scaler(drawLocation, drawMarginSize, secondaryAxis);
         var primaryScale = new Scaler(drawLocation, drawMarginSize, primaryAxis);
@@ -221,7 +218,7 @@ public abstract class CoreSection<TSizedGeometry, TLabelGeometry> : CoreSection
 
         if (Fill is not null)
         {
-            Fill.ZIndex = ZIndex ?? -2.5;
+            Fill.ZIndex = ZIndex ?? PaintConstants.SectionFillZIndex;
 
             if (_fillSizedGeometry is null)
             {
@@ -233,7 +230,7 @@ public abstract class CoreSection<TSizedGeometry, TLabelGeometry> : CoreSection
                     Height = yj - yi
                 };
 
-                _fillSizedGeometry.Animate(cartesianChart.EasingFunction, cartesianChart.AnimationsSpeed);
+                _fillSizedGeometry.Animate(cartesianChart.ActualEasingFunction, cartesianChart.ActualAnimationsSpeed);
             }
 
             _fillSizedGeometry.X = xi;
@@ -241,14 +238,13 @@ public abstract class CoreSection<TSizedGeometry, TLabelGeometry> : CoreSection
             _fillSizedGeometry.Width = xj - xi;
             _fillSizedGeometry.Height = yj - yi;
 
-            Fill.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             Fill.AddGeometryToPaintTask(chart.Canvas, _fillSizedGeometry);
-            chart.Canvas.AddDrawableTask(Fill);
+            chart.Canvas.AddDrawableTask(Fill, zone: CanvasZone.DrawMargin);
         }
 
         if (Stroke is not null)
         {
-            Stroke.ZIndex = ZIndex ?? 0;
+            Stroke.ZIndex = ZIndex ?? PaintConstants.SectionStrokeZIndex;
 
             if (_strokeSizedGeometry is null)
             {
@@ -268,14 +264,13 @@ public abstract class CoreSection<TSizedGeometry, TLabelGeometry> : CoreSection
             _strokeSizedGeometry.Width = xj - xi;
             _strokeSizedGeometry.Height = yj - yi;
 
-            Stroke.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             Stroke.AddGeometryToPaintTask(chart.Canvas, _strokeSizedGeometry);
-            chart.Canvas.AddDrawableTask(Stroke);
+            chart.Canvas.AddDrawableTask(Stroke, zone: CanvasZone.DrawMargin);
         }
 
         if (LabelPaint is not null)
         {
-            LabelPaint.ZIndex = ZIndex ?? 0.01;
+            LabelPaint.ZIndex = ZIndex ?? PaintConstants.SectionLabelsZIndex;
 
             var xil = Xi is null ? drawLocation.X : secondaryScale.ToPixels(Xi.Value);
             var yil = Yi is null ? drawLocation.Y : primaryScale.ToPixels(Yi.Value);
@@ -290,8 +285,8 @@ public abstract class CoreSection<TSizedGeometry, TLabelGeometry> : CoreSection
                 };
 
                 _labelGeometry.Animate(
-                    cartesianChart.EasingFunction, cartesianChart.AnimationsSpeed,
-                    nameof(_labelGeometry.X), nameof(_labelGeometry.Y));
+                    cartesianChart.ActualEasingFunction, cartesianChart.ActualAnimationsSpeed,
+                    BaseLabelGeometry.XProperty, BaseLabelGeometry.YProperty);
 
                 _labelGeometry.VerticalAlign = Align.Start;
                 _labelGeometry.HorizontalAlign = Align.Start;
@@ -299,13 +294,12 @@ public abstract class CoreSection<TSizedGeometry, TLabelGeometry> : CoreSection
 
             _labelGeometry.X = xi;
             _labelGeometry.Y = yi;
-            _labelGeometry.Text = _label;
+            _labelGeometry.Text = Label;
             _labelGeometry.TextSize = _labelSize;
             _labelGeometry.Paint = LabelPaint;
 
-            LabelPaint.SetClipRectangle(cartesianChart.Canvas, new LvcRectangle(drawLocation, drawMarginSize));
             LabelPaint.AddGeometryToPaintTask(chart.Canvas, _labelGeometry);
-            chart.Canvas.AddDrawableTask(LabelPaint);
+            chart.Canvas.AddDrawableTask(LabelPaint, zone: CanvasZone.DrawMargin);
         }
     }
 }

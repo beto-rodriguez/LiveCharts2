@@ -1,0 +1,65 @@
+﻿<UserControl
+    x:Class="WinUISample.Axes.MatchScale.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
+    xmlns:vms="using:ViewModelsSamples.Axes.MatchScale"
+    mc:Ignorable="d">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <lvc:CartesianChart
+        MatchAxesScreenDataRatio="True"
+        ZoomMode="Both"
+        TooltipPosition="Hidden">
+
+        <!--
+        DrawMarginFrame="{lvc:Frame Stroke={lvc:SolidColorPaint Color='#64b4b4b4', StrokeWidth=2}}"
+
+        it seems that nested extensions are not working in Uno
+        CSC : error UXAML0001: MarkupExtension SolidColorPaintExtension is not supported.
+        -->
+
+        <lvc:CartesianChart.Series>
+            <lvc:SeriesCollection>
+                <lvc:XamlLineSeries
+                    Values="{Binding Values}"
+                    Stroke="{lvc:SolidColorPaint Color='#2196f3', StrokeWidth=4}"
+                    Fill="{x:Null}"
+                    GeometryStroke="{x:Null}"
+                    GeometryFill="{x:Null}"/>
+            </lvc:SeriesCollection>
+        </lvc:CartesianChart.Series>
+
+        <!--
+            we are forcing the step to 0.1 to highlight that
+            both axes take the same amount of pixels per unit of data,
+            but in a real scenario the MinStep is not necessary
+        -->
+
+        <lvc:CartesianChart.XAxes>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis
+                    AxisName="XAxis"
+                    SeparatorsPaint="{lvc:SolidColorPaint Color='#64b4b4b4'}"
+                    MinStep="0.1"
+                    ForceStepToMin="True"/>
+            </lvc:AxesCollection>
+        </lvc:CartesianChart.XAxes>
+
+        <lvc:CartesianChart.YAxes>
+            <lvc:AxesCollection>
+                <lvc:XamlAxis
+                    AxisName="YAxis"
+                    SeparatorsPaint="{lvc:SolidColorPaint Color='#64b4b4b4'}"
+                    MinStep="0.1"
+                    ForceStepToMin="True"/>
+            </lvc:AxesCollection>
+        </lvc:CartesianChart.YAxes>
+
+    </lvc:CartesianChart>
+</UserControl>

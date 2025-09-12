@@ -53,9 +53,14 @@ public interface IPlane : IChartElement
     Padding NamePadding { get; set; }
 
     /// <summary>
-    /// Get or sets the actual bounds.
+    /// Gets the motion min limit, it is the min limit at the moment of getting the property.
     /// </summary>
-    AnimatableAxisBounds ActualBounds { get; }
+    double MotionMinLimit { get; }
+
+    /// <summary>
+    /// Gets the motion max limit, it is the max limit at the moment of getting the property.
+    /// </summary>
+    double MotionMaxLimit { get; }
 
     /// <summary>
     /// Gets the data bounds, the min and max values in the axis.
@@ -110,7 +115,7 @@ public interface IPlane : IChartElement
 
     /// <summary>
     /// Gets or sets the minimum value visible in the axis, any point less than this value will be hidden, 
-    /// set it to null to use a value based on the smaller value in the chart.
+    /// set it to null (or double.NaN) to use a value based on the smaller value in the chart.
     /// </summary>
     /// <value>
     /// The minimum value.
@@ -119,7 +124,7 @@ public interface IPlane : IChartElement
 
     /// <summary>
     /// Gets or sets the maximum value visible in the axis, any point greater than this value will be hidden, 
-    /// set it null to use a value based on the greater value in the chart.
+    /// set it null (or double.NaN) to use a value based on the greater value in the chart.
     /// </summary>
     /// <value>
     /// The maximum value.
@@ -163,7 +168,7 @@ public interface IPlane : IChartElement
 
     /// <summary>
     /// Gets or sets the animations speed, if this property is null, the
-    /// <see cref="Chart.AnimationsSpeed"/> property will be used.
+    /// <see cref="Chart.ActualAnimationsSpeed"/> property will be used.
     /// </summary>
     /// <value>
     /// The animations speed.
@@ -172,7 +177,7 @@ public interface IPlane : IChartElement
 
     /// <summary>
     /// Gets or sets the easing function to animate the series, if this property is null, the
-    /// <see cref="Chart.EasingFunction"/> property will be used.
+    /// <see cref="Chart.ActualEasingFunction"/> property will be used.
     /// </summary>
     /// <value>
     /// The easing function.

@@ -4,17 +4,23 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-    xmlns:vms="clr-namespace:ViewModelsSamples.Events.Tutorial;assembly=ViewModelsSamples">
+    xmlns:vms="clr-namespace:ViewModelsSamples.Events.Tutorial;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
 
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
 
     <lvc:CartesianChart
-        Series="{Binding SeriesCollection}"
         FindingStrategy="{Binding Strategy}"
         PressedCommand="{Binding PressedCommand}"
         HoveredPointsChangedCommand="{Binding HoveredPointsChangedCommand}">
+        <lvc:CartesianChart.Series>
+            <lvc:SeriesCollection>
+                <lvc:XamlColumnSeries Values="{Binding Values1}" Stroke="#00000000"/>
+                <lvc:XamlColumnSeries Values="{Binding Values2}" Stroke="#00000000"/>
+            </lvc:SeriesCollection>
+        </lvc:CartesianChart.Series>
     </lvc:CartesianChart>
 
 </ContentPage>

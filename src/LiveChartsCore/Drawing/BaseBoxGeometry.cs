@@ -21,77 +21,29 @@
 // SOFTWARE.
 
 using System;
-using LiveChartsCore.Motion;
+using LiveChartsCore.Generators;
 
 namespace LiveChartsCore.Drawing;
 
 /// <summary>
 /// Defines a box geometry.
 /// </summary>
-public abstract class BaseBoxGeometry : DrawnGeometry
+public abstract partial class BaseBoxGeometry : DrawnGeometry
 {
-    private readonly FloatMotionProperty _wProperty;
-    private readonly FloatMotionProperty _tProperty;
-    private readonly FloatMotionProperty _fProperty;
-    private readonly FloatMotionProperty _minProperty;
-    private readonly FloatMotionProperty _medProperty;
+    [MotionProperty]
+    public partial float Width { get; set; }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="BaseBoxGeometry"/> class.
-    /// </summary>
-    public BaseBoxGeometry()
-    {
-        _wProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Width), 0f));
-        _tProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Third), 0f));
-        _fProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(First), 0f));
-        _minProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Min), 0f));
-        _medProperty = RegisterMotionProperty(new FloatMotionProperty(nameof(Median), 0f));
-    }
+    [MotionProperty]
+    public partial float Third { get; set; }
 
-    /// <summary>
-    /// Gets or sets the width.
-    /// </summary>
-    public float Width
-    {
-        get => _wProperty.GetMovement(this);
-        set => _wProperty.SetMovement(value, this);
-    }
+    [MotionProperty]
+    public partial float First { get; set; }
 
-    /// <summary>
-    /// Gets or sets the third quadrile.
-    /// </summary>
-    public float Third
-    {
-        get => _tProperty.GetMovement(this);
-        set => _tProperty.SetMovement(value, this);
-    }
+    [MotionProperty]
+    public partial float Min { get; set; }
 
-    /// <summary>
-    /// Gets or sets the first quadrile.
-    /// </summary>
-    public float First
-    {
-        get => _fProperty.GetMovement(this);
-        set => _fProperty.SetMovement(value, this);
-    }
-
-    /// <summary>
-    /// Gets or sets the min.
-    /// </summary>
-    public float Min
-    {
-        get => _minProperty.GetMovement(this);
-        set => _minProperty.SetMovement(value, this);
-    }
-
-    /// <summary>
-    /// Gets or sets the median.
-    /// </summary>
-    public float Median
-    {
-        get => _medProperty.GetMovement(this);
-        set => _medProperty.SetMovement(value, this);
-    }
+    [MotionProperty]
+    public partial float Median { get; set; }
 
     /// <inheritdoc cref="DrawnGeometry.Measure()" />
     public override LvcSize Measure() =>

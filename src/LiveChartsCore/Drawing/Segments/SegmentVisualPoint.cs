@@ -23,66 +23,28 @@
 namespace LiveChartsCore.Drawing.Segments;
 
 /// <summary>
-/// Defines a stepline visual point.
+/// Defines a point in a segment that is part of a path.
 /// </summary>
-/// <typeparam name="TVisual">The type of the visual.</typeparam>
-/// <typeparam name="TSegment">The type of the segment.</typeparam>
-public class SegmentVisualPoint<TVisual, TSegment>
-    where TVisual : BoundedDrawnGeometry, new()
-    where TSegment : Segment, new()
+/// <param name="geometry">The drawn geometry for the point.</param>
+public class SegmentVisualPoint(BoundedDrawnGeometry geometry)
 {
     /// <summary>
-    /// Gets the geometry.
+    /// Gets the drawn geometry for the point.
     /// </summary>
-    /// <value>
-    /// The geometry.
-    /// </value>
-    public TVisual Geometry { get; set; } = new();
+    public BoundedDrawnGeometry Geometry { get; } = geometry;
 
     /// <summary>
-    /// Gets the stepline.
+    /// Gets the segment in the path that this point belongs to.
     /// </summary>
-    /// <value>
-    /// The stepline.
-    /// </value>
-    public TSegment Segment { get; set; } = new();
+    public Segment Segment { get; } = new Segment();
 
     /// <summary>
-    /// Gets or sets the path.
+    /// Gets the X error geometry.
     /// </summary>
-    /// <value>
-    /// The path.
-    /// </value>
-    public BaseVectorGeometry<TSegment>? FillPath { get; set; }
+    public BaseLineGeometry? XError { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the stroke path.
+    /// Gets the Y error geometry.
     /// </summary>
-    /// <value>
-    /// The stroke path.
-    /// </value>
-    public BaseVectorGeometry<TSegment>? StrokePath { get; set; }
-}
-
-/// <summary>
-/// Defines a stepline visual point.
-/// </summary>
-/// <typeparam name="TVisual">The type of the visual.</typeparam>
-/// <typeparam name="TSegment">The type of the segment.</typeparam>
-/// <typeparam name="TErrorGeometry">The type of the error geometry.</typeparam>
-public class SegmentVisualPoint<TVisual, TSegment, TErrorGeometry>
-    : SegmentVisualPoint<TVisual, TSegment>
-        where TVisual : BoundedDrawnGeometry, new()
-        where TSegment : Segment, new()
-        where TErrorGeometry : DrawnGeometry
-{
-    /// <summary>
-    /// Gets or sets the y error geometry.
-    /// </summary>
-    public TErrorGeometry? YError { get; set; }
-
-    /// <summary>
-    /// Gets or sets the x error geometry.
-    /// </summary>
-    public TErrorGeometry? XError { get; set; }
+    public BaseLineGeometry? YError { get; internal set; }
 }

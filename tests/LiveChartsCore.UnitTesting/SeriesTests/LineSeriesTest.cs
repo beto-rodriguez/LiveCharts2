@@ -38,7 +38,7 @@ public class LineSeriesTest
         // chart.SaveImage("test.png"); // use this method to see the actual tested image
 
         var datafactory = sutSeries.DataFactory;
-        var points = datafactory.Fetch(sutSeries, chart.Core).ToArray();
+        var points = datafactory.Fetch(sutSeries, chart.CoreChart).ToArray();
 
         var unit = points.First(x => x.Coordinate.PrimaryValue == 1);
         var typedUnit = sutSeries.ConvertToTypedChartPoint(unit);
@@ -57,8 +57,8 @@ public class LineSeriesTest
             // test x
             var currentDeltaX = previous.Visual.X - sutPoint.Visual.X;
 
-            var previousBezier = ((SegmentVisualPoint<CircleGeometry, CubicBezierSegment>)previous.Context.AdditionalVisuals)?.Segment;
-            var sutBezier = ((SegmentVisualPoint<CircleGeometry, CubicBezierSegment>)sutPoint.Context.AdditionalVisuals).Segment;
+            var previousBezier = ((CubicSegmentVisualPoint)previous.Context.AdditionalVisuals)?.Segment;
+            var sutBezier = ((CubicSegmentVisualPoint)sutPoint.Context.AdditionalVisuals).Segment;
 
             var currentDeltaAreaX = previousBezier.Xj - sutBezier.Xj;
 
@@ -74,9 +74,9 @@ public class LineSeriesTest
             // test y
             var p = 1f - sutPoint.Coordinate.PrimaryValue / 512f;
             Assert.IsTrue(
-                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutPoint.Visual.Y + chart.Core.DrawMarginLocation.Y) < 0.001);
+                Math.Abs(p * chart.CoreChart.DrawMarginSize.Height - sutPoint.Visual.Y + chart.CoreChart.DrawMarginLocation.Y) < 0.001);
             Assert.IsTrue(
-                Math.Abs(p * chart.Core.DrawMarginSize.Height - sutBezier.Yj + chart.Core.DrawMarginLocation.Y) < 0.001);
+                Math.Abs(p * chart.CoreChart.DrawMarginSize.Height - sutBezier.Yj + chart.CoreChart.DrawMarginLocation.Y) < 0.001);
 
             previousX = previous.Visual.X - sutPoint.Visual.X;
             previousXArea = previousBezier.Xj - sutBezier.Xj;
@@ -108,9 +108,9 @@ public class LineSeriesTest
             ExplicitDisposing = true
         };
 
-        chart.Core._isPointerIn = true;
-        chart.Core._isToolTipOpen = true;
-        chart.Core._pointerPosition = new(150, 150);
+        chart.CoreChart._isPointerIn = true;
+        chart.CoreChart._isToolTipOpen = true;
+        chart.CoreChart._pointerPosition = new(150, 150);
 
         chart.TooltipPosition = TooltipPosition.Top;
         _ = chart.GetImage();
@@ -166,7 +166,7 @@ public class LineSeriesTest
         Assert.IsTrue(
             Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
             Math.Abs(tp.Y - (150 - tp.Height)) < 0.1 &&
-            chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Top,
+            chart.CoreChart.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Top,
             "Tool tip on top failed [AUTO]");
 
         sutSeries.Values = [-1, -2, -3, -4, -5];
@@ -175,27 +175,27 @@ public class LineSeriesTest
         Assert.IsTrue(
             Math.Abs(tp.X + tp.Width * 0.5f - 150) < 0.1 &&
             Math.Abs(tp.Y - 150) < 0.1 &&
-            chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Bottom,
+            chart.CoreChart.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Bottom,
             "Tool tip on bottom failed [AUTO]");
 
         sutSeries.Values = [1, 2, 3, 4, 5];
-        chart.Core._pointerPosition = new(299, 150);
+        chart.CoreChart._pointerPosition = new(299, 150);
         _ = chart.GetImage();
         UpdateTooltipRect();
         Assert.IsTrue(
             // that 2... it seems that the lineseries.DataPadding takes more space than expected
             Math.Abs(tp.X - (300 - tp.Width)) < 2 &&
             //Math.Abs(tp.Y - -tp.Height * 0.5f) < 2 &&
-            chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Left,
+            chart.CoreChart.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Left,
             "Tool tip on left failed [AUTO]");
 
-        chart.Core._pointerPosition = new(1, 150);
+        chart.CoreChart._pointerPosition = new(1, 150);
         _ = chart.GetImage();
         UpdateTooltipRect();
         Assert.IsTrue(
             Math.Abs(tp.X) < 2 &&
             //Math.Abs(tp.Y - (300 - tp.Height * 0.5f)) < 2 &&
-            chart.Core.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Right,
+            chart.CoreChart.AutoToolTipsInfo.ToolTipPlacement == PopUpPlacement.Right,
             "Tool tip on left failed [AUTO]");
     }
 
@@ -228,7 +228,7 @@ public class LineSeriesTest
         _ = chart.GetImage();
 
         var points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         Assert.IsTrue(sutSeries.DataLabelsPosition == DataLabelsPosition.End);
@@ -245,7 +245,7 @@ public class LineSeriesTest
         _ = chart.GetImage();
 
         points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         foreach (var p in points)
@@ -267,7 +267,7 @@ public class LineSeriesTest
         _ = chart.GetImage();
 
         points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         foreach (var p in points)
@@ -289,7 +289,7 @@ public class LineSeriesTest
         _ = chart.GetImage();
 
         points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         foreach (var p in points)
@@ -311,7 +311,7 @@ public class LineSeriesTest
         _ = chart.GetImage();
 
         points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         foreach (var p in points)
@@ -333,7 +333,7 @@ public class LineSeriesTest
         _ = chart.GetImage();
 
         points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         foreach (var p in points)
@@ -355,7 +355,7 @@ public class LineSeriesTest
         _ = chart.GetImage();
 
         points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         foreach (var p in points)
@@ -388,7 +388,7 @@ public class LineSeriesTest
         _ = chart.GetImage();
 
         points = datafactory
-            .Fetch(sutSeries, chart.Core)
+            .Fetch(sutSeries, chart.CoreChart)
             .Select(sutSeries.ConvertToTypedChartPoint);
 
         foreach (var p in points)
@@ -420,6 +420,6 @@ public class LineSeriesTest
         sutSeries.DataLabelsPaint = null;
         _ = chart.GetImage();
 
-        Assert.IsTrue(!chart.CoreCanvas._paintTasks.Contains(previousPaint));
+        Assert.IsTrue(!chart.CoreCanvas.ContainsPaintTask(previousPaint));
     }
 }

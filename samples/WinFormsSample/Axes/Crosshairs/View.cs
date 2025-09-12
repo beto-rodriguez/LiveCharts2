@@ -1,6 +1,13 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.WinForms;
-using ViewModelsSamples.Axes.Crosshairs;
+using LiveChartsCore.Measure;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
+
+#pragma warning disable IDE1006 // Naming Styles
 
 namespace WinFormsSample.Axes.Crosshairs;
 
@@ -13,15 +20,43 @@ public partial class View : UserControl
         InitializeComponent();
         Size = new System.Drawing.Size(100, 100);
 
-        var viewModel = new ViewModel();
+        // Sample data and label formatter
+        var values = new double[] { 200, 558, 458, 249, 457, 339, 587 };
+        static string labelFormatter(double value) => value.ToString("N2");
+
+        var series = new ISeries[]
+        {
+            new LineSeries<double> { Values = values }
+        };
+
+        var crosshairColor = new SKColor(255, 0, 51);
+        var crosshairBackground = new LiveChartsCore.Drawing.LvcColor(255, 0, 51);
+
+        var xAxis = new Axis
+        {
+            Name = "X Axis",
+            CrosshairPaint = new SolidColorPaint(crosshairColor, 2),
+            CrosshairLabelsPaint = new SolidColorPaint(SKColors.White),
+            CrosshairLabelsBackground = crosshairBackground,
+            CrosshairPadding = new LiveChartsCore.Drawing.Padding(6)
+        };
+
+        var yAxis = new Axis
+        {
+            Name = "Y Axis",
+            Labeler = labelFormatter,
+            CrosshairPaint = new SolidColorPaint(crosshairColor, 2),
+            CrosshairLabelsPaint = new SolidColorPaint(SKColors.White),
+            CrosshairLabelsBackground = crosshairBackground,
+            CrosshairPadding = new LiveChartsCore.Drawing.Padding(6),
+            CrosshairSnapEnabled = true
+        };
 
         cartesianChart = new CartesianChart
         {
-            Series = viewModel.Series,
-            XAxes = viewModel.XAxes,
-            YAxes = viewModel.YAxes,
-
-            // out of livecharts properties...
+            Series = series,
+            XAxes = [xAxis],
+            YAxes = [yAxis],
             Location = new System.Drawing.Point(0, 50),
             Size = new System.Drawing.Size(100, 50),
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom

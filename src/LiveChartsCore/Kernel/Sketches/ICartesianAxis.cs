@@ -89,6 +89,13 @@ public interface ICartesianAxis : IPlane, INotifyPropertyChanged
     double? MinZoomDelta { get; set; }
 
     /// <summary>
+    /// Gets or sets the distance that the axis can be panned beyond its limits, the unit is percentage of the chart
+    /// width or height depending on the axis orientation, default is 0.25 which means that the axis can be panned
+    /// 25% of the chart width or height beyond its limits.
+    /// </summary>
+    double BouncingDistance { get; set; }
+
+    /// <summary>
     /// Gets or sets a value indicating whether the ticks are centered to the <see cref="IPlane.UnitWidth"/>, default is true.
     /// </summary>
     bool TicksAtCenter { get; set; }
@@ -135,7 +142,7 @@ public interface ICartesianAxis : IPlane, INotifyPropertyChanged
     /// <summary>
     /// Gets or sets the shared axes collection, useful to share the zooming an panning between several charts.
     /// </summary>
-    public IEnumerable<ICartesianAxis>? SharedWith { get; set; }
+    IEnumerable<ICartesianAxis>? SharedWith { get; set; }
 
     /// <summary>
     /// Gets or sets the sub-separators paint.
@@ -253,4 +260,10 @@ public interface ICartesianAxis : IPlane, INotifyPropertyChanged
     /// </summary>
     /// <param name="chart">The chart.</param>
     void ClearCrosshair(Chart chart);
+
+    /// <summary>
+    /// Sets the log base.
+    /// </summary>
+    /// <param name="newBase">The new base.</param>
+    void SetLogBase(double newBase);
 }

@@ -33,21 +33,24 @@ namespace LiveChartsCore.VisualElements;
 /// </summary>
 public abstract class BaseNeedleVisual : VisualElement
 {
-    private Paint? _fill;
-    private double _value;
 
     /// <summary>
     /// Gets or sets the value.
     /// </summary>
-    public double Value { get => _value; set => SetProperty(ref _value, value); }
+    public double Value { get; set => SetProperty(ref field, value); }
+
+    /// <summary>
+    /// Gets or sets the width of the needle.
+    /// </summary>
+    public double Width { get; set => SetProperty(ref field, value); }
 
     /// <summary>
     /// Gets or sets the fill paint.
     /// </summary>
     public Paint? Fill
     {
-        get => _fill;
-        set => SetPaintProperty(ref _fill, value);
+        get;
+        set => SetPaintProperty(ref field, value);
     }
 }
 
@@ -65,7 +68,7 @@ public abstract class BaseNeedleVisual<TGeometry, TLabelGeometry> : BaseNeedleVi
     /// <inheritdoc cref="VisualElement.OnInvalidated(Chart)"/>
     protected internal override void OnInvalidated(Chart chart)
     {
-        ApplyTheme<BaseNeedleVisual>();
+        ApplyTheme<BaseNeedleVisual>(chart.GetTheme());
 
         if (chart is not PieChartEngine pieChart)
             throw new Exception("The needle visual can only be added to a pie chart");
@@ -96,6 +99,7 @@ public abstract class BaseNeedleVisual<TGeometry, TLabelGeometry> : BaseNeedleVi
                 X = cx,
                 Y = cy,
                 Radius = h,
+                Width = (float)Width,
                 RotateTransform = initialRotation - 90
             };
             _geometry.Animate(chart);
@@ -104,6 +108,7 @@ public abstract class BaseNeedleVisual<TGeometry, TLabelGeometry> : BaseNeedleVi
         _geometry.X = cx;
         _geometry.Y = cy;
         _geometry.Radius = h;
+        _geometry.Width = (float)Width;
 
         var p = (Value - startValue) / (endValue - startValue);
         _geometry.RotateTransform = (float)(initialRotation + p * completeAngle - 90); // -90 to match the pie start angle
@@ -111,7 +116,7 @@ public abstract class BaseNeedleVisual<TGeometry, TLabelGeometry> : BaseNeedleVi
 
         if (Fill is not null)
         {
-            Fill.ZIndex = Fill.ZIndex == 0 ? 999 : Fill.ZIndex;
+            Fill.ZIndex = Fill.ZIndex == 0 ? PaintConstants.NeedleFillZIndex : Fill.ZIndex;
             Fill.AddGeometryToPaintTask(chart.Canvas, _geometry);
             pieChart.Canvas.AddDrawableTask(Fill);
         }

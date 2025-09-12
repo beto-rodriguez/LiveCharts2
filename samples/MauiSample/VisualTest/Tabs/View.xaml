@@ -14,9 +14,9 @@
             </Grid.RowDefinitions>
 
             <TabbedPage x:Name="TabbedPage" Grid.Row="1">
-                <bars:View></bars:View>
-                <lines:View></lines:View>
-                <scatter:View></scatter:View>
+                <bars:View Title="Bars"/>
+                <lines:View Title="Lines"/>
+                <scatter:View Title="Scatter"/>
             </TabbedPage>
 
         </Grid>

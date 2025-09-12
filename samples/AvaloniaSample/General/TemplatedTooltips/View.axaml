@@ -1,21 +1,27 @@
-<UserControl x:Class="AvaloniaSample.General.TemplatedTooltips.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.General.TemplatedTooltips"
-             xmlns:ctx="using:LiveChartsCore.Kernel">
-  <UserControl.DataContext>
-    <vms:ViewModel/>
-  </UserControl.DataContext>
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="*"/>
-    </Grid.RowDefinitions>
-    <lvc:CartesianChart Series="{Binding Series}">
-      <!-- mark -untilCloses lvc:CartesianChart.Tooltip -->
-      <lvc:CartesianChart.Tooltip>
-          <vms:CustomTooltip></vms:CustomTooltip>
-      </lvc:CartesianChart.Tooltip>
+<UserControl
+    x:Class="AvaloniaSample.General.TemplatedTooltips.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.General.TemplatedTooltips"
+    xmlns:ctx="using:LiveChartsCore.Kernel"
+    x:DataType="vms:ViewModel">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <lvc:CartesianChart>
+        <!-- mark -untilCloses CartesianChart.Tooltip -->
+        <lvc:CartesianChart.Tooltip>
+            <vms:CustomTooltip/>
+        </lvc:CartesianChart.Tooltip>
+
+        <lvc:CartesianChart.Series>
+            <lvc:XamlColumnSeries
+              x:TypeArguments="vms:GeometryPoint"
+              Values="{Binding Values}"/>
+        </lvc:CartesianChart.Series>
+
     </lvc:CartesianChart>
-  </Grid>  
 </UserControl>

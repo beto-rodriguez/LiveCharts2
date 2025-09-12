@@ -1,30 +1,32 @@
-{{ render this "~/shared/genericSampleSimpleHeader.md" }}
+{{ render "~/shared/genericSampleSimpleHeader.md" }}
 
+{{~ if mvvm ~}}
 ## View model
 
-```
+```csharp
 {{ full_name | get_vm_from_docs }}
 ```
+{{~ end ~}}
 
 ## MyGeometry.cs
 
-{{~ "~/../samples/ViewModelsSamples/Scatter/Custom/MyGeometry.cs" | render_file_as_code ~}}
+```csharp
+{{~ render "~/../samples/ViewModelsSamples/Scatter/Custom/MyGeometry.cs" ~}}
+```
 
-{{~ if xaml ~}}
-## XAML
-{{~ end ~}}
-
-{{~ if winforms ~}}
-## Form code behind
-{{~ end ~}}
-
-{{~ if blazor~}}
-## HTML
-{{~ end~}}
+## {{~ view_title ~}}
 
 ```
 {{ full_name | get_view_from_docs }}
 ```
+
+{{~ if xaml2006 ~}}
+## CustomSeries.cs
+
+```csharp
+{{~ render $"~/../samples/{samples_folder}/Scatter/Custom/CustomSeries.cs" ~}}
+```
+{{~ end ~}}
 
 {{~ if related_to != null ~}}
 

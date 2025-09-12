@@ -1,34 +1,103 @@
 ﻿@page "/Scatter/AutoUpdate"
 @using LiveChartsCore.SkiaSharpView.Blazor
-@using ViewModelsSamples.Scatter.AutoUpdate
+@using LiveChartsCore.SkiaSharpView
+@using LiveChartsCore
+@using LiveChartsCore.Defaults
+@using System.Collections.ObjectModel
 
 <div>
-	<button type="button" class="btn btn-primary" @onclick="ViewModel.AddItem">Add item</button>
-	<button type="button" class="btn btn-primary" @onclick="ViewModel.RemoveItem">Remove item</button>
-	<button type="button" class="btn btn-primary" @onclick="ViewModel.ReplaceItem">Replace item</button>
-	<button type="button" class="btn btn-primary" @onclick="ViewModel.AddSeries">Add Series</button>
-	<button type="button" class="btn btn-primary" @onclick="ViewModel.RemoveSeries">Remove Series</button>
-	<button type="button" class="btn btn-primary" @onclick="ToggleConstantChanges">Constant changes</button>
+	<button type="button" class="btn btn-primary" @onclick="AddItem">Add item</button>
+	<button type="button" class="btn btn-primary" @onclick="ReplaceItem">Replace item</button>
+	<button type="button" class="btn btn-primary" @onclick="RemoveItem">Remove item</button>
+	<button type="button" class="btn btn-primary" @onclick="AddSeries">Add series</button>
+	<button type="button" class="btn btn-primary" @onclick="RemoveSeries">Remove series</button>
 </div>
 
 <CartesianChart
-	Series="ViewModel.Series">
+	Series="SeriesCollection">
 </CartesianChart>
 
 @code {
-	private bool? _isStreaming = false;
+    private readonly Random _random = new();
+    private ObservableCollection<ISeries> SeriesCollection { get; set; }
+    private ObservableCollection<ObservablePoint> _juanaValues;
 
-	public ViewModel ViewModel { get; set; } = new();
+    protected override void OnInitialized()
+    {
+        _juanaValues = new ObservableCollection<ObservablePoint>
+        {
+            new(0, 2),
+            new(1, 5),
+            new(2, 4)
+        };
 
-	public async void ToggleConstantChanges()
-	{
-		_isStreaming = _isStreaming is null ? true : !_isStreaming;
+        SeriesCollection = new ObservableCollection<ISeries>
+        {
+            new ScatterSeries<ObservablePoint>
+            {
+                Name = "Juana",
+                Values = _juanaValues
+            },
+            new ScatterSeries<ObservablePoint>
+            {
+                Name = "Mary",
+                Values = new ObservableCollection<ObservablePoint>
+                {
+                    new(0, 5),
+                    new(1, 4),
+                    new(2, 1)
+                }
+            }
+        };
+    }
 
-		while (_isStreaming.Value)
-		{
-			ViewModel.RemoveItem();
-			ViewModel.AddItem();
-			await Task.Delay(100);
-		}
-	}
+    private void AddSeries()
+    {
+        SeriesCollection.Add(
+            new ScatterSeries<ObservablePoint>
+            {
+                Name = $"User #{SeriesCollection.Count}",
+                Values = new ObservableCollection<ObservablePoint>(FetchValues())
+            });
+        StateHasChanged();
+    }
+
+    private void RemoveSeries()
+    {
+        if (SeriesCollection.Count <= 1) return;
+        SeriesCollection.RemoveAt(SeriesCollection.Count - 1);
+        StateHasChanged();
+    }
+
+    private void AddItem()
+    {
+        var newPoint = new ObservablePoint(_juanaValues.Count, _random.Next(0, 10));
+        _juanaValues.Add(newPoint);
+        StateHasChanged();
+    }
+
+    private void RemoveItem()
+    {
+        if (_juanaValues.Count < 2) return;
+        _juanaValues.RemoveAt(0);
+        StateHasChanged();
+    }
+
+    private void ReplaceItem()
+    {
+        if (_juanaValues.Count < 2) return;
+        var randomIndex = _random.Next(0, _juanaValues.Count - 1);
+        _juanaValues[randomIndex] = new ObservablePoint(randomIndex, _random.Next(1, 10));
+        StateHasChanged();
+    }
+
+    private ObservablePoint[] FetchValues()
+    {
+        return new[]
+        {
+            new ObservablePoint(0, _random.Next(0, 10)),
+            new ObservablePoint(1, _random.Next(0, 10)),
+            new ObservablePoint(2, _random.Next(0, 10))
+        };
+    }
 }

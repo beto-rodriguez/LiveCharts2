@@ -23,6 +23,7 @@
 using System.ComponentModel;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
+using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore;
@@ -32,8 +33,6 @@ namespace LiveChartsCore;
 /// </summary>
 public abstract class CoreDrawMarginFrame : ChartElement, INotifyPropertyChanged
 {
-    private Paint? _stroke = null;
-    private Paint? _fill = null;
 
     /// <summary>
     /// Gets or sets the stroke.
@@ -43,9 +42,9 @@ public abstract class CoreDrawMarginFrame : ChartElement, INotifyPropertyChanged
     /// </value>
     public Paint? Stroke
     {
-        get => _stroke;
-        set => SetPaintProperty(ref _stroke, value, PaintStyle.Stroke);
-    }
+        get;
+        set => SetPaintProperty(ref field, value, PaintStyle.Stroke);
+    } = null;
 
     /// <summary>
     /// Gets or sets the fill.
@@ -55,13 +54,13 @@ public abstract class CoreDrawMarginFrame : ChartElement, INotifyPropertyChanged
     /// </value>
     public Paint? Fill
     {
-        get => _fill;
-        set => SetPaintProperty(ref _fill, value);
-    }
+        get;
+        set => SetPaintProperty(ref field, value);
+    } = null;
 
     /// <inheritdoc cref="ChartElement.GetPaintTasks"/>
     protected internal override Paint?[] GetPaintTasks() =>
-        [_stroke, _fill];
+        [Stroke, Fill];
 
     /// <summary>
     /// Called when the fill changes.
@@ -96,7 +95,7 @@ public abstract class CoreDrawMarginFrame<TSizedGeometry> : CoreDrawMarginFrame
 
         if (Fill is not null)
         {
-            if (Fill.ZIndex == 0) Fill.ZIndex = -3;
+            if (Fill.ZIndex == 0) Fill.ZIndex = PaintConstants.DrawMarginFrameFillZIndex;
 
             _fillSizedGeometry ??= new TSizedGeometry();
 
@@ -106,12 +105,12 @@ public abstract class CoreDrawMarginFrame<TSizedGeometry> : CoreDrawMarginFrame
             _fillSizedGeometry.Height = drawMarginSize.Height;
 
             Fill.AddGeometryToPaintTask(chart.Canvas, _fillSizedGeometry);
-            chart.Canvas.AddDrawableTask(Fill);
+            chart.Canvas.AddDrawableTask(Fill, zone: CanvasZone.NoClip);
         }
 
         if (Stroke is not null)
         {
-            if (Stroke.ZIndex == 0) Stroke.ZIndex = -0.9;
+            if (Stroke.ZIndex == 0) Stroke.ZIndex = PaintConstants.DrawMarginFrameStrokeZIndex;
 
             _strokeSizedGeometry ??= new TSizedGeometry();
 
@@ -121,7 +120,7 @@ public abstract class CoreDrawMarginFrame<TSizedGeometry> : CoreDrawMarginFrame
             _strokeSizedGeometry.Height = drawMarginSize.Height;
 
             Stroke.AddGeometryToPaintTask(chart.Canvas, _strokeSizedGeometry);
-            chart.Canvas.AddDrawableTask(Stroke);
+            chart.Canvas.AddDrawableTask(Stroke, zone: CanvasZone.NoClip);
         }
 
         if (!_isInitialized)

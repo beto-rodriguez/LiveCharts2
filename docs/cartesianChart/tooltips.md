@@ -164,7 +164,9 @@ When the [FindingStrategy](https://livecharts.dev/docs/{{ platform }}/{{ version
 is not enough, we can override the logic to determine whether a given point is inside a drawn `ChartPoint`. This method
 will be used by the library to resolve the points to show in a tooltip, or the points passed in any pointer event:
 
-{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/Events/OverrideFind/ViewModel.cs" ~}}
+```csharp
+{{~ render "~/../samples/ViewModelsSamples/Events/OverrideFind/ViewModel.cs" ~}}
+```
 
 :::tip
 Another alternative is to override the `HoverArea`, this area defines a section in the UI where the point is "selectable", you can find an example [here](https://github.com/beto-rodriguez/LiveCharts2/blob/dev/samples/ViewModelsSamples/General/TooltipHoverArea/ViewModel.cs).
@@ -287,53 +289,19 @@ The PieSeries class uses the `ToolTipLabelFormatter` property to configure the t
 
 You can quickly change the position, the font, the text size or the background color:
 
-#### View
+#### {{ view_title }}
 
-{{~ if xaml ~}}
-{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/Axes/NamedLabels/$PlatformViewFile" ~}}
-{{~ end ~}}
-
-{{~ if winforms ~}}
-{{~ render_params_file_as_code this "~/../samples/WinFormsSample/Axes/NamedLabels/View.cs" ~}}
-{{~ end ~}}
-
-{{~ if eto ~}}
-{{~ render_params_file_as_code this "~/../samples/EtoFormsSample/Axes/NamedLabels/View.cs" ~}}
-{{~ end ~}}
-
-{{~ if blazor ~}}
-{{~ render_params_file_as_code this "~/../samples/BlazorSample/Pages/Axes/NamedLabels.razor" ~}}
-{{~ end ~}}
-
-#### View model
-
-```c#
-[ObservableObject]
-public partial class ViewModel
-{
-    public ISeries[] Series { get; set; } = { ... };
-    public Axis[] XAxes { get; set; } = { ... };
-    public Axis[] YAxes { get; set; } = { ... };
-
-    public SolidColorPaint TooltipTextPaint { get; set; } = // mark
-        new SolidColorPaint // mark
-        { // mark
-            Color = new SKColor(242, 244, 195), // mark
-            SKTypeface = SKTypeface.FromFamilyName("Courier New") // mark
-        }; // mark
-
-    public SolidColorPaint TooltipBackgroundPaint { get; set; } = // mark
-        new SolidColorPaint(new SKColor(72, 0, 50)); // mark
-}
+```
+{{~ render $"~/../samples/{samples_folder}/Axes/NamedLabels{view_extension}" ~}}
 ```
 
 ![image]({{ assets_url }}/docs/samples/general/customTooltips/styling-tooltips.png)
 
 ## Custom tooltip control
 
-You can also create your own tooltip, the recommended way is to use the LiveCharts API (example bellow) but you can
+You can also create your own tooltip, the recommended way is to use the LiveCharts API (example below) but you can
 use anything as tooltip as soon as it implements the `IChartTooltip<T>` interface. In the following example we build
-a custom control to render tooltips in out charts using the LiveCharts API.
+a custom control to render tooltips in our charts using the LiveCharts API.
 
 :::tip
 The next tooltip is drawn by the library, LiveCharts can only draw inside the control bounds, in some cases it could 
@@ -345,10 +313,14 @@ see [#1558](https://github.com/beto-rodriguez/LiveCharts2/issues/1558) for more 
 
 #### CustomTooltip.cs
 
-{{~ render_params_file_as_code this "~/../samples/ViewModelsSamples/General/TemplatedTooltips/CustomTooltip.cs" ~}}
+```csharp
+{{~ render "~/../samples/ViewModelsSamples/General/TemplatedTooltips/CustomTooltip.cs" ~}}
+```
 
 #### View
 
-{{~ render_params_file_as_code this "~/../samples/$PlatformSamplesFolder/General/TemplatedTooltips/$PlatformViewFile" ~}}
+```
+{{~ render $"~/../samples/{samples_folder}/General/TemplatedTooltips{view_extension}" ~}}
+```
 
 ![custom tooltip]({{ assets_url }}/docs/_assets/tooltip-custom-template.gif)

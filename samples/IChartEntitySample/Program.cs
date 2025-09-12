@@ -99,10 +99,8 @@ public partial class City : ObservableObject, IChartEntity
         base.OnPropertyChanged(e);
     }
 
-    protected void OnCoordinateChanged(int index)
-    {
+    protected void OnCoordinateChanged(int index) =>
         Coordinate = new(index, Population);
-    }
 }
 
 // DateTime object

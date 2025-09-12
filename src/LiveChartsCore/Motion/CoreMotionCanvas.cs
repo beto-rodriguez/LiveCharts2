@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Painting;
 
@@ -34,23 +35,71 @@ namespace LiveChartsCore.Motion;
 /// </summary>
 public class CoreMotionCanvas : IDisposable
 {
-    internal HashSet<Paint> _paintTasks = [];
-    private readonly Stopwatch _stopwatch = new();
-    private object _sync = new();
-
+    private static readonly Stopwatch s_clock = new();
     private int _frames = 0;
     private Stopwatch? _fspSw;
-    private double _lastKnowFps = 0;
-    private double _totalFrames = 0;
+    private int _jitteredDrawCount;
+    private double _totalDrawTime = 0;
+    private double _lastDrawTime = 0;
+    private double _lastKnownFPS = 0;
+    private double _averageRenderTime = 0;
+    private double _totalFrames = double.Epsilon;
     private double _totalSeconds = 0;
+    internal long _lastFrameTimestamp;
+    internal TimeSpan _nextFrameDelay = s_baseFrameDelay;
+    private static readonly double s_ticksPerMillisecond = Stopwatch.Frequency / 1000d;
+    private static readonly TimeSpan s_baseFrameDelay = TimeSpan.FromMilliseconds(1000d / LiveCharts.RenderingSettings.LiveChartsRenderLoopFPS);
+    private static readonly long s_jitterThreshold = s_baseFrameDelay.Ticks / 2;
+    internal LvcColor _virtualBackgroundColor;
+    internal static string? s_externalRenderer;
+    internal static string? s_rendererName;
+    internal static string? s_tickerName;
+
+    static CoreMotionCanvas()
+    {
+        s_clock.Start();
+    }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CoreMotionCanvas"/> class.
+    /// The frame request handler delegate.
     /// </summary>
-    public CoreMotionCanvas()
+    /// <param name="context"></param>
+    public delegate void FrameRequestHandler(DrawingContext context);
+
+    internal CanvasZone[] Zones
     {
-        _stopwatch.Start();
+        get
+        {
+            if (field.Length > 0)
+                return field;
+
+            // if the zones are not initialized, we create them
+            field = CanvasZone.CreateZones();
+
+            return field;
+        }
+        set => field = value;
+    } = [];
+
+    /// <summary>
+    /// Gets the clock elapsed time in milliseconds.
+    /// </summary>
+    public static long ElapsedMilliseconds
+    {
+        get
+        {
+#if DEBUG
+            if (DebugElapsedMilliseconds > -1)
+                return DebugElapsedMilliseconds;
+#endif
+            return s_clock.ElapsedMilliseconds;
+        }
     }
+
+#if DEBUG
+    internal static long DebugElapsedMilliseconds { get; set; } = -1;
+    internal static bool IsTesting { get; set; }
+#endif
 
     internal bool DisableAnimations { get; set; }
 
@@ -78,18 +127,12 @@ public class CoreMotionCanvas : IDisposable
     /// <value>
     /// The synchronize.
     /// </value>
-    public object Sync { get => _sync; internal set => _sync = value ?? new object(); }
-
-    /// <summary>
-    /// Gets the animatables collection.
-    /// </summary>
-    public HashSet<Animatable> Trackers { get; } = [];
+    public object Sync { get; internal set => field = value ?? new object(); } = new();
 
     /// <summary>
     /// Draws the frame.
     /// </summary>
     /// <param name="context">The context.</param>
-    /// <returns></returns>
     public void DrawFrame<TDrawingContext>(TDrawingContext context)
         where TDrawingContext : DrawingContext
     {
@@ -100,58 +143,58 @@ public class CoreMotionCanvas : IDisposable
                 $"thread: {Environment.CurrentManagedThreadId}");
 #endif
 
-        var showFps = LiveCharts.ShowFPS;
+        var showFps = LiveCharts.RenderingSettings.ShowFPS;
+        var drawStartTime = s_clock.ElapsedTicks;
+        _lastFrameTimestamp = drawStartTime;
 
         lock (Sync)
         {
             context.OnBeginDraw();
 
             var isValid = true;
-            var frameTime = _stopwatch.ElapsedMilliseconds;
 
             var toRemoveGeometries = new List<Tuple<Paint, IDrawnElement>>();
 
-            foreach (var task in _paintTasks.Where(x => x is not null).OrderBy(x => x.ZIndex))
+            foreach (var zone in Zones)
             {
-                if (DisableAnimations) task.CompleteTransition(null);
-                task.IsValid = true;
-                task.CurrentTime = frameTime;
+                context.OnBeginZone(zone);
 
-                context.InitializePaintTask(task);
-
-                foreach (var geometry in task.GetGeometries(this))
+                foreach (var task in zone.EnumerateTasks())
                 {
-                    if (geometry is null) continue;
-                    if (DisableAnimations) geometry.CompleteTransition(null);
+                    if (DisableAnimations) task.CompleteTransition(null);
+                    task.IsValid = true;
 
-                    geometry.IsValid = true;
-                    geometry.CurrentTime = frameTime;
+                    context.SelectPaint(task);
 
-                    if (!task.IsPaused)
+                    foreach (var geometry in task.GetGeometries(this))
                     {
-                        context.ActiveOpacity = geometry.Opacity;
-                        context.Draw(geometry);
+                        if (geometry is null) continue;
+                        if (DisableAnimations) geometry.CompleteTransition(null);
+
+                        geometry.IsValid = true;
+
+                        if (!task.IsPaused)
+                        {
+                            context.ActiveOpacity = geometry.Opacity;
+                            context.Draw(geometry);
+                        }
+
+                        isValid = isValid && geometry.IsValid;
+
+                        if (geometry.IsValid && geometry.RemoveOnCompleted)
+                            toRemoveGeometries.Add(
+                                new Tuple<Paint, IDrawnElement>(task, geometry));
                     }
 
-                    isValid = isValid && geometry.IsValid;
+                    isValid = isValid && task.IsValid;
 
-                    if (geometry.IsValid && geometry.RemoveOnCompleted)
-                        toRemoveGeometries.Add(
-                            new Tuple<Paint, IDrawnElement>(task, geometry));
+                    if (task.RemoveOnCompleted && task.IsValid)
+                        zone.RemoveTask(task);
+
+                    context.ClearPaintSelection(task);
                 }
 
-                isValid = isValid && task.IsValid;
-
-                if (task.RemoveOnCompleted && task.IsValid) _ = _paintTasks.Remove(task);
-
-                context.DisposePaintTask(task);
-            }
-
-            foreach (var tracker in Trackers)
-            {
-                tracker.IsValid = true;
-                tracker.CurrentTime = frameTime;
-                isValid = isValid && tracker.IsValid;
+                context.OnEndZone(zone);
             }
 
             foreach (var tuple in toRemoveGeometries)
@@ -165,11 +208,34 @@ public class CoreMotionCanvas : IDisposable
 
             if (showFps)
             {
-                MeasureFPS();
+                MeasureFPS(drawStartTime);
 
-                if (_totalSeconds > 0)
-                    context.LogOnCanvas(
-                        $"[fps] last {_lastKnowFps:N2}, average {_totalFrames / _totalSeconds:N2}");
+                var sb = new StringBuilder();
+
+#if DEBUG
+                sb.Append($"[~~ {_lastKnownFPS:N2} ~~] FPS (DEBUG)");
+#else
+                sb.Append($"[ {_lastKnownFPS:N2} ] FPS");
+#endif
+                sb.Append($"`[ {_lastDrawTime:N2}ms / {_averageRenderTime:N2}ms ] render time last / avrg");
+
+                if (s_externalRenderer is null)
+                {
+                    sb.Append($"`{s_rendererName}");
+                    var isVSynced = LiveCharts.RenderingSettings.UseGPU && LiveCharts.RenderingSettings.TryUseVSync;
+                    sb.Append($"`[ {(isVSynced ? "VSync" : "VSync disabled")} ] handled by {s_tickerName}");
+                }
+                else
+                {
+                    sb.Append($"`{s_externalRenderer}");
+                    sb.Append($"`{s_tickerName}");
+                }
+
+                if (_jitteredDrawCount > 0)
+                    sb.Append(
+                            $"`[ {_jitteredDrawCount} ] jittered draws");
+
+                context.LogOnCanvas(sb.ToString());
             }
 
             IsValid = isValid;
@@ -183,24 +249,44 @@ public class CoreMotionCanvas : IDisposable
 
             if (showFps)
             {
+                // restart the count when the canvas is valid.
                 _frames = 0;
                 _fspSw = null;
+                _totalDrawTime = 0;
+                _totalFrames = 0;
+                _totalSeconds = 0;
             }
+        }
+
+        if (!LiveCharts.RenderingSettings.TryUseVSync)
+        {
+            var timeInDrawOperation = s_clock.ElapsedTicks - drawStartTime;
+            var delay = s_baseFrameDelay.Ticks - timeInDrawOperation;
+
+            TimeSpan frameDelay;
+
+            if (delay <= s_jitterThreshold)
+            {
+                _jitteredDrawCount++;
+                frameDelay = s_baseFrameDelay;
+            }
+            else
+            {
+                frameDelay = new TimeSpan(delay);
+            }
+
+            _nextFrameDelay = frameDelay;
         }
     }
 
     /// <summary>
     /// Gets the drawables count.
     /// </summary>
-    /// <value>
-    /// The drawables count.
-    /// </value>
-    public int DrawablesCount => _paintTasks.Count;
+    public int DrawablesCount => Zones.Sum(x => x.CountTasks());
 
     /// <summary>
     /// Invalidates this instance.
     /// </summary>
-    /// <returns></returns>
     public void Invalidate()
     {
         IsValid = false;
@@ -211,8 +297,17 @@ public class CoreMotionCanvas : IDisposable
     /// Adds a drawable task.
     /// </summary>
     /// <param name="task">The task.</param>
-    /// <returns></returns>
-    public void AddDrawableTask(Paint task) => _ = _paintTasks.Add(task);
+    /// <param name="style">The paint style.</param>
+    /// <param name="zone">The zone.</param>
+    public void AddDrawableTask(Paint task, PaintStyle style = PaintStyle.Undefined, int zone = CanvasZone.NoClip)
+    {
+        if (task == Paint.Default) return;
+
+        if (style != PaintStyle.Undefined)
+            task.PaintStyle = style;
+
+        Zones[zone].AddTask(task);
+    }
 
     /// <summary>
     /// Adds a geometry (or geometries) to the canvas.
@@ -223,26 +318,29 @@ public class CoreMotionCanvas : IDisposable
     public DrawnTask AddGeometry(params IDrawnElement[] geometries)
     {
         var task = new DrawnTask(this, geometries);
-        _ = _paintTasks.Add(task);
+
+        Zones[CanvasZone.NoClip].AddTask(task);
+
         return task;
     }
-
-    /// <summary>
-    /// Sets the paint tasks.
-    /// </summary>
-    /// <param name="tasks">The tasks.</param>
-    /// <returns></returns>
-    public void SetPaintTasks(HashSet<Paint> tasks) => _paintTasks = tasks;
 
     /// <summary>
     /// Removes the paint task.
     /// </summary>
     /// <param name="task">The task.</param>
-    /// <returns></returns>
     public void RemovePaintTask(Paint task)
     {
+        var geometriesWithOwnPaints = task.GetGeometries(this)
+                .Where(x => (x.Fill ?? x.Stroke ?? x.Paint) is not null);
+
+        foreach (var geometry in geometriesWithOwnPaints)
+            geometry.DisposePaints();
+
         task.ReleaseCanvas(this);
-        _ = _paintTasks.Remove(task);
+
+        foreach (var zone in Zones)
+            if (zone.RemoveTask(task))
+                break;
     }
 
     /// <summary>
@@ -250,9 +348,7 @@ public class CoreMotionCanvas : IDisposable
     /// </summary>
     public void Clear()
     {
-        foreach (var task in _paintTasks)
-            task.ReleaseCanvas(this);
-        _paintTasks.Clear();
+        Clean();
         Invalidate();
     }
 
@@ -264,7 +360,7 @@ public class CoreMotionCanvas : IDisposable
     {
         var count = 0;
 
-        foreach (var task in _paintTasks)
+        foreach (var task in Zones.SelectMany(x => x.EnumerateTasks()))
             foreach (var geometry in task.GetGeometries(this))
                 count++;
 
@@ -272,19 +368,73 @@ public class CoreMotionCanvas : IDisposable
     }
 
     /// <summary>
+    /// Counts the paint tasks in the canvas.
+    /// </summary>
+    /// <returns>the paints count in all zones.</returns>
+    public int CountPaintTasks()
+    {
+        var count = 0;
+        foreach (var zone in Zones)
+            count += zone.CountTasks();
+        return count;
+    }
+
+    /// <summary>
+    /// Checks if the canvas contains a paint task.
+    /// </summary>
+    /// <param name="task">The task.</param>
+    /// <returns>A value indicating if the task is contained.</returns>
+    public bool ContainsPaintTask(Paint task)
+    {
+        foreach (var zone in Zones)
+            if (zone.ContainsTask(task))
+                return true;
+
+        return false;
+    }
+
+
+    /// <summary>
     /// Releases the resources.
     /// </summary>
     public void Dispose()
     {
-        foreach (var task in _paintTasks)
-            task.ReleaseCanvas(this);
-        _paintTasks.Clear();
-        Trackers.Clear();
-        IsValid = true;
+        lock (Sync)
+        {
+            Clean();
+            IsValid = true;
+        }
     }
 
-    private void MeasureFPS()
+    private void Clean()
     {
+        foreach (var zone in Zones)
+        {
+            foreach (var task in zone.EnumerateTasks())
+            {
+                var geometriesWithOwnPaints = task.GetGeometries(this)
+                    .Where(x => (x.Fill ?? x.Stroke ?? x.Paint) is not null);
+
+                foreach (var geometry in geometriesWithOwnPaints)
+                    geometry.DisposePaints();
+
+                task.DisposeTask();
+                task.ReleaseCanvas(this);
+            }
+
+            zone.ClearTasks();
+        }
+
+        Zones = [];
+    }
+
+    private void MeasureFPS(long drawStartTime)
+    {
+        if (s_clock.ElapsedMilliseconds < 3000)
+            return; // we only start measuring after 3 seconds, to improve accuracy.
+
+        _totalDrawTime += (s_clock.ElapsedTicks - drawStartTime) / s_ticksPerMillisecond;
+
         if (_fspSw is null)
         {
             _fspSw = new();
@@ -297,10 +447,15 @@ public class CoreMotionCanvas : IDisposable
         if (_frames % logEach == 0)
         {
             var elapsedSeconds = _fspSw.ElapsedMilliseconds / 1000d;
-            _lastKnowFps = logEach / elapsedSeconds;
 
             _totalFrames += logEach;
             _totalSeconds += elapsedSeconds;
+            _lastKnownFPS = _totalFrames / _totalSeconds;
+            _averageRenderTime = _totalDrawTime / _totalFrames;
+
+            // it not exactly the last frame time, is the 20th frame time
+            // so we can actually read the time in the log.
+            _lastDrawTime = (s_clock.ElapsedTicks - drawStartTime) / s_ticksPerMillisecond;
 
             _fspSw.Restart();
         }

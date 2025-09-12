@@ -1,36 +1,78 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="MauiSample.Axes.Shared.View"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
-             xmlns:vms="clr-namespace:ViewModelsSamples.Axes.Shared;assembly=ViewModelsSamples"
-             >
+<ContentPage
+    x:Class="MauiSample.Axes.Shared.View"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vms="clr-namespace:ViewModelsSamples.Axes.Shared;assembly=ViewModelsSamples"
+    x:DataType="vms:ViewModel">
+
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
-	<ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
 
-            <lvc:CartesianChart
-                Grid.Row="0"
-                Series="{Binding SeriesCollection1}"
-                XAxes="{Binding X1}"
-                DrawMargin="{Binding DrawMargin}"
-                ZoomMode="X">
-            </lvc:CartesianChart>
+    <Grid RowDefinitions="*,*">
 
-            <lvc:CartesianChart
-                Grid.Row="1"
-                Series="{Binding SeriesCollection2}"
-                XAxes="{Binding X2}"
-                DrawMargin="{Binding DrawMargin}"
-                ZoomMode="X">
-            </lvc:CartesianChart>
+        <!--
+        We define a SharedAxesPair, it cointains a pair of axes, one for each chart,
+        The SharedAxesPair class will take care of keeping the axes in sync as the user
+        zooms and pans the charts.
+        -->
 
-        </Grid>
-    </ContentPage.Content>
+        <Grid.Resources>
+            <lvc:SharedAxesPair x:Key="SharedAxes">
+
+                <lvc:SharedAxesPair.First>
+                    <lvc:XamlAxis
+                        CrosshairLabelsBackground="#FF4500"
+                        CrosshairLabelsPaint="#FFF"
+                        CrosshairPaint="#40FF4500"
+                        Labeler="{Binding Labeler}"
+                        MaxLimit="{Binding Max}"/>
+                </lvc:SharedAxesPair.First>
+
+                <lvc:SharedAxesPair.Second>
+                    <lvc:XamlAxis
+                        CrosshairPaint="#40FF4500"
+                        MaxLimit="{Binding Max}" />
+                </lvc:SharedAxesPair.Second>
+
+            </lvc:SharedAxesPair>
+        </Grid.Resources>
+
+        <!--
+        We force the left margin in the "DrawMargin" to 70 in both charts, this to align the
+        axes no matter the size of the labels on each axis.
+        -->
+        
+        <lvc:CartesianChart
+            Grid.Row="0"
+            XAxes="{lvc:FromSharedAxes AxesPair={StaticResource SharedAxes}, Element=First}"
+            DrawMargin="70, Auto, Auto, Auto"
+            ZoomMode="X">
+
+            <lvc:CartesianChart.Series>
+                <lvc:SeriesCollection>
+                    <lvc:XamlLineSeries Values="{Binding Values1}"/>
+                </lvc:SeriesCollection>
+            </lvc:CartesianChart.Series>
+
+        </lvc:CartesianChart>
+
+        <lvc:CartesianChart
+            Grid.Row="1"
+            XAxes="{lvc:FromSharedAxes AxesPair={StaticResource SharedAxes}, Element=Second}"
+            DrawMargin="70, Auto, Auto, Auto"
+            ZoomMode="X">
+
+            <lvc:CartesianChart.Series>
+                <lvc:SeriesCollection>
+                    <lvc:XamlColumnSeries Values="{Binding Values2}"/>
+                </lvc:SeriesCollection>
+            </lvc:CartesianChart.Series>
+
+        </lvc:CartesianChart>
+
+    </Grid>
+
 </ContentPage>

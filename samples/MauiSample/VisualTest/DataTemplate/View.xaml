@@ -4,7 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
              xmlns:vms="clr-namespace:ViewModelsSamples.VisualTest.DataTemplate;assembly=ViewModelsSamples"
-             >
+             xmlns:oc="clr-namespace:System.Collections.ObjectModel;assembly=System.Windows">
     <ContentPage.BindingContext>
         <vms:ViewModel/>
     </ContentPage.BindingContext>
@@ -14,15 +14,15 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
+            <!--
+            ToDo Update this example to use the xaml syntax.
             <StackLayout BindableLayout.ItemsSource="{Binding Models}" VerticalOptions="Start">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate>
-                        <Frame Margin="10">
-                            <lvc:CartesianChart Series="{Binding}" HeightRequest="200" />
-                        </Frame>
+                        <lvc:CartesianChart Series="{Binding}" HeightRequest="200" />
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
-            </StackLayout>
+            </StackLayout>-->
         </Grid>
     </ContentPage.Content>
 </ContentPage>

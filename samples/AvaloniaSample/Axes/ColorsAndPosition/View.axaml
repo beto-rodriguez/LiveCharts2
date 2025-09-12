@@ -1,21 +1,59 @@
-<UserControl x:Class="AvaloniaSample.Axes.ColorsAndPosition.View"
-             xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-             xmlns:vms="using:ViewModelsSamples.Axes.ColorsAndPosition">
-  <UserControl.DataContext>
-    <vms:ViewModel/>
-  </UserControl.DataContext>
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="50"/>
-      <RowDefinition Height="*"/>
-    </Grid.RowDefinitions>
-    <StackPanel Grid.Row="0" Orientation="Horizontal">
-      <Button Margin="6" Command="{Binding SetNewColorCommand}">Set new color</Button>
-      <Button Margin="6" Command="{Binding TogglePositionCommand}">Toggle Position</Button>
-    </StackPanel>
-    <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}">
-    </lvc:CartesianChart>
-  </Grid> 
+<UserControl
+    x:Class="AvaloniaSample.Axes.ColorsAndPosition.View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:vms="using:ViewModelsSamples.Axes.ColorsAndPosition"
+    xmlns:local="using:AvaloniaSample.Axes.ColorsAndPosition"
+    x:DataType="vms:ViewModel">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <local:StringToPaintConverter x:Key="StringToPaintConverter" />
+    </UserControl.Resources>
+
+    <Grid RowDefinitions="Auto, *">
+        
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button
+                Margin="6"
+                Command="{Binding SetNewColorCommand}">
+                    Set new color
+            </Button>
+            <Button
+                Margin="6"
+                Command="{Binding TogglePositionCommand}">
+                    Toggle Position
+            </Button>
+        </StackPanel>
+
+        <lvc:CartesianChart Grid.Row="1">
+
+            <lvc:CartesianChart.Series>
+                <lvc:XamlColumnSeries Values="{Binding Values}"/>
+            </lvc:CartesianChart.Series>
+           
+            <lvc:CartesianChart.XAxes>
+                <lvc:XamlAxis
+                    AxisName="X axis"
+                    TextSize="20"
+                    Position="{Binding Position}"
+                    LabelsPaint="{Binding Color, Converter={StaticResource StringToPaintConverter}}"
+                    SeparatorsPaint="{Binding Color, Converter={StaticResource StringToPaintConverter}}"/>
+            </lvc:CartesianChart.XAxes>
+
+            <lvc:CartesianChart.YAxes>
+                <lvc:XamlAxis
+                    AxisName="Y axis"
+                    TextSize="20"
+                    Position="{Binding Position}"
+                    LabelsPaint="{Binding Color, Converter={StaticResource StringToPaintConverter}}"
+                    SeparatorsPaint="{Binding Color, Converter={StaticResource StringToPaintConverter}}"/>
+            </lvc:CartesianChart.YAxes>
+
+        </lvc:CartesianChart>
+    </Grid>
 </UserControl>

@@ -24,6 +24,7 @@ using System;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Kernel;
 using LiveChartsCore.Measure;
+using LiveChartsCore.Motion;
 using LiveChartsCore.Painting;
 
 namespace LiveChartsCore.VisualElements;
@@ -50,7 +51,7 @@ public abstract class BaseLabelVisual : VisualElement
     public Paint? Paint
     {
         get => _paint;
-        set => SetPaintProperty(ref _paint, value);
+        set => SetPaintProperty(ref _paint, value, PaintStyle.Text);
     }
 
     /// <summary>
@@ -82,11 +83,6 @@ public abstract class BaseLabelVisual : VisualElement
     /// Gets or sets the padding.
     /// </summary>
     public Padding Padding { get => _padding; set => SetProperty(ref _padding, value); }
-
-    /// <summary>
-    /// Gets or sets the line height [times the text measured height].
-    /// </summary>
-    public float LineHeight { get => _lineHeight; set => SetProperty(ref _lineHeight, value); }
 
     /// <summary>
     /// Gets or sets the maximum width.
@@ -122,7 +118,6 @@ public abstract class BaseLabelVisual<TLabelGeometry> : BaseLabelVisual
     {
         var x = (float)X;
         var y = (float)Y;
-        var clipping = Clipping.GetClipRectangle(ClippingMode, chart);
 
         if (LocationUnit == MeasureUnit.ChartValues)
         {
@@ -146,13 +141,11 @@ public abstract class BaseLabelVisual<TLabelGeometry> : BaseLabelVisual
         _labelGeometry.HorizontalAlign = HorizontalAlignment;
         _labelGeometry.Background = BackgroundColor;
         _labelGeometry.Padding = Padding;
-        _labelGeometry.LineHeight = LineHeight;
         _labelGeometry.MaxWidth = MaxWidth;
 
         if (Paint is not null)
         {
-            chart.Canvas.AddDrawableTask(Paint);
-            Paint.SetClipRectangle(chart.Canvas, clipping);
+            chart.Canvas.AddDrawableTask(Paint, zone: CanvasZone.DrawMargin);
             Paint.AddGeometryToPaintTask(chart.Canvas, _labelGeometry);
         }
     }
@@ -167,7 +160,7 @@ public abstract class BaseLabelVisual<TLabelGeometry> : BaseLabelVisual
     /// <inheritdoc cref="VisualElement.Measure(Chart)"/>
     public override LvcSize Measure(Chart chart)
     {
-        ApplyTheme<BaseLabelVisual>();
+        ApplyTheme<BaseLabelVisual>(chart.GetTheme());
 
         InitializeLabel();
 
@@ -179,7 +172,6 @@ public abstract class BaseLabelVisual<TLabelGeometry> : BaseLabelVisual
         _labelGeometry.HorizontalAlign = HorizontalAlignment;
         _labelGeometry.Background = BackgroundColor;
         _labelGeometry.Padding = Padding;
-        _labelGeometry.LineHeight = LineHeight;
         _labelGeometry.MaxWidth = MaxWidth;
         _labelGeometry.Paint = _paint;
 

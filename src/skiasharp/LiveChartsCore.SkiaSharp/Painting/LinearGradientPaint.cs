@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using System.Linq;
 using LiveChartsCore.Drawing;
 using LiveChartsCore.Painting;
 using LiveChartsCore.SkiaSharpView.Drawing;
@@ -44,40 +43,45 @@ namespace LiveChartsCore.SkiaSharpView.Painting;
 /// The end point, both X and Y in the range of 0 to 1, where 0 is the start of the axis and 1 the end.
 /// </param>
 /// <param name="colorPos">
-/// An array of integers in the range of 0 to 1.
-/// These integers indicate the relative positions of the colors, You can set that argument to null to equally
+/// An array of floats in the range of 0 to 1.
+/// These floats indicate the relative positions of the colors, you can set that argument to null to equally
 /// space the colors, default is null.
 /// </param>
 /// <param name="tileMode">
-/// The shader tile mode, default is <see cref="SKShaderTileMode.Repeat"/>.
+/// The shader tile mode, default is <see cref="SKShaderTileMode.Clamp"/>.
 /// </param>
 public class LinearGradientPaint(
     SKColor[] gradientStops,
     SKPoint startPoint,
     SKPoint endPoint,
     float[]? colorPos = null,
-    SKShaderTileMode tileMode = SKShaderTileMode.Repeat)
+    SKShaderTileMode tileMode = SKShaderTileMode.Clamp)
         : SkiaPaint
 {
-    private SKPaint? _skiaPaint;
+    private SKShader? _shader;
+    private SKRect _activeClip = new();
+
+    private SKColor[] GradientStops { get; set; } = gradientStops;
+    private SKPoint StartPoint { get; set; } = startPoint;
+    private SKPoint EndPoint { get; set; } = endPoint;
+    private float[]? ColorPos { get; set; } = colorPos;
 
     /// <summary>
     /// Default start point.
     /// </summary>
-    protected static readonly SKPoint s_defaultStartPoint = new(0, 0.5f);
+    public static readonly SKPoint DefaultStartPoint = new(0, 0.5f);
 
     /// <summary>
     /// Default end point.
     /// </summary>
-    protected static readonly SKPoint s_defaultEndPoint = new(1, 0.5f);
-    private SkiaSharpDrawingContext? _drawingContext;
+    public static readonly SKPoint DefaultEndPoint = new(1, 0.5f);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LinearGradientPaint"/> class.
     /// </summary>
     /// <param name="gradientStops">The gradient stops.</param>
     public LinearGradientPaint(SKColor[] gradientStops)
-        : this(gradientStops, s_defaultStartPoint, s_defaultEndPoint) { }
+        : this(gradientStops, DefaultStartPoint, DefaultEndPoint) { }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LinearGradientPaint"/> class.
@@ -99,157 +103,109 @@ public class LinearGradientPaint(
     /// <param name="start">The start.</param>
     /// <param name="end">The end.</param>
     public LinearGradientPaint(SKColor start, SKColor end)
-        : this(start, end, s_defaultStartPoint, s_defaultEndPoint) { }
+        : this(start, end, DefaultStartPoint, DefaultEndPoint) { }
 
     /// <inheritdoc cref="Paint.CloneTask" />
     public override Paint CloneTask()
     {
-        return new LinearGradientPaint(gradientStops, startPoint, endPoint, colorPos, tileMode)
-        {
-            PaintStyle = PaintStyle,
-            IsAntialias = IsAntialias,
-            StrokeThickness = StrokeThickness,
-            StrokeCap = StrokeCap,
-            StrokeJoin = StrokeJoin,
-            StrokeMiter = StrokeMiter,
-            FontFamily = FontFamily,
-            SKFontStyle = SKFontStyle,
-            SKTypeface = SKTypeface,
-            PathEffect = PathEffect?.Clone(),
-            ImageFilter = ImageFilter?.Clone()
-        };
+        var clone = new LinearGradientPaint(GradientStops, StartPoint, EndPoint, ColorPos, tileMode);
+        Map(this, clone);
+
+        return clone;
     }
 
-    /// <inheritdoc cref="Paint.ApplyOpacityMask(DrawingContext, float)" />
-    public override void ApplyOpacityMask(DrawingContext context, float opacity)
-    {
-        if (_skiaPaint is null) return;
-        var skiaContext = (SkiaSharpDrawingContext)context;
-
-        var size = GetDrawRectangleSize(skiaContext);
-
-        var xf = size.Location.X;
-        var xt = xf + size.Width;
-
-        var yf = size.Location.Y;
-        var yt = yf + size.Height;
-
-        var start = new SKPoint(xf + (xt - xf) * startPoint.X, yf + (yt - yf) * startPoint.Y);
-        var end = new SKPoint(xf + (xt - xf) * endPoint.X, yf + (yt - yf) * endPoint.Y);
-
-        _skiaPaint.Shader = SKShader.CreateLinearGradient(
-            start,
-            end,
-            gradientStops.Select(x => new SKColor(x.Red, x.Green, x.Blue, (byte)(255 * opacity))).ToArray(),
-            colorPos,
-            tileMode);
-    }
-
-    /// <inheritdoc cref="Paint.RestoreOpacityMask(DrawingContext, float)" />
-    public override void RestoreOpacityMask(DrawingContext context, float opacity)
-    {
-        if (_skiaPaint is null) return;
-
-        var size = GetDrawRectangleSize((SkiaSharpDrawingContext)context);
-
-        var xf = size.Location.X;
-        var xt = xf + size.Width;
-
-        var yf = size.Location.Y;
-        var yt = yf + size.Height;
-
-        var start = new SKPoint(xf + (xt - xf) * startPoint.X, yf + (yt - yf) * startPoint.Y);
-        var end = new SKPoint(xf + (xt - xf) * endPoint.X, yf + (yt - yf) * endPoint.Y);
-
-        _skiaPaint.Shader = SKShader.CreateLinearGradient(
-            start,
-            end,
-            gradientStops,
-            colorPos,
-            tileMode);
-    }
-
-    /// <inheritdoc cref="Paint.InitializeTask(DrawingContext)" />
-    public override void InitializeTask(DrawingContext drawingContext)
+    internal override void OnPaintStarted(DrawingContext drawingContext, IDrawnElement? drawnElement)
     {
         var skiaContext = (SkiaSharpDrawingContext)drawingContext;
-        _skiaPaint ??= new SKPaint();
+        _skiaPaint = UpdateSkiaPaint(skiaContext, drawnElement);
 
-        var size = GetDrawRectangleSize(skiaContext);
+        var bounds = skiaContext.Canvas.LocalClipBounds;
+        _activeClip = new SKRect(bounds.Left, bounds.Top, bounds.Right, bounds.Bottom);
 
-        var xf = size.Location.X;
-        var xt = xf + size.Width;
-
-        var yf = size.Location.Y;
-        var yt = yf + size.Height;
-
-        var start = new SKPoint(xf + (xt - xf) * startPoint.X, yf + (yt - yf) * startPoint.Y);
-        var end = new SKPoint(xf + (xt - xf) * endPoint.X, yf + (yt - yf) * endPoint.Y);
-
-        _skiaPaint.Shader = SKShader.CreateLinearGradient(
-                start,
-                end,
-                gradientStops,
-                colorPos,
-                tileMode);
-
-        _skiaPaint.IsAntialias = IsAntialias;
-        _skiaPaint.StrokeWidth = StrokeThickness;
-        _skiaPaint.StrokeCap = StrokeCap;
-        _skiaPaint.StrokeJoin = StrokeJoin;
-        _skiaPaint.StrokeMiter = StrokeMiter;
-        _skiaPaint.Style = PaintStyle.HasFlag(PaintStyle.Stroke) ? SKPaintStyle.Stroke : SKPaintStyle.Fill;
-
-        if (HasCustomFont) _skiaPaint.Typeface = GetSKTypeface();
-
-        if (PathEffect is not null)
-        {
-            PathEffect.CreateEffect(skiaContext);
-            _skiaPaint.PathEffect = PathEffect.SKPathEffect;
-        }
-
-        if (ImageFilter is not null)
-        {
-            ImageFilter.CreateFilter(skiaContext);
-            _skiaPaint.ImageFilter = ImageFilter.SKImageFilter;
-        }
-
-        var clip = GetClipRectangle(skiaContext.MotionCanvas);
-        if (clip != LvcRectangle.Empty)
-        {
-            _ = skiaContext.Canvas.Save();
-            skiaContext.Canvas.ClipRect(new SKRect(clip.X, clip.Y, clip.X + clip.Width, clip.Y + clip.Height));
-            _drawingContext = skiaContext;
-        }
-
-        skiaContext.ActiveSkiaPaint = _skiaPaint;
+        _skiaPaint.Shader = GetShader();
     }
 
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-    /// </summary>
-    public override void Dispose()
+    internal override void ApplyOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement)
     {
-        // Note #301222
-        // Disposing typefaces could cause render issues.
-        // Does this causes memory leaks?
-        // Should the user dispose typefaces manually?
-        //if (HasCustomFont && _skiaPaint != null) _skiaPaint.Typeface.Dispose();
-        PathEffect?.Dispose();
-        ImageFilter?.Dispose();
+        if (_skiaPaint is null || opacity > 0.99) return;
 
-        if (_drawingContext is not null && GetClipRectangle(_drawingContext.MotionCanvas) != LvcRectangle.Empty)
-        {
-            _drawingContext.Canvas.Restore();
-            _drawingContext = null;
-        }
-
-        _skiaPaint?.Dispose();
-        _skiaPaint = null;
-
-        GC.SuppressFinalize(this);
+        _skiaPaint.ColorFilter =
+            SKColorFilter.CreateBlendMode(
+                new SKColor(255, 255, 255, (byte)(255 * opacity)),
+                SKBlendMode.DstIn);
     }
 
-    private static SKRect GetDrawRectangleSize(SkiaSharpDrawingContext drawingContext) =>
-        new(0, 0, drawingContext.Info.Width, drawingContext.Info.Width);
+    internal override void RestoreOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement)
+    {
+        if (_skiaPaint is null) return;
+
+        _skiaPaint.ColorFilter = null;
+    }
+
+    internal override Paint Transitionate(float progress, Paint target)
+    {
+        if (target is not LinearGradientPaint toPaint) return target;
+
+        if (toPaint.GradientStops.Length != GradientStops.Length)
+            throw new NotImplementedException(
+                $"Transitions between {nameof(GradientStops)} must be of the same length.");
+
+        for (var i = 0; i < GradientStops.Length; i++)
+            GradientStops[i] = new SKColor(
+                (byte)(GradientStops[i].Red + progress * (toPaint.GradientStops[i].Red - GradientStops[i].Red)),
+                (byte)(GradientStops[i].Green + progress * (toPaint.GradientStops[i].Green - GradientStops[i].Green)),
+                (byte)(GradientStops[i].Blue + progress * (toPaint.GradientStops[i].Blue - GradientStops[i].Blue)),
+                (byte)(GradientStops[i].Alpha + progress * (toPaint.GradientStops[i].Alpha - GradientStops[i].Alpha)));
+
+        StartPoint = new SKPoint(
+            StartPoint.X + progress * (toPaint.StartPoint.X - StartPoint.X),
+            StartPoint.Y + progress * (toPaint.StartPoint.Y - StartPoint.Y));
+
+        EndPoint = new SKPoint(
+            EndPoint.X + progress * (toPaint.EndPoint.X - EndPoint.X),
+            EndPoint.Y + progress * (toPaint.EndPoint.Y - EndPoint.Y));
+
+        if (ColorPos is not null && toPaint.ColorPos is not null)
+        {
+            if (ColorPos is null || ColorPos.Length != toPaint.ColorPos.Length)
+                throw new NotImplementedException(
+                    $"Transitions between {nameof(ColorPos)} must be of the same length.");
+
+            for (var i = 0; i < ColorPos.Length; i++)
+                ColorPos[i] = ColorPos[i] + progress * (toPaint.ColorPos[i] - ColorPos[i]);
+        }
+
+        _shader?.Dispose();
+        _shader = null;
+
+        _skiaPaint?.Shader = GetShader();
+
+        return this;
+    }
+
+    internal override void DisposeTask()
+    {
+        base.DisposeTask();
+
+        _shader?.Dispose();
+        _shader = null;
+    }
+
+    private SKShader GetShader()
+    {
+        if (_shader is not null)
+            return _shader;
+
+        var xf = _activeClip.Location.X;
+        var xt = xf + _activeClip.Width;
+
+        var yf = _activeClip.Location.Y;
+        var yt = yf + _activeClip.Height;
+
+        var start = new SKPoint(xf + (xt - xf) * StartPoint.X, yf + (yt - yf) * StartPoint.Y);
+        var end = new SKPoint(xf + (xt - xf) * EndPoint.X, yf + (yt - yf) * EndPoint.Y);
+
+        return
+            _shader = SKShader.CreateLinearGradient(start, end, GradientStops, ColorPos, tileMode);
+    }
 }

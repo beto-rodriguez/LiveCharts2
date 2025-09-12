@@ -43,19 +43,19 @@ public class DrawnTask : Paint
     }
 
     /// <inheritdoc cref="Paint.CloneTask" />
-    public override void ApplyOpacityMask(DrawingContext context, float opacity) { }
-
-    /// <inheritdoc cref="Paint.CloneTask" />
     public override Paint CloneTask() => throw new NotImplementedException();
 
-    /// <inheritdoc cref="Paint.Dispose" />
-    public override void Dispose() { }
+    internal override void ApplyOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement) { }
 
-    /// <inheritdoc cref="Paint.InitializeTask(DrawingContext)" />
-    public override void InitializeTask(DrawingContext drawingContext) =>
+    internal override void OnPaintFinished(DrawingContext context, IDrawnElement? drawnElement) { }
+
+    internal override void OnPaintStarted(DrawingContext drawingContext, IDrawnElement? drawnElement) =>
         // lets clear the active paint task, this will force the drawables to use their own paint tasks.
         drawingContext.ActiveLvcPaint = null;
 
-    /// <inheritdoc cref="Paint.RestoreOpacityMask(DrawingContext, float)" />
-    public override void RestoreOpacityMask(DrawingContext context, float opacity) { }
+    internal override void RestoreOpacityMask(DrawingContext context, float opacity, IDrawnElement? drawnElement) { }
+
+    internal override Paint Transitionate(float progress, Paint target) => this;
+
+    internal override void DisposeTask() { }
 }

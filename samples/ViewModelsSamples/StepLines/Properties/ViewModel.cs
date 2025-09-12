@@ -1,108 +1,78 @@
 ﻿using System;
-using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using LiveChartsCore;
-using LiveChartsCore.Drawing;
-using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Painting;
-using LiveChartsCore.Themes;
-using SkiaSharp;
 
 namespace ViewModelsSamples.StepLines.Properties;
 
 public partial class ViewModel : ObservableObject
 {
-    private readonly LvcColor[] _colors = ColorPalletes.FluentDesign;
     private readonly Random _random = new();
-    private StepLineSeries<double> _lineSeries;
-    private int _currentColor = 0;
-
-    public ViewModel()
-    {
-        _lineSeries = new StepLineSeries<double>
-        {
-            Values = new List<double> { -2, -1, 3, 5, 3, 4, 6 },
-        };
-
-        _series = [_lineSeries];
-    }
 
     [ObservableProperty]
-    private ISeries[] _series;
+    public partial double[] Values { get; set; } = [-2, -1, 3, 5, 3, 4, 6];
+
+    [ObservableProperty]
+    public partial string Stroke { get; set; } = "#000";
+
+    [ObservableProperty]
+    public partial string Fill { get; set; } = "#30000000";
+
+    [ObservableProperty]
+    public partial string GeometryStroke { get; set; } = "#000";
+
+    [ObservableProperty]
+    public partial string GeometryFill { get; set; } = "#30000000";
+
+    [ObservableProperty]
+    public partial double GeometrySize { get; set; } = 20;
 
     [RelayCommand]
     public void ChangeValuesInstance()
     {
         var t = 0;
-        var values = new List<double>();
+        var values = new double[10];
+
         for (var i = 0; i < 10; i++)
         {
             t += _random.Next(-5, 10);
-            values.Add(t);
+            values[i] = t;
         }
 
-        _lineSeries.Values = values;
-    }
-
-    public void ChangeSeriesInstance()
-    {
-        _lineSeries = new StepLineSeries<double>
-        {
-            Values = new List<double> { -2, -1, 3, 5, 3, 4, 6 },
-        };
-
-        Series = [_lineSeries];
+        Values = values;
     }
 
     [RelayCommand]
-    public void NewStroke()
-    {
-        var nextColorIndex = _currentColor++ % _colors.Length;
-        var color = _colors[nextColorIndex];
-        _lineSeries.Stroke = new SolidColorPaint(new SKColor(color.R, color.G, color.B)) { StrokeThickness = 3 };
-    }
+    public void NewStroke() => Stroke = GetRandomColor();
 
     [RelayCommand]
-    public void NewFill()
-    {
-        var nextColorIndex = _currentColor++ % _colors.Length;
-        var color = _colors[nextColorIndex];
-
-        _lineSeries.Fill = new SolidColorPaint(new SKColor(color.R, color.G, color.B, 90));
-    }
+    public void NewFill() => Fill = GetRandomColor();
 
     [RelayCommand]
-    public void NewGeometryFill()
-    {
-        var nextColorIndex = _currentColor++ % _colors.Length;
-        var color = _colors[nextColorIndex];
-
-        _lineSeries.GeometryFill = new SolidColorPaint(new SKColor(color.R, color.G, color.B));
-    }
+    public void NewGeometryFill() => GeometryFill = GetRandomColor();
 
     [RelayCommand]
-    public void NewGeometryStroke()
-    {
-        var nextColorIndex = _currentColor++ % _colors.Length;
-        var color = _colors[nextColorIndex];
-
-        _lineSeries.GeometryStroke = new SolidColorPaint(new SKColor(color.R, color.G, color.B)) { StrokeThickness = 3 };
-    }
+    public void NewGeometryStroke() => GeometryStroke = GetRandomColor();
 
     [RelayCommand]
     public void IncreaseGeometrySize()
     {
-        if (_lineSeries.GeometrySize == 60) return;
-
-        _lineSeries.GeometrySize += 10;
+        if (GeometrySize == 60) return;
+        GeometrySize += 10;
     }
 
     [RelayCommand]
     public void DecreaseGeometrySize()
     {
-        if (_lineSeries.GeometrySize == 0) return;
+        if (GeometrySize == 0) return;
+        GeometrySize -= 10;
+    }
 
-        _lineSeries.GeometrySize -= 10;
+    private string GetRandomColor()
+    {
+        var r = _random.Next(0, 255);
+        var g = _random.Next(0, 255);
+        var b = _random.Next(0, 255);
+
+        return $"#{r:X2}{g:X2}{b:X2}";
     }
 }

@@ -1,0 +1,63 @@
+﻿<UserControl
+    x:Class="WinUISample.Pies.Gauge4.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
+    xmlns:vms="using:ViewModelsSamples.Pies.Gauge4"
+    mc:Ignorable="d"
+    MaxWidth="400"
+    MaxHeight="400">
+
+    <UserControl.DataContext>
+        <vms:ViewModel/>
+    </UserControl.DataContext>
+
+    <lvc:PieChart
+        InitialRotation="-90"
+        MaxAngle="350"
+        MinValue="0"
+        MaxValue="100">
+        <lvc:PieChart.Series>
+            <lvc:SeriesCollection>
+                <!--
+                The main gauge series for Vanessa.
+                -->
+                <lvc:XamlGaugeSeries
+                    GaugeValue="{Binding Vanesa}"
+                    SeriesName="Vanessa"
+                    DataLabelsSize="20"
+                    DataLabelsPosition="End"
+                    DataLabelsFormatter="{Binding Formatter}"
+                    InnerRadius="20"
+                    MaxRadialColumnWidth="5"/>
+                <!--
+                The main gauge series for Charles.
+                -->
+                <lvc:XamlGaugeSeries
+                    GaugeValue="{Binding Charles}"
+                    SeriesName="Charles"
+                    DataLabelsSize="20"
+                    DataLabelsPosition="End"
+                    DataLabelsFormatter="{Binding Formatter}"
+                    InnerRadius="20"
+                    MaxRadialColumnWidth="5"/>
+                <!--
+                The main gauge series for Ana.
+                -->
+                <lvc:XamlGaugeSeries
+                    GaugeValue="{Binding Ana}"
+                    SeriesName="Ana"
+                    DataLabelsSize="20"
+                    DataLabelsPosition="End"
+                    DataLabelsFormatter="{Binding Formatter}"
+                    InnerRadius="20"
+                    MaxRadialColumnWidth="5"/>
+                <!-- The background series is used to style the gauge background. -->
+                <lvc:XamlGaugeBackgroundSeries Fill="{x:Null}"/>
+            </lvc:SeriesCollection>
+        </lvc:PieChart.Series>
+    </lvc:PieChart>
+
+</UserControl>
