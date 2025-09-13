@@ -31,8 +31,7 @@ This web site wraps every sample using a `ContentPage` instance, but LiveCharts 
 {{~ if winforms ~}}
 
 :::info
-This web site builds the control from code behind but you could also grab it from the toolbox,
-this sample also uses a ViewModel to populate the properties of the control(s) in this sample.
+This web site builds the control from code behind but you could also grab it from the toolbox.
 :::
 
 {{~ end ~}}

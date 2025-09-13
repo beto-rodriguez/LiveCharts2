@@ -12,8 +12,7 @@ this sample also follows a Model-View-* pattern.
 {{~ if winforms ~}}
 
 :::info
-Notice this web site builds the control from code behind but you could also grab it from the toolbox,
-this sample also uses a ViewModel to populate the properties of the control(s) in this sample.
+Notice this web site builds the control from code behind but you could also grab it from the toolbox.
 :::
 
 {{~ end ~}}
