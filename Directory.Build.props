@@ -30,8 +30,8 @@
     <!--
     Useful to toggle between using project references or nuget references
     -->
-    <UseNuGetForSamples>true</UseNuGetForSamples>
-    <UseNuGetForGenerator>false</UseNuGetForGenerator>
+    <UseNuGetForSamples>false</UseNuGetForSamples>
+    <UseNuGetForGenerator>true</UseNuGetForGenerator>
 
   </PropertyGroup>
 
