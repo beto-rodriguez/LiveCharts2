@@ -21,7 +21,7 @@ You can also create lines as sections, in the next example we set the same value
     <img src="{{ assets_url }}/docs/{{ unique_name }}/result2.png" alt="sample image" />
 </div>
 
-```csharp
+```
 {{~ render  $"~/../samples/{samples_folder}/General/Sections2{view_extension}"  ~}}
 ```
 
