@@ -68,7 +68,7 @@ internal partial class PointerController : INativePointerController
         _scaleDetector?.Dispose();
         _scaleDetector = null;
 
-        _customScaleListener.Dispose();
+        _customScaleListener?.Dispose();
         _customScaleListener = null!;
     }
 

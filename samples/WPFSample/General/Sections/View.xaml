@@ -21,8 +21,8 @@
             <lvc:SectionsCollection>
                 <!-- creates a section from 3 to 4 in the X axis -->
                 <lvc:XamlRectangularSection
-                    Xi="3"
-                    Xj="4"
+                    Xi="{Binding Xi1}"
+                    Xj="{Binding Xj1}"
                     Fill="{lvc:SolidColorPaint Color='#FFCDD2'}"/>
 
                 <!--
@@ -30,13 +30,14 @@
                 and from 2 to 8 in the Y axis
                 -->
                 <lvc:XamlRectangularSection
-                    Xi="5" Xj="6"
-                    Yi="2" Yj="8"
+                    Xi="{Binding Xi2}" Xj="{Binding Xj2}"
+                    Yi="{Binding Yi2}" Yj="{Binding Yj2}"
                     Fill="{lvc:SolidColorPaint Color='#BBDEFB'}"/>
 
                 <!-- creates a section from 8 to the end in the X axis -->
                 <lvc:XamlRectangularSection
-                    Xi="8"
+                    Xi="{Binding Xi3}"
+                    Xj="{Binding Xj3}"
                     Label="A section here!"
                     LabelSize="14"
                     LabelPaint="{lvc:SolidColorPaint Color='#FF6F00'}"
