@@ -3,7 +3,7 @@
 Zooming and panning is disabled by default, you can enable it by setting the `ZoomMode` property, this property is of type
 [ZoomAndPanMode](https://lvcharts.com/api/{{ version }}/LiveChartsCore.Measure.ZoomAndPanMode), this type is a flag enum
 it means that you can combine the options as you need, you can learn more about zooming and panning
-[here](https://lvcharts.com/docs/{{ platform }}/{{ version }}/CartesianChart.Axes%20properties#zooming-and-panning).
+options [here](#options).
 
 
 
@@ -219,6 +219,7 @@ private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
 
     axis.SetLimits(min.Value, max.Value);
 }
+```
 
 # Manually fire zooming or panning
 
