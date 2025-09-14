@@ -22,6 +22,7 @@
 
 ```csharp
 {{~ render $"~/../samples/{samples_folder}/Lines/Custom/CustomSeries.cs" ~}}
+```
 {{~ end ~}}
 
 {{~ if related_to != null ~}}
