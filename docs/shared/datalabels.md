@@ -23,4 +23,4 @@ new {{ name  | to_title_case_no_spaces }}<double>
 
 The previous series will result in the following chart:
 
-![image]({{ assets_url }}/docs/_assets/1.8.datalabels.png)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/_assets/1.8.datalabels.png)

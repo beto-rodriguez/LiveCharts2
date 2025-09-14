@@ -8,7 +8,7 @@ changing on multiple threads so it can handle it and prevent
 There are 2 alternatives you can follow to prevent this issue, 1. use the [lock](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/statements/lock) keyword to wrap any change in your data, 2. Invoke the changes on the UI thread.
 
 <div class="text-center sample-img">
-    <img src="{{ assets_url }}/docs/{{ unique_name }}/result.gif" alt="sample image" />
+    <img src="https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/{{ unique_name }}/result.gif" alt="sample image" />
 </div>
 
 ## Locking changes (Alternative 1)

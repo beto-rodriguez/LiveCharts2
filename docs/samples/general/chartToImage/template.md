@@ -36,7 +36,7 @@ Having the previous data (ViewModel), we add 3 charts to the UI, a `CartesianCha
 You will get the following plot in the UI.
 
 <div class="text-center sample-img">
-    <img src="{{ assets_url }}/docs/{{ unique_name }}/result2.png" alt="sample image" />
+    <img src="https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/{{ unique_name }}/result2.png" alt="sample image" />
 </div>
 
 {{~ if xaml ~}}
@@ -70,7 +70,7 @@ The Net 6.0 template is much cleaner than previous console app templates, notice
 .NET 5.0, .NET core 3.1 or .NET framework (classic) 4.6.2 or greater.
 :::
 
-![image]({{ assets_url }}/docs/_assets/console.png)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/_assets/console.png)
 
 Finally build the images in the `Program.cs` file.
 

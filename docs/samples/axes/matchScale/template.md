@@ -18,7 +18,7 @@ Now both axes use the same scale, we can easily notice this in the grid drawn by
 no mater if we zoom in/out (or use the panning feature).
 
 <div class="text-center sample-img">
-    <img src="{{ assets_url }}/docs/{{ unique_name }}/matchsdr.gif" alt="sample image" />
+    <img src="https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/{{ unique_name }}/matchsdr.gif" alt="sample image" />
 </div>
 
 ## Custom Axis scale
@@ -41,7 +41,7 @@ CustomScaleExtensions.DoubleY(myChart);
 Once we run our app again, we can see that our scale works as expected:
 
 <div class="text-center sample-img">
-    <img src="{{ assets_url }}/docs/{{ unique_name }}/doubley.png" alt="sample image" />
+    <img src="https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/{{ unique_name }}/doubley.png" alt="sample image" />
 </div>
 
 ## Scale separators to 1 inch sample
@@ -69,7 +69,7 @@ And that's it, now our separators will be one inch long always, no matter the ch
 and panning level.
 
 <div class="text-center sample-img">
-    <img src="{{ assets_url }}/docs/{{ unique_name }}/inch-long-separator.jpg" alt="sample image" style="max-width: 650px" />
+    <img src="https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/{{ unique_name }}/inch-long-separator.jpg" alt="sample image" style="max-width: 650px" />
 </div>
 
 {{ render "~/shared/relatedTo.md" }}

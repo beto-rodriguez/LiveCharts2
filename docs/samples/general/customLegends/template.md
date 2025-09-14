@@ -3,7 +3,7 @@
 You can use the chart `LegendPosition`, `LegendTextPaint`, `LegendBackgroundPaint` and `LegendTextSize` to 
 define the legend look (full example [here](https://github.com/beto-rodriguez/LiveCharts2/blob/master/samples/{{ samples_folder }}/Axes/Multiple{{ view_extension }})).
 
-![custom]({{ assets_url }}/docs/_assets/legend-custom-style.png)
+![custom](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/_assets/legend-custom-style.png)
 
 # Override the default legend behavior
 
@@ -28,7 +28,7 @@ in the next example we set a larger miniature compared with the default size.
 {{~ render $"~/../samples/{samples_folder}/General/TemplatedLegends{view_extension}" ~}}
 ```
 
-![custom legend]({{ assets_url }}/docs/_assets/legend-custom-template.png)
+![custom legend](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/_assets/legend-custom-template.png)
 
 # Legend control from scratch
 

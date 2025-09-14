@@ -37,7 +37,7 @@ new LineSeries<double>
 
 Produces the following result:
 
-![image]({{ assets_url }}/docs/_assets/1.8.padding00.png)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/_assets/1.8.padding00.png)
 
 But you can remove the padding only from an axis, for example:
 
@@ -52,7 +52,7 @@ new LineSeries<double>
 }
 ```
 
-![image]({{ assets_url }}/docs/_assets/1.8.padding50.png)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/_assets/1.8.padding50.png)
 
 Or you can increase the distance:
 
@@ -67,4 +67,4 @@ new LineSeries<double>
 }
 ```
 
-![image]({{ assets_url }}/docs/_assets/1.8.padding22.png)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/_assets/1.8.padding22.png)
