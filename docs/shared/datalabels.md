@@ -1,3 +1,8 @@
+<!--
+To get help on editing this file, see https://github.com/beto-rodriguez/LiveCharts2/blob/dev/docs/readme.md
+content is normally pulled from the examples in the repository.
+-->
+
 ## Data labels 
 
 Data labels are labels for every point in a series, there are multiple properties to customize them, take a look at the 

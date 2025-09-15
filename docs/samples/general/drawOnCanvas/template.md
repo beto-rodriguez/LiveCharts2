@@ -1,3 +1,8 @@
+<!--
+To get help on editing this file, see https://github.com/beto-rodriguez/LiveCharts2/blob/dev/docs/readme.md
+content is normally pulled from the examples in the repository.
+-->
+
 :::tip
 This article adds geometries directly to the canvas, this is intended to explain how geometries and animations
 are handled in the library, but in general the recommended way to draw a custom element in the chart is to use the 

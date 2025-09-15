@@ -1,3 +1,8 @@
+<!--
+To get help on editing this file, see https://github.com/beto-rodriguez/LiveCharts2/blob/dev/docs/readme.md
+content is normally pulled from the examples in the repository.
+-->
+
 {{ render "~/shared/genericSampleJustGifHeader.md" }}
 
 Zooming and panning is disabled by default, you can enable it by setting the `ZoomMode` property, this property is of type

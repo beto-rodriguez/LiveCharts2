@@ -1,3 +1,8 @@
+<!--
+To get help on editing this file, see https://github.com/beto-rodriguez/LiveCharts2/blob/dev/docs/readme.md\
+content is normally pulled from the examples in the repository.
+-->
+
 In this example, both axes `X` and `Y` use the same scale, it means that the amount of space in the UI
 is the same for both axes per data unit. We use the `ICartesianChartView`.`MatchAxesScreenDataRatio` property, 
 this will set the scale up for us, but we can also build custom scales if necessary.

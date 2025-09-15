@@ -1,3 +1,9 @@
+<!--
+To get help on editing this file, see https://github.com/beto-rodriguez/LiveCharts2/blob/dev/docs/readme.md
+This file pulls content from the ~/shared/ tempaltes
+content is normally pulled from the examples in the repository.
+-->
+
 # {{ name | to_title_case }}
 
 When the data is changing on another thread(s), there is a chance that while the chart is measured, the data changes at the same time, this 

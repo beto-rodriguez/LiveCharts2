@@ -1,3 +1,8 @@
+<!--
+To get help on editing this file, see https://github.com/beto-rodriguez/LiveCharts2/blob/dev/docs/readme.md
+content is normally pulled from the examples in the repository.
+-->
+
 {{ render "~/shared/genericSampleSimpleHeader.md" }}
 
 We can add custom elements to a chart using the `VisualElements` property, this property is of type `IEnumerable<ChartElement>`,

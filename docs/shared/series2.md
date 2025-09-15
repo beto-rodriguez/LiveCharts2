@@ -1,3 +1,8 @@
+<!--
+To get help on editing this file, see https://github.com/beto-rodriguez/LiveCharts2/blob/dev/docs/readme.md
+content is normally pulled from the examples in the repository.
+-->
+
 ## Plotting custom types
 
 You can plot any type of data, please see the [mappers article]({{ website_url }}/docs/{{ platform }}/{{ version }}/Overview.Mappers) for more information.

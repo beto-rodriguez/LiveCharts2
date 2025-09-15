@@ -1,3 +1,8 @@
+<!--
+To get help on editing this file, see https://github.com/beto-rodriguez/LiveCharts2/blob/dev/docs/readme.md
+content is normally pulled from the examples in the repository.
+-->
+
 # Pressed and hover events
 
 You can request a chart to find the elements in a given position using the `Chart.GetPointsAt()` or
