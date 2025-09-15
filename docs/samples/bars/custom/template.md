@@ -24,7 +24,7 @@
 ## LogarithmicSeries.cs
 
 ```csharp
-{{~ render $"~/../samples/{samples_folder}/Bars/Custom/CustomSeries.cs" ~}}
+{{~ render $"~/../samples/{platform_samples_folder}/Bars/Custom/CustomSeries.cs" ~}}
 ```
 {{~ end ~}}
 

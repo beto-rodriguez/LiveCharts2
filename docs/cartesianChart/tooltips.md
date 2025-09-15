@@ -292,7 +292,7 @@ You can quickly change the position, the font, the text size or the background c
 #### {{ view_title }}
 
 ```
-{{~ render $"~/../samples/{samples_folder}/Axes/NamedLabels{view_extension}" ~}}
+{{~ render $"~/../samples/{platform_samples_folder}/Axes/NamedLabels{view_extension}" ~}}
 ```
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/samples/general/customTooltips/styling-tooltips.png)
@@ -320,7 +320,7 @@ see [#1558](https://github.com/beto-rodriguez/LiveCharts2/issues/1558) for more 
 #### View
 
 ```
-{{~ render $"~/../samples/{samples_folder}/General/TemplatedTooltips{view_extension}" ~}}
+{{~ render $"~/../samples/{platform_samples_folder}/General/TemplatedTooltips{view_extension}" ~}}
 ```
 
 ![custom tooltip](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/_assets/tooltip-custom-template.gif)

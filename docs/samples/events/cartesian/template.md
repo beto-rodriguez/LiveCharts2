@@ -60,7 +60,7 @@ restores the default paint when the pointer leaves.
 ## {{~ view_title ~}}
 
 ```
-{{~ render "~/../samples/{samples_folder}/Events/Cartesian{view_extension}" ~}}
+{{~ render "~/../samples/{platform_samples_folder}/Events/Cartesian{view_extension}" ~}}
 ```
 
 By using the `Series` events you can subscribe strongly typed method signatures, where the library knows the type of
@@ -91,7 +91,7 @@ You could also detect the pointer down events/commands at the chart level but si
 ```
 
 ```
-{{~ render "~/../samples/{samples_folder}/Events/Polar{view_extension}" ~}}
+{{~ render "~/../samples/{platform_samples_folder}/Events/Polar{view_extension}" ~}}
 ```
 
 {{~ if related_to != null ~}}

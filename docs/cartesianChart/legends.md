@@ -90,7 +90,7 @@ a custom control to render legends in our charts using the LiveCharts API.
 ## View
 
 ```
-{{~ render $"~/../samples/{samples_folder}/General/TemplatedLegends{view_extension}" ~}}
+{{~ render $"~/../samples/{platform_samples_folder}/General/TemplatedLegends{view_extension}" ~}}
 ```
 
 ![custom tooltip](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/_assets/legend-custom-template.png)

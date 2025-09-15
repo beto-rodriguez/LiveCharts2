@@ -18,7 +18,7 @@
 ## CustomGeometryPointColumnSeries.cs
 
 ```csharp
-{{~ render $"~/../samples/{samples_folder}/Lines/Basic/CustomStarLineSeries.cs" ~}}
+{{~ render $"~/../samples/{platform_samples_folder}/Lines/Basic/CustomStarLineSeries.cs" ~}}
 ```
 {{~ end ~}}
 

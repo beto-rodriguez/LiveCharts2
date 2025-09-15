@@ -24,7 +24,7 @@
 ## CustomSeries.cs
 
 ```csharp
-{{~ render $"~/../samples/{samples_folder}/Scatter/Custom/CustomSeries.cs" ~}}
+{{~ render $"~/../samples/{platform_samples_folder}/Scatter/Custom/CustomSeries.cs" ~}}
 ```
 {{~ end ~}}
 

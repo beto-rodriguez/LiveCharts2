@@ -22,7 +22,7 @@
 ## CustomSeries.cs
 
 ```csharp
-{{~ render $"~/../samples/{samples_folder}/Lines/CustomPoints/CustomArrowLineSeries.cs" ~}}
+{{~ render $"~/../samples/{platform_samples_folder}/Lines/CustomPoints/CustomArrowLineSeries.cs" ~}}
 ```
 {{~ end ~}}
 

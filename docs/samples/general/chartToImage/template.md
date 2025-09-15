@@ -45,7 +45,7 @@ You can take any control in the UI and build an image from it, in the next examp
 view is loaded.
 
 ```csharp
-{{~ render $"~/../samples/{samples_folder}/General/ChartToImage{view_code}" ~}}
+{{~ render $"~/../samples/{platform_samples_folder}/General/ChartToImage{view_code}" ~}}
 ```
 {{~ end ~}}
 

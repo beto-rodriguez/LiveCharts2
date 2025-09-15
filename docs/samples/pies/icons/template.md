@@ -18,13 +18,13 @@
 ## CustomPieSeries.cs
 
 ```csharp
-{{~ render $"~/../samples/{samples_folder}/Pies/Icons/CustomPieSeries.cs" ~}}
+{{~ render $"~/../samples/{platform_samples_folder}/Pies/Icons/CustomPieSeries.cs" ~}}
 ```
 
 ## SvgLabel.cs
 
 ```csharp
-{{~ render $"~/../samples/{samples_folder}/Pies/Icons/SvgLabel.cs" ~}}
+{{~ render $"~/../samples/{platform_samples_folder}/Pies/Icons/SvgLabel.cs" ~}}
 ```
 {{~ end ~}}
 

@@ -18,7 +18,7 @@
 ## StringToPaintConverter.cs
 
 ```csharp
-{{~ render $"~/../samples/{samples_folder}/Pies/Nested/StringToPaintConverter.cs" ~}}
+{{~ render $"~/../samples/{platform_samples_folder}/Pies/Nested/StringToPaintConverter.cs" ~}}
 ```
 {{~ end ~}}
 

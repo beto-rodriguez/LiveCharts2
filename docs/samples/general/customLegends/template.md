@@ -25,7 +25,7 @@ in the next example we set a larger miniature compared with the default size.
 #### View
 
 ```
-{{~ render $"~/../samples/{samples_folder}/General/TemplatedLegends{view_extension}" ~}}
+{{~ render $"~/../samples/{platform_samples_folder}/General/TemplatedLegends{view_extension}" ~}}
 ```
 
 ![custom legend](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/_assets/legend-custom-template.png)

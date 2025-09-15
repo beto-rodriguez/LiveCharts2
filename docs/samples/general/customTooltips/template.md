@@ -13,7 +13,7 @@ You can quickly change the position, the font, the text size or the background c
 
 #### View
 
-{{~ render $"~/../samples/{samples_folder}/Axes/NamedLabels{view_extension}" ~}}
+{{~ render $"~/../samples/{platform_samples_folder}/Axes/NamedLabels{view_extension}" ~}}
 
 ![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/samples/general/customTooltips/styling-tooltips.png)
 
@@ -146,13 +146,13 @@ in the next example, we draw a geometry in the tooltip based on the point that i
 #### View
 
 ```csharp
-{{~ render $"~/../samples/{samples_folder}/General/TemplatedTooltips{view_extension}" ~}}
+{{~ render $"~/../samples/{platform_samples_folder}/General/TemplatedTooltips{view_extension}" ~}}
 ```
 
 {{~ if xaml2006 ~}}
 ## CustomGeometryPointColumnSeries.cs
 ```csharp
-{{~ render $"~/../samples/{samples_folder}/General/TemplatedTooltips/CustomGeometryPointColumnSeries.cs" ~}}
+{{~ render $"~/../samples/{platform_samples_folder}/General/TemplatedTooltips/CustomGeometryPointColumnSeries.cs" ~}}
 ```
 {{~ end ~}}
 

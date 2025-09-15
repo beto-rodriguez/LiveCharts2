@@ -22,7 +22,7 @@ You can also create lines as sections, in the next example we set the same value
 </div>
 
 ```
-{{~ render  $"~/../samples/{samples_folder}/General/Sections2{view_extension}"  ~}}
+{{~ render  $"~/../samples/{platform_samples_folder}/General/Sections2{view_extension}"  ~}}
 ```
 
 {{ render "~/shared/relatedTo.md" }}
