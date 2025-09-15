@@ -1,3 +1,8 @@
+<!--
+To get help on editing this file, see https://github.com/beto-rodriguez/LiveCharts2/blob/dev/docs/readme.md
+content is normally pulled from the examples in the repository.
+-->
+
 :::info
 This article does not include all the properties of the {{ name | to_title_case }} class, it only highlights some features, to
 explore the full object checkout the [API explorer]({{ website_url }}/api/{{ version }}/LiveChartsCore.SkiaSharpView.{{ name  | to_title_case_no_spaces }}-3)

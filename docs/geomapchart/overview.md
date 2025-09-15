@@ -1,13 +1,13 @@
-<div id="edit-this-article-source">
-    {{ edit_source | replace_local_to_server}}
-</div>
+<!--
+To get help on editing this file, see https://github.com/beto-rodriguez/LiveCharts2/blob/dev/docs/readme.md
+-->
 
 # The GeoMap Chart
 
 The `GeoMap` control is useful to create geographical maps, it uses files in [geojson](https://en.wikipedia.org/wiki/GeoJSON) format to render
 vectorized maps.
 
-![image]({{ assets_url }}/docs/_assets/geomaphs.png)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/_assets/geomaphs.png)
 
 {{~ if xaml ~}}
 <pre><code>using LiveChartsCore.SkiaSharpView;
@@ -107,7 +107,7 @@ any image below is a link to an article explaining more about them.
 
 <a href="{{ website_url }}/docs/{{ platform }}/{{ version }}/GeoMap.Heat%20land%20series">
 <div class="series-miniature">
-<img src="{{ assets_url }}/docs/samples/polarLines/basic/geomaphs.png" alt="series"/>
+<img src="https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/samples/polarLines/basic/geomaphs.png" alt="series"/>
 <div class="text-center"><b>Heat Land series</b></div>
 </div>
 </a>
@@ -172,7 +172,7 @@ namespace ViewModelsSamples.Maps.World
 geoMap1.Stroke = new SolidColorPaint(SKColors.Red) { StrokeThickness = 2 }; // mark</code></pre>
 {{~ end ~}}
 
-![image]({{ assets_url }}/docs/_assets/geomap-stroke.png)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/_assets/geomap-stroke.png)
 
 :::info
 Paints can create gradients, dashed lines and more, if you need help using the `Paint` instances take 
@@ -238,7 +238,7 @@ namespace ViewModelsSamples.Maps.World
 geoMap1.Fill = new SolidColorPaint(SKColors.LightPink); // mark</code></pre>
 {{~ end ~}}
 
-![image]({{ assets_url }}/docs/_assets/geomap-fill.png)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/_assets/geomap-fill.png)
 
 :::info
 Paints can create gradients, dashed lines and more, if you need help using the `Paint` instances take 
@@ -268,4 +268,4 @@ currently it only support the `Default` (none) and `Mercator` projections.
 <pre><code>geoMap1.MapProjection = LiveChartsCore.Geo.MapProjection.Mercator;</code></pre>
 {{~ end ~}}
 
-![image]({{ assets_url }}/docs/_assets/geomap-mercator.png)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/_assets/geomap-mercator.png)

@@ -1,6 +1,6 @@
-<div id="edit-this-article-source">
-    {{ edit_source | replace_local_to_server}}
-</div>
+<!--
+To get help on editing this file, see https://github.com/beto-rodriguez/LiveCharts2/blob/dev/docs/readme.md
+-->
 
 # {{ name | to_title_case }}
 
@@ -13,7 +13,7 @@
 If the stroke property is not set, then LiveCharts will create it based on the series position in your series collection
 and the current theme.
 
-![image]({{ assets_url }}/docs/_assets/stepstroke.png)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/_assets/stepstroke.png)
 
 ```csharp
 Series = new ISeries[]
@@ -49,7 +49,7 @@ and the current theme.
 
 The alpha channel enables transparency, it goes from 0 to 255, 0 is transparent and 255 disables transparency completely.
 
-![image]({{ assets_url }}/docs/_assets/stepfill.png)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/_assets/stepfill.png)
 
 ```csharp
 Series = new ISeries[]
@@ -76,7 +76,7 @@ The geometry is the circle shape (by default) that the line series draws for eve
 the fill and stroke of this shape, if none of these properties are set then LiveCharts will create them based on 
 the series position in your series collection and the current theme.
 
-![image]({{ assets_url }}/docs/_assets/stepgeometrystrokefill.png)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/_assets/stepgeometrystrokefill.png)
 
 ```csharp
 Series = new ISeries[]
@@ -101,7 +101,7 @@ a look at the [Paints article]({{ website_url }}/docs/{{ platform }}/{{ version 
 
 Determines the size of the geometry, if this property is not set, then the library will decide it based on the theme.
 
-![image]({{ assets_url }}/docs/_assets/stepgeometrysize.png)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/_assets/stepgeometrysize.png)
 
 ```csharp
 Series = new ISeries[]
@@ -124,7 +124,7 @@ Series = new ISeries[]
 This property is enabled by default (`true`), it has a performance cost and allows the series to create gaps, when the
 series finds a `null` instance then the series will create a gap.
 
-![image]({{ assets_url }}/docs/_assets/stepnullsplit.png)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/_assets/stepnullsplit.png)
 
 ```csharp
 Series = new ISeries[]

@@ -1,3 +1,8 @@
+<!--
+To get help on editing this file, see https://github.com/beto-rodriguez/LiveCharts2/blob/dev/docs/readme.md
+content is normally pulled from the examples in the repository.
+-->
+
 {{ render "~/shared/genericSampleJustGifHeader.md" }}
 
 Zooming and panning is disabled by default, you can enable it by setting the `ZoomMode` property, this property is of type
@@ -34,7 +39,7 @@ On **Mobile** and touch screens:
 ## {{~ view_title ~}}
 
 ```
-{{ full_name | get_view_from_docs }}
+{{ render_current_directory_view }}
 ```
 
 # Options
@@ -75,7 +80,7 @@ myChart.ZoomMode = flags;
 
 
 <div class="text-center sample-img">
-    <img src="{{ assets_url }}/docs/{{ unique_name }}/zoom-both-nofit.gif" alt="sample image" />
+    <img src="https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/{{ unique_name }}/zoom-both-nofit.gif" alt="sample image" />
 </div>
 
 # Bouncing distance
@@ -115,7 +120,7 @@ when zooming is enabled, this feature is also enabled by default, you can also c
 find more info [here](https://lvcharts.com/docs/{{ platform }}/{{ version }}/CartesianChart.Axes%20properties#zooming-and-panning).
 
 <div class="text-center sample-img">
-    <img src="{{ assets_url }}/docs/{{ unique_name }}/selection-zoom.gif" alt="sample image" />
+    <img src="https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/{{ unique_name }}/selection-zoom.gif" alt="sample image" />
 </div>
 
 

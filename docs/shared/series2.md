@@ -1,3 +1,8 @@
+<!--
+To get help on editing this file, see https://github.com/beto-rodriguez/LiveCharts2/blob/dev/docs/readme.md
+content is normally pulled from the examples in the repository.
+-->
+
 ## Plotting custom types
 
 You can plot any type of data, please see the [mappers article]({{ website_url }}/docs/{{ platform }}/{{ version }}/Overview.Mappers) for more information.
@@ -37,7 +42,7 @@ new LineSeries<double>
 
 Produces the following result:
 
-![image]({{ assets_url }}/docs/_assets/1.8.padding00.png)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/_assets/1.8.padding00.png)
 
 But you can remove the padding only from an axis, for example:
 
@@ -52,7 +57,7 @@ new LineSeries<double>
 }
 ```
 
-![image]({{ assets_url }}/docs/_assets/1.8.padding50.png)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/_assets/1.8.padding50.png)
 
 Or you can increase the distance:
 
@@ -67,4 +72,4 @@ new LineSeries<double>
 }
 ```
 
-![image]({{ assets_url }}/docs/_assets/1.8.padding22.png)
+![image](https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/_assets/1.8.padding22.png)

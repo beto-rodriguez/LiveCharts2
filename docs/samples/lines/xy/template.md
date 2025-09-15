@@ -1,7 +1,12 @@
+<!--
+To get help on editing this file, see https://github.com/beto-rodriguez/LiveCharts2/blob/dev/docs/readme.md
+content is normally pulled from the examples in the repository.
+-->
+
 # {{ name | to_title_case }}
 
 <div class="text-center sample-img">
-    <img src="{{ assets_url }}/docs/{{ unique_name }}/result.png" alt="sample image" />
+    <img src="https://raw.githubusercontent.com/beto-rodriguez/LiveCharts2/dev/docs/{{ unique_name }}/result.png" alt="sample image" />
 </div>
 
 When you need to specify both, X and Y coordinates, you can use the 
@@ -17,14 +22,14 @@ how to handle that object, if you want to learn more, please read the
 ## View Model
 
 ```csharp
-{{ full_name | get_vm_from_docs }}
+{{ render_current_directory_view_model }}
 ```
 {{~ end ~}}
 
 ## {{~ view_title ~}}
 
 ```
-{{ full_name | get_view_from_docs }}
+{{ render_current_directory_view }}
 ```
 
 {{ render "~/shared/relatedTo.md" }}
