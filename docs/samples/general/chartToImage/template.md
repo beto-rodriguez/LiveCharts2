@@ -1,20 +1,9 @@
 # {{ name | to_title_case }}
 
-{{~ if wpf || avalonia ~}}
-
-:::info
-Notice this web site wraps every sample using the `UserControl` class, but LiveCharts controls can be used inside any container, 
-this sample also follows a Model-View-* pattern.
-:::
-
-{{~ end ~}}
-
 {{~ if winforms ~}}
-
 :::info
 Notice this web site builds the control from code behind but you could also grab it from the toolbox.
 :::
-
 {{~ end ~}}
 
 {{~ if mvvm ~}}
