@@ -78,18 +78,4 @@ You could also detect the pointer down events/commands at the chart level but si
 {{~ render "~/../samples/{platform_samples_folder}/Events/Polar{view_extension}" ~}}
 ```
 
-{{~ if related_to != null ~}}
-
-### Articles you might also find useful:
-
-{{~ for r in related_to ~}}
-
-<div>
-<a href="{{ compile this r.url }}">
-{{ r.name }}
-</a>
-</div>
-
-{{~ end ~}}
-
-{{~ end ~}}
+{{ render "~/shared/relatedTo.md" }}

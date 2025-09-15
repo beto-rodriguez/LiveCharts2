@@ -33,18 +33,4 @@ content is normally pulled from the examples in the repository.
 ```
 {{~ end ~}}
 
-{{~ if related_to != null ~}}
-
-### Articles you might also find useful:
-
-{{~ for r in related_to ~}}
-
-<div>
-<a href="{{ compile this r.url }}">
-{{ r.name }}
-</a>
-</div>
-
-{{~ end ~}}
-
-{{~ end ~}}
+{{ render "~/shared/relatedTo.md" }}

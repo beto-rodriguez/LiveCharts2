@@ -3,21 +3,15 @@ To get help on editing this file, see https://github.com/beto-rodriguez/LiveChar
 content is normally pulled from the examples in the repository.
 -->
 
-{{~ if related_to != null ~}}
+{{ if related_to != null }}
+<span style="opacity: 0.7"> Related articles: </span>
 
-#### Articles you might also find useful:
-
-{{~ for r in related_to ~}}
-
-<div class="my-2">
-<a href="{{ compile this r.url }}">
-<div class="d-inline-block p-3 bg-light shadow-sm">
-<b>{{ r.name }}</b>
+{{ for r in related_to }}
+<div>
+    <a href="{{ compile this r.url }}">
+        <b>- {{ r.name }}</b>
+    </a>
 </div>
-</a>
-
-</div>
-
-{{~ end ~}}
+{{ end }}
 
 {{~ end ~}}
