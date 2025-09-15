@@ -10,7 +10,7 @@ Notice this web site builds the control from code behind but you could also grab
 ## View model
 
 ```csharp
-{{ full_name | get_vm_from_docs }}
+{{ render_current_directory_view_model }}
 ```
 {{~ end ~}}
 
@@ -19,7 +19,7 @@ Notice this web site builds the control from code behind but you could also grab
 Having the previous data (ViewModel), we add 3 charts to the UI, a `CartesianChart`, a `PieChart` and a `GeoMap`.
 
 ```
-{{ full_name | get_view_from_docs }}
+{{ render_current_directory_view }}
 ```
 
 You will get the following plot in the UI.

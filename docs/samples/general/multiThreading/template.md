@@ -24,14 +24,14 @@ measuring a chart.
 ## View model
 
 ```csharp
-{{ full_name | get_vm_from_docs }}
+{{ render_current_directory_view_model }}
 ```
 {{~ end ~}}
 
 ## {{~ view_title ~}}
 
 ```
-{{ full_name | get_view_from_docs }}
+{{ render_current_directory_view }}
 ```
 
 Notice that we also set the chart `SyncContext` property so the chart knows our sync object.

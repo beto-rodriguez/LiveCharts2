@@ -26,11 +26,11 @@ This is the recommended way to detect when a `ChartPoint` is pressed or hovered 
 commands/events to run actions as the user interacts with the chart.
 
 ```
-{{ full_name | get_vm_from_docs }}
+{{ render_current_directory_view_model }}
 ```
 
 ```
-{{ full_name | get_view_from_docs }}
+{{ render_current_directory_view }}
 ```
 
 In that example, we created the `OnHoveredPointsChanged` method, this method is called every time the "hovered" points change, `hover`

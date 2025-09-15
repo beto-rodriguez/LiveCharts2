@@ -10,14 +10,14 @@ In the next example, we create a `CartesianChart`, this chart contains multiple 
 ## View Model
 
 ```csharp
-{{ full_name | get_vm_from_docs }}
+{{ render_current_directory_view_model }}
 ```
 {{~ end ~}}
 
 ## {{~ view_title ~}}
 
 ```
-{{ full_name | get_view_from_docs }}
+{{ render_current_directory_view }}
 ```
 
 ### Basic sample

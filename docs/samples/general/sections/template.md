@@ -4,14 +4,14 @@
 ## View model
 
 ```csharp
-{{ full_name | get_vm_from_docs }}
+{{ render_current_directory_view_model }}
 ```
 {{~ end ~}}
 
 ## {{~ view_title ~}}
 
 ```
-{{ full_name | get_view_from_docs }}
+{{ render_current_directory_view }}
 ```
 
 You can also create lines as sections, in the next example we set the same value for both

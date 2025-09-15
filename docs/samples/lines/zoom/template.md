@@ -34,7 +34,7 @@ On **Mobile** and touch screens:
 ## {{~ view_title ~}}
 
 ```
-{{ full_name | get_view_from_docs }}
+{{ render_current_directory_view }}
 ```
 
 # Options

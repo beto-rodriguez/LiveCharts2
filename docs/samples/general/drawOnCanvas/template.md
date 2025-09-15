@@ -27,14 +27,14 @@ the control is measured, a LiveCharts control is measured when the data or the c
 ## View model
 
 ```csharp
-{{ full_name | get_vm_from_docs }}
+{{ render_current_directory_view_model }}
 ```
 {{~ end ~}}
 
 ## {{~ view_title ~}}
 
 ```
-{{ full_name | get_view_from_docs }}
+{{ render_current_directory_view }}
 ```
 
 In the previous case we inherited from `Geometry`, this class already contains some useful properties that we

@@ -7,11 +7,11 @@ this will set the scale up for us, but we can also build custom scales if necess
 When the `ICartesianChartView`.`MatchAxesScreenDataRatio` is `true`,  both axes will take the same number of pixels per data unit.
 
 ```
-{{ full_name | get_view_from_docs }}
+{{ render_current_directory_view }}
 ```
 
 ```
-{{ full_name | get_vm_from_docs }}
+{{ render_current_directory_view_model }}
 ```
 
 Now both axes use the same scale, we can easily notice this in the grid drawn by the axes separators, this grid is composed by perfect rectangles,

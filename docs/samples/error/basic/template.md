@@ -23,14 +23,14 @@ This web site builds the control from code behind but you could also grab it fro
 ## View model
 
 ```csharp
-{{ full_name | get_vm_from_docs }}
+{{ render_current_directory_view_model }}
 ```
 {{~ end ~}}
 
 ## {{~ view_title ~}}
 
 ```
-{{ full_name | get_view_from_docs }}
+{{ render_current_directory_view }}
 ```
 
 {{ render "~/shared/relatedTo.md" }}
