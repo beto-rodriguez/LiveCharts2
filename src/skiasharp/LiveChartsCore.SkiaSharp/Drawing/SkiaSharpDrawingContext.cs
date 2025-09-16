@@ -107,7 +107,9 @@ public class SkiaSharpDrawingContext(
     {
         if (Background == SKColor.Empty) return;
 
+        _ = Canvas.SaveLayer();
         Canvas.Clear(Background);
+        Canvas.Restore();
     }
 
     internal override void OnEndDraw()
